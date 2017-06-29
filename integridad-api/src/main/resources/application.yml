@@ -5,7 +5,7 @@ spring:
 spring:
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
   profiles: development
   datasource:
     url: jdbc:postgresql://localhost:5432/integridad
