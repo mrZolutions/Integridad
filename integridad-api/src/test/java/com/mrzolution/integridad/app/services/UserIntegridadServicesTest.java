@@ -1,5 +1,7 @@
 package com.mrzolution.integridad.app.services;
 
+import java.util.UUID;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -35,9 +37,15 @@ public class UserIntegridadServicesTest {
 	
 	@Test
 	public void createTest(){
-		service.create(user);
+		Mockito.when(userIntegridadRepository.save(user)).thenReturn(user);
+		
+		UserIntegridad created = service.create(user);
+		System.out.println(created);
 		
 		Mockito.verify(userIntegridadRepository, Mockito.times(1)).save(Mockito.any(UserIntegridad.class));
+		
+		Assert.assertNotNull(created.getValidation());
+		Assert.assertFalse(created.isActive());
 	}
 	
 	@Test(expected=BadRequestException.class)
@@ -45,20 +53,9 @@ public class UserIntegridadServicesTest {
 		String email = "daniel@yahoo.com"; 
 		user.setEmail(email);
 		
-		Mockito.when(userIntegridadRepository.findByEmailContainingIgnoreCase(email)).thenReturn(UserIntegridad.newUserIntegridadTest());
+		Mockito.when(userIntegridadRepository.findByEmailContainingIgnoreCaseAndActive(email, true)).thenReturn(UserIntegridad.newUserIntegridadTest());
 		
 		service.create(user);
-	}
-	
-	@Test
-	public void authenticationTest(){
-		String email = "daniel@yahoo.com"; 
-		user.setEmail(email);
-		
-		Mockito.when(userIntegridadRepository.findByEmailContainingIgnoreCase(email)).thenReturn(UserIntegridad.newUserIntegridadTest());
-		UserIntegridad authenticated = service.authenticate(user);
-		
-		Assert.assertNotNull(authenticated);
 	}
 	
 	@Test(expected=BadRequestException.class)
@@ -66,7 +63,7 @@ public class UserIntegridadServicesTest {
 		String email = "daniel@yahoo.com"; 
 		user.setEmail(email);
 		
-		Mockito.when(userIntegridadRepository.findByEmailContainingIgnoreCase(email)).thenReturn(null);
+		Mockito.when(userIntegridadRepository.findByEmailContainingIgnoreCaseAndActive(email, true)).thenReturn(null);
 		UserIntegridad authenticated = service.authenticate(user);
 		
 		Assert.assertNull(authenticated);
@@ -84,10 +81,56 @@ public class UserIntegridadServicesTest {
 		userWrongPass.setEmail(email);
 		userWrongPass.setPassword(password);
 		
-		Mockito.when(userIntegridadRepository.findByEmailContainingIgnoreCase(email)).thenReturn(userWrongPass);
+		Mockito.when(userIntegridadRepository.findByEmailContainingIgnoreCaseAndActive(email, true)).thenReturn(userWrongPass);
 		UserIntegridad authenticated = service.authenticate(user);
 		
 		Assert.assertNull(authenticated);
+	}
+	
+	@Test
+	public void activateTest(){
+		UUID userId = UUID.randomUUID();
+		String validation = "yyyyy";
+		
+		user.setActive(false);
+		Mockito.when(userIntegridadRepository.findByIdAndValidation(userId, validation)).thenReturn(user);
+		Mockito.when(userIntegridadRepository.save(user)).thenReturn(user);
+		
+		UserIntegridad activated = service.activate(userId, validation);
+		
+		Mockito.verify(userIntegridadRepository, Mockito.times(1)).save(Mockito.any(UserIntegridad.class));
+		
+		Assert.assertNotNull(activated);
+	}
+	
+	@Test(expected=BadRequestException.class)
+	public void wrongActiveTest(){
+		UUID userId = UUID.randomUUID();
+		String validation = "yyyyy";
+		
+		user.setActive(false);
+		Mockito.when(userIntegridadRepository.findByIdAndValidation(userId, validation)).thenReturn(null);
+		
+		UserIntegridad activated = service.activate(userId, validation);
+		
+		Mockito.verify(userIntegridadRepository, Mockito.times(0)).save(Mockito.any(UserIntegridad.class));
+		
+		Assert.assertNull(activated);
+	}
+	
+	@Test(expected=BadRequestException.class)
+	public void wrongActivate2Test(){
+		UUID userId = UUID.randomUUID();
+		String validation = "yyyyy";
+		
+		user.setActive(true);
+		Mockito.when(userIntegridadRepository.findByIdAndValidation(userId, validation)).thenReturn(user);
+		
+		UserIntegridad activated = service.activate(userId, validation);
+		
+		Mockito.verify(userIntegridadRepository, Mockito.times(0)).save(Mockito.any(UserIntegridad.class));
+		
+		Assert.assertNull(activated);
 	}
 
 }

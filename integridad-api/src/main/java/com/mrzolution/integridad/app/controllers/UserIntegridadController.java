@@ -1,8 +1,11 @@
 package com.mrzolution.integridad.app.controllers;
 
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -44,6 +47,19 @@ public class UserIntegridadController {
 		}catch(BadRequestException e) {
 			log.info("UserIntegridadController authenticate Exception thrown: {}", e.getMessage());	    
 	        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+	    }
+		return new ResponseEntity<UserIntegridad>(response, HttpStatus.OK);
+	}
+	
+	@RequestMapping(method = RequestMethod.PUT, value="/{id}/{validation}")
+    public ResponseEntity activate(@PathVariable("id") UUID id, @PathVariable("validation") String validation){
+		log.info("UserIntegridadController activate: {}", id);
+		UserIntegridad response = null;
+		try {
+			response = service.activate(id, validation);
+		}catch(BadRequestException e) {
+			log.info("UserIntegridadController activate Exception thrown: {}", e.getMessage());	    
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	    }
 		return new ResponseEntity<UserIntegridad>(response, HttpStatus.OK);
 	}

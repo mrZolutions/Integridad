@@ -22,6 +22,8 @@ public class UserIntegridad {
     private String name;
     private String userName;
     private String password;
+    private String validation;
+    private boolean active;
     
     @Email
     private String email;
