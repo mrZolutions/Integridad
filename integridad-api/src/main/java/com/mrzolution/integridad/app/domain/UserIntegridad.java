@@ -32,7 +32,7 @@ public class UserIntegridad {
     }
 
     @Transient
-    public static UserIntegridad newAuditFirmTest(){
+    public static UserIntegridad newUserIntegridadTest(){
         UserIntegridad userIntegridad = new UserIntegridad();
 
         return userIntegridad;

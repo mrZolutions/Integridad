@@ -5,6 +5,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import com.mrzolution.integridad.app.domain.UserIntegridad;
+import com.mrzolution.integridad.app.exceptions.BadRequestException;
 import com.mrzolution.integridad.app.repositories.UserIntegridadRepository;
 
 import lombok.extern.slf4j.Slf4j;
@@ -19,20 +20,37 @@ public class UserIntegridadServices {
 	@Autowired
 	PasswordEncoder passwordEncoder;
 	
-	public UserIntegridad create(UserIntegridad userIntegridad){
+	public UserIntegridad create(UserIntegridad userIntegridad) throws BadRequestException{
 		log.info("UserIntegridadServices create: {}", userIntegridad.getEmail());
+		
+		if(userIntegridadRepository.findByEmailContainingIgnoreCase(userIntegridad.getEmail()) != null){
+			throw new BadRequestException("Email already used");
+		}
+		
 		String encoded = passwordEncoder.encode(userIntegridad.getPassword());
 		userIntegridad.setPassword(encoded);
 		log.info("UserIntegridadServices create: {} password Encoded", userIntegridad.getEmail());
-		
-		System.out.println("***************** 1: " +  userIntegridad.getPassword());
-		System.out.println("***************** 3: " +  (passwordEncoder.matches("12345", encoded)));
 		
 		UserIntegridad saved = userIntegridadRepository.save(userIntegridad);
 		
 		log.info("UserIntegridadServices created: {}", userIntegridad.getId());
 		
 		return saved;
+	}
+
+	public UserIntegridad authenticate(UserIntegridad user) throws BadRequestException{
+		log.info("UserIntegridadServices authenticate: {}", user.getEmail());
+		UserIntegridad userResponse = userIntegridadRepository.findByEmailContainingIgnoreCase(user.getEmail());
+		if(userResponse == null){
+			throw new BadRequestException("Invalid Email");
+		}
+		
+		if(!passwordEncoder.matches(user.getPassword(), userResponse.getPassword())){
+			userResponse = null;
+			throw new BadRequestException("Wrong Password");
+		}
+		log.info("UserIntegridadServices authenticate success: {}, id: {}", userResponse.getEmail(), userResponse.getId());
+		return userResponse;
 	}
 
 }

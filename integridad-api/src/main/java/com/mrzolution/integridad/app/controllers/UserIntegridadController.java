@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mrzolution.integridad.app.domain.UserIntegridad;
+import com.mrzolution.integridad.app.exceptions.BadRequestException;
 import com.mrzolution.integridad.app.services.UserIntegridadServices;
 
 import lombok.extern.slf4j.Slf4j;
@@ -22,8 +23,28 @@ public class UserIntegridadController {
 	UserIntegridadServices service;
 
 	@RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<UserIntegridad> create(@RequestBody UserIntegridad userIntegridad){
-		UserIntegridad response = service.create(userIntegridad);
-		return new ResponseEntity<>(response, HttpStatus.CREATED);
+    public ResponseEntity create(@RequestBody UserIntegridad userIntegridad){
+		log.info("UserIntegridadController create: {}", userIntegridad);
+		UserIntegridad response = null;
+		try {
+			response = service.create(userIntegridad);
+		}catch(BadRequestException e) {
+			log.error("UserIntegridadController create Exception thrown: {}", e.getMessage());	    
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+	    }
+		return new ResponseEntity<UserIntegridad>(response, HttpStatus.CREATED);
+	}
+	
+	@RequestMapping(method = RequestMethod.POST, value="/auth")
+    public ResponseEntity authenticate(@RequestBody UserIntegridad userIntegridad){
+		log.info("UserIntegridadController authenticate: {}", userIntegridad);
+		UserIntegridad response = null;
+		try {
+			response = service.authenticate(userIntegridad);
+		}catch(BadRequestException e) {
+			log.info("UserIntegridadController authenticate Exception thrown: {}", e.getMessage());	    
+	        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+	    }
+		return new ResponseEntity<UserIntegridad>(response, HttpStatus.OK);
 	}
 }
