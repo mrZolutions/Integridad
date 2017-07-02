@@ -11,6 +11,11 @@ spring:
     url: jdbc:postgresql://localhost:5432/integridad
     username: postgres
     password: postgres
+    
+email:
+    username: Soporte.tecnico1@mrzolutions.com
+    pass: hijodedios
+    emailFrom: Integridad - MrZolutions <Soporte.tecnico1@mrzolutions.com>
 
 ---
 spring:
@@ -22,3 +27,8 @@ spring:
     url: zzzz
     username: xxxx
     password: yyyyyyyy
+
+email:
+    username: Soporte.tecnico1@mrzolutions.com
+    pass: hijodedios
+    emailFrom: Integridad - MrZolutions <Soporte.tecnico1@mrzolutions.com>

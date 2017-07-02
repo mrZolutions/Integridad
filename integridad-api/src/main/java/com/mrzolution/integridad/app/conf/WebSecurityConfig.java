@@ -1,34 +1,32 @@
 package com.mrzolution.integridad.app.conf;
 
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.context.annotation.Configuration;
-//import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-//import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-//import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-//import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
-//@Configuration
-//@EnableWebSecurity
-//public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
-public class WebSecurityConfig {
-	// @Override
-	// protected void configure(HttpSecurity http) throws Exception {
-	// http.csrf().disable();
-	// http
-	// .authorizeRequests()
-	// .antMatchers("/").permitAll()
-	// .anyRequest().authenticated()
-	// .and()
-	// .formLogin()
-	// .loginPage("/login")
-	// .permitAll()
-	// .and()
-	// .logout()
-	// .permitAll();
-	// }
+@Configuration
+@EnableGlobalMethodSecurity(prePostEnabled = true)
+public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+	
+	
+	@Override
+	public void configure(AuthenticationManagerBuilder auth) throws Exception {
+	    auth.inMemoryAuthentication()
+	      .withUser("dan").password("12345").roles("USER", "ADMIN");
+	}
+	
+	@Override
+	protected void configure(HttpSecurity http) throws Exception {
+		http
+	      .httpBasic().and()
+	      .authorizeRequests()
+	        .antMatchers(HttpMethod.POST, "/integridad/**").hasRole("ADMIN")
+	        .antMatchers(HttpMethod.PUT, "/integridad/**").hasRole("ADMIN")
+	        .antMatchers(HttpMethod.PATCH, "/integridad/**").hasRole("ADMIN").and()
+	      .csrf().disable();
+	}
 
-//	@Autowired
-//	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-//		auth.inMemoryAuthentication().withUser("user").password("DanielArcos").roles("USER");
-//	}
 }

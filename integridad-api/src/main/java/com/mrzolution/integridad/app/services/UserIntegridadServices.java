@@ -22,6 +22,9 @@ public class UserIntegridadServices {
 	@Autowired
 	PasswordEncoder passwordEncoder;
 	
+	@Autowired
+	MailingService mailingService;
+	
 	public UserIntegridad create(UserIntegridad userIntegridad) throws BadRequestException{
 		log.info("UserIntegridadServices create: {}", userIntegridad.getEmail());
 		
@@ -37,7 +40,7 @@ public class UserIntegridadServices {
 		
 		UserIntegridad saved = userIntegridadRepository.save(userIntegridad);
 		
-//		TODO send email to validate EMAIL with id and validation ---------------------------------------------------------------
+		mailingService.sendEmailREgister(userIntegridad);
 		
 		log.info("UserIntegridadServices created: {}", userIntegridad.getId());
 		

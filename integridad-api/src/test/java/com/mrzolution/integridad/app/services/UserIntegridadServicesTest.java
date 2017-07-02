@@ -28,6 +28,9 @@ public class UserIntegridadServicesTest {
 	@Mock
 	PasswordEncoder passwordEncoder;
 	
+	@Mock
+	MailingService mailingService;
+	
 	UserIntegridad user;
 	
 	@Before
@@ -43,6 +46,7 @@ public class UserIntegridadServicesTest {
 		System.out.println(created);
 		
 		Mockito.verify(userIntegridadRepository, Mockito.times(1)).save(Mockito.any(UserIntegridad.class));
+		Mockito.verify(mailingService, Mockito.times(1)).sendEmailREgister(Mockito.any(UserIntegridad.class));
 		
 		Assert.assertNotNull(created.getValidation());
 		Assert.assertFalse(created.isActive());
