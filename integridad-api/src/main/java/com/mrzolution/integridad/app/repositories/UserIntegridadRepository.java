@@ -13,7 +13,7 @@ import org.springframework.data.repository.CrudRepository;
 @Qualifier(value="UserIntegridadRepository")
 public interface UserIntegridadRepository extends CrudRepository<UserIntegridad, UUID>{
 
-	UserIntegridad findByEmailContainingIgnoreCaseAndActive(String email, boolean active);
+	UserIntegridad findByEmailIgnoreCaseAndActive(String email, boolean active);
 
 	UserIntegridad findByIdAndValidation(UUID userId, String validation);
 

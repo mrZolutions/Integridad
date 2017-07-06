@@ -57,7 +57,7 @@ public class UserIntegridadServicesTest {
 		String email = "daniel@yahoo.com"; 
 		user.setEmail(email);
 		
-		Mockito.when(userIntegridadRepository.findByEmailContainingIgnoreCaseAndActive(email, true)).thenReturn(UserIntegridad.newUserIntegridadTest());
+		Mockito.when(userIntegridadRepository.findByEmailIgnoreCaseAndActive(email, true)).thenReturn(UserIntegridad.newUserIntegridadTest());
 		
 		service.create(user);
 	}
@@ -67,7 +67,7 @@ public class UserIntegridadServicesTest {
 		String email = "daniel@yahoo.com"; 
 		user.setEmail(email);
 		
-		Mockito.when(userIntegridadRepository.findByEmailContainingIgnoreCaseAndActive(email, true)).thenReturn(null);
+		Mockito.when(userIntegridadRepository.findByEmailIgnoreCaseAndActive(email, true)).thenReturn(null);
 		UserIntegridad authenticated = service.authenticate(user);
 		
 		Assert.assertNull(authenticated);
@@ -85,7 +85,7 @@ public class UserIntegridadServicesTest {
 		userWrongPass.setEmail(email);
 		userWrongPass.setPassword(password);
 		
-		Mockito.when(userIntegridadRepository.findByEmailContainingIgnoreCaseAndActive(email, true)).thenReturn(userWrongPass);
+		Mockito.when(userIntegridadRepository.findByEmailIgnoreCaseAndActive(email, true)).thenReturn(userWrongPass);
 		UserIntegridad authenticated = service.authenticate(user);
 		
 		Assert.assertNull(authenticated);

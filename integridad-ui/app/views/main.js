@@ -8,18 +8,36 @@
  * Controller of the integridadUiApp
  */
 angular.module('integridadUiApp')
-  .controller('MainCtrl', function (securityService) {
+  .controller('MainCtrl', function ($location, authService) {
     var vm = this;
 
-    vm.test = function(){
-      var user={
-        "email": "danielgokuarcos@yahoo.com",
-        "password": "12345"
-      }
-      securityService.post('/user/auth',user).then(function successCallback(response) {
-        console.log(JSON.stringify(response, null, 4));
-      }).catch(function (e) {
-        console.log(JSON.stringify(e, null, 4));
+    vm.error = undefined;
+    vm.success = undefined;
+
+    vm.login = function(){
+      var user = {email: vm.email, password: vm.password};
+      authService.authUser(user).then(function (response) {
+        $location.path('/home');
+      }).catch(function (error) {
+        vm.error = error.data;
       });
     }
+
+    vm.register = function(){
+      vm.email = vm.email.trim();
+      vm.password = vm.password.trim();
+
+      if(vm.email === '' || vm.password === ''){
+        vm.error = 'Debe ingresar un Email y Password';
+      } else {
+        var user = {email: vm.email, password: vm.password};
+        authService.registerUser(user).then(function (response) {
+          vm.error = undefined;
+          vm.success = 'Resgistro realizado con exito. Se envio un email a la cuenta registrada para activar su cuenta';
+        }).catch(function (error) {
+          vm.error = error.data;
+        });
+      }
+    }
+
   });

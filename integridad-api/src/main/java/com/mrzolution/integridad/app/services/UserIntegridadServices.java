@@ -28,7 +28,7 @@ public class UserIntegridadServices {
 	public UserIntegridad create(UserIntegridad userIntegridad) throws BadRequestException{
 		log.info("UserIntegridadServices create: {}", userIntegridad.getEmail());
 		
-		if(userIntegridadRepository.findByEmailContainingIgnoreCaseAndActive(userIntegridad.getEmail(), true) != null){
+		if(userIntegridadRepository.findByEmailIgnoreCaseAndActive(userIntegridad.getEmail(), true) != null){
 			throw new BadRequestException("Email already used");
 		}
 		
@@ -49,7 +49,7 @@ public class UserIntegridadServices {
 
 	public UserIntegridad authenticate(UserIntegridad user) throws BadRequestException{
 		log.info("UserIntegridadServices authenticate: {}", user.getEmail());
-		UserIntegridad userResponse = userIntegridadRepository.findByEmailContainingIgnoreCaseAndActive(user.getEmail(), true);
+		UserIntegridad userResponse = userIntegridadRepository.findByEmailIgnoreCaseAndActive(user.getEmail(), true);
 		if(userResponse == null){
 			throw new BadRequestException("Invalid Email");
 		}
