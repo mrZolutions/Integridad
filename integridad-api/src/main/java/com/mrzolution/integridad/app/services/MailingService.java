@@ -33,7 +33,8 @@ public class MailingService {
         String subject = "Cuenta para tu aplicacion Integridad";
         String body = "Gracias por tu registro. "
                 + "\n\n Tu email registrado es: " + userIntegridad.getEmail()
-        		+ "\n\n Usa este link para activar tu cuenta: ";
+        		+ "\n\n Usa este link para activar tu cuenta: "
+        		+ "\n\nhttps://mrzolutions.github.io/Integridad/integridad-ui/dist/#/activate/" + userIntegridad.getId()+ "/" + userIntegridad.getValidation();
         
         sendEmail(subject, body, to);
         return true;
