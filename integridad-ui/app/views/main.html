@@ -1,23 +1,42 @@
-<div class="jumbotron">
-  <h1>'Allo, 'Allo!</h1>
-  <p class="lead">
-    <img src="images/yeoman.png" alt="I'm Yeoman"><br>
-    Always a pleasure scaffolding your apps.
-  </p>
-  <p><a class="btn btn-lg btn-success" ng-href="#/">Splendid!<span class="glyphicon glyphicon-ok"></span></a></p>
+<div class="row">
+  <div class="col-md-8 col-md-offset-2">
+    <img src="images/zolutions1.jpg"><br>
+  </div>
 </div>
 
-<div class="row marketing">
-  <h4>HTML5 Boilerplate</h4>
-  <p>
-    HTML5 Boilerplate is a professional front-end template for building fast, robust, and adaptable web apps or sites.
-  </p>
 
-  <h4>Angular</h4>
-  <p>
-    AngularJS is a toolset for building the framework most suited to your application development.
-  </p>
+<div class="panel panel-default">
+  <div class="panel-body">
+    <div class="row" ng-show="vm.error !== undefined">
+      <div class="form-group col-md-12">
+        <div class="alert alert-danger">{{vm.error}}</div>
+      </div>
+    </div>
+    <div class="row" ng-show="vm.success !== undefined">
+      <div class="form-group col-md-12">
+        <div class="alert alert-success">{{vm.success}}</div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group col-md-6">
+        <label>E-mail: </label>
+        <input type="text" ng-model="vm.email" class="form-control">
+      </div>
 
-  <h4>Karma</h4>
-  <p>Spectacular Test Runner for JavaScript.</p>
+      <div class="form-group col-md-6">
+        <label>Password: </label>
+        <input type="password" ng-model="vm.password" class="form-control">
+      </div>
+    </div>
+  </div>
+  <div class="panel-footer">
+    <button type="button" class="btn btn-primary" ng-click="vm.login()"
+      ng-disabled="vm.email === undefined || vm.password === undefined">
+      Ingresar
+    </button>
+    <button type="button" class="btn btn-success" ng-click="vm.register()"
+      ng-disabled="vm.email === undefined || vm.password === undefined">
+      Registrarse
+    </button>
+  </div>
 </div>

@@ -1,16 +1,21 @@
 spring:
-  profiles.active: development
+  profiles.active: production
 
 ---
 spring:
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
   profiles: development
   datasource:
     url: jdbc:postgresql://localhost:5432/integridad
     username: postgres
     password: postgres
+    
+email:
+    username: Soporte.tecnico1@mrzolutions.com
+    pass: hijodedios
+    emailFrom: Integridad - MrZolutions <Soporte.tecnico1@mrzolutions.com>
 
 ---
 spring:
@@ -19,6 +24,11 @@ spring:
       ddl-auto: update
   profiles: production
   datasource:
-    url: zzzz
-    username: xxxx
-    password: yyyyyyyy
+    url: jdbc:postgresql://ec2-23-21-246-11.compute-1.amazonaws.com:5432/d2fjcfrvu95ctb?ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory
+    username: tohuyzexvjwuon
+    password: ffb4de1c47ebdfca86f69011374da34d8696ffaa6149f952939f381c263fd967
+
+email:
+    username: Soporte.tecnico1@mrzolutions.com
+    pass: hijodedios
+    emailFrom: Integridad - MrZolutions <Soporte.tecnico1@mrzolutions.com>
