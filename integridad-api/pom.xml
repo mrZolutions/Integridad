@@ -96,7 +96,7 @@
                 <configuration>
                     <appName>integridad</appName>
                     <processTypes>
-                        <web>java -Dserver.port=$PORT -Dspring.profiles.active=production target/integridad-api-0.0.1.jar -Xmx384m -Xms384m -Xss512k -XX:+UseCompressedOops</web>
+                        <web>java -jar -Dserver.port=$PORT -Dspring.profiles.active=production target/integridad-api-0.0.1.jar -Xmx384m -Xms384m -Xss512k -XX:+UseCompressedOops</web>
                     </processTypes>
                 </configuration>
             </plugin>
