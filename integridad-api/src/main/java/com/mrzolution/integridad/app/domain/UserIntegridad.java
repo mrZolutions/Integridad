@@ -6,6 +6,7 @@ import javax.persistence.*;
 
 import org.hibernate.validator.constraints.Email;
 
+import java.util.Date;
 import java.util.UUID;
 
 /**
@@ -22,6 +23,8 @@ public class UserIntegridad {
     private String name;
     private String userName;
     private String password;
+    private String validation;
+    private boolean active;
     
     @Email
     private String email;
@@ -32,7 +35,7 @@ public class UserIntegridad {
     }
 
     @Transient
-    public static UserIntegridad newAuditFirmTest(){
+    public static UserIntegridad newUserIntegridadTest(){
         UserIntegridad userIntegridad = new UserIntegridad();
 
         return userIntegridad;
