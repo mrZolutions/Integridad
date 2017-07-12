@@ -1,48 +1,33 @@
 package com.mrzolution.integridad.app.domain;
 
+import java.util.List;
 import java.util.UUID;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Transient;
-
-import org.hibernate.validator.constraints.Email;
 
 import lombok.Data;
 
-/**
- * Created by daniel.
- */
 @Entity
 @Data
-public class UserIntegridad {
+public class UserType {
 
-    @Id
+	@Id
     @GeneratedValue
     private UUID id;
 
     private String name;
-    private String userName;
-    private String password;
-    private String validation;
-    private boolean active;
+    private String code;
     
-    @Email
-    private String email;
-
-    @ManyToOne
-    @JoinColumn(name = "user_type_id")
-    private UserType userType;
+    @OneToMany(mappedBy = "userType", cascade = CascadeType.ALL)
+    private List<UserIntegridad> users;
     
     public void setListsNull(){
-    	
-    }
-    
-    public void setFatherListToNull(){
-    	userType.setListsNull();
+    	if(users != null) users = null;
     }
 
     @Transient
@@ -51,5 +36,4 @@ public class UserIntegridad {
 
         return userIntegridad;
     }
-
 }
