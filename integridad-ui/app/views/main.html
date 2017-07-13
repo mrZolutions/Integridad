@@ -17,14 +17,13 @@
   </div>
 </div>
 
-<div class="row">
+<div class="row" ng-show="vm.init">
   <div class="col-md-8 col-md-offset-2">
     <img src="images/zolutions1.jpg"><br>
   </div>
 </div>
 
-
-<div class="panel panel-default">
+<div class="panel panel-default" ng-show="vm.init">
   <div class="panel-body">
     <div class="row" ng-show="vm.error !== undefined">
       <div class="form-group col-md-12">
@@ -53,9 +52,54 @@
       ng-disabled="vm.email === undefined || vm.password === undefined">
       Ingresar
     </button>
-    <button type="button" class="btn btn-success" ng-click="vm.register()"
-      ng-disabled="vm.email === undefined || vm.password === undefined">
+    <button type="button" class="btn btn-success" ng-click="vm.init = false">
       Registrarse
+    </button>
+  </div>
+</div>
+
+<div class="panel panel-default" ng-show="!vm.init">
+  <div class="panel-body">
+    <div class="row" ng-show="vm.error !== undefined">
+      <div class="form-group col-md-12">
+        <div class="alert alert-danger">{{vm.error}}</div>
+      </div>
+    </div>
+    <div class="row" ng-show="vm.success !== undefined">
+      <div class="form-group col-md-12">
+        <div class="alert alert-success">{{vm.success}}</div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group col-md-6">
+        <label>Nombre: </label>
+        <input type="text" ng-model="vm.userIntegridad.name" class="form-control">
+      </div>
+
+      <div class="form-group col-md-6">
+        <label>Nickname: </label>
+        <input type="text" ng-model="vm.userIntegridad.userName" class="form-control">
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group col-md-6">
+        <label>E-mail: </label>
+        <input type="text" ng-model="vm.userIntegridad.email" class="form-control">
+      </div>
+
+      <div class="form-group col-md-6">
+        <label>Password: </label>
+        <input type="password" ng-model="vm.userIntegridad.password" class="form-control">
+      </div>
+    </div>
+  </div>
+  <div class="panel-footer">
+    <button type="button" class="btn btn-primary" ng-click="vm.register()"
+      ng-disabled="vm.userIntegridad.email === undefined || vm.userIntegridad.password === undefined">
+      Registrar
+    </button>
+    <button type="button" class="btn btn-success" ng-click="vm.init = true">
+      Cancelar
     </button>
   </div>
 </div>

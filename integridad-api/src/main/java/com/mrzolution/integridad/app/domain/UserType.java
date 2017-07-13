@@ -31,9 +31,9 @@ public class UserType {
     }
 
     @Transient
-    public static UserIntegridad newUserIntegridadTest(){
-        UserIntegridad userIntegridad = new UserIntegridad();
+    public static UserType newUserTypeTest(){
+    	UserType userType = new UserType();
 
-        return userIntegridad;
+        return userType;
     }
 }

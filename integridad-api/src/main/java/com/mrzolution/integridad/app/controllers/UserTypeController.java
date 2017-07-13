@@ -9,13 +9,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.mrzolution.integridad.app.domain.UserIntegridad;
 import com.mrzolution.integridad.app.domain.UserType;
 import com.mrzolution.integridad.app.exceptions.BadRequestException;
-import com.mrzolution.integridad.app.services.UserIntegridadServices;
 import com.mrzolution.integridad.app.services.UserTypeServices;
 
 import lombok.extern.slf4j.Slf4j;

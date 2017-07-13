@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
 import com.mrzolution.integridad.app.domain.UserIntegridad;
+import com.mrzolution.integridad.app.domain.UserType;
 
 import org.springframework.data.repository.CrudRepository;
 
@@ -16,5 +17,7 @@ public interface UserIntegridadRepository extends CrudRepository<UserIntegridad,
 	UserIntegridad findByEmailIgnoreCaseAndActive(String email, boolean active);
 
 	UserIntegridad findByIdAndValidation(UUID userId, String validation);
+	
+	Iterable<UserIntegridad> findByUserType(UserType userType);
 
 }

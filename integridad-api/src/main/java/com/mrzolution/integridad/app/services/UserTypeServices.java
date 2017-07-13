@@ -1,11 +1,13 @@
 package com.mrzolution.integridad.app.services;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import com.google.common.collect.Iterables;
 import com.mrzolution.integridad.app.domain.UserIntegridad;
 import com.mrzolution.integridad.app.domain.UserType;
 import com.mrzolution.integridad.app.exceptions.BadRequestException;
@@ -20,6 +22,8 @@ public class UserTypeServices {
 	
 	@Autowired
 	UserTypeRepository userTypeRepository;
+	@Autowired
+	UserIntegridadRepository userIntegridadRepository;
 	
 	public UserType create(UserType userType){
 		log.info("UserTypeServices create: {}", userType.getName());
@@ -33,6 +37,7 @@ public class UserTypeServices {
 			throw new BadRequestException("Invalid User Type");
 		}
 		log.info("UserTypeServices update: {}", userType.getName());
+		userType.setListsNull();
 		UserType updated = userTypeRepository.save(userType);
 		log.info("UserTypeServices update id: {}", updated.getId());
 		return updated;
@@ -47,12 +52,33 @@ public class UserTypeServices {
 			log.info("UserTypeServices retrieved id NULL: {}", id);
 		}
 		
+		populateChildren(retrieved);
 		return retrieved;
 	}
 	
 	public Iterable<UserType> getAll(){
-		return userTypeRepository.findAll();
+		log.info("UserTypeServices getAll");
+		Iterable<UserType> usersType = userTypeRepository.findAll();
+		for (UserType userType : usersType) {
+			populateChildren(userType);
+		}
+		log.info("UserTypeServices getAll size retrieved: {}", Iterables.size(usersType));
+		return usersType;
 	}
 	
+	private void populateChildren(UserType userType) {
+		log.info("UserTypeServices populateChildren userTypeId: {}", userType.getId());
+		List<UserIntegridad> userIntegridadList = new ArrayList<>();
+		Iterable<UserIntegridad> usersIntegridad= userIntegridadRepository.findByUserType(userType);
+		
+		for (UserIntegridad userIntegridad : usersIntegridad) {
+			userIntegridad.setUserType(null);
+			
+			userIntegridadList.add(userIntegridad);
+		}
+		
+		userType.setUsers(userIntegridadList);
+		log.info("UserTypeServices populateChildren FINISHED userTypeId: {}", userType.getId());
+	}
 
 }
