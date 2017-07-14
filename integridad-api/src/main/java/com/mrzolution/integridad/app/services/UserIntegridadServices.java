@@ -1,5 +1,6 @@
 package com.mrzolution.integridad.app.services;
 
+import java.util.Date;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,7 @@ public class UserIntegridadServices {
 		userIntegridad.setPassword(encoded);
 		userIntegridad.setValidation(UUID.randomUUID().toString());
 		userIntegridad.setActive(false);
+		userIntegridad.setDateCreated(new Date().getTime());
 		log.info("UserIntegridadServices create: {} password Encoded", userIntegridad.getEmail());
 		
 		UserIntegridad saved = userIntegridadRepository.save(userIntegridad);
@@ -58,6 +60,9 @@ public class UserIntegridadServices {
 			userResponse = null;
 			throw new BadRequestException("Wrong Password");
 		}
+		
+		userResponse.setFatherListToNull();
+		
 		log.info("UserIntegridadServices authenticate success: {}, id: {}", userResponse.getEmail(), userResponse.getId());
 		return userResponse;
 	}

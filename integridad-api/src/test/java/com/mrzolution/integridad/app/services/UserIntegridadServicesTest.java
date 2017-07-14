@@ -13,6 +13,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.mrzolution.integridad.app.domain.UserIntegridad;
+import com.mrzolution.integridad.app.domain.UserType;
 import com.mrzolution.integridad.app.exceptions.BadRequestException;
 import com.mrzolution.integridad.app.repositories.UserIntegridadRepository;
 
@@ -89,6 +90,23 @@ public class UserIntegridadServicesTest {
 		UserIntegridad authenticated = service.authenticate(user);
 		
 		Assert.assertNull(authenticated);
+	}
+	
+	@Test
+	public void successAuthenticationTest() throws Exception {
+		String email = "daniel@yahoo.com";
+		String password = "12345";
+		user.setUserType(UserType.newUserTypeTest());
+		user.setEmail(email);
+		user.setPassword(password);
+		
+		Mockito.when(userIntegridadRepository.findByEmailIgnoreCaseAndActive(email, true)).thenReturn(user);
+		Mockito.when(passwordEncoder.matches(Mockito.anyString(), Mockito.anyString())).thenReturn(true);
+		UserIntegridad authenticated = service.authenticate(user);
+		
+		ListValidation.checkListsAndFatherNull(UserIntegridad.class, authenticated);
+		
+		Assert.assertNotNull(authenticated);
 	}
 	
 	@Test
