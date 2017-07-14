@@ -8,7 +8,7 @@
  * Controller of the integridadUiApp
  */
 angular.module('integridadUiApp')
-  .controller('MainCtrl', function ($location, authService) {
+  .controller('MainCtrl', function ($location, authService, utilValidationService) {
     var vm = this;
     vm.loading = false;
 
@@ -34,9 +34,22 @@ angular.module('integridadUiApp')
       vm.userIntegridad.email = vm.userIntegridad.email.trim();
       vm.userIntegridad.password = vm.userIntegridad.password.trim();
 
-      if(vm.userIntegridad.email === '' || vm.userIntegridad.password === ''){
-        vm.error = 'Debe ingresar un Email y Password';
+      var validationError = utilValidationService.isAnyInArrayStringEmpty([
+        vm.userIntegridad.email, vm.userIntegridad.password, vm.userIntegridad.firstName,
+        vm.userIntegridad.lastName
+      ]);
+
+      if(validationError){
+        vm.error = 'Debe ingresar Nombres completos, email y password';
       } else {
+        validationError = utilValidationService.isStringEmpty(vm.userIntegridad.cedula) && utilValidationService.isStringEmpty(vm.userIntegridad.ruc);
+
+        if(validationError){
+          vm.error = 'Debe ingresar un numero de cedula o ruc';
+        }
+      }
+
+      if(!validationError){
         vm.loading = true;
         authService.registerUser(vm.userIntegridad).then(function (response) {
           vm.loading = false;
@@ -48,6 +61,6 @@ angular.module('integridadUiApp')
           vm.error = error.data;
         });
       }
-    }
+    };
 
   });

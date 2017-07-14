@@ -24,9 +24,21 @@ public class UserIntegridad {
     @GeneratedValue
     private UUID id;
 
-    private String name;
+    private String firstName;
+    private String lastName;
+    private String celPhone;
+    private String phone;
+    private String city;
+    private String address1;
+    private String address2;
+    private String cedula;
+    private String ruc;
+    
+    private long dateCreated;
     private String userName;
     private String password;
+    
+    
     private String validation;
     private boolean active;
     

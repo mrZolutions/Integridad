@@ -52,7 +52,8 @@
       ng-disabled="vm.email === undefined || vm.password === undefined">
       Ingresar
     </button>
-    <button type="button" class="btn btn-success" ng-click="vm.init = false">
+    <button type="button" class="btn btn-success"
+    ng-click="vm.init = false; vm.userIntegridad = {}; vm.success=undefined; vm.error=undefined">
       Registrarse
     </button>
   </div>
@@ -73,14 +74,57 @@
     <div class="row">
       <div class="form-group col-md-6">
         <label>Nombre: </label>
-        <input type="text" ng-model="vm.userIntegridad.name" class="form-control">
+        <input type="text" ng-model="vm.userIntegridad.firstName" class="form-control">
       </div>
 
       <div class="form-group col-md-6">
-        <label>Nickname: </label>
-        <input type="text" ng-model="vm.userIntegridad.userName" class="form-control">
+        <label>Apellido: </label>
+        <input type="text" ng-model="vm.userIntegridad.lastName" class="form-control">
       </div>
     </div>
+
+    <div class="row">
+      <div class="form-group col-md-6">
+        <label>Tel&eacute;fono: (incluir c&oacute;digo de provincia ej: 02) </label>
+        <input type="text" onkeypress='return event.charCode >= 48 && event.charCode <= 57'
+        ng-model="vm.userIntegridad.phone" class="form-control" maxlength="9">
+      </div>
+
+      <div class="form-group col-md-6">
+        <label>Tel&eacute;fono celular: </label>
+        <input type="text" onkeypress='return event.charCode >= 48 && event.charCode <= 57'
+        ng-model="vm.userIntegridad.celPhone" class="form-control" maxlength="10">
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="form-group col-md-12">
+        <label>Direcci&oacute;n: </label>
+        <input type="text" ng-model="vm.userIntegridad.address1" class="form-control">
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="form-group col-md-12">
+        <label>Intersecci&oacute;n: </label>
+        <input type="text" ng-model="vm.userIntegridad.address2" class="form-control">
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="form-group col-md-6">
+        <label>C&eacute;dula: </label>
+        <input type="text" onkeypress='return event.charCode >= 48 && event.charCode <= 57'
+        ng-model="vm.userIntegridad.cedula" class="form-control" maxlength="10">
+      </div>
+
+      <div class="form-group col-md-6">
+        <label>Ruc: </label>
+        <input type="text" onkeypress='return event.charCode >= 48 && event.charCode <= 57'
+        ng-model="vm.userIntegridad.ruc" class="form-control" maxlength="13">
+      </div>
+    </div>
+
     <div class="row">
       <div class="form-group col-md-6">
         <label>E-mail: </label>
@@ -98,7 +142,8 @@
       ng-disabled="vm.userIntegridad.email === undefined || vm.userIntegridad.password === undefined">
       Registrar
     </button>
-    <button type="button" class="btn btn-success" ng-click="vm.init = true">
+    <button type="button" class="btn btn-success"
+    ng-click="vm.init = true; vm.userIntegridad = {}; vm.success=undefined; vm.error=undefined">
       Cancelar
     </button>
   </div>
