@@ -13,7 +13,9 @@ angular.module('integridadUiApp')
     vm.loading = false;
 
     vm.init = true;
+    vm.recover = false;
     vm.userIntegridad = {};
+    // vm.idTypes=[];
 
     vm.error = undefined;
     vm.success = undefined;
@@ -31,6 +33,7 @@ angular.module('integridadUiApp')
     }
 
     vm.register = function(){
+      vm.userIntegridad.birthDay = $('#pickerBirthday').data("DateTimePicker").date().toDate().getTime();
       vm.userIntegridad.email = vm.userIntegridad.email.trim();
       vm.userIntegridad.password = vm.userIntegridad.password.trim();
 
@@ -62,5 +65,18 @@ angular.module('integridadUiApp')
         });
       }
     };
+
+    vm.recoverPass = function(){
+      vm.loading = true;
+      var user = {email: vm.email};
+      authService.recoverUser(user).then(function (response) {
+        vm.loading = false;
+        vm.recover = false;
+        vm.success = 'Se envio un email a la cuenta registrada con un nuevo Password para ingresar al sistema.';
+      }).catch(function (error) {
+        vm.loading = false;
+        vm.error = error.data;
+      });
+    }
 
   });

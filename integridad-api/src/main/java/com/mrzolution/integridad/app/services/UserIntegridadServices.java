@@ -78,4 +78,29 @@ public class UserIntegridadServices {
 		throw new BadRequestException("Wrong URL to validate");
 	}
 
+	public UserIntegridad recoverPassword(String eMail) {
+		log.info("UserIntegridadServices recoverPassword: {}", eMail);
+		UserIntegridad userResponse = userIntegridadRepository.findByEmailIgnoreCaseAndActive(eMail, true);
+		
+		if(userResponse == null){
+			throw new BadRequestException("Invalid Email");
+		}
+		
+		log.info("UserIntegridadServices recoverPassword user found: {}", userResponse.getId());
+		UUID rand = UUID.randomUUID();
+		String newPass = rand.toString();
+		
+		log.info("UserIntegridadServices recoverPassword user found new pass: {}", newPass);
+		String encoded = passwordEncoder.encode(newPass);
+		userResponse.setPassword(encoded);
+		
+		userIntegridadRepository.save(userResponse);
+		
+		log.info("UserIntegridadServices recoverPassword user updated with new pass: {}", userResponse.getId());
+		
+		mailingService.sendEmailRecoveryPass(userResponse, newPass);
+		
+		return userResponse;
+	}
+
 }

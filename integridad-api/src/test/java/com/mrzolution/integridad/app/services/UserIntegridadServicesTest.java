@@ -154,5 +154,22 @@ public class UserIntegridadServicesTest {
 		
 		Assert.assertNull(activated);
 	}
+	
+	@Test
+	public void recoverPasswordTest(){
+		String mail = "daniel@yahoo.com";
+		
+		user.setActive(true);
+		user.setEmail(mail);
+		Mockito.when(userIntegridadRepository.findByEmailIgnoreCaseAndActive(mail, true)).thenReturn(user);
+		Mockito.when(userIntegridadRepository.save(user)).thenReturn(user);
+		
+		UserIntegridad recovered = service.recoverPassword(mail);
+		
+		Mockito.verify(userIntegridadRepository, Mockito.times(1)).save(Mockito.any(UserIntegridad.class));
+		Mockito.verify(mailingService, Mockito.times(1)).sendEmailRecoveryPass(Mockito.any(UserIntegridad.class), Mockito.anyString());
+		
+		Assert.assertNotNull(recovered);
+	}
 
 }

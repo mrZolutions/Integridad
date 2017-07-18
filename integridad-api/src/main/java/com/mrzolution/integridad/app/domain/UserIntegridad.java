@@ -33,6 +33,7 @@ public class UserIntegridad {
     private String address2;
     private String cedula;
     private String ruc;
+    private long birthDay;
     
     private long dateCreated;
     private String userName;
