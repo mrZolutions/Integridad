@@ -8,7 +8,7 @@
  * Controller of the integridadUiApp
  */
 angular.module('integridadUiApp')
-  .controller('MainCtrl', function ($location, authService, utilValidationService) {
+  .controller('MainCtrl', function ($rootScope, $location, authService, utilValidationService, permissionService, $localStorage) {
     var vm = this;
     vm.loading = false;
 
@@ -20,10 +20,10 @@ angular.module('integridadUiApp')
     vm.error = undefined;
     vm.success = undefined;
 
-    vm.login = function(){
-      vm.loading = true;
-      var user = {email: vm.email, password: vm.password};
-      authService.authUser(user).then(function (response) {
+    function getPermissions(){
+      permissionService.getPermissions($localStorage.user.userType).then(function (respnse) {
+        $localStorage.permissions = respnse;
+        $rootScope.updateMenu();
         vm.loading = false;
         $location.path('/home');
       }).catch(function (error) {
@@ -31,6 +31,18 @@ angular.module('integridadUiApp')
         vm.error = error.data;
       });
     }
+
+    vm.login = function(){
+      vm.loading = true;
+      var user = {email: vm.email, password: vm.password};
+      authService.authUser(user).then(function (response) {
+        $localStorage.user = response;
+        getPermissions();
+      }).catch(function (error) {
+        vm.loading = false;
+        vm.error = error.data;
+      });
+    };
 
     vm.register = function(){
       vm.userIntegridad.birthDay = $('#pickerBirthday').data("DateTimePicker").date().toDate().getTime();
@@ -77,6 +89,6 @@ angular.module('integridadUiApp')
         vm.loading = false;
         vm.error = error.data;
       });
-    }
+    };
 
   });

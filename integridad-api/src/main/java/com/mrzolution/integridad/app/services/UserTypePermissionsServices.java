@@ -16,10 +16,15 @@ public class UserTypePermissionsServices {
 	@Autowired
 	UserTypePermissionsRepository userTypePermissionsRepository;
 	
+	public UserTypePermissions create(UserTypePermissions userTypePermissions){
+		return userTypePermissionsRepository.save(userTypePermissions);
+	}
+	
 	public Iterable<UserTypePermissions> findByUserType(UserType userType){
 		Iterable<UserTypePermissions> userTypePermissions = userTypePermissionsRepository.findByUserType(userType);
 		for (UserTypePermissions userTypePermission : userTypePermissions) {
-			userTypePermission.setFatherListToNull();
+//			userTypePermission.setFatherListToNull();
+			userTypePermission.setUserType(null);
 		}
 		return userTypePermissions;
 	}
