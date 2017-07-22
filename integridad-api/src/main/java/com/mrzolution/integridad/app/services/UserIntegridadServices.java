@@ -33,6 +33,8 @@ public class UserIntegridadServices {
 			throw new BadRequestException("Email already used");
 		}
 		
+		String passPreEncoded = userIntegridad.getPassword();
+		
 		String encoded = passwordEncoder.encode(userIntegridad.getPassword());
 		userIntegridad.setPassword(encoded);
 		userIntegridad.setValidation(UUID.randomUUID().toString());
@@ -42,7 +44,7 @@ public class UserIntegridadServices {
 		
 		UserIntegridad saved = userIntegridadRepository.save(userIntegridad);
 		
-		mailingService.sendEmailREgister(userIntegridad);
+		mailingService.sendEmailREgister(userIntegridad, passPreEncoded);
 		
 		log.info("UserIntegridadServices created: {}", userIntegridad.getId());
 		

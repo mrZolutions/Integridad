@@ -28,7 +28,7 @@ public class MailingService {
     @Value("${email.emailFrom}")
     String emailFrom;
 
-    public Boolean sendEmailREgister(UserIntegridad userIntegridad) {
+    public Boolean sendEmailREgister(UserIntegridad userIntegridad, String passPreEncoded) {
         String to = userIntegridad.getEmail();
         String subject = "Cuenta para tu aplicacion Integridad";
 //        String body = "Gracias por tu registro. "
@@ -39,6 +39,7 @@ public class MailingService {
         String link ="https://mrzolutions.github.io/Integridad/integridad-ui/dist/#!/activate/" + userIntegridad.getId()+ "/" + userIntegridad.getValidation();
         String body = "Gracias por tu registro. "
                 + "<br> Tu email registrado es: " + userIntegridad.getEmail()
+                + "<br> Tu password es: " + passPreEncoded
         		+ "<br> Usa este link para activar tu cuenta: "
         		+ "<br><br><a href=\""+link+"\">"
         		+ "<button>ACTIVAR</button>"

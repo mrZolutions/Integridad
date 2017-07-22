@@ -66,6 +66,16 @@ public class UserTypeServices {
 		return usersType;
 	}
 	
+	public Iterable<UserType> getAllLazy(){
+		log.info("UserTypeServices getAllLazy");
+		Iterable<UserType> usersType = userTypeRepository.findAll();
+		for (UserType userType : usersType) {
+			userType.setListsNull();
+		}
+		log.info("UserTypeServices getAllLazy size retrieved: {}", Iterables.size(usersType));
+		return usersType;
+	}
+	
 	private void populateChildren(UserType userType) {
 		log.info("UserTypeServices populateChildren userTypeId: {}", userType.getId());
 		List<UserIntegridad> userIntegridadList = new ArrayList<>();

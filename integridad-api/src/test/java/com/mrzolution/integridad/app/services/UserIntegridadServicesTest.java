@@ -47,7 +47,7 @@ public class UserIntegridadServicesTest {
 		System.out.println(created);
 		
 		Mockito.verify(userIntegridadRepository, Mockito.times(1)).save(Mockito.any(UserIntegridad.class));
-		Mockito.verify(mailingService, Mockito.times(1)).sendEmailREgister(Mockito.any(UserIntegridad.class));
+		Mockito.verify(mailingService, Mockito.times(1)).sendEmailREgister(Mockito.any(UserIntegridad.class), Mockito.anyString());
 		
 		Assert.assertNotNull(created.getValidation());
 		Assert.assertFalse(created.isActive());
