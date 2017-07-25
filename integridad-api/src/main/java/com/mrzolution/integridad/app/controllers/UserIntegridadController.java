@@ -63,4 +63,18 @@ public class UserIntegridadController {
 	    }
 		return new ResponseEntity<UserIntegridad>(response, HttpStatus.OK);
 	}
+	
+	@RequestMapping(method = RequestMethod.POST, value="/recover")
+    public ResponseEntity recoverPass(@RequestBody UserIntegridad userIntegridad){
+		String email = userIntegridad.getEmail();
+		log.info("UserIntegridadController recoverPass: {}", email);
+		UserIntegridad response = null;
+		try {
+			response = service.recoverPassword(email);
+		}catch(BadRequestException e) {
+			log.info("UserIntegridadController recoverPass Exception thrown: {}", e.getMessage());	    
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+	    }
+		return new ResponseEntity<UserIntegridad>(response, HttpStatus.OK);
+	}
 }

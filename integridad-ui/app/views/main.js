@@ -8,20 +8,22 @@
  * Controller of the integridadUiApp
  */
 angular.module('integridadUiApp')
-  .controller('MainCtrl', function ($location, authService, utilValidationService) {
+  .controller('MainCtrl', function ($rootScope, $location, authService, utilValidationService, permissionService, $localStorage) {
     var vm = this;
     vm.loading = false;
 
     vm.init = true;
+    vm.recover = false;
     vm.userIntegridad = {};
+    // vm.idTypes=[];
 
     vm.error = undefined;
     vm.success = undefined;
 
-    vm.login = function(){
-      vm.loading = true;
-      var user = {email: vm.email, password: vm.password};
-      authService.authUser(user).then(function (response) {
+    function getPermissions(){
+      permissionService.getPermissions($localStorage.user.userType).then(function (respnse) {
+        $localStorage.permissions = respnse;
+        $rootScope.updateMenu();
         vm.loading = false;
         $location.path('/home');
       }).catch(function (error) {
@@ -30,7 +32,20 @@ angular.module('integridadUiApp')
       });
     }
 
+    vm.login = function(){
+      vm.loading = true;
+      var user = {email: vm.email, password: vm.password};
+      authService.authUser(user).then(function (response) {
+        $localStorage.user = response;
+        getPermissions();
+      }).catch(function (error) {
+        vm.loading = false;
+        vm.error = error.data;
+      });
+    };
+
     vm.register = function(){
+      vm.userIntegridad.birthDay = $('#pickerBirthday').data("DateTimePicker").date().toDate().getTime();
       vm.userIntegridad.email = vm.userIntegridad.email.trim();
       vm.userIntegridad.password = vm.userIntegridad.password.trim();
 
@@ -61,6 +76,19 @@ angular.module('integridadUiApp')
           vm.error = error.data;
         });
       }
+    };
+
+    vm.recoverPass = function(){
+      vm.loading = true;
+      var user = {email: vm.email};
+      authService.recoverUser(user).then(function (response) {
+        vm.loading = false;
+        vm.recover = false;
+        vm.success = 'Se envio un email a la cuenta registrada con un nuevo Password para ingresar al sistema.';
+      }).catch(function (error) {
+        vm.loading = false;
+        vm.error = error.data;
+      });
     };
 
   });
