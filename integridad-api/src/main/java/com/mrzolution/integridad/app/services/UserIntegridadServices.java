@@ -7,7 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import com.mrzolution.integridad.app.cons.Constants;
 import com.mrzolution.integridad.app.domain.UserIntegridad;
+import com.mrzolution.integridad.app.domain.UserType;
 import com.mrzolution.integridad.app.exceptions.BadRequestException;
 import com.mrzolution.integridad.app.repositories.UserIntegridadRepository;
 
@@ -26,12 +28,17 @@ public class UserIntegridadServices {
 	@Autowired
 	MailingService mailingService;
 	
+	@Autowired
+	UserTypeServices userTypeServices;
+	
 	public UserIntegridad create(UserIntegridad userIntegridad) throws BadRequestException{
 		log.info("UserIntegridadServices create: {}", userIntegridad.getEmail());
 		
 		if(userIntegridadRepository.findByEmailIgnoreCaseAndActive(userIntegridad.getEmail(), true) != null){
 			throw new BadRequestException("Email already used");
 		}
+		
+		String passPreEncoded = userIntegridad.getPassword();
 		
 		String encoded = passwordEncoder.encode(userIntegridad.getPassword());
 		userIntegridad.setPassword(encoded);
@@ -40,9 +47,14 @@ public class UserIntegridadServices {
 		userIntegridad.setDateCreated(new Date().getTime());
 		log.info("UserIntegridadServices create: {} password Encoded", userIntegridad.getEmail());
 		
+		if(userIntegridad.getUserType() == null){
+			UserType userType = userTypeServices.getByCode(Constants.USER_TYPE_EMP_CODE);
+			userIntegridad.setUserType(userType);
+		}
+		
 		UserIntegridad saved = userIntegridadRepository.save(userIntegridad);
 		
-		mailingService.sendEmailREgister(userIntegridad);
+		mailingService.sendEmailREgister(userIntegridad, passPreEncoded);
 		
 		log.info("UserIntegridadServices created: {}", userIntegridad.getId());
 		
@@ -76,6 +88,31 @@ public class UserIntegridadServices {
 			return activeUser;
 		}
 		throw new BadRequestException("Wrong URL to validate");
+	}
+
+	public UserIntegridad recoverPassword(String eMail) {
+		log.info("UserIntegridadServices recoverPassword: {}", eMail);
+		UserIntegridad userResponse = userIntegridadRepository.findByEmailIgnoreCaseAndActive(eMail, true);
+		
+		if(userResponse == null){
+			throw new BadRequestException("Invalid Email");
+		}
+		
+		log.info("UserIntegridadServices recoverPassword user found: {}", userResponse.getId());
+		UUID rand = UUID.randomUUID();
+		String newPass = rand.toString();
+		
+		log.info("UserIntegridadServices recoverPassword user found new pass: {}", newPass);
+		String encoded = passwordEncoder.encode(newPass);
+		userResponse.setPassword(encoded);
+		
+		userIntegridadRepository.save(userResponse);
+		
+		log.info("UserIntegridadServices recoverPassword user updated with new pass: {}", userResponse.getId());
+		
+		mailingService.sendEmailRecoveryPass(userResponse, newPass);
+		
+		return userResponse;
 	}
 
 }

@@ -28,13 +28,40 @@ public class MailingService {
     @Value("${email.emailFrom}")
     String emailFrom;
 
-    public Boolean sendEmailREgister(UserIntegridad userIntegridad) {
+    public Boolean sendEmailREgister(UserIntegridad userIntegridad, String passPreEncoded) {
         String to = userIntegridad.getEmail();
         String subject = "Cuenta para tu aplicacion Integridad";
+//        String body = "Gracias por tu registro. "
+//                + "\n\n Tu email registrado es: " + userIntegridad.getEmail()
+//        		+ "\n\n Usa este link para activar tu cuenta: "
+//        		+ "\n\nhttps://mrzolutions.github.io/Integridad/integridad-ui/dist/#!/activate/" + userIntegridad.getId()+ "/" + userIntegridad.getValidation();
+        
+        String link ="https://mrzolutions.github.io/Integridad/integridad-ui/dist/#!/activate/" + userIntegridad.getId()+ "/" + userIntegridad.getValidation();
         String body = "Gracias por tu registro. "
-                + "\n\n Tu email registrado es: " + userIntegridad.getEmail()
-        		+ "\n\n Usa este link para activar tu cuenta: "
-        		+ "\n\nhttps://mrzolutions.github.io/Integridad/integridad-ui/dist/#!/activate/" + userIntegridad.getId()+ "/" + userIntegridad.getValidation();
+                + "<br> Tu email registrado es: " + userIntegridad.getEmail()
+                + "<br> Tu password es: " + passPreEncoded
+        		+ "<br> Usa este link para activar tu cuenta: "
+        		+ "<br><br><a href=\""+link+"\">"
+        		+ "<button>ACTIVAR</button>"
+        		+ "</a>";
+    
+        
+        sendEmail(subject, body, to);
+        return true;
+    }
+    
+    public Boolean sendEmailRecoveryPass(UserIntegridad userIntegridad, String pass){
+    	String to = userIntegridad.getEmail();
+        String subject = "Clave Recuperada para Sistema Integridad";
+        
+        String link ="https://mrzolutions.github.io/Integridad/integridad-ui/dist/#!/";
+        String body = "Tu password temporal para ingresar al sistema es. "
+                + "<br> Tu email registrado es: " + userIntegridad.getEmail()
+        		+ "<br> Password: " + pass
+        		+ "<br><br><a href=\""+link+"\">"
+        		+ "<button>Ingrear</button>"
+        		+ "</a>";
+    
         
         sendEmail(subject, body, to);
         return true;
@@ -69,8 +96,9 @@ public class MailingService {
             message.setFrom(new InternetAddress(emailFrom));
             message.setRecipients(Message.RecipientType.TO,
                     InternetAddress.parse(to));
+            message.setContent(body, "text/html; charset=utf-8");
             message.setSubject(subject);
-            message.setText(body);
+//            message.setText(body);
 
             Transport.send(message);
             

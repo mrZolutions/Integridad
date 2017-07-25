@@ -16,6 +16,10 @@ function routes($routeProvider) {
       templateUrl: 'views/home/home.tpl.html',
       controller: 'HomeCtrl',
       controllerAs: 'vm'
+    }).when('/users', {
+      templateUrl: 'views/users/users.tpl.html',
+      controller: 'UsersCtrl',
+      controllerAs: 'vm'
     }).otherwise({
     redirectTo: '/'
   });

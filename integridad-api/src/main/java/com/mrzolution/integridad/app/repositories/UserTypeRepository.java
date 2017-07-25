@@ -12,5 +12,7 @@ import org.springframework.data.repository.CrudRepository;
 @Repository
 @Qualifier(value="UserTypeRepository")
 public interface UserTypeRepository extends CrudRepository<UserType, UUID>{
+	
+	UserType findByCode(String code);
 
 }

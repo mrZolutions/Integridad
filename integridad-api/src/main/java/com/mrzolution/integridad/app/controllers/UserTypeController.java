@@ -78,4 +78,17 @@ public class UserTypeController {
 	    }
 		return new ResponseEntity<Iterable<UserType>>(response, HttpStatus.OK);
 	}
+	
+	@RequestMapping(method = RequestMethod.GET, value="/lazy")
+    public ResponseEntity getAllLazy(){
+		log.info("UserTypeController getAllLazy");
+		Iterable<UserType>  response = null;
+		try {
+			response = service.getAllLazy();
+		}catch(BadRequestException e) {
+			log.info("UserTypeController getAll Exception thrown: {}", e.getMessage());	    
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+	    }
+		return new ResponseEntity<Iterable<UserType>>(response, HttpStatus.OK);
+	}
 }
