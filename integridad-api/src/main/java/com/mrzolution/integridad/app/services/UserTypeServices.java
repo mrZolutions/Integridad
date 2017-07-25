@@ -76,6 +76,15 @@ public class UserTypeServices {
 		return usersType;
 	}
 	
+	public UserType getByCode(String code){
+		log.info("UserTypeServices getByCode: {}", code);
+		UserType typeCode = userTypeRepository.findByCode(code);
+		if(typeCode != null){
+			typeCode.setListsNull();
+		}
+		return typeCode;
+	}
+	
 	private void populateChildren(UserType userType) {
 		log.info("UserTypeServices populateChildren userTypeId: {}", userType.getId());
 		List<UserIntegridad> userIntegridadList = new ArrayList<>();

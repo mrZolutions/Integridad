@@ -7,7 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import com.mrzolution.integridad.app.cons.Constants;
 import com.mrzolution.integridad.app.domain.UserIntegridad;
+import com.mrzolution.integridad.app.domain.UserType;
 import com.mrzolution.integridad.app.exceptions.BadRequestException;
 import com.mrzolution.integridad.app.repositories.UserIntegridadRepository;
 
@@ -26,6 +28,9 @@ public class UserIntegridadServices {
 	@Autowired
 	MailingService mailingService;
 	
+	@Autowired
+	UserTypeServices userTypeServices;
+	
 	public UserIntegridad create(UserIntegridad userIntegridad) throws BadRequestException{
 		log.info("UserIntegridadServices create: {}", userIntegridad.getEmail());
 		
@@ -41,6 +46,11 @@ public class UserIntegridadServices {
 		userIntegridad.setActive(false);
 		userIntegridad.setDateCreated(new Date().getTime());
 		log.info("UserIntegridadServices create: {} password Encoded", userIntegridad.getEmail());
+		
+		if(userIntegridad.getUserType() == null){
+			UserType userType = userTypeServices.getByCode(Constants.USER_TYPE_EMP_CODE);
+			userIntegridad.setUserType(userType);
+		}
 		
 		UserIntegridad saved = userIntegridadRepository.save(userIntegridad);
 		

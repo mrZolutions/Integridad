@@ -12,6 +12,7 @@ import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import com.mrzolution.integridad.app.cons.Constants;
 import com.mrzolution.integridad.app.domain.UserIntegridad;
 import com.mrzolution.integridad.app.domain.UserType;
 import com.mrzolution.integridad.app.exceptions.BadRequestException;
@@ -32,6 +33,9 @@ public class UserIntegridadServicesTest {
 	@Mock
 	MailingService mailingService;
 	
+	@Mock
+	UserTypeServices userTypeServices;
+	
 	UserIntegridad user;
 	
 	@Before
@@ -46,6 +50,22 @@ public class UserIntegridadServicesTest {
 		UserIntegridad created = service.create(user);
 		System.out.println(created);
 		
+		Mockito.verify(userIntegridadRepository, Mockito.times(1)).save(Mockito.any(UserIntegridad.class));
+		Mockito.verify(mailingService, Mockito.times(1)).sendEmailREgister(Mockito.any(UserIntegridad.class), Mockito.anyString());
+		
+		Assert.assertNotNull(created.getValidation());
+		Assert.assertFalse(created.isActive());
+	}
+	
+	@Test
+	public void createEmployeeTest(){
+		user.setUserType(null);
+		Mockito.when(userIntegridadRepository.save(user)).thenReturn(user);
+		
+		UserIntegridad created = service.create(user);
+		System.out.println(created);
+
+		Mockito.verify(userTypeServices, Mockito.times(1)).getByCode(Constants.USER_TYPE_EMP_CODE);
 		Mockito.verify(userIntegridadRepository, Mockito.times(1)).save(Mockito.any(UserIntegridad.class));
 		Mockito.verify(mailingService, Mockito.times(1)).sendEmailREgister(Mockito.any(UserIntegridad.class), Mockito.anyString());
 		
