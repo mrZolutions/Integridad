@@ -45,8 +45,12 @@
               <li ng-repeat="option in permissions">
                 <a href="{{option.path}}">{{option.menuName}}</a>
               </li>
-              <li>
+              <li ng-show="nameType != undefined">
                 <a href="" ng-click="logout()">Salir</a>
+              </li>
+
+              <li ng-show="nameType != undefined">
+                <a><b>{{nameType}}</b></a>
               </li>
             </ul>
 

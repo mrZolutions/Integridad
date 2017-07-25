@@ -13,10 +13,12 @@ angular.module('integridadUiApp')
 
     $rootScope.updateMenu = function () {
       $scope.permissions = $localStorage.permissions;
+      $scope.nameType = $localStorage.user.firstName + ' - ' + $localStorage.user.userType.name;
     }
 
     $scope.logout = function () {
       $scope.permissions = [];
+      $scope.nameType = undefined;
       $localStorage.permissions = undefined;
       $localStorage.user = undefined;
       $location.path('/');
