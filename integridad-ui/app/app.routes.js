@@ -20,6 +20,10 @@ function routes($routeProvider) {
       templateUrl: 'views/users/users.tpl.html',
       controller: 'UsersCtrl',
       controllerAs: 'vm'
+    }).when('/users/edit', {
+      templateUrl: 'views/users/edit.tpl.html',
+      controller: 'UserEditCtrl',
+      controllerAs: 'vm'
     }).otherwise({
     redirectTo: '/'
   });
