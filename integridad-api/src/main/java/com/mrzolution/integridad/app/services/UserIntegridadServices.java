@@ -68,9 +68,11 @@ public class UserIntegridadServices {
 			throw new BadRequestException("Email already used");
 		}
 		
-		String encoded = passwordEncoder.encode(userIntegridad.getPassword());
-		userIntegridad.setPassword(encoded);
-		log.info("UserIntegridadServices update: {} password Encoded", userIntegridad.getEmail());
+		if(!"".equals(userIntegridad.getPassword())){
+			String encoded = passwordEncoder.encode(userIntegridad.getPassword());
+			userIntegridad.setPassword(encoded);
+			log.info("UserIntegridadServices update: {} password Encoded", userIntegridad.getEmail());
+		}
 		
 		if(userIntegridad.getUserType() == null){
 			UserType userType = userTypeServices.getByCode(Constants.USER_TYPE_EMP_CODE);
@@ -136,6 +138,8 @@ public class UserIntegridadServices {
 		log.info("UserIntegridadServices recoverPassword user updated with new pass: {}", userResponse.getId());
 		
 		mailingService.sendEmailRecoveryPass(userResponse, newPass);
+		
+		userResponse.setFatherListToNull();
 		
 		return userResponse;
 	}

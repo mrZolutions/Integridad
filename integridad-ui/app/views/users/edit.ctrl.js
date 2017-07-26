@@ -27,13 +27,15 @@ angular.module('integridadUiApp')
     vm.editUser = function(){
       if(vm.changePassword && !vm.passwordNotMatch){
         vm.userIntegridad.password = vm.newPass;
+      } else {
+        vm.userIntegridad.password = '';
       }
 
       vm.userIntegridad.birthDay = $('#pickerBirthday').data("DateTimePicker").date().toDate().getTime();
       vm.userIntegridad.email = vm.userIntegridad.email.trim();
 
       var validationError = utilValidationService.isAnyInArrayStringEmpty([
-        vm.userIntegridad.email, vm.userIntegridad.password, vm.userIntegridad.firstName,
+        vm.userIntegridad.email, vm.userIntegridad.firstName,
         vm.userIntegridad.lastName
       ]);
 
