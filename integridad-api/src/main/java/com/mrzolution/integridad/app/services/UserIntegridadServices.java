@@ -77,11 +77,13 @@ public class UserIntegridadServices {
 			userIntegridad.setUserType(userType);
 		}
 		
-		UserIntegridad saved = userIntegridadRepository.save(userIntegridad);
+		UserIntegridad updated = userIntegridadRepository.save(userIntegridad);
 		
 		log.info("UserIntegridadServices update: {}", userIntegridad.getId());
 		
-		return saved;
+		updated.setFatherListToNull();
+		
+		return updated;
 	}
 
 	public UserIntegridad authenticate(UserIntegridad user) throws BadRequestException{
