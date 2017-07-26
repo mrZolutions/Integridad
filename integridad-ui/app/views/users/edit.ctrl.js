@@ -49,10 +49,10 @@ angular.module('integridadUiApp')
 
       if(!validationError){
         vm.loading = true;
-        authService.registerUser(vm.userIntegridad).then(function (response) {
+        authService.update(vm.userIntegridad).then(function (response) {
           vm.loading = false;
           vm.error = undefined;
-          vm.success = 'Resgistro realizado con exito. Se envio un email a la cuenta registrada para activar su cuenta';
+          vm.success = 'Perfil actualizado con exito';
         }).catch(function (error) {
           vm.loading = false;
           vm.error = error.data;

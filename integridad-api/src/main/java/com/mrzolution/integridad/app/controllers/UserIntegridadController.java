@@ -43,9 +43,9 @@ public class UserIntegridadController {
 		log.info("UserIntegridadController update: {}", userIntegridad.getId());
 		UserIntegridad response = null;
 		try {
-			response = service.create(userIntegridad);
+			response = service.update(userIntegridad);
 		}catch(BadRequestException e) {
-			log.error("UserIntegridadController create Exception thrown: {}", e.getMessage());	    
+			log.error("UserIntegridadController update Exception thrown: {}", e.getMessage());	    
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	    }
 		return new ResponseEntity<UserIntegridad>(response, HttpStatus.CREATED);
