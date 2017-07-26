@@ -64,11 +64,9 @@ public class UserIntegridadServices {
 	public UserIntegridad update (UserIntegridad userIntegridad) throws BadRequestException{
 		log.info("UserIntegridadServices update: {}", userIntegridad.getEmail());
 		
-		if(userIntegridadRepository.findByEmailIgnoreCaseAndActive(userIntegridad.getEmail(), true).getId() != userIntegridad.getId()){
+		if(!userIntegridadRepository.findByEmailIgnoreCaseAndActive(userIntegridad.getEmail(), true).getId().equals(userIntegridad.getId())){
 			throw new BadRequestException("Email already used");
 		}
-		
-		String passPreEncoded = userIntegridad.getPassword();
 		
 		String encoded = passwordEncoder.encode(userIntegridad.getPassword());
 		userIntegridad.setPassword(encoded);

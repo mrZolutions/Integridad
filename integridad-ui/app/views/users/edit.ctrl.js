@@ -49,7 +49,7 @@ angular.module('integridadUiApp')
 
       if(!validationError){
         vm.loading = true;
-        authService.update(vm.userIntegridad).then(function (response) {
+        authService.updateUser(vm.userIntegridad).then(function (response) {
           vm.loading = false;
           vm.error = undefined;
           vm.success = 'Perfil actualizado con exito';
