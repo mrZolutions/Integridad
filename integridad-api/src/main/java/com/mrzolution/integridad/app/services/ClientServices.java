@@ -1,5 +1,6 @@
 package com.mrzolution.integridad.app.services;
 
+import java.util.Date;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,7 @@ public class ClientServices {
 	
 	public Client create(Client client){
 		log.info("ClientServices create: {}", client.getName());
+		client.setDateCreated(new Date().getTime());
 		Client saved = clientRepository.save(client);
 		log.info("ClientServices created id: {}", saved.getId());
 		return saved;

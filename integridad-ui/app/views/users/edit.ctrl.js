@@ -8,7 +8,7 @@
  * Controller of the integridadUiApp
  */
 angular.module('integridadUiApp')
-  .controller('UserEditCtrl', function (utilStringService, utilValidationService, userTypeService, authService, $localStorage) {
+  .controller('UserEditCtrl', function ($rootScope, utilStringService, utilValidationService, userTypeService, authService, $localStorage) {
     var vm = this;
 
     vm.loading = false;
@@ -55,6 +55,8 @@ angular.module('integridadUiApp')
           vm.loading = false;
           vm.error = undefined;
           vm.success = 'Perfil actualizado con exito';
+          $localStorage.user = response;
+          $rootScope.updateMenu();
         }).catch(function (error) {
           vm.loading = false;
           vm.error = error.data;

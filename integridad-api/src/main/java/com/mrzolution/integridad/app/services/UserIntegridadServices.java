@@ -63,8 +63,9 @@ public class UserIntegridadServices {
 	
 	public UserIntegridad update (UserIntegridad userIntegridad) throws BadRequestException{
 		log.info("UserIntegridadServices update: {}", userIntegridad.getEmail());
+		UserIntegridad retrieved = userIntegridadRepository.findByEmailIgnoreCaseAndActive(userIntegridad.getEmail(), true);
 		
-		if(!userIntegridadRepository.findByEmailIgnoreCaseAndActive(userIntegridad.getEmail(), true).getId().equals(userIntegridad.getId())){
+		if(!retrieved.getId().equals(userIntegridad.getId())){
 			throw new BadRequestException("Email already used");
 		}
 		
@@ -72,6 +73,8 @@ public class UserIntegridadServices {
 			String encoded = passwordEncoder.encode(userIntegridad.getPassword());
 			userIntegridad.setPassword(encoded);
 			log.info("UserIntegridadServices update: {} password Encoded", userIntegridad.getEmail());
+		} else {
+			userIntegridad.setPassword(retrieved.getPassword());
 		}
 		
 		if(userIntegridad.getUserType() == null){
@@ -81,7 +84,7 @@ public class UserIntegridadServices {
 		
 		UserIntegridad updated = userIntegridadRepository.save(userIntegridad);
 		
-		log.info("UserIntegridadServices update: {}", userIntegridad.getId());
+		log.info("UserIntegridadServices updated: {}", userIntegridad.getId());
 		
 		updated.setFatherListToNull();
 		
