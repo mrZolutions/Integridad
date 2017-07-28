@@ -12,11 +12,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.mrzolution.integridad.app.domain.UserIntegridad;
 import com.mrzolution.integridad.app.domain.UserType;
-import com.mrzolution.integridad.app.exceptions.BadRequestException;
 import com.mrzolution.integridad.app.repositories.UserIntegridadRepository;
 import com.mrzolution.integridad.app.repositories.UserTypeRepository;
 

@@ -1,14 +1,18 @@
 package com.mrzolution.integridad.app.services;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.google.common.collect.Iterables;
+import com.mrzolution.integridad.app.domain.Bill;
 import com.mrzolution.integridad.app.domain.Client;
 import com.mrzolution.integridad.app.exceptions.BadRequestException;
+import com.mrzolution.integridad.app.repositories.BillRepository;
 import com.mrzolution.integridad.app.repositories.ClientRepository;
 
 import lombok.extern.slf4j.Slf4j;
@@ -19,10 +23,13 @@ public class ClientServices {
 	
 	@Autowired
 	ClientRepository clientRepository;
+	@Autowired
+	BillRepository billRepository;
 	
 	public Client create(Client client){
 		log.info("ClientServices create: {}", client.getName());
 		client.setDateCreated(new Date().getTime());
+		client.setActive(true);
 		Client saved = clientRepository.save(client);
 		log.info("ClientServices created id: {}", saved.getId());
 		return saved;
@@ -62,8 +69,29 @@ public class ClientServices {
 		return clients;
 	}
 	
+	public Iterable<Client> getAllLazy(){
+		log.info("ClientServices getAllLazy");
+		Iterable<Client> clients = clientRepository.findAll();
+		for (Client client : clients) {
+			client.setListsNull();
+			client.setFatherListToNull();
+		}
+		log.info("ClientServices getAllLazy size retrieved: {}", Iterables.size(clients));
+		return clients;
+	}
+	
 	private void populateChildren(Client client) {
 		log.info("ClientServices populateChildren clientId: {}", client.getId());
+		List<Bill> billList = new ArrayList<>();
+		Iterable<Bill> bills= billRepository.findByClient(client);
+		
+		for (Bill bill : bills) {
+			bill.setClient(null);
+			
+			billList.add(bill);
+		}
+		
+		client.setBills(billList);
 		log.info("ClientServices populateChildren FINISHED clientId: {}", client.getId());
 	}
 

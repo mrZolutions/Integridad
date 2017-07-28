@@ -8,4 +8,16 @@ angular
       });
     };
 
+    this.update = function (client) {
+      return securityService.put('/client', client).then(function successCallback(response) {
+        return response.data;
+      });
+    };
+
+    this.getLazy = function () {
+      return securityService.get('/client/lazy').then(function successCallback(response) {
+        return response.data;
+      });
+    };
+
   });

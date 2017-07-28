@@ -8,14 +8,68 @@
  * Controller of the integridadUiApp
  */
 angular.module('integridadUiApp')
-  .controller('ClientsCtrl', function (utilStringService, utilValidationService, clientService) {
+  .controller('ClientsCtrl', function (utilStringService, utilValidationService, countryListService, clientService) {
     var vm = this;
 
     vm.loading = false;
-    vm.client={};
+    vm.client=undefined;
+    vm.countryList = countryListService.getCountryList();
+    vm.citiesList = countryListService.getCitiesEcuador();
+
+    vm.clientList = undefined;
 
     function _activate(){
+      vm.loading = true;
+      clientService.getLazy().then(function (response) {
+        vm.clientList = response;
+        vm.loading = false;
+      }).catch(function (error) {
+        vm.loading = false;
+        vm.error = error.data;
+      });
     }
+
+    function create(){
+      console.log('----------------------------- create');
+      clientService.create(vm.client).then(function (response) {
+        vm.client=undefined;
+        _activate();
+        vm.error = undefined;
+        vm.success = 'Resgistro realizado con exito';
+      }).catch(function (error) {
+        vm.loading = false;
+        vm.error = error.data;
+      });
+    }
+
+    function update(){
+      console.log('----------------------------- update');
+      clientService.update(vm.client).then(function (response) {
+        vm.client=undefined;
+        _activate();
+        vm.error = undefined;
+        vm.success = 'Resgistro actualizado con exito';
+      }).catch(function (error) {
+        vm.loading = false;
+        vm.error = error.data;
+      });
+    }
+
+    vm.clientCreate = function(){
+      vm.success=undefined;
+      vm.error=undefined
+      vm.client={country:'Ecuador', city:'Quito'};
+    };
+
+    vm.clientEdit = function(client){
+      vm.success=undefined;
+      vm.error=undefined
+      vm.client=angular.copy(client);
+    };
+
+    vm.validateEcuador = function(){
+      if(vm.client.country !== 'Ecuador'){vm.client.city = undefined}
+    };
 
     vm.save = function(){
       var validationError = utilValidationService.isAnyInArrayStringEmpty([
@@ -26,21 +80,18 @@ angular.module('integridadUiApp')
         vm.error = 'Debe ingresar Nombres completos, una identificacion y el Codigo de Contabilidad';
       } else {
         vm.loading = true;
-        clientService.create(vm.client).then(function (response) {
-          vm.client = {};
-          vm.loading = false;
-          vm.error = undefined;
-          vm.success = 'Resgistro realizado con exito. Se envio un email a la cuenta registrada para activar su cuenta';
-        }).catch(function (error) {
-          vm.loading = false;
-          vm.error = error.data;
-        });
+        console.log('******************: ' + vm.client.id);
+        if(vm.client.id === undefined){
+          create();
+        }else{
+          update();
+        }
       }
 
     };
 
     vm.cancel=function(){
-      vm.client = {};
+      vm.client=undefined;
       vm.success=undefined;
       vm.error=undefined
     };

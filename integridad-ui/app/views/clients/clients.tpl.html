@@ -17,19 +17,63 @@
   </div>
 </div>
 
-<div class="panel panel-default">
+<div class="header">
+  <h4>
+    Clientes
+  </h4>
+</div>
+
+<div class="row" ng-show="vm.error !== undefined">
+  <div class="form-group col-md-12">
+    <div class="alert alert-danger">{{vm.error}}</div>
+  </div>
+</div>
+<div class="row" ng-show="vm.success !== undefined">
+  <div class="form-group col-md-12">
+    <div class="alert alert-success">{{vm.success}}</div>
+  </div>
+</div>
+
+<div ng-show="vm.client === undefined">
+
+  <input ng-model="searchText" class="form-control" placeholder="Buscar">
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th> CodConta </th>
+        <th> Nombre </th>
+        <th> Ruc / C&eacute;dula </th>
+        <th>
+          <button type="button" class="btn btn-primary" ng-click="vm.clientCreate()">
+            Crear
+          </button>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-show="vm.clientList == 0">
+        <td colspan="4">
+          No hay clientes ingresados
+        </td>
+      </tr>
+      <tr ng-repeat="clientEdit in vm.clientList | orderBy:name | filter:searchText">
+        <td>{{ clientEdit.codConta }}</td>
+        <td>{{ clientEdit.name }}</td>
+        <td>{{ clientEdit.identification }}</td>
+        <td>
+          <button type="button" class="btn btn-primary" ng-click="vm.clientEdit(clientEdit)">
+            Editar
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+</div>
+
+<div class="panel panel-default" ng-show="vm.client">
 
   <div class="panel-body">
-    <div class="row" ng-show="vm.error !== undefined">
-      <div class="form-group col-md-12">
-        <div class="alert alert-danger">{{vm.error}}</div>
-      </div>
-    </div>
-    <div class="row" ng-show="vm.success !== undefined">
-      <div class="form-group col-md-12">
-        <div class="alert alert-success">{{vm.success}}</div>
-      </div>
-    </div>
 
     <div class="row">
       <div class="form-group col-md-12">
@@ -54,12 +98,19 @@
 
     <div class="row">
       <div class="form-group col-md-6">
-        <label>Pa&iacute;s </label>
-        <input type="text" ng-model="vm.client.country" class="form-control">
+        <label>Pa&iacute;s: </label>
+        <select ng-options="country for country in vm.countryList"
+        ng-model="vm.client.country" class="form-control" ng-change="vm.validateEcuador()"></select>
       </div>
 
-      <div class="form-group col-md-6">
-        <label>City: </label>
+      <div class="form-group col-md-6" ng-show="vm.client.country === 'Ecuador'">
+        <label>Ciudad: </label>
+        <select ng-options="city for city in vm.citiesList"
+        ng-model="vm.client.city" class="form-control"></select>
+      </div>
+
+      <div class="form-group col-md-6" ng-show="vm.client.country !== 'Ecuador'">
+        <label>Ciudad: </label>
         <input type="text" ng-model="vm.client.city" class="form-control">
       </div>
     </div>
