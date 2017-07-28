@@ -38,6 +38,19 @@ public class UserIntegridadController {
 		return new ResponseEntity<UserIntegridad>(response, HttpStatus.CREATED);
 	}
 	
+	@RequestMapping(method = RequestMethod.PUT)
+    public ResponseEntity update(@RequestBody UserIntegridad userIntegridad){
+		log.info("UserIntegridadController update: {}", userIntegridad.getId());
+		UserIntegridad response = null;
+		try {
+			response = service.update(userIntegridad);
+		}catch(BadRequestException e) {
+			log.error("UserIntegridadController update Exception thrown: {}", e.getMessage());	    
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+	    }
+		return new ResponseEntity<UserIntegridad>(response, HttpStatus.CREATED);
+	}
+	
 	@RequestMapping(method = RequestMethod.POST, value="/auth")
     public ResponseEntity authenticate(@RequestBody UserIntegridad userIntegridad){
 		log.info("UserIntegridadController authenticate: {}", userIntegridad);

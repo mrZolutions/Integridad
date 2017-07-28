@@ -20,6 +20,12 @@ angular
       });
     };
 
+    this.updateUser = function (user) {
+      return securityService.put('/user', user).then(function successCallback(response) {
+        return response.data;
+      });
+    };
+
     this.recoverUser = function (user) {
       return securityService.post('/user/recover', user).then(function successCallback(response) {
         return response.data;

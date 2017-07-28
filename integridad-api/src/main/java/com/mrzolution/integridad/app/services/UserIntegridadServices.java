@@ -60,6 +60,36 @@ public class UserIntegridadServices {
 		
 		return saved;
 	}
+	
+	public UserIntegridad update (UserIntegridad userIntegridad) throws BadRequestException{
+		log.info("UserIntegridadServices update: {}", userIntegridad.getEmail());
+		UserIntegridad retrieved = userIntegridadRepository.findByEmailIgnoreCaseAndActive(userIntegridad.getEmail(), true);
+		
+		if(!retrieved.getId().equals(userIntegridad.getId())){
+			throw new BadRequestException("Email already used");
+		}
+		
+		if(!"".equals(userIntegridad.getPassword())){
+			String encoded = passwordEncoder.encode(userIntegridad.getPassword());
+			userIntegridad.setPassword(encoded);
+			log.info("UserIntegridadServices update: {} password Encoded", userIntegridad.getEmail());
+		} else {
+			userIntegridad.setPassword(retrieved.getPassword());
+		}
+		
+		if(userIntegridad.getUserType() == null){
+			UserType userType = userTypeServices.getByCode(Constants.USER_TYPE_EMP_CODE);
+			userIntegridad.setUserType(userType);
+		}
+		
+		UserIntegridad updated = userIntegridadRepository.save(userIntegridad);
+		
+		log.info("UserIntegridadServices updated: {}", userIntegridad.getId());
+		
+		updated.setFatherListToNull();
+		
+		return updated;
+	}
 
 	public UserIntegridad authenticate(UserIntegridad user) throws BadRequestException{
 		log.info("UserIntegridadServices authenticate: {}", user.getEmail());
@@ -111,6 +141,8 @@ public class UserIntegridadServices {
 		log.info("UserIntegridadServices recoverPassword user updated with new pass: {}", userResponse.getId());
 		
 		mailingService.sendEmailRecoveryPass(userResponse, newPass);
+		
+		userResponse.setFatherListToNull();
 		
 		return userResponse;
 	}
