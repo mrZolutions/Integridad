@@ -1,10 +1,14 @@
 package com.mrzolution.integridad.app.domain;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 
 import org.hibernate.validator.constraints.Email;
@@ -40,7 +44,11 @@ public class Client {
     @Email
     private String email;
     
+    @OneToMany(mappedBy = "client", cascade = CascadeType.ALL)
+    private List<Bill> bills;
+    
     public void setListsNull(){
+    	bills = null;
     }
     
     public void setFatherListToNull(){
@@ -49,6 +57,7 @@ public class Client {
     @Transient
     public static Client newClientTest(){
         Client client = new Client();
+        client.setBills(new ArrayList<>());
 
         return client;
     }
