@@ -44,7 +44,7 @@ public class ClientServicesTest {
 		List<Client> clients = new ArrayList<>();
 		clients.add(client);
 		
-		Mockito.when(clientRepository.findAll()).thenReturn(clients);
+		Mockito.when(clientRepository.findByActive(true)).thenReturn(clients);
 		
 		Iterable<Client> clientList = service.getAllLazy();
 		Assert.assertEquals(1, Iterables.size(clientList));

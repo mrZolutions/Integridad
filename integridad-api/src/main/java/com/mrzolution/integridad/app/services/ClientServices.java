@@ -71,7 +71,7 @@ public class ClientServices {
 	
 	public Iterable<Client> getAllLazy(){
 		log.info("ClientServices getAllLazy");
-		Iterable<Client> clients = clientRepository.findAll();
+		Iterable<Client> clients = clientRepository.findByActive(true);
 		for (Client client : clients) {
 			client.setListsNull();
 			client.setFatherListToNull();

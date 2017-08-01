@@ -11,5 +11,7 @@ import com.mrzolution.integridad.app.domain.Client;
 @Repository
 @Qualifier(value="ClientRepository")
 public interface ClientRepository extends CrudRepository<Client, UUID>{
+	
+	Iterable<Client> findByActive(boolean active);
 
 }

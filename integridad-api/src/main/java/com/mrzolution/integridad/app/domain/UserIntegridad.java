@@ -61,7 +61,7 @@ public class UserIntegridad {
     @Transient
     public static UserIntegridad newUserIntegridadTest(){
         UserIntegridad userIntegridad = new UserIntegridad();
-        userIntegridad.setUserType(new UserType());
+        userIntegridad.setUserType(UserType.newUserTypeTest());
 
         return userIntegridad;
     }

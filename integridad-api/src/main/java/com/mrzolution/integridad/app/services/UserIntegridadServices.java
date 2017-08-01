@@ -147,4 +147,10 @@ public class UserIntegridadServices {
 		return userResponse;
 	}
 
+	public Iterable<UserIntegridad> getAllActivesLazy() {
+		Iterable<UserIntegridad> userIntegridadList = userIntegridadRepository.findByActive(true);
+		userIntegridadList.forEach(user->{user.setFatherListToNull();});
+		return userIntegridadList;
+	}
+
 }
