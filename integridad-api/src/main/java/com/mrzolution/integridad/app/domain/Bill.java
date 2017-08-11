@@ -26,18 +26,26 @@ public class Bill {
     @JoinColumn(name = "client_id")
     private Client client;
     
+    @ManyToOne
+    @JoinColumn(name = "client_id")
+    private UserIntegridad userIntegridad;
+    
     
     public void setListsNull(){
     }
     
     public void setFatherListToNull(){
     	client.setListsNull();
+    	client.setFatherListToNull();
+    	userIntegridad.setListsNull();
+    	userIntegridad.setFatherListToNull();
     }
 
     @Transient
     public static Bill newBillTest(){
         Bill bill = new Bill();
         bill.setClient(Client.newClientTest());
+        bill.setUserIntegridad(UserIntegridad.newUserIntegridadTest());
 
         return bill;
     }

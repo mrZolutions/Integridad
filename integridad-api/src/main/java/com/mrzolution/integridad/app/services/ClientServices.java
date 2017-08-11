@@ -86,6 +86,7 @@ public class ClientServices {
 		Iterable<Bill> bills= billRepository.findByClient(client);
 		
 		for (Bill bill : bills) {
+			bill.setFatherListToNull();
 			bill.setClient(null);
 			
 			billList.add(bill);
