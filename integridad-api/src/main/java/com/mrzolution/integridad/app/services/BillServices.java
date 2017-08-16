@@ -8,13 +8,15 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.google.common.collect.Iterables;
 import com.mrzolution.integridad.app.domain.Bill;
-import com.mrzolution.integridad.app.domain.Client;
+import com.mrzolution.integridad.app.domain.Detail;
 import com.mrzolution.integridad.app.domain.UserIntegridad;
 import com.mrzolution.integridad.app.exceptions.BadRequestException;
+import com.mrzolution.integridad.app.father.Father;
+import com.mrzolution.integridad.app.father.FatherManageChildren;
 import com.mrzolution.integridad.app.repositories.BillRepository;
-import com.mrzolution.integridad.app.repositories.ClientRepository;
+import com.mrzolution.integridad.app.repositories.DetailChildRepository;
+import com.mrzolution.integridad.app.repositories.DetailRepository;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -24,6 +26,10 @@ public class BillServices {
 	
 	@Autowired
 	BillRepository billRepository;
+	@Autowired
+	DetailRepository detailRepository;
+	@Autowired
+	DetailChildRepository detailChildRepository;
 	
 	public Iterable<Bill> getByUserLazy(UserIntegridad user){
 		log.info("BillServices getByUserLazy: {}", user.getId());
@@ -35,75 +41,62 @@ public class BillServices {
 		
 		return bills;
 	}
-//	
-//	public Client create(Client client){
-//		log.info("ClientServices create: {}", client.getName());
-//		client.setDateCreated(new Date().getTime());
-//		client.setActive(true);
-//		Client saved = clientRepository.save(client);
-//		log.info("ClientServices created id: {}", saved.getId());
-//		return saved;
-//	}
-//	
-//	public Client update(Client client) throws BadRequestException{
-//		if(client.getId() == null){
-//			throw new BadRequestException("Invalid Client");
-//		}
-//		log.info("ClientServices update: {}", client.getName());
-//		client.setListsNull();
-//		Client updated = clientRepository.save(client);
-//		log.info("ClientServices update id: {}", updated.getId());
-//		return updated;
-//	}
-//	
-//	public Client getById(UUID id){
-//		log.info("ClientServices getById: {}", id);
-//		Client retrieved = clientRepository.findOne(id);
-//		if(retrieved != null){
-//			log.info("ClientServices retrieved id: {}", retrieved.getId());
-//		} else {
-//			log.info("ClientServices retrieved id NULL: {}", id);
-//		}
-//		
-//		populateChildren(retrieved);
-//		return retrieved;
-//	}
-//	
-//	public Iterable<Client> getAll(){
-//		log.info("ClientServices getAll");
-//		Iterable<Client> clients = clientRepository.findAll();
-//		for (Client client : clients) {
-//			populateChildren(client);
-//		}
-//		log.info("ClientServices getAll size retrieved: {}", Iterables.size(clients));
-//		return clients;
-//	}
-//	
-//	public Iterable<Client> getAllLazy(){
-//		log.info("ClientServices getAllLazy");
-//		Iterable<Client> clients = clientRepository.findByActive(true);
-//		for (Client client : clients) {
-//			client.setListsNull();
-//			client.setFatherListToNull();
-//		}
-//		log.info("ClientServices getAllLazy size retrieved: {}", Iterables.size(clients));
-//		return clients;
-//	}
-//	
-//	private void populateChildren(Client client) {
-//		log.info("ClientServices populateChildren clientId: {}", client.getId());
-//		List<Bill> billList = new ArrayList<>();
-//		Iterable<Bill> bills= billRepository.findByClient(client);
-//		
-//		for (Bill bill : bills) {
-//			bill.setFatherListToNull();
-//			bill.setClient(null);
-//			
-//			billList.add(bill);
-//		}
-//		
-//		client.setBills(billList);
-//		log.info("ClientServices populateChildren FINISHED clientId: {}", client.getId());
-//	}
+	
+	public Bill getById(UUID id) {
+		log.info("BillServices getById: {}", id);
+		Bill retrieved = billRepository.findOne(id);
+		if(retrieved != null){
+			log.info("BillServices retrieved id: {}", retrieved.getId());
+		} else {
+			log.info("BillServices retrieved id NULL: {}", id);
+		}
+		
+		populateChildren(retrieved);
+		return retrieved;
+	}
+	
+	public Bill create(Bill bill){
+		log.info("BillServices create");
+		bill.setDateCreated(new Date().getTime());
+		bill.setActive(true);
+		Bill saved = billRepository.save(bill);
+		log.info("BillServices created id: {}", saved.getId());
+		return saved;
+	}
+	
+	public Bill update(Bill bill) throws BadRequestException{
+		if(bill.getId() == null){
+			throw new BadRequestException("Invalid Bill");
+		}
+		log.info("BillServices update: {}", bill.getId());
+		Father<Bill, Detail> father = new Father<>(bill, bill.getDetails());
+        FatherManageChildren fatherUpdateChildren = new FatherManageChildren(father, detailChildRepository, detailRepository);
+        fatherUpdateChildren.updateChildren();
+
+        log.info("BillServices CHILDREN updated: {}", bill.getId());
+        
+		bill.setListsNull();
+		Bill updated = billRepository.save(bill);
+		log.info("BillServices update id: {}", updated.getId());
+		return updated;
+	}
+	
+	private void populateChildren(Bill bill) {
+		log.info("BillServices populateChildren billId: {}", bill.getId());
+		List<Detail> detailList = new ArrayList<>();
+		Iterable<Detail> details = detailRepository.findByBill(bill);
+		
+		details.forEach(detail -> {
+			detail.setListsNull();
+			detail.setFatherListToNull();
+			detail.setBill(null);
+			
+			detailList.add(detail);
+		});
+		
+		bill.setDetails(detailList);
+		bill.setFatherListToNull();
+		log.info("BillServices populateChildren FINISHED clientId: {}", bill.getId());
+	}
 
 }

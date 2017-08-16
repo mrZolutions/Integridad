@@ -87,6 +87,7 @@ public class ClientServices {
 		
 		for (Bill bill : bills) {
 			bill.setFatherListToNull();
+			bill.setListsNull();
 			bill.setClient(null);
 			
 			billList.add(bill);
