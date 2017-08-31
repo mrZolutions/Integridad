@@ -9,6 +9,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
 
+import com.mrzolution.integridad.app.interfaces.Child;
+
 import lombok.Data;
 
 /**
@@ -16,7 +18,7 @@ import lombok.Data;
  */
 @Entity
 @Data
-public class Subsidiary {
+public class Subsidiary implements Child{
 
     @Id
     @GeneratedValue
@@ -50,6 +52,7 @@ public class Subsidiary {
     @Transient
     public static Subsidiary newSubsidiaryTest(){
         Subsidiary subsidiary = new Subsidiary();
+        subsidiary.setUserClient(UserClient.newUserClientTest());
         
         return subsidiary;
     }
