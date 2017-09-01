@@ -55,12 +55,27 @@ public class BillServices {
 		return retrieved;
 	}
 	
-	public Bill create(Bill bill){
+	public Bill create(Bill bill) throws BadRequestException{
 		log.info("BillServices create");
+		List<Detail> details = bill.getDetails();
+		
+		if(details == null){
+			throw new BadRequestException("Debe tener un detalle por lo menos");
+		}
+		
 		bill.setDateCreated(new Date().getTime());
 		bill.setActive(true);
+		bill.setDetails(null);
 		Bill saved = billRepository.save(bill);
+		
+		details.forEach(detail->{
+			detail.setBill(saved);
+			detailRepository.save(detail);
+			detail.setBill(null);
+		});
+		
 		log.info("BillServices created id: {}", saved.getId());
+		saved.setDetails(details);
 		return saved;
 	}
 	

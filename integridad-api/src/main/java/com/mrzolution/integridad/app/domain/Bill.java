@@ -28,6 +28,7 @@ public class Bill {
     
     private long dateCreated;
     private boolean active;
+    private String billSeq;
 
     @ManyToOne
     @JoinColumn(name = "client_id")
@@ -36,6 +37,10 @@ public class Bill {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private UserIntegridad userIntegridad;
+    
+    @ManyToOne
+    @JoinColumn(name = "subsidiary_id")
+    private Subsidiary subsidiary;
     
     @OneToMany(mappedBy = "bill", cascade = CascadeType.ALL)
     private List<Detail> details;
@@ -50,6 +55,8 @@ public class Bill {
     	client.setFatherListToNull();
     	userIntegridad.setListsNull();
     	userIntegridad.setFatherListToNull();
+    	subsidiary.setListsNull();
+    	subsidiary.setFatherListToNull();
     }
 
     @Transient
@@ -58,6 +65,7 @@ public class Bill {
         bill.setDetails(new ArrayList<>());
         bill.setClient(Client.newClientTest());
         bill.setUserIntegridad(UserIntegridad.newUserIntegridadTest());
+        bill.setSubsidiary(Subsidiary.newSubsidiaryTest());
 
         return bill;
     }

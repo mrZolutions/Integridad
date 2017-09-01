@@ -17,6 +17,7 @@ import com.google.common.collect.Iterables;
 import com.mrzolution.integridad.app.domain.Bill;
 import com.mrzolution.integridad.app.domain.Detail;
 import com.mrzolution.integridad.app.domain.UserIntegridad;
+import com.mrzolution.integridad.app.exceptions.BadRequestException;
 import com.mrzolution.integridad.app.repositories.BillRepository;
 import com.mrzolution.integridad.app.repositories.DetailChildRepository;
 import com.mrzolution.integridad.app.repositories.DetailRepository;
@@ -112,4 +113,28 @@ public class BillServicesTest {
         Mockito.verify(detailRepository, Mockito.times(1)).delete(idChildOld);
     	
     }
+	
+	@Test
+	public void createCallDetailRepository(){
+		Detail detail = Detail.newDetailTest();
+		List<Detail> detailList = new ArrayList<>();
+		detailList.add(detail);
+		bill.setDetails(detailList);
+		
+		Mockito.when(billRepository.save(Mockito.any(Bill.class))).thenReturn(Bill.newBillTest());
+		
+		Bill response = service.create(bill);
+		
+		Mockito.verify(billRepository, Mockito.times(1)).save(Mockito.any(Bill.class));
+		Mockito.verify(detailRepository, Mockito.times(1)).save(detail);
+		
+		Assert.assertTrue(!response.getDetails().isEmpty());
+		
+	}
+	
+	@Test(expected=BadRequestException.class)
+	public void validatAtLeastOneDetail(){
+		bill.setDetails(null);
+		service.create(bill);
+	}
 }
