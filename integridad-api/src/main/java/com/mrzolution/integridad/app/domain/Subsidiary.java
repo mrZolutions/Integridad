@@ -49,6 +49,7 @@ public class Subsidiary implements Child{
     
     public void setFatherListToNull(){
     	userClient.setListsNull();
+    	userClient.setFatherListToNull();
     }
 
     @Transient

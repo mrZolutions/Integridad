@@ -112,6 +112,8 @@ public class BillServices {
 		details.forEach(detail -> {
 			detail.setListsNull();
 			detail.setFatherListToNull();
+			detail.getProduct().setFatherListToNull();
+			detail.getProduct().setListsNull();
 			detail.setBill(null);
 			
 			detailList.add(detail);
@@ -119,7 +121,7 @@ public class BillServices {
 		
 		bill.setDetails(detailList);
 		bill.setFatherListToNull();
-		log.info("BillServices populateChildren FINISHED clientId: {}", bill.getId());
+		log.info("BillServices populateChildren FINISHED billId: {}", bill.getId());
 	}
 
 }
