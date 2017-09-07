@@ -31,19 +31,26 @@ public class Product implements Child{
     @JoinColumn(name = "user_client_id")
     private UserClient userClient;
     
+    @ManyToOne
+    @JoinColumn(name = "subsidiary_id")
+    private Subsidiary subsidiary;
+    
     public void setListsNull(){
     }
     
     public void setFatherListToNull(){
     	userClient.setListsNull();
     	userClient.setFatherListToNull();
+    	subsidiary.setListsNull();
+    	subsidiary.setFatherListToNull();
     }
 
     @Transient
     public static Product newProducTest(){
         Product product = new Product();
         product.setUserClient(UserClient.newUserClientTest());
-
+        product.setSubsidiary(Subsidiary.newSubsidiaryTest());
+        
         return product;
     }
 
