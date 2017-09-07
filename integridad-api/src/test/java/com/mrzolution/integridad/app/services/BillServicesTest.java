@@ -16,11 +16,13 @@ import org.mockito.runners.MockitoJUnitRunner;
 import com.google.common.collect.Iterables;
 import com.mrzolution.integridad.app.domain.Bill;
 import com.mrzolution.integridad.app.domain.Detail;
+import com.mrzolution.integridad.app.domain.Subsidiary;
 import com.mrzolution.integridad.app.domain.UserIntegridad;
 import com.mrzolution.integridad.app.exceptions.BadRequestException;
 import com.mrzolution.integridad.app.repositories.BillRepository;
 import com.mrzolution.integridad.app.repositories.DetailChildRepository;
 import com.mrzolution.integridad.app.repositories.DetailRepository;
+import com.mrzolution.integridad.app.repositories.SubsidiaryRepository;
 
 @RunWith(MockitoJUnitRunner.class)
 public class BillServicesTest {
@@ -34,6 +36,8 @@ public class BillServicesTest {
 	DetailRepository detailRepository;
 	@Mock
 	DetailChildRepository detailChildRepository;
+	@Mock
+	SubsidiaryRepository subsidiaryRepository;
 	
 	Bill bill;
 	
@@ -122,6 +126,7 @@ public class BillServicesTest {
 		bill.setDetails(detailList);
 		
 		Mockito.when(billRepository.save(Mockito.any(Bill.class))).thenReturn(Bill.newBillTest());
+		Mockito.when(subsidiaryRepository.findOne(Mockito.any(UUID.class))).thenReturn(Subsidiary.newSubsidiaryTest());
 		
 		Bill response = service.create(bill);
 		
@@ -129,6 +134,29 @@ public class BillServicesTest {
 		Mockito.verify(detailRepository, Mockito.times(1)).save(detail);
 		
 		Assert.assertTrue(!response.getDetails().isEmpty());
+		
+	}
+	
+	@Test
+	public void createAddOneToSeqOnSubsidiary(){
+		UUID idSubsidiary = UUID.randomUUID();
+		bill.getSubsidiary().setId(idSubsidiary);
+		bill.getSubsidiary().setBillNumberSeq(1);
+		Subsidiary subsidiary = bill.getSubsidiary(); 
+		Detail detail = Detail.newDetailTest();
+		List<Detail> detailList = new ArrayList<>();
+		detailList.add(detail);
+		bill.setDetails(detailList);
+		
+		Mockito.when(billRepository.save(Mockito.any(Bill.class))).thenReturn(Bill.newBillTest());
+		Mockito.when(subsidiaryRepository.findOne(idSubsidiary)).thenReturn(subsidiary);
+		
+		service.create(bill);
+		
+		subsidiary.setBillNumberSeq(2);
+		
+		Mockito.verify(subsidiaryRepository, Mockito.times(1)).findOne(idSubsidiary);
+		Mockito.verify(subsidiaryRepository, Mockito.times(1)).save(subsidiary);
 		
 	}
 	

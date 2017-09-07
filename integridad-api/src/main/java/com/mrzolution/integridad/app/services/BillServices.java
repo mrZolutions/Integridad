@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import com.mrzolution.integridad.app.domain.Bill;
 import com.mrzolution.integridad.app.domain.Detail;
+import com.mrzolution.integridad.app.domain.Subsidiary;
 import com.mrzolution.integridad.app.domain.UserIntegridad;
 import com.mrzolution.integridad.app.exceptions.BadRequestException;
 import com.mrzolution.integridad.app.father.Father;
@@ -17,6 +18,7 @@ import com.mrzolution.integridad.app.father.FatherManageChildren;
 import com.mrzolution.integridad.app.repositories.BillRepository;
 import com.mrzolution.integridad.app.repositories.DetailChildRepository;
 import com.mrzolution.integridad.app.repositories.DetailRepository;
+import com.mrzolution.integridad.app.repositories.SubsidiaryRepository;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -30,6 +32,8 @@ public class BillServices {
 	DetailRepository detailRepository;
 	@Autowired
 	DetailChildRepository detailChildRepository;
+	@Autowired
+	SubsidiaryRepository subsidiaryRepository;
 	
 	public Iterable<Bill> getByUserLazy(UserIntegridad user){
 		log.info("BillServices getByUserLazy: {}", user.getId());
@@ -67,6 +71,10 @@ public class BillServices {
 		bill.setActive(true);
 		bill.setDetails(null);
 		Bill saved = billRepository.save(bill);
+		
+		Subsidiary subsidiary =  subsidiaryRepository.findOne(bill.getSubsidiary().getId());
+		subsidiary.setBillNumberSeq(subsidiary.getBillNumberSeq() + 1);
+		subsidiaryRepository.save(subsidiary);
 		
 		details.forEach(detail->{
 			detail.setBill(saved);

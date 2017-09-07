@@ -18,7 +18,7 @@ import lombok.Data;
  */
 @Entity
 @Data
-public class Detail implements Child{
+public class BillDetail implements Child{
 
     @Id
     @GeneratedValue
@@ -29,8 +29,8 @@ public class Detail implements Child{
     private Bill bill;
     
     @ManyToOne
-    @JoinColumn(name = "product_id")
-    private Product product;
+    @JoinColumn(name = "detail_id")
+    private Detail detail;
     
     private long quantity;
     
@@ -40,15 +40,18 @@ public class Detail implements Child{
     public void setFatherListToNull(){
     	bill.setListsNull();
     	bill.setFatherListToNull();
+    	
+    	detail.setListsNull();
+    	detail.setFatherListToNull();
     }
 
     @Transient
-    public static Detail newDetailTest(){
-        Detail detail = new Detail();
-        detail.setBill(Bill.newBillTest());
-        detail.setProduct(Product.newProducTest());
+    public static BillDetail newBillDetailTest(){
+        BillDetail billDetail = new BillDetail();
+        billDetail.setBill(Bill.newBillTest());
+        billDetail.setDetail(Detail.newDetailTest());
 
-        return detail;
+        return billDetail;
     }
 
 }

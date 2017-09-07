@@ -29,6 +29,9 @@ public class Bill {
     private long dateCreated;
     private boolean active;
     private String billSeq;
+    
+    private double total;
+    private double subTotal;
 
     @ManyToOne
     @JoinColumn(name = "client_id")
