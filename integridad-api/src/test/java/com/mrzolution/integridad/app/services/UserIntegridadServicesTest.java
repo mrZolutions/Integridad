@@ -1,5 +1,7 @@
 package com.mrzolution.integridad.app.services;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import org.junit.Assert;
@@ -12,6 +14,7 @@ import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import com.google.common.collect.Iterables;
 import com.mrzolution.integridad.app.cons.Constants;
 import com.mrzolution.integridad.app.domain.UserIntegridad;
 import com.mrzolution.integridad.app.domain.UserType;
@@ -190,6 +193,24 @@ public class UserIntegridadServicesTest {
 		Mockito.verify(mailingService, Mockito.times(1)).sendEmailRecoveryPass(Mockito.any(UserIntegridad.class), Mockito.anyString());
 		
 		Assert.assertNotNull(recovered);
+	}
+	
+	@Test
+	public void getAllActives() throws Exception{
+		user.setActive(true);
+		
+		List<UserIntegridad> userIntegridadList = new ArrayList<>();
+		userIntegridadList.add(user);
+		
+		Mockito.when(userIntegridadRepository.findByActive(true)).thenReturn(userIntegridadList);
+		
+		Iterable<UserIntegridad> response = service.getAllActivesLazy();
+		
+		for(UserIntegridad user : response){
+			ListValidation.checkListsAndFatherNull(UserIntegridad.class, user);
+		}
+		
+		Assert.assertTrue(Iterables.size(response) == 1);
 	}
 
 }

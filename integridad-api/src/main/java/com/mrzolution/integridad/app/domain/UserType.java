@@ -1,5 +1,6 @@
 package com.mrzolution.integridad.app.domain;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -33,6 +34,7 @@ public class UserType {
     @Transient
     public static UserType newUserTypeTest(){
     	UserType userType = new UserType();
+    	userType.setUsers(new ArrayList<>());
 
         return userType;
     }

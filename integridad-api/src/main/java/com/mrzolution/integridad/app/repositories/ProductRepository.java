@@ -6,12 +6,12 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-import com.mrzolution.integridad.app.domain.Client;
+import com.mrzolution.integridad.app.domain.Product;
 
 @Repository
-@Qualifier(value="ClientRepository")
-public interface ClientRepository extends CrudRepository<Client, UUID>{
+@Qualifier(value="ProductRepository")
+public interface ProductRepository extends CrudRepository<Product, UUID>{
 	
-	Iterable<Client> findByActive(boolean active);
-
+	Iterable<Product> findByActive(boolean active);
+	
 }

@@ -20,4 +20,6 @@ public interface UserIntegridadRepository extends CrudRepository<UserIntegridad,
 	
 	Iterable<UserIntegridad> findByUserType(UserType userType);
 
+	Iterable<UserIntegridad> findByActive(boolean active);
+
 }

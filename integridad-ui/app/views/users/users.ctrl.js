@@ -12,18 +12,65 @@ angular.module('integridadUiApp')
     var vm = this;
 
     vm.loading = false;
-    vm.userIntegridad = {};
+    vm.userIntegridad = undefined;
 
     function _activate(){
       vm.loading = true;
-      userTypeService.getUserTypes().then(function (response) {
-        vm.userTypes =  response;
+      authService.getLazy().then(function (response) {
+        vm.userList = response;
         vm.loading = false;
       }).catch(function (error) {
         vm.loading = false;
         vm.error = error.data;
       });
     }
+
+    function create(){
+      vm.loading = true;
+      authService.registerUser(vm.userIntegridad).then(function (response) {
+        vm.loading = false;
+        vm.error = undefined;
+        vm.success = 'Resgistro realizado con exito. Se envio un email a la cuenta registrada para activar su cuenta';
+        vm.userIntegridad=undefined;
+        _activate();
+      }).catch(function (error) {
+        vm.loading = false;
+        vm.error = error.data;
+      });
+    }
+
+    function update(){
+      vm.loading = true;
+      authService.updateUser(vm.userIntegridad).then(function (response) {
+        vm.loading = false;
+        vm.error = undefined;
+        vm.success = 'Resgistro actualizado con exito';
+        vm.userIntegridad=undefined;
+        _activate();
+      }).catch(function (error) {
+        vm.loading = false;
+        vm.error = error.data;
+      });
+    }
+
+    vm.userCreate = function(){
+      vm.success=undefined;
+      vm.error=undefined;
+      vm.userIntegridad = {};
+    };
+
+    vm.userEdit = function(user){
+      vm.success=undefined;
+      vm.error=undefined
+      vm.userIntegridad=angular.copy(user);
+
+      if(vm.userIntegridad.cedula !== undefined && vm.userIntegridad.cedula !== null){
+        vm.typeId = 'Cedula';
+      } else {
+        vm.typeId = 'Ruc';
+      }
+      $('#pickerBirthday').data("DateTimePicker").date(new Date(vm.userIntegridad.birthDay));
+    };
 
     vm.register = function(){
       vm.userIntegridad.birthDay = $('#pickerBirthday').data("DateTimePicker").date().toDate().getTime();
@@ -46,19 +93,30 @@ angular.module('integridadUiApp')
       }
 
       if(!validationError){
-        vm.loading = true;
-        authService.registerUser(vm.userIntegridad).then(function (response) {
-          vm.loading = false;
-          vm.error = undefined;
-          vm.success = 'Resgistro realizado con exito. Se envio un email a la cuenta registrada para activar su cuenta';
-        }).catch(function (error) {
-          vm.loading = false;
-          vm.error = error.data;
-        });
+        if(vm.userIntegridad.id === undefined){
+          create();
+        }else{
+          vm.userIntegridad.password = '';
+          update(false);
+        }
       }
     };
 
+    vm.cancel=function(){
+      vm.userIntegridad =undefined;
+      vm.success=undefined;
+      vm.error=undefined
+    };
+
     (function initController() {
+      vm.loading = true;
+      userTypeService.getUserTypes().then(function (response) {
+        vm.userTypes =  response;
+        vm.loading = false;
+      }).catch(function (error) {
+        vm.loading = false;
+        vm.error = error.data;
+      });
       _activate();
     })();
 

@@ -32,6 +32,12 @@ angular
       });
     };
 
+    this.getLazy = function () {
+      return securityService.get('/user/lazy').then(function successCallback(response) {
+        return response.data;
+      });
+    };
+
     //
     // this.findById = function (auditFirmId) {
     //   return securityService.get('/audit-firms/' + auditFirmId).then(function successCallback(response) {

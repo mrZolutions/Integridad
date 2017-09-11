@@ -9,7 +9,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
 
-import org.hibernate.validator.constraints.Email;
+import com.mrzolution.integridad.app.interfaces.Child;
 
 import lombok.Data;
 
@@ -18,52 +18,46 @@ import lombok.Data;
  */
 @Entity
 @Data
-public class UserIntegridad {
+public class Subsidiary implements Child{
 
     @Id
     @GeneratedValue
     private UUID id;
 
-    private String firstName;
-    private String lastName;
+    private String name;
+    private String threeCode;
     private String celPhone;
     private String phone;
     private String city;
     private String address1;
     private String address2;
-    private String cedula;
-    private String ruc;
-    private long birthDay;
+    
+    private long billNumberSeq;
     
     private long dateCreated;
-    private String userName;
-    private String password;
     
-    
-    private String validation;
     private boolean active;
     
-    @Email
-    private String email;
-
     @ManyToOne
-    @JoinColumn(name = "user_type_id")
-    private UserType userType;
+    @JoinColumn(name = "user_client_id")
+    private UserClient userClient;
+    
     
     public void setListsNull(){
     	
     }
     
     public void setFatherListToNull(){
-    	userType.setListsNull();
+    	userClient.setListsNull();
+    	userClient.setFatherListToNull();
     }
 
     @Transient
-    public static UserIntegridad newUserIntegridadTest(){
-        UserIntegridad userIntegridad = new UserIntegridad();
-        userIntegridad.setUserType(UserType.newUserTypeTest());
-
-        return userIntegridad;
+    public static Subsidiary newSubsidiaryTest(){
+        Subsidiary subsidiary = new Subsidiary();
+        subsidiary.setUserClient(UserClient.newUserClientTest());
+        
+        return subsidiary;
     }
 
 }

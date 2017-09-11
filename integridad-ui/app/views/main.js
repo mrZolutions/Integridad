@@ -37,6 +37,8 @@ angular.module('integridadUiApp')
       var user = {email: vm.email, password: vm.password};
       authService.authUser(user).then(function (response) {
         $localStorage.user = response;
+        var d = new Date();
+        $localStorage.timeloged = d.getTime();
         getPermissions();
       }).catch(function (error) {
         vm.loading = false;
