@@ -23,123 +23,171 @@
   </h4>
 </div>
 
-<div class="panel panel-default">
+<div class="row" ng-show="vm.error !== undefined">
+  <div class="form-group col-md-12">
+    <div class="alert alert-danger">{{vm.error}}</div>
+  </div>
+</div>
+<div class="row" ng-show="vm.success !== undefined">
+  <div class="form-group col-md-12">
+    <div class="alert alert-success">{{vm.success}}</div>
+  </div>
+</div>
 
-  <div class="panel-body">
-    <div class="row" ng-show="vm.error !== undefined">
-      <div class="form-group col-md-12">
-        <div class="alert alert-danger">{{vm.error}}</div>
-      </div>
-    </div>
-    <div class="row" ng-show="vm.success !== undefined">
-      <div class="form-group col-md-12">
-        <div class="alert alert-success">{{vm.success}}</div>
-      </div>
-    </div>
+<div ng-show="vm.userIntegridad === undefined">
 
-    <div class="row">
-      <div class="form-group col-md-12">
-        <label>Tipo de Usuario *: </label>
-        <select ng-options="userType as userType.name for userType in vm.userTypes  | orderBy:'name' track by userType.id"
-          ng-model="vm.userIntegridad.userType" class="form-control">
-        </select>
-      </div>
-    </div>
+  <input ng-model="searchText" class="form-control" placeholder="Buscar">
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th> Nombre </th>
+        <th> Apellido </th>
+        <th> Ruc </th>
+        <th> C&eacute;dula </th>
+        <th> Tipo </th>
+        <th>
+          <button type="button" class="btn btn-primary" ng-click="vm.userCreate()">
+            Crear
+          </button>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-show="vm.clientList == 0">
+        <td colspan="4">
+          No hay usuarios ingresados
+        </td>
+      </tr>
+      <tr ng-repeat="userEdit in vm.userList | orderBy:firstName | filter:searchText">
+        <td>{{ userEdit.firstName }}</td>
+        <td>{{ userEdit.lastName }}</td>
+        <td>{{ userEdit.ruc }}</td>
+        <td>{{ userEdit.cedula }}</td>
+        <td>{{ userEdit.userType.name }}</td>
+        <td>
+          <button type="button" class="btn btn-primary" ng-click="vm.userEdit(userEdit)">
+            Editar
+          </button>
+          <button type="button" class="btn btn-primary" ng-click="vm.userEdit=userEdits"
+            data-toggle="modal" data-target="#modalEliminar">
+            Eliminar
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
 
-    <div class="row">
-      <div class="form-group col-md-6">
-        <label>Nombre *: </label>
-        <input type="text" ng-model="vm.userIntegridad.firstName" class="form-control">
-      </div>
+</div>
 
-      <div class="form-group col-md-6">
-        <label>Apellido *: </label>
-        <input type="text" ng-model="vm.userIntegridad.lastName" class="form-control">
-      </div>
-    </div>
+<div ng-show="vm.userIntegridad">
+  <div class="panel panel-default">
 
-    <div class="row">
-      <div class="form-group col-md-6">
-        <label>Tel&eacute;fono: (incluir c&oacute;digo de provincia ej: 02) </label>
-        <input type="text" onkeypress='return event.charCode >= 48 && event.charCode <= 57'
-        ng-model="vm.userIntegridad.phone" class="form-control" maxlength="9">
-      </div>
+    <div class="panel-body">
 
-      <div class="form-group col-md-6">
-        <label>Tel&eacute;fono celular: </label>
-        <input type="text" onkeypress='return event.charCode >= 48 && event.charCode <= 57'
-        ng-model="vm.userIntegridad.celPhone" class="form-control" maxlength="10">
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="form-group col-md-6">
-        <label>Fecha de Nacimiento</label>
-        <div class="input-group date" id="pickerBirthday">
-          <input type="text" class="form-control input-group-addon"/>
-          <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"/></span>
+      <div class="row">
+        <div class="form-group col-md-12">
+          <label>Tipo de Usuario *: </label>
+          <select ng-options="userType as userType.name for userType in vm.userTypes  | orderBy:'name' track by id"
+            ng-model="vm.userIntegridad.userType" class="form-control">
+          </select>
         </div>
-        <script>
-          var defaultDate = new Date();
-          $('#pickerBirthday').datetimepicker({
-            format: "DD/MM/YY",
-            defaultDate: defaultDate
-          });
-        </script>
+      </div>
+
+      <div class="row">
+        <div class="form-group col-md-6">
+          <label>Nombre *: </label>
+          <input type="text" ng-model="vm.userIntegridad.firstName" class="form-control">
+        </div>
+
+        <div class="form-group col-md-6">
+          <label>Apellido *: </label>
+          <input type="text" ng-model="vm.userIntegridad.lastName" class="form-control">
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="form-group col-md-6">
+          <label>Tel&eacute;fono: (incluir c&oacute;digo de provincia ej: 02) </label>
+          <input type="text" onkeypress='return event.charCode >= 48 && event.charCode <= 57'
+          ng-model="vm.userIntegridad.phone" class="form-control" maxlength="9">
+        </div>
+
+        <div class="form-group col-md-6">
+          <label>Tel&eacute;fono celular: </label>
+          <input type="text" onkeypress='return event.charCode >= 48 && event.charCode <= 57'
+          ng-model="vm.userIntegridad.celPhone" class="form-control" maxlength="10">
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="form-group col-md-6">
+          <label>Fecha de Nacimiento</label>
+          <div class="input-group date" id="pickerBirthday">
+            <input type="text" class="form-control input-group-addon"/>
+            <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"/></span>
+          </div>
+          <script>
+            var defaultDate = new Date();
+            $('#pickerBirthday').datetimepicker({
+              format: "DD/MM/YY",
+              defaultDate: defaultDate
+            });
+          </script>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="form-group col-md-6">
+          <label>Tipo de Identificacion: </label>
+          <select ng-options="item for item in ['Cedula', 'Ruc']"
+          ng-model="vm.typeId" class="form-control"></select>
+        </div>
+
+        <div class="form-group col-md-6" ng-show="vm.typeId === 'Cedula'">
+          <label>C&eacute;dula *: </label>
+          <input type="text" onkeypress='return event.charCode >= 48 && event.charCode <= 57'
+          ng-model="vm.userIntegridad.cedula" class="form-control" maxlength="10">
+        </div>
+
+        <div class="form-group col-md-6" ng-show="vm.typeId === 'Ruc'">
+          <label>Ruc *: </label>
+          <input type="text" onkeypress='return event.charCode >= 48 && event.charCode <= 57'
+          ng-model="vm.userIntegridad.ruc" class="form-control" maxlength="13">
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="form-group col-md-12">
+          <label>Direcci&oacute;n: </label>
+          <input type="text" ng-model="vm.userIntegridad.address1" class="form-control">
+        </div>
+      </div>
+
+      <!-- <div class="row">
+        <div class="form-group col-md-12">
+          <label>Intersecci&oacute;n: </label>
+          <input type="text" ng-model="vm.userIntegridad.address2" class="form-control">
+        </div>
+      </div> -->
+
+      <div class="row">
+        <div class="form-group col-md-12">
+          <label>E-mail *: </label>
+          <input type="text" ng-model="vm.userIntegridad.email" class="form-control">
+        </div>
+
       </div>
     </div>
-
-    <div class="row">
-      <div class="form-group col-md-6">
-        <label>Tipo de Identificacion: </label>
-        <select ng-options="item for item in ['Cedula', 'Ruc']"
-        ng-model="vm.typeId" class="form-control"></select>
-      </div>
-
-      <div class="form-group col-md-6" ng-show="vm.typeId === 'Cedula'">
-        <label>C&eacute;dula *: </label>
-        <input type="text" onkeypress='return event.charCode >= 48 && event.charCode <= 57'
-        ng-model="vm.userIntegridad.cedula" class="form-control" maxlength="10">
-      </div>
-
-      <div class="form-group col-md-6" ng-show="vm.typeId === 'Ruc'">
-        <label>Ruc *: </label>
-        <input type="text" onkeypress='return event.charCode >= 48 && event.charCode <= 57'
-        ng-model="vm.userIntegridad.ruc" class="form-control" maxlength="13">
-      </div>
+    <div class="panel-footer">
+      <button type="button" class="btn btn-primary" ng-click="vm.register()"
+        ng-disabled="vm.userIntegridad.email === undefined">
+        Guardar
+      </button>
+      <button type="button" class="btn btn-success"
+      ng-click="vm.cancel()">
+        Cancelar
+      </button>
     </div>
 
-    <div class="row">
-      <div class="form-group col-md-12">
-        <label>Direcci&oacute;n: </label>
-        <input type="text" ng-model="vm.userIntegridad.address1" class="form-control">
-      </div>
-    </div>
-
-    <!-- <div class="row">
-      <div class="form-group col-md-12">
-        <label>Intersecci&oacute;n: </label>
-        <input type="text" ng-model="vm.userIntegridad.address2" class="form-control">
-      </div>
-    </div> -->
-
-    <div class="row">
-      <div class="form-group col-md-12">
-        <label>E-mail *: </label>
-        <input type="text" ng-model="vm.userIntegridad.email" class="form-control">
-      </div>
-
-    </div>
   </div>
-  <div class="panel-footer">
-    <button type="button" class="btn btn-primary" ng-click="vm.register()"
-      ng-disabled="vm.userIntegridad.email === undefined">
-      Registrar
-    </button>
-    <button type="button" class="btn btn-success"
-    ng-click="vm.userIntegridad = {}; vm.success=undefined; vm.error=undefined">
-      Cancelar
-    </button>
-  </div>
-
 </div>

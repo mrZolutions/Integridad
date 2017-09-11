@@ -90,4 +90,17 @@ public class UserIntegridadController {
 	    }
 		return new ResponseEntity<UserIntegridad>(response, HttpStatus.OK);
 	}
+	
+	@RequestMapping(method = RequestMethod.GET, value="/lazy")
+    public ResponseEntity getAllActivesLazy(){
+		log.info("UserIntegridadController getAllActivesLazy");
+		Iterable<UserIntegridad> response = null;
+		try {
+			response = service.getAllActivesLazy();
+		}catch(BadRequestException e) {
+			log.info("UserIntegridadController recoverPass Exception thrown: {}", e.getMessage());	    
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+	    }
+		return new ResponseEntity<Iterable>(response, HttpStatus.OK);
+	}
 }

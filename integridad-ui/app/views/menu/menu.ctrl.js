@@ -21,8 +21,18 @@ angular.module('integridadUiApp')
       $scope.nameType = undefined;
       $localStorage.permissions = undefined;
       $localStorage.user = undefined;
+      $localStorage.timeloged = undefined;
       $location.path('/');
     };
+
+    if($localStorage.timeloged){
+      var dateNow = new Date();
+      var timeNow = dateNow.getTime()
+      var timeLapsed = timeNow - $localStorage.timeloged;
+      if(timeLapsed > 86400000){
+        $scope.logout();
+      }
+    }
 
     if($localStorage.permissions){
       $rootScope.updateMenu();

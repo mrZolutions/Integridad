@@ -30,7 +30,6 @@ angular.module('integridadUiApp')
     }
 
     function create(){
-      console.log('----------------------------- create');
       clientService.create(vm.client).then(function (response) {
         vm.client=undefined;
         _activate();
@@ -42,13 +41,16 @@ angular.module('integridadUiApp')
       });
     }
 
-    function update(){
-      console.log('----------------------------- update');
+    function update(isRemove){
       clientService.update(vm.client).then(function (response) {
         vm.client=undefined;
         _activate();
         vm.error = undefined;
-        vm.success = 'Resgistro actualizado con exito';
+        if(isRemove){
+          vm.success = 'Resgistro eliminado con exito';
+        } else {
+          vm.success = 'Resgistro actualizado con exito';
+        }
       }).catch(function (error) {
         vm.loading = false;
         vm.error = error.data;
@@ -80,14 +82,18 @@ angular.module('integridadUiApp')
         vm.error = 'Debe ingresar Nombres completos, una identificacion y el Codigo de Contabilidad';
       } else {
         vm.loading = true;
-        console.log('******************: ' + vm.client.id);
         if(vm.client.id === undefined){
           create();
         }else{
-          update();
+          update(false);
         }
       }
 
+    };
+
+    vm.remove = function(){
+      vm.client.active = false;
+      update(true);
     };
 
     vm.cancel=function(){

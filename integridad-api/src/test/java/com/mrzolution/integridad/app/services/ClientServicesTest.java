@@ -1,6 +1,5 @@
 package com.mrzolution.integridad.app.services;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -44,7 +43,7 @@ public class ClientServicesTest {
 		List<Client> clients = new ArrayList<>();
 		clients.add(client);
 		
-		Mockito.when(clientRepository.findAll()).thenReturn(clients);
+		Mockito.when(clientRepository.findByActive(true)).thenReturn(clients);
 		
 		Iterable<Client> clientList = service.getAllLazy();
 		Assert.assertEquals(1, Iterables.size(clientList));

@@ -8,11 +8,14 @@ import org.springframework.stereotype.Repository;
 
 import com.mrzolution.integridad.app.domain.Bill;
 import com.mrzolution.integridad.app.domain.Client;
+import com.mrzolution.integridad.app.domain.UserIntegridad;
 
 @Repository
 @Qualifier(value="BillRepository")
 public interface BillRepository extends CrudRepository<Bill, UUID>{
 	
 	Iterable<Bill> findByClient(Client client);
+	
+	Iterable<Bill> findByUserIntegridad(UserIntegridad user);
 
 }

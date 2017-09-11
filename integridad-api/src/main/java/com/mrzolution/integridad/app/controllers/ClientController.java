@@ -1,7 +1,5 @@
 package com.mrzolution.integridad.app.controllers;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,7 +30,7 @@ public class ClientController {
 		try {
 			response = service.create(client);
 		}catch(BadRequestException e) {
-			log.error("UserTypeController create Exception thrown: {}", e.getMessage());	    
+			log.error("ClientController create Exception thrown: {}", e.getMessage());	    
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	    }
 		return new ResponseEntity<Client>(response, HttpStatus.CREATED);
@@ -45,7 +43,7 @@ public class ClientController {
 		try {
 			response = service.update(client);
 		}catch(BadRequestException e) {
-			log.error("UserTypeController create Exception thrown: {}", e.getMessage());	    
+			log.error("ClientController create Exception thrown: {}", e.getMessage());	    
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	    }
 		return new ResponseEntity<Client>(response, HttpStatus.CREATED);
@@ -58,7 +56,7 @@ public class ClientController {
 		try {
 			response = service.getAllLazy();
 		}catch(BadRequestException e) {
-			log.error("UserTypeController getLazy Exception thrown: {}", e.getMessage());	    
+			log.error("ClientController getLazy Exception thrown: {}", e.getMessage());	    
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	    }
 		return new ResponseEntity<Iterable>(response, HttpStatus.CREATED);
