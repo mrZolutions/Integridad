@@ -25,6 +25,10 @@ angular.module('integridadUiApp')
       $location.path('/');
     };
 
+    $scope.$on('onBeforeUnload', function (e, confirmation) {
+      $scope.logout();
+    });
+
     if($localStorage.timeloged){
       var dateNow = new Date();
       var timeNow = dateNow.getTime()
