@@ -45,6 +45,7 @@ public class UserIntegridadServices {
 		userIntegridad.setValidation(UUID.randomUUID().toString());
 		userIntegridad.setActive(false);
 		userIntegridad.setDateCreated(new Date().getTime());
+		userIntegridad.setTempPass(false);
 		log.info("UserIntegridadServices create: {} password Encoded", userIntegridad.getEmail());
 		
 		if(userIntegridad.getUserType() == null){
@@ -135,6 +136,7 @@ public class UserIntegridadServices {
 		log.info("UserIntegridadServices recoverPassword user found new pass: {}", newPass);
 		String encoded = passwordEncoder.encode(newPass);
 		userResponse.setPassword(encoded);
+		userResponse.setTempPass(true);
 		
 		userIntegridadRepository.save(userResponse);
 		

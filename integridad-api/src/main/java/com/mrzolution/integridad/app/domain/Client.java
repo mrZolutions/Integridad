@@ -26,6 +26,7 @@ public class Client {
     @GeneratedValue
     private UUID id;
 
+    private String code;
     private String name;
     private String celPhone;
     private String phone;

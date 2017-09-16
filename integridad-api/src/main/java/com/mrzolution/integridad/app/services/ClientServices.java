@@ -27,6 +27,9 @@ public class ClientServices {
 	BillRepository billRepository;
 	
 	public Client create(Client client){
+		if(client.getCode() == null){
+			throw new BadRequestException("Debe tener codigo");
+		}
 		log.info("ClientServices create: {}", client.getName());
 		client.setDateCreated(new Date().getTime());
 		client.setActive(true);

@@ -37,6 +37,32 @@ angular.module('integridadUiApp')
       var user = {email: vm.email, password: vm.password};
       authService.authUser(user).then(function (response) {
         $localStorage.user = response;
+
+        if($localStorage.user.tempPass){
+          vm.loading = false;
+          vm.passwordNotMatch = false;
+          vm.userIntegridad = angular.copy($localStorage.user);
+          $('#modalChangePassword').modal('show');
+        } else {
+          var d = new Date();
+          $localStorage.timeloged = d.getTime();
+          getPermissions();
+        }
+
+      }).catch(function (error) {
+        vm.loading = false;
+        vm.error = error.data;
+      });
+    };
+
+    vm.update = function(){
+      vm.loading = true;
+      vm.userIntegridad.password = vm.newPass;
+      vm.userIntegridad.tempPass = false;
+      authService.updateUser(vm.userIntegridad).then(function (response) {
+        vm.error = undefined;
+        vm.success = 'Perfil actualizado con exito';
+        $localStorage.user = response;
         var d = new Date();
         $localStorage.timeloged = d.getTime();
         getPermissions();
@@ -44,6 +70,10 @@ angular.module('integridadUiApp')
         vm.loading = false;
         vm.error = error.data;
       });
+    }
+
+    vm.validatePassword = function () {
+      vm.passwordNotMatch = vm.newPass !== vm.passConfirmation;
     };
 
     vm.register = function(){
