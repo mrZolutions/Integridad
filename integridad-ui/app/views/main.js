@@ -8,7 +8,7 @@
  * Controller of the integridadUiApp
  */
 angular.module('integridadUiApp')
-  .controller('MainCtrl', function ($rootScope, $location, authService, utilValidationService, permissionService, $localStorage) {
+  .controller('MainCtrl', function ($rootScope, $location, authService, utilStringService, permissionService, $localStorage) {
     var vm = this;
     vm.loading = false;
 
@@ -81,7 +81,7 @@ angular.module('integridadUiApp')
       vm.userIntegridad.email = vm.userIntegridad.email.trim();
       vm.userIntegridad.password = vm.userIntegridad.password.trim();
 
-      var validationError = utilValidationService.isAnyInArrayStringEmpty([
+      var validationError = utilStringService.isAnyInArrayStringEmpty([
         vm.userIntegridad.email, vm.userIntegridad.password, vm.userIntegridad.firstName,
         vm.userIntegridad.lastName
       ]);
@@ -89,7 +89,7 @@ angular.module('integridadUiApp')
       if(validationError){
         vm.error = 'Debe ingresar Nombres completos, email y password';
       } else {
-        validationError = utilValidationService.isStringEmpty(vm.userIntegridad.cedula) && utilValidationService.isStringEmpty(vm.userIntegridad.ruc);
+        validationError = utilStringService.isStringEmpty(vm.userIntegridad.cedula) && utilStringService.isStringEmpty(vm.userIntegridad.ruc);
 
         if(validationError){
           vm.error = 'Debe ingresar un numero de cedula o ruc';

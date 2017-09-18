@@ -73,7 +73,7 @@ public class ClientServicesTest {
 	}
 	
 	@Test(expected=BadRequestException.class)
-	public void validateExistCodeOnCreate(){
+	public void validateExistCodeContaOnCreate(){
 		service.create(client);
 	}
 
