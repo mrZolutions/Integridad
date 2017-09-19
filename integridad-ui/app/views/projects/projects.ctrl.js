@@ -14,6 +14,7 @@ angular.module('integridadUiApp')
     vm.loading = false;
     vm.project = undefined;
     vm.projectList = undefined;
+    vm.subsidiary = undefined;
 
     function _activate(){
       vm.loading = true;
@@ -57,7 +58,7 @@ angular.module('integridadUiApp')
     vm.projectCreate = function(){
       vm.success=undefined;
       vm.error=undefined
-      vm.project={};
+      vm.project={subsidiaries:[]};
     };
 
     vm.save = function(){
@@ -83,8 +84,21 @@ angular.module('integridadUiApp')
       update(true);
     };
 
+    vm.saveSubsidiary = function(){
+      if(vm.subsidiary.id === undefined){
+          vm.project.subsidiaries.push(vm.subsidiary);
+      }
+      vm.subsidiary = undefined;
+    };
+
     vm.cancel=function(){
       vm.project=undefined;
+      vm.success=undefined;
+      vm.error=undefined
+    };
+
+    vm.cancel=function(){
+      vm.subsidiary=undefined;
       vm.success=undefined;
       vm.error=undefined
     };

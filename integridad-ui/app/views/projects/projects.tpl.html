@@ -42,7 +42,7 @@
       <tr>
         <th> Codigo </th>
         <th> Nombre </th>
-        <th> Ruc / C&eacute;dula </th>
+        <th> Ruc </th>
         <th>
           <button type="button" class="btn btn-primary" ng-click="vm.projectCreate()">
             Crear
@@ -59,7 +59,7 @@
       <tr ng-repeat="projectEdit in vm.projectList | orderBy:name | filter:searchText">
         <td>{{ projectEdit.codeIntegridad }}</td>
         <td>{{ projectEdit.name }}</td>
-        <td>{{ projectEdit.cedula }} / {{ projectEdit.ruc }}</td>
+        <td>{{ projectEdit.ruc }}</td>
         <td>
           <button type="button" class="btn btn-primary" ng-click="vm.projectEdit(projectEdit)">
             Editar
@@ -138,6 +138,55 @@
       </div>
     </div>
 
+    <div class="row">
+      <div class="form-group col-md-12">
+        <h4>
+          Sucursales
+        </h4>
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group col-md-12">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th> Nombre </th>
+              <th> Ciudad </th>
+              <th> Direcci&oacute;n </th>
+              <th>
+                <button type="button" class="btn btn-primary" ng-click="vm.subsidiary={}"
+                  data-toggle="modal" data-target="#modalSubsidiary">
+                  Agregar
+                </button>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-show="vm.project.subsidiaries == 0">
+              <td colspan="4">
+                No hay sucursales ingresados
+              </td>
+            </tr>
+            <tr ng-repeat="subsi in vm.project.subsidiaries | orderBy:name">
+              <td>{{ subsi.name }}</td>
+              <td>{{ subsi.city }}</td>
+              <td>{{ subsi.address1 }}</td>
+              <td>
+                <button type="button" class="btn btn-primary" ng-click="vm.subsidiary=subsi"
+                  data-toggle="modal" data-target="#modalSubsidiary">
+                  Editar
+                </button>
+                <button type="button" class="btn btn-primary" ng-click="vm.project=projectEdit"
+                  data-toggle="modal" data-target="#modalEliminar">
+                  Eliminar
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
   </div>
   <div class="panel-footer">
     <button type="button" class="btn btn-primary" ng-click="vm.save()"
@@ -150,6 +199,73 @@
     </button>
   </div>
 </div>
+
+<div id="modalSubsidiary" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" ng-click="vm.subsidiary=undefined">&times;</button>
+        <h4 class="modal-title">Sucursal</h4>
+      </div>
+      <div class="modal-body">
+
+        <div class="row">
+          <div class="form-group col-md-12">
+            <label>Nombre *: </label>
+            <input type="text" ng-model="vm.subsidiary.name" class="form-control">
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="form-group col-md-6">
+            <label>Tel&eacute;fono: (incluir c&oacute;digo de provincia ej: 02) </label>
+            <input type="text" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+            ng-model="vm.subsidiary.phone" class="form-control" maxlength="9">
+          </div>
+
+          <div class="form-group col-md-6">
+            <label>Tel&eacute;fono celular: </label>
+            <input type="text" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+            ng-model="vm.subsidiary.celPhone" class="form-control" maxlength="10">
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="form-group col-md-6">
+            <label>Ciudad: </label>
+            <input type="text" ng-model="vm.subsidiary.city" class="form-control">
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="form-group col-md-12">
+            <label>Direcci&oacute;n: </label>
+            <input type="text" ng-model="vm.subsidiary.address1" class="form-control">
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="form-group col-md-6">
+            <label>C&oacute;digo Facturaci&oacute;n (Ejemplo: 001): </label>
+            <input type="text" ng-model="vm.subsidiary.threeCode" class="form-control">
+          </div>
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" ng-click="vm.saveSubsidiary()"
+          ng-disabled="vm.subsidiary.name === undefined" data-dismiss="modal">
+          Guardar
+        </button>
+        <button type="button" class="btn btn-success"
+          ng-click="vm.cancelSubisdiary()" data-dismiss="modal">
+          Cancelar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
 
 <div id="modalEliminar" class="modal fade" role="dialog">
   <div class="modal-dialog">
