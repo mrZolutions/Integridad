@@ -8,7 +8,7 @@
  * Controller of the integridadUiApp
  */
 angular.module('integridadUiApp')
-  .controller('UserEditCtrl', function ($rootScope, utilStringService, utilValidationService, userTypeService, authService, $localStorage) {
+  .controller('UserEditCtrl', function ($rootScope, utilStringService, userTypeService, authService, $localStorage) {
     var vm = this;
 
     vm.loading = false;
@@ -34,7 +34,7 @@ angular.module('integridadUiApp')
       vm.userIntegridad.birthDay = $('#pickerBirthday').data("DateTimePicker").date().toDate().getTime();
       vm.userIntegridad.email = vm.userIntegridad.email.trim();
 
-      var validationError = utilValidationService.isAnyInArrayStringEmpty([
+      var validationError = utilStringService.isAnyInArrayStringEmpty([
         vm.userIntegridad.email, vm.userIntegridad.firstName,
         vm.userIntegridad.lastName
       ]);
@@ -42,7 +42,7 @@ angular.module('integridadUiApp')
       if(validationError){
         vm.error = 'Debe ingresar Nombres completos y un email';
       } else {
-        validationError = utilValidationService.isStringEmpty(vm.userIntegridad.cedula) && utilValidationService.isStringEmpty(vm.userIntegridad.ruc);
+        validationError = utilStringService.isStringEmpty(vm.userIntegridad.cedula) && utilStringService.isStringEmpty(vm.userIntegridad.ruc);
 
         if(validationError){
           vm.error = 'Debe ingresar un numero de cedula o ruc';

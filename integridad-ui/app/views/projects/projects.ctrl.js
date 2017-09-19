@@ -2,26 +2,24 @@
 
 /**
  * @ngdoc function
- * @name integridadUiApp.controller:ClientsCtrl
+ * @name integridadUiApp.controller:ProjectsCtrl
  * @description
- * # ClientsCtrl
- * Controller of the integridadUiApp
+ * # ProjectsCtrl
+ * Controller of the menu
  */
 angular.module('integridadUiApp')
-  .controller('ClientsCtrl', function (utilStringService, countryListService, clientService) {
+  .controller('ProjectsCtrl', function ($localStorage, $location, projectService, utilStringService) {
     var vm = this;
 
     vm.loading = false;
-    vm.client=undefined;
-    vm.countryList = countryListService.getCountryList();
-    vm.citiesList = countryListService.getCitiesEcuador();
-
-    vm.clientList = undefined;
+    vm.project = undefined;
+    vm.projectList = undefined;
+    vm.subsidiary = undefined;
 
     function _activate(){
       vm.loading = true;
-      clientService.getLazy().then(function (response) {
-        vm.clientList = response;
+      projectService.getLazy().then(function (response) {
+        vm.projectList = response;
         vm.loading = false;
       }).catch(function (error) {
         vm.loading = false;
@@ -30,8 +28,8 @@ angular.module('integridadUiApp')
     }
 
     function create(){
-      clientService.create(vm.client).then(function (response) {
-        vm.client=undefined;
+      projectService.create(vm.project).then(function (response) {
+        vm.project=undefined;
         _activate();
         vm.error = undefined;
         vm.success = 'Resgistro realizado con exito';
@@ -42,8 +40,8 @@ angular.module('integridadUiApp')
     }
 
     function update(isRemove){
-      clientService.update(vm.client).then(function (response) {
-        vm.client=undefined;
+      projectService.update(vm.project).then(function (response) {
+        vm.project=undefined;
         _activate();
         vm.error = undefined;
         if(isRemove){
@@ -57,32 +55,22 @@ angular.module('integridadUiApp')
       });
     }
 
-    vm.clientCreate = function(){
+    vm.projectCreate = function(){
       vm.success=undefined;
       vm.error=undefined
-      vm.client={country:'Ecuador', city:'Quito'};
-    };
-
-    vm.clientEdit = function(client){
-      vm.success=undefined;
-      vm.error=undefined
-      vm.client=angular.copy(client);
-    };
-
-    vm.validateEcuador = function(){
-      if(vm.client.country !== 'Ecuador'){vm.client.city = undefined}
+      vm.project={subsidiaries:[]};
     };
 
     vm.save = function(){
       var validationError = utilStringService.isAnyInArrayStringEmpty([
-        vm.client.name, vm.client.identification, vm.client.codConta
+        vm.project.name, vm.project.threeCode, vm.project.codeIntegridad, vm.project.ruc
       ]);
 
       if(validationError){
-        vm.error = 'Debe ingresar Nombres completos, una identificacion y el Codigo de Contabilidad';
+        vm.error = 'Debe ingresar Nombres completos, ruc y sus Codigos';
       } else {
         vm.loading = true;
-        if(vm.client.id === undefined){
+        if(vm.project.id === undefined){
           create();
         }else{
           update(false);
@@ -92,12 +80,25 @@ angular.module('integridadUiApp')
     };
 
     vm.remove = function(){
-      vm.client.active = false;
+      vm.project.active = false;
       update(true);
     };
 
+    vm.saveSubsidiary = function(){
+      if(vm.subsidiary.id === undefined){
+          vm.project.subsidiaries.push(vm.subsidiary);
+      }
+      vm.subsidiary = undefined;
+    };
+
     vm.cancel=function(){
-      vm.client=undefined;
+      vm.project=undefined;
+      vm.success=undefined;
+      vm.error=undefined
+    };
+
+    vm.cancel=function(){
+      vm.subsidiary=undefined;
       vm.success=undefined;
       vm.error=undefined
     };
@@ -105,5 +106,4 @@ angular.module('integridadUiApp')
     (function initController() {
       _activate();
     })();
-
   });

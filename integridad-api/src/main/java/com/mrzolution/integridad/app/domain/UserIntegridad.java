@@ -39,6 +39,7 @@ public class UserIntegridad {
     private String userName;
     private String password;
     
+    private boolean tempPass;
     
     private String validation;
     private boolean active;

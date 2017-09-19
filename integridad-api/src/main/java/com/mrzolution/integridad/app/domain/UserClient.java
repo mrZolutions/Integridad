@@ -26,6 +26,7 @@ public class UserClient {
 
     private String name;
     private String threeCode;
+    private String codeIntegridad;
     private String celPhone;
     private String phone;
     private String city;

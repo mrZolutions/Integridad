@@ -58,6 +58,7 @@ public class UserIntegridadServicesTest {
 		
 		Assert.assertNotNull(created.getValidation());
 		Assert.assertFalse(created.isActive());
+		Assert.assertFalse(created.isTempPass());
 	}
 	
 	@Test
@@ -193,6 +194,7 @@ public class UserIntegridadServicesTest {
 		Mockito.verify(mailingService, Mockito.times(1)).sendEmailRecoveryPass(Mockito.any(UserIntegridad.class), Mockito.anyString());
 		
 		Assert.assertNotNull(recovered);
+		Assert.assertTrue(recovered.isTempPass());
 	}
 	
 	@Test

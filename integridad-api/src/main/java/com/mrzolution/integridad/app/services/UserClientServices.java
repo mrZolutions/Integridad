@@ -1,6 +1,7 @@
 package com.mrzolution.integridad.app.services;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -31,6 +32,9 @@ public class UserClientServices {
 		
 	public UserClient create(UserClient userClient) throws BadRequestException{
 		log.info("UserClientServices create: {}", userClient.getName());
+		userClient.setDateCreated(new Date().getTime());
+		userClient.setActive(true);
+		
 		List<Subsidiary> subsidiarieList = userClient.getSubsidiaries();
 		userClient.setSubsidiaries(null);
 		

@@ -16,6 +16,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import com.google.common.collect.Iterables;
 import com.mrzolution.integridad.app.domain.Bill;
 import com.mrzolution.integridad.app.domain.Client;
+import com.mrzolution.integridad.app.exceptions.BadRequestException;
 import com.mrzolution.integridad.app.repositories.BillRepository;
 import com.mrzolution.integridad.app.repositories.ClientRepository;
 
@@ -69,6 +70,11 @@ public class ClientServicesTest {
 		ListValidation.childsLisAndFathertValidation(Client.class, retrieved);
 		
 		Assert.assertNotNull(retrieved);
+	}
+	
+	@Test(expected=BadRequestException.class)
+	public void validateExistCodeContaOnCreate(){
+		service.create(client);
 	}
 
 }

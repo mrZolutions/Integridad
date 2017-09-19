@@ -8,6 +8,6 @@
  * Controller of the integridadUiApp
  */
 angular.module('integridadUiApp')
-  .controller('BillCtrl', function ($rootScope, utilStringService, utilValidationService, userTypeService, authService, $localStorage) {
+  .controller('BillCtrl', function ($rootScope, utilStringService, userTypeService, authService, $localStorage) {
 
   });
