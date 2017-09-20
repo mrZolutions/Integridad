@@ -20,4 +20,10 @@ angular
       });
     };
 
+    this.getById = function (id) {
+      return securityService.get('/project/' + id).then(function successCallback(response) {
+        return response.data;
+      });
+    };
+
   });

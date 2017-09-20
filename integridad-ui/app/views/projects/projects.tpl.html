@@ -61,7 +61,7 @@
         <td>{{ projectEdit.name }}</td>
         <td>{{ projectEdit.ruc }}</td>
         <td>
-          <button type="button" class="btn btn-primary" ng-click="vm.projectEdit(projectEdit)">
+          <button type="button" class="btn btn-primary" ng-click="vm.editProject(projectEdit)">
             Editar
           </button>
           <button type="button" class="btn btn-primary" ng-click="vm.project=projectEdit"
@@ -150,6 +150,7 @@
         <table class="table table-striped">
           <thead>
             <tr>
+              <th> C&oacute;digo Facturaci&oacute;n </th>
               <th> Nombre </th>
               <th> Ciudad </th>
               <th> Direcci&oacute;n </th>
@@ -168,6 +169,7 @@
               </td>
             </tr>
             <tr ng-repeat="subsi in vm.project.subsidiaries | orderBy:name">
+              <td>{{ subsi.threeCode }}</td>
               <td>{{ subsi.name }}</td>
               <td>{{ subsi.city }}</td>
               <td>{{ subsi.address1 }}</td>
@@ -176,8 +178,8 @@
                   data-toggle="modal" data-target="#modalSubsidiary">
                   Editar
                 </button>
-                <button type="button" class="btn btn-primary" ng-click="vm.project=projectEdit"
-                  data-toggle="modal" data-target="#modalEliminar">
+                <button type="button" class="btn btn-primary" ng-click="vm.subsidiary=subsi"
+                  data-toggle="modal" data-target="#modalEliminarSubsidiary">
                   Eliminar
                 </button>
               </td>
@@ -254,7 +256,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-primary" ng-click="vm.saveSubsidiary()"
-          ng-disabled="vm.subsidiary.name === undefined" data-dismiss="modal">
+          data-dismiss="modal" >
           Guardar
         </button>
         <button type="button" class="btn btn-success"
@@ -265,7 +267,6 @@
     </div>
   </div>
 </div>
-
 
 <div id="modalEliminar" class="modal fade" role="dialog">
   <div class="modal-dialog">
@@ -284,6 +285,30 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-primary" ng-click="vm.remove()" data-dismiss="modal">
+          Eliminar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="modalEliminarSubsidiary" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" ng-click="vm.project=undefined">&times;</button>
+        <h4 class="modal-title">Advertencia</h4>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-md-12" >
+            Esta seguro que desea Eliminar la Sucursal {{vm.subsidiary.name}} con c&oacute;digo:
+            {{vm.subsidiary.threeCode}}
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" ng-click="vm.removeSubsidiary()" data-dismiss="modal">
           Eliminar
         </button>
       </div>
