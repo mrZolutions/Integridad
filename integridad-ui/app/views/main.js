@@ -8,7 +8,7 @@
  * Controller of the integridadUiApp
  */
 angular.module('integridadUiApp')
-  .controller('MainCtrl', function ($rootScope, $location, authService, utilValidationService, permissionService, $localStorage) {
+  .controller('MainCtrl', function ($rootScope, $location, authService, utilStringService, permissionService, $localStorage) {
     var vm = this;
     vm.loading = false;
 
@@ -37,6 +37,32 @@ angular.module('integridadUiApp')
       var user = {email: vm.email, password: vm.password};
       authService.authUser(user).then(function (response) {
         $localStorage.user = response;
+
+        if($localStorage.user.tempPass){
+          vm.loading = false;
+          vm.passwordNotMatch = false;
+          vm.userIntegridad = angular.copy($localStorage.user);
+          $('#modalChangePassword').modal('show');
+        } else {
+          var d = new Date();
+          $localStorage.timeloged = d.getTime();
+          getPermissions();
+        }
+
+      }).catch(function (error) {
+        vm.loading = false;
+        vm.error = error.data;
+      });
+    };
+
+    vm.update = function(){
+      vm.loading = true;
+      vm.userIntegridad.password = vm.newPass;
+      vm.userIntegridad.tempPass = false;
+      authService.updateUser(vm.userIntegridad).then(function (response) {
+        vm.error = undefined;
+        vm.success = 'Perfil actualizado con exito';
+        $localStorage.user = response;
         var d = new Date();
         $localStorage.timeloged = d.getTime();
         getPermissions();
@@ -44,6 +70,10 @@ angular.module('integridadUiApp')
         vm.loading = false;
         vm.error = error.data;
       });
+    }
+
+    vm.validatePassword = function () {
+      vm.passwordNotMatch = vm.newPass !== vm.passConfirmation;
     };
 
     vm.register = function(){
@@ -51,7 +81,7 @@ angular.module('integridadUiApp')
       vm.userIntegridad.email = vm.userIntegridad.email.trim();
       vm.userIntegridad.password = vm.userIntegridad.password.trim();
 
-      var validationError = utilValidationService.isAnyInArrayStringEmpty([
+      var validationError = utilStringService.isAnyInArrayStringEmpty([
         vm.userIntegridad.email, vm.userIntegridad.password, vm.userIntegridad.firstName,
         vm.userIntegridad.lastName
       ]);
@@ -59,7 +89,7 @@ angular.module('integridadUiApp')
       if(validationError){
         vm.error = 'Debe ingresar Nombres completos, email y password';
       } else {
-        validationError = utilValidationService.isStringEmpty(vm.userIntegridad.cedula) && utilValidationService.isStringEmpty(vm.userIntegridad.ruc);
+        validationError = utilStringService.isStringEmpty(vm.userIntegridad.cedula) && utilStringService.isStringEmpty(vm.userIntegridad.ruc);
 
         if(validationError){
           vm.error = 'Debe ingresar un numero de cedula o ruc';

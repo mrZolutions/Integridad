@@ -23,7 +23,7 @@ angular
     }
 
     this.getCitiesEcuador = function(){
-      var cities= ['Ambato','Arajuno','Babahoyo','Bahía de Caráquez','Baños de Agua Santa','Cuenca','Durán','Esmeraldas','Guaranda','Guayaquil','Ibarra','La Libertad','Latacunga','Loja','Macas','Machala','Manta','Milagro','Nueva Loja','Portoviejo'
+      var cities= ['Ambato','Arajuno','Babahoyo','Bahía de Caráquez','Baños de Agua Santa','Cuenca', 'Coca','Durán','Esmeraldas','Guaranda','Guayaquil','Ibarra','La Libertad','Lago Agrio','Latacunga','Loja','Macas','Machala','Manta','Milagro','Nueva Loja','Portoviejo'
       ,'Piñas','Pintag','Quevedo','Quito','Riobamba','Santo Domingo de los Colorados','Salinas','Shell Mera','Tulcán']
 
       return cities;

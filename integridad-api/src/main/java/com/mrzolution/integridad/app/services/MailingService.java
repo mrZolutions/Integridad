@@ -1,16 +1,22 @@
 package com.mrzolution.integridad.app.services;
 
-import lombok.extern.slf4j.Slf4j;
+import java.util.Properties;
+
+import javax.mail.Authenticator;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.mrzolution.integridad.app.domain.UserIntegridad;
 
-import javax.mail.*;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
-import java.util.Properties;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Created by daniel.
@@ -31,12 +37,9 @@ public class MailingService {
     public Boolean sendEmailREgister(UserIntegridad userIntegridad, String passPreEncoded) {
         String to = userIntegridad.getEmail();
         String subject = "Cuenta para tu aplicacion Integridad";
-//        String body = "Gracias por tu registro. "
-//                + "\n\n Tu email registrado es: " + userIntegridad.getEmail()
-//        		+ "\n\n Usa este link para activar tu cuenta: "
-//        		+ "\n\nhttps://mrzolutions.github.io/Integridad/integridad-ui/dist/#!/activate/" + userIntegridad.getId()+ "/" + userIntegridad.getValidation();
         
         String link ="https://mrzolutions.github.io/Integridad/integridad-ui/dist/#!/activate/" + userIntegridad.getId()+ "/" + userIntegridad.getValidation();
+        
         String body = "Gracias por tu registro. "
                 + "<br> Tu email registrado es: " + userIntegridad.getEmail()
                 + "<br> Tu password es: " + passPreEncoded
@@ -55,11 +58,13 @@ public class MailingService {
         String subject = "Clave Recuperada para Sistema Integridad";
         
         String link ="https://mrzolutions.github.io/Integridad/integridad-ui/dist/#!/";
-        String body = "Tu password temporal para ingresar al sistema es. "
-                + "<br> Tu email registrado es: " + userIntegridad.getEmail()
-        		+ "<br> Password: " + pass
+        
+        String body = "GRACIAS POR CONFIAR EN LOS SERVICIOS DE MR. ZOLUTIONS ECUADOR. "
+        		+ "<br><br> Estimado usuario, hemos recibido su solicitud de recuperación de clave para el sistema INTEGRIDAD. "
+        		+ "<br> Su clave de acceso temporal es: " + pass
+        		+ "<br> Ingrese al sistema y personalice su clave dando clic en el siguiente botón"
         		+ "<br><br><a href=\""+link+"\">"
-        		+ "<button>Ingrear</button>"
+        		+ "<button>Intedgridad</button>"
         		+ "</a>";
     
         
