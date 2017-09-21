@@ -168,7 +168,7 @@
                 No hay sucursales ingresados
               </td>
             </tr>
-            <tr ng-repeat="subsi in vm.project.subsidiaries | orderBy:name">
+            <tr ng-repeat="subsi in vm.project.subsidiaries | orderBy:name | filter:{active: true}">
               <td>{{ subsi.threeCode }}</td>
               <td>{{ subsi.name }}</td>
               <td>{{ subsi.city }}</td>

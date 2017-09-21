@@ -51,18 +51,27 @@ public class UserIntegridad {
     @JoinColumn(name = "user_type_id")
     private UserType userType;
     
+    @ManyToOne
+    @JoinColumn(name = "subsidiary_id")
+    private Subsidiary subsidiary;
+    
     public void setListsNull(){
     	
     }
     
     public void setFatherListToNull(){
     	userType.setListsNull();
+    	if(subsidiary != null) {
+    		subsidiary.setListsNull(); 
+    		subsidiary.setFatherListToNull();
+    	};
     }
 
     @Transient
     public static UserIntegridad newUserIntegridadTest(){
         UserIntegridad userIntegridad = new UserIntegridad();
         userIntegridad.setUserType(UserType.newUserTypeTest());
+        userIntegridad.setSubsidiary(Subsidiary.newSubsidiaryTest());
 
         return userIntegridad;
     }
