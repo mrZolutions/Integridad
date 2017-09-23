@@ -84,23 +84,38 @@ angular.module('integridadUiApp')
       update(true);
     };
 
+    vm.removeSubsidiary = function(){
+      vm.subsidiary.active = false;
+      update(true);
+    };
+
+    vm.editProject = function(projectEdit){
+      projectService.getById(projectEdit.id).then(function (response) {
+        vm.project = response;
+      }).catch(function (error) {
+        vm.loading = false;
+        vm.error = error.data;
+      });
+    };
+
     vm.saveSubsidiary = function(){
-      if(vm.subsidiary.id === undefined){
-          vm.project.subsidiaries.push(vm.subsidiary);
+      if(vm.subsidiary.id === undefined && vm.subsidiary.name !== undefined){
+        vm.subsidiary.active = true;
+        vm.subsidiary.dateCreated = new Date().getTime();
+        vm.project.subsidiaries.push(vm.subsidiary);
       }
-      vm.subsidiary = undefined;
     };
 
     vm.cancel=function(){
       vm.project=undefined;
       vm.success=undefined;
-      vm.error=undefined
+      vm.error=undefined;
     };
 
-    vm.cancel=function(){
+    vm.cancelSubisdiary=function(){
       vm.subsidiary=undefined;
       vm.success=undefined;
-      vm.error=undefined
+      vm.error=undefined;
     };
 
     (function initController() {

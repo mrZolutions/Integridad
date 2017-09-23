@@ -91,6 +91,8 @@ public class UserTypeServices {
 		Iterable<UserIntegridad> usersIntegridad= userIntegridadRepository.findByUserType(userType);
 		
 		for (UserIntegridad userIntegridad : usersIntegridad) {
+			userIntegridad.setListsNull();
+			userIntegridad.setFatherListToNull();
 			userIntegridad.setUserType(null);
 			
 			userIntegridadList.add(userIntegridad);

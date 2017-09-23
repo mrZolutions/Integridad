@@ -38,7 +38,7 @@ public class UserClientServices {
 		List<Subsidiary> subsidiarieList = userClient.getSubsidiaries();
 		userClient.setSubsidiaries(null);
 		
-		if(subsidiarieList == null){
+		if(subsidiarieList == null || subsidiarieList.isEmpty()){
 			throw new BadRequestException("Debe tener una sucursal por lo menos");
 		}
 		
