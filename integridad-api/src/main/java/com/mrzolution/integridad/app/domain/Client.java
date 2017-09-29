@@ -8,6 +8,8 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 
@@ -36,6 +38,7 @@ public class Client {
     private String identification;
     private String contact;
     private String codConta;
+    private String codApp;
     private long entryDate;
     
     private long dateCreated;
@@ -43,6 +46,10 @@ public class Client {
     
     @Email
     private String email;
+    
+    @ManyToOne
+    @JoinColumn(name = "user_client_id")
+    private UserClient userClient;
     
     @OneToMany(mappedBy = "client", cascade = CascadeType.ALL)
     private List<Bill> bills;
@@ -52,11 +59,16 @@ public class Client {
     }
     
     public void setFatherListToNull(){
+    	if(userClient != null){    		
+    		userClient.setListsNull();
+    		userClient.setFatherListToNull();
+    	}
     }
 
     @Transient
     public static Client newClientTest(){
         Client client = new Client();
+        client.setUserClient(UserClient.newUserClientTest());
         client.setBills(new ArrayList<>());
 
         return client;

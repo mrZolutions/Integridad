@@ -40,7 +40,7 @@
   <table class="table table-striped">
     <thead>
       <tr>
-        <th> CodConta </th>
+        <th> C&oacute;digo </th>
         <th> Nombre </th>
         <th> Ruc / C&eacute;dula </th>
         <th>
@@ -57,7 +57,7 @@
         </td>
       </tr>
       <tr ng-repeat="clientEdit in vm.clientList | orderBy:name | filter:searchText">
-        <td>{{ clientEdit.codConta }}</td>
+        <td>{{ clientEdit.codApp }}</td>
         <td>{{ clientEdit.name }}</td>
         <td>{{ clientEdit.identification }}</td>
         <td>
@@ -163,11 +163,18 @@
       </div>
     </div>
 
+    <div class="row">
+      <div class="form-group col-md-6">
+        <label>C&oacute;digo : </label>
+        <input type="text" ng-model="vm.client.codApp" class="form-control">
+      </div>
+    </div>
+
   </div>
   <div class="panel-footer">
     <button type="button" class="btn btn-primary" ng-click="vm.save()"
       ng-disabled="vm.client.name === undefined || vm.client.identification === undefined ||
-      vm.client.codConta === undefined">
+      vm.client.codApp === undefined">
       Guardar
     </button>
     <button type="button" class="btn btn-success"

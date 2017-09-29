@@ -8,7 +8,7 @@
  * Controller of the integridadUiApp
  */
 angular.module('integridadUiApp')
-  .controller('ClientsCtrl', function (utilStringService, countryListService, clientService) {
+  .controller('ClientsCtrl', function (projectService, utilStringService, countryListService, clientService, $localStorage) {
     var vm = this;
 
     vm.loading = false;
@@ -58,9 +58,20 @@ angular.module('integridadUiApp')
     }
 
     vm.clientCreate = function(){
-      vm.success=undefined;
-      vm.error=undefined
-      vm.client={country:'Ecuador', city:'Quito'};
+      projectService.getNumberOfProjects($localStorage.user.subsidiary.userClient.id).then(function (response) {
+        vm.success=undefined;
+        vm.error=undefined
+        var number = parseInt(response);
+        vm.client={
+          country:'Ecuador',
+          city:'Quito',
+          codApp: number + 1,
+          userClient: $localStorage.user.subsidiary.userClient
+        };
+      }).catch(function (error) {
+        vm.loading = false;
+        vm.error = error.data;
+      });
     };
 
     vm.clientEdit = function(client){
@@ -75,7 +86,7 @@ angular.module('integridadUiApp')
 
     vm.save = function(){
       var validationError = utilStringService.isAnyInArrayStringEmpty([
-        vm.client.name, vm.client.identification, vm.client.codConta
+        vm.client.name, vm.client.identification, vm.client.codApp
       ]);
 
       if(validationError){

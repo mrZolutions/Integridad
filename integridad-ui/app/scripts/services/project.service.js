@@ -26,4 +26,10 @@ angular
       });
     };
 
+    this.getNumberOfProjects = function (id) {
+      return securityService.get('/project//clients_number/' + id).then(function successCallback(response) {
+        return response.data;
+      });
+    };
+
   });
