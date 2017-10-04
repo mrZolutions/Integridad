@@ -118,6 +118,12 @@ angular.module('integridadUiApp')
       vm.error=undefined;
     };
 
+    vm.products=function(subsidiary){
+      console.log(vm.project);
+      console.log(subsidiary);
+      console.log($localStorage.user);
+    };
+
     (function initController() {
       _activate();
     })();
