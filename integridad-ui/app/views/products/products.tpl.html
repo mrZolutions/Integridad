@@ -1,0 +1,316 @@
+<div style="width: 100%;height: 100%;top: 0px;left: 0px;position: fixed;display: block; z-index: 99; background: rgba(255, 255, 255, 0.3)" ng-show="vm.loading">
+  <div style="position: absolute;top: 15%;z-index: 100; width: 100%; text-align: center;">
+    <div class="sk-circle">
+      <div class="sk-circle1 sk-child"></div>
+      <div class="sk-circle2 sk-child"></div>
+      <div class="sk-circle3 sk-child"></div>
+      <div class="sk-circle4 sk-child"></div>
+      <div class="sk-circle5 sk-child"></div>
+      <div class="sk-circle6 sk-child"></div>
+      <div class="sk-circle7 sk-child"></div>
+      <div class="sk-circle8 sk-child"></div>
+      <div class="sk-circle9 sk-child"></div>
+      <div class="sk-circle10 sk-child"></div>
+      <div class="sk-circle11 sk-child"></div>
+      <div class="sk-circle12 sk-child"></div>
+    </div>
+  </div>
+</div>
+
+<div class="header">
+  <h4>
+    Productos
+  </h4>
+</div>
+
+<div class="row" ng-show="vm.error !== undefined">
+  <div class="form-group col-md-12">
+    <div class="alert alert-danger">{{vm.error}}</div>
+  </div>
+</div>
+<div class="row" ng-show="vm.success !== undefined">
+  <div class="form-group col-md-12">
+    <div class="alert alert-success">{{vm.success}}</div>
+  </div>
+</div>
+
+<div ng-show="vm.product === undefined">
+
+  <input ng-model="searchText" class="form-control" placeholder="Buscar">
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th> Nombre </th>
+        <th> Sucursal </th>
+        <th> Cantidad </th>
+        <th>
+          <button type="button" class="btn btn-primary" ng-click="vm.productCreate()">
+            Crear
+          </button>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-show="vm.productList == 0">
+        <td colspan="4">
+          No hay proyectos ingresados
+        </td>
+      </tr>
+      <tr ng-repeat="productEdit in vm.productList | orderBy:name | filter:searchText">
+        <td>{{ productEdit.name }}</td>
+        <td>{{ productEdit.subsidiary.name }}</td>
+        <td>{{ productEdit.quantity }}</td>
+        <td>
+          <button type="button" class="btn btn-primary" ng-click="vm.editProduct(productEdit)">
+            Editar
+          </button>
+          <button type="button" class="btn btn-primary" ng-click="vm.product=productEdit"
+            data-toggle="modal" data-target="#modalEliminar">
+            Eliminar
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+</div>
+
+<!-- <div class="panel panel-default" ng-show="vm.project">
+  <div class="panel-body">
+    <div class="row">
+      <div class="form-group col-md-12">
+        <label>Nombre *: </label>
+        <input type="text" ng-model="vm.project.name" class="form-control">
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="form-group col-md-6">
+        <label>Tel&eacute;fono: (incluir c&oacute;digo de provincia ej: 02) </label>
+        <input type="text" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+        ng-model="vm.project.phone" class="form-control" maxlength="9">
+      </div>
+
+      <div class="form-group col-md-6">
+        <label>Tel&eacute;fono celular: </label>
+        <input type="text" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+        ng-model="vm.project.celPhone" class="form-control" maxlength="10">
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="form-group col-md-6">
+        <label>Ciudad: </label>
+        <input type="text" ng-model="vm.project.city" class="form-control">
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="form-group col-md-12">
+        <label>Direcci&oacute;n: </label>
+        <input type="text" ng-model="vm.project.address1" class="form-control">
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="form-group col-md-6">
+        <label>C&eacute;dula: </label>
+        <input type="text" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+        ng-model="vm.project.cedula" class="form-control" maxlength="10">
+      </div>
+
+      <div class="form-group col-md-6">
+        <label>Ruc *: </label>
+        <input type="text" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+        ng-model="vm.project.ruc" class="form-control" maxlength="13">
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="form-group col-md-6">
+        <label>C&oacute;digo Facturaci&oacute;n (Ejemplo: 001): </label>
+        <input type="text" ng-model="vm.project.threeCode" class="form-control">
+      </div>
+
+      <div class="form-group col-md-6">
+        <label>C&oacute;digo Integridad(Ejemplo: COD01-01): </label>
+        <input type="text" ng-model="vm.project.codeIntegridad" class="form-control">
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="form-group col-md-12">
+        <h4>
+          Sucursales
+        </h4>
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group col-md-12">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th> C&oacute;digo Facturaci&oacute;n </th>
+              <th> Nombre </th>
+              <th> Ciudad </th>
+              <th> Direcci&oacute;n </th>
+              <th>
+                <button type="button" class="btn btn-primary" ng-click="vm.subsidiary={}"
+                  data-toggle="modal" data-target="#modalSubsidiary">
+                  Agregar
+                </button>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-show="vm.project.subsidiaries == 0">
+              <td colspan="4">
+                No hay sucursales ingresados
+              </td>
+            </tr>
+            <tr ng-repeat="subsi in vm.project.subsidiaries | orderBy:name | filter:{active: true}">
+              <td>{{ subsi.threeCode }}</td>
+              <td>{{ subsi.name }}</td>
+              <td>{{ subsi.city }}</td>
+              <td>{{ subsi.address1 }}</td>
+              <td>
+                <button type="button" class="btn btn-primary" ng-click="vm.subsidiary=subsi"
+                  data-toggle="modal" data-target="#modalSubsidiary">
+                  Editar
+                </button>
+                <button type="button" class="btn btn-primary" ng-click="vm.subsidiary=subsi"
+                  data-toggle="modal" data-target="#modalEliminarSubsidiary">
+                  Eliminar
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+  <div class="panel-footer">
+    <button type="button" class="btn btn-primary" ng-click="vm.save()"
+      ng-disabled="vm.project.name === undefined">
+      Guardar
+    </button>
+    <button type="button" class="btn btn-success"
+    ng-click="vm.cancel()">
+      Cancelar
+    </button>
+  </div>
+</div>
+
+<div id="modalSubsidiary" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" ng-click="vm.subsidiary=undefined">&times;</button>
+        <h4 class="modal-title">Sucursal</h4>
+      </div>
+      <div class="modal-body">
+
+        <div class="row">
+          <div class="form-group col-md-12">
+            <label>Nombre *: </label>
+            <input type="text" ng-model="vm.subsidiary.name" class="form-control">
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="form-group col-md-6">
+            <label>Tel&eacute;fono: (incluir c&oacute;digo de provincia ej: 02) </label>
+            <input type="text" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+            ng-model="vm.subsidiary.phone" class="form-control" maxlength="9">
+          </div>
+
+          <div class="form-group col-md-6">
+            <label>Tel&eacute;fono celular: </label>
+            <input type="text" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+            ng-model="vm.subsidiary.celPhone" class="form-control" maxlength="10">
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="form-group col-md-6">
+            <label>Ciudad: </label>
+            <input type="text" ng-model="vm.subsidiary.city" class="form-control">
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="form-group col-md-12">
+            <label>Direcci&oacute;n: </label>
+            <input type="text" ng-model="vm.subsidiary.address1" class="form-control">
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="form-group col-md-6">
+            <label>C&oacute;digo Facturaci&oacute;n (Ejemplo: 001): </label>
+            <input type="text" ng-model="vm.subsidiary.threeCode" class="form-control">
+          </div>
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" ng-click="vm.saveSubsidiary()"
+          data-dismiss="modal" >
+          Guardar
+        </button>
+        <button type="button" class="btn btn-success"
+          ng-click="vm.cancelSubisdiary()" data-dismiss="modal">
+          Cancelar
+        </button>
+      </div>
+    </div>
+  </div>
+</div> -->
+
+<div id="modalEliminar" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" ng-click="vm.product=undefined">&times;</button>
+        <h4 class="modal-title">Advertencia</h4>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-md-12" >
+            Esta seguro que desea Eliminar el Producto {{vm.product.name}}
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" ng-click="vm.remove()" data-dismiss="modal">
+          Eliminar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- <div id="modalEliminarSubsidiary" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" ng-click="vm.project=undefined">&times;</button>
+        <h4 class="modal-title">Advertencia</h4>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-md-12" >
+            Esta seguro que desea Eliminar la Sucursal {{vm.subsidiary.name}} con c&oacute;digo:
+            {{vm.subsidiary.threeCode}}
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" ng-click="vm.removeSubsidiary()" data-dismiss="modal">
+          Eliminar
+        </button>
+      </div>
+    </div>
+  </div>
+</div> -->

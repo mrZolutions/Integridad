@@ -34,12 +34,29 @@ public class ProductServices {
 		return findOne;
 	}
 	
+	public Product delete(UUID productId) {
+		log.info("ProductServices delete: {}", productId);
+		Product findOne = productRepository.findOne(productId);
+		findOne.setListsNull();
+		findOne.setActive(false);
+		return findOne;
+	}
+	
 	public Iterable<Product> getAllActives(){
 		log.info("ProductServices getAllActives");
 		Iterable<Product> actives = productRepository.findByActive(true);
 		actives.forEach(this::populateChildren);
 		return actives;
 		
+	}
+	
+	public Iterable<Product> getAllActivesByUserClientIdAndActive(UUID userClientId) {
+		log.info("ProductServices getAllActivesByUserClientIdAndActive");
+		Iterable<Product> actives = productRepository.findByUserClientIdAndActive(userClientId);
+		actives.forEach(prodcut -> {
+			prodcut.setFatherListToNull();
+		});
+		return actives;
 	}
 	
 	private void populateChildren(Product product) {
