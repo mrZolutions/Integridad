@@ -1,5 +1,6 @@
 package com.mrzolution.integridad.app.services;
 
+import java.util.Date;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,12 +20,18 @@ public class ProductServices {
 	
 	public Product create(Product product){
 		log.info("ProductServices create");
+		product.setActive(true);
+		product.setDateCreated(new Date().getTime());
+		product.setLastDateUpdated(new Date().getTime());
 		return productRepository.save(product);
 	}
 	
-	public Product update(Product product){
+	public void update(Product product){
 		log.info("ProductServices update");
-		return productRepository.save(product);
+		product.setLastDateUpdated(new Date().getTime());
+		product.getSubsidiary().setFatherListToNull();
+		product.getUserClient().setFatherListToNull();
+		productRepository.save(product);
 	}
 	
 	public Product getById(UUID id){
@@ -39,6 +46,7 @@ public class ProductServices {
 		Product findOne = productRepository.findOne(productId);
 		findOne.setListsNull();
 		findOne.setActive(false);
+		update(findOne);
 		return findOne;
 	}
 	

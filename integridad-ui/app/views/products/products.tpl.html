@@ -75,124 +75,26 @@
 
 </div>
 
-<!-- <div class="panel panel-default" ng-show="vm.project">
+<div class="panel panel-default" ng-show="vm.product">
   <div class="panel-body">
     <div class="row">
       <div class="form-group col-md-12">
         <label>Nombre *: </label>
-        <input type="text" ng-model="vm.project.name" class="form-control">
+        <input type="text" ng-model="vm.product.name" class="form-control">
       </div>
     </div>
 
     <div class="row">
       <div class="form-group col-md-6">
-        <label>Tel&eacute;fono: (incluir c&oacute;digo de provincia ej: 02) </label>
+        <label>Cantidad: </label>
         <input type="text" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
-        ng-model="vm.project.phone" class="form-control" maxlength="9">
-      </div>
-
-      <div class="form-group col-md-6">
-        <label>Tel&eacute;fono celular: </label>
-        <input type="text" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
-        ng-model="vm.project.celPhone" class="form-control" maxlength="10">
+        ng-model="vm.product.quantity" class="form-control" maxlength="9">
       </div>
     </div>
-
-    <div class="row">
-      <div class="form-group col-md-6">
-        <label>Ciudad: </label>
-        <input type="text" ng-model="vm.project.city" class="form-control">
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="form-group col-md-12">
-        <label>Direcci&oacute;n: </label>
-        <input type="text" ng-model="vm.project.address1" class="form-control">
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="form-group col-md-6">
-        <label>C&eacute;dula: </label>
-        <input type="text" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
-        ng-model="vm.project.cedula" class="form-control" maxlength="10">
-      </div>
-
-      <div class="form-group col-md-6">
-        <label>Ruc *: </label>
-        <input type="text" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
-        ng-model="vm.project.ruc" class="form-control" maxlength="13">
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="form-group col-md-6">
-        <label>C&oacute;digo Facturaci&oacute;n (Ejemplo: 001): </label>
-        <input type="text" ng-model="vm.project.threeCode" class="form-control">
-      </div>
-
-      <div class="form-group col-md-6">
-        <label>C&oacute;digo Integridad(Ejemplo: COD01-01): </label>
-        <input type="text" ng-model="vm.project.codeIntegridad" class="form-control">
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="form-group col-md-12">
-        <h4>
-          Sucursales
-        </h4>
-      </div>
-    </div>
-    <div class="row">
-      <div class="form-group col-md-12">
-        <table class="table table-striped">
-          <thead>
-            <tr>
-              <th> C&oacute;digo Facturaci&oacute;n </th>
-              <th> Nombre </th>
-              <th> Ciudad </th>
-              <th> Direcci&oacute;n </th>
-              <th>
-                <button type="button" class="btn btn-primary" ng-click="vm.subsidiary={}"
-                  data-toggle="modal" data-target="#modalSubsidiary">
-                  Agregar
-                </button>
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr ng-show="vm.project.subsidiaries == 0">
-              <td colspan="4">
-                No hay sucursales ingresados
-              </td>
-            </tr>
-            <tr ng-repeat="subsi in vm.project.subsidiaries | orderBy:name | filter:{active: true}">
-              <td>{{ subsi.threeCode }}</td>
-              <td>{{ subsi.name }}</td>
-              <td>{{ subsi.city }}</td>
-              <td>{{ subsi.address1 }}</td>
-              <td>
-                <button type="button" class="btn btn-primary" ng-click="vm.subsidiary=subsi"
-                  data-toggle="modal" data-target="#modalSubsidiary">
-                  Editar
-                </button>
-                <button type="button" class="btn btn-primary" ng-click="vm.subsidiary=subsi"
-                  data-toggle="modal" data-target="#modalEliminarSubsidiary">
-                  Eliminar
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
   </div>
   <div class="panel-footer">
     <button type="button" class="btn btn-primary" ng-click="vm.save()"
-      ng-disabled="vm.project.name === undefined">
+      ng-disabled="vm.product.name === undefined || vm.product.quantity === undefined">
       Guardar
     </button>
     <button type="button" class="btn btn-success"
@@ -202,7 +104,7 @@
   </div>
 </div>
 
-<div id="modalSubsidiary" class="modal fade" role="dialog">
+<!-- <div id="modalSubsidiary" class="modal fade" role="dialog">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">

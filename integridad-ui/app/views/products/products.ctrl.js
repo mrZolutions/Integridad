@@ -26,59 +26,61 @@ angular.module('integridadUiApp')
         vm.error = error.data;
       });
     }
-    //
-    // function create(){
-    //   projectService.create(vm.project).then(function (response) {
-    //     vm.project=undefined;
-    //     _activate();
-    //     vm.error = undefined;
-    //     vm.success = 'Resgistro realizado con exito';
-    //   }).catch(function (error) {
-    //     vm.loading = false;
-    //     vm.error = error.data;
-    //   });
-    // }
-    //
-    // function update(isRemove){
-    //   projectService.update(vm.project).then(function (response) {
-    //     vm.project=undefined;
-    //     _activate();
-    //     vm.error = undefined;
-    //     if(isRemove){
-    //       vm.success = 'Resgistro eliminado con exito';
-    //     } else {
-    //       vm.success = 'Resgistro actualizado con exito';
-    //     }
-    //   }).catch(function (error) {
-    //     vm.loading = false;
-    //     vm.error = error.data;
-    //   });
-    // }
-    //
-    // vm.projectCreate = function(){
-    //   vm.success=undefined;
-    //   vm.error=undefined
-    //   vm.project={subsidiaries:[]};
-    // };
-    //
-    // vm.save = function(){
-    //   var validationError = utilStringService.isAnyInArrayStringEmpty([
-    //     vm.project.name, vm.project.threeCode, vm.project.codeIntegridad, vm.project.ruc
-    //   ]);
-    //
-    //   if(validationError){
-    //     vm.error = 'Debe ingresar Nombres completos, ruc y sus Codigos';
-    //   } else {
-    //     vm.loading = true;
-    //     if(vm.project.id === undefined){
-    //       create();
-    //     }else{
-    //       update(false);
-    //     }
-    //   }
-    //
-    // };
-    //
+
+    function create(){
+      productService.create(vm.product).then(function (response) {
+        vm.product=undefined;
+        _activate();
+        vm.error = undefined;
+        vm.success = 'Resgistro realizado con exito';
+      }).catch(function (error) {
+        vm.loading = false;
+        vm.error = error.data;
+      });
+    }
+
+    function update(isRemove){
+      productService.update(vm.product).then(function (response) {
+        vm.product=undefined;
+        _activate();
+        vm.error = undefined;
+        if(isRemove){
+          vm.success = 'Resgistro eliminado con exito';
+        } else {
+          vm.success = 'Resgistro actualizado con exito';
+        }
+      }).catch(function (error) {
+        vm.loading = false;
+        vm.error = error.data;
+      });
+    }
+
+    vm.productCreate = function(){
+      vm.success=undefined;
+      vm.error=undefined
+      vm.product={
+        userClient: $localStorage.user.subsidiary.userClient  ,
+        subsidiary: $localStorage.user.subsidiary
+      };
+    };
+
+    vm.save = function(){
+      var validationError = utilStringService.isAnyInArrayStringEmpty([
+        vm.product.name
+      ]);
+
+      if(validationError){
+        vm.error = 'Debe ingresar Nombre del producto';
+      } else {
+        vm.loading = true;
+        if(vm.product.id === undefined){
+          create();
+        }else{
+          update(false);
+        }
+      }
+    };
+
     // vm.remove = function(){
     //   vm.project.active = false;
     //   update(true);
@@ -88,15 +90,17 @@ angular.module('integridadUiApp')
     //   vm.subsidiary.active = false;
     //   update(true);
     // };
-    //
-    // vm.editProject = function(projectEdit){
-    //   projectService.getById(projectEdit.id).then(function (response) {
-    //     vm.project = response;
-    //   }).catch(function (error) {
-    //     vm.loading = false;
-    //     vm.error = error.data;
-    //   });
-    // };
+
+    vm.editProduct = function(productEdit){
+      vm.loading = true;
+      productService.getById(productEdit.id).then(function (response) {
+        vm.loading = false;
+        vm.product = response;
+      }).catch(function (error) {
+        vm.loading = false;
+        vm.error = error.data;
+      });
+    };
     //
     // vm.saveSubsidiary = function(){
     //   if(vm.subsidiary.id === undefined && vm.subsidiary.name !== undefined){
@@ -105,13 +109,13 @@ angular.module('integridadUiApp')
     //     vm.project.subsidiaries.push(vm.subsidiary);
     //   }
     // };
-    //
-    // vm.cancel=function(){
-    //   vm.project=undefined;
-    //   vm.success=undefined;
-    //   vm.error=undefined;
-    // };
-    //
+
+    vm.cancel=function(){
+      vm.product=undefined;
+      vm.success=undefined;
+      vm.error=undefined;
+    };
+
     // vm.cancelSubisdiary=function(){
     //   vm.subsidiary=undefined;
     //   vm.success=undefined;

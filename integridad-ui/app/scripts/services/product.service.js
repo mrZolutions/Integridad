@@ -20,6 +20,12 @@ angular
       });
     };
 
+    this.getById = function (id) {
+      return securityService.get('/product/' + id).then(function successCallback(response) {
+        return response.data;
+      });
+    };
+
     this.getLazy = function () {
       return securityService.get('/product/actives').then(function successCallback(response) {
         return response.data;
