@@ -33,7 +33,13 @@ angular
     };
 
     this.getLazyByProjectId = function (projectId) {
-      return securityService.get('/product/actives/'+projectId).then(function successCallback(response) {
+      return securityService.get('/product/actives/user_client/'+projectId).then(function successCallback(response) {
+        return response.data;
+      });
+    };
+
+    this.getLazyBySusidiaryId = function (subsidiaryId) {
+      return securityService.get('/product/actives/subsidiary/'+subsidiaryId).then(function successCallback(response) {
         return response.data;
       });
     };

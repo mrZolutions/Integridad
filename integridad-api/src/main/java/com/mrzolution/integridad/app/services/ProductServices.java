@@ -67,6 +67,15 @@ public class ProductServices {
 		return actives;
 	}
 	
+	public Iterable<Product> getAllActivesBySubsidiaryIdAndActive(UUID subsidiaryId) {
+		log.info("ProductServices getAllActivesBySubsidiaryIdAndActive");
+		Iterable<Product> actives = productRepository.findBySubsidiaryIdAndActive(subsidiaryId);
+		actives.forEach(prodcut -> {
+			prodcut.setFatherListToNull();
+		});
+		return actives;
+	}
+	
 	private void populateChildren(Product product) {
 		log.info("ProductServices populateChildren productId: {}", product.getId());
 		product.setFatherListToNull();

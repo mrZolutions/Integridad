@@ -18,4 +18,7 @@ public interface ProductRepository extends CrudRepository<Product, UUID>{
 	
 	@Query("SELECT p FROM Product p WHERE p.userClient.id = (:id) and p.active = true")
 	Iterable<Product> findByUserClientIdAndActive(@Param("id") UUID userClientId);
+	
+	@Query("SELECT p FROM Product p WHERE p.subsidiary.id = (:id) and p.active = true")
+	Iterable<Product> findBySubsidiaryIdAndActive(@Param("id") UUID subsidiaryId);
 }

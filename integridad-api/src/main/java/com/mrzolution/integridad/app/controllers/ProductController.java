@@ -90,7 +90,7 @@ public class ProductController {
 		return new ResponseEntity<Iterable>(response, HttpStatus.CREATED);
 	}
 	
-	@RequestMapping(method = RequestMethod.GET, value="/actives/{userClientId}")
+	@RequestMapping(method = RequestMethod.GET, value="/actives/user_client/{userClientId}")
     public ResponseEntity getAllActivesByUserClientId(@PathVariable("userClientId") UUID userClientId){
 		log.info("ProductController getAllActivesByUserClientId: {}", userClientId);
 		Iterable<Product> response = null;
@@ -98,6 +98,19 @@ public class ProductController {
 			response = service.getAllActivesByUserClientIdAndActive(userClientId);
 		}catch(BadRequestException e) {
 			log.error("ProductController getAllActivesByUserClientId Exception thrown: {}", e.getMessage());	    
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+	    }
+		return new ResponseEntity<Iterable>(response, HttpStatus.CREATED);
+	}
+	
+	@RequestMapping(method = RequestMethod.GET, value="/actives/subsidiary/{subsidiaryId}")
+    public ResponseEntity getAllActivesBySubsidiaryId(@PathVariable("subsidiaryId") UUID subsidiaryId){
+		log.info("ProductController getAllActivesBySubsidiaryId: {}", subsidiaryId);
+		Iterable<Product> response = null;
+		try {
+			response = service.getAllActivesBySubsidiaryIdAndActive(subsidiaryId);
+		}catch(BadRequestException e) {
+			log.error("ProductController getAllActivesBySubsidiaryId Exception thrown: {}", e.getMessage());	    
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	    }
 		return new ResponseEntity<Iterable>(response, HttpStatus.CREATED);

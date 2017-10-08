@@ -8,23 +8,33 @@
  * Controller of the menu
  */
 angular.module('integridadUiApp')
-  .controller('ProductsCtrl', function ($localStorage, $location, productService, utilStringService) {
+  .controller('ProductsCtrl', function ($localStorage, $location, productService, utilStringService, projectService, $routeParams) {
     var vm = this;
 
     vm.loading = false;
     vm.product = undefined;
     vm.productList = undefined;
-    // vm.subsidiary = undefined;
-    //
+    vm.subsidiaryId = undefined;
+
     function _activate(){
       vm.loading = true;
-      productService.getLazyByProjectId($localStorage.user.subsidiary.userClient.id).then(function (response) {
-        vm.productList = response;
-        vm.loading = false;
-      }).catch(function (error) {
-        vm.loading = false;
-        vm.error = error.data;
-      });
+      if($routeParams.subsidiaryId){
+        productService.getLazyBySusidiaryId($routeParams.subsidiaryId).then(function (response) {
+          vm.productList = response;
+          vm.loading = false;
+        }).catch(function (error) {
+          vm.loading = false;
+          vm.error = error.data;
+        });
+      } else {
+        productService.getLazyByProjectId($localStorage.user.subsidiary.userClient.id).then(function (response) {
+          vm.productList = response;
+          vm.loading = false;
+        }).catch(function (error) {
+          vm.loading = false;
+          vm.error = error.data;
+        });
+      }
     }
 
     function create(){
@@ -56,12 +66,17 @@ angular.module('integridadUiApp')
     }
 
     vm.productCreate = function(){
-      vm.success=undefined;
-      vm.error=undefined
-      vm.product={
-        userClient: $localStorage.user.subsidiary.userClient  ,
-        subsidiary: $localStorage.user.subsidiary
-      };
+      projectService.getById($localStorage.user.subsidiary.userClient.id).then(function (response) {
+        vm.subsidiaries = response.subsidiaries;
+        vm.success=undefined;
+        vm.error=undefined
+        vm.product={
+          userClient: $localStorage.user.subsidiary.userClient
+        };
+      }).catch(function (error) {
+        vm.loading = false;
+        vm.error = error.data;
+      });
     };
 
     vm.save = function(){
@@ -81,15 +96,10 @@ angular.module('integridadUiApp')
       }
     };
 
-    // vm.remove = function(){
-    //   vm.project.active = false;
-    //   update(true);
-    // };
-    //
-    // vm.removeSubsidiary = function(){
-    //   vm.subsidiary.active = false;
-    //   update(true);
-    // };
+    vm.remove = function(){
+      vm.product.active = false;
+      update(true);
+    };
 
     vm.editProduct = function(productEdit){
       vm.loading = true;
@@ -101,26 +111,12 @@ angular.module('integridadUiApp')
         vm.error = error.data;
       });
     };
-    //
-    // vm.saveSubsidiary = function(){
-    //   if(vm.subsidiary.id === undefined && vm.subsidiary.name !== undefined){
-    //     vm.subsidiary.active = true;
-    //     vm.subsidiary.dateCreated = new Date().getTime();
-    //     vm.project.subsidiaries.push(vm.subsidiary);
-    //   }
-    // };
 
     vm.cancel=function(){
       vm.product=undefined;
       vm.success=undefined;
       vm.error=undefined;
     };
-
-    // vm.cancelSubisdiary=function(){
-    //   vm.subsidiary=undefined;
-    //   vm.success=undefined;
-    //   vm.error=undefined;
-    // };
 
     (function initController() {
       _activate();
