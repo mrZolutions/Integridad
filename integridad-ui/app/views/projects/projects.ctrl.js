@@ -119,9 +119,7 @@ angular.module('integridadUiApp')
     };
 
     vm.products=function(subsidiary){
-      console.log(vm.project);
-      console.log(subsidiary);
-      console.log($localStorage.user);
+      $location.path('/products/products/'+subsidiary.id);
     };
 
     (function initController() {
