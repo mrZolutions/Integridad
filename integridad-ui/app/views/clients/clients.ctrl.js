@@ -8,7 +8,7 @@
  * Controller of the integridadUiApp
  */
 angular.module('integridadUiApp')
-  .controller('ClientsCtrl', function (projectService, utilStringService, countryListService, clientService, $localStorage) {
+  .controller('ClientsCtrl', function (projectService, utilStringService, countryListService, clientService, $localStorage, validatorService) {
     var vm = this;
 
     vm.loading = false;
@@ -89,9 +89,16 @@ angular.module('integridadUiApp')
         vm.client.name, vm.client.identification, vm.client.codApp
       ]);
 
+      var idValid = false;
+      if(vm.client.typeId === 'CED'){
+        idValid = validatorService.isCedulaValid(vm.client.identification);
+      }
+
       if(validationError){
         vm.error = 'Debe ingresar Nombres completos, una identificacion y el Codigo de Contabilidad';
-      } else {
+      } else if(!idValid){
+        vm.error = 'Identificacion invalida';
+      }else {
         vm.loading = true;
         if(vm.client.id === undefined){
           create();
