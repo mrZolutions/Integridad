@@ -111,11 +111,15 @@ public class UserIntegridadServices {
 	}
 
 	public UserIntegridad activate(UUID userId, String validation) throws BadRequestException{
+		log.info("UserIntegridadServices activate: {}", userId);
 		UserIntegridad userToValidate = userIntegridadRepository.findByIdAndValidation(userId, validation);
 		if(userToValidate != null && !userToValidate.isActive()){
+			log.info("UserIntegridadServices activating: {}", userToValidate.getId());
 			userToValidate.setActive(true);
 			UserIntegridad activeUser = userIntegridadRepository.save(userToValidate);
 			
+			activeUser.setFatherListToNull();
+			log.info("UserIntegridadServices activated: {}", activeUser.getId());
 			return activeUser;
 		}
 		throw new BadRequestException("Wrong URL to validate");

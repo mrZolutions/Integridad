@@ -36,6 +36,14 @@ function routes($routeProvider) {
       templateUrl: 'views/projects/projects.tpl.html',
       controller: 'ProjectsCtrl',
       controllerAs: 'vm'
+    }).when('/products/products', {
+      templateUrl: 'views/products/products.tpl.html',
+      controller: 'ProductsCtrl',
+      controllerAs: 'vm'
+    }).when('/products/products/:subsidiaryId', {
+      templateUrl: 'views/products/products.tpl.html',
+      controller: 'ProductsCtrl',
+      controllerAs: 'vm'
     }).otherwise({
     redirectTo: '/'
   });

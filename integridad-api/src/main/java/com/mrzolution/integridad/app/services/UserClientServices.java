@@ -8,11 +8,13 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.google.common.collect.Iterables;
 import com.mrzolution.integridad.app.domain.Subsidiary;
 import com.mrzolution.integridad.app.domain.UserClient;
 import com.mrzolution.integridad.app.exceptions.BadRequestException;
 import com.mrzolution.integridad.app.father.Father;
 import com.mrzolution.integridad.app.father.FatherManageChildren;
+import com.mrzolution.integridad.app.repositories.ClientChildRepository;
 import com.mrzolution.integridad.app.repositories.SubsidiaryChildRepository;
 import com.mrzolution.integridad.app.repositories.SubsidiaryRepository;
 import com.mrzolution.integridad.app.repositories.UserClientRepository;
@@ -29,6 +31,8 @@ public class UserClientServices {
 	SubsidiaryRepository subsidiaryRepository;
 	@Autowired
 	SubsidiaryChildRepository subsidiaryChildRepository;
+	@Autowired
+	ClientChildRepository clientChildRepository;
 		
 	public UserClient create(UserClient userClient) throws BadRequestException{
 		log.info("UserClientServices create: {}", userClient.getName());
@@ -90,6 +94,13 @@ public class UserClientServices {
 		
 		populateChildren(retrieved);
 		return retrieved;
+	}
+	
+	public Integer getNumberOfClients(UUID userClientId) {
+		log.info("UserClientServices getNumberOfClients: {}", userClientId);
+		UserClient userClient = userClientRepository.findOne(userClientId);
+		Iterable<UUID> ids = clientChildRepository.findByFather(userClient);
+		return Iterables.size(ids);
 	}
 
 	private void populateChildren(UserClient userClient) {

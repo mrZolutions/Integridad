@@ -65,6 +65,19 @@ public class UserClientController {
 		return new ResponseEntity<Iterable>(response, HttpStatus.CREATED);
 	}
 	
+	@RequestMapping(method = RequestMethod.GET, value="/clients_number/{userClientId}")
+    public ResponseEntity getNumberOfClients(@PathVariable(value = "userClientId") UUID userClientId){
+		log.info("UserClientController getNumberOfClients");
+		Integer response = null;
+		try {
+			response = service.getNumberOfClients(userClientId);
+		}catch(BadRequestException e) {
+			log.error("UserClientController getLazy Exception thrown: {}", e.getMessage());	    
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+	    }
+		return new ResponseEntity<Integer>(response, HttpStatus.CREATED);
+	}
+	
 	@RequestMapping(method = RequestMethod.GET, value = "/{userClientId}")
     public ResponseEntity getById(
             @PathVariable(value = "userClientId") UUID userClientId) {

@@ -118,6 +118,10 @@ angular.module('integridadUiApp')
       vm.error=undefined;
     };
 
+    vm.products=function(subsidiary){
+      $location.path('/products/products/'+subsidiary.id);
+    };
+
     (function initController() {
       _activate();
     })();
