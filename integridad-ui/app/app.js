@@ -2,7 +2,7 @@ var app = angular.module('integridadUiApp', ['app.routes', 'app.core', 'app.dire
 app.run(['$rootScope', '$location', 'authorizationService', '$localStorage',
  function ($rootScope, $location, authorizationService, $localStorage) {
    $rootScope.$on('$routeChangeStart', function (event) {
-     if($location.path() !== '/' && !$location.path().includes("/active/")){
+     if(!$location.path().includes("/activate/")){
        if (!authorizationService.isLoggedIn()) {
             $location.path('/');
         }

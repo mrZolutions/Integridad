@@ -26,7 +26,7 @@ angular.module('integridadUiApp')
     };
 
     $scope.$on('onBeforeUnload', function (e, confirmation) {
-      $scope.logout();
+      // $scope.logout();
     });
 
     if($localStorage.timeloged){
