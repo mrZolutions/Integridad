@@ -85,6 +85,22 @@
     <div class="panel-body">
 
       <div class="row">
+        <div class="form-group col-md-6">
+          <label>Proyecto *: </label>
+          <select ng-options="project as project.name for project in vm.projectList  | orderBy:'name'  track by project.id"
+            ng-change="vm.getSubsidiaries()" ng-model="vm.project" class="form-control">
+          </select>
+        </div>
+
+        <div class="form-group col-md-6">
+          <label>Surcursal *: </label>
+          <select ng-options="sub as sub.name for sub in vm.subsidiaryList  | orderBy:'name' track by sub.id"
+            ng-model="vm.userIntegridad.subsidiary" class="form-control">
+          </select>
+        </div>
+      </div>
+
+      <div class="row">
         <div class="form-group col-md-12">
           <label>Tipo de Usuario *: </label>
           <select ng-options="userType as userType.name for userType in vm.userTypes  | orderBy:'name' track by id"

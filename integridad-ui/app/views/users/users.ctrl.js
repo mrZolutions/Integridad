@@ -8,16 +8,28 @@
  * Controller of the integridadUiApp
  */
 angular.module('integridadUiApp')
-  .controller('UsersCtrl', function (utilStringService, userTypeService, authService) {
+  .controller('UsersCtrl', function (utilStringService, userTypeService, authService, projectService, subsidiaryService)  {
     var vm = this;
 
     vm.loading = false;
     vm.userIntegridad = undefined;
+    vm.project = undefined;
 
     function _activate(){
       vm.loading = true;
       authService.getLazy().then(function (response) {
         vm.userList = response;
+      }).catch(function (error) {
+        vm.loading = false;
+        vm.error = error.data;
+      });
+
+      getProjects();
+    }
+
+    function getProjects(){
+      projectService.getLazy().then(function (response) {
+        vm.projectList = response;
         vm.loading = false;
       }).catch(function (error) {
         vm.loading = false;
@@ -53,6 +65,16 @@ angular.module('integridadUiApp')
       });
     }
 
+    vm.getSubsidiaries = function(){
+      subsidiaryService.getByProjectId(vm.project.id).then(function (response) {
+        vm.subsidiaryList = response;
+        vm.loading = false;
+      }).catch(function (error) {
+        vm.loading = false;
+        vm.error = error.data;
+      });
+    };
+
     vm.userCreate = function(){
       vm.success=undefined;
       vm.error=undefined;
@@ -69,6 +91,11 @@ angular.module('integridadUiApp')
       } else {
         vm.typeId = 'Ruc';
       }
+
+      getProjects();
+      vm.project = vm.userIntegridad.subsidiary.userClient;
+      vm.getSubsidiaries();
+
       $('#pickerBirthday').data("DateTimePicker").date(new Date(vm.userIntegridad.birthDay));
     };
 

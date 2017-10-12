@@ -26,6 +26,9 @@ public class Product implements Child{
     
     private String name;
     private boolean active;
+    private Long quantity;
+    private Long dateCreated;
+    private Long lastDateUpdated;
     
     @ManyToOne
     @JoinColumn(name = "user_client_id")
