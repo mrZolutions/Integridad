@@ -41,12 +41,12 @@ public class ClientController {
 		log.info("ClientController update: {}", client);
 		Client response = null;
 		try {
-			response = service.update(client);
+			service.update(client);
 		}catch(BadRequestException e) {
 			log.error("ClientController create Exception thrown: {}", e.getMessage());	    
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	    }
-		return new ResponseEntity<Client>(response, HttpStatus.CREATED);
+		return new ResponseEntity<Void>(HttpStatus.CREATED);
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, value="/lazy")
