@@ -38,15 +38,14 @@ public class ClientServices {
 		return saved;
 	}
 	
-	public Client update(Client client) throws BadRequestException{
+	public void update(Client client) throws BadRequestException{
 		if(client.getId() == null){
 			throw new BadRequestException("Invalid Client");
 		}
 		log.info("ClientServices update: {}", client.getName());
 		client.setListsNull();
 		Client updated = clientRepository.save(client);
-		log.info("ClientServices update id: {}", updated.getId());
-		return updated;
+		log.info("ClientServices updated id: {}", updated.getId());
 	}
 	
 	public Client getById(UUID id){

@@ -89,9 +89,11 @@ angular.module('integridadUiApp')
         vm.client.name, vm.client.identification, vm.client.codApp
       ]);
 
-      var idValid = false;
+      var idValid = true;
       if(vm.client.typeId === 'CED'){
         idValid = validatorService.isCedulaValid(vm.client.identification);
+      } else if(vm.client.typeId === 'RUC'){
+        idValid = validatorService.isRucValid(vm.client.identification);
       }
 
       if(validationError){
