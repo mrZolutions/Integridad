@@ -8,7 +8,7 @@
  * Controller of the menu
  */
 angular.module('integridadUiApp')
-  .controller('ProjectsCtrl', function ($localStorage, $location, projectService, utilStringService) {
+  .controller('ProjectsCtrl', function ($localStorage, $location, projectService, utilStringService, validatorService) {
     var vm = this;
 
     vm.loading = false;
@@ -66,15 +66,19 @@ angular.module('integridadUiApp')
         vm.project.name, vm.project.threeCode, vm.project.codeIntegridad, vm.project.ruc
       ]);
 
+      var idValid = validatorService.isRucValid(vm.project.ruc);
+
       if(validationError){
         vm.error = 'Debe ingresar Nombres completos, ruc y sus Codigos';
-      } else {
+      } else if(idValid){
         vm.loading = true;
         if(vm.project.id === undefined){
           create();
         }else{
           update(false);
         }
+      } else {
+        vm.error = 'RUC invalido';
       }
 
     };

@@ -28,4 +28,13 @@ public class SubsidiaryServices {
 		log.info("SubsidiaryServices getAllActivesByUserClientId size retrieved: {}", Iterables.size(subsidiaries));
 		return subsidiaries;
 	}
+
+	public Subsidiary getById(UUID id){
+		log.info("SubsidiaryServices getById: {}", id);
+		Subsidiary subsidiary = subsidiaryRepository.findOne(id);
+		subsidiary.setFatherListToNull();
+		subsidiary.setListsNull();
+
+		return subsidiary;
+	}
 }
