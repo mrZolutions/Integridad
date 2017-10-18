@@ -8,4 +8,10 @@ angular
       });
     };
 
+    this.getById = function (id) {
+      return securityService.get('/subsidiary/' + id).then(function successCallback(response) {
+        return response.data;
+      });
+    };
+
   });

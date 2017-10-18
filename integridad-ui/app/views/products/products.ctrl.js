@@ -8,7 +8,7 @@
  * Controller of the menu
  */
 angular.module('integridadUiApp')
-  .controller('ProductsCtrl', function ($localStorage, $location, productService, utilStringService, projectService, $routeParams) {
+  .controller('ProductsCtrl', function ($localStorage, $location, productService, utilStringService, projectService, subsidiaryService, $routeParams) {
     var vm = this;
 
     vm.loading = false;
@@ -66,17 +66,31 @@ angular.module('integridadUiApp')
     }
 
     vm.productCreate = function(){
-      projectService.getById($localStorage.user.subsidiary.userClient.id).then(function (response) {
-        vm.subsidiaries = response.subsidiaries;
-        vm.success=undefined;
-        vm.error=undefined
-        vm.product={
-          userClient: $localStorage.user.subsidiary.userClient
-        };
-      }).catch(function (error) {
-        vm.loading = false;
-        vm.error = error.data;
-      });
+      if($routeParams.subsidiaryId){
+        subsidiaryService.getById($routeParams.subsidiaryId).then(function(response){
+          vm.subsidiaries = [response];
+          vm.success=undefined;
+          vm.error=undefined
+          vm.product={
+            userClient: response.userClient
+          };
+        }).catch(function (error) {
+          vm.loading = false;
+          vm.error = error.data;
+        });
+      } else {
+        projectService.getById($localStorage.user.subsidiary.userClient.id).then(function (response) {
+          vm.subsidiaries = response.subsidiaries;
+          vm.success=undefined;
+          vm.error=undefined
+          vm.product={
+            userClient: $localStorage.user.subsidiary.userClient
+          };
+        }).catch(function (error) {
+          vm.loading = false;
+          vm.error = error.data;
+        });
+      }
     };
 
     vm.save = function(){

@@ -37,4 +37,17 @@ public class SubsidiaryController {
 	    }
 		return new ResponseEntity<Iterable>(response, HttpStatus.OK);
 	}
+
+	@RequestMapping(method = RequestMethod.GET, value="/{id}")
+	public ResponseEntity getById(@PathVariable("id") UUID id){
+		log.info("SubsidiaryController getById: {}", id);
+		Subsidiary response = null;
+		try {
+			response = service.getById(id);
+		}catch(BadRequestException e) {
+			log.info("SubsidiaryController getById Exception thrown: {}", e.getMessage());
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+		}
+		return new ResponseEntity<Subsidiary>(response, HttpStatus.OK);
+	}
 }
