@@ -8,7 +8,7 @@
  * Controller of the integridadUiApp
  */
 angular.module('integridadUiApp')
-  .controller('UsersCtrl', function (utilStringService, userTypeService, authService, projectService, subsidiaryService)  {
+  .controller('UsersCtrl', function (utilStringService, userTypeService, authService, projectService, subsidiaryService, validatorService)  {
     var vm = this;
 
     vm.loading = false;
@@ -119,7 +119,16 @@ angular.module('integridadUiApp')
         }
       }
 
-      if(!validationError){
+      var idValid = true;
+      if(vm.typeId === 'Cedula'){
+        idValid = validatorService.isCedulaValid(vm.userIntegridad.cedula);
+      } else if(vm.typeId === 'Ruc'){
+        idValid = validatorService.isRucValid(vm.userIntegridad.ruc);
+      }
+
+      if(!idValid){
+        vm.error = 'Identificacion invalida';
+      }else if(!validationError){
         if(vm.userIntegridad.id === undefined){
           create();
         }else{
