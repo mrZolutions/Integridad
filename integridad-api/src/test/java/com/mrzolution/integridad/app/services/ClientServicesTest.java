@@ -53,6 +53,21 @@ public class ClientServicesTest {
 		}
 		
 	}
+
+	@Test
+	public void getLazyByUserClientTest() throws Exception{
+		List<Client> clients = new ArrayList<>();
+		clients.add(client);
+
+		Mockito.when(clientRepository.findActivesByUserClientId(Mockito.any())).thenReturn(clients);
+
+		Iterable<Client> clientList = service.getAllLazyByUserClientid(UUID.randomUUID());
+		Assert.assertEquals(1, Iterables.size(clientList));
+		for(Client client: clientList){
+			ListValidation.checkListsAndFatherNull(Client.class, client);
+		}
+
+	}
 	
 	@Test
 	public void validatePopulateChildren() throws Exception {

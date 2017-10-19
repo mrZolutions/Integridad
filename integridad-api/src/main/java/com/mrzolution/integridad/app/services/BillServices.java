@@ -70,6 +70,7 @@ public class BillServices {
 		bill.setDateCreated(new Date().getTime());
 		bill.setActive(true);
 		bill.setDetails(null);
+		bill.setFatherListToNull();
 		Bill saved = billRepository.save(bill);
 		
 		Subsidiary subsidiary =  subsidiaryRepository.findOne(bill.getSubsidiary().getId());

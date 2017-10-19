@@ -81,6 +81,17 @@ public class ClientServices {
 		log.info("ClientServices getAllLazy size retrieved: {}", Iterables.size(clients));
 		return clients;
 	}
+
+	public Iterable<Client> getAllLazyByUserClientid(UUID userClientId){
+		log.info("ClientServices getAllLazyByUserClientid id: {}", userClientId);
+		Iterable<Client> clients = clientRepository.findActivesByUserClientId(userClientId);
+		for (Client client : clients) {
+			client.setListsNull();
+			client.setFatherListToNull();
+		}
+		log.info("ClientServices getAllLazyByUserClientid size retrieved: {}", Iterables.size(clients));
+		return clients;
+	}
 	
 	private void populateChildren(Client client) {
 		log.info("ClientServices populateChildren clientId: {}", client.getId());

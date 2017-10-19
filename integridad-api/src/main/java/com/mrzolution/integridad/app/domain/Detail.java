@@ -33,6 +33,8 @@ public class Detail implements Child{
     private Product product;
     
     private long quantity;
+    private Double costEach;
+    private Double total;
     
     public void setListsNull(){
     }

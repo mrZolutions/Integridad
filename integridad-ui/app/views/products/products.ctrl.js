@@ -65,6 +65,28 @@ angular.module('integridadUiApp')
       });
     }
 
+    function _getSubsidiaries(){
+      if($routeParams.subsidiaryId){
+        subsidiaryService.getById($routeParams.subsidiaryId).then(function(response){
+          vm.subsidiaries = [response];
+          vm.success=undefined;
+          vm.error=undefined
+        }).catch(function (error) {
+          vm.loading = false;
+          vm.error = error.data;
+        });
+      } else {
+        projectService.getById($localStorage.user.subsidiary.userClient.id).then(function (response) {
+          vm.subsidiaries = response.subsidiaries;
+          vm.success=undefined;
+          vm.error=undefined
+        }).catch(function (error) {
+          vm.loading = false;
+          vm.error = error.data;
+        });
+      }
+    }
+
     vm.productCreate = function(){
       if($routeParams.subsidiaryId){
         subsidiaryService.getById($routeParams.subsidiaryId).then(function(response){
@@ -117,6 +139,7 @@ angular.module('integridadUiApp')
 
     vm.editProduct = function(productEdit){
       vm.loading = true;
+      _getSubsidiaries();
       productService.getById(productEdit.id).then(function (response) {
         vm.loading = false;
         vm.product = response;
