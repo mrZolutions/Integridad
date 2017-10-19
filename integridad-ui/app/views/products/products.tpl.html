@@ -97,6 +97,13 @@
         </select>
       </div>
     </div>
+    <div class="row">
+      <div class="form-group col-md-6">
+        <label>Precio de Venta: $</label>
+        <input type="text" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+        ng-model="vm.product.cost" class="form-control" maxlength="9">
+      </div>
+    </div>
   </div>
   <div class="panel-footer">
     <button type="button" class="btn btn-primary" ng-click="vm.save()"
