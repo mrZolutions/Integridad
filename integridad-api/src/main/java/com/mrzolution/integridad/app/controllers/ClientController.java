@@ -3,16 +3,15 @@ package com.mrzolution.integridad.app.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.mrzolution.integridad.app.domain.Client;
 import com.mrzolution.integridad.app.exceptions.BadRequestException;
 import com.mrzolution.integridad.app.services.ClientServices;
 
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.UUID;
 
 @Slf4j
 @RestController
@@ -59,6 +58,19 @@ public class ClientController {
 			log.error("ClientController getLazy Exception thrown: {}", e.getMessage());	    
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	    }
+		return new ResponseEntity<Iterable>(response, HttpStatus.CREATED);
+	}
+
+	@RequestMapping(method = RequestMethod.GET, value="/lazy/{id}")
+	public ResponseEntity getLazyByUserClient(@PathVariable("id") UUID userClientId){
+		log.info("ClientController getLazyByUserClient id:{}", userClientId);
+		Iterable<Client> response = null;
+		try {
+			response = service.getAllLazyByUserClientid(userClientId);
+		}catch(BadRequestException e) {
+			log.error("ClientController getLazyByUserClient Exception thrown: {}", e.getMessage());
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+		}
 		return new ResponseEntity<Iterable>(response, HttpStatus.CREATED);
 	}
 	

@@ -21,5 +21,138 @@
   <h4>
     Factura
   </h4>
-  
+</div>
+
+<div class="row" ng-show="vm.error !== undefined">
+  <div class="form-group col-md-12">
+    <div class="alert alert-danger">{{vm.error}}</div>
+  </div>
+</div>
+<div class="row" ng-show="vm.success !== undefined">
+  <div class="form-group col-md-12">
+    <div class="alert alert-success">{{vm.success}}</div>
+  </div>
+</div>
+
+<div ng-show="vm.clientSelected === undefined">
+
+  <input ng-model="searchText" class="form-control" placeholder="Buscar">
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th> C&oacute;digo </th>
+        <th> Nombre </th>
+        <th> Ruc / C&eacute;dula </th>
+        <th>
+          <button type="button" class="btn btn-primary" ng-click="vm.clientCreate()">
+            Crear Cliente
+          </button>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-show="vm.clientList == 0">
+        <td colspan="4">
+          No hay clientes ingresados
+        </td>
+      </tr>
+      <tr ng-repeat="clientPreSelect in vm.clientList | orderBy:name | filter:searchText">
+        <td>{{ clientPreSelect.codApp }}</td>
+        <td>{{ clientPreSelect.name }}</td>
+        <td>{{ clientPreSelect.identification }}</td>
+        <td>
+          <button type="button" class="btn btn-primary" ng-click="vm.clientSelect(clientPreSelect)">
+            Facturar
+          </button>
+          <button type="button" class="btn btn-primary" ng-click="vm.clientConsult(clientPreSelect)">
+            Consultar
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+</div>
+
+<div ng-show="vm.clientSelected !== undefined">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <b>Datos del Cliente</b>
+    </div>
+    <div class="panel-body">
+      <div class="row">
+        <div class="form-group col-md-6">
+          <b>FECHA: </b>{{vm.dateBill | date:'dd/MM/yyyy'}}
+        </div>
+        <div class="form-group col-md-6">
+          <b>NOMBRE: </b>{{vm.clientSelected.name}}
+        </div>
+      </div>
+      <div class="row">
+        <div class="form-group col-md-6">
+          <b ng-if="vm.clientSelected.typeId === 'CED'">CEDULA: </b>
+          <b ng-if="vm.clientSelected.typeId === 'RUC'">RUC: </b>
+          {{vm.clientSelected.identification}}
+        </div>
+        <div class="form-group col-md-6">
+          <b>TELEFONO: </b>{{vm.clientSelected.phone}}
+        </div>
+      </div>
+      <div class="row">
+        <div class="form-group col-md-12">
+          <b>DIRECCION: </b>{{vm.clientSelected.address}}
+        </div>
+      </div>
+      <div class="row">
+        <div class="form-group col-md-12">
+          <b>NUMERO DE FACTURA: </b> {{vm.seqNumber}}
+          &nbsp;&nbsp;&nbsp;<a>Editar</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <b>Detalle</b>
+    </div>
+    <div class="panel-body">
+      <div class="row">
+        <div class="form-group col-md-12">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th> Producto </th>
+                <th> Cantidad </th>
+                <th> Valor unitario </th>
+                <th> Valor Total </th>
+                <th>
+                  <button type="button" class="btn btn-primary" ng-click="vm.addProduct()">
+                    Agregar Producto
+                  </button>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-show="vm.clientList == 0">
+                <td colspan="4">
+                  No hay detalles ingresados
+                </td>
+              </tr>
+              <tr ng-repeat="detail in vm.bill.details">
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>
+                  <button type="button" class="btn btn-primary" ng-click="vm.clientSelect(clientPreSelect)">
+                    Eliminar
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
 </div>
