@@ -8,7 +8,7 @@
  * Controller of the integridadUiApp
  */
 angular.module('integridadUiApp')
-  .controller('BillCtrl', function ($rootScope, utilStringService, $localStorage, clientService) {
+  .controller('BillCtrl', function ($rootScope, utilStringService, $localStorage, clientService, productService) {
     var vm = this;
 
     vm.loading = false;
@@ -18,6 +18,9 @@ angular.module('integridadUiApp')
       vm.clientSelected = undefined;
       vm.dateBill = undefined;
       vm.seqNumber = undefined;
+      vm.productList = undefined;
+      vm.productToAdd = undefined;
+      vm.quantity = undefined;
       vm.loading = true;
       clientService.getLazyByProjectId($localStorage.user.subsidiary.userClient.id).then(function (response) {
         vm.clientList = response;
@@ -64,6 +67,43 @@ angular.module('integridadUiApp')
     };
 
     vm.addProduct = function(){
+      vm.loading = true;
+      productService.getLazyBySusidiaryId($localStorage.user.subsidiary.id)
+      .then(function(response){
+        vm.loading = false;
+        vm.productList = response;
+        console.log(vm.productList);
+      }).catch(function (error) {
+        vm.loading = false;
+        vm.error = error.data;
+      });
+    };
+
+    vm.acceptProduct = function(closeModal){
+      var detail={
+        product: vm.productToAdd,
+        quantity: vm.quantity,
+        costEach: vm.productToAdd.cost,
+        total: vm.quantity * vm.productToAdd.cost
+      }
+
+      vm.bill.details.push(detail);
+      vm.productToAdd = undefined;
+      vm.quantity = undefined;
+
+      if(closeModal){
+        $('#modalAddProduct').modal('hide');
+      } else {
+        for (var i = 0; i < vm.productList.length; i++) {
+          if(vm.productList[i].id === detail.productid){
+            console.log('1: ', vm.productList[i].quantity);
+            console.log('1,2: ', detail.quantity);
+            vm.productList[i].quantity -= detail.quantity
+            console.log('2: ', vm.productList[i].quantity);
+            break;
+          }
+        }
+      }
 
     };
 
