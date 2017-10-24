@@ -175,6 +175,7 @@
                   <tr>
                     <th> Nombre </th>
                     <th> Cantidad Disponible</th>
+                    <th> Precio Unitario $</th>
                     <th>
                     </th>
                   </tr>
@@ -188,6 +189,7 @@
                   <tr ng-repeat="productSelect in vm.productList | orderBy:name | filter:searchText">
                     <td>{{ productSelect.name }}</td>
                     <td>{{ productSelect.quantity }}</td>
+                    <td>{{ productSelect.cost }}</td>
                     <td>
                       <button type="button" class="btn btn-primary" ng-click="vm.productToAdd = productSelect; vm.quantity = 1">
                         Seleccionar
