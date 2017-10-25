@@ -72,7 +72,6 @@ angular.module('integridadUiApp')
       .then(function(response){
         vm.loading = false;
         vm.productList = response;
-        console.log(vm.productList);
       }).catch(function (error) {
         vm.loading = false;
         vm.error = error.data;
@@ -84,7 +83,7 @@ angular.module('integridadUiApp')
         product: vm.productToAdd,
         quantity: vm.quantity,
         costEach: vm.productToAdd.cost,
-        total: vm.quantity * vm.productToAdd.cost
+        total: parseFloat(vm.quantity) * parseFloat(vm.productToAdd.cost)
       }
 
       vm.bill.details.push(detail);
@@ -95,11 +94,8 @@ angular.module('integridadUiApp')
         $('#modalAddProduct').modal('hide');
       } else {
         for (var i = 0; i < vm.productList.length; i++) {
-          if(vm.productList[i].id === detail.productid){
-            console.log('1: ', vm.productList[i].quantity);
-            console.log('1,2: ', detail.quantity);
+          if(vm.productList[i].id === detail.product.id){
             vm.productList[i].quantity -= detail.quantity
-            console.log('2: ', vm.productList[i].quantity);
             break;
           }
         }
