@@ -22,6 +22,7 @@ angular.module('integridadUiApp')
       vm.productToAdd = undefined;
       vm.quantity = undefined;
       vm.loading = true;
+      vm.indexDetail = undefined;
       clientService.getLazyByProjectId($localStorage.user.subsidiary.userClient.id).then(function (response) {
         vm.clientList = response;
         vm.loading = false;
@@ -67,6 +68,7 @@ angular.module('integridadUiApp')
     };
 
     vm.addProduct = function(){
+      vm.indexDetail = undefined;
       vm.loading = true;
       vm.errorQuantity = undefined;
       productService.getLazyBySusidiaryId($localStorage.user.subsidiary.id)
@@ -99,7 +101,13 @@ angular.module('integridadUiApp')
           total: parseFloat(vm.quantity) * parseFloat(vm.productToAdd.cost)
         }
 
-        vm.bill.details.push(detail);
+        if(vm.indexDetail !== undefined){
+          vm.bill.details[vm.indexDetail] = detail;
+        } else {
+          vm.bill.details.push(detail);
+        }
+
+
         vm.productToAdd = undefined;
         vm.quantity = undefined;
 
@@ -118,9 +126,13 @@ angular.module('integridadUiApp')
     };
 
     vm.editDetail=function(detail, index){
+      vm.indexDetail = index;
       vm.productToAdd= detail.product;
       vm.quantity= detail.quantity
-      //TODO editar elemento de la lista de details
+    };
+
+    vm.removeDetail=function(index){
+      vm.bill.details.splice(index,1);
     };
 
     (function initController() {
