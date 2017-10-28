@@ -8,7 +8,7 @@
  * Controller of the integridadUiApp
  */
 angular.module('integridadUiApp')
-  .controller('BillCtrl', function ($rootScope, utilStringService, $localStorage, clientService, productService) {
+  .controller('BillCtrl', function ( _, $rootScope, utilStringService, $localStorage, clientService, productService) {
     var vm = this;
 
     vm.loading = false;
@@ -22,6 +22,7 @@ angular.module('integridadUiApp')
       vm.productToAdd = undefined;
       vm.quantity = undefined;
       vm.loading = true;
+      vm.indexDetail = undefined;
       clientService.getLazyByProjectId($localStorage.user.subsidiary.userClient.id).then(function (response) {
         vm.clientList = response;
         vm.loading = false;
@@ -67,11 +68,23 @@ angular.module('integridadUiApp')
     };
 
     vm.addProduct = function(){
+      vm.indexDetail = undefined;
       vm.loading = true;
+      vm.errorQuantity = undefined;
       productService.getLazyBySusidiaryId($localStorage.user.subsidiary.id)
       .then(function(response){
         vm.loading = false;
-        vm.productList = response;
+        vm.productList = [];
+
+        for (var i = 0; i < response.length; i++) {
+          var productFound = _.find(vm.bill.details, function (detail) {
+            return detail.product.id === response[i].id;
+          })
+
+          if(productFound === undefined){
+            vm.productList.push(response[i]);
+          }
+        }
       }).catch(function (error) {
         vm.loading = false;
         vm.error = error.data;
@@ -79,28 +92,47 @@ angular.module('integridadUiApp')
     };
 
     vm.acceptProduct = function(closeModal){
-      var detail={
-        product: vm.productToAdd,
-        quantity: vm.quantity,
-        costEach: vm.productToAdd.cost,
-        total: parseFloat(vm.quantity) * parseFloat(vm.productToAdd.cost)
-      }
-
-      vm.bill.details.push(detail);
-      vm.productToAdd = undefined;
-      vm.quantity = undefined;
-
-      if(closeModal){
-        $('#modalAddProduct').modal('hide');
-      } else {
-        for (var i = 0; i < vm.productList.length; i++) {
-          if(vm.productList[i].id === detail.product.id){
-            vm.productList[i].quantity -= detail.quantity
-            break;
-          }
+      if(parseInt(vm.quantity) <= parseInt(vm.productToAdd.quantity)){
+        vm.errorQuantity = undefined;
+        var detail={
+          product: angular.copy(vm.productToAdd),
+          quantity: vm.quantity,
+          costEach: vm.productToAdd.cost,
+          total: parseFloat(vm.quantity) * parseFloat(vm.productToAdd.cost)
         }
+
+        if(vm.indexDetail !== undefined){
+          vm.bill.details[vm.indexDetail] = detail;
+        } else {
+          vm.bill.details.push(detail);
+        }
+
+
+        vm.productToAdd = undefined;
+        vm.quantity = undefined;
+
+        if(closeModal){
+          $('#modalAddProduct').modal('hide');
+        } else {
+          var newProductList = _.filter(vm.productList, function (prod) {
+            return prod.id !== detail.product.id;
+          });
+          vm.productList = newProductList;
+        }
+      } else {
+        vm.errorQuantity = 'Cantidad disponible insuficiente';
       }
 
+    };
+
+    vm.editDetail=function(detail, index){
+      vm.indexDetail = index;
+      vm.productToAdd= detail.product;
+      vm.quantity= detail.quantity
+    };
+
+    vm.removeDetail=function(index){
+      vm.bill.details.splice(index,1);
     };
 
     (function initController() {

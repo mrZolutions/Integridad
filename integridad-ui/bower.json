@@ -17,7 +17,8 @@
     "ngstorage": "^0.3.11",
     "angular-base64": "^2.0.5",
     "SpinKit": "spinkit#^1.2.5",
-    "eonasdan-bootstrap-datetimepicker": "^4.17.47"
+    "eonasdan-bootstrap-datetimepicker": "^4.17.47",
+    "angular-underscorejs": "^1.0.1"
   },
   "devDependencies": {
     "angular-mocks": "^1.4.0"

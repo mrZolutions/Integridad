@@ -146,7 +146,12 @@
                 <td>{{detail.costEach}}</td>
                 <td>{{detail.total}}</td>
                 <td>
-                  <button type="button" class="btn btn-primary" ng-click="vm.clientSelect(clientPreSelect)">
+                  <button type="button" class="btn btn-primary"
+                          ng-click="vm.editDetail(detail, $index)"
+                          data-toggle="modal" data-target="#modalAddProduct">
+                    Editar
+                  </button>
+                  <button type="button" class="btn btn-primary" ng-click="vm.removeDetail($index)">
                     Eliminar
                   </button>
                 </td>
@@ -162,12 +167,11 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" ng-click="vm.product=undefined">&times;</button>
+          <button type="button" class="close" data-dismiss="modal" ng-click="vm.productToAdd=undefined">&times;</button>
           <h4 class="modal-title">Agregar Producto</h4>
         </div>
         <div class="modal-body">
           <div class="row">
-
             <div class="col-md-12" ng-if="vm.productToAdd === undefined">
               <input ng-model="searchText" class="form-control" placeholder="Buscar">
               <table class="table table-striped">
@@ -206,6 +210,11 @@
                   <b>{{vm.productToAdd.name}}</b>
                 </div>
                 <div class="panel-body">
+                  <div class="row" ng-show="vm.errorQuantity">
+                    <div class="form-group col-md-12">
+                      <div class="alert alert-danger">{{vm.errorQuantity}}</div>
+                    </div>
+                  </div>
                   <div class="row">
                     <div class="form-group col-md-6">
                       <b>CANTIDAD DISPONIBLE: </b><h4>{{vm.productToAdd.quantity}}</h4>
