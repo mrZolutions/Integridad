@@ -13,6 +13,10 @@ angular.module('integridadUiApp')
 
     vm.loading = false;
     vm.clientList = undefined;
+    vm.prices = [
+      { name: 'VENTA NORMAL', cod: 'cost'}, { name: 'AL POR MAYOR', cod: 'costMajority'}, { name: 'DIFERIDO', cod: 'costDeferred'}
+    ];
+
 
     function _activate(){
       vm.clientSelected = undefined;
@@ -23,6 +27,7 @@ angular.module('integridadUiApp')
       vm.quantity = undefined;
       vm.loading = true;
       vm.indexDetail = undefined;
+      vm.priceType = vm.prices[0];
       clientService.getLazyByProjectId($localStorage.user.subsidiary.userClient.id).then(function (response) {
         vm.clientList = response;
         vm.loading = false;
@@ -59,6 +64,22 @@ angular.module('integridadUiApp')
         details: []
       };
     }
+
+    function _getTotalSubtotal(){
+      vm.bill.subTotal = 0;
+      _.map(vm.bill.details, function(detail){
+         vm.bill.subTotal = (parseFloat(vm.bill.subTotal) + parseFloat(detail.total)).toFixed(2);
+         vm.bill.total = (parseFloat(vm.bill.subTotal) * 1.12).toFixed(2);
+      });
+    }
+
+    vm.reCalculateTotal = function(){
+      _.map(vm.bill.details, function(detail){
+        detail.costEach = detail.product[vm.priceType.cod];
+        detail.total = (parseFloat(detail.quantity) * parseFloat(detail.costEach)).toFixed(2);
+      });
+      _getTotalSubtotal();
+    };
 
     vm.clientSelect = function(client){
       vm.dateBill = new Date();
@@ -97,8 +118,8 @@ angular.module('integridadUiApp')
         var detail={
           product: angular.copy(vm.productToAdd),
           quantity: vm.quantity,
-          costEach: vm.productToAdd.cost,
-          total: parseFloat(vm.quantity) * parseFloat(vm.productToAdd.cost)
+          costEach: vm.productToAdd[vm.priceType.cod],
+          total: (parseFloat(vm.quantity) * parseFloat(vm.productToAdd[vm.priceType.cod])).toFixed(2)
         }
 
         if(vm.indexDetail !== undefined){
@@ -110,6 +131,7 @@ angular.module('integridadUiApp')
 
         vm.productToAdd = undefined;
         vm.quantity = undefined;
+        _getTotalSubtotal();
 
         if(closeModal){
           $('#modalAddProduct').modal('hide');
