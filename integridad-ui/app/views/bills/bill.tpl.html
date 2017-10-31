@@ -109,6 +109,13 @@
           &nbsp;&nbsp;&nbsp;<a>Editar</a>
         </div>
       </div>
+      <div class="row">
+        <div class="form-group col-md-12">
+          <b>PRECIO CONVENIDO: </b>
+          <select ng-options="price as price.name for price in vm.prices"
+          ng-model="vm.priceType" class="form-control" ng-change="vm.reCalculateTotal()"></select>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -156,6 +163,22 @@
                   </button>
                 </td>
               </tr>
+              <tr>
+                <td></td>
+                <td></td>
+                <td><b>SUBTOTAL: </b></td>
+                <td>{{vm.bill.subTotal}}</td>
+                <td>
+                </td>
+              </tr>
+              <tr>
+                <td></td>
+                <td></td>
+                <td><b>TOTAL: </b></td>
+                <td>{{vm.bill.total}}</td>
+                <td>
+                </td>
+              </tr>
             </tbody>
           </table>
         </div>
@@ -193,7 +216,7 @@
                   <tr ng-repeat="productSelect in vm.productList | orderBy:name | filter:searchText">
                     <td>{{ productSelect.name }}</td>
                     <td>{{ productSelect.quantity }}</td>
-                    <td>{{ productSelect.cost }}</td>
+                    <td>{{ productSelect[vm.priceType.cod] }}</td>
                     <td>
                       <button type="button" class="btn btn-primary" ng-click="vm.productToAdd = productSelect; vm.quantity = 1">
                         Seleccionar
