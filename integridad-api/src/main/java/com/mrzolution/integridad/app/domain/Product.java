@@ -30,6 +30,8 @@ public class Product implements Child{
     private Long dateCreated;
     private Long lastDateUpdated;
     private Double cost;
+    private Double costMajority;
+    private Double costDeferred;
     
     @ManyToOne
     @JoinColumn(name = "user_client_id")
