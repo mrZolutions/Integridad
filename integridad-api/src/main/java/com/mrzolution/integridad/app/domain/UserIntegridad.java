@@ -1,13 +1,9 @@
 package com.mrzolution.integridad.app.domain;
 
+import java.util.List;
 import java.util.UUID;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Transient;
+import javax.persistence.*;
 
 import org.hibernate.validator.constraints.Email;
 
@@ -54,6 +50,10 @@ public class UserIntegridad {
     @ManyToOne
     @JoinColumn(name = "subsidiary_id")
     private Subsidiary subsidiary;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private UserIntegridad user;
     
     public void setListsNull(){
     	
@@ -61,6 +61,9 @@ public class UserIntegridad {
     
     public void setFatherListToNull(){
     	userType.setListsNull();
+    	if(user != null){
+    	    user.setFatherListToNull();
+        }
     	if(subsidiary != null) {
     		subsidiary.setListsNull(); 
     		subsidiary.setFatherListToNull();
@@ -72,6 +75,12 @@ public class UserIntegridad {
         UserIntegridad userIntegridad = new UserIntegridad();
         userIntegridad.setUserType(UserType.newUserTypeTest());
         userIntegridad.setSubsidiary(Subsidiary.newSubsidiaryTest());
+
+        UserIntegridad userFatther = new UserIntegridad();
+        userFatther.setUserType(UserType.newUserTypeTest());
+        userFatther.setSubsidiary(Subsidiary.newSubsidiaryTest());
+
+        userIntegridad.setUser(userFatther);
 
         return userIntegridad;
     }

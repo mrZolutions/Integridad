@@ -8,7 +8,7 @@
  * Controller of the integridadUiApp
  */
 angular.module('integridadUiApp')
-  .controller('BillCtrl', function ( _, $rootScope, utilStringService, $localStorage, clientService, productService) {
+  .controller('BillCtrl', function ( _, $rootScope, $location, utilStringService, $localStorage, clientService, productService) {
     var vm = this;
 
     vm.loading = false;
@@ -79,6 +79,10 @@ angular.module('integridadUiApp')
         detail.total = (parseFloat(detail.quantity) * parseFloat(detail.costEach)).toFixed(2);
       });
       _getTotalSubtotal();
+    };
+
+    vm.clientCreate = function(){
+      $location.path('/clients/create');
     };
 
     vm.clientSelect = function(client){
@@ -155,6 +159,10 @@ angular.module('integridadUiApp')
 
     vm.removeDetail=function(index){
       vm.bill.details.splice(index,1);
+    };
+
+    vm.verifyUser = function(){
+      // console.log($localStorage.user)
     };
 
     (function initController() {
