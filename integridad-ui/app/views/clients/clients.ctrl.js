@@ -8,7 +8,7 @@
  * Controller of the integridadUiApp
  */
 angular.module('integridadUiApp')
-  .controller('ClientsCtrl', function (projectService, utilStringService, countryListService, clientService, $localStorage, validatorService) {
+  .controller('ClientsCtrl', function ($routeParams, $location, projectService, utilStringService, countryListService, clientService, $localStorage, validatorService) {
     var vm = this;
 
     vm.loading = false;
@@ -19,14 +19,18 @@ angular.module('integridadUiApp')
     vm.clientList = undefined;
 
     function _activate(){
-      vm.loading = true;
-      clientService.getLazy().then(function (response) {
-        vm.clientList = response;
-        vm.loading = false;
-      }).catch(function (error) {
-        vm.loading = false;
-        vm.error = error.data;
-      });
+      if($routeParams.create){
+        vm.clientCreate();
+      } else {
+        vm.loading = true;
+        clientService.getLazy().then(function (response) {
+          vm.clientList = response;
+          vm.loading = false;
+        }).catch(function (error) {
+          vm.loading = false;
+          vm.error = error.data;
+        });
+      }
     }
 
     function create(){
@@ -35,6 +39,9 @@ angular.module('integridadUiApp')
         _activate();
         vm.error = undefined;
         vm.success = 'Resgistro realizado con exito';
+        if($routeParams.create){
+          $location.path('/bills/bill');
+        }
       }).catch(function (error) {
         vm.loading = false;
         vm.error = error.data;
@@ -119,7 +126,10 @@ angular.module('integridadUiApp')
     vm.cancel=function(){
       vm.client=undefined;
       vm.success=undefined;
-      vm.error=undefined
+      vm.error=undefined;
+      if($routeParams.create){
+        $location.path('/bills/bill');
+      }
     };
 
     (function initController() {

@@ -106,7 +106,10 @@
       <div class="row">
         <div class="form-group col-md-12">
           <b>NUMERO DE FACTURA: </b> {{vm.seqNumber}}
-          &nbsp;&nbsp;&nbsp;<a>Editar</a>
+          &nbsp;&nbsp;&nbsp;
+          <a data-toggle="modal" data-target="#modalEditBillNumber" ng-click="vm.verifyUser()">
+            Editar
+          </a>
         </div>
       </div>
       <div class="row">
@@ -270,6 +273,20 @@
             ng-disabled="vm.productToAdd === undefined">
             Aceptar y Agreagar Mas productos
           </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="modalEditBillNumber" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" ng-click="vm.productToAdd=undefined">&times;</button>
+          <h4 class="modal-title">Editar N&uacute;mero de Factura</h4>
+        </div>
+        <div class="modal-body">
+
         </div>
       </div>
     </div>
