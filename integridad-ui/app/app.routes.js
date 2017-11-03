@@ -28,6 +28,10 @@ function routes($routeProvider) {
       templateUrl: 'views/clients/clients.tpl.html',
       controller: 'ClientsCtrl',
       controllerAs: 'vm'
+    }).when('/clients/:create', {
+      templateUrl: 'views/clients/clients.tpl.html',
+      controller: 'ClientsCtrl',
+      controllerAs: 'vm'
     }).when('/bills/bill', {
       templateUrl: 'views/bills/bill.tpl.html',
       controller: 'BillCtrl',
