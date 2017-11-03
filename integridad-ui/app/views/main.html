@@ -24,43 +24,45 @@
 </div>
 
 <div class="panel panel-default" ng-show="vm.init && !vm.recover">
-  <div class="panel-body">
-    <div class="row" ng-show="vm.error !== undefined">
-      <div class="form-group col-md-12">
-        <div class="alert alert-danger">{{vm.error}}</div>
+  <form>
+    <div class="panel-body">
+      <div class="row" ng-show="vm.error !== undefined">
+        <div class="form-group col-md-12">
+          <div class="alert alert-danger">{{vm.error}}</div>
+        </div>
       </div>
-    </div>
-    <div class="row" ng-show="vm.success !== undefined">
-      <div class="form-group col-md-12">
-        <div class="alert alert-success">{{vm.success}}</div>
+      <div class="row" ng-show="vm.success !== undefined">
+        <div class="form-group col-md-12">
+          <div class="alert alert-success">{{vm.success}}</div>
+        </div>
       </div>
-    </div>
-    <div class="row">
-      <div class="form-group col-md-6">
-        <label>E-mail: </label>
-        <input type="text" ng-model="vm.email" class="form-control">
-      </div>
+      <div class="row">
+        <div class="form-group col-md-6">
+          <label>E-mail: </label>
+          <input type="text" ng-model="vm.email"  name="email" id="email" class="form-control">
+        </div>
 
-      <div class="form-group col-md-6">
-        <label>Password: </label>
-        <input type="password" ng-model="vm.password" class="form-control">
+        <div class="form-group col-md-6">
+          <label>Password: </label>
+          <input type="password" ng-model="vm.password" class="form-control">
+        </div>
       </div>
     </div>
-  </div>
-  <div class="panel-footer">
-    <button type="button" class="btn btn-primary" ng-click="vm.login()"
-      ng-disabled="vm.email === undefined || vm.password === undefined">
-      Ingresar
-    </button>
-    <!-- <button type="button" class="btn btn-success"
-    ng-click="vm.init = false; vm.userIntegridad = {}; vm.success=undefined; vm.error=undefined">
-      Registrarse
-    </button> -->
-    <button type="button" class="btn btn-warning"
-    ng-click="vm.recover = true; vm.success=undefined; vm.error=undefined">
-      Olvid&eacute; mi Password
-    </button>
-  </div>
+    <div class="panel-footer">
+      <button class="btn btn-primary" ng-click="vm.login()"
+        ng-disabled="vm.email === undefined || vm.password === undefined">
+        Ingresar
+      </button>
+      <!-- <button type="button" class="btn btn-success"
+      ng-click="vm.init = false; vm.userIntegridad = {}; vm.success=undefined; vm.error=undefined">
+        Registrarse
+      </button> -->
+      <button type="button" class="btn btn-warning"
+      ng-click="vm.recover = true; vm.success=undefined; vm.error=undefined">
+        Olvid&eacute; mi Password
+      </button>
+    </div>
+  </form>
 </div>
 
 <div class="panel panel-default" ng-show="vm.recover">
