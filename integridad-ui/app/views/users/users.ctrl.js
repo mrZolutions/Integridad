@@ -14,6 +14,12 @@ angular.module('integridadUiApp')
     vm.loading = false;
     vm.userIntegridad = undefined;
     vm.project = undefined;
+    vm.bosses = [];
+    vm.codeBosses = {
+      EMP : 'ADM',
+      ADM : 'SAD',
+      SAD : 'SAD'
+    }
 
     function _activate(){
       vm.loading = true;
@@ -51,12 +57,16 @@ angular.module('integridadUiApp')
       });
     }
 
-    function update(){
+    function update(isRemove){
       vm.loading = true;
       authService.updateUser(vm.userIntegridad).then(function (response) {
         vm.loading = false;
         vm.error = undefined;
-        vm.success = 'Resgistro actualizado con exito';
+        if(isRemove){
+          vm.success = 'Resgistro eliminado con exito';
+        } else {
+          vm.success = 'Resgistro actualizado con exito';
+        }
         vm.userIntegridad=undefined;
         _activate();
       }).catch(function (error) {
@@ -74,6 +84,12 @@ angular.module('integridadUiApp')
         vm.error = error.data;
       });
     };
+
+    vm.getBosses = function(){
+      authService.getBosses(vm.codeBosses[vm.userIntegridad.userType.code],vm.userIntegridad.subsidiary.id).then(function(response){
+        vm.bosses = response;
+      });
+    }
 
     vm.userCreate = function(){
       vm.success=undefined;
@@ -138,11 +154,17 @@ angular.module('integridadUiApp')
       }
     };
 
+    vm.remove= function(){
+      vm.userIntegridad.active = false;
+      update(true);
+    }
+
     vm.cancel=function(){
       vm.userIntegridad =undefined;
       vm.success=undefined;
       vm.error=undefined
     };
+
 
     (function initController() {
       vm.loading = true;

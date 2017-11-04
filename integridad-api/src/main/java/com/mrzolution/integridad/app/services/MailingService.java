@@ -64,7 +64,7 @@ public class MailingService {
         		+ "<br> Su clave de acceso temporal es: " + pass
         		+ "<br> Ingrese al sistema y personalice su clave dando clic en el siguiente botón"
         		+ "<br><br><a href=\""+link+"\">"
-        		+ "<button>Intedgridad</button>"
+        		+ "<button>Integridad</button>"
         		+ "</a>";
     
         

@@ -34,6 +34,7 @@ public class UserClient {
     private String address2;
     private String cedula;
     private String ruc;
+    private long initialActivityDate;
     
     private long dateCreated;
     

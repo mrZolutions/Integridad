@@ -2,6 +2,7 @@ package com.mrzolution.integridad.app.repositories;
 
 import java.util.UUID;
 
+import com.mrzolution.integridad.app.domain.Subsidiary;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
@@ -19,6 +20,10 @@ public interface UserIntegridadRepository extends CrudRepository<UserIntegridad,
 	UserIntegridad findByIdAndValidation(UUID userId, String validation);
 	
 	Iterable<UserIntegridad> findByUserType(UserType userType);
+
+	Iterable<UserIntegridad> findByUserTypeAndActive(UserType userType, boolean active);
+
+	Iterable<UserIntegridad> findByUserTypeAndActiveAndSubsidiary(UserType userType, boolean active, Subsidiary subsidiary);
 
 	Iterable<UserIntegridad> findByActive(boolean active);
 
