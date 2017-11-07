@@ -29,6 +29,7 @@ public class UserIntegridad {
     private String address2;
     private String cedula;
     private String ruc;
+    private String cashier;
     private long birthDay;
     
     private long dateCreated;

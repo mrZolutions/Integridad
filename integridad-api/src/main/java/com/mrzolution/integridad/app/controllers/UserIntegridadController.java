@@ -98,9 +98,22 @@ public class UserIntegridadController {
 		try {
 			response = service.getAllActivesLazy();
 		}catch(BadRequestException e) {
-			log.info("UserIntegridadController recoverPass Exception thrown: {}", e.getMessage());	    
+			log.info("UserIntegridadController getAllActivesLazy Exception thrown: {}", e.getMessage());
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	    }
+		return new ResponseEntity<Iterable>(response, HttpStatus.OK);
+	}
+
+	@RequestMapping(method = RequestMethod.GET, value="/lazy/bosses/{id}/{code}")
+	public ResponseEntity getAllActivesBosesLazy(@PathVariable("id") UUID idSubsidiary, @PathVariable("code") String code){
+		log.info("UserIntegridadController getAllActivesBosesLazy");
+		Iterable<UserIntegridad> response = null;
+		try {
+			response = service.getByCodeTypeAndSubsidiaryIdActivesLazy(code, idSubsidiary);
+		}catch(BadRequestException e) {
+			log.info("UserIntegridadController getAllActivesBosesLazy Exception thrown: {}", e.getMessage());
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+		}
 		return new ResponseEntity<Iterable>(response, HttpStatus.OK);
 	}
 }
