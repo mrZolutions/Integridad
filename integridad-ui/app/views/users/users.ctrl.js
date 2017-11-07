@@ -111,6 +111,7 @@ angular.module('integridadUiApp')
       getProjects();
       vm.project = vm.userIntegridad.subsidiary.userClient;
       vm.getSubsidiaries();
+      vm.getBosses();
 
       $('#pickerBirthday').data("DateTimePicker").date(new Date(vm.userIntegridad.birthDay));
     };

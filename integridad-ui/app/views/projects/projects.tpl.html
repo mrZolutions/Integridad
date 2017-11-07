@@ -270,6 +270,11 @@
             <label>C&oacute;digo Facturaci&oacute;n (Ejemplo: 001): </label>
             <input type="text" ng-model="vm.subsidiary.threeCode" class="form-control">
           </div>
+          <div class="form-group col-md-6">
+            <label>Cantidad de cajeros </label>
+            <input type="text" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+            ng-model="vm.subsidiary.nomberOfCashiers" class="form-control" maxlength="9">
+          </div>
         </div>
 
       </div>

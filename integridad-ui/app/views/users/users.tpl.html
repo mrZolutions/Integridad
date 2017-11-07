@@ -101,10 +101,17 @@
       </div>
 
       <div class="row">
-        <div class="form-group col-md-12">
+        <div class="form-group col-md-6">
           <label>Tipo de Usuario *: </label>
           <select ng-options="userType as userType.name for userType in vm.userTypes  | orderBy:'name' track by userType.id"
             ng-model="vm.userIntegridad.userType" class="form-control" ng-change="vm.getBosses()">
+          </select>
+        </div>
+
+        <div class="form-group col-md-6">
+          <label>Caja*: </label>
+          <input type="text" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+          ng-model="vm.userIntegridad.cashier" class="form-control" maxlength="9">
           </select>
         </div>
       </div>
