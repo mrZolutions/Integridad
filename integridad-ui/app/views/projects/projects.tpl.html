@@ -137,6 +137,22 @@
         <input type="text" ng-model="vm.project.codeIntegridad" class="form-control">
       </div>
     </div>
+    <div class="row">
+      <div class="form-group col-md-6">
+        <label>Fecha de Inicio de Actividades</label>
+        <div class="input-group date" id="pickerInitialDate">
+          <input type="text" class="form-control input-group-addon"/>
+          <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"/></span>
+        </div>
+        <script>
+          var defaultDate = new Date();
+          $('#pickerInitialDate').datetimepicker({
+            format: "DD/MM/YY",
+            defaultDate: defaultDate
+          });
+        </script>
+      </div>
+    </div>
 
     <div class="row">
       <div class="form-group col-md-12">
@@ -253,6 +269,11 @@
           <div class="form-group col-md-6">
             <label>C&oacute;digo Facturaci&oacute;n (Ejemplo: 001): </label>
             <input type="text" ng-model="vm.subsidiary.threeCode" class="form-control">
+          </div>
+          <div class="form-group col-md-6">
+            <label>Cantidad de cajeros </label>
+            <input type="text" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+            ng-model="vm.subsidiary.nomberOfCashiers" class="form-control" maxlength="9">
           </div>
         </div>
 

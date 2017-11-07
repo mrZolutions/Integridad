@@ -59,9 +59,11 @@ angular.module('integridadUiApp')
       vm.success=undefined;
       vm.error=undefined
       vm.project={subsidiaries:[]};
+      vm.project.initialActivityDate = $('#pickerInitialDate').data("DateTimePicker").date().toDate().getTime();
     };
 
     vm.save = function(){
+      vm.project.initialActivityDate = $('#pickerInitialDate').data("DateTimePicker").date().toDate().getTime();
       var validationError = utilStringService.isAnyInArrayStringEmpty([
         vm.project.name, vm.project.threeCode, vm.project.codeIntegridad, vm.project.ruc
       ]);
@@ -96,6 +98,7 @@ angular.module('integridadUiApp')
     vm.editProject = function(projectEdit){
       projectService.getById(projectEdit.id).then(function (response) {
         vm.project = response;
+        $('#pickerInitialDate').data("DateTimePicker").date(new Date(vm.project.initialActivityDate));
       }).catch(function (error) {
         vm.loading = false;
         vm.error = error.data;

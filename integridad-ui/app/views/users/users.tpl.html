@@ -68,7 +68,7 @@
           <button type="button" class="btn btn-primary" ng-click="vm.userEdit(userEdit)">
             Editar
           </button>
-          <button type="button" class="btn btn-primary" ng-click="vm.userEdit=userEdits"
+          <button type="button" class="btn btn-primary" ng-click="vm.userIntegridad=userEdit"
             data-toggle="modal" data-target="#modalEliminar">
             Eliminar
           </button>
@@ -101,10 +101,26 @@
       </div>
 
       <div class="row">
-        <div class="form-group col-md-12">
+        <div class="form-group col-md-6">
           <label>Tipo de Usuario *: </label>
-          <select ng-options="userType as userType.name for userType in vm.userTypes  | orderBy:'name' track by id"
-            ng-model="vm.userIntegridad.userType" class="form-control">
+          <select ng-options="userType as userType.name for userType in vm.userTypes  | orderBy:'name' track by userType.id"
+            ng-model="vm.userIntegridad.userType" class="form-control" ng-change="vm.getBosses()">
+          </select>
+        </div>
+
+        <div class="form-group col-md-6">
+          <label>Caja*: </label>
+          <input type="text" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+          ng-model="vm.userIntegridad.cashier" class="form-control" maxlength="9">
+          </select>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="form-group col-md-12">
+          <label>Supervisor *: </label>
+          <select ng-options="boss as (boss.firstName + ' ' + boss.lastName) for boss in vm.bosses  track by boss.id"
+            ng-model="vm.userIntegridad.user" class="form-control">
           </select>
         </div>
       </div>
@@ -205,5 +221,29 @@
       </button>
     </div>
 
+  </div>
+</div>
+
+<div id="modalEliminar" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" ng-click="vm.userEdit=undefined">&times;</button>
+        <h4 class="modal-title">Advertencia</h4>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-md-12" >
+            Esta seguro que desea Eliminar el Usuario {{vm.userIntegridad.firstName}} {{vm.userIntegridad.lastName}} con e-mail:
+            {{vm.userIntegridad.email}}
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" ng-click="vm.remove()" data-dismiss="modal">
+          Eliminar
+        </button>
+      </div>
+    </div>
   </div>
 </div>

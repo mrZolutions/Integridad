@@ -3,6 +3,7 @@ package com.mrzolution.integridad.app.services;
 import java.util.Date;
 import java.util.UUID;
 
+import com.mrzolution.integridad.app.domain.Subsidiary;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -30,6 +31,9 @@ public class UserIntegridadServices {
 	
 	@Autowired
 	UserTypeServices userTypeServices;
+
+	@Autowired
+	SubsidiaryServices subsidiaryServices;
 	
 	public UserIntegridad create(UserIntegridad userIntegridad) throws BadRequestException{
 		log.info("UserIntegridadServices create: {}", userIntegridad.getEmail());
@@ -155,6 +159,20 @@ public class UserIntegridadServices {
 
 	public Iterable<UserIntegridad> getAllActivesLazy() {
 		Iterable<UserIntegridad> userIntegridadList = userIntegridadRepository.findByActive(true);
+		userIntegridadList.forEach(user->{user.setFatherListToNull();});
+		return userIntegridadList;
+	}
+
+	public Iterable<UserIntegridad> getByCodeTypeAndSubsidiaryIdActivesLazy(String code, UUID subsidiaryId) {
+		log.info("UserIntegridadServices getByCodeTypeAndSubsidiaryIdActivesLazy code: {},  subsidiaryId: {}",
+				code, subsidiaryId);
+		UserType userType = userTypeServices.getByCode(code);
+		log.info("UserIntegridadServices getByCodeTypeAndSubsidiaryIdActivesLazy userType retreived");
+		Subsidiary subsidiary = subsidiaryServices.getById(subsidiaryId);
+		log.info("UserIntegridadServices getByCodeTypeAndSubsidiaryIdActivesLazy subsidiary retreived");
+		Iterable<UserIntegridad> userIntegridadList = userIntegridadRepository.
+				findByUserTypeAndActiveAndSubsidiary(userType,true, subsidiary);
+		log.info("UserIntegridadServices getByCodeTypeAndSubsidiaryIdActivesLazy userIntegridad list retreived");
 		userIntegridadList.forEach(user->{user.setFatherListToNull();});
 		return userIntegridadList;
 	}
