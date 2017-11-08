@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import com.mrzolution.integridad.app.domain.Cashier;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -30,24 +31,33 @@ public class UserClientServicesTest {
 	@Mock
 	UserClientRepository userClientRepository;
 	@Mock
+	SubsidiaryServices subsidiaryServices;
+	@Mock
 	SubsidiaryRepository subsidiaryRepository;
 	@Mock
 	SubsidiaryChildRepository subsidiaryChildRepository;
 	
 	UserClient client;
 	Subsidiary subsidiary;
+	Cashier cashier;
 	
 	List<Subsidiary> subsidiaryList = new ArrayList<>();
+	List<Cashier> cashierList = new ArrayList<>();
 	
 	@Before
 	public void setupTest(){
 		client = UserClient.newUserClientTest();
 		subsidiary = Subsidiary.newSubsidiaryTest();
 		subsidiary.setUserClient(null);
+
+		cashier = Cashier.newCashierTest();
+		cashier.setSubsidiary(null);
 	}
 	
 	@Test
 	public void createCallSubsidiaryRepository(){
+		cashierList.add(cashier);
+		subsidiary.setCashiers(cashierList);
 		subsidiaryList.add(subsidiary);
 		client.setSubsidiaries(subsidiaryList);
 		
@@ -56,7 +66,7 @@ public class UserClientServicesTest {
 		UserClient response = service.create(client);
 		
 		Mockito.verify(userClientRepository, Mockito.times(1)).save(Mockito.any(UserClient.class));
-		Mockito.verify(subsidiaryRepository, Mockito.times(1)).save(subsidiary);
+		Mockito.verify(subsidiaryServices, Mockito.times(1)).create(subsidiary);
 		
 		Assert.assertTrue(!response.getSubsidiaries().isEmpty());
 		

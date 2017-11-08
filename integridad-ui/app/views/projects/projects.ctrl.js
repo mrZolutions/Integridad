@@ -15,6 +15,7 @@ angular.module('integridadUiApp')
     vm.project = undefined;
     vm.projectList = undefined;
     vm.subsidiary = undefined;
+    vm.cashier = undefined;
 
     function _activate(){
       vm.loading = true;
@@ -28,6 +29,8 @@ angular.module('integridadUiApp')
     }
 
     function create(){
+      console.log('--------------crate')
+      console.log(JSON.stringify(vm.project, null, 4))
       projectService.create(vm.project).then(function (response) {
         vm.project=undefined;
         _activate();
@@ -90,6 +93,12 @@ angular.module('integridadUiApp')
       update(true);
     };
 
+    vm.addSubsidiary = function(){
+      vm.subsidiary={
+        cashiers: []
+      }
+    };
+
     vm.removeSubsidiary = function(){
       vm.subsidiary.active = false;
       update(true);
@@ -111,6 +120,18 @@ angular.module('integridadUiApp')
         vm.subsidiary.dateCreated = new Date().getTime();
         vm.project.subsidiaries.push(vm.subsidiary);
       }
+      vm.subsidiary = undefined;
+    };
+
+    vm.saveCashier = function(){
+      vm.cashier.active = true;
+      vm.cashier.dateCreated = new Date().getTime();
+      vm.cashier.threeCode = '006';
+      vm.cashier.billNumberSeq = 1;
+
+      vm.subsidiary.cashiers.push(vm.cashier);
+      // vm.cashier = undefined;
+      console.log('----',vm.subsidiary)
     };
 
     vm.cancel=function(){

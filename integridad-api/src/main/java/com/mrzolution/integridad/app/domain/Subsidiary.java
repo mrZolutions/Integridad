@@ -49,10 +49,14 @@ public class Subsidiary implements Child{
     
     @OneToMany(mappedBy = "subsidiary", cascade = CascadeType.ALL)
     private List<UserIntegridad> users;
+
+    @OneToMany(mappedBy = "subsidiary", cascade = CascadeType.ALL)
+    private List<Cashier> cashiers;
     
     
     public void setListsNull(){
-    	users = null;
+        users = null;
+        cashiers = null;
     }
     
     public void setFatherListToNull(){
@@ -65,6 +69,7 @@ public class Subsidiary implements Child{
         Subsidiary subsidiary = new Subsidiary();
         subsidiary.setUserClient(UserClient.newUserClientTest());
         subsidiary.setUsers(new ArrayList<>());
+        subsidiary.setCashiers(new ArrayList<>());
         
         return subsidiary;
     }
