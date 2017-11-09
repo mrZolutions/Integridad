@@ -16,6 +16,7 @@ import javax.persistence.Transient;
 import com.mrzolution.integridad.app.interfaces.Child;
 
 import lombok.Data;
+import org.hibernate.annotations.Type;
 
 /**
  * Created by daniel.
@@ -36,6 +37,9 @@ public class Subsidiary implements Child{
     private String address1;
     private String address2;
     private Long nomberOfCashiers;
+
+    @Type(type = "com.mrzolution.integridad.app.GenericTypeConverter.GenericArrayUserType")
+    private String[] warehouses;
     
     private long billNumberSeq;
     

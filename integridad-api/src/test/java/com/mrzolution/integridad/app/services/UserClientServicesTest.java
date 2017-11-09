@@ -101,7 +101,6 @@ public class UserClientServicesTest {
     	UUID id = UUID.randomUUID();
         client.setId(id);
         
-        UUID idChildOld = UUID.randomUUID();
         UUID idChildNew = UUID.randomUUID();
         UUID idChildUpdate = UUID.randomUUID();
         
@@ -117,7 +116,6 @@ public class UserClientServicesTest {
         subsidiaryListNew.add(subsidiaryU);
         
         List<UUID> subsidiaryListOld = new ArrayList<>();
-        subsidiaryListOld.add(idChildOld);
         subsidiaryListOld.add(idChildUpdate);
         
         client.setSubsidiaries(subsidiaryListNew);
@@ -127,27 +125,36 @@ public class UserClientServicesTest {
         
         service.update(client);
         
-        Mockito.verify(subsidiaryRepository, Mockito.times(1)).save(subsidiaryN);
-        Mockito.verify(subsidiaryRepository, Mockito.times(1)).save(subsidiaryU);
-        Mockito.verify(subsidiaryRepository, Mockito.times(1)).delete(idChildOld);
-    	
+        Mockito.verify(subsidiaryServices, Mockito.times(1)).update(subsidiaryN);
+        Mockito.verify(subsidiaryServices, Mockito.times(1)).update(subsidiaryU);
+
     }
 	
 	@Test
 	public void getByIdTest() throws Exception{
 		UUID id = UUID.randomUUID();
-		
+
+		cashierList.add(cashier);
+		subsidiary.setCashiers(cashierList);
 		subsidiary.setUserClient(client);
 		subsidiaryList.add(subsidiary);
 		client.setSubsidiaries(subsidiaryList);
+		client.setId(id);
 		
 		Mockito.when(userClientRepository.findOne(id)).thenReturn(client);
-		Mockito.when(subsidiaryRepository.findByUserClient(client)).thenReturn(subsidiaryList);
+		Mockito.when(subsidiaryServices.getAllActivesByUserClientId(id)).thenReturn(subsidiaryList);
 		
 		UserClient retrieved = service.getById(id);
-		ListValidation.childsLisAndFathertValidation(UserClient.class, retrieved);
-		
+//		ListValidation.childsLisAndFathertValidation(UserClient.class, retrieved);
+
+		System.out.println(retrieved);
+
 		Assert.assertNotNull(retrieved);
+		Assert.assertNotNull(retrieved.getSubsidiaries().get(0));
+		Assert.assertNull(retrieved.getSubsidiaries().get(0).getUsers());
+		Assert.assertNotNull(retrieved.getSubsidiaries().get(0).getCashiers());
+		Assert.assertNull(retrieved.getSubsidiaries().get(0).getUserClient());
+
 	}
 
 }

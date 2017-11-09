@@ -29,8 +29,6 @@ angular.module('integridadUiApp')
     }
 
     function create(){
-      console.log('--------------crate')
-      console.log(JSON.stringify(vm.project, null, 4))
       projectService.create(vm.project).then(function (response) {
         vm.project=undefined;
         _activate();
@@ -99,9 +97,13 @@ angular.module('integridadUiApp')
       }
     };
 
+    vm.removeCashier = function(){
+      vm.cashier.active = false;
+    };
+
     vm.removeSubsidiary = function(){
       vm.subsidiary.active = false;
-      update(true);
+      // update(true);
     };
 
     vm.editProject = function(projectEdit){
@@ -116,11 +118,14 @@ angular.module('integridadUiApp')
 
     vm.saveSubsidiary = function(){
       if(vm.subsidiary.id === undefined && vm.subsidiary.name !== undefined){
+        vm.subsidiary.warehouses = ['bodega 1', 'bodega 2']
         vm.subsidiary.active = true;
         vm.subsidiary.dateCreated = new Date().getTime();
+        console.log('********************',vm.subsidiary);
         vm.project.subsidiaries.push(vm.subsidiary);
       }
       vm.subsidiary = undefined;
+      vm.updSubsi = false;
     };
 
     vm.saveCashier = function(){
@@ -135,12 +140,14 @@ angular.module('integridadUiApp')
     };
 
     vm.cancel=function(){
+      vm.updSubsi = false;
       vm.project=undefined;
       vm.success=undefined;
       vm.error=undefined;
     };
 
     vm.cancelSubisdiary=function(){
+      vm.updSubsi = false;
       vm.subsidiary=undefined;
       vm.success=undefined;
       vm.error=undefined;

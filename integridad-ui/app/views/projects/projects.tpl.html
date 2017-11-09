@@ -75,7 +75,7 @@
 
 </div>
 
-<div class="panel panel-default" ng-show="!vm.subsidiary && vm.project">
+<div class="panel panel-default" ng-show="!vm.updSubsi && vm.project">
   <div class="panel-body">
     <div class="row">
       <div class="form-group col-md-12">
@@ -171,7 +171,7 @@
               <th> Ciudad </th>
               <th> Direcci&oacute;n </th>
               <th>
-                <button type="button" class="btn btn-primary" ng-click="vm.addSubsidiary()"
+                <button type="button" class="btn btn-primary" ng-click="vm.addSubsidiary(); vm.updSubsi = true"
                   data-toggle="modal" data-target="#modalSubsidiary">
                   Agregar
                 </button>
@@ -190,11 +190,11 @@
               <td>{{ subsi.city }}</td>
               <td>{{ subsi.address1 }}</td>
               <td>
-                <button type="button" class="btn btn-primary" ng-click="vm.subsidiary=subsi"
+                <button type="button" class="btn btn-primary" ng-click="vm.subsidiary=subsi; vm.updSubsi = true"
                   data-toggle="modal" data-target="#modalSubsidiary">
                   Editar
                 </button>
-                <button type="button" class="btn btn-primary" ng-click="vm.subsidiary=subsi"
+                <button type="button" class="btn btn-primary" ng-click="vm.subsidiary=subsi; vm.updSubsi = false"
                   data-toggle="modal" data-target="#modalEliminarSubsidiary">
                   Eliminar
                 </button>
@@ -221,8 +221,11 @@
   </div>
 </div>
 
-<div ng-show="vm.subsidiary">
+<div ng-show="vm.subsidiary !== undefined && vm.updSubsi">
   <div class="panel panel-default">
+    <div class="panel-heading">
+      Sucursal
+    </div>
     <div class="panel-body">
 
       <div class="row">
@@ -290,8 +293,8 @@
               <tr ng-repeat="cashier in vm.subsidiary.cashiers | filter:{active: true}">
                 <td>{{ cashier.nameNumber }}</td>
                 <td>
-                  <button type="button" class="btn btn-primary" ng-click="vm.subsidiary=subsi"
-                    data-toggle="modal" data-target="#modalEliminarSubsidiary">
+                  <button type="button" class="btn btn-primary" ng-click="vm.cashier=cashier"
+                    data-toggle="modal" data-target="#modalEliminarCashier">
                     Eliminar
                   </button>
                 </td>
@@ -429,6 +432,29 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-primary" ng-click="vm.removeSubsidiary()" data-dismiss="modal">
+          Eliminar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="modalEliminarCashier" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" ng-click="vm.project=undefined">&times;</button>
+        <h4 class="modal-title">Advertencia</h4>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-md-12" >
+            Esta seguro que desea Eliminar La caja {{vm.cashier.nameNumber}}
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" ng-click="vm.removeCashier()" data-dismiss="modal">
           Eliminar
         </button>
       </div>

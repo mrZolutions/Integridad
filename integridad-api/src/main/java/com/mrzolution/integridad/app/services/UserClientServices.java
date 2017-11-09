@@ -67,9 +67,11 @@ public class UserClientServices {
 			throw new BadRequestException("Invalid User Client");
 		}
 		log.info("UserClientServices update: {}", userClient.getName());
-		Father<UserClient, Subsidiary> father = new Father<>(userClient, userClient.getSubsidiaries());
-        FatherManageChildren fatherUpdateChildren = new FatherManageChildren(father, subsidiaryChildRepository, subsidiaryRepository);
-        fatherUpdateChildren.updateChildren();
+		userClient.getSubsidiaries().forEach(subsidiary -> {
+			System.out.println(subsidiary);
+			subsidiary.setUserClient(userClient);
+			subsidiaryServices.update(subsidiary);
+		});
 
         log.info("UserClientServices CHILDREN updated: {}", userClient.getId());
         
@@ -108,10 +110,10 @@ public class UserClientServices {
 	private void populateChildren(UserClient userClient) {
 		log.info("UserClientServices populateChildren userClientId: {}", userClient.getId());
 		List<Subsidiary> subsidiaryList = new ArrayList<>();
-		Iterable<Subsidiary> subsidairies = subsidiaryRepository.findByUserClient(userClient);
-		
+		Iterable<Subsidiary> subsidairies = subsidiaryServices.getAllActivesByUserClientId(userClient.getId());
+
 		subsidairies.forEach(subsidiary -> {
-			subsidiary.setListsNull();
+			subsidiary.setUsers(null);
 			subsidiary.setFatherListToNull();
 			subsidiary.setUserClient(null);
 			
