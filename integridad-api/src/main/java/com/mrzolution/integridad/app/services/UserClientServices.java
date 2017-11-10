@@ -68,7 +68,6 @@ public class UserClientServices {
 		}
 		log.info("UserClientServices update: {}", userClient.getName());
 		userClient.getSubsidiaries().forEach(subsidiary -> {
-			System.out.println(subsidiary);
 			subsidiary.setUserClient(userClient);
 			subsidiaryServices.update(subsidiary);
 		});

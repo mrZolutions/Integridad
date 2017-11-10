@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.UUID;
 
 import com.mrzolution.integridad.app.domain.Cashier;
+import com.mrzolution.integridad.app.domain.Warehouse;
+import com.mrzolution.integridad.app.repositories.*;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,9 +20,6 @@ import com.google.common.collect.Iterables;
 import com.mrzolution.integridad.app.domain.Subsidiary;
 import com.mrzolution.integridad.app.domain.UserClient;
 import com.mrzolution.integridad.app.exceptions.BadRequestException;
-import com.mrzolution.integridad.app.repositories.SubsidiaryChildRepository;
-import com.mrzolution.integridad.app.repositories.SubsidiaryRepository;
-import com.mrzolution.integridad.app.repositories.UserClientRepository;
 
 @RunWith(MockitoJUnitRunner.class)
 public class UserClientServicesTest {
@@ -36,13 +35,16 @@ public class UserClientServicesTest {
 	SubsidiaryRepository subsidiaryRepository;
 	@Mock
 	SubsidiaryChildRepository subsidiaryChildRepository;
+
 	
 	UserClient client;
 	Subsidiary subsidiary;
 	Cashier cashier;
+	Warehouse warehouse;
 	
 	List<Subsidiary> subsidiaryList = new ArrayList<>();
 	List<Cashier> cashierList = new ArrayList<>();
+	List<Warehouse> warehouseList = new ArrayList<>();
 	
 	@Before
 	public void setupTest(){
@@ -52,6 +54,10 @@ public class UserClientServicesTest {
 
 		cashier = Cashier.newCashierTest();
 		cashier.setSubsidiary(null);
+
+		warehouse = Warehouse.newWarehouseTest();
+		warehouse.setSubsidiary(null);
+
 	}
 	
 	@Test

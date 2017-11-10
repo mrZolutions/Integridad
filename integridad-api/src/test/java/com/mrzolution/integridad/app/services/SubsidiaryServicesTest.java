@@ -4,6 +4,7 @@ import com.google.common.collect.Iterables;
 import com.mrzolution.integridad.app.domain.Cashier;
 import com.mrzolution.integridad.app.domain.Subsidiary;
 import com.mrzolution.integridad.app.domain.UserClient;
+import com.mrzolution.integridad.app.domain.Warehouse;
 import com.mrzolution.integridad.app.exceptions.BadRequestException;
 import com.mrzolution.integridad.app.repositories.*;
 import org.junit.Assert;
@@ -31,11 +32,17 @@ public class SubsidiaryServicesTest {
 	CashierRepository cashierRepository;
 	@Mock
 	CashierChildRepository cashierChildRepository;
+	@Mock
+	WarehouseRepository warehouseRepository;
+	@Mock
+	WarehouseChildRepository warehouseChildRepository;
 
 	Subsidiary subsidiary;
 	Cashier cashier;
+	Warehouse warehouse;
 	
 	List<Cashier> cashierList = new ArrayList<>();
+	List<Warehouse> warehouseList = new ArrayList<>();
 	
 	@Before
 	public void setupTest(){
@@ -44,6 +51,9 @@ public class SubsidiaryServicesTest {
 
 		cashier = Cashier.newCashierTest();
 		cashier.setSubsidiary(null);
+
+		warehouse = Warehouse.newWarehouseTest();
+		warehouse.setSubsidiary(null);
 	}
 	
 	@Test
@@ -71,6 +81,10 @@ public class SubsidiaryServicesTest {
         UUID idChildNew = UUID.randomUUID();
         UUID idChildUpdate = UUID.randomUUID();
 
+		UUID idChildWOld = UUID.randomUUID();
+		UUID idChildWNew = UUID.randomUUID();
+		UUID idChildWUpdate = UUID.randomUUID();
+
         List<Cashier> cashierListNew = new ArrayList<>();
 		Cashier cashierN = new Cashier();
         cashierN.setId(idChildNew);
@@ -78,17 +92,34 @@ public class SubsidiaryServicesTest {
         cashierListNew.add(cashierN);
 
 		Cashier cashierU = new Cashier();
-        cashierU.setId(idChildUpdate);
-        cashierU.setSubsidiary(subsidiary);
-        cashierListNew.add(cashierU);
+		cashierU.setId(idChildUpdate);
+		cashierU.setSubsidiary(subsidiary);
+		cashierListNew.add(cashierU);
 
-        List<UUID> subsidiaryListOld = new ArrayList<>();
-        subsidiaryListOld.add(idChildOld);
-        subsidiaryListOld.add(idChildUpdate);
+		List<Warehouse> warehouseListNew = new ArrayList<>();
+		Warehouse warehouseN = new Warehouse();
+		warehouseN.setId(idChildWNew);
+		warehouseN.setSubsidiary(subsidiary);
+		warehouseListNew.add(warehouseN);
+
+		Warehouse warehouseU = new Warehouse();
+		warehouseU.setId(idChildWUpdate);
+		warehouseU.setSubsidiary(subsidiary);
+		warehouseListNew.add(warehouseU);
+
+		List<UUID> subsidiaryListOld = new ArrayList<>();
+		subsidiaryListOld.add(idChildOld);
+		subsidiaryListOld.add(idChildUpdate);
+
+        List<UUID> warehouseListOld = new ArrayList<>();
+		warehouseListOld.add(idChildWOld);
+		warehouseListOld.add(idChildWUpdate);
 
         subsidiary.setCashiers(cashierListNew);
+        subsidiary.setWarehouses(warehouseListNew);
 
         Mockito.when(cashierChildRepository.findByFather(subsidiary)).thenReturn(subsidiaryListOld);
+		Mockito.when(warehouseChildRepository.findByFather(subsidiary)).thenReturn(warehouseListOld);
         Mockito.when(subsidiaryRepository.save(subsidiary)).thenReturn(subsidiary);
 
         service.update(subsidiary);
@@ -96,6 +127,10 @@ public class SubsidiaryServicesTest {
         Mockito.verify(cashierRepository, Mockito.times(1)).save(cashierN);
         Mockito.verify(cashierRepository, Mockito.times(1)).save(cashierU);
         Mockito.verify(cashierRepository, Mockito.times(1)).delete(idChildOld);
+
+		Mockito.verify(warehouseRepository, Mockito.times(1)).save(warehouseN);
+		Mockito.verify(warehouseRepository, Mockito.times(1)).save(warehouseU);
+		Mockito.verify(warehouseRepository, Mockito.times(1)).delete(idChildWOld);
 
     }
 //

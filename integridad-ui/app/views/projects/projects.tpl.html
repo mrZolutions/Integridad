@@ -275,6 +275,40 @@
           <table class="table table-striped">
             <thead>
               <tr>
+                <th> N&uacute;mero / Nombre de Bodega </th>
+                <th>
+                  <button type="button" class="btn btn-primary" ng-click="vm.warehouse={}"
+                    data-toggle="modal" data-target="#modalWarehouse">
+                    Agregar
+                  </button>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-show="vm.subsidiary.warehouses == 0">
+                <td colspan="2">
+                  No hay bodegas ingresados
+                </td>
+              </tr>
+              <tr ng-repeat="warehouse in vm.subsidiary.warehouses | filter:{active: true}">
+                <td>{{ warehouse.nameNumber }}</td>
+                <td>
+                  <button type="button" class="btn btn-primary" ng-click="vm.warehouse=warehouse"
+                    data-toggle="modal" data-target="#modalEliminarWarehouse">
+                    Eliminar
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="form-group col-md-12">
+          <table class="table table-striped">
+            <thead>
+              <tr>
                 <th> N&uacute;mero / Nombre de caja </th>
                 <th>
                   <button type="button" class="btn btn-primary" ng-click="vm.cashier={}"

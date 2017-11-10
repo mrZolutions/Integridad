@@ -16,6 +16,7 @@ angular.module('integridadUiApp')
     vm.projectList = undefined;
     vm.subsidiary = undefined;
     vm.cashier = undefined;
+    vm.warehouse = undefined;
 
     function _activate(){
       vm.loading = true;
@@ -93,8 +94,13 @@ angular.module('integridadUiApp')
 
     vm.addSubsidiary = function(){
       vm.subsidiary={
-        cashiers: []
+        cashiers: [],
+        warehouses: []
       }
+    };
+
+    vm.removeWarehouse = function(){
+      vm.warehouse.active = false;
     };
 
     vm.removeCashier = function(){
@@ -118,10 +124,8 @@ angular.module('integridadUiApp')
 
     vm.saveSubsidiary = function(){
       if(vm.subsidiary.id === undefined && vm.subsidiary.name !== undefined){
-        vm.subsidiary.warehouses = ['bodega 1', 'bodega 2']
         vm.subsidiary.active = true;
         vm.subsidiary.dateCreated = new Date().getTime();
-        console.log('********************',vm.subsidiary);
         vm.project.subsidiaries.push(vm.subsidiary);
       }
       vm.subsidiary = undefined;
@@ -136,7 +140,14 @@ angular.module('integridadUiApp')
 
       vm.subsidiary.cashiers.push(vm.cashier);
       // vm.cashier = undefined;
-      console.log('----',vm.subsidiary)
+    };
+
+    vm.saveWarehouse = function(){
+      vm.warehouse.active = true;
+      vm.warehouse.dateCreated = new Date().getTime();
+
+      vm.subsidiary.warehouses.push(vm.warehouse);
+      // vm.cashier = undefined;
     };
 
     vm.cancel=function(){

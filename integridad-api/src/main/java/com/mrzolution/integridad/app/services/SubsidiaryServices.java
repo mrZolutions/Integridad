@@ -7,17 +7,16 @@ import java.util.UUID;
 
 import com.mrzolution.integridad.app.domain.Cashier;
 import com.mrzolution.integridad.app.domain.UserClient;
+import com.mrzolution.integridad.app.domain.Warehouse;
 import com.mrzolution.integridad.app.exceptions.BadRequestException;
 import com.mrzolution.integridad.app.father.Father;
 import com.mrzolution.integridad.app.father.FatherManageChildren;
-import com.mrzolution.integridad.app.repositories.CashierChildRepository;
-import com.mrzolution.integridad.app.repositories.CashierRepository;
+import com.mrzolution.integridad.app.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.google.common.collect.Iterables;
 import com.mrzolution.integridad.app.domain.Subsidiary;
-import com.mrzolution.integridad.app.repositories.SubsidiaryRepository;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -31,6 +30,10 @@ public class SubsidiaryServices {
 	CashierRepository cashierRepository;
 	@Autowired
 	CashierChildRepository cashierChildRepository;
+	@Autowired
+	WarehouseRepository warehouseRepository;
+	@Autowired
+	WarehouseChildRepository warehouseChildRepository;
 
 	public Subsidiary create(Subsidiary subsidiary){
 		log.info("SubsidiaryServices create: {}", subsidiary.getName());
@@ -86,6 +89,10 @@ public class SubsidiaryServices {
 		FatherManageChildren fatherUpdateChildren = new FatherManageChildren(father, cashierChildRepository, cashierRepository);
 		fatherUpdateChildren.updateChildren();
 
+		Father<Subsidiary, Warehouse> father2 = new Father<>(subsidiary, subsidiary.getWarehouses());
+		fatherUpdateChildren = new FatherManageChildren(father2, warehouseChildRepository, warehouseRepository);
+		fatherUpdateChildren.updateChildren();
+
 		log.info("SubsidiaryServices CHILDREN updated: {}", subsidiary.getId());
 
 		subsidiary.setListsNull();
@@ -98,6 +105,8 @@ public class SubsidiaryServices {
 		log.info("SubsidiaryServices populateChildren subsidiaryId: {}", subsidiary.getId());
 		List<Cashier> cashierList = new ArrayList<>();
 		Iterable<Cashier> cashiers = cashierRepository.findBySubsidiary(subsidiary);
+		List<Warehouse> warehouseList = new ArrayList<>();
+		Iterable<Warehouse> warehouses = warehouseRepository.findBySubsidiary(subsidiary);
 
 		cashiers.forEach(cashierConsumer -> {
 			cashierConsumer.setListsNull();
@@ -107,7 +116,16 @@ public class SubsidiaryServices {
 			cashierList.add(cashierConsumer);
 		});
 
+		warehouses.forEach(warehouseConsumer ->{
+			warehouseConsumer.setListsNull();
+			warehouseConsumer.setFatherListToNull();
+			warehouseConsumer.setSubsidiary(null);
+
+			warehouseList.add(warehouseConsumer);
+		});
+
 		subsidiary.setCashiers(cashierList);
+		subsidiary.setWarehouses(warehouseList);
 		subsidiary.setFatherListToNull();
 		log.info("SubsidiaryServices populateChildren FINISHED subsidiaryId: {}", subsidiary.getId());
 

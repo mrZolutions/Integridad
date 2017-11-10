@@ -37,9 +37,6 @@ public class Subsidiary implements Child{
     private String address1;
     private String address2;
     private Long nomberOfCashiers;
-
-    @Type(type = "com.mrzolution.integridad.app.GenericTypeConverter.GenericArrayUserType")
-    private String[] warehouses;
     
     private long billNumberSeq;
     
@@ -56,11 +53,15 @@ public class Subsidiary implements Child{
 
     @OneToMany(mappedBy = "subsidiary", cascade = CascadeType.ALL)
     private List<Cashier> cashiers;
+
+    @OneToMany(mappedBy = "subsidiary", cascade = CascadeType.ALL)
+    private List<Warehouse> warehouses;
     
     
     public void setListsNull(){
         users = null;
         cashiers = null;
+        warehouses = null;
     }
     
     public void setFatherListToNull(){
@@ -74,6 +75,7 @@ public class Subsidiary implements Child{
         subsidiary.setUserClient(UserClient.newUserClientTest());
         subsidiary.setUsers(new ArrayList<>());
         subsidiary.setCashiers(new ArrayList<>());
+        subsidiary.setWarehouses(new ArrayList<>());
         
         return subsidiary;
     }
