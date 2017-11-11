@@ -5,9 +5,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-import com.mrzolution.integridad.app.domain.Cashier;
-import com.mrzolution.integridad.app.domain.UserClient;
-import com.mrzolution.integridad.app.domain.Warehouse;
+import com.mrzolution.integridad.app.domain.*;
 import com.mrzolution.integridad.app.exceptions.BadRequestException;
 import com.mrzolution.integridad.app.father.Father;
 import com.mrzolution.integridad.app.father.FatherManageChildren;
@@ -16,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.google.common.collect.Iterables;
-import com.mrzolution.integridad.app.domain.Subsidiary;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -34,6 +31,8 @@ public class SubsidiaryServices {
 	WarehouseRepository warehouseRepository;
 	@Autowired
 	WarehouseChildRepository warehouseChildRepository;
+	@Autowired
+	UserIntegridadRepository userIntegridadRepository;
 
 	public Subsidiary create(Subsidiary subsidiary){
 		log.info("SubsidiaryServices create: {}", subsidiary.getName());
@@ -107,6 +106,8 @@ public class SubsidiaryServices {
 		Iterable<Cashier> cashiers = cashierRepository.findBySubsidiary(subsidiary);
 		List<Warehouse> warehouseList = new ArrayList<>();
 		Iterable<Warehouse> warehouses = warehouseRepository.findBySubsidiary(subsidiary);
+		List<UserIntegridad> userIntegridadList = new ArrayList<>();
+		Iterable<UserIntegridad> userIntegridads = userIntegridadRepository.findBySubsidiary(subsidiary);
 
 		cashiers.forEach(cashierConsumer -> {
 			cashierConsumer.setListsNull();
@@ -124,8 +125,17 @@ public class SubsidiaryServices {
 			warehouseList.add(warehouseConsumer);
 		});
 
+		userIntegridads.forEach(userConsumer ->{
+			userConsumer.setListsNull();
+			userConsumer.setFatherListToNull();
+			userConsumer.setSubsidiary(null);
+
+			userIntegridadList.add(userConsumer);
+		});
+
 		subsidiary.setCashiers(cashierList);
 		subsidiary.setWarehouses(warehouseList);
+		subsidiary.setUsers(userIntegridadList);
 		subsidiary.setFatherListToNull();
 		log.info("SubsidiaryServices populateChildren FINISHED subsidiaryId: {}", subsidiary.getId());
 

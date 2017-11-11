@@ -112,6 +112,16 @@ angular.module('integridadUiApp')
       // update(true);
     };
 
+    vm.addWarehouse = function(){
+      var warehouse = {
+        nameNumber: vm.warehouseName,
+        dateCreated: new Date().getTime(),
+        active: true
+      };
+      vm.subsidiary.warehouses.push(warehouse);
+      vm.warehouseName = undefined;
+    };
+
     vm.editProject = function(projectEdit){
       projectService.getById(projectEdit.id).then(function (response) {
         vm.project = response;
@@ -135,8 +145,6 @@ angular.module('integridadUiApp')
     vm.saveCashier = function(){
       vm.cashier.active = true;
       vm.cashier.dateCreated = new Date().getTime();
-      vm.cashier.threeCode = '006';
-      vm.cashier.billNumberSeq = 1;
 
       vm.subsidiary.cashiers.push(vm.cashier);
       // vm.cashier = undefined;

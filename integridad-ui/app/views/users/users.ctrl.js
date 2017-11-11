@@ -166,6 +166,18 @@ angular.module('integridadUiApp')
       vm.error=undefined
     };
 
+    vm.userIntegridadResend = function(userIntegridad){
+      vm.loading = true;
+      authService.recoverUser(userIntegridad).then(function (response) {
+        vm.loading = false;
+        vm.recover = false;
+        vm.success = 'Se envio un email a '+ userIntegridad.email +' con un nuevo Password para ingresar al sistema.';
+      }).catch(function (error) {
+        vm.loading = false;
+        vm.error = error.data;
+      });
+    };
+
 
     (function initController() {
       vm.loading = true;
