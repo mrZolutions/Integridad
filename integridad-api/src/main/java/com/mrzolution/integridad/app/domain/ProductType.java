@@ -17,6 +17,8 @@ public class ProductType {
 
     private String name;
     private String code;
+
+    private boolean active;
     
     @OneToMany(mappedBy = "productType", cascade = CascadeType.ALL)
     private List<Product> products;

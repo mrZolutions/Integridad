@@ -102,11 +102,18 @@ public class ProductServices {
 	
 	public Iterable<Product> getAllActivesBySubsidiaryIdAndActive(UUID subsidiaryId) {
 		log.info("ProductServices getAllActivesBySubsidiaryIdAndActive");
-		Iterable<Product> actives = productRepository.findBySubsidiaryIdAndActive(subsidiaryId);
-		actives.forEach(prodcut -> {
-			prodcut.setFatherListToNull();
+		Iterable<UUID> productIdList = productBySubsidiairyRepository.findBySubsidiaryIdAndProductActive(subsidiaryId);
+		List<Product> listReturn = new ArrayList<>();
+		productIdList.forEach(id ->{
+			listReturn.add(getById(id));
+			Product product = getById(id);
 		});
-		return actives;
+
+//		Iterable<Product> actives = productRepository.findBySubsidiaryIdAndActive(subsidiaryId);
+//		actives.forEach(prodcut -> {
+//			prodcut.setFatherListToNull();
+//		});
+		return listReturn;
 	}
 	
 	private void populateChildren(Product product) {

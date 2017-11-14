@@ -20,6 +20,9 @@ public interface ProductBySubsidiairyRepository extends CrudRepository<ProductBy
 	@Query("SELECT p FROM ProductBySubsidiary p WHERE p.subsidiary.id = (:id)")
 	Iterable<ProductBySubsidiary> findBySubsidiaryId(@Param("id") UUID subsidiaryId);
 
+	@Query("SELECT distinct(p.product.id) FROM ProductBySubsidiary p WHERE p.subsidiary.id = (:id) and p.product.active = true")
+	Iterable<UUID> findBySubsidiaryIdAndProductActive(@Param("id") UUID subsidiaryId);
+
 	@Query("SELECT p FROM ProductBySubsidiary p WHERE p.product.id = (:id)")
 	Iterable<ProductBySubsidiary> findByProductId(@Param("id") UUID productId);
 }

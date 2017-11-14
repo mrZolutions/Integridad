@@ -12,6 +12,9 @@ import java.util.UUID;
 @Qualifier(value="ProductTypeRepository")
 public interface ProductTypeRepository extends CrudRepository<ProductType, UUID>{
 
-	UserType findByCode(String code);
+	ProductType findByCode(String code);
+
+
+	Iterable<ProductType> findByActive(boolean active);
 
 }
