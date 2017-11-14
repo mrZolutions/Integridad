@@ -13,7 +13,7 @@ import com.mrzolution.integridad.app.interfaces.ChildRepository;
 import java.util.UUID;
 
 @Repository
-@Qualifier(value="MarketChildExhibitorRepository")
+@Qualifier(value="DetailChildRepository")
 public interface DetailChildRepository extends ChildRepository<Bill>, JpaRepository<Detail, UUID>{
 
     @Query("SELECT d.id FROM Detail d WHERE d.bill = (:id)")

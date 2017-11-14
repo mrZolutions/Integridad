@@ -1,13 +1,10 @@
 package com.mrzolution.integridad.app.domain;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Transient;
+import javax.persistence.*;
 
 import com.mrzolution.integridad.app.interfaces.Child;
 
@@ -26,36 +23,49 @@ public class Product implements Child{
     
     private String name;
     private boolean active;
-    private Long quantity;
     private Long dateCreated;
     private Long lastDateUpdated;
+    private String codeIntegridad;
+    private String unitOfMeasurementAbbr;
+    private String unitOfMeasurementFull;
+
+
+//    ******************************** TODO VERIFICAR SI ESTOS CAMPOS SON NECESARIOS
+    private Long quantity;
+
     private Double cost;
     private Double costMajority;
     private Double costDeferred;
+//    ********************************
+
+    @ManyToOne
+    @JoinColumn(name = "product_type_id")
+    private ProductType productType;
     
     @ManyToOne
     @JoinColumn(name = "user_client_id")
     private UserClient userClient;
     
-    @ManyToOne
-    @JoinColumn(name = "subsidiary_id")
-    private Subsidiary subsidiary;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    private List<ProductBySubsidiary> productBySubsidiaries;
     
     public void setListsNull(){
+        if(productBySubsidiaries != null){productBySubsidiaries = null;}
     }
     
     public void setFatherListToNull(){
     	userClient.setListsNull();
     	userClient.setFatherListToNull();
-    	subsidiary.setListsNull();
-    	subsidiary.setFatherListToNull();
+        productType.setListsNull();
     }
 
     @Transient
     public static Product newProducTest(){
         Product product = new Product();
         product.setUserClient(UserClient.newUserClientTest());
-        product.setSubsidiary(Subsidiary.newSubsidiaryTest());
+        product.setProductType(ProductType.ProductTypeTest());
+        product.setProductBySubsidiaries(new ArrayList<>());
         
         return product;
     }

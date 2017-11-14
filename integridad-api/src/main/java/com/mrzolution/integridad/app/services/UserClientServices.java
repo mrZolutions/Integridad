@@ -28,6 +28,8 @@ public class UserClientServices {
 	@Autowired
 	UserClientRepository userClientRepository;
 	@Autowired
+	SubsidiaryServices subsidiaryServices;
+	@Autowired
 	SubsidiaryRepository subsidiaryRepository;
 	@Autowired
 	SubsidiaryChildRepository subsidiaryChildRepository;
@@ -39,24 +41,24 @@ public class UserClientServices {
 		userClient.setDateCreated(new Date().getTime());
 		userClient.setActive(true);
 		
-		List<Subsidiary> subsidiarieList = userClient.getSubsidiaries();
+		List<Subsidiary> subsidiariesList = userClient.getSubsidiaries();
 		userClient.setSubsidiaries(null);
 		
-		if(subsidiarieList == null || subsidiarieList.isEmpty()){
+		if(subsidiariesList == null || subsidiariesList.isEmpty()){
 			throw new BadRequestException("Debe tener una sucursal por lo menos");
 		}
 		
 		UserClient saved = userClientRepository.save(userClient);
 		
-		subsidiarieList.forEach(subsidiary->{
+		subsidiariesList.forEach(subsidiary->{
 			subsidiary.setUserClient(saved);
-			subsidiaryRepository.save(subsidiary);
+			subsidiaryServices.create(subsidiary);
 			subsidiary.setUserClient(null);
 		});
 		
-		log.info("UserClientServices created: {}", userClient.getId());
+		log.info("UserClientServices created: {}", saved.getId());
 		
-		saved.setSubsidiaries(subsidiarieList);
+		saved.setSubsidiaries(subsidiariesList);
 		return saved;
 	}
 	
@@ -65,9 +67,10 @@ public class UserClientServices {
 			throw new BadRequestException("Invalid User Client");
 		}
 		log.info("UserClientServices update: {}", userClient.getName());
-		Father<UserClient, Subsidiary> father = new Father<>(userClient, userClient.getSubsidiaries());
-        FatherManageChildren fatherUpdateChildren = new FatherManageChildren(father, subsidiaryChildRepository, subsidiaryRepository);
-        fatherUpdateChildren.updateChildren();
+		userClient.getSubsidiaries().forEach(subsidiary -> {
+			subsidiary.setUserClient(userClient);
+			subsidiaryServices.update(subsidiary);
+		});
 
         log.info("UserClientServices CHILDREN updated: {}", userClient.getId());
         
@@ -106,10 +109,10 @@ public class UserClientServices {
 	private void populateChildren(UserClient userClient) {
 		log.info("UserClientServices populateChildren userClientId: {}", userClient.getId());
 		List<Subsidiary> subsidiaryList = new ArrayList<>();
-		Iterable<Subsidiary> subsidairies = subsidiaryRepository.findByUserClient(userClient);
-		
+		Iterable<Subsidiary> subsidairies = subsidiaryServices.getAllActivesByUserClientId(userClient.getId());
+
 		subsidairies.forEach(subsidiary -> {
-			subsidiary.setListsNull();
+			subsidiary.setUsers(null);
 			subsidiary.setFatherListToNull();
 			subsidiary.setUserClient(null);
 			

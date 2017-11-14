@@ -71,6 +71,7 @@ public class BillServices {
 		bill.setActive(true);
 		bill.setDetails(null);
 		bill.setFatherListToNull();
+		bill.setListsNull();
 		Bill saved = billRepository.save(bill);
 		
 		Subsidiary subsidiary =  subsidiaryRepository.findOne(bill.getSubsidiary().getId());

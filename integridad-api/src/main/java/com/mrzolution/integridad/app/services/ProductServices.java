@@ -1,8 +1,15 @@
 package com.mrzolution.integridad.app.services;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
+import com.mrzolution.integridad.app.domain.ProductBySubsidiary;
+import com.mrzolution.integridad.app.father.Father;
+import com.mrzolution.integridad.app.father.FatherManageChildren;
+import com.mrzolution.integridad.app.repositories.ProductBySubsidiairyRepository;
+import com.mrzolution.integridad.app.repositories.ProductBySubsidiaryChildRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -17,21 +24,47 @@ public class ProductServices {
 	
 	@Autowired
 	ProductRepository productRepository;
+	@Autowired
+	ProductBySubsidiairyRepository productBySubsidiairyRepository;
+	@Autowired
+	ProductBySubsidiaryChildRepository productBySubsidiaryChildRepository;
 	
 	public Product create(Product product){
 		log.info("ProductServices create");
 		product.setActive(true);
 		product.setDateCreated(new Date().getTime());
 		product.setLastDateUpdated(new Date().getTime());
-		return productRepository.save(product);
+
+		List<ProductBySubsidiary> productBySubsidiaryList = product.getProductBySubsidiaries();
+		product.setListsNull();
+
+		Product saved = productRepository.save(product);
+		productBySubsidiaryList.forEach(productBySubsidiary -> {
+			productBySubsidiary.setProduct(saved);
+			productBySubsidiary.setFatherListToNull();
+
+			productBySubsidiairyRepository.save(productBySubsidiary);
+		});
+
+		return saved;
 	}
 	
 	public void update(Product product){
-		log.info("ProductServices update");
+		log.info("ProductServices update: {}", product.getId());
 		product.setLastDateUpdated(new Date().getTime());
-		product.getSubsidiary().setFatherListToNull();
-		product.getUserClient().setFatherListToNull();
-		productRepository.save(product);
+
+		Father<Product, ProductBySubsidiary> father =
+				new Father<>(product, product.getProductBySubsidiaries());
+		FatherManageChildren fatherUpdateChildren =
+				new FatherManageChildren(father, productBySubsidiaryChildRepository, productBySubsidiairyRepository);
+		fatherUpdateChildren.updateChildren();
+
+		log.info("ProductServices CHILDREN updated: {}", product.getId());
+
+		product.setListsNull();
+		product.setFatherListToNull();
+		Product updated = productRepository.save(product);
+		log.info("ProductServices update id: {}", updated.getId());
 	}
 	
 	public Product getById(UUID id){
@@ -69,15 +102,36 @@ public class ProductServices {
 	
 	public Iterable<Product> getAllActivesBySubsidiaryIdAndActive(UUID subsidiaryId) {
 		log.info("ProductServices getAllActivesBySubsidiaryIdAndActive");
-		Iterable<Product> actives = productRepository.findBySubsidiaryIdAndActive(subsidiaryId);
-		actives.forEach(prodcut -> {
-			prodcut.setFatherListToNull();
+		Iterable<UUID> productIdList = productBySubsidiairyRepository.findBySubsidiaryIdAndProductActive(subsidiaryId);
+		List<Product> listReturn = new ArrayList<>();
+		productIdList.forEach(id ->{
+			listReturn.add(getById(id));
+			Product product = getById(id);
 		});
-		return actives;
+
+//		Iterable<Product> actives = productRepository.findBySubsidiaryIdAndActive(subsidiaryId);
+//		actives.forEach(prodcut -> {
+//			prodcut.setFatherListToNull();
+//		});
+		return listReturn;
 	}
 	
 	private void populateChildren(Product product) {
 		log.info("ProductServices populateChildren productId: {}", product.getId());
+		List<ProductBySubsidiary> productBySubsidiaryList = new ArrayList<>();
+		Iterable<ProductBySubsidiary> productBySubsidiaries = productBySubsidiairyRepository.findByProductId(product.getId());
+
+		productBySubsidiaries.forEach(productBySubsidiaryConsumer -> {
+			productBySubsidiaryConsumer.setListsNull();
+			productBySubsidiaryConsumer.setFatherListToNull();
+			productBySubsidiaryConsumer.getSubsidiary().setFatherListToNull();
+			productBySubsidiaryConsumer.getSubsidiary().setListsNull();
+			productBySubsidiaryConsumer.setProduct(null);
+
+			productBySubsidiaryList.add(productBySubsidiaryConsumer);
+		});
+
+		product.setProductBySubsidiaries(productBySubsidiaryList);
 		product.setFatherListToNull();
 		log.info("ProductServices populateChildren FINISHED productId: {}", product.getId());
 		

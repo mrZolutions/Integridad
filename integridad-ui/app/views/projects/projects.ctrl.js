@@ -15,6 +15,8 @@ angular.module('integridadUiApp')
     vm.project = undefined;
     vm.projectList = undefined;
     vm.subsidiary = undefined;
+    vm.cashier = undefined;
+    vm.warehouse = undefined;
 
     function _activate(){
       vm.loading = true;
@@ -90,9 +92,34 @@ angular.module('integridadUiApp')
       update(true);
     };
 
+    vm.addSubsidiary = function(){
+      vm.subsidiary={
+        cashiers: [],
+        warehouses: []
+      }
+    };
+
+    vm.removeWarehouse = function(){
+      vm.warehouse.active = false;
+    };
+
+    vm.removeCashier = function(){
+      vm.cashier.active = false;
+    };
+
     vm.removeSubsidiary = function(){
       vm.subsidiary.active = false;
-      update(true);
+      // update(true);
+    };
+
+    vm.addWarehouse = function(){
+      var warehouse = {
+        nameNumber: vm.warehouseName,
+        dateCreated: new Date().getTime(),
+        active: true
+      };
+      vm.subsidiary.warehouses.push(warehouse);
+      vm.warehouseName = undefined;
     };
 
     vm.editProject = function(projectEdit){
@@ -111,15 +138,35 @@ angular.module('integridadUiApp')
         vm.subsidiary.dateCreated = new Date().getTime();
         vm.project.subsidiaries.push(vm.subsidiary);
       }
+      vm.subsidiary = undefined;
+      vm.updSubsi = false;
+    };
+
+    vm.saveCashier = function(){
+      vm.cashier.active = true;
+      vm.cashier.dateCreated = new Date().getTime();
+
+      vm.subsidiary.cashiers.push(vm.cashier);
+      // vm.cashier = undefined;
+    };
+
+    vm.saveWarehouse = function(){
+      vm.warehouse.active = true;
+      vm.warehouse.dateCreated = new Date().getTime();
+
+      vm.subsidiary.warehouses.push(vm.warehouse);
+      // vm.cashier = undefined;
     };
 
     vm.cancel=function(){
+      vm.updSubsi = false;
       vm.project=undefined;
       vm.success=undefined;
       vm.error=undefined;
     };
 
     vm.cancelSubisdiary=function(){
+      vm.updSubsi = false;
       vm.subsidiary=undefined;
       vm.success=undefined;
       vm.error=undefined;
