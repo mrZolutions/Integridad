@@ -16,6 +16,7 @@ import javax.persistence.Transient;
 import com.mrzolution.integridad.app.interfaces.Child;
 
 import lombok.Data;
+import org.hibernate.annotations.Type;
 
 /**
  * Created by daniel.
@@ -49,10 +50,18 @@ public class Subsidiary implements Child{
     
     @OneToMany(mappedBy = "subsidiary", cascade = CascadeType.ALL)
     private List<UserIntegridad> users;
+
+    @OneToMany(mappedBy = "subsidiary", cascade = CascadeType.ALL)
+    private List<Cashier> cashiers;
+
+    @OneToMany(mappedBy = "subsidiary", cascade = CascadeType.ALL)
+    private List<Warehouse> warehouses;
     
     
     public void setListsNull(){
-    	users = null;
+        users = null;
+        cashiers = null;
+        warehouses = null;
     }
     
     public void setFatherListToNull(){
@@ -65,6 +74,8 @@ public class Subsidiary implements Child{
         Subsidiary subsidiary = new Subsidiary();
         subsidiary.setUserClient(UserClient.newUserClientTest());
         subsidiary.setUsers(new ArrayList<>());
+        subsidiary.setCashiers(new ArrayList<>());
+        subsidiary.setWarehouses(new ArrayList<>());
         
         return subsidiary;
     }

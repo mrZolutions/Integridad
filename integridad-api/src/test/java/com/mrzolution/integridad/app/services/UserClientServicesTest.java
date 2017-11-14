@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import com.mrzolution.integridad.app.domain.Cashier;
+import com.mrzolution.integridad.app.domain.Warehouse;
+import com.mrzolution.integridad.app.repositories.*;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,9 +20,6 @@ import com.google.common.collect.Iterables;
 import com.mrzolution.integridad.app.domain.Subsidiary;
 import com.mrzolution.integridad.app.domain.UserClient;
 import com.mrzolution.integridad.app.exceptions.BadRequestException;
-import com.mrzolution.integridad.app.repositories.SubsidiaryChildRepository;
-import com.mrzolution.integridad.app.repositories.SubsidiaryRepository;
-import com.mrzolution.integridad.app.repositories.UserClientRepository;
 
 @RunWith(MockitoJUnitRunner.class)
 public class UserClientServicesTest {
@@ -30,24 +30,40 @@ public class UserClientServicesTest {
 	@Mock
 	UserClientRepository userClientRepository;
 	@Mock
+	SubsidiaryServices subsidiaryServices;
+	@Mock
 	SubsidiaryRepository subsidiaryRepository;
 	@Mock
 	SubsidiaryChildRepository subsidiaryChildRepository;
+
 	
 	UserClient client;
 	Subsidiary subsidiary;
+	Cashier cashier;
+	Warehouse warehouse;
 	
 	List<Subsidiary> subsidiaryList = new ArrayList<>();
+	List<Cashier> cashierList = new ArrayList<>();
+	List<Warehouse> warehouseList = new ArrayList<>();
 	
 	@Before
 	public void setupTest(){
 		client = UserClient.newUserClientTest();
 		subsidiary = Subsidiary.newSubsidiaryTest();
 		subsidiary.setUserClient(null);
+
+		cashier = Cashier.newCashierTest();
+		cashier.setSubsidiary(null);
+
+		warehouse = Warehouse.newWarehouseTest();
+		warehouse.setSubsidiary(null);
+
 	}
 	
 	@Test
 	public void createCallSubsidiaryRepository(){
+		cashierList.add(cashier);
+		subsidiary.setCashiers(cashierList);
 		subsidiaryList.add(subsidiary);
 		client.setSubsidiaries(subsidiaryList);
 		
@@ -56,7 +72,7 @@ public class UserClientServicesTest {
 		UserClient response = service.create(client);
 		
 		Mockito.verify(userClientRepository, Mockito.times(1)).save(Mockito.any(UserClient.class));
-		Mockito.verify(subsidiaryRepository, Mockito.times(1)).save(subsidiary);
+		Mockito.verify(subsidiaryServices, Mockito.times(1)).create(subsidiary);
 		
 		Assert.assertTrue(!response.getSubsidiaries().isEmpty());
 		
@@ -91,7 +107,6 @@ public class UserClientServicesTest {
     	UUID id = UUID.randomUUID();
         client.setId(id);
         
-        UUID idChildOld = UUID.randomUUID();
         UUID idChildNew = UUID.randomUUID();
         UUID idChildUpdate = UUID.randomUUID();
         
@@ -107,7 +122,6 @@ public class UserClientServicesTest {
         subsidiaryListNew.add(subsidiaryU);
         
         List<UUID> subsidiaryListOld = new ArrayList<>();
-        subsidiaryListOld.add(idChildOld);
         subsidiaryListOld.add(idChildUpdate);
         
         client.setSubsidiaries(subsidiaryListNew);
@@ -117,27 +131,36 @@ public class UserClientServicesTest {
         
         service.update(client);
         
-        Mockito.verify(subsidiaryRepository, Mockito.times(1)).save(subsidiaryN);
-        Mockito.verify(subsidiaryRepository, Mockito.times(1)).save(subsidiaryU);
-        Mockito.verify(subsidiaryRepository, Mockito.times(1)).delete(idChildOld);
-    	
+        Mockito.verify(subsidiaryServices, Mockito.times(1)).update(subsidiaryN);
+        Mockito.verify(subsidiaryServices, Mockito.times(1)).update(subsidiaryU);
+
     }
 	
 	@Test
 	public void getByIdTest() throws Exception{
 		UUID id = UUID.randomUUID();
-		
+
+		cashierList.add(cashier);
+		subsidiary.setCashiers(cashierList);
 		subsidiary.setUserClient(client);
 		subsidiaryList.add(subsidiary);
 		client.setSubsidiaries(subsidiaryList);
+		client.setId(id);
 		
 		Mockito.when(userClientRepository.findOne(id)).thenReturn(client);
-		Mockito.when(subsidiaryRepository.findByUserClient(client)).thenReturn(subsidiaryList);
+		Mockito.when(subsidiaryServices.getAllActivesByUserClientId(id)).thenReturn(subsidiaryList);
 		
 		UserClient retrieved = service.getById(id);
-		ListValidation.childsLisAndFathertValidation(UserClient.class, retrieved);
-		
+//		ListValidation.childsLisAndFathertValidation(UserClient.class, retrieved);
+
+		System.out.println(retrieved);
+
 		Assert.assertNotNull(retrieved);
+		Assert.assertNotNull(retrieved.getSubsidiaries().get(0));
+		Assert.assertNull(retrieved.getSubsidiaries().get(0).getUsers());
+		Assert.assertNotNull(retrieved.getSubsidiaries().get(0).getCashiers());
+		Assert.assertNull(retrieved.getSubsidiaries().get(0).getUserClient());
+
 	}
 
 }
