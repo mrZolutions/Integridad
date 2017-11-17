@@ -41,8 +41,6 @@
     <thead>
       <tr>
         <th> Nombre </th>
-        <th> Sucursal </th>
-        <th> Cantidad </th>
         <th>
           <button type="button" class="btn btn-primary" ng-click="vm.productCreate()">
             Crear
@@ -58,8 +56,6 @@
       </tr>
       <tr ng-repeat="productEdit in vm.productList | orderBy:name | filter:searchText">
         <td>{{ productEdit.name }}</td>
-        <td>{{ productEdit.subsidiary.name }}</td>
-        <td>{{ productEdit.quantity }}</td>
         <td>
           <button type="button" class="btn btn-primary" ng-click="vm.editProduct(productEdit)">
             Editar
@@ -86,29 +82,72 @@
 
     <div class="row">
       <div class="form-group col-md-6">
-        <label>Cantidad: </label>
-        <input type="text" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
-        ng-model="vm.product.quantity" class="form-control" maxlength="9">
+        <label>C&oacute;digo: </label>
+        <input type="text" ng-model="vm.product.codeIntegridad" class="form-control">
       </div>
       <div class="form-group col-md-6">
-        <label>Sucursal *: </label>
-        <select ng-options="subsidiary as subsidiary.name for subsidiary in vm.subsidiaries  | orderBy:'name'  track by subsidiary.id"
-          ng-model="vm.product.subsidiary" class="form-control">
+        <label>Tipo de Producto: </label>
+        <select ng-options="type as type.name for type in vm.productTypes  | orderBy:'name'  track by type.id"
+          ng-model="vm.product.productType" class="form-control">
         </select>
       </div>
     </div>
     <div class="row">
       <div class="form-group col-md-6">
-        <label>Precio de Venta: $</label>
-        <input type="text" onkeypress="return ((event.which >= 46 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
-        ng-model="vm.product.cost" class="form-control" maxlength="9">
+        <label>Medida: </label>
+        <select ng-options="mess.shortName as mess.name for mess in vm.messurements  | orderBy:'name'  track by mess.shortName"
+          ng-model="vm.product.unitOfMeasurementAbbr" ng-change="vm.setUnitOfMeasurementFull()" class="form-control">
+        </select>
       </div>
-      <div class="form-group col-md-6">
+      <!-- <div class="form-group col-md-6">
         <label>Precio de Venta al por Mayor: $</label>
         <input type="text" onkeypress="return ((event.which >= 46 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
         ng-model="vm.product.costMajority" class="form-control" maxlength="9">
-      </div>
+      </div> -->
     </div>
+    <div class="row">
+      <div class="col-sm-4 col-sm-offset-1">
+        <div id="list1">
+          <span class="list-group-item s">
+            <b>Sucursales</b>
+            <input title="toggle all" class="all pull-right" type="checkbox" ng-click="vm.clickAllMarkets()" ng-model="vm.selectedAllMarkets">
+          </span>
+          <span ng-repeat="sub in vm.subsidiaries" class="list-group-item">
+            {{ sub.name }}
+            <input class="pull-right" ng-model="market.selected" type="checkbox">
+          </span>
+        </div>
+      </div>
+
+      <div class="col-sm-2">
+         <button title="Send to list 2" class="btn btn-default center-block add" ng-click="vm.moveMarkets(vm.markets, vm.auditFirm.marketsAsObject, true)">
+           <i class="glyphicon glyphicon-chevron-right"></i>
+         </button>
+         <button title="Send to list 1" class="btn btn-default center-block remove" ng-click="vm.moveMarkets(vm.auditFirm.marketsAsObject, vm.markets, false)">
+           <i class="glyphicon glyphicon-chevron-left"></i>
+         </button>
+      </div>
+
+      <div class="col-sm-4">
+        <div id="list2">
+          <span class="list-group-item ">
+            <b>Seleccionadas</b>
+            <input title="toggle all" class="all pull-right" type="checkbox" ng-click="vm.clickAllMarketsAdded()" ng-model="vm.selectedAllMarketsAdded">
+          </span>
+          <span ng-repeat="sub in vm.subsidiaries" class="list-group-item">
+            {{ sub.name }}
+            <input class="pull-right" ng-model="market.selected" type="checkbox">
+          </span>
+        </div>
+      </div>
+
+
+    </div>
+
+
+
+
+
     <div class="row">
       <div class="form-group col-md-6">
         <label>Precio de Venta Diferido: $</label>

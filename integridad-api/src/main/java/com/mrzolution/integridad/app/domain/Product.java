@@ -30,14 +30,6 @@ public class Product implements Child{
     private String unitOfMeasurementFull;
 
 
-//    ******************************** TODO VERIFICAR SI ESTOS CAMPOS SON NECESARIOS
-    private Long quantity;
-
-    private Double cost;
-    private Double costMajority;
-    private Double costDeferred;
-//    ********************************
-
     @ManyToOne
     @JoinColumn(name = "product_type_id")
     private ProductType productType;

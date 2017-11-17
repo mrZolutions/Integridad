@@ -94,8 +94,9 @@ public class ProductServices {
 	public Iterable<Product> getAllActivesByUserClientIdAndActive(UUID userClientId) {
 		log.info("ProductServices getAllActivesByUserClientIdAndActive");
 		Iterable<Product> actives = productRepository.findByUserClientIdAndActive(userClientId);
-		actives.forEach(prodcut -> {
-			prodcut.setFatherListToNull();
+		actives.forEach(product -> {
+			product.setFatherListToNull();
+			populateChildren(product);
 		});
 		return actives;
 	}

@@ -8,16 +8,28 @@
  * Controller of the menu
  */
 angular.module('integridadUiApp')
-  .controller('ProductsCtrl', function ($localStorage, $location, productService, utilStringService, projectService, subsidiaryService, $routeParams) {
+  .controller('ProductsCtrl', function (_, $localStorage, $location, productService, utilStringService, projectService,
+    subsidiaryService, productTypeService, messurementListService, $routeParams) {
     var vm = this;
 
     vm.loading = false;
     vm.product = undefined;
     vm.productList = undefined;
     vm.subsidiaryId = undefined;
+    vm.productTypes = undefined;
+    vm.messurements = undefined;
+    vm.subsidiaries = undefined;
 
     function _activate(){
       vm.loading = true;
+      vm.messurements = messurementListService.getMessurementList();
+      productTypeService.getproductTypes().then(function(response){
+        vm.productTypes = response;
+      }).catch(function (error) {
+        vm.loading = false;
+        vm.error = error.data;
+      });
+
       if($routeParams.subsidiaryId){
         productService.getLazyBySusidiaryId($routeParams.subsidiaryId).then(function (response) {
           vm.productList = response;
@@ -35,6 +47,15 @@ angular.module('integridadUiApp')
           vm.error = error.data;
         });
       }
+    }
+
+    function _getSubsidiaries(){
+      subsidiaryService.getByProjectId($localStorage.user.subsidiary.userClient.id).then(function (response) {
+        vm.subsidiaries = response;
+      }).catch(function (error) {
+        vm.loading = false;
+        vm.error = error.data;
+      });
     }
 
     function create(){
@@ -65,7 +86,7 @@ angular.module('integridadUiApp')
       });
     }
 
-    function _getSubsidiaries(){
+    function _getSubsidiarie(){
       if($routeParams.subsidiaryId){
         subsidiaryService.getById($routeParams.subsidiaryId).then(function(response){
           vm.subsidiaries = [response];
@@ -88,31 +109,37 @@ angular.module('integridadUiApp')
     }
 
     vm.productCreate = function(){
-      if($routeParams.subsidiaryId){
-        subsidiaryService.getById($routeParams.subsidiaryId).then(function(response){
-          vm.subsidiaries = [response];
-          vm.success=undefined;
-          vm.error=undefined
-          vm.product={
-            userClient: response.userClient
-          };
-        }).catch(function (error) {
-          vm.loading = false;
-          vm.error = error.data;
-        });
-      } else {
-        projectService.getById($localStorage.user.subsidiary.userClient.id).then(function (response) {
-          vm.subsidiaries = response.subsidiaries;
-          vm.success=undefined;
-          vm.error=undefined
-          vm.product={
-            userClient: $localStorage.user.subsidiary.userClient
-          };
-        }).catch(function (error) {
-          vm.loading = false;
-          vm.error = error.data;
-        });
-      }
+      _getSubsidiaries();
+      vm.success=undefined;
+      vm.error=undefined
+      vm.product={
+        // userClient: response.userClient
+      };
+      // if($routeParams.subsidiaryId){
+      //   subsidiaryService.getById($routeParams.subsidiaryId).then(function(response){
+      //     vm.subsidiaries = [response];
+      //     vm.success=undefined;
+      //     vm.error=undefined
+      //     vm.product={
+      //       userClient: response.userClient
+      //     };
+      //   }).catch(function (error) {
+      //     vm.loading = false;
+      //     vm.error = error.data;
+      //   });
+      // } else {
+      //   projectService.getById($localStorage.user.subsidiary.userClient.id).then(function (response) {
+      //     vm.subsidiaries = response.subsidiaries;
+      //     vm.success=undefined;
+      //     vm.error=undefined
+      //     vm.product={
+      //       userClient: $localStorage.user.subsidiary.userClient
+      //     };
+      //   }).catch(function (error) {
+      //     vm.loading = false;
+      //     vm.error = error.data;
+      //   });
+      // }
     };
 
     vm.save = function(){
@@ -139,7 +166,7 @@ angular.module('integridadUiApp')
 
     vm.editProduct = function(productEdit){
       vm.loading = true;
-      _getSubsidiaries();
+      _getSubsidiarie();
       productService.getById(productEdit.id).then(function (response) {
         vm.loading = false;
         vm.product = response;
