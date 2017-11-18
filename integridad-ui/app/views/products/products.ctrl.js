@@ -19,6 +19,7 @@ angular.module('integridadUiApp')
     vm.productTypes = undefined;
     vm.messurements = undefined;
     vm.subsidiaries = undefined;
+    vm.wizard = 0;
 
     function _activate(){
       vm.loading = true;
@@ -112,7 +113,9 @@ angular.module('integridadUiApp')
       _getSubsidiaries();
       vm.success=undefined;
       vm.error=undefined
+      vm.wizard = 1;
       vm.product={
+        productBySubsidiaries: [],
         // userClient: response.userClient
       };
       // if($routeParams.subsidiaryId){
@@ -140,6 +143,32 @@ angular.module('integridadUiApp')
       //     vm.error = error.data;
       //   });
       // }
+    };
+
+    vm.changeSub = function(subsidiary){
+      if(subsidiary.selected){
+        subsidiary.cantidad = 0;
+      } else {
+        subsidiary.cantidad = undefined;
+      }
+    };
+
+    vm.wiz2 = function(){
+      _.each(vm.subsidiaries, function(sub){
+        if(sub.selected){
+          var productBySubsidiary = {
+            dateCreated: new Date().getTime(),
+            quantity: sub.cantidad,
+            subsidiary: sub
+          };
+
+          vm.product.productBySubsidiaries.push(productBySubsidiary);
+
+        }
+      });
+
+      console.log(vm.product);
+      vm.wizard = 2;
     };
 
     vm.save = function(){
@@ -177,6 +206,7 @@ angular.module('integridadUiApp')
     };
 
     vm.cancel=function(){
+      vm.wizard = 0;
       vm.product=undefined;
       vm.success=undefined;
       vm.error=undefined;

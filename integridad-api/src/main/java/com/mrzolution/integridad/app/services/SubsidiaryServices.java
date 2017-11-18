@@ -40,7 +40,9 @@ public class SubsidiaryServices {
 		subsidiary.setActive(true);
 
 		List<Cashier> cashierList = subsidiary.getCashiers();
+		List<Warehouse> warehouseList = subsidiary.getWarehouses();
 		subsidiary.setCashiers(null);
+		subsidiary.setWarehouses(null);
 
 		if(cashierList == null || cashierList.isEmpty()){
 			throw new BadRequestException("La sucursal debe tener por lo menos una caja");
@@ -52,6 +54,12 @@ public class SubsidiaryServices {
 			cashier.setSubsidiary(saved);
 			cashierRepository.save(cashier);
 			cashier.setSubsidiary(null);
+		});
+
+		warehouseList.forEach(warehouse -> {
+			warehouse.setSubsidiary(subsidiary);
+			warehouseRepository.save(warehouse);
+			warehouse.setSubsidiary(null);
 		});
 
 		log.info("SubsidiaryServices created: {}", saved.getId());

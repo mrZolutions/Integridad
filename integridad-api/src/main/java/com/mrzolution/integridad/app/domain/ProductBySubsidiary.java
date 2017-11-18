@@ -26,11 +26,7 @@ public class ProductBySubsidiary implements Child{
     @ManyToOne
     @JoinColumn(name = "product_id")
     private Product product;
-    
-    @ManyToOne
-    @JoinColumn(name = "user_client_id")
-    private UserClient userClient;
-    
+
     @ManyToOne
     @JoinColumn(name = "subsidiary_id")
     private Subsidiary subsidiary;
@@ -39,8 +35,6 @@ public class ProductBySubsidiary implements Child{
     }
     
     public void setFatherListToNull(){
-    	userClient.setListsNull();
-    	userClient.setFatherListToNull();
     	subsidiary.setListsNull();
     	subsidiary.setFatherListToNull();
         product.setFatherListToNull();
@@ -50,7 +44,6 @@ public class ProductBySubsidiary implements Child{
     @Transient
     public static ProductBySubsidiary newProductBySubsidiaryTest(){
         ProductBySubsidiary product = new ProductBySubsidiary();
-        product.setUserClient(UserClient.newUserClientTest());
         product.setSubsidiary(Subsidiary.newSubsidiaryTest());
         product.setProduct(Product.newProducTest());
         

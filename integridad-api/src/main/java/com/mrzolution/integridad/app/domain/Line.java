@@ -9,7 +9,7 @@ import java.util.UUID;
 
 @Entity
 @Data
-public class ProductType {
+public class Line {
 
 	@Id
     @GeneratedValue
@@ -20,18 +20,22 @@ public class ProductType {
 
     private boolean active;
     
-    @OneToMany(mappedBy = "productType", cascade = CascadeType.ALL)
-    private List<Product> products;
+    @OneToMany(mappedBy = "line", cascade = CascadeType.ALL)
+    private List<Group> groups;
+
+    public void setFatherListToNull(){
+
+    }
     
     public void setListsNull(){
-    	if(products != null) products = null;
+    	if(groups != null) groups = null;
     }
 
     @Transient
-    public static ProductType newProductTypeTest(){
-    	ProductType productType = new ProductType();
-    	productType.setProducts(new ArrayList<>());
+    public static Line newLineTest(){
+    	Line line = new Line();
+    	line.setGroups(new ArrayList<>());
 
-        return productType;
+        return line;
     }
 }
