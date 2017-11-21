@@ -21,15 +21,15 @@ public class SubGroup {
     private boolean active;
 
     @ManyToOne
-    @JoinColumn(name = "group_id")
-    private Group group;
+    @JoinColumn(name = "group_line_id")
+    private GroupLine groupLine;
     
     @OneToMany(mappedBy = "subgroup", cascade = CascadeType.ALL)
     private List<Product> products;
 
     public void setFatherListToNull(){
-        group.setListsNull();
-        group.setFatherListToNull();
+        groupLine.setListsNull();
+        groupLine.setFatherListToNull();
     }
     
     public void setListsNull(){
@@ -39,7 +39,7 @@ public class SubGroup {
     @Transient
     public static SubGroup newSubBrandTest(){
     	SubGroup subGroup = new SubGroup();
-    	subGroup.setGroup(Group.newGroupTest());
+    	subGroup.setGroupLine(GroupLine.newGroupLineTest());
     	subGroup.setProducts(new ArrayList<>());
 
         return subGroup;

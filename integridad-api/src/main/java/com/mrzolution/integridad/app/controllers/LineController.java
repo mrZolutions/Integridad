@@ -13,8 +13,9 @@ import java.util.UUID;
 
 @Slf4j
 @RestController
-@RequestMapping(value = "/integridad/v1/product_type")
+@RequestMapping(value = "/integridad/v1/line")
 public class LineController {
+
 
 	@Autowired
 	ProductTypeServices service;

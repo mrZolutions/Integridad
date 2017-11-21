@@ -21,20 +21,20 @@ public class Line {
     private boolean active;
     
     @OneToMany(mappedBy = "line", cascade = CascadeType.ALL)
-    private List<Group> groups;
+    private List<GroupLine> groupLines;
 
     public void setFatherListToNull(){
 
     }
     
     public void setListsNull(){
-    	if(groups != null) groups = null;
+    	if(groupLines != null) groupLines = null;
     }
 
     @Transient
     public static Line newLineTest(){
     	Line line = new Line();
-    	line.setGroups(new ArrayList<>());
+    	line.setGroupLines(new ArrayList<>());
 
         return line;
     }

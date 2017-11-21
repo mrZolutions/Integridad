@@ -9,7 +9,7 @@ import java.util.UUID;
 
 @Entity
 @Data
-public class Group {
+public class GroupLine {
 
 	@Id
     @GeneratedValue
@@ -21,10 +21,10 @@ public class Group {
     private boolean active;
 
     @ManyToOne
-    @JoinColumn(name = "group_id")
+    @JoinColumn(name = "line_id")
     private Line line;
     
-    @OneToMany(mappedBy = "group", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "groupLine", cascade = CascadeType.ALL)
     private List<SubGroup> subGroups;
 
     public void setFatherListToNull(){
@@ -37,11 +37,11 @@ public class Group {
     }
 
     @Transient
-    public static Group newGroupTest(){
-    	Group group = new Group();
-    	group.setLine(Line.newLineTest());
-    	group.setSubGroups(new ArrayList<>());
+    public static GroupLine newGroupLineTest(){
+    	GroupLine groupLine = new GroupLine();
+    	groupLine.setLine(Line.newLineTest());
+    	groupLine.setSubGroups(new ArrayList<>());
 
-        return group;
+        return groupLine;
     }
 }

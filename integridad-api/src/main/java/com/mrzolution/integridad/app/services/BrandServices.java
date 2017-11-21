@@ -20,101 +20,75 @@ public class BrandServices {
 
 	@Autowired
 	BrandRepository brandRepository;
+	@Autowired
+	ProductRepository productRepository;
 	
-	public ProductType create(Brand brand){
+	public Brand create(Brand brand){
 		log.info("BrandServices create");
 		brand.setActive(true);
 
-		ProductType saved = brandRepository.save(brand);
+		Brand saved = brandRepository.save(brand);
 
 		saved.setListsNull();
 
 		return saved;
 	}
 	
-//	public void update(ProductType productType){
-//		log.info("ProductTypeServices update: {}", productType.getId());
-//
-//		productType.setListsNull();
-//		ProductType updated = productTypeRepository.save(productType);
-//		log.info("ProductTypeServices update id: {}", updated.getId());
-//	}
-//
-//	public ProductType delete(UUID productTypeId) {
-//		log.info("ProductServices delete: {}", productTypeId);
-//		ProductType findOne = productTypeRepository.findOne(productTypeId);
-//		findOne.setListsNull();
-//		findOne.setActive(false);
-//		update(findOne);
-//		return findOne;
-//	}
+	public void update(Brand brand){
+		log.info("BrandServices update: {}", brand.getId());
+
+		brand.setListsNull();
+		Brand updated = brandRepository.save(brand);
+		log.info("BrandServices update id: {}", updated.getId());
+	}
+
+	public Brand delete(UUID brandId) {
+		log.info("BrandServices delete: {}", brandId);
+		Brand findOne = brandRepository.findOne(brandId);
+		findOne.setListsNull();
+		findOne.setActive(false);
+		update(findOne);
+		return findOne;
+	}
 
 	public Iterable<Brand> getAllActives(){
-		log.info("ProductTypeServices getAllActives");
-		Iterable<ProductType> actives = productTypeRepository.findByActive(true);
+		log.info("BrandServices getAllActives");
+		Iterable<Brand> actives = brandRepository.findByActive(true);
 		actives.forEach(this::populateChildren);
 		return actives;
 
 	}
 
-	public Iterable<ProductType> getAllActivesLazy(){
+	public Iterable<Brand> getAllActivesLazy(){
 		log.info("BrandServices getAllActivesLazy");
 		Iterable<Brand> actives = brandRepository.findByActive(true);
-		actives.forEach(productType -> {productType.setListsNull();});
+		actives.forEach(brand -> {brand.setListsNull();});
 		return actives;
 
 	}
-//
-//	public Product getById(UUID id){
-//		log.info("ProductServices getById: {}", id);
-//		Product findOne = productRepository.findOne(id);
-//		populateChildren(findOne);
-//		return findOne;
-//	}
-//
-//
-//
-//
-//	public Iterable<Product> getAllActivesByUserClientIdAndActive(UUID userClientId) {
-//		log.info("ProductServices getAllActivesByUserClientIdAndActive");
-//		Iterable<Product> actives = productRepository.findByUserClientIdAndActive(userClientId);
-//		actives.forEach(prodcut -> {
-//			prodcut.setFatherListToNull();
-//		});
-//		return actives;
-//	}
-//
-//	public Iterable<Product> getAllActivesBySubsidiaryIdAndActive(UUID subsidiaryId) {
-//		log.info("ProductServices getAllActivesBySubsidiaryIdAndActive");
-//		Iterable<UUID> productIdList = productBySubsidiairyRepository.findBySubsidiaryIdAndProductActive(subsidiaryId);
-//		List<Product> listReturn = new ArrayList<>();
-//		productIdList.forEach(id ->{
-//			listReturn.add(getById(id));
-//			Product productType = getById(id);
-//		});
-//
-////		Iterable<Product> actives = productRepository.findBySubsidiaryIdAndActive(subsidiaryId);
-////		actives.forEach(prodcut -> {
-////			prodcut.setFatherListToNull();
-////		});
-//		return listReturn;
-//	}
-//
-	private void populateChildren(ProductType productType) {
-		log.info("ProductTypeServices populateChildren producTypetId: {}", productType.getId());
+
+	public Brand getById(UUID id){
+		log.info("BrandServices getById: {}", id);
+		Brand findOne = brandRepository.findOne(id);
+		populateChildren(findOne);
+		return findOne;
+	}
+
+	private void populateChildren(Brand brand) {
+		log.info("BrandServices populateChildren brandId: {}", brand.getId());
 		List<Product> productList = new ArrayList<>();
-		Iterable<Product> products = productRepository.findByProductTypeIdAndActive(productType.getId());
+		Iterable<Product> products = productRepository.findByBrandIdAndActive(brand.getId());
 
 		products.forEach(productConsumer -> {
 			productConsumer.setListsNull();
 			productConsumer.setFatherListToNull();
-			productConsumer.setProductType(null);
+			productConsumer.setBrand(null);
 
 			productList.add(productConsumer);
 		});
 
-		productType.setProducts(productList);
-		log.info("ProductTypeServices populateChildren FINISHED producTypetId: {}", productType.getId());
+		brand.setProducts(productList);
+		log.info("BrandServices populateChildren FINISHED brandId: {}", brand.getId());
 
 	}
 }
