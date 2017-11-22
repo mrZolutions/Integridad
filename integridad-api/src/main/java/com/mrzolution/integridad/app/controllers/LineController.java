@@ -1,7 +1,9 @@
 package com.mrzolution.integridad.app.controllers;
 
+import com.mrzolution.integridad.app.domain.Line;
 import com.mrzolution.integridad.app.domain.ProductType;
 import com.mrzolution.integridad.app.exceptions.BadRequestException;
+import com.mrzolution.integridad.app.services.LineServices;
 import com.mrzolution.integridad.app.services.ProductTypeServices;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,71 +18,70 @@ import java.util.UUID;
 @RequestMapping(value = "/integridad/v1/line")
 public class LineController {
 
-
 	@Autowired
-	ProductTypeServices service;
+	LineServices service;
 
 
 	@RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity create(@RequestBody ProductType productType){
-		log.info("ProductTypeController create: {}", productType);
-		ProductType response = null;
+    public ResponseEntity create(@RequestBody Line line){
+		log.info("LineController create: {}", line);
+		Line response = null;
 		try {
-			response = service.create(productType);
+			response = service.create(line);
 		}catch(BadRequestException e) {
-			log.error("ProductTypeController create Exception thrown: {}", e.getMessage());
+			log.error("LineController create Exception thrown: {}", e.getMessage());
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	    }
-		return new ResponseEntity<ProductType>(response, HttpStatus.CREATED);
+		return new ResponseEntity<Line>(response, HttpStatus.CREATED);
 	}
 	
 	@RequestMapping(method = RequestMethod.PUT)
-    public ResponseEntity update(@RequestBody ProductType productType){
-		log.info("ProductTypeController update: {}", productType);
+    public ResponseEntity update(@RequestBody Line line){
+		log.info("LineController update: {}", line);
 		try {
-			service.update(productType);
+			service.update(line);
 		}catch(BadRequestException e) {
-			log.error("ProductTypeController update Exception thrown: {}", e.getMessage());
+			log.error("LineController update Exception thrown: {}", e.getMessage());
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	    }
 		return new ResponseEntity<Void>(HttpStatus.ACCEPTED);
 	}
 	
-	@RequestMapping(method = RequestMethod.DELETE, value = "/{productTypeId}")
-    public ResponseEntity delete(@PathVariable("productTypeId") UUID productTypeId){
-		log.info("ProductTypeController delete: {}", productTypeId);
-		ProductType response = null;
+	@RequestMapping(method = RequestMethod.DELETE, value = "/{lineId}")
+    public ResponseEntity delete(@PathVariable("lineId") UUID lineId){
+		log.info("LineController delete: {}", lineId);
+		Line response = null;
 		try {
-			response = service.delete(productTypeId);
+			response = service.delete(lineId);
 		}catch(BadRequestException e) {
-			log.error("ProductTypeController delete Exception thrown: {}", e.getMessage());
+			log.error("LineController delete Exception thrown: {}", e.getMessage());
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	    }
-		return new ResponseEntity<ProductType>(response, HttpStatus.ACCEPTED);
+		return new ResponseEntity<Line>(response, HttpStatus.ACCEPTED);
 	}
 
 	
-	@RequestMapping(method = RequestMethod.GET, value="/actives")
-    public ResponseEntity getAllActives(){
-		log.info("ProductTypeController getAllActives");
-		Iterable<ProductType> response = null;
+	@RequestMapping(method = RequestMethod.GET, value="/actives/{projectId}")
+    public ResponseEntity getAllActivesByProjectId(@PathVariable("projectId") UUID projectId){
+		log.info("LineController getAllActivesByProjectId: {}", projectId);
+		Iterable<Line> response = null;
 		try {
-			response = service.getAllActives();
+			response = service.getAllActivesByUserClientId(projectId);
 		}catch(BadRequestException e) {
-			log.error("ProductTypeController getActives Exception thrown: {}", e.getMessage());
+			log.error("LineController getAllActivesByProjectId Exception thrown: {}", e.getMessage());
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	    }
 		return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
 	}
 
-	@RequestMapping(method = RequestMethod.GET, value="/actives_lazy")
-	public ResponseEntity getAllActivesLazy(){
-		log.info("ProductTypeController getAllActivesLazy");
-		Iterable<ProductType> response = null;
+	@RequestMapping(method = RequestMethod.GET, value="/actives_lazy/{projectId}")
+	public ResponseEntity getAllActivesByProjectIdLazy(@PathVariable("projectId") UUID projectId){
+		log.info("LineController getAllActivesByProjectIdLazy: {}", projectId);
+		Iterable<Line> response = null;
 		try {
-			response = service.getAllActivesLazy();
+			response = service.getAllActivesByUserClientIdLazy(projectId);
 		}catch(BadRequestException e) {
-			log.error("ProductTypeController getActivesLazy Exception thrown: {}", e.getMessage());
+			log.error("LineController getAllActivesByProjectIdLazy Exception thrown: {}", e.getMessage());
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 		}
 		return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);

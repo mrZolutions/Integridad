@@ -19,11 +19,17 @@ public class Line {
     private String code;
 
     private boolean active;
-    
+
+    @ManyToOne
+    @JoinColumn(name = "user_client_id")
+    private UserClient userClient;
+
     @OneToMany(mappedBy = "line", cascade = CascadeType.ALL)
     private List<GroupLine> groupLines;
 
     public void setFatherListToNull(){
+        userClient.setFatherListToNull();
+        userClient.setListsNull();
 
     }
     
@@ -34,6 +40,7 @@ public class Line {
     @Transient
     public static Line newLineTest(){
     	Line line = new Line();
+    	line.setUserClient(UserClient.newUserClientTest());
     	line.setGroupLines(new ArrayList<>());
 
         return line;
