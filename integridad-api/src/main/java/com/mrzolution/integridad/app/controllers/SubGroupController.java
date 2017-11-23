@@ -15,7 +15,7 @@ import java.util.UUID;
 
 @Slf4j
 @RestController
-@RequestMapping(value = "/integridad/v1/group_line")
+@RequestMapping(value = "/integridad/v1/sub_group")
 public class SubGroupController {
 
 	@Autowired

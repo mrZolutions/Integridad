@@ -143,6 +143,86 @@
   </div>
 </div>
 
+<div class="panel panel-default" ng-show="vm.wizard === 2">
+  <div class="panel-body">
+
+    <div class="row">
+      <div class="form-group col-md-9">
+        <label>Marca: </label>
+        <select ng-options="brand as brand.name for brand in vm.brands  | orderBy:'name'  track by brand.id"
+          ng-model="vm.product.brand" class="form-control">
+        </select>
+      </div>
+      <div class="form-group col-md-3">
+        <label>&nbsp;</label>
+        <button type="button" class="form-control btn btn-primary" ng-click="vm.createBrand()"
+          data-toggle="modal" data-target="#modalCreateBrand">
+          Crear Marca
+        </button>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="form-group col-md-9">
+        <label>L&iacute;nea: </label>
+        <select ng-options="lin as lin.name for lin in vm.lineas  | orderBy:'name'  track by lin.id"
+          ng-model="vm.selectedLine" class="form-control" ng-change="vm.getGroups()">
+        </select>
+      </div>
+      <div class="form-group col-md-3">
+        <label>&nbsp;</label>
+        <button type="button" class="form-control btn btn-primary" ng-click="vm.createLine()"
+          data-toggle="modal" data-target="#modalCreateLine" ng-disabled="vm.product.brand === undefined">
+          Crear L&iacute;nea
+        </button>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="form-group col-md-9">
+        <label>Grupo: </label>
+        <select ng-options="group as group.name for group in vm.groups  | orderBy:'name'  track by group.id"
+          ng-model="vm.selectedGroup" class="form-control" ng-change="vm.getSubGroups()">
+        </select>
+      </div>
+      <div class="form-group col-md-3">
+        <label>&nbsp;</label>
+        <button type="button" class="form-control btn btn-primary" ng-click="vm.createGroup()"
+          data-toggle="modal" data-target="#modalCreateGroup" ng-disabled="vm.selectedLine === undefined">
+          Crear Grupo
+        </button>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="form-group col-md-9">
+        <label>Subgrupo: </label>
+        <select ng-options="subgroup as subgroup.name for subgroup in vm.subGroups  | orderBy:'name'  track by subgroup.id"
+          ng-model="vm.product.subgroup" class="form-control">
+        </select>
+      </div>
+      <div class="form-group col-md-3">
+        <label>&nbsp;</label>
+        <button type="button" class="form-control btn btn-primary" ng-click="vm.createSubGroup()"
+          data-toggle="modal" data-target="#modalCreateSubGroup" ng-disabled="vm.selectedGroup === undefined">
+          Crear Subgrupo
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="panel-footer">
+    <button type="button" class="btn btn-primary" ng-click="vm.wiz2()">
+      Siguiente
+    </button>
+    <button type="button" class="btn btn-primary" ng-click="vm.wizard = 1">
+      Atr&aacute;s
+    </button>
+    <button type="button" class="btn btn-success" ng-click="vm.cancel()">
+      Cancelar
+    </button>
+  </div>
+</div>
+
 <div id="modalEliminar" class="modal fade" role="dialog">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -160,6 +240,150 @@
       <div class="modal-footer">
         <button type="button" class="btn btn-primary" ng-click="vm.remove()" data-dismiss="modal">
           Eliminar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="modalCreateBrand" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" ng-click="vm.newBrand=undefined">&times;</button>
+        <h4 class="modal-title">Crear Marca</h4>
+      </div>
+      <div class="modal-body">
+
+        <div class="row">
+          <div class="form-group col-md-12">
+            <label>Nombre : </label>
+            <input type="text" ng-model="vm.newBrand.name" class="form-control">
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="form-group col-md-6">
+            <label>C&oacute;digo: </label>
+            <input type="text" ng-model="vm.newBrand.code" class="form-control">
+          </div>
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" ng-click="vm.saveNewBrand()" data-dismiss="modal">
+          Aceptar
+        </button>
+        <button type="button" class="btn btn-success" ng-click="vm.newBrand = undefined" data-dismiss="modal">
+          Cancelar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="modalCreateLine" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" ng-click="vm.newLine=undefined">&times;</button>
+        <h4 class="modal-title">Crear L&iacute;nea</h4>
+      </div>
+      <div class="modal-body">
+
+        <div class="row">
+          <div class="form-group col-md-12">
+            <label>Nombre : </label>
+            <input type="text" ng-model="vm.newLine.name" class="form-control">
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="form-group col-md-6">
+            <label>C&oacute;digo: </label>
+            <input type="text" ng-model="vm.newLine.code" class="form-control">
+          </div>
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" ng-click="vm.saveNewLine()" data-dismiss="modal">
+          Aceptar
+        </button>
+        <button type="button" class="btn btn-success" ng-click="vm.newLine = undefined" data-dismiss="modal">
+          Cancelar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="modalCreateGroup" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" ng-click="vm.newGroup=undefined">&times;</button>
+        <h4 class="modal-title">Crear Grupo</h4>
+      </div>
+      <div class="modal-body">
+
+        <div class="row">
+          <div class="form-group col-md-12">
+            <label>Nombre : </label>
+            <input type="text" ng-model="vm.newGroup.name" class="form-control">
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="form-group col-md-6">
+            <label>C&oacute;digo: </label>
+            <input type="text" ng-model="vm.newGroup.code" class="form-control">
+          </div>
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" ng-click="vm.saveNewGroup()" data-dismiss="modal">
+          Aceptar
+        </button>
+        <button type="button" class="btn btn-success" ng-click="vm.newGroup = undefined" data-dismiss="modal">
+          Cancelar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="modalCreateSubGroup" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" ng-click="vm.newSubGroup=undefined">&times;</button>
+        <h4 class="modal-title">Crear Subgrupo</h4>
+      </div>
+      <div class="modal-body">
+
+        <div class="row">
+          <div class="form-group col-md-12">
+            <label>Nombre : </label>
+            <input type="text" ng-model="vm.newSubGroup.name" class="form-control">
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="form-group col-md-6">
+            <label>C&oacute;digo: </label>
+            <input type="text" ng-model="vm.newSubGroup.code" class="form-control">
+          </div>
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" ng-click="vm.saveNewSubGroup()" data-dismiss="modal">
+          Aceptar
+        </button>
+        <button type="button" class="btn btn-success" ng-click="vm.newSubGroup = undefined" data-dismiss="modal">
+          Cancelar
         </button>
       </div>
     </div>

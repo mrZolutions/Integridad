@@ -59,10 +59,13 @@ public class BrandServices {
 
 	}
 
-	public Iterable<Brand> getAllActivesLazy(){
+	public Iterable<Brand> getAllActivesLazy(UUID projectId){
 		log.info("BrandServices getAllActivesLazy");
-		Iterable<Brand> actives = brandRepository.findByActive(true);
-		actives.forEach(brand -> {brand.setListsNull();});
+		Iterable<Brand> actives = brandRepository.findByUserClienteIdAndActive(projectId);
+		actives.forEach(brand -> {
+			brand.setFatherListToNull();
+			brand.setListsNull();
+		});
 		return actives;
 
 	}

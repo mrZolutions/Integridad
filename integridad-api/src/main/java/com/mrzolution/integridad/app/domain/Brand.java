@@ -19,10 +19,20 @@ public class Brand {
     private String code;
 
     private boolean active;
+
+    @ManyToOne
+    @JoinColumn(name = "user_client_id")
+    private UserClient userClient;
     
     @OneToMany(mappedBy = "brand", cascade = CascadeType.ALL)
     private List<Product> products;
-    
+
+    public void setFatherListToNull(){
+        userClient.setFatherListToNull();
+        userClient.setListsNull();
+
+    }
+
     public void setListsNull(){
     	if(products != null) products = null;
     }
@@ -31,6 +41,7 @@ public class Brand {
     public static Brand newBrandTest(){
     	Brand brand = new Brand();
     	brand.setProducts(new ArrayList<>());
+    	brand.setUserClient(UserClient.newUserClientTest());
 
         return brand;
     }

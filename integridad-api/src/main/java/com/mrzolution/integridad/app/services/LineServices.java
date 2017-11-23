@@ -64,7 +64,10 @@ public class LineServices {
 	public Iterable<Line> getAllActivesByUserClientIdLazy(UUID userClientId){
 		log.info("LineServices getAllActivesByUserClientIdLazy");
 		Iterable<Line> actives = lineRepository.findByUserClienteIdAndActive(userClientId);
-		actives.forEach(line -> {line.setListsNull();});
+		actives.forEach(line -> {
+			line.setListsNull();
+			line.setFatherListToNull();
+		});
 		return actives;
 
 	}

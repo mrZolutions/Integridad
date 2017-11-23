@@ -60,7 +60,10 @@ public class GroupLineServices {
 	public Iterable<GroupLine> getAllActivesByLineIdLazy(UUID lineId){
 		log.info("GroupLineServices getAllActivesByLineIdLazy");
 		Iterable<GroupLine> actives = groupLineRepository.findByLineIdAndActive(lineId);
-		actives.forEach(line -> {line.setListsNull();});
+		actives.forEach(line -> {
+			line.setListsNull();
+			line.setFatherListToNull();
+		});
 		return actives;
 
 	}

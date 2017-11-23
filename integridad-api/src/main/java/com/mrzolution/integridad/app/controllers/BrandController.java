@@ -74,14 +74,14 @@ public class BrandController {
 		return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
 	}
 
-	@RequestMapping(method = RequestMethod.GET, value="/actives_lazy")
-	public ResponseEntity getAllActivesLazy(){
-		log.info("BrandController getAllActivesLazy");
+	@RequestMapping(method = RequestMethod.GET, value="/actives_lazy/{projectId}")
+	public ResponseEntity getAllActivesByProjectIdLazy(@PathVariable("projectId") UUID projectId){
+		log.info("BrandController getAllActivesByProjectIdLazy");
 		Iterable<Brand> response = null;
 		try {
-			response = service.getAllActivesLazy();
+			response = service.getAllActivesLazy(projectId);
 		}catch(BadRequestException e) {
-			log.error("BrandController getActivesLazy Exception thrown: {}", e.getMessage());
+			log.error("BrandController getActivesByProjectIdLazy Exception thrown: {}", e.getMessage());
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 		}
 		return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);

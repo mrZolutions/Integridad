@@ -133,6 +133,8 @@ public class ProductServices {
 		});
 
 		product.setProductBySubsidiaries(productBySubsidiaryList);
+		product.getBrand().setFatherListToNull();
+		product.getBrand().setListsNull();
 		product.setFatherListToNull();
 		log.info("ProductServices populateChildren FINISHED productId: {}", product.getId());
 		

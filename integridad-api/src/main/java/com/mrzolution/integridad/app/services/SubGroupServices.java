@@ -62,7 +62,10 @@ public class SubGroupServices {
 	public Iterable<SubGroup> getAllActivesByGroupLineIdLazy(UUID groupLineId){
 		log.info("SubGroupervices getAllActivesByGroupLineIdLazy");
 		Iterable<SubGroup> actives = subGroupRepository.findByGroupLineIdAndActive(groupLineId);
-		actives.forEach(line -> {line.setListsNull();});
+		actives.forEach(subGroup -> {
+			subGroup.setListsNull();
+			subGroup.setFatherListToNull();
+		});
 		return actives;
 
 	}

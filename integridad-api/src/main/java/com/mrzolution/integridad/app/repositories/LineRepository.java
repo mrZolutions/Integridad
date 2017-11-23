@@ -20,6 +20,6 @@ public interface LineRepository extends CrudRepository<Line, UUID>{
 	Iterable<Line> findByActive(boolean active);
 
 	@Query("SELECT p FROM Line p WHERE p.userClient.id = (:id) and p.active = true")
-	Iterable<Line> findByUserClienteIdAndActive(@Param("id") UUID lineId);
+	Iterable<Line> findByUserClienteIdAndActive(@Param("id") UUID userClientId);
 
 }
