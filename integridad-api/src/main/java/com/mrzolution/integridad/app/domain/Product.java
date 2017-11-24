@@ -31,6 +31,13 @@ public class Product implements Child{
     private String characteristics;
     private String barCode;
 
+    private Double averageCost;
+    private Double cashPercentage;
+    private Double creditPercentage;
+    private Double cardPercentage;
+    private Double majorPercentage;
+    private Long maxMinimun;
+
 
     @ManyToOne
     @JoinColumn(name = "product_type_id")

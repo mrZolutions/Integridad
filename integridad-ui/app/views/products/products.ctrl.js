@@ -67,6 +67,11 @@ angular.module('integridadUiApp')
     function create(){
       productService.create(vm.product).then(function (response) {
         vm.product=undefined;
+        vm.selectedGroup = undefined;
+        vm.selectedLine = undefined;
+        vm.product.unitOfMeasurementAbbr = undefined;
+        vm.product.unitOfMeasurementFull = undefined;
+        vm.wizard = 0;
         _activate();
         vm.error = undefined;
         vm.success = 'Resgistro realizado con exito';
@@ -114,14 +119,43 @@ angular.module('integridadUiApp')
       }
     }
 
+    vm.editProduct = function(productEdit){
+      console.log(productEdit)
+      vm.selectedGroup = productEdit.subgroup.groupLine;
+      vm.selectedLine = productEdit.subgroup.groupLine.line;
+      vm.messurements = messurementListService.getMessurementList();
+
+      _.each(vm.messurements, function(mes){
+        if(productEdit.unitOfMeasurementAbbr === mes.shortName){
+          vm.messurementSelected = mes;
+        }
+      });
+
+      vm.getGroups();
+      vm.getSubGroups();
+      _getSubsidiaries();
+      vm.wizard = 1;
+      vm.product= productEdit;
+
+      // vm.loading = true;
+      // _getSubsidiarie();
+      // productService.getById(productEdit.id).then(function (response) {
+      //   vm.loading = false;
+      //   vm.product = response;
+      // }).catch(function (error) {
+      //   vm.loading = false;
+      //   vm.error = error.data;
+      // });
+    };
+
     vm.productCreate = function(){
       _getSubsidiaries();
       vm.success=undefined;
       vm.error=undefined
       vm.wizard = 1;
       vm.product={
+        userClient: $localStorage.user.subsidiary.userClient,
         productBySubsidiaries: [],
-        // userClient: response.userClient
       };
       // if($routeParams.subsidiaryId){
       //   subsidiaryService.getById($routeParams.subsidiaryId).then(function(response){
@@ -254,6 +288,8 @@ angular.module('integridadUiApp')
     };
 
     vm.wiz2 = function(){
+      vm.product.unitOfMeasurementAbbr = vm.messurementSelected.shortName;
+      vm.product.unitOfMeasurementFull = vm.messurementSelected.name;
       _.each(vm.subsidiaries, function(sub){
         if(sub.selected){
           var productBySubsidiary = {
@@ -282,6 +318,10 @@ angular.module('integridadUiApp')
       vm.wizard = 2;
     };
 
+    vm.wiz3 = function(){
+      vm.wizard = 3;
+    };
+
     vm.save = function(){
       var validationError = utilStringService.isAnyInArrayStringEmpty([
         vm.product.name
@@ -304,21 +344,13 @@ angular.module('integridadUiApp')
       update(true);
     };
 
-    vm.editProduct = function(productEdit){
-      vm.loading = true;
-      _getSubsidiarie();
-      productService.getById(productEdit.id).then(function (response) {
-        vm.loading = false;
-        vm.product = response;
-      }).catch(function (error) {
-        vm.loading = false;
-        vm.error = error.data;
-      });
-    };
-
     vm.cancel=function(){
       vm.wizard = 0;
       vm.product=undefined;
+      vm.selectedGroup = undefined;
+      vm.selectedLine = undefined;
+      vm.product.unitOfMeasurementAbbr = undefined;
+      vm.product.unitOfMeasurementFull = undefined;
       vm.success=undefined;
       vm.error=undefined;
     };

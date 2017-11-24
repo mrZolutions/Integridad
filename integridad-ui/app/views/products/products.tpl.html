@@ -94,7 +94,7 @@
       <div class="form-group col-md-4">
         <label>Medida: </label>
         <select ng-options="mess.shortName as mess.name for mess in vm.messurements  | orderBy:'name'  track by mess.shortName"
-          ng-model="vm.product.unitOfMeasurementAbbr" ng-change="vm.setUnitOfMeasurementFull()" class="form-control">
+          ng-model="vm.messurementSelected" ng-change="vm.setUnitOfMeasurementFull()" class="form-control">
         </select>
       </div>
     </div>
@@ -211,10 +211,75 @@
     </div>
   </div>
   <div class="panel-footer">
-    <button type="button" class="btn btn-primary" ng-click="vm.wiz2()">
+    <button type="button" class="btn btn-primary" ng-click="vm.wiz3()">
       Siguiente
     </button>
     <button type="button" class="btn btn-primary" ng-click="vm.wizard = 1">
+      Atr&aacute;s
+    </button>
+    <button type="button" class="btn btn-success" ng-click="vm.cancel()">
+      Cancelar
+    </button>
+  </div>
+</div>
+
+<div class="panel panel-default" ng-show="vm.wizard === 3">
+  <div class="panel-body">
+
+    <div class="row">
+      <div class="form-group col-md-6">
+        <label>M&aacute;ximo / M&iacute;nimo: </label>
+        <input type="text" onkeypress="return ((event.which >= 46 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+ng-model="vm.product.maxMinimun" class="form-control" maxlength="9">
+        </select>
+      </div>
+      <div class="form-group col-md-6">
+        <label>Costo (promedio): </label>
+        <input type="text" onkeypress="return ((event.which >= 46 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+ng-model="vm.product.averageCost" class="form-control" maxlength="9">
+        </select>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="form-group col-md-6">
+        <label>Ganancia % efectivo: </label>
+        <input type="text" onkeypress="return ((event.which >= 46 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+ng-model="vm.product.cashPercentage" class="form-control" maxlength="9">
+        </select>
+      </div>
+
+      <div class="form-group col-md-6">
+        <label>Ganancia % cr&eacute;dito: </label>
+        <input type="text" onkeypress="return ((event.which >= 46 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+ng-model="vm.product.creditPercentage" class="form-control" maxlength="9">
+        </select>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="form-group col-md-6">
+        <label>Ganancia % tarjeta: </label>
+        <input type="text" onkeypress="return ((event.which >= 46 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+ng-model="vm.product.cardPercentage" class="form-control" maxlength="9">
+        </select>
+      </div>
+
+      <div class="form-group col-md-6">
+        <label>Ganancia % mayorista: </label>
+        <input type="text" onkeypress="return ((event.which >= 46 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+ng-model="vm.product.majorPercentage" class="form-control" maxlength="9">
+        </select>
+      </div>
+    </div>
+
+
+  </div>
+  <div class="panel-footer">
+    <button type="button" class="btn btn-primary" ng-click="vm.save()">
+      Guardar
+    </button>
+    <button type="button" class="btn btn-primary" ng-click="vm.wizard = 2">
       Atr&aacute;s
     </button>
     <button type="button" class="btn btn-success" ng-click="vm.cancel()">
