@@ -59,7 +59,7 @@ angular.module('integridadUiApp')
 
     vm.projectCreate = function(){
       vm.success=undefined;
-      vm.error=undefined
+      vm.error=undefined;
       vm.project={subsidiaries:[]};
       vm.project.initialActivityDate = $('#pickerInitialDate').data("DateTimePicker").date().toDate().getTime();
     };
@@ -123,6 +123,8 @@ angular.module('integridadUiApp')
     };
 
     vm.editProject = function(projectEdit){
+      vm.success=undefined;
+      vm.error=undefined;
       projectService.getById(projectEdit.id).then(function (response) {
         vm.project = response;
         $('#pickerInitialDate').data("DateTimePicker").date(new Date(vm.project.initialActivityDate));

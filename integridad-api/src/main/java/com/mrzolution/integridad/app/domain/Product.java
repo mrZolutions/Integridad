@@ -28,15 +28,16 @@ public class Product implements Child{
     private String codeIntegridad;
     private String unitOfMeasurementAbbr;
     private String unitOfMeasurementFull;
+    private String characteristics;
+    private String barCode;
 
+    private Double averageCost;
+    private Double cashPercentage;
+    private Double creditPercentage;
+    private Double cardPercentage;
+    private Double majorPercentage;
+    private Long maxMinimun;
 
-//    ******************************** TODO VERIFICAR SI ESTOS CAMPOS SON NECESARIOS
-    private Long quantity;
-
-    private Double cost;
-    private Double costMajority;
-    private Double costDeferred;
-//    ********************************
 
     @ManyToOne
     @JoinColumn(name = "product_type_id")
@@ -45,6 +46,14 @@ public class Product implements Child{
     @ManyToOne
     @JoinColumn(name = "user_client_id")
     private UserClient userClient;
+
+    @ManyToOne
+    @JoinColumn(name = "brand_id")
+    private Brand brand;
+
+    @ManyToOne
+    @JoinColumn(name = "subgroup_id")
+    private SubGroup subgroup;
     
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
@@ -58,13 +67,18 @@ public class Product implements Child{
     	userClient.setListsNull();
     	userClient.setFatherListToNull();
         productType.setListsNull();
+        brand.setListsNull();
+        subgroup.setListsNull();
+        subgroup.setFatherListToNull();
     }
 
     @Transient
     public static Product newProducTest(){
         Product product = new Product();
         product.setUserClient(UserClient.newUserClientTest());
-        product.setProductType(ProductType.ProductTypeTest());
+        product.setBrand(Brand.newBrandTest());
+        product.setSubgroup(SubGroup.newSubBrandTest());
+        product.setProductType(ProductType.newProductTypeTest());
         product.setProductBySubsidiaries(new ArrayList<>());
         
         return product;
