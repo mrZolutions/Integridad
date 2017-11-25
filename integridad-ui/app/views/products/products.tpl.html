@@ -93,7 +93,7 @@
       </div>
       <div class="form-group col-md-4">
         <label>Medida: </label>
-        <select ng-options="mess.shortName as mess.name for mess in vm.messurements  | orderBy:'name'  track by mess.shortName"
+        <select ng-options="mess as mess.name for mess in vm.messurements  | orderBy:'name'  track by mess.shortName"
           ng-model="vm.messurementSelected" ng-change="vm.setUnitOfMeasurementFull()" class="form-control">
         </select>
       </div>

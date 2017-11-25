@@ -18,9 +18,9 @@ public class ProductBySubsidiary implements Child{
     private UUID id;
 
     private Long dateCreated;
-    private Long lastDateUpdated;
-
     private Long quantity;
+
+    private boolean active;
 
 
     @ManyToOne
