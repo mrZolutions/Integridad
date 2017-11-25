@@ -28,7 +28,7 @@ public class ProductType {
     }
 
     @Transient
-    public static ProductType ProductTypeTest(){
+    public static ProductType newProductTypeTest(){
     	ProductType productType = new ProductType();
     	productType.setProducts(new ArrayList<>());
 

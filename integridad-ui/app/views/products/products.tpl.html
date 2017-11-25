@@ -34,15 +34,13 @@
   </div>
 </div>
 
-<div ng-show="vm.product === undefined">
+<div ng-show="vm.wizard === 0">
 
   <input ng-model="searchText" class="form-control" placeholder="Buscar">
   <table class="table table-striped">
     <thead>
       <tr>
         <th> Nombre </th>
-        <th> Sucursal </th>
-        <th> Cantidad </th>
         <th>
           <button type="button" class="btn btn-primary" ng-click="vm.productCreate()">
             Crear
@@ -58,8 +56,6 @@
       </tr>
       <tr ng-repeat="productEdit in vm.productList | orderBy:name | filter:searchText">
         <td>{{ productEdit.name }}</td>
-        <td>{{ productEdit.subsidiary.name }}</td>
-        <td>{{ productEdit.quantity }}</td>
         <td>
           <button type="button" class="btn btn-primary" ng-click="vm.editProduct(productEdit)">
             Editar
@@ -75,7 +71,7 @@
 
 </div>
 
-<div class="panel panel-default" ng-show="vm.product">
+<div class="panel panel-default" ng-show="vm.wizard === 1">
   <div class="panel-body">
     <div class="row">
       <div class="form-group col-md-12">
@@ -85,45 +81,208 @@
     </div>
 
     <div class="row">
-      <div class="form-group col-md-6">
-        <label>Cantidad: </label>
-        <input type="text" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
-        ng-model="vm.product.quantity" class="form-control" maxlength="9">
+      <div class="form-group col-md-4">
+        <label>C&oacute;digo: </label>
+        <input type="text" ng-model="vm.product.codeIntegridad" class="form-control">
       </div>
-      <div class="form-group col-md-6">
-        <label>Sucursal *: </label>
-        <select ng-options="subsidiary as subsidiary.name for subsidiary in vm.subsidiaries  | orderBy:'name'  track by subsidiary.id"
-          ng-model="vm.product.subsidiary" class="form-control">
+      <div class="form-group col-md-4">
+        <label>Tipo de Producto: </label>
+        <select ng-options="type as type.name for type in vm.productTypes  | orderBy:'name'  track by type.id"
+          ng-model="vm.product.productType" class="form-control">
+        </select>
+      </div>
+      <div class="form-group col-md-4">
+        <label>Medida: </label>
+        <select ng-options="mess.shortName as mess.name for mess in vm.messurements  | orderBy:'name'  track by mess.shortName"
+          ng-model="vm.messurementSelected" ng-change="vm.setUnitOfMeasurementFull()" class="form-control">
         </select>
       </div>
     </div>
     <div class="row">
-      <div class="form-group col-md-6">
-        <label>Precio de Venta: $</label>
-        <input type="text" onkeypress="return ((event.which >= 46 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
-        ng-model="vm.product.cost" class="form-control" maxlength="9">
+      <div class="form-group col-md-10">
+        <label>Sucursales: </label>
+        <span ng-repeat="sub in vm.subsidiaries" class="list-group-item">
+          <div class="row">
+            <div class="form-group col-sm-7">
+              <input class="pull-right" ng-model="sub.selected" type="checkbox" ng-change="vm.changeSub(sub)">
+              {{ sub.name }}
+            </div>
+            <div class="form-group col-sm-2">
+              Cantidad:
+            </div>
+            <div class="form-group col-sm-3">
+              <input type="text" onkeypress="return ((event.which >= 46 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+              ng-model="sub.cantidad" class="form-control" ng-disabled="!sub.selected">
+            </div>
+          </div>
+        </span>
       </div>
-      <div class="form-group col-md-6">
-        <label>Precio de Venta al por Mayor: $</label>
-        <input type="text" onkeypress="return ((event.which >= 46 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
-        ng-model="vm.product.costMajority" class="form-control" maxlength="9">
+    </div>
+    <div class="row">
+      <div class="form-group col-md-12">
+        <label>Caracter&iacute;sticas: </label>
+        <textarea class="form-control" rows="3" id="comment" ng-model="vm.product.characteristics"></textarea>
       </div>
     </div>
     <div class="row">
       <div class="form-group col-md-6">
-        <label>Precio de Venta Diferido: $</label>
+        <label>C&oacute;digo de Barras: </label>
         <input type="text" onkeypress="return ((event.which >= 46 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
-        ng-model="vm.product.costDeferred" class="form-control" maxlength="9">
+        ng-model="vm.product.barCode" class="form-control" maxlength="9">
       </div>
     </div>
   </div>
   <div class="panel-footer">
-    <button type="button" class="btn btn-primary" ng-click="vm.save()"
-      ng-disabled="vm.product.name === undefined || vm.product.quantity === undefined">
+    <button type="button" class="btn btn-primary" ng-click="vm.wiz2()"
+      ng-disabled="vm.product.name === undefined">
+      Siguiente
+    </button>
+    <button type="button" class="btn btn-success" ng-click="vm.cancel()">
+      Cancelar
+    </button>
+  </div>
+</div>
+
+<div class="panel panel-default" ng-show="vm.wizard === 2">
+  <div class="panel-body">
+
+    <div class="row">
+      <div class="form-group col-md-9">
+        <label>Marca: </label>
+        <select ng-options="brand as brand.name for brand in vm.brands  | orderBy:'name'  track by brand.id"
+          ng-model="vm.product.brand" class="form-control">
+        </select>
+      </div>
+      <div class="form-group col-md-3">
+        <label>&nbsp;</label>
+        <button type="button" class="form-control btn btn-primary" ng-click="vm.createBrand()"
+          data-toggle="modal" data-target="#modalCreateBrand">
+          Crear Marca
+        </button>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="form-group col-md-9">
+        <label>L&iacute;nea: </label>
+        <select ng-options="lin as lin.name for lin in vm.lineas  | orderBy:'name'  track by lin.id"
+          ng-model="vm.selectedLine" class="form-control" ng-change="vm.getGroups()">
+        </select>
+      </div>
+      <div class="form-group col-md-3">
+        <label>&nbsp;</label>
+        <button type="button" class="form-control btn btn-primary" ng-click="vm.createLine()"
+          data-toggle="modal" data-target="#modalCreateLine" ng-disabled="vm.product.brand === undefined">
+          Crear L&iacute;nea
+        </button>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="form-group col-md-9">
+        <label>Grupo: </label>
+        <select ng-options="group as group.name for group in vm.groups  | orderBy:'name'  track by group.id"
+          ng-model="vm.selectedGroup" class="form-control" ng-change="vm.getSubGroups()">
+        </select>
+      </div>
+      <div class="form-group col-md-3">
+        <label>&nbsp;</label>
+        <button type="button" class="form-control btn btn-primary" ng-click="vm.createGroup()"
+          data-toggle="modal" data-target="#modalCreateGroup" ng-disabled="vm.selectedLine === undefined">
+          Crear Grupo
+        </button>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="form-group col-md-9">
+        <label>Subgrupo: </label>
+        <select ng-options="subgroup as subgroup.name for subgroup in vm.subGroups  | orderBy:'name'  track by subgroup.id"
+          ng-model="vm.product.subgroup" class="form-control">
+        </select>
+      </div>
+      <div class="form-group col-md-3">
+        <label>&nbsp;</label>
+        <button type="button" class="form-control btn btn-primary" ng-click="vm.createSubGroup()"
+          data-toggle="modal" data-target="#modalCreateSubGroup" ng-disabled="vm.selectedGroup === undefined">
+          Crear Subgrupo
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="panel-footer">
+    <button type="button" class="btn btn-primary" ng-click="vm.wiz3()">
+      Siguiente
+    </button>
+    <button type="button" class="btn btn-primary" ng-click="vm.wizard = 1">
+      Atr&aacute;s
+    </button>
+    <button type="button" class="btn btn-success" ng-click="vm.cancel()">
+      Cancelar
+    </button>
+  </div>
+</div>
+
+<div class="panel panel-default" ng-show="vm.wizard === 3">
+  <div class="panel-body">
+
+    <div class="row">
+      <div class="form-group col-md-6">
+        <label>M&aacute;ximo / M&iacute;nimo: </label>
+        <input type="text" onkeypress="return ((event.which >= 46 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+ng-model="vm.product.maxMinimun" class="form-control" maxlength="9">
+        </select>
+      </div>
+      <div class="form-group col-md-6">
+        <label>Costo (promedio): </label>
+        <input type="text" onkeypress="return ((event.which >= 46 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+ng-model="vm.product.averageCost" class="form-control" maxlength="9">
+        </select>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="form-group col-md-6">
+        <label>Ganancia % efectivo: </label>
+        <input type="text" onkeypress="return ((event.which >= 46 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+ng-model="vm.product.cashPercentage" class="form-control" maxlength="9">
+        </select>
+      </div>
+
+      <div class="form-group col-md-6">
+        <label>Ganancia % cr&eacute;dito: </label>
+        <input type="text" onkeypress="return ((event.which >= 46 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+ng-model="vm.product.creditPercentage" class="form-control" maxlength="9">
+        </select>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="form-group col-md-6">
+        <label>Ganancia % tarjeta: </label>
+        <input type="text" onkeypress="return ((event.which >= 46 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+ng-model="vm.product.cardPercentage" class="form-control" maxlength="9">
+        </select>
+      </div>
+
+      <div class="form-group col-md-6">
+        <label>Ganancia % mayorista: </label>
+        <input type="text" onkeypress="return ((event.which >= 46 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+ng-model="vm.product.majorPercentage" class="form-control" maxlength="9">
+        </select>
+      </div>
+    </div>
+
+
+  </div>
+  <div class="panel-footer">
+    <button type="button" class="btn btn-primary" ng-click="vm.save()">
       Guardar
     </button>
-    <button type="button" class="btn btn-success"
-    ng-click="vm.cancel()">
+    <button type="button" class="btn btn-primary" ng-click="vm.wizard = 2">
+      Atr&aacute;s
+    </button>
+    <button type="button" class="btn btn-success" ng-click="vm.cancel()">
       Cancelar
     </button>
   </div>
@@ -146,6 +305,150 @@
       <div class="modal-footer">
         <button type="button" class="btn btn-primary" ng-click="vm.remove()" data-dismiss="modal">
           Eliminar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="modalCreateBrand" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" ng-click="vm.newBrand=undefined">&times;</button>
+        <h4 class="modal-title">Crear Marca</h4>
+      </div>
+      <div class="modal-body">
+
+        <div class="row">
+          <div class="form-group col-md-12">
+            <label>Nombre : </label>
+            <input type="text" ng-model="vm.newBrand.name" class="form-control">
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="form-group col-md-6">
+            <label>C&oacute;digo: </label>
+            <input type="text" ng-model="vm.newBrand.code" class="form-control">
+          </div>
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" ng-click="vm.saveNewBrand()" data-dismiss="modal">
+          Aceptar
+        </button>
+        <button type="button" class="btn btn-success" ng-click="vm.newBrand = undefined" data-dismiss="modal">
+          Cancelar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="modalCreateLine" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" ng-click="vm.newLine=undefined">&times;</button>
+        <h4 class="modal-title">Crear L&iacute;nea</h4>
+      </div>
+      <div class="modal-body">
+
+        <div class="row">
+          <div class="form-group col-md-12">
+            <label>Nombre : </label>
+            <input type="text" ng-model="vm.newLine.name" class="form-control">
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="form-group col-md-6">
+            <label>C&oacute;digo: </label>
+            <input type="text" ng-model="vm.newLine.code" class="form-control">
+          </div>
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" ng-click="vm.saveNewLine()" data-dismiss="modal">
+          Aceptar
+        </button>
+        <button type="button" class="btn btn-success" ng-click="vm.newLine = undefined" data-dismiss="modal">
+          Cancelar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="modalCreateGroup" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" ng-click="vm.newGroup=undefined">&times;</button>
+        <h4 class="modal-title">Crear Grupo</h4>
+      </div>
+      <div class="modal-body">
+
+        <div class="row">
+          <div class="form-group col-md-12">
+            <label>Nombre : </label>
+            <input type="text" ng-model="vm.newGroup.name" class="form-control">
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="form-group col-md-6">
+            <label>C&oacute;digo: </label>
+            <input type="text" ng-model="vm.newGroup.code" class="form-control">
+          </div>
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" ng-click="vm.saveNewGroup()" data-dismiss="modal">
+          Aceptar
+        </button>
+        <button type="button" class="btn btn-success" ng-click="vm.newGroup = undefined" data-dismiss="modal">
+          Cancelar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="modalCreateSubGroup" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" ng-click="vm.newSubGroup=undefined">&times;</button>
+        <h4 class="modal-title">Crear Subgrupo</h4>
+      </div>
+      <div class="modal-body">
+
+        <div class="row">
+          <div class="form-group col-md-12">
+            <label>Nombre : </label>
+            <input type="text" ng-model="vm.newSubGroup.name" class="form-control">
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="form-group col-md-6">
+            <label>C&oacute;digo: </label>
+            <input type="text" ng-model="vm.newSubGroup.code" class="form-control">
+          </div>
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" ng-click="vm.saveNewSubGroup()" data-dismiss="modal">
+          Aceptar
+        </button>
+        <button type="button" class="btn btn-success" ng-click="vm.newSubGroup = undefined" data-dismiss="modal">
+          Cancelar
         </button>
       </div>
     </div>

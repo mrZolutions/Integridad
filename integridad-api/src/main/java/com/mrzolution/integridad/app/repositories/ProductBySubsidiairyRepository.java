@@ -14,9 +14,6 @@ import java.util.UUID;
 @Qualifier(value="ProductBySubsidiairyRepository")
 public interface ProductBySubsidiairyRepository extends CrudRepository<ProductBySubsidiary, UUID>{
 	
-	@Query("SELECT p FROM ProductBySubsidiary p WHERE p.userClient.id = (:id)")
-	Iterable<ProductBySubsidiary> findByUserClientId(@Param("id") UUID userClientId);
-	
 	@Query("SELECT p FROM ProductBySubsidiary p WHERE p.subsidiary.id = (:id)")
 	Iterable<ProductBySubsidiary> findBySubsidiaryId(@Param("id") UUID subsidiaryId);
 

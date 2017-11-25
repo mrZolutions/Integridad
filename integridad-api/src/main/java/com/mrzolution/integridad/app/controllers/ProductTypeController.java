@@ -86,5 +86,5 @@ public class ProductTypeController {
 		}
 		return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
 	}
-	
+
 }

@@ -36,7 +36,6 @@ public class Subsidiary implements Child{
     private String city;
     private String address1;
     private String address2;
-    private Long nomberOfCashiers;
     
     private long billNumberSeq;
     

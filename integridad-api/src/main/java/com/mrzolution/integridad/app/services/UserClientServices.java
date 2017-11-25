@@ -69,7 +69,11 @@ public class UserClientServices {
 		log.info("UserClientServices update: {}", userClient.getName());
 		userClient.getSubsidiaries().forEach(subsidiary -> {
 			subsidiary.setUserClient(userClient);
-			subsidiaryServices.update(subsidiary);
+			if(subsidiary.getId() == null){
+				subsidiaryServices.create(subsidiary);
+			} else {
+				subsidiaryServices.update(subsidiary);
+			}
 		});
 
         log.info("UserClientServices CHILDREN updated: {}", userClient.getId());
