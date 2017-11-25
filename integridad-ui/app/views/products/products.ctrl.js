@@ -98,6 +98,11 @@ angular.module('integridadUiApp')
       _.each(vm.productBySubsidiaries, function(psNew){vm.product.productBySubsidiaries.push(psNew)});
       productService.update(vm.product).then(function (response) {
         vm.product=undefined;
+        vm.selectedGroup = undefined;
+        vm.selectedLine = undefined;
+        // vm.product.unitOfMeasurementAbbr = undefined;
+        // vm.product.unitOfMeasurementFull = undefined;
+        vm.wizard = 0;
         _activate();
         vm.error = undefined;
         if(isRemove){
@@ -305,6 +310,7 @@ angular.module('integridadUiApp')
     };
 
     vm.wiz2 = function(){
+      vm.productBySubsidiaries = [];
       vm.product.unitOfMeasurementAbbr = vm.messurementSelected.shortName;
       vm.product.unitOfMeasurementFull = vm.messurementSelected.name;
       _.each(vm.subsidiaries, function(sub){
