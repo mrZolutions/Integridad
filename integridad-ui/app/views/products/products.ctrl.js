@@ -24,6 +24,7 @@ angular.module('integridadUiApp')
     vm.lineas = undefined;
     vm.groups = undefined;
     vm.subGroups = undefined;
+    vm.productBySubsidiaries = [];
     vm.wizard = 0;
 
     function _activate(){
@@ -55,9 +56,19 @@ angular.module('integridadUiApp')
       }
     }
 
-    function _getSubsidiaries(){
+    function _getSubsidiaries(edit){
       subsidiaryService.getByProjectId($localStorage.user.subsidiary.userClient.id).then(function (response) {
         vm.subsidiaries = response;
+        if(edit){
+          _.each(vm.subsidiaries, function(sub){
+            _.each(vm.product.productBySubsidiaries, function(ps){
+                if(sub.id === ps.subsidiary.id && ps.active){
+                  sub.cantidad = ps.quantity;
+                  sub.selected = true;
+                }
+            });
+          });
+        }
       }).catch(function (error) {
         vm.loading = false;
         vm.error = error.data;
@@ -65,12 +76,13 @@ angular.module('integridadUiApp')
     }
 
     function create(){
+      vm.product.productBySubsidiaries = vm.productBySubsidiaries;
       productService.create(vm.product).then(function (response) {
         vm.product=undefined;
         vm.selectedGroup = undefined;
         vm.selectedLine = undefined;
-        vm.product.unitOfMeasurementAbbr = undefined;
-        vm.product.unitOfMeasurementFull = undefined;
+        // vm.product.unitOfMeasurementAbbr = undefined;
+        // vm.product.unitOfMeasurementFull = undefined;
         vm.wizard = 0;
         _activate();
         vm.error = undefined;
@@ -82,6 +94,8 @@ angular.module('integridadUiApp')
     }
 
     function update(isRemove){
+      _.each(vm.product.productBySubsidiaries, function(ps){ps.active=false;});
+      _.each(vm.productBySubsidiaries, function(psNew){vm.product.productBySubsidiaries.push(psNew)});
       productService.update(vm.product).then(function (response) {
         vm.product=undefined;
         _activate();
@@ -120,7 +134,6 @@ angular.module('integridadUiApp')
     }
 
     vm.editProduct = function(productEdit){
-      console.log(productEdit)
       vm.selectedGroup = productEdit.subgroup.groupLine;
       vm.selectedLine = productEdit.subgroup.groupLine.line;
       vm.messurements = messurementListService.getMessurementList();
@@ -133,7 +146,10 @@ angular.module('integridadUiApp')
 
       vm.getGroups();
       vm.getSubGroups();
-      _getSubsidiaries();
+      _getSubsidiaries(true);
+
+
+
       vm.wizard = 1;
       vm.product= productEdit;
 
@@ -149,9 +165,10 @@ angular.module('integridadUiApp')
     };
 
     vm.productCreate = function(){
-      _getSubsidiaries();
+      _getSubsidiaries(false);
       vm.success=undefined;
       vm.error=undefined
+      vm.productBySubsidiaries = [];
       vm.wizard = 1;
       vm.product={
         userClient: $localStorage.user.subsidiary.userClient,
@@ -295,9 +312,10 @@ angular.module('integridadUiApp')
           var productBySubsidiary = {
             dateCreated: new Date().getTime(),
             quantity: sub.cantidad,
-            subsidiary: sub
+            subsidiary: sub,
+            active: true
           };
-          vm.product.productBySubsidiaries.push(productBySubsidiary);
+          vm.productBySubsidiaries.push(productBySubsidiary);
         }
       });
 
@@ -349,8 +367,8 @@ angular.module('integridadUiApp')
       vm.product=undefined;
       vm.selectedGroup = undefined;
       vm.selectedLine = undefined;
-      vm.product.unitOfMeasurementAbbr = undefined;
-      vm.product.unitOfMeasurementFull = undefined;
+      // vm.product.unitOfMeasurementAbbr = undefined;
+      // vm.product.unitOfMeasurementFull = undefined;
       vm.success=undefined;
       vm.error=undefined;
     };
