@@ -14,7 +14,8 @@ angular.module('integridadUiApp')
     vm.loading = false;
     vm.clientList = undefined;
     vm.prices = [
-      { name: 'VENTA NORMAL', cod: 'cost'}, { name: 'AL POR MAYOR', cod: 'costMajority'}, { name: 'DIFERIDO', cod: 'costDeferred'}
+      { name: 'EFECTIVO', cod: 'cashPercentage'}, { name: 'MAYORISTA', cod: 'majorPercentage'},
+      { name: 'CREDITO', cod: 'creditPercentage'}, { name: 'TARJETA', cod: 'cardPercentage'}
     ];
 
 
@@ -47,10 +48,11 @@ angular.module('integridadUiApp')
     }
 
     function _getSeqNumber(){
-      var numberAddedOne = parseInt($localStorage.user.subsidiary.billNumberSeq) + 1;
-      vm.seqNumber = $localStorage.user.subsidiary.userClient.threeCode + '-'
-        + $localStorage.user.subsidiary.threeCode + '-'
-        + _pad_with_zeroes(numberAddedOne, 10);
+      // var numberAddedOne = parseInt($localStorage.user.subsidiary.billNumberSeq) + 1;
+      // vm.seqNumber = $localStorage.user.subsidiary.userClient.threeCode + '-'
+      //   + $localStorage.user.subsidiary.threeCode + '-'
+      //   + _pad_with_zeroes(numberAddedOne, 10);
+      return 100000000000000000000;
     }
 
     function _initializeBill(){
@@ -104,9 +106,13 @@ angular.module('integridadUiApp')
         for (var i = 0; i < response.length; i++) {
           var productFound = _.find(vm.bill.details, function (detail) {
             return detail.product.id === response[i].id;
-          })
+          });
 
           if(productFound === undefined){
+            var sub = _.find(response[i].productBySubsidiaries, function (s) {
+              return s.subsidiary.id === $localStorage.user.subsidiary.id;
+            });
+            response[i].quantity = sub.quantity
             vm.productList.push(response[i]);
           }
         }
@@ -122,8 +128,8 @@ angular.module('integridadUiApp')
         var detail={
           product: angular.copy(vm.productToAdd),
           quantity: vm.quantity,
-          costEach: vm.productToAdd[vm.priceType.cod],
-          total: (parseFloat(vm.quantity) * parseFloat(vm.productToAdd[vm.priceType.cod])).toFixed(2)
+          costEach: vm.productToAdd.averageCost * productSelect[vm.priceType.cod],
+          total: (parseFloat(vm.quantity) * parseFloat(vm.productToAdd.averageCost * productSelect[vm.priceType.cod])).toFixed(2)
         }
 
         if(vm.indexDetail !== undefined){
@@ -149,6 +155,12 @@ angular.module('integridadUiApp')
         vm.errorQuantity = 'Cantidad disponible insuficiente';
       }
 
+    };
+
+    vm.getCost = function(textCost, averageCost){
+      var aC = parseFloat(textCost)
+      var cost = aC * averageCost;
+      return (cost).toFixed(2);
     };
 
     vm.editDetail=function(detail, index){
