@@ -48,6 +48,8 @@ angular.module('integridadUiApp')
     }
 
     function _getSeqNumber(){
+      console.log($localStorage.user);
+
       // var numberAddedOne = parseInt($localStorage.user.subsidiary.billNumberSeq) + 1;
       // vm.seqNumber = $localStorage.user.subsidiary.userClient.threeCode + '-'
       //   + $localStorage.user.subsidiary.threeCode + '-'
@@ -77,7 +79,8 @@ angular.module('integridadUiApp')
 
     vm.reCalculateTotal = function(){
       _.map(vm.bill.details, function(detail){
-        detail.costEach = detail.product[vm.priceType.cod];
+        var costEachCalculated = vm.getCost('1.'+ detail.product[vm.priceType.cod], detail.product.averageCost);
+        detail.costEach = costEachCalculated;
         detail.total = (parseFloat(detail.quantity) * parseFloat(detail.costEach)).toFixed(2);
       });
       _getTotalSubtotal();
@@ -125,11 +128,12 @@ angular.module('integridadUiApp')
     vm.acceptProduct = function(closeModal){
       if(parseInt(vm.quantity) <= parseInt(vm.productToAdd.quantity)){
         vm.errorQuantity = undefined;
+        var costEachCalculated = vm.getCost('1.'+ vm.productToAdd[vm.priceType.cod], vm.productToAdd.averageCost);
         var detail={
           product: angular.copy(vm.productToAdd),
           quantity: vm.quantity,
-          costEach: vm.productToAdd.averageCost * productSelect[vm.priceType.cod],
-          total: (parseFloat(vm.quantity) * parseFloat(vm.productToAdd.averageCost * productSelect[vm.priceType.cod])).toFixed(2)
+          costEach: costEachCalculated,
+          total: (parseFloat(vm.quantity) * parseFloat(costEachCalculated)).toFixed(2)
         }
 
         if(vm.indexDetail !== undefined){
