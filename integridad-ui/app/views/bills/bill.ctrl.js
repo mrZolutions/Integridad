@@ -8,13 +8,15 @@
  * Controller of the integridadUiApp
  */
 angular.module('integridadUiApp')
-  .controller('BillCtrl', function ( _, $rootScope, $location, utilStringService, $localStorage, clientService, productService) {
+  .controller('BillCtrl', function ( _, $rootScope, $location, utilStringService, $localStorage, clientService, productService, authService) {
     var vm = this;
 
     vm.loading = false;
     vm.clientList = undefined;
+    vm.isEmp = true;
     vm.prices = [
-      { name: 'VENTA NORMAL', cod: 'cost'}, { name: 'AL POR MAYOR', cod: 'costMajority'}, { name: 'DIFERIDO', cod: 'costDeferred'}
+      { name: 'EFECTIVO', cod: 'cashPercentage'}, { name: 'MAYORISTA', cod: 'majorPercentage'},
+      { name: 'CREDITO', cod: 'creditPercentage'}, { name: 'TARJETA', cod: 'cardPercentage'}
     ];
 
 
@@ -47,10 +49,13 @@ angular.module('integridadUiApp')
     }
 
     function _getSeqNumber(){
-      var numberAddedOne = parseInt($localStorage.user.subsidiary.billNumberSeq) + 1;
-      vm.seqNumber = $localStorage.user.subsidiary.userClient.threeCode + '-'
-        + $localStorage.user.subsidiary.threeCode + '-'
-        + _pad_with_zeroes(numberAddedOne, 10);
+      var numberAddedOne = parseInt($localStorage.user.cashier.billNumberSeq) + 1;
+      vm.seqNumberFirstPart = $localStorage.user.subsidiary.userClient.threeCode + '-'
+        + $localStorage.user.cashier.threeCode;
+      vm.seqNumberSecondPart = _pad_with_zeroes(numberAddedOne, 10);
+      vm.seqNumber =  vm.seqNumberFirstPart + '-'
+        + vm.seqNumberSecondPart;
+
     }
 
     function _initializeBill(){
@@ -73,9 +78,15 @@ angular.module('integridadUiApp')
       });
     }
 
+    vm.acceptNewSeq = function(){
+      vm.seqNumber =  vm.seqNumberFirstPart + '-'
+        + vm.seqNumberSecondPart;
+    };
+
     vm.reCalculateTotal = function(){
       _.map(vm.bill.details, function(detail){
-        detail.costEach = detail.product[vm.priceType.cod];
+        var costEachCalculated = vm.getCost('1.'+ detail.product[vm.priceType.cod], detail.product.averageCost);
+        detail.costEach = costEachCalculated;
         detail.total = (parseFloat(detail.quantity) * parseFloat(detail.costEach)).toFixed(2);
       });
       _getTotalSubtotal();
@@ -104,9 +115,13 @@ angular.module('integridadUiApp')
         for (var i = 0; i < response.length; i++) {
           var productFound = _.find(vm.bill.details, function (detail) {
             return detail.product.id === response[i].id;
-          })
+          });
 
           if(productFound === undefined){
+            var sub = _.find(response[i].productBySubsidiaries, function (s) {
+              return s.subsidiary.id === $localStorage.user.subsidiary.id;
+            });
+            response[i].quantity = sub.quantity
             vm.productList.push(response[i]);
           }
         }
@@ -119,11 +134,12 @@ angular.module('integridadUiApp')
     vm.acceptProduct = function(closeModal){
       if(parseInt(vm.quantity) <= parseInt(vm.productToAdd.quantity)){
         vm.errorQuantity = undefined;
+        var costEachCalculated = vm.getCost('1.'+ vm.productToAdd[vm.priceType.cod], vm.productToAdd.averageCost);
         var detail={
           product: angular.copy(vm.productToAdd),
           quantity: vm.quantity,
-          costEach: vm.productToAdd[vm.priceType.cod],
-          total: (parseFloat(vm.quantity) * parseFloat(vm.productToAdd[vm.priceType.cod])).toFixed(2)
+          costEach: costEachCalculated,
+          total: (parseFloat(vm.quantity) * parseFloat(costEachCalculated)).toFixed(2)
         }
 
         if(vm.indexDetail !== undefined){
@@ -151,6 +167,12 @@ angular.module('integridadUiApp')
 
     };
 
+    vm.getCost = function(textCost, averageCost){
+      var aC = parseFloat(textCost)
+      var cost = aC * averageCost;
+      return (cost).toFixed(2);
+    };
+
     vm.editDetail=function(detail, index){
       vm.indexDetail = index;
       vm.productToAdd= detail.product;
@@ -161,8 +183,22 @@ angular.module('integridadUiApp')
       vm.bill.details.splice(index,1);
     };
 
+    vm.validateAdm = function(){
+      vm.errorValidateAdm = undefined;
+      var userAdm = $localStorage.user.user;
+      userAdm.password = vm.passwordAdm;
+      authService.authUser(userAdm)
+      .then(function(response){
+        vm.loading = false;
+        vm.isEmp = false;
+      }).catch(function (error) {
+        vm.loading = false;
+        vm.errorValidateAdm = error.data;
+      });
+    }
+
     vm.verifyUser = function(){
-      // console.log($localStorage.user)
+      vm.isEmp = $localStorage.user.userType.code === 'EMP';
     };
 
     (function initController() {

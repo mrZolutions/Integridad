@@ -28,7 +28,7 @@ public class UserIntegridad {
     private String address2;
     private String cedula;
     private String ruc;
-    private String cashier;
+//    private String cashier;
     private long birthDay;
     
     private long dateCreated;
@@ -42,6 +42,10 @@ public class UserIntegridad {
     
     @Email
     private String email;
+
+    @ManyToOne
+    @JoinColumn(name = "cashier_id")
+    private Cashier cashier;
 
     @ManyToOne
     @JoinColumn(name = "user_type_id")
@@ -68,6 +72,10 @@ public class UserIntegridad {
     		subsidiary.setListsNull(); 
     		subsidiary.setFatherListToNull();
     	};
+    	if(cashier != null){
+    	    cashier.setFatherListToNull();
+    	    cashier.setListsNull();
+        }
     }
 
     @Transient
@@ -75,6 +83,7 @@ public class UserIntegridad {
         UserIntegridad userIntegridad = new UserIntegridad();
         userIntegridad.setUserType(UserType.newUserTypeTest());
         userIntegridad.setSubsidiary(Subsidiary.newSubsidiaryTest());
+        userIntegridad.setCashier(Cashier.newCashierTest());
 
         UserIntegridad userFatther = new UserIntegridad();
         userFatther.setUserType(UserType.newUserTypeTest());
