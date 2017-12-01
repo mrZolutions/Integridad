@@ -8,11 +8,12 @@
  * Controller of the integridadUiApp
  */
 angular.module('integridadUiApp')
-  .controller('BillCtrl', function ( _, $rootScope, $location, utilStringService, $localStorage, clientService, productService) {
+  .controller('BillCtrl', function ( _, $rootScope, $location, utilStringService, $localStorage, clientService, productService, authService) {
     var vm = this;
 
     vm.loading = false;
     vm.clientList = undefined;
+    vm.isEmp = true;
     vm.prices = [
       { name: 'EFECTIVO', cod: 'cashPercentage'}, { name: 'MAYORISTA', cod: 'majorPercentage'},
       { name: 'CREDITO', cod: 'creditPercentage'}, { name: 'TARJETA', cod: 'cardPercentage'}
@@ -48,13 +49,13 @@ angular.module('integridadUiApp')
     }
 
     function _getSeqNumber(){
-      console.log($localStorage.user);
+      var numberAddedOne = parseInt($localStorage.user.cashier.billNumberSeq) + 1;
+      vm.seqNumberFirstPart = $localStorage.user.subsidiary.userClient.threeCode + '-'
+        + $localStorage.user.cashier.threeCode;
+      vm.seqNumberSecondPart = _pad_with_zeroes(numberAddedOne, 10);
+      vm.seqNumber =  vm.seqNumberFirstPart + '-'
+        + vm.seqNumberSecondPart;
 
-      // var numberAddedOne = parseInt($localStorage.user.subsidiary.billNumberSeq) + 1;
-      // vm.seqNumber = $localStorage.user.subsidiary.userClient.threeCode + '-'
-      //   + $localStorage.user.subsidiary.threeCode + '-'
-      //   + _pad_with_zeroes(numberAddedOne, 10);
-      return 100000000000000000000;
     }
 
     function _initializeBill(){
@@ -76,6 +77,11 @@ angular.module('integridadUiApp')
          vm.bill.total = (parseFloat(vm.bill.subTotal) * 1.12).toFixed(2);
       });
     }
+
+    vm.acceptNewSeq = function(){
+      vm.seqNumber =  vm.seqNumberFirstPart + '-'
+        + vm.seqNumberSecondPart;
+    };
 
     vm.reCalculateTotal = function(){
       _.map(vm.bill.details, function(detail){
@@ -177,8 +183,22 @@ angular.module('integridadUiApp')
       vm.bill.details.splice(index,1);
     };
 
+    vm.validateAdm = function(){
+      vm.errorValidateAdm = undefined;
+      var userAdm = $localStorage.user.user;
+      userAdm.password = vm.passwordAdm;
+      authService.authUser(userAdm)
+      .then(function(response){
+        vm.loading = false;
+        vm.isEmp = false;
+      }).catch(function (error) {
+        vm.loading = false;
+        vm.errorValidateAdm = error.data;
+      });
+    }
+
     vm.verifyUser = function(){
-      // console.log($localStorage.user)
+      vm.isEmp = $localStorage.user.userType.code === 'EMP';
     };
 
     (function initController() {

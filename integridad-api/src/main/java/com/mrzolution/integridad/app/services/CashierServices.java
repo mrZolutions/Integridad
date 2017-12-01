@@ -23,12 +23,12 @@ public class CashierServices {
 	CashierRepository cashierRepository;
 
 
-	public Iterable<Cashier> getAllBySubsiduaryActivesLazy(Subsidiary sub){
+	public Iterable<Cashier> getAllBySubsiduaryActivesLazy(UUID subId){
 		log.info("CashierServices getAllBySubsiduaryActivesLazy");
-		Iterable<Cashier> actives = cashierRepository.findBySubsidiary(sub);
-		actives.forEach(brand -> {
-			brand.setFatherListToNull();
-			brand.setListsNull();
+		Iterable<Cashier> actives = cashierRepository.findBySubsidiaryId(subId);
+		actives.forEach(cashier -> {
+			cashier.setFatherListToNull();
+			cashier.setListsNull();
 		});
 		return actives;
 
