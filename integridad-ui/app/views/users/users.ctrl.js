@@ -8,7 +8,8 @@
  * Controller of the integridadUiApp
  */
 angular.module('integridadUiApp')
-  .controller('UsersCtrl', function (utilStringService, userTypeService, authService, projectService, subsidiaryService, validatorService)  {
+  .controller('UsersCtrl', function (utilStringService, userTypeService, authService, projectService,
+    subsidiaryService, validatorService, cashierService)  {
     var vm = this;
 
     vm.loading = false;
@@ -88,6 +89,16 @@ angular.module('integridadUiApp')
     vm.getBosses = function(){
       authService.getBosses(vm.codeBosses[vm.userIntegridad.userType.code],vm.userIntegridad.subsidiary.id).then(function(response){
         vm.bosses = response;
+      });
+    }
+
+    vm.getCashiers = function(){
+      cashierService.getBySubsidiaryId(vm.userIntegridad.subsidiary.id).then(function (response) {
+        vm.cashierList = response;
+        vm.loading = false;
+      }).catch(function (error) {
+        vm.loading = false;
+        vm.error = error.data;
       });
     }
 

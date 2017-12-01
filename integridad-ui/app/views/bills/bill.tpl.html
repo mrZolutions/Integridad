@@ -219,7 +219,7 @@
                   <tr ng-repeat="productSelect in vm.productList | orderBy:name | filter:searchText">
                     <td>{{ productSelect.name }}</td>
                     <td>{{ productSelect.quantity }}</td>
-                    <td>{{ productSelect[vm.priceType.cod] }}</td>
+                    <td>{{ vm.getCost('1.'+ productSelect[vm.priceType.cod], productSelect.averageCost) }}</td>
                     <td>
                       <button type="button" class="btn btn-primary" ng-click="vm.productToAdd = productSelect; vm.quantity = 1">
                         Seleccionar
@@ -280,13 +280,62 @@
 
   <div id="modalEditBillNumber" class="modal fade" role="dialog">
     <div class="modal-dialog">
-      <div class="modal-content">
+      <div class="modal-content" ng-show="vm.isEmp">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Editar N&uacute;mero de Factura</h4>
+        </div>
+        <div class="modal-body">
+          <div class="row" ng-show="vm.errorValidateAdm !== undefined">
+            <div class="form-group col-md-12">
+              <div class="alert alert-danger">{{vm.errorValidateAdm}}</div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="form-group col-md-12">
+              <b>CLAVE ADMINISTRADOR: </b>
+              <input type="password" ng-model="vm.passwordAdm" class="form-control">
+            </div>
+          </div>
+          <div class="row">
+            <div class="form-group col-md-12">
+              <button type="button" class="btn btn-primary" ng-click="vm.validateAdm()" ng-disabled="vm.passwordAdm === undefined">
+                Validar
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-content" ng-show="!vm.isEmp">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" ng-click="vm.productToAdd=undefined">&times;</button>
           <h4 class="modal-title">Editar N&uacute;mero de Factura</h4>
         </div>
         <div class="modal-body">
+          <div class="row">
+            <div class="form-group col-md-12">
+              <b>NUEVO NUMERO DE FACTURA: </b>
+            </div>
+          </div>
+          <div class="row">
+            <div class="form-group col-md-2">
+              {{vm.seqNumberFirstPart}}-
+            </div>
+            <div class="form-group col-md-10">
+              <input type="text" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+              ng-model="vm.seqNumberSecondPart" class="form-control" maxlength="10">
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" ng-click="vm.acceptNewSeq()" data-dismiss="modal">
+            Aceptar
+          </button>
 
+          <button type="button" class="btn btn-primary" data-dismiss="modal">
+            Cancelar
+          </button>
         </div>
       </div>
     </div>
