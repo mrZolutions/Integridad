@@ -41,6 +41,10 @@ public class UserIntegridadServices {
 		if(userIntegridadRepository.findByEmailIgnoreCaseAndActive(userIntegridad.getEmail(), true) != null){
 			throw new BadRequestException("Email already used");
 		}
+
+		if(userIntegridadRepository.findByCedulaAndActive(userIntegridad.getCedula(), true) != null){
+			throw new BadRequestException("Cedula already used");
+		}
 		
 		String passPreEncoded = userIntegridad.getPassword();
 		
@@ -69,9 +73,15 @@ public class UserIntegridadServices {
 	public UserIntegridad update (UserIntegridad userIntegridad) throws BadRequestException{
 		log.info("UserIntegridadServices update: {}", userIntegridad.getEmail());
 		UserIntegridad retrieved = userIntegridadRepository.findByEmailIgnoreCaseAndActive(userIntegridad.getEmail(), true);
+
+		UserIntegridad retrievedCedula = userIntegridadRepository.findByCedulaAndActive(userIntegridad.getCedula(), true);
 		
 		if(!retrieved.getId().equals(userIntegridad.getId())){
 			throw new BadRequestException("Email already used");
+		}
+
+		if(!retrievedCedula.getId().equals(userIntegridad.getId())){
+			throw new BadRequestException("Cedula already used");
 		}
 		
 		if(!"".equals(userIntegridad.getPassword())){

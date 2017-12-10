@@ -49,7 +49,7 @@ angular.module('integridadUiApp')
       authService.registerUser(vm.userIntegridad).then(function (response) {
         vm.loading = false;
         vm.error = undefined;
-        vm.success = 'Resgistro realizado con exito. Se envio un email a la cuenta registrada para activar su cuenta';
+        vm.success = 'Registro realizado con exito. Se envio un email a la cuenta registrada para activar su cuenta';
         vm.userIntegridad=undefined;
         _activate();
       }).catch(function (error) {
@@ -64,9 +64,9 @@ angular.module('integridadUiApp')
         vm.loading = false;
         vm.error = undefined;
         if(isRemove){
-          vm.success = 'Resgistro eliminado con exito';
+          vm.success = 'Registro eliminado con exito';
         } else {
-          vm.success = 'Resgistro actualizado con exito';
+          vm.success = 'Registro actualizado con exito';
         }
         vm.userIntegridad=undefined;
         _activate();
@@ -77,6 +77,7 @@ angular.module('integridadUiApp')
     }
 
     vm.getSubsidiaries = function(){
+      vm.cashierList = undefined;
       subsidiaryService.getByProjectId(vm.project.id).then(function (response) {
         vm.subsidiaryList = response;
         vm.loading = false;
@@ -122,6 +123,7 @@ angular.module('integridadUiApp')
       getProjects();
       vm.project = vm.userIntegridad.subsidiary.userClient;
       vm.getSubsidiaries();
+      vm.getCashiers();
       vm.getBosses();
 
       $('#pickerBirthday').data("DateTimePicker").date(new Date(vm.userIntegridad.birthDay));

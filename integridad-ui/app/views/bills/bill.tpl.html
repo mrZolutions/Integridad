@@ -56,7 +56,7 @@
           No hay clientes ingresados
         </td>
       </tr>
-      <tr ng-repeat="clientPreSelect in vm.clientList | orderBy:name | filter:searchText">
+      <tr ng-repeat="clientPreSelect in vm.clientList | orderBy:'name' | filter:searchText">
         <td>{{ clientPreSelect.codApp }}</td>
         <td>{{ clientPreSelect.name }}</td>
         <td>{{ clientPreSelect.identification }}</td>
@@ -82,7 +82,19 @@
     <div class="panel-body">
       <div class="row">
         <div class="form-group col-md-6">
-          <b>FECHA: </b>{{vm.dateBill | date:'dd/MM/yyyy'}}
+          <!-- <b>FECHA: </b>{{vm.dateBill | date:'dd/MM/yyyy'}} -->
+          <label>FECHA</label>
+          <div class="input-group date" id="pickerBillDate">
+            <input type="text" class="form-control input-group-addon"/>
+            <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"/></span>
+          </div>
+          <script>
+            var defaultDate = new Date();
+            $('#pickerBillDate').datetimepicker({
+              format: "DD/MM/YY",
+              defaultDate: defaultDate
+            });
+          </script>
         </div>
         <div class="form-group col-md-6">
           <b>NOMBRE: </b>{{vm.clientSelected.name}}
@@ -216,7 +228,7 @@
                       No hay proyectos ingresados
                     </td>
                   </tr>
-                  <tr ng-repeat="productSelect in vm.productList | orderBy:name | filter:searchText">
+                  <tr ng-repeat="productSelect in vm.productList | orderBy:'name' | filter:searchText">
                     <td>{{ productSelect.name }}</td>
                     <td>{{ productSelect.quantity }}</td>
                     <td>{{ vm.getCost('1.'+ productSelect[vm.priceType.cod], productSelect.averageCost) }}</td>

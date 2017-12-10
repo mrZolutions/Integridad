@@ -17,6 +17,8 @@ public interface UserIntegridadRepository extends CrudRepository<UserIntegridad,
 
 	UserIntegridad findByEmailIgnoreCaseAndActive(String email, boolean active);
 
+	UserIntegridad findByCedulaAndActive(String cedula, boolean active);
+
 	UserIntegridad findByIdAndValidation(UUID userId, String validation);
 	
 	Iterable<UserIntegridad> findByUserType(UserType userType);

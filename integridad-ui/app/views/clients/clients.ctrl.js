@@ -38,7 +38,7 @@ angular.module('integridadUiApp')
         vm.client=undefined;
         _activate();
         vm.error = undefined;
-        vm.success = 'Resgistro realizado con exito';
+        vm.success = 'Registro realizado con exito';
         if($routeParams.create){
           $location.path('/bills/bill');
         }
@@ -54,9 +54,9 @@ angular.module('integridadUiApp')
         _activate();
         vm.error = undefined;
         if(isRemove){
-          vm.success = 'Resgistro eliminado con exito';
+          vm.success = 'Registro eliminado con exito';
         } else {
-          vm.success = 'Resgistro actualizado con exito';
+          vm.success = 'Registro actualizado con exito';
         }
       }).catch(function (error) {
         vm.loading = false;

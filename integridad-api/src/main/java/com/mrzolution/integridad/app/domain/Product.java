@@ -37,6 +37,8 @@ public class Product implements Child{
     private Double cardPercentage;
     private Double majorPercentage;
     private Long maxMinimun;
+    private boolean ice;
+    private boolean iva;
 
 
     @ManyToOne
