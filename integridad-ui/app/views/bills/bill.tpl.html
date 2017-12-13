@@ -189,6 +189,22 @@
               <tr>
                 <td></td>
                 <td></td>
+                <td><b>ICE: </b></td>
+                <td>{{vm.bill.ice}}</td>
+                <td>
+                </td>
+              </tr>
+              <tr>
+                <td></td>
+                <td></td>
+                <td><b>IVA: </b></td>
+                <td>{{vm.bill.iva}}</td>
+                <td>
+                </td>
+              </tr>
+              <tr>
+                <td></td>
+                <td></td>
                 <td><b>TOTAL: </b></td>
                 <td>{{vm.bill.total}}</td>
                 <td>
@@ -197,6 +213,11 @@
             </tbody>
           </table>
         </div>
+      </div>
+      <div class="row">
+        <button type="button" class="btn btn-primary" ng-click="vm.getClaveAcceso()">
+          Facturar
+        </button>
       </div>
     </div>
   </div>
