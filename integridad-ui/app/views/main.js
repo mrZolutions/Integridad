@@ -102,7 +102,7 @@ angular.module('integridadUiApp')
           vm.loading = false;
           vm.error = undefined;
           vm.init = true;
-          vm.success = 'Resgistro realizado con exito. Se envio un email a la cuenta registrada para activar su cuenta';
+          vm.success = 'Registro realizado con exito. Se envio un email a la cuenta registrada para activar su cuenta';
         }).catch(function (error) {
           vm.loading = false;
           vm.error = error.data;
