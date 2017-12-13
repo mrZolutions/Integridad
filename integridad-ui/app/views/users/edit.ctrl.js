@@ -17,7 +17,7 @@ angular.module('integridadUiApp')
     vm.passwordNotMatch = false;
 
     function _activate(){
-      $('#pickerBirthday').data("DateTimePicker").date(new Date(vm.userIntegridad.birthDay));
+      $('#pickerBirthdayEdit').data("DateTimePicker").date(new Date(vm.userIntegridad.birthDay));
     }
 
     vm.validatePassword = function () {
@@ -31,7 +31,7 @@ angular.module('integridadUiApp')
         vm.userIntegridad.password = '';
       }
 
-      vm.userIntegridad.birthDay = $('#pickerBirthday').data("DateTimePicker").date().toDate().getTime();
+      vm.userIntegridad.birthDay = $('#pickerBirthdayEdit').data("DateTimePicker").date().toDate().getTime();
       vm.userIntegridad.email = vm.userIntegridad.email.trim();
 
       var validationError = utilStringService.isAnyInArrayStringEmpty([

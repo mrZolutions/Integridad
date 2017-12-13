@@ -8,7 +8,8 @@
  * Controller of the integridadUiApp
  */
 angular.module('integridadUiApp')
-  .controller('BillCtrl', function ( _, $rootScope, $location, utilStringService, $localStorage, clientService, productService, authService) {
+  .controller('BillCtrl', function ( _, $rootScope, $location, utilStringService, $localStorage,
+                                     clientService, productService, authService, billService) {
     var vm = this;
 
     vm.loading = false;
@@ -66,16 +67,32 @@ angular.module('integridadUiApp')
         dateCreated: vm.dateBill.getTime(),
         total: 0,
         subTotal: 0,
+        iva: 0,
+        ice: 0,
         details: []
       };
     }
 
     function _getTotalSubtotal(){
       vm.bill.subTotal = 0;
-      _.map(vm.bill.details, function(detail){
-         vm.bill.subTotal = (parseFloat(vm.bill.subTotal) + parseFloat(detail.total)).toFixed(2);
-         vm.bill.total = (parseFloat(vm.bill.subTotal) * 1.12).toFixed(2);
+      vm.bill.iva = 0;
+      vm.bill.ice = 0;
+      _.each(vm.bill.details, function(detail){
+        vm.bill.subTotal = (parseFloat(vm.bill.subTotal) + parseFloat(detail.total)).toFixed(2);
+        if(detail.product.iva){
+          vm.bill.iva = (parseFloat(vm.bill.iva) + (parseFloat(detail.total) * 0.12)).toFixed(2);
+        }
+        if(detail.product.ice){
+          vm.bill.ice = (parseFloat(vm.bill.ice) + (parseFloat(detail.total) * 0.10)).toFixed(2);
+        }
+
       });
+
+      vm.bill.total = (parseFloat(vm.bill.subTotal)
+        +  parseFloat(vm.bill.iva)
+        +  parseFloat(vm.bill.ice)
+      ).toFixed(2);
+
     }
 
     vm.acceptNewSeq = function(){
@@ -199,6 +216,11 @@ angular.module('integridadUiApp')
 
     vm.verifyUser = function(){
       vm.isEmp = $localStorage.user.userType.code === 'EMP';
+    };
+
+    vm.getClaveAcceso = function(){
+      console.log('-------------------------- function')
+      billService.getClaveDeAcceso();
     };
 
     (function initController() {

@@ -54,7 +54,7 @@
           No hay proyectos ingresados
         </td>
       </tr>
-      <tr ng-repeat="productEdit in vm.productList | orderBy:name | filter:searchText">
+      <tr ng-repeat="productEdit in vm.productList | orderBy:'name' | filter:searchText">
         <td>{{ productEdit.name }}</td>
         <td>
           <button type="button" class="btn btn-primary" ng-click="vm.editProduct(productEdit)">
@@ -231,13 +231,11 @@
         <label>M&aacute;ximo / M&iacute;nimo: </label>
         <input type="text" onkeypress="return ((event.which >= 46 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
 ng-model="vm.product.maxMinimun" class="form-control" maxlength="9">
-        </select>
       </div>
       <div class="form-group col-md-6">
         <label>Costo (promedio): </label>
         <input type="text" onkeypress="return ((event.which >= 46 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
 ng-model="vm.product.averageCost" class="form-control" maxlength="9">
-        </select>
       </div>
     </div>
 
@@ -246,14 +244,12 @@ ng-model="vm.product.averageCost" class="form-control" maxlength="9">
         <label>Ganancia % efectivo: </label>
         <input type="text" onkeypress="return ((event.which >= 46 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
 ng-model="vm.product.cashPercentage" class="form-control" maxlength="9">
-        </select>
       </div>
 
       <div class="form-group col-md-6">
         <label>Ganancia % cr&eacute;dito: </label>
         <input type="text" onkeypress="return ((event.which >= 46 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
 ng-model="vm.product.creditPercentage" class="form-control" maxlength="9">
-        </select>
       </div>
     </div>
 
@@ -262,14 +258,24 @@ ng-model="vm.product.creditPercentage" class="form-control" maxlength="9">
         <label>Ganancia % tarjeta: </label>
         <input type="text" onkeypress="return ((event.which >= 46 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
 ng-model="vm.product.cardPercentage" class="form-control" maxlength="9">
-        </select>
       </div>
 
       <div class="form-group col-md-6">
         <label>Ganancia % mayorista: </label>
         <input type="text" onkeypress="return ((event.which >= 46 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
 ng-model="vm.product.majorPercentage" class="form-control" maxlength="9">
-        </select>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="form-group col-md-6">
+        <label>IVA: </label>
+        <input class="pull-right" ng-model="vm.product.iva" type="checkbox">
+      </div>
+
+      <div class="form-group col-md-6">
+        <label>ICE: </label>
+        <input class="pull-right" ng-model="vm.product.ice" type="checkbox">
       </div>
     </div>
 

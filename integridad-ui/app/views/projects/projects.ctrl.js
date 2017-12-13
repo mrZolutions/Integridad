@@ -34,7 +34,7 @@ angular.module('integridadUiApp')
         vm.project=undefined;
         _activate();
         vm.error = undefined;
-        vm.success = 'Resgistro realizado con exito';
+        vm.success = 'Registro realizado con exito';
       }).catch(function (error) {
         vm.loading = false;
         vm.error = error.data;
@@ -47,9 +47,9 @@ angular.module('integridadUiApp')
         _activate();
         vm.error = undefined;
         if(isRemove){
-          vm.success = 'Resgistro eliminado con exito';
+          vm.success = 'Registro eliminado con exito';
         } else {
-          vm.success = 'Resgistro actualizado con exito';
+          vm.success = 'Registro actualizado con exito';
         }
       }).catch(function (error) {
         vm.loading = false;

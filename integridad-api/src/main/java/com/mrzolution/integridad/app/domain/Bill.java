@@ -29,7 +29,9 @@ public class Bill {
     private long dateCreated;
     private boolean active;
     private String billSeq;
-    
+
+    private double iva;
+    private double ice;
     private double total;
     private double subTotal;
 

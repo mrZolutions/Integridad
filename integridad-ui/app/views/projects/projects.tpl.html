@@ -56,7 +56,7 @@
           No hay proyectos ingresados
         </td>
       </tr>
-      <tr ng-repeat="projectEdit in vm.projectList | orderBy:name | filter:searchText">
+      <tr ng-repeat="projectEdit in vm.projectList | orderBy:'name' | filter:searchText">
         <td>{{ projectEdit.codeIntegridad }}</td>
         <td>{{ projectEdit.name }}</td>
         <td>{{ projectEdit.ruc }}</td>
@@ -182,7 +182,7 @@
                     No hay sucursales ingresados
                   </td>
                 </tr>
-                <tr ng-repeat="subsi in vm.project.subsidiaries | orderBy:name | filter:{active: true}">
+                <tr ng-repeat="subsi in vm.project.subsidiaries | orderBy:'name' | filter:{active: true}">
                   <td>{{ subsi.threeCode }}</td>
                   <td>{{ subsi.name }}</td>
                   <td>{{ subsi.city }}</td>

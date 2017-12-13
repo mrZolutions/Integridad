@@ -56,7 +56,7 @@
           No hay clientes ingresados
         </td>
       </tr>
-      <tr ng-repeat="clientEdit in vm.clientList | orderBy:name | filter:searchText">
+      <tr ng-repeat="clientEdit in vm.clientList | orderBy:'name' | filter:searchText">
         <td>{{ clientEdit.codApp }}</td>
         <td>{{ clientEdit.name }}</td>
         <td>{{ clientEdit.identification }}</td>
