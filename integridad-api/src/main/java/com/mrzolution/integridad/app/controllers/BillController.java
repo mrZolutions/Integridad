@@ -1,6 +1,7 @@
 package com.mrzolution.integridad.app.controllers;
 
 import com.mrzolution.integridad.app.domain.Brand;
+import com.mrzolution.integridad.app.domain.ebill.Requirement;
 import com.mrzolution.integridad.app.exceptions.BadRequestException;
 import com.mrzolution.integridad.app.services.BillServices;
 import com.mrzolution.integridad.app.services.BrandServices;
@@ -60,12 +61,14 @@ public class BillController {
 //	}
 
 	
-	@RequestMapping(method = RequestMethod.GET, value="/testing")
-    public ResponseEntity getDatil(){
+	@RequestMapping(method = RequestMethod.POST, value="/testing")
+    public ResponseEntity getDatil(@RequestBody Requirement requirement){
 		log.info("BillController getAllDatil");
 		String response = null;
+		System.out.println("===============================================");
+		System.out.println(requirement);
 		try {
-			response = service.getDatil();
+			response = service.getDatil(requirement);
 		}catch(Exception e) {
 			log.error("BillController getDatil Exception thrown: {}", e.getMessage());
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());

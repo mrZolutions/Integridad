@@ -1,7 +1,9 @@
 package com.mrzolution.integridad.app.domain.ebill;
 
-import java.util.List;
+import lombok.Data;
 
+import java.util.List;
+@Data
 public class Item {
     private String descripcion;
     private String codigo_principal;
