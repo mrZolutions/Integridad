@@ -22,7 +22,14 @@ angular.module('integridadUiApp')
     vm.tipyIdCode = {
       RUC : '04',
       CED : '05'
-    }
+    };
+    vm.medList = [
+      {code: 'efectivo', name: 'Efectivo' },
+      {code: 'cheque', name: 'Cheque' },
+      {code: 'tarjeta_credito', name: 'Tarjeta de crédito' },
+      {code: 'tarjeta_debito', name: 'Tarjeta de débito' },
+      {code: 'dinero_electronico_ec', name: 'Dinero electrónico' },
+    ];
 
 
     function _activate(){
@@ -37,6 +44,7 @@ angular.module('integridadUiApp')
       vm.priceType = vm.prices[0];
 
       vm.impuestosTotales = [];
+      vm.items = [];
       vm.impuestoICE = {
         "base_imponible":0.0,
         "valor":0.0,
@@ -49,6 +57,8 @@ angular.module('integridadUiApp')
         "codigo":"2",
         "codigo_porcentaje":2
       };
+      vm.medio={};
+      vm.pagos=[];
 
       clientService.getLazyByProjectId($localStorage.user.subsidiary.userClient.id).then(function (response) {
         vm.clientList = response;
@@ -175,6 +185,7 @@ angular.module('integridadUiApp')
       if(parseInt(vm.quantity) <= parseInt(vm.productToAdd.quantity)){
         vm.errorQuantity = undefined;
         var costEachCalculated = vm.getCost('1.'+ vm.productToAdd[vm.priceType.cod], vm.productToAdd.averageCost);
+
         var detail={
           product: angular.copy(vm.productToAdd),
           quantity: vm.quantity,
@@ -187,7 +198,6 @@ angular.module('integridadUiApp')
         } else {
           vm.bill.details.push(detail);
         }
-
 
         vm.productToAdd = undefined;
         vm.quantity = undefined;
@@ -241,10 +251,72 @@ angular.module('integridadUiApp')
       vm.isEmp = $localStorage.user.userType.code === 'EMP';
     };
 
+    vm.addPago = function(){
+      vm.pagos.push(angular.copy(vm.medio));
+      vm.medio = {};
+    };
+
+    vm.getTotalPago = function(){
+      vm.varPago=0;
+      vm.getCambio=0;
+
+      if(vm.bill){
+        _.each(vm.pagos, function(med){
+          vm.varPago=parseFloat(parseFloat(vm.varPago)+parseFloat(med.total)).toFixed(2);
+        });
+
+        vm.getCambio = vm.varPago - vm.bill.total;
+      }
+
+      return vm.varPago;
+    };
+
     vm.getClaveAcceso = function(){
       console.log($localStorage.user.cashier);
       console.log(vm.clientSelected)
       vm.impuestosTotales.push(vm.impuestoICE,vm.impuestoIVA);
+
+      _.each(vm.bill.details, function(det){
+        var costWithIva = (det.costEach*1.12).toFixed(2);
+        var costWithIce = (det.costEach*1.10).toFixed(2);
+        var impuestos = [];
+        var impuesto ={};
+        if(det.product.iva){
+          impuesto.base_imponible=det.costEach;
+          impuesto.valor=costWithIva;
+          impuesto.tarifa=12.0;
+          impuesto.codigo='2';
+          impuesto.codigo_porcentaje='2';
+
+          impuestos.push(impuesto);
+        }
+
+        if(det.product.ice){
+          impuesto.base_imponible=det.costEach;
+          impuesto.valor=costWithIce;
+          impuesto.tarifa=10.0;
+          impuesto.codigo='3';
+          impuesto.codigo_porcentaje='2';
+
+          impuestos.push(impuesto);
+        }
+
+        var item={
+          "cantidad":det.quantity,
+          "codigo_principal": det.product.barCode,
+          "codigo_auxiliar": det.product.barCode,
+          "precio_unitario": costWithIva,
+          "descripcion": det.product.name,
+          "precio_total_sin_impuestos": det.costEach,
+          "impuestos": impuestos,
+          "detalles_adicionales": null,
+          "descuento": 0.0,
+          "unidad_medida": det.product.unitOfMeasurementFull
+        }
+
+        vm.items.push(item);
+      });
+
       var req = {
         "ambiente": 1,
         "tipo_emision": 1,
@@ -280,30 +352,10 @@ angular.module('integridadUiApp')
           "direccion":vm.clientSelected.address,
           "telefono":vm.clientSelected.phone
         },
-        "items":[
-          {
-            "cantidad":622.0,
-            "codigo_principal": "ZNC",
-            "codigo_auxiliar": "050",
-            "precio_unitario": 7.01,
-            "descripcion": "Zanahoria granel  50 Kg.",
-            "precio_total_sin_impuestos": 4360.22,
-            "impuestos": [
-              {
-                "base_imponible":4359.54,
-                "valor":523.14,
-                "tarifa":12.0,
-                "codigo":"2",
-                "codigo_porcentaje":"2"
-              }
-            ],
-            "detalles_adicionales": {
-              "Peso":"5000.0000"
-            },
-            "descuento": 0.0,
-            "unidad_medida": "Kilos"
-          }
-        ]
+        "items":vm.items,
+        "valor_retenido_iva": 70.40,
+        "valor_retenido_renta": 29.60,
+        "pagos": vm.pagos
       };
 
 

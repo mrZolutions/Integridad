@@ -215,9 +215,87 @@
         </div>
       </div>
       <div class="row">
-        <button type="button" class="btn btn-primary" ng-click="vm.getClaveAcceso()">
-          Facturar
-        </button>
+        <div class="form-group col-md-12">
+          <button type="button" class="btn btn-primary"
+          data-toggle="modal" data-target="#modalAddPago">
+            Cobrar
+          </button>
+          <button type="button" class="btn btn-primary" ng-click="vm.getClaveAcceso()">
+            Facturar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="modalAddPago" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" ng-click="vm.medio={}">&times;</button>
+          <h4 class="modal-title">Agregar Pago</h4>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="form-group col-md-4">
+              <b>MEDIO: </b>
+              <select ng-options="med.code as med.name for med in vm.medList  | orderBy:'name'  track by med.code"
+                ng-model="vm.medio.medio" class="form-control">
+              </select>
+            </div>
+            <div class="form-group col-md-4">
+              <b>VALOR: </b>
+              <input type="text" onkeypress="return ((event.which >= 46 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+              ng-model="vm.medio.total" class="form-control" maxlength="9">
+            </div>
+            <div class="form-group col-md-4">
+              <br />
+              <button type="button" class="btn btn-primary" ng-click="vm.addPago()">
+                Agregar
+              </button>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-12">
+              <table class="table table-striped">
+                <thead>
+                  <tr>
+                    <th> Medio </th>
+                    <th> Valor</th>
+                    <th>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr ng-show="vm.pagos == 0">
+                    <td colspan="4">
+                      No hay pagos ingresados
+                    </td>
+                  </tr>
+                  <tr ng-repeat="pago in vm.pagos">
+                    <td>{{ pago.medio }}</td>
+                    <td>{{ pago.total }}</td>
+                    <td>
+                      <button type="button" class="btn btn-primary" ng-click="">
+                        Eliminar
+                      </button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><b>TOTAL</b></td>
+                    <td>{{vm.getTotalPago()}}</td>
+                    <td>
+                      Vuelto: {{vm.getCambio}}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+
       </div>
     </div>
   </div>

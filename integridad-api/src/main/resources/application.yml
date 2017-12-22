@@ -8,7 +8,7 @@ spring:
       ddl-auto: update
   profiles: development
   datasource:
-    url: jdbc:postgresql://localhost:5432/PERSONAL
+    url: jdbc:postgresql://localhost:5432/integridad
     username: postgres
     password: postgres
     

@@ -38,6 +38,9 @@ public class Bill {
     //TODO
     //propina
     //descuento
+    //valor retenido iva
+    //valor retenido renta
+    //pagos
 
     @ManyToOne
     @JoinColumn(name = "client_id")
