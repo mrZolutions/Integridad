@@ -19,6 +19,10 @@ angular.module('integridadUiApp')
       { name: 'EFECTIVO', cod: 'cashPercentage'}, { name: 'MAYORISTA', cod: 'majorPercentage'},
       { name: 'CREDITO', cod: 'creditPercentage'}, { name: 'TARJETA', cod: 'cardPercentage'}
     ];
+    vm.tipyIdCode = {
+      RUC : '04',
+      CED : '05'
+    }
 
 
     function _activate(){
@@ -31,6 +35,21 @@ angular.module('integridadUiApp')
       vm.loading = true;
       vm.indexDetail = undefined;
       vm.priceType = vm.prices[0];
+
+      vm.impuestosTotales = [];
+      vm.impuestoICE = {
+        "base_imponible":0.0,
+        "valor":0.0,
+        "codigo":"3",
+        "codigo_porcentaje":2
+      };
+      vm.impuestoIVA = {
+        "base_imponible":0.0,
+        "valor":0.0,
+        "codigo":"2",
+        "codigo_porcentaje":2
+      };
+
       clientService.getLazyByProjectId($localStorage.user.subsidiary.userClient.id).then(function (response) {
         vm.clientList = response;
         vm.loading = false;
@@ -88,6 +107,10 @@ angular.module('integridadUiApp')
 
       });
 
+      vm.impuestoICE.base_imponible = vm.bill.subTotal;
+      vm.impuestoIVA.base_imponible = vm.bill.subTotal;
+      vm.impuestoICE.valor = vm.bill.ice;
+      vm.impuestoIVA.valor = vm.bill.iva;
       vm.bill.total = (parseFloat(vm.bill.subTotal)
         +  parseFloat(vm.bill.iva)
         +  parseFloat(vm.bill.ice)
@@ -219,8 +242,73 @@ angular.module('integridadUiApp')
     };
 
     vm.getClaveAcceso = function(){
-      console.log('-------------------------- function')
-      billService.getClaveDeAcceso();
+      console.log($localStorage.user.cashier);
+      console.log(vm.clientSelected)
+      vm.impuestosTotales.push(vm.impuestoICE,vm.impuestoIVA);
+      var req = {
+        "ambiente": 1,
+        "tipo_emision": 1,
+        "secuencial": 148,
+        "fecha_emision": billService.getIsoDate($('#pickerBillDate').data("DateTimePicker").date().toDate()),
+        "emisor":{
+          "ruc":$localStorage.user.cashier.subsidiary.userClient.ruc,
+          "obligado_contabilidad":true,
+          "contribuyente_especial":"",
+          "nombre_comercial":$localStorage.user.cashier.subsidiary.userClient.name,
+          "razon_social":$localStorage.user.cashier.subsidiary.userClient.name,
+          "direccion":$localStorage.user.cashier.subsidiary.userClient.address1,
+          "establecimiento":{
+            "punto_emision":$localStorage.user.cashier.subsidiary.threeCode,
+            "codigo":$localStorage.user.cashier.threeCode,
+            "direccion":$localStorage.user.cashier.subsidiary.address1
+          }
+        },
+        "moneda":"USD",
+        "informacion_adicional":{},
+        "totales":{
+          "total_sin_impuestos":vm.bill.subTotal,
+          "impuestos":vm.impuestosTotales,
+          "importe_total":vm.bill.total,
+          "propina":0.0,
+          "descuento":0.0
+        },
+        "comprador":{
+          "email":vm.clientSelected.email,
+          "identificacion":vm.clientSelected.identification,
+          "tipo_identificacion":vm.tipyIdCode[vm.clientSelected.typeId],
+          "razon_social":vm.clientSelected.name,
+          "direccion":vm.clientSelected.address,
+          "telefono":vm.clientSelected.phone
+        },
+        "items":[
+          {
+            "cantidad":622.0,
+            "codigo_principal": "ZNC",
+            "codigo_auxiliar": "050",
+            "precio_unitario": 7.01,
+            "descripcion": "Zanahoria granel  50 Kg.",
+            "precio_total_sin_impuestos": 4360.22,
+            "impuestos": [
+              {
+                "base_imponible":4359.54,
+                "valor":523.14,
+                "tarifa":12.0,
+                "codigo":"2",
+                "codigo_porcentaje":"2"
+              }
+            ],
+            "detalles_adicionales": {
+              "Peso":"5000.0000"
+            },
+            "descuento": 0.0,
+            "unidad_medida": "Kilos"
+          }
+        ]
+      };
+
+
+      console.log(req)
+      // billService.getClaveDeAcceso();
     };
 
     (function initController() {

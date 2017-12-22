@@ -43,6 +43,9 @@ public class Client {
     
     private long dateCreated;
     private boolean active;
+
+    //TODO
+    //razon social
     
     @Email
     private String email;

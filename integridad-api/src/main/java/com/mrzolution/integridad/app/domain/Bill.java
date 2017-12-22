@@ -35,6 +35,10 @@ public class Bill {
     private double total;
     private double subTotal;
 
+    //TODO
+    //propina
+    //descuento
+
     @ManyToOne
     @JoinColumn(name = "client_id")
     private Client client;
