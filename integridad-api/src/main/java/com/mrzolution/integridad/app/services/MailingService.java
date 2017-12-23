@@ -40,13 +40,16 @@ public class MailingService {
         
         String link ="https://mrzolutions.github.io/Integridad/integridad-ui/dist/#!/activate/" + userIntegridad.getId()+ "/" + userIntegridad.getValidation();
         
-        String body = "Gracias por tu registro. "
-                + "<br> Tu email registrado es: " + userIntegridad.getEmail()
-                + "<br> Tu password es: " + passPreEncoded
-        		+ "<br> Usa este link para activar tu cuenta: "
+        String body = "Bienvenido al mundo de Mr. Zolutions Ecuador y su sistema Contable Integridad, el software contable inteligente hecho con tecnología de punta. Más que un programa se convertirá en el aliado perfecto para el crecimiento de su empresa o negocio. "
+                + "<br><br> A continuación verifique que sus datos sean correctos:"
+                + "<br> Correo electrónico: " + userIntegridad.getEmail()
+                + "<br> Contraseña provisional: " + passPreEncoded
+        		+ "<br><br> Para terminar con la activación presione aquí: "
         		+ "<br><br><a href=\""+link+"\">"
         		+ "<button>ACTIVAR</button>"
-        		+ "</a>";
+        		+ "</a>"
+                + "<br><br> MR. ZOLUTIONS ECUADOR – SISTEMA CONTABLE INTEGRIDAD"
+                + "<br> IDEAS QUE CAMBIAN VIDAS";
     
         
         sendEmail(subject, body, to);
