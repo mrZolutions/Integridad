@@ -9,7 +9,7 @@
  */
 angular.module('integridadUiApp')
   .controller('BillCtrl', function ( _, $rootScope, $location, utilStringService, $localStorage,
-                                     clientService, productService, authService, billService) {
+                                     clientService, productService, authService, billService, $window) {
     var vm = this;
 
     vm.loading = false;
@@ -256,24 +256,48 @@ angular.module('integridadUiApp')
       vm.medio = {};
     };
 
+    vm.removePago = function(index){
+      vm.pagos.splice(index, 1);
+    };
+
     vm.getTotalPago = function(){
       vm.varPago=0;
-      vm.getCambio=0;
 
       if(vm.bill){
+        vm.getCambio=0;
         _.each(vm.pagos, function(med){
           vm.varPago=parseFloat(parseFloat(vm.varPago)+parseFloat(med.total)).toFixed(2);
         });
 
-        vm.getCambio = vm.varPago - vm.bill.total;
+        vm.getCambio = (vm.varPago - vm.bill.total).toFixed(2);
       }
 
       return vm.varPago;
     };
 
+    // PRIMERA OPCION PARA IMPRIMIR
+    // vm.printIt = function(){
+    //    var table = document.getElementById('printArea').innerHTML;
+    //    var myWindow = $window.open('', '', 'width=800, height=600');
+    //    myWindow.document.write(table);
+    //    myWindow.print();
+    // };
+
+    // // SEGUNDA OPCION PARA IMPRIMIR
+    // vm.printIt = function(){
+    //   var innerContents = document.getElementById('printArea').innerHTML;
+    //   var popupWinindow = window.open('', '_blank', 'width=800,height=700,scrollbars=no,menubar=no,toolbar=no,location=no,status=no,titlebar=no');
+    //   popupWinindow.document.open();
+    //   popupWinindow.document.write('<html><head><link rel="stylesheet" type="text/css" href="style.css" /></head><body onload="window.print()">' + innerContents + '</html>');
+    //   popupWinindow.document.close();
+    // };
+
+    // TERCERA OPCION PARA IMPRIMIR
+    // vm.printIt = function(){
+    //
+    // };
+
     vm.getClaveAcceso = function(){
-      console.log($localStorage.user.cashier);
-      console.log(vm.clientSelected)
       vm.impuestosTotales.push(vm.impuestoICE,vm.impuestoIVA);
 
       _.each(vm.bill.details, function(det){
@@ -320,7 +344,7 @@ angular.module('integridadUiApp')
       var req = {
         "ambiente": 1,
         "tipo_emision": 1,
-        "secuencial": 148,
+        "secuencial": parseInt($localStorage.user.cashier.billNumberSeq) + 1,
         "fecha_emision": billService.getIsoDate($('#pickerBillDate').data("DateTimePicker").date().toDate()),
         "emisor":{
           "ruc":$localStorage.user.cashier.subsidiary.userClient.ruc,
@@ -357,7 +381,6 @@ angular.module('integridadUiApp')
         "valor_retenido_renta": 29.60,
         "pagos": vm.pagos
       };
-
 
       console.log(req)
       // billService.getClaveDeAcceso();
