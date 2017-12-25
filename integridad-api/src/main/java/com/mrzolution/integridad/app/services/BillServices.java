@@ -43,11 +43,9 @@ public class BillServices {
 		ObjectMapper mapper = new ObjectMapper();
 		String data = mapper.writeValueAsString(requirement);
 
-		System.out.println("**********************************");
-		System.out.println(data);
-//		String response = "";
 		String url = "https://link.datil.co/invoices/issue";
 		String response = httpCallerService.post(url, data);
+//		String response = "OK";
 		return response;
 	}
 	

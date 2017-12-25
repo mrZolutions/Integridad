@@ -220,12 +220,15 @@
       <div class="row">
         <div class="form-group col-md-12">
           <button type="button" class="btn btn-primary"
-          data-toggle="modal" data-target="#modalAddPago" ng-disabled="vm.bill.total <= 0" print-hide>
+          data-toggle="modal" data-target="#modalAddPago" ng-disabled="vm.bill.total <= 0 || vm.billed" print-hide>
             Cobrar
           </button>
           <button print-btn type="button" class="btn btn-primary" ng-click="vm.getClaveAcceso()"
-          ng-disabled="vm.pagos.length === 0 || vm.getCambio < 0" print-hide>
+          ng-disabled="(vm.pagos.length === 0 || vm.getCambio < 0) || vm.billed" print-hide>
             Facturar
+          </button>
+          <button type="button" class="btn btn-primary">
+            Cancelar
           </button>
         </div>
       </div>

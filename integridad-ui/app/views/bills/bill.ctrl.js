@@ -33,6 +33,7 @@ angular.module('integridadUiApp')
 
 
     function _activate(){
+      vm.billed = false;
       vm.clientSelected = undefined;
       vm.dateBill = undefined;
       vm.seqNumber = undefined;
@@ -79,10 +80,10 @@ angular.module('integridadUiApp')
     }
 
     function _getSeqNumber(){
-      var numberAddedOne = parseInt($localStorage.user.cashier.billNumberSeq) + 1;
+      vm.numberAddedOne = parseInt($localStorage.user.cashier.billNumberSeq) + 1;
       vm.seqNumberFirstPart = $localStorage.user.subsidiary.userClient.threeCode + '-'
         + $localStorage.user.cashier.threeCode;
-      vm.seqNumberSecondPart = _pad_with_zeroes(numberAddedOne, 10);
+      vm.seqNumberSecondPart = _pad_with_zeroes(vm.numberAddedOne, 10);
       vm.seqNumber =  vm.seqNumberFirstPart + '-'
         + vm.seqNumberSecondPart;
 
@@ -277,6 +278,7 @@ angular.module('integridadUiApp')
 
     vm.getClaveAcceso = function(){
       vm.impuestosTotales.push(vm.impuestoICE,vm.impuestoIVA);
+      vm.bill.billSeq = vm.numberAddedOne;
 
       _.each(vm.bill.details, function(det){
         var costWithIva = (det.costEach*1.12).toFixed(2);
@@ -322,7 +324,7 @@ angular.module('integridadUiApp')
       var req = {
         "ambiente": 1,
         "tipo_emision": 1,
-        "secuencial": parseInt($localStorage.user.cashier.billNumberSeq) + 1,
+        "secuencial": vm.bill.seq,
         "fecha_emision": billService.getIsoDate($('#pickerBillDate').data("DateTimePicker").date().toDate()),
         "emisor":{
           "ruc":$localStorage.user.cashier.subsidiary.userClient.ruc,
@@ -361,7 +363,20 @@ angular.module('integridadUiApp')
       };
 
       console.log(req)
-      // billService.getClaveDeAcceso();
+      billService.getClaveDeAcceso(req).then(function(resp){
+        console.log('============ resp: ', resp)
+        billService.create(vm.bill).then(function(respBill){
+          vm.billed = true;
+          console.log('============ respBill: ', respBill)
+        }).catch(function (error) {
+          vm.loading = false;
+          vm.errorValidateAdm = error.data;
+        });
+
+      }).catch(function (error) {
+        vm.loading = false;
+        vm.errorValidateAdm = error.data;
+      });
     };
 
     (function initController() {

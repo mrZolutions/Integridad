@@ -1,5 +1,6 @@
 package com.mrzolution.integridad.app.controllers;
 
+import com.mrzolution.integridad.app.domain.Bill;
 import com.mrzolution.integridad.app.domain.Brand;
 import com.mrzolution.integridad.app.domain.ebill.Requirement;
 import com.mrzolution.integridad.app.exceptions.BadRequestException;
@@ -21,19 +22,32 @@ public class BillController {
 	@Autowired
 	BillServices service;
 
+	@RequestMapping(method = RequestMethod.POST, value="/clave_acceso")
+	public ResponseEntity getDatil(@RequestBody Requirement requirement){
+		log.info("BillController getAllDatil");
+		String response = null;
+		try {
+			response = service.getDatil(requirement);
+		}catch(Exception e) {
+			log.error("BillController getDatil Exception thrown: {}", e.getMessage());
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+		}
+		return new ResponseEntity<String>(response, HttpStatus.ACCEPTED);
+	}
 
-//	@RequestMapping(method = RequestMethod.POST)
-//    public ResponseEntity create(@RequestBody Brand brand){
-//		log.info("BrandController create: {}", brand);
-//		Brand response = null;
-//		try {
-//			response = service.create(brand);
-//		}catch(BadRequestException e) {
-//			log.error("BrandController create Exception thrown: {}", e.getMessage());
-//	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-//	    }
-//		return new ResponseEntity<Brand>(response, HttpStatus.CREATED);
-//	}
+
+	@RequestMapping(method = RequestMethod.POST)
+    public ResponseEntity create(@RequestBody Bill bill){
+		log.info("BillController create: {}", bill.getBillSeq());
+		Bill response = null;
+		try {
+			response = service.create(bill);
+		}catch(BadRequestException e) {
+			log.error("BillController create Exception thrown: {}", e.getMessage());
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+	    }
+		return new ResponseEntity<Bill>(response, HttpStatus.CREATED);
+	}
 //
 //	@RequestMapping(method = RequestMethod.PUT)
 //    public ResponseEntity update(@RequestBody Brand brand){
@@ -61,20 +75,7 @@ public class BillController {
 //	}
 
 	
-	@RequestMapping(method = RequestMethod.POST, value="/testing")
-    public ResponseEntity getDatil(@RequestBody Requirement requirement){
-		log.info("BillController getAllDatil");
-		String response = null;
-		System.out.println("===============================================");
-		System.out.println(requirement);
-		try {
-			response = service.getDatil(requirement);
-		}catch(Exception e) {
-			log.error("BillController getDatil Exception thrown: {}", e.getMessage());
-	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-	    }
-		return new ResponseEntity<String>(response, HttpStatus.ACCEPTED);
-	}
+
 //
 //	@RequestMapping(method = RequestMethod.GET, value="/actives_lazy/{projectId}")
 //	public ResponseEntity getAllActivesByProjectIdLazy(@PathVariable("projectId") UUID projectId){

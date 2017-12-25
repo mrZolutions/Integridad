@@ -32,7 +32,6 @@ public class httpCallerService {
                 .post(body)
                 .build();
         try (Response response = client.newCall(request).execute()) {
-            System.out.println("*******************************");
             return response.body().string();
         }
     }
