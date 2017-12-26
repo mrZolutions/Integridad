@@ -58,7 +58,7 @@ public class UserIntegridadServicesTest {
 		
 		Assert.assertNotNull(created.getValidation());
 		Assert.assertFalse(created.isActive());
-		Assert.assertFalse(created.isTempPass());
+		Assert.assertTrue(created.isTempPass());
 	}
 	
 	@Test

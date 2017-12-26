@@ -74,7 +74,7 @@
 
 </div>
 
-<div ng-show="vm.clientSelected !== undefined">
+<div ng-show="vm.clientSelected !== undefined" id="printArea" print-section>
   <div class="panel panel-default">
     <div class="panel-heading">
       <b>Datos del Cliente</b>
@@ -91,22 +91,25 @@
           <script>
             var defaultDate = new Date();
             $('#pickerBillDate').datetimepicker({
-              format: "DD/MM/YY",
+              format: "DD/MM/YY HH:mm",
               defaultDate: defaultDate
             });
           </script>
         </div>
-        <div class="form-group col-md-6">
-          <b>NOMBRE: </b>{{vm.clientSelected.name}}
+        <div class="form-group col-md-6 text-right">
+          <img src="images/yeoman.png" ><br>
         </div>
       </div>
       <div class="row">
-        <div class="form-group col-md-6">
+        <div class="form-group col-md-5">
+          <b>NOMBRE: </b>{{vm.clientSelected.name}}
+        </div>
+        <div class="form-group col-md-4">
           <b ng-if="vm.clientSelected.typeId === 'CED'">CEDULA: </b>
           <b ng-if="vm.clientSelected.typeId === 'RUC'">RUC: </b>
           {{vm.clientSelected.identification}}
         </div>
-        <div class="form-group col-md-6">
+        <div class="form-group col-md-3">
           <b>TELEFONO: </b>{{vm.clientSelected.phone}}
         </div>
       </div>
@@ -119,12 +122,12 @@
         <div class="form-group col-md-12">
           <b>NUMERO DE FACTURA: </b> {{vm.seqNumber}}
           &nbsp;&nbsp;&nbsp;
-          <a data-toggle="modal" data-target="#modalEditBillNumber" ng-click="vm.verifyUser()">
+          <a data-toggle="modal" data-target="#modalEditBillNumber" ng-click="vm.verifyUser()" print-hide>
             Editar
           </a>
         </div>
       </div>
-      <div class="row">
+      <div class="row" print-hide>
         <div class="form-group col-md-12">
           <b>PRECIO CONVENIDO: </b>
           <select ng-options="price as price.name for price in vm.prices"
@@ -150,7 +153,7 @@
                 <th> Valor Total </th>
                 <th>
                   <button type="button" class="btn btn-primary" ng-click="vm.addProduct()"
-                    data-toggle="modal" data-target="#modalAddProduct">
+                    data-toggle="modal" data-target="#modalAddProduct" print-hide>
                     Agregar Producto
                   </button>
                 </th>
@@ -170,10 +173,10 @@
                 <td>
                   <button type="button" class="btn btn-primary"
                           ng-click="vm.editDetail(detail, $index)"
-                          data-toggle="modal" data-target="#modalAddProduct">
+                          data-toggle="modal" data-target="#modalAddProduct" print-hide>
                     Editar
                   </button>
-                  <button type="button" class="btn btn-primary" ng-click="vm.removeDetail($index)">
+                  <button type="button" class="btn btn-primary" ng-click="vm.removeDetail($index)" print-hide>
                     Eliminar
                   </button>
                 </td>
@@ -214,11 +217,98 @@
           </table>
         </div>
       </div>
-      <!--<div class="row">-->
-        <!--<button type="button" class="btn btn-primary" ng-click="vm.getClaveAcceso()">-->
-          <!--Facturar-->
-        <!--</button>-->
-      <!--</div>-->
+      <div class="row">
+        <div class="form-group col-md-12">
+          <button type="button" class="btn btn-primary"
+          data-toggle="modal" data-target="#modalAddPago" ng-disabled="vm.bill.total <= 0 || vm.billed" print-hide>
+            Cobrar
+          </button>
+          <button print-btn type="button" class="btn btn-primary" ng-click="vm.getClaveAcceso()"
+          ng-disabled="(vm.pagos.length === 0 || vm.getCambio < 0) || vm.billed" print-hide>
+            Facturar
+          </button>
+          <button type="button" class="btn btn-primary">
+            Cancelar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <div id="modalAddPago" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" ng-click="vm.medio={}">&times;</button>
+          <h4 class="modal-title">Agregar Pago</h4>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="form-group col-md-4">
+              <b>MEDIO: </b>
+              <select ng-options="med.code as med.name for med in vm.medList  | orderBy:'name'  track by med.code"
+                ng-model="vm.medio.medio" class="form-control">
+              </select>
+            </div>
+            <div class="form-group col-md-4">
+              <b>VALOR: </b>
+              <input type="text" onkeypress="return ((event.which >= 46 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+              ng-model="vm.medio.total" class="form-control" maxlength="9">
+            </div>
+            <div class="form-group col-md-4">
+              <br />
+              <button type="button" class="btn btn-primary" ng-click="vm.addPago()">
+                Agregar
+              </button>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-12">
+              <table class="table table-striped">
+                <thead>
+                  <tr>
+                    <th> Medio </th>
+                    <th> Valor</th>
+                    <th>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr ng-show="vm.pagos == 0">
+                    <td colspan="4">
+                      No hay pagos ingresados
+                    </td>
+                  </tr>
+                  <tr ng-repeat="pago in vm.pagos">
+                    <td>{{ pago.medio }}</td>
+                    <td>{{ pago.total }}</td>
+                    <td>
+                      <button type="button" class="btn btn-primary" ng-click="vm.removePago($index)">
+                        Eliminar
+                      </button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><b>TOTAL</b></td>
+                    <td>{{vm.getTotalPago()}}</td>
+                    <td>
+                      Vuelto: {{vm.getCambio}}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-dismiss="modal"
+            ng-disabled="vm.pagos.length === 0 || vm.getCambio < 0">
+            Aceptar y Cerrar
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 

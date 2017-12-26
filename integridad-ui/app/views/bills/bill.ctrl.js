@@ -9,7 +9,7 @@
  */
 angular.module('integridadUiApp')
   .controller('BillCtrl', function ( _, $rootScope, $location, utilStringService, $localStorage,
-                                     clientService, productService, authService, billService) {
+                                     clientService, productService, authService, billService, $window) {
     var vm = this;
 
     vm.loading = false;
@@ -19,9 +19,21 @@ angular.module('integridadUiApp')
       { name: 'EFECTIVO', cod: 'cashPercentage'}, { name: 'MAYORISTA', cod: 'majorPercentage'},
       { name: 'CREDITO', cod: 'creditPercentage'}, { name: 'TARJETA', cod: 'cardPercentage'}
     ];
+    vm.tipyIdCode = {
+      RUC : '04',
+      CED : '05'
+    };
+    vm.medList = [
+      {code: 'efectivo', name: 'Efectivo' },
+      {code: 'cheque', name: 'Cheque' },
+      {code: 'tarjeta_credito', name: 'Tarjeta de crédito' },
+      {code: 'tarjeta_debito', name: 'Tarjeta de débito' },
+      {code: 'dinero_electronico_ec', name: 'Dinero electrónico' },
+    ];
 
 
     function _activate(){
+      vm.billed = false;
       vm.clientSelected = undefined;
       vm.dateBill = undefined;
       vm.seqNumber = undefined;
@@ -31,6 +43,24 @@ angular.module('integridadUiApp')
       vm.loading = true;
       vm.indexDetail = undefined;
       vm.priceType = vm.prices[0];
+
+      vm.impuestosTotales = [];
+      vm.items = [];
+      vm.impuestoICE = {
+        "base_imponible":0.0,
+        "valor":0.0,
+        "codigo":"3",
+        "codigo_porcentaje":2
+      };
+      vm.impuestoIVA = {
+        "base_imponible":0.0,
+        "valor":0.0,
+        "codigo":"2",
+        "codigo_porcentaje":2
+      };
+      vm.medio={};
+      vm.pagos=[];
+
       clientService.getLazyByProjectId($localStorage.user.subsidiary.userClient.id).then(function (response) {
         vm.clientList = response;
         vm.loading = false;
@@ -50,10 +80,10 @@ angular.module('integridadUiApp')
     }
 
     function _getSeqNumber(){
-      var numberAddedOne = parseInt($localStorage.user.cashier.billNumberSeq) + 1;
+      vm.numberAddedOne = parseInt($localStorage.user.cashier.billNumberSeq) + 1;
       vm.seqNumberFirstPart = $localStorage.user.subsidiary.userClient.threeCode + '-'
         + $localStorage.user.cashier.threeCode;
-      vm.seqNumberSecondPart = _pad_with_zeroes(numberAddedOne, 10);
+      vm.seqNumberSecondPart = _pad_with_zeroes(vm.numberAddedOne, 10);
       vm.seqNumber =  vm.seqNumberFirstPart + '-'
         + vm.seqNumberSecondPart;
 
@@ -88,6 +118,10 @@ angular.module('integridadUiApp')
 
       });
 
+      vm.impuestoICE.base_imponible = vm.bill.subTotal;
+      vm.impuestoIVA.base_imponible = vm.bill.subTotal;
+      vm.impuestoICE.valor = vm.bill.ice;
+      vm.impuestoIVA.valor = vm.bill.iva;
       vm.bill.total = (parseFloat(vm.bill.subTotal)
         +  parseFloat(vm.bill.iva)
         +  parseFloat(vm.bill.ice)
@@ -152,6 +186,7 @@ angular.module('integridadUiApp')
       if(parseInt(vm.quantity) <= parseInt(vm.productToAdd.quantity)){
         vm.errorQuantity = undefined;
         var costEachCalculated = vm.getCost('1.'+ vm.productToAdd[vm.priceType.cod], vm.productToAdd.averageCost);
+
         var detail={
           product: angular.copy(vm.productToAdd),
           quantity: vm.quantity,
@@ -164,7 +199,6 @@ angular.module('integridadUiApp')
         } else {
           vm.bill.details.push(detail);
         }
-
 
         vm.productToAdd = undefined;
         vm.quantity = undefined;
@@ -218,9 +252,131 @@ angular.module('integridadUiApp')
       vm.isEmp = $localStorage.user.userType.code === 'EMP';
     };
 
+    vm.addPago = function(){
+      vm.pagos.push(angular.copy(vm.medio));
+      vm.medio = {};
+    };
+
+    vm.removePago = function(index){
+      vm.pagos.splice(index, 1);
+    };
+
+    vm.getTotalPago = function(){
+      vm.varPago=0;
+
+      if(vm.bill){
+        vm.getCambio=0;
+        _.each(vm.pagos, function(med){
+          vm.varPago=parseFloat(parseFloat(vm.varPago)+parseFloat(med.total)).toFixed(2);
+        });
+
+        vm.getCambio = (vm.varPago - vm.bill.total).toFixed(2);
+      }
+
+      return vm.varPago;
+    };
+
     vm.getClaveAcceso = function(){
-      console.log('-------------------------- function')
-      billService.getClaveDeAcceso();
+      vm.impuestosTotales.push(vm.impuestoICE,vm.impuestoIVA);
+      vm.bill.billSeq = vm.numberAddedOne;
+
+      _.each(vm.bill.details, function(det){
+        var costWithIva = (det.costEach*1.12).toFixed(2);
+        var costWithIce = (det.costEach*1.10).toFixed(2);
+        var impuestos = [];
+        var impuesto ={};
+        if(det.product.iva){
+          impuesto.base_imponible=det.costEach;
+          impuesto.valor=costWithIva;
+          impuesto.tarifa=12.0;
+          impuesto.codigo='2';
+          impuesto.codigo_porcentaje='2';
+
+          impuestos.push(impuesto);
+        }
+
+        if(det.product.ice){
+          impuesto.base_imponible=det.costEach;
+          impuesto.valor=costWithIce;
+          impuesto.tarifa=10.0;
+          impuesto.codigo='3';
+          impuesto.codigo_porcentaje='2';
+
+          impuestos.push(impuesto);
+        }
+
+        var item={
+          "cantidad":det.quantity,
+          "codigo_principal": det.product.barCode,
+          "codigo_auxiliar": det.product.barCode,
+          "precio_unitario": costWithIva,
+          "descripcion": det.product.name,
+          "precio_total_sin_impuestos": det.costEach,
+          "impuestos": impuestos,
+          "detalles_adicionales": null,
+          "descuento": 0.0,
+          "unidad_medida": det.product.unitOfMeasurementFull
+        }
+
+        vm.items.push(item);
+      });
+
+      var req = {
+        "ambiente": 1,
+        "tipo_emision": 1,
+        "secuencial": vm.bill.seq,
+        "fecha_emision": billService.getIsoDate($('#pickerBillDate').data("DateTimePicker").date().toDate()),
+        "emisor":{
+          "ruc":$localStorage.user.cashier.subsidiary.userClient.ruc,
+          "obligado_contabilidad":true,
+          "contribuyente_especial":"",
+          "nombre_comercial":$localStorage.user.cashier.subsidiary.userClient.name,
+          "razon_social":$localStorage.user.cashier.subsidiary.userClient.name,
+          "direccion":$localStorage.user.cashier.subsidiary.userClient.address1,
+          "establecimiento":{
+            "punto_emision":$localStorage.user.cashier.subsidiary.threeCode,
+            "codigo":$localStorage.user.cashier.threeCode,
+            "direccion":$localStorage.user.cashier.subsidiary.address1
+          }
+        },
+        "moneda":"USD",
+        "informacion_adicional":{},
+        "totales":{
+          "total_sin_impuestos":vm.bill.subTotal,
+          "impuestos":vm.impuestosTotales,
+          "importe_total":vm.bill.total,
+          "propina":0.0,
+          "descuento":0.0
+        },
+        "comprador":{
+          "email":vm.clientSelected.email,
+          "identificacion":vm.clientSelected.identification,
+          "tipo_identificacion":vm.tipyIdCode[vm.clientSelected.typeId],
+          "razon_social":vm.clientSelected.name,
+          "direccion":vm.clientSelected.address,
+          "telefono":vm.clientSelected.phone
+        },
+        "items":vm.items,
+        "valor_retenido_iva": 70.40,
+        "valor_retenido_renta": 29.60,
+        "pagos": vm.pagos
+      };
+
+      console.log(req)
+      billService.getClaveDeAcceso(req).then(function(resp){
+        console.log('============ resp: ', resp)
+        billService.create(vm.bill).then(function(respBill){
+          vm.billed = true;
+          console.log('============ respBill: ', respBill)
+        }).catch(function (error) {
+          vm.loading = false;
+          vm.errorValidateAdm = error.data;
+        });
+
+      }).catch(function (error) {
+        vm.loading = false;
+        vm.errorValidateAdm = error.data;
+      });
     };
 
     (function initController() {
