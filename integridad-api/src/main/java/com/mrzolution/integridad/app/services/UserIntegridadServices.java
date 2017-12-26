@@ -52,8 +52,8 @@ public class UserIntegridadServices {
 		userIntegridad.setPassword(encoded);
 		userIntegridad.setValidation(UUID.randomUUID().toString());
 		userIntegridad.setActive(false);
+		userIntegridad.setTempPass(true);
 		userIntegridad.setDateCreated(new Date().getTime());
-		userIntegridad.setTempPass(false);
 		log.info("UserIntegridadServices create: {} password Encoded", userIntegridad.getEmail());
 		
 		if(userIntegridad.getUserType() == null){

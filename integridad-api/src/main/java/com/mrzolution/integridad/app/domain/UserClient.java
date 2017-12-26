@@ -35,6 +35,10 @@ public class UserClient {
     private String cedula;
     private String ruc;
     private long initialActivityDate;
+
+    //TODO
+    //razonsocial
+    //contribuyente especial
     
     private long dateCreated;
     

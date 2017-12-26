@@ -23,7 +23,7 @@ angular.module('integridadUiApp')
         vm.clientCreate();
       } else {
         vm.loading = true;
-        clientService.getLazy().then(function (response) {
+        clientService.getLazyByProjectId($localStorage.user.subsidiary.userClient.id).then(function (response) {
           vm.clientList = response;
           vm.loading = false;
         }).catch(function (error) {

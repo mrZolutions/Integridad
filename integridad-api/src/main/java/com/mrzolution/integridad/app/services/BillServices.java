@@ -5,6 +5,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mrzolution.integridad.app.domain.ebill.Requirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -34,6 +36,18 @@ public class BillServices {
 	DetailChildRepository detailChildRepository;
 	@Autowired
 	SubsidiaryRepository subsidiaryRepository;
+	@Autowired
+	httpCallerService httpCallerService;
+
+	public String getDatil(Requirement requirement) throws Exception{
+		ObjectMapper mapper = new ObjectMapper();
+		String data = mapper.writeValueAsString(requirement);
+
+		String url = "https://link.datil.co/invoices/issue";
+		String response = httpCallerService.post(url, data);
+//		String response = "OK";
+		return response;
+	}
 	
 	public Iterable<Bill> getByUserLazy(UserIntegridad user){
 		log.info("BillServices getByUserLazy: {}", user.getId());

@@ -7,3 +7,39 @@
     </div>
   </div>
 </div>
+
+<div id="modalChangePassword" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <div class="modal-content">
+      <div class="modal-header">
+          <h4 class="modal-title">Cambie su clave Temporal</h4>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="form-group col-md-6" >
+            <label>Nuevo Password</label>
+            <input type="password" class="form-control" id="password" ng-model="vm.newPass"/>
+          </div>
+
+          <div class="form-group col-md-6" >
+            <label>Confirmar nuevo Password</label>
+            <input type="password" class="form-control" id="passwordConfirmation" ng-model="vm.passConfirmation" ng-change="vm.validatePassword()"/>
+          </div>
+        </div>
+
+        <div class="row" ng-show="vm.passwordNotMatch">
+          <div class="form-group col-md-12" >
+            <div class="alert alert-danger">El nuevo password no coincide con la confirmacion</div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <div ng-if="vm.passConfirmation">
+          <button class="btn btn-primary" ng-click="vm.update()" data-dismiss="modal"
+          ng-disabled="vm.passwordNotMatch">Cambiar e Ingresar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
