@@ -182,6 +182,14 @@ angular.module('integridadUiApp')
       });
     };
 
+    vm.selectProductToAdd = function(productSelect){
+      if(productSelect.productType.code === 'SER'){
+        productSelect.quantity = 1;
+      }
+      vm.productToAdd = productSelect;
+      vm.quantity = 1;
+    }
+
     vm.acceptProduct = function(closeModal){
       if(parseInt(vm.quantity) <= parseInt(vm.productToAdd.quantity)){
         vm.errorQuantity = undefined;
