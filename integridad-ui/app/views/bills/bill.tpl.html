@@ -221,7 +221,7 @@
         <div class="form-group col-md-12">
           <button type="button" class="btn btn-primary"
           data-toggle="modal" data-target="#modalAddPago" ng-disabled="vm.bill.total <= 0 || vm.billed" print-hide>
-            Cobrar
+            Forma de Pago
           </button>
           <button print-btn type="button" class="btn btn-primary" ng-click="vm.getClaveAcceso()"
           ng-disabled="(vm.pagos.length === 0 || vm.getCambio < 0) || vm.billed" print-hide>
@@ -344,7 +344,7 @@
                     <td>{{ productSelect.quantity }}</td>
                     <td>{{ vm.getCost('1.'+ productSelect[vm.priceType.cod], productSelect.averageCost) }}</td>
                     <td>
-                      <button type="button" class="btn btn-primary" ng-click="vm.productToAdd = productSelect; vm.quantity = 1">
+                      <button type="button" class="btn btn-primary" ng-click="vm.selectProductToAdd(productSelect)">
                         Seleccionar
                       </button>
                     </td>
@@ -371,7 +371,7 @@
                     <div class="form-group col-md-6">
                       <b>CANTIDAD A VENDER: </b>
                       <input type="text" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
-                      ng-model="vm.quantity" class="form-control" maxlength="9">
+                      ng-model="vm.quantity" class="form-control" maxlength="9" ng-disabled="vm.productToAdd.productType.code === 'SER'">
                     </div>
                   </div>
                 </div>

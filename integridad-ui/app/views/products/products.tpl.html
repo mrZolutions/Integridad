@@ -94,7 +94,8 @@
       <div class="form-group col-md-4">
         <label>Medida: </label>
         <select ng-options="mess as mess.name for mess in vm.messurements  | orderBy:'name'  track by mess.shortName"
-          ng-model="vm.messurementSelected" ng-change="vm.setUnitOfMeasurementFull()" class="form-control">
+          ng-model="vm.messurementSelected" ng-change="vm.setUnitOfMeasurementFull()" class="form-control"
+          ng-disabled="vm.product.productType.code === 'SER'">
         </select>
       </div>
     </div>
@@ -112,7 +113,7 @@
             </div>
             <div class="form-group col-sm-3">
               <input type="text" onkeypress="return ((event.which >= 46 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
-              ng-model="sub.cantidad" class="form-control" ng-disabled="!sub.selected">
+              ng-model="sub.cantidad" class="form-control" ng-disabled="!sub.selected || vm.product.productType.code === 'SER'">
             </div>
           </div>
         </span>
@@ -230,7 +231,7 @@
       <div class="form-group col-md-6">
         <label>M&aacute;ximo / M&iacute;nimo: </label>
         <input type="text" onkeypress="return ((event.which >= 46 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
-ng-model="vm.product.maxMinimun" class="form-control" maxlength="9">
+ng-model="vm.product.maxMinimun" class="form-control" maxlength="9" ng-disabled="vm.product.productType.code === 'SER'">
       </div>
       <div class="form-group col-md-6">
         <label>Costo (promedio): </label>
