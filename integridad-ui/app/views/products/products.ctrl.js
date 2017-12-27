@@ -178,6 +178,7 @@ angular.module('integridadUiApp')
       vm.product={
         userClient: $localStorage.user.subsidiary.userClient,
         productBySubsidiaries: [],
+        codeIntegridad: vm.productList.length + 1,
       };
       // if($routeParams.subsidiaryId){
       //   subsidiaryService.getById($routeParams.subsidiaryId).then(function(response){
@@ -207,10 +208,12 @@ angular.module('integridadUiApp')
     };
 
     vm.changeSub = function(subsidiary){
-      if(subsidiary.selected){
-        subsidiary.cantidad = 0;
-      } else {
-        subsidiary.cantidad = undefined;
+      if(vm.product.productType.code !== 'SER'){
+        if(subsidiary.selected){
+          subsidiary.cantidad = 0;
+        } else {
+          subsidiary.cantidad = undefined;
+        }
       }
     };
 
@@ -235,6 +238,7 @@ angular.module('integridadUiApp')
     vm.createBrand = function(){
       vm.newBrand = {
         userClient: $localStorage.user.subsidiary.userClient,
+        code: vm.brands.length +1,
         active: true
       }
     };
@@ -242,6 +246,7 @@ angular.module('integridadUiApp')
     vm.createLine = function(){
       vm.newLine ={
         userClient: $localStorage.user.subsidiary.userClient,
+        code: vm.lineas.length +1,
         active: true,
         groupLines:[]
       }
@@ -250,6 +255,7 @@ angular.module('integridadUiApp')
     vm.createGroup = function(){
       vm.newGroup ={
         line: vm.selectedLine,
+        code: vm.groups.length +1,
         active: true,
         products:[]
       }
@@ -258,6 +264,7 @@ angular.module('integridadUiApp')
     vm.createSubGroup = function(){
       vm.newSubGroup ={
         groupLine: vm.selectedGroup,
+        code: vm.subGroups.length +1,
         active: true,
         subGroups:[]
       }
@@ -311,8 +318,10 @@ angular.module('integridadUiApp')
 
     vm.wiz2 = function(){
       vm.productBySubsidiaries = [];
-      vm.product.unitOfMeasurementAbbr = vm.messurementSelected.shortName;
-      vm.product.unitOfMeasurementFull = vm.messurementSelected.name;
+      if(vm.product.productType.code !== 'SER'){
+        vm.product.unitOfMeasurementAbbr = vm.messurementSelected.shortName;
+        vm.product.unitOfMeasurementFull = vm.messurementSelected.name;
+      }
       _.each(vm.subsidiaries, function(sub){
         if(sub.selected){
           var productBySubsidiary = {

@@ -5,7 +5,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import com.google.common.collect.Iterables;
 import com.mrzolution.integridad.app.domain.ProductBySubsidiary;
+import com.mrzolution.integridad.app.exceptions.BadRequestException;
 import com.mrzolution.integridad.app.father.Father;
 import com.mrzolution.integridad.app.father.FatherManageChildren;
 import com.mrzolution.integridad.app.repositories.ProductBySubsidiairyRepository;
@@ -29,8 +31,14 @@ public class ProductServices {
 	@Autowired
 	ProductBySubsidiaryChildRepository productBySubsidiaryChildRepository;
 	
-	public Product create(Product product){
+	public Product create(Product product) throws BadRequestException{
 		log.info("ProductServices create");
+
+		Iterable<Product> products = productRepository.findByCodeIntegridadAndActive(product.getCodeIntegridad(), true);
+		if(Iterables.size(products) >0){
+			throw new BadRequestException("CODIGO DUPLICADO");
+		}
+
 		product.setActive(true);
 		product.setDateCreated(new Date().getTime());
 		product.setLastDateUpdated(new Date().getTime());

@@ -28,4 +28,6 @@ public interface ProductRepository extends CrudRepository<Product, UUID>{
 	@Query("SELECT p FROM Product p WHERE p.subgroup.id = (:id) and p.active = true")
 	Iterable<Product> findBySubGroupIdAndActive(@Param("id") UUID brandId);
 
+	Iterable<Product> findByCodeIntegridadAndActive(String code, boolean active);
+
 }

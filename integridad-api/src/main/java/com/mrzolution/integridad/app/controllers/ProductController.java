@@ -28,7 +28,7 @@ public class ProductController {
 
 	@RequestMapping(method = RequestMethod.POST)
     public ResponseEntity create(@RequestBody Product product){
-		log.info("ProductController create: {}", product);
+		log.info("ProductController create: {}", product.getName());
 		Product response = null;
 		try {
 			response = service.create(product);
