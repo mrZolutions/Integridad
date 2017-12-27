@@ -103,6 +103,8 @@ public class ProductServicesTest {
 	@Test
 	public void createCallProdBySubRepository(){
 
+		Mockito.when(productRepository.findByCodeIntegridadAndActive(Mockito.anyString(), Mockito.anyBoolean()))
+				.thenReturn(new ArrayList<>());
 		Mockito.when(productRepository.save(Mockito.any(Product.class))).thenReturn(product);
 
 		Product response = service.create(product);
