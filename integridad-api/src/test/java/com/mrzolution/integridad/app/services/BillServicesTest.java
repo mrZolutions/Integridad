@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import com.mrzolution.integridad.app.domain.*;
+import com.mrzolution.integridad.app.repositories.*;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,15 +16,7 @@ import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import com.google.common.collect.Iterables;
-import com.mrzolution.integridad.app.domain.Bill;
-import com.mrzolution.integridad.app.domain.Detail;
-import com.mrzolution.integridad.app.domain.Subsidiary;
-import com.mrzolution.integridad.app.domain.UserIntegridad;
 import com.mrzolution.integridad.app.exceptions.BadRequestException;
-import com.mrzolution.integridad.app.repositories.BillRepository;
-import com.mrzolution.integridad.app.repositories.DetailChildRepository;
-import com.mrzolution.integridad.app.repositories.DetailRepository;
-import com.mrzolution.integridad.app.repositories.SubsidiaryRepository;
 
 @RunWith(MockitoJUnitRunner.class)
 public class BillServicesTest {
@@ -38,6 +32,12 @@ public class BillServicesTest {
 	DetailChildRepository detailChildRepository;
 	@Mock
 	SubsidiaryRepository subsidiaryRepository;
+	@Mock
+	CashierRepository cashierRepository;
+	@Mock
+	ProductBySubsidiairyRepository productBySubsidiairyRepository;
+	@Mock
+	PagoRepository pagoRepository;
 	
 	Bill bill;
 	
@@ -120,11 +120,20 @@ public class BillServicesTest {
 	
 	@Test
 	public void createCallDetailRepository(){
+		UUID idCashier = UUID.randomUUID();
 		Detail detail = Detail.newDetailTest();
 		List<Detail> detailList = new ArrayList<>();
 		detailList.add(detail);
+		bill.getUserIntegridad().getCashier().setId(idCashier);
+		bill.getUserIntegridad().getCashier().setBillNumberSeq(1);
+		ProductBySubsidiary ps = ProductBySubsidiary.newProductBySubsidiaryTest();
+		ps.setQuantity(Long.valueOf(1));
+		Cashier cashier = bill.getUserIntegridad().getCashier();
 		bill.setDetails(detailList);
-		
+
+		Mockito.when(productBySubsidiairyRepository.
+				findBySubsidiaryIdAndProductId(Mockito.any(UUID.class), Mockito.any(UUID.class))).thenReturn(ps);
+		Mockito.when(cashierRepository.findOne(idCashier)).thenReturn(cashier);
 		Mockito.when(billRepository.save(Mockito.any(Bill.class))).thenReturn(Bill.newBillTest());
 		Mockito.when(subsidiaryRepository.findOne(Mockito.any(UUID.class))).thenReturn(Subsidiary.newSubsidiaryTest());
 		
@@ -139,24 +148,32 @@ public class BillServicesTest {
 	
 	@Test
 	public void createAddOneToSeqOnSubsidiary(){
+		UUID idCashier = UUID.randomUUID();
 		UUID idSubsidiary = UUID.randomUUID();
 		bill.getSubsidiary().setId(idSubsidiary);
 		bill.getSubsidiary().setBillNumberSeq(1);
+		bill.getUserIntegridad().getCashier().setId(idCashier);
+		bill.getUserIntegridad().getCashier().setBillNumberSeq(1);
+		ProductBySubsidiary ps = ProductBySubsidiary.newProductBySubsidiaryTest();
+		ps.setQuantity(Long.valueOf(1));
+		Cashier cashier = bill.getUserIntegridad().getCashier();
 		Subsidiary subsidiary = bill.getSubsidiary(); 
 		Detail detail = Detail.newDetailTest();
 		List<Detail> detailList = new ArrayList<>();
 		detailList.add(detail);
 		bill.setDetails(detailList);
-		
+
+		Mockito.when(productBySubsidiairyRepository.
+				findBySubsidiaryIdAndProductId(Mockito.any(UUID.class), Mockito.any(UUID.class))).thenReturn(ps);
 		Mockito.when(billRepository.save(Mockito.any(Bill.class))).thenReturn(Bill.newBillTest());
-		Mockito.when(subsidiaryRepository.findOne(idSubsidiary)).thenReturn(subsidiary);
+		Mockito.when(cashierRepository.findOne(idCashier)).thenReturn(cashier);
+//		Mockito.when(subsidiaryRepository.findOne(idSubsidiary)).thenReturn(subsidiary);
 		
 		service.create(bill);
+
 		
-		subsidiary.setBillNumberSeq(2);
-		
-		Mockito.verify(subsidiaryRepository, Mockito.times(1)).findOne(idSubsidiary);
-		Mockito.verify(subsidiaryRepository, Mockito.times(1)).save(subsidiary);
+		Mockito.verify(cashierRepository, Mockito.times(1)).findOne(idCashier);
+		Mockito.verify(cashierRepository, Mockito.times(1)).save(cashier);
 		
 	}
 	

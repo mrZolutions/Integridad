@@ -99,7 +99,8 @@ angular.module('integridadUiApp')
         subTotal: 0,
         iva: 0,
         ice: 0,
-        details: []
+        details: [],
+        pagos:[],
       };
     }
 
@@ -332,7 +333,7 @@ angular.module('integridadUiApp')
       var req = {
         "ambiente": 1,
         "tipo_emision": 1,
-        "secuencial": vm.bill.seq,
+        "secuencial": vm.bill.billSeq,
         "fecha_emision": billService.getIsoDate($('#pickerBillDate').data("DateTimePicker").date().toDate()),
         "emisor":{
           "ruc":$localStorage.user.cashier.subsidiary.userClient.ruc,
@@ -373,8 +374,10 @@ angular.module('integridadUiApp')
       console.log(req)
       billService.getClaveDeAcceso(req).then(function(resp){
         console.log('============ resp: ', resp)
+        vm.bill.pagos = vm.pagos;
         billService.create(vm.bill).then(function(respBill){
           vm.billed = true;
+          $localStorage.user.cashier.billNumberSeq = vm.bill.billSeq;
           console.log('============ respBill: ', respBill)
         }).catch(function (error) {
           vm.loading = false;
