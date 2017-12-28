@@ -227,7 +227,7 @@
           ng-disabled="(vm.pagos.length === 0 || vm.getCambio < 0) || vm.billed" print-hide>
             Facturar
           </button>
-          <button type="button" class="btn btn-primary">
+          <button type="button" class="btn btn-primary" ng-click="vm.clientSelected = undefined">
             Cancelar
           </button>
         </div>
@@ -258,7 +258,8 @@
             </div>
             <div class="form-group col-md-4">
               <br />
-              <button type="button" class="btn btn-primary" ng-click="vm.addPago()">
+              <button type="button" class="btn btn-primary" ng-click="vm.addPago()"
+                      ng-disabled="vm.medio.medio === undefinded || vm.medio.total === undefined">
                 Agregar
               </button>
             </div>

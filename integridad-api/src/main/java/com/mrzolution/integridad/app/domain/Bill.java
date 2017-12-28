@@ -56,10 +56,14 @@ public class Bill {
     
     @OneToMany(mappedBy = "bill", cascade = CascadeType.ALL)
     private List<Detail> details;
+
+    @OneToMany(mappedBy = "bill", cascade = CascadeType.ALL)
+    private List<Pago> pagos;
     
     
     public void setListsNull(){
     	details = null;
+    	pagos = null;
     }
     
     public void setFatherListToNull(){
@@ -75,6 +79,7 @@ public class Bill {
     public static Bill newBillTest(){
         Bill bill = new Bill();
         bill.setDetails(new ArrayList<>());
+        bill.setPagos(new ArrayList<>());
         bill.setClient(Client.newClientTest());
         bill.setUserIntegridad(UserIntegridad.newUserIntegridadTest());
         bill.setSubsidiary(Subsidiary.newSubsidiaryTest());
