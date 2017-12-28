@@ -6,21 +6,15 @@ import java.util.List;
 import java.util.UUID;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mrzolution.integridad.app.domain.*;
 import com.mrzolution.integridad.app.domain.ebill.Requirement;
+import com.mrzolution.integridad.app.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.mrzolution.integridad.app.domain.Bill;
-import com.mrzolution.integridad.app.domain.Detail;
-import com.mrzolution.integridad.app.domain.Subsidiary;
-import com.mrzolution.integridad.app.domain.UserIntegridad;
 import com.mrzolution.integridad.app.exceptions.BadRequestException;
 import com.mrzolution.integridad.app.father.Father;
 import com.mrzolution.integridad.app.father.FatherManageChildren;
-import com.mrzolution.integridad.app.repositories.BillRepository;
-import com.mrzolution.integridad.app.repositories.DetailChildRepository;
-import com.mrzolution.integridad.app.repositories.DetailRepository;
-import com.mrzolution.integridad.app.repositories.SubsidiaryRepository;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -35,9 +29,13 @@ public class BillServices {
 	@Autowired
 	DetailChildRepository detailChildRepository;
 	@Autowired
-	SubsidiaryRepository subsidiaryRepository;
-	@Autowired
 	httpCallerService httpCallerService;
+	@Autowired
+	CashierRepository cashierRepository;
+	@Autowired
+	ProductBySubsidiairyRepository productBySubsidiairyRepository;
+	@Autowired
+	PagoRepository pagoRepository;
 
 	public String getDatil(Requirement requirement) throws Exception{
 		ObjectMapper mapper = new ObjectMapper();
@@ -76,25 +74,39 @@ public class BillServices {
 	public Bill create(Bill bill) throws BadRequestException{
 		log.info("BillServices create");
 		List<Detail> details = bill.getDetails();
-		
+		List<Pago> pagos = bill.getPagos();
 		if(details == null){
 			throw new BadRequestException("Debe tener un detalle por lo menos");
+		}
+		if(pagos == null){
+			throw new BadRequestException("Debe tener un pago por lo menos");
 		}
 		
 		bill.setDateCreated(new Date().getTime());
 		bill.setActive(true);
 		bill.setDetails(null);
+		bill.setPagos(null);
 		bill.setFatherListToNull();
 		bill.setListsNull();
 		Bill saved = billRepository.save(bill);
-		
-		Subsidiary subsidiary =  subsidiaryRepository.findOne(bill.getSubsidiary().getId());
-		subsidiary.setBillNumberSeq(subsidiary.getBillNumberSeq() + 1);
-		subsidiaryRepository.save(subsidiary);
-		
+
+		Cashier cashier = cashierRepository.findOne(bill.getUserIntegridad().getCashier().getId());
+		cashier.setBillNumberSeq(cashier.getBillNumberSeq() + 1);
+		cashierRepository.save(cashier);
+
+		pagos.forEach(pago -> {
+			pago.setBill(saved);
+			pagoRepository.save(pago);
+		});
+
 		details.forEach(detail->{
 			detail.setBill(saved);
 			detailRepository.save(detail);
+
+			ProductBySubsidiary ps =productBySubsidiairyRepository.findBySubsidiaryIdAndProductId(bill.getSubsidiary().getId(), detail.getProduct().getId());
+			ps.setQuantity(ps.getQuantity() - detail.getQuantity());
+			productBySubsidiairyRepository.save(ps);
+
 			detail.setBill(null);
 		});
 		
