@@ -26,9 +26,27 @@ angular.module('integridadUiApp')
     vm.medList = [
       {code: 'efectivo', name: 'Efectivo' },
       {code: 'cheque', name: 'Cheque' },
+      {code: 'cheque_posfechado', name: 'Cheque posfechado' },
       {code: 'tarjeta_credito', name: 'Tarjeta de crédito' },
       {code: 'tarjeta_debito', name: 'Tarjeta de débito' },
       {code: 'dinero_electronico_ec', name: 'Dinero electrónico' },
+      {code: 'credito', name: 'Crédito' },
+    ];
+    vm.formList = [
+      '01 - SIN UTILIZACION DEL SISTEMA FINANCIERO',
+      '15 - COMPENSACION DE DEUDAS',
+      '16 - TARJETAS DE DEBITO',
+      '17 - DINERO ELECTRONICO',
+      '18 - TARJETA PREPAGO',
+      '19 - TARJETA DE CREDITO',
+      '20 - OTROS CON UTILIZACION DEL SISTEMA FINANCIERO',
+      '21 - ENDOSO DE TITULOS'
+    ];
+    vm.creditCardList=[
+      'DINNERS CLUB',
+      'VISA',
+      'MASTERCARD',
+      'AMERICAN'
     ];
 
 
@@ -130,6 +148,12 @@ angular.module('integridadUiApp')
 
     }
 
+    function _addDays(date, days) {
+      var result = new Date(date);
+      result.setDate(result.getDate() + days);
+      return result.getTime();
+    }
+
     vm.acceptNewSeq = function(){
       vm.seqNumber =  vm.seqNumberFirstPart + '-'
         + vm.seqNumberSecondPart;
@@ -187,42 +211,46 @@ angular.module('integridadUiApp')
       if(productSelect.productType.code === 'SER'){
         productSelect.quantity = 1;
       }
-      vm.productToAdd = productSelect;
+      vm.productToAdd = angular.copy(productSelect);
+      var costEachCalculated = vm.getCost('1.'+ productSelect[vm.priceType.cod], productSelect.averageCost);
+      vm.productToAdd.costEachCalculated = costEachCalculated;
       vm.quantity = 1;
     }
 
     vm.acceptProduct = function(closeModal){
-      if(parseInt(vm.quantity) <= parseInt(vm.productToAdd.quantity)){
-        vm.errorQuantity = undefined;
-        var costEachCalculated = vm.getCost('1.'+ vm.productToAdd[vm.priceType.cod], vm.productToAdd.averageCost);
+      if(vm.productToAdd.productType.code !== 'SER'){
+          if(parseInt(vm.quantity) >= parseInt(vm.productToAdd.quantity)){
+            vm.errorQuantity = 'Cantidad disponible insuficiente';
+            return;
+          }
+      }
 
-        var detail={
-          product: angular.copy(vm.productToAdd),
-          quantity: vm.quantity,
-          costEach: costEachCalculated,
-          total: (parseFloat(vm.quantity) * parseFloat(costEachCalculated)).toFixed(2)
-        }
+      vm.errorQuantity = undefined;
 
-        if(vm.indexDetail !== undefined){
-          vm.bill.details[vm.indexDetail] = detail;
-        } else {
-          vm.bill.details.push(detail);
-        }
+      var detail={
+        product: angular.copy(vm.productToAdd),
+        quantity: vm.quantity,
+        costEach: vm.productToAdd.costEachCalculated,
+        total: (parseFloat(vm.quantity) * parseFloat(vm.productToAdd.costEachCalculated)).toFixed(2)
+      }
 
-        vm.productToAdd = undefined;
-        vm.quantity = undefined;
-        _getTotalSubtotal();
-
-        if(closeModal){
-          $('#modalAddProduct').modal('hide');
-        } else {
-          var newProductList = _.filter(vm.productList, function (prod) {
-            return prod.id !== detail.product.id;
-          });
-          vm.productList = newProductList;
-        }
+      if(vm.indexDetail !== undefined){
+        vm.bill.details[vm.indexDetail] = detail;
       } else {
-        vm.errorQuantity = 'Cantidad disponible insuficiente';
+        vm.bill.details.push(detail);
+      }
+
+      vm.productToAdd = undefined;
+      vm.quantity = undefined;
+      _getTotalSubtotal();
+
+      if(closeModal){
+        $('#modalAddProduct').modal('hide');
+      } else {
+        var newProductList = _.filter(vm.productList, function (prod) {
+          return prod.id !== detail.product.id;
+        });
+        vm.productList = newProductList;
       }
 
     };
@@ -259,6 +287,49 @@ angular.module('integridadUiApp')
 
     vm.verifyUser = function(){
       vm.isEmp = $localStorage.user.userType.code === 'EMP';
+    };
+
+    vm.loadMedio = function(){
+      if(vm.medio.medio === 'efectivo' || vm.medio.medio === 'dinero_electronico_ec'){
+        vm.medio.payForm = '01 - SIN UTILIZACION DEL SISTEMA FINANCIERO';
+      }
+      if(vm.medio.medio === 'credito'){
+        vm.medio.payForm = '01 - SIN UTILIZACION DEL SISTEMA FINANCIERO';
+        vm.medio.total = vm.bill.total;
+      }
+      if(vm.medio.medio === 'cheque' || vm.medio.medio === 'cheque_posfechado'){
+        vm.medio.payForm = '20 - OTROS CON UTILIZACION DEL SISTEMA FINANCIERO';
+        vm.medio.total = vm.bill.total;
+      }
+      if(vm.medio.medio === 'tarjeta_credito' || vm.medio.medio === 'tarjeta_debito'){
+        vm.medio.payForm = '19 - TARJETA DE CREDITO';
+        vm.medio.total = vm.bill.total;
+      }
+    };
+
+    vm.loadCredit = function(){
+      var creditArray = [];
+      var diasPlazo = parseInt(vm.medio.creditoIntervalos);
+      var d = new Date();
+      var total = parseFloat(parseFloat(vm.bill.total)/parseFloat(vm.medio.creditoNumeroPagos)).toFixed(2);
+      for (var i = 1; i <= parseInt(vm.medio.creditoNumeroPagos); i++) {
+        var credito = {
+          payNumber: i,
+          diasPlazo: diasPlazo,
+          fecha: _addDays(d, diasPlazo),
+          valor: total
+        }
+        diasPlazo += parseInt(vm.medio.creditoIntervalos);
+        creditArray.push(credito)
+      }
+
+      vm.medio.credits = creditArray
+
+    };
+
+    vm.getFechaCobro = function() {
+      var d = new Date();
+      vm.medio.fechaCobro = _addDays(d, parseInt(vm.medio.chequeDiasPlazo));
     };
 
     vm.addPago = function(){

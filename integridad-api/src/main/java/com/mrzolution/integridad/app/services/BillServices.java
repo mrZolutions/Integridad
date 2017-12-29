@@ -36,6 +36,8 @@ public class BillServices {
 	ProductBySubsidiairyRepository productBySubsidiairyRepository;
 	@Autowired
 	PagoRepository pagoRepository;
+	@Autowired
+	CreditsRepository creditsRepository;
 
 	public String getDatil(Requirement requirement) throws Exception{
 		ObjectMapper mapper = new ObjectMapper();
@@ -95,8 +97,17 @@ public class BillServices {
 		cashierRepository.save(cashier);
 
 		pagos.forEach(pago -> {
+			List<Credits> creditsList = pago.getCredits();
+			pago.setCredits(null);
 			pago.setBill(saved);
-			pagoRepository.save(pago);
+			Pago pagoSaved = pagoRepository.save(pago);
+
+			if(creditsList != null){
+				creditsList.forEach(credit ->{
+					credit.setPago(pagoSaved);
+					creditsRepository.save(credit);
+				});
+			}
 		});
 
 		details.forEach(detail->{
