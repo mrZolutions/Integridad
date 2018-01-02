@@ -194,9 +194,11 @@ angular.module('integridadUiApp')
           });
 
           if(productFound === undefined){
+            console.log('resp',response[i])
             var sub = _.find(response[i].productBySubsidiaries, function (s) {
-              return s.subsidiary.id === $localStorage.user.subsidiary.id;
+              return (s.subsidiary.id === $localStorage.user.subsidiary.id && s.active === true);
             });
+            console.log('sub',sub)
             response[i].quantity = sub.quantity
             vm.productList.push(response[i]);
           }
@@ -219,7 +221,7 @@ angular.module('integridadUiApp')
 
     vm.acceptProduct = function(closeModal){
       if(vm.productToAdd.productType.code !== 'SER'){
-          if(parseInt(vm.quantity) >= parseInt(vm.productToAdd.quantity)){
+          if(parseInt(vm.quantity) > parseInt(vm.productToAdd.quantity)){
             vm.errorQuantity = 'Cantidad disponible insuficiente';
             return;
           }
@@ -442,14 +444,11 @@ angular.module('integridadUiApp')
         "pagos": vm.pagos
       };
 
-      console.log(req)
       billService.getClaveDeAcceso(req).then(function(resp){
-        console.log('============ resp: ', resp)
         vm.bill.pagos = vm.pagos;
         billService.create(vm.bill).then(function(respBill){
           vm.billed = true;
           $localStorage.user.cashier.billNumberSeq = vm.bill.billSeq;
-          console.log('============ respBill: ', respBill)
         }).catch(function (error) {
           vm.loading = false;
           vm.errorValidateAdm = error.data;
