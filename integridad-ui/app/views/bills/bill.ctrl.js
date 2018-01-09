@@ -173,6 +173,7 @@ angular.module('integridadUiApp')
     };
 
     vm.clientSelect = function(client){
+      vm.companyData = $localStorage.user.subsidiary;
       vm.dateBill = new Date();
       vm.clientSelected = client;
       _getSeqNumber();
@@ -194,11 +195,9 @@ angular.module('integridadUiApp')
           });
 
           if(productFound === undefined){
-            console.log('resp',response[i])
             var sub = _.find(response[i].productBySubsidiaries, function (s) {
               return (s.subsidiary.id === $localStorage.user.subsidiary.id && s.active === true);
             });
-            console.log('sub',sub)
             response[i].quantity = sub.quantity
             vm.productList.push(response[i]);
           }
