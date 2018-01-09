@@ -81,6 +81,17 @@
     </div>
     <div class="panel-body">
       <div class="row">
+        <div class="form-group col-md-6 text-center">
+          <img src="images/yeoman.png" ><br>
+        </div>
+        <div class="form-group col-md-6">
+          <b>{{vm.companyData.userClient.name}}</b><br/></br>
+          <b>Matriz: {{vm.companyData.userClient.address1}}</b><br/>
+          <b>Establecimiento: {{vm.companyData.address1}}</b><br/><br/>
+          <b>RUC: {{vm.companyData.userClient.ruc}}</b><br/>
+        </div>
+      </div>
+      <div class="row">
         <div class="form-group col-md-6">
           <!-- <b>FECHA: </b>{{vm.dateBill | date:'dd/MM/yyyy'}} -->
           <label>FECHA</label>
@@ -95,9 +106,6 @@
               defaultDate: defaultDate
             });
           </script>
-        </div>
-        <div class="form-group col-md-6 text-right">
-          <img src="images/yeoman.png" ><br>
         </div>
       </div>
       <div class="row">
@@ -120,6 +128,11 @@
       </div>
       <div class="row">
         <div class="form-group col-md-12">
+          <b>E-MAIL: </b>{{vm.clientSelected.email}}
+        </div>
+      </div>
+      <div class="row">
+        <div class="form-group col-md-12">
           <b>NUMERO DE FACTURA: </b> {{vm.seqNumber}}
           &nbsp;&nbsp;&nbsp;
           <a data-toggle="modal" data-target="#modalEditBillNumber" ng-click="vm.verifyUser()" print-hide>
@@ -131,7 +144,7 @@
         <div class="form-group col-md-12">
           <b>PRECIO CONVENIDO: </b>
           <select ng-options="price as price.name for price in vm.prices"
-          ng-model="vm.priceType" class="form-control" ng-change="vm.reCalculateTotal()"></select>
+          ng-model="vm.priceType" class="form-control" ng-change="vm.reCalculateTotal()" ng-disabled="vm.bill.details.length > 0"></select>
         </div>
       </div>
     </div>
@@ -147,14 +160,18 @@
           <table class="table table-striped">
             <thead>
               <tr>
-                <th> Producto </th>
+                <th> Item </th>
+                <th> C&oacute;digo </th>
+                <th> Descripci&oacute;n </th>
                 <th> Cantidad </th>
+                <th> Unidad de medida </th>
                 <th> Valor unitario </th>
+                <th> Descuento </th>
                 <th> Valor Total </th>
                 <th>
                   <button type="button" class="btn btn-primary" ng-click="vm.addProduct()"
                     data-toggle="modal" data-target="#modalAddProduct" print-hide>
-                    Agregar Producto
+                    Agregar
                   </button>
                 </th>
               </tr>
@@ -166,9 +183,13 @@
                 </td>
               </tr>
               <tr ng-repeat="detail in vm.bill.details">
+                <td>{{$index + 1}}</td>
+                <td>{{detail.product.codeIntegridad}}</td>
                 <td>{{detail.product.name}}</td>
                 <td>{{detail.quantity}}</td>
+                <td>{{detail.product.unitOfMeasurementFull}}</td>
                 <td>{{detail.costEach}}</td>
+                <td></td>
                 <td>{{detail.total}}</td>
                 <td>
                   <button type="button" class="btn btn-primary"
@@ -184,34 +205,46 @@
               <tr>
                 <td></td>
                 <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
                 <td><b>SUBTOTAL: </b></td>
                 <td>{{vm.bill.subTotal}}</td>
-                <td>
-                </td>
+                <td> </td>
               </tr>
               <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
                 <td></td>
                 <td></td>
                 <td><b>ICE: </b></td>
                 <td>{{vm.bill.ice}}</td>
-                <td>
-                </td>
+                <td></td>
               </tr>
               <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
                 <td></td>
                 <td></td>
                 <td><b>IVA: </b></td>
                 <td>{{vm.bill.iva}}</td>
-                <td>
-                </td>
+                <td></td>
               </tr>
               <tr>
                 <td></td>
                 <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
                 <td><b>TOTAL: </b></td>
                 <td>{{vm.bill.total}}</td>
-                <td>
-                </td>
+                <td></td>
               </tr>
             </tbody>
           </table>
