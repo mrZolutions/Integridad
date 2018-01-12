@@ -35,6 +35,11 @@ public class Bill {
     private double total;
     private double subTotal;
 
+    private String ordenDecompra;
+    private String srr;
+    private String lugar;
+    private String otir;
+
     //TODO
     //propina
     //descuento
