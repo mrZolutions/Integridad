@@ -35,6 +35,10 @@ public class UserClient {
     private String cedula;
     private String ruc;
     private long initialActivityDate;
+    private String ePassword;
+    private String logo;
+    private String apiKey;
+    private boolean espTemp;
 
     //TODO
     //razonsocial

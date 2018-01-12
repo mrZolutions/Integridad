@@ -174,6 +174,7 @@ angular.module('integridadUiApp')
 
     vm.clientSelect = function(client){
       vm.companyData = $localStorage.user.subsidiary;
+      console.log(vm.companyData)
       vm.dateBill = new Date();
       vm.clientSelected = client;
       _getSeqNumber();
@@ -445,6 +446,8 @@ angular.module('integridadUiApp')
 
       billService.getClaveDeAcceso(req).then(function(resp){
         vm.bill.pagos = vm.pagos;
+        console.log('resp',resp)
+        console.log('bill',vm.bill)
         billService.create(vm.bill).then(function(respBill){
           vm.billed = true;
           $localStorage.user.cashier.billNumberSeq = vm.bill.billSeq;
