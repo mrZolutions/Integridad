@@ -59,6 +59,17 @@ public class BillServices {
 		
 		return bills;
 	}
+
+	public Iterable<Bill> getByClientIdLazy(UUID id){
+		log.info("BillServices getByClientIdLazy: {}", id);
+		Iterable<Bill> bills = billRepository.findByClientId(id);
+		bills.forEach(bill->{
+			bill.setListsNull();
+			bill.setFatherListToNull();
+		});
+
+		return bills;
+	}
 	
 	public Bill getById(UUID id) {
 		log.info("BillServices getById: {}", id);

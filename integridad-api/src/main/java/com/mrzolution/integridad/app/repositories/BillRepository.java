@@ -3,7 +3,9 @@ package com.mrzolution.integridad.app.repositories;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.mrzolution.integridad.app.domain.Bill;
@@ -17,5 +19,8 @@ public interface BillRepository extends CrudRepository<Bill, UUID>{
 	Iterable<Bill> findByClient(Client client);
 	
 	Iterable<Bill> findByUserIntegridad(UserIntegridad user);
+
+	@Query("SELECT p FROM Bill p WHERE p.client.id = (:id)")
+	Iterable<Bill> findByClientId(@Param("id") UUID id);
 
 }
