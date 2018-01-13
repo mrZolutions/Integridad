@@ -113,6 +113,7 @@ angular.module('integridadUiApp')
         userIntegridad: $localStorage.user,
         subsidiary: $localStorage.user.subsidiary,
         dateCreated: vm.dateBill.getTime(),
+        discount: 0,
         total: 0,
         subTotal: 0,
         iva: 0,
@@ -128,20 +129,32 @@ angular.module('integridadUiApp')
       vm.bill.ice = 0;
       _.each(vm.bill.details, function(detail){
         vm.bill.subTotal = (parseFloat(vm.bill.subTotal) + parseFloat(detail.total)).toFixed(2);
+        var tot = detail.total;
+        if(vm.bill.discountPercentage){
+          tot = (parseFloat(detail.total) - (parseInt(vm.bill.discountPercentage)/100)*(parseFloat(detail.total))).toFixed(2);
+        }
         if(detail.product.iva){
-          vm.bill.iva = (parseFloat(vm.bill.iva) + (parseFloat(detail.total) * 0.12)).toFixed(2);
+          vm.bill.iva = (parseFloat(vm.bill.iva) + (parseFloat(tot) * 0.12)).toFixed(2);
         }
         if(detail.product.ice){
-          vm.bill.ice = (parseFloat(vm.bill.ice) + (parseFloat(detail.total) * 0.10)).toFixed(2);
+          vm.bill.ice = (parseFloat(vm.bill.ice) + (parseFloat(tot) * 0.10)).toFixed(2);
         }
 
       });
+
+      if(vm.bill.discountPercentage){
+        vm.bill.discount = ((parseInt(vm.bill.discountPercentage)/100)*vm.bill.subTotal).toFixed(2);
+      }else {
+        vm.bill.discount = 0;
+      }
+
 
       vm.impuestoICE.base_imponible = vm.bill.subTotal;
       vm.impuestoIVA.base_imponible = vm.bill.subTotal;
       vm.impuestoICE.valor = vm.bill.ice;
       vm.impuestoIVA.valor = vm.bill.iva;
-      vm.bill.total = (parseFloat(vm.bill.subTotal)
+      vm.bill.baseTaxes = vm.bill.subTotal - vm.bill.discount;
+      vm.bill.total = (parseFloat(vm.bill.baseTaxes)
         +  parseFloat(vm.bill.iva)
         +  parseFloat(vm.bill.ice)
       ).toFixed(2);
@@ -161,6 +174,11 @@ angular.module('integridadUiApp')
 
     vm.reCalculateTotal = function(){
       _.map(vm.bill.details, function(detail){
+        if(vm.bill.discountPercentage){
+          detail.discount = vm.bill.discountPercentage;
+        } else {
+          detail.discount = 0;
+        }
         var costEachCalculated = vm.getCost('1.'+ detail.product[vm.priceType.cod], detail.product.averageCost);
         detail.costEach = costEachCalculated;
         detail.total = (parseFloat(detail.quantity) * parseFloat(detail.costEach)).toFixed(2);
@@ -174,11 +192,22 @@ angular.module('integridadUiApp')
 
     vm.clientSelect = function(client){
       vm.companyData = $localStorage.user.subsidiary;
-      console.log(vm.companyData)
       vm.dateBill = new Date();
       vm.clientSelected = client;
       _getSeqNumber();
       _initializeBill();
+    };
+
+    vm.clientConsult = function(client){
+      vm.loading = true;
+      billService.getByClientId(client.id).then(function (response) {
+        vm.billList = response;
+        vm.loading = false;
+      }).catch(function (error) {
+        vm.loading = false;
+        vm.error = error.data;
+      });
+
     };
 
     vm.addProduct = function(){
@@ -230,6 +259,7 @@ angular.module('integridadUiApp')
       vm.errorQuantity = undefined;
 
       var detail={
+        discount: 0,
         product: angular.copy(vm.productToAdd),
         quantity: vm.quantity,
         costEach: vm.productToAdd.costEachCalculated,
@@ -396,7 +426,7 @@ angular.module('integridadUiApp')
           "precio_total_sin_impuestos": det.costEach,
           "impuestos": impuestos,
           "detalles_adicionales": null,
-          "descuento": 0.0,
+          "descuento": vm.bill.discountPercentage,
           "unidad_medida": det.product.unitOfMeasurementFull
         }
 
@@ -428,7 +458,7 @@ angular.module('integridadUiApp')
           "impuestos":vm.impuestosTotales,
           "importe_total":vm.bill.total,
           "propina":0.0,
-          "descuento":0.0
+          "descuento":vm.bill.discount
         },
         "comprador":{
           "email":vm.clientSelected.email,
@@ -446,6 +476,9 @@ angular.module('integridadUiApp')
 
       billService.getClaveDeAcceso(req).then(function(resp){
         vm.bill.pagos = vm.pagos;
+        if(vm.bill.discountPercentage === undefined){
+          vm.bill.discountPercentage = 0;
+        }
         console.log('resp',resp)
         console.log('bill',vm.bill)
         billService.create(vm.bill).then(function(respBill){
