@@ -34,7 +34,7 @@
   </div>
 </div>
 
-<div ng-show="vm.clientSelected === undefined">
+<div ng-show="vm.clientSelected === undefined && vm.billList === undefined">
 
   <input ng-model="searchText" class="form-control" placeholder="Buscar">
   <table class="table table-striped">
@@ -64,13 +64,59 @@
           <button type="button" class="btn btn-primary" ng-click="vm.clientSelect(clientPreSelect)">
             Facturar
           </button>
-          <!-- <button type="button" class="btn btn-primary" ng-click="vm.clientConsult(clientPreSelect)">
+          <button type="button" class="btn btn-primary" ng-click="vm.clientConsult(clientPreSelect)">
+            Consultar
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+</div>
+
+<div ng-show="vm.billList !== undefined">
+
+  <input ng-model="searchText" class="form-control" placeholder="Buscar">
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th> N&uacute;mero </th>
+        <th> Fecha </th>
+        <th> Cliente </th>
+        <th> Total </th>
+        <th>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-show="vm.billList == 0">
+        <td colspan="4">
+          No hay facturas ingresados
+        </td>
+      </tr>
+      <tr ng-repeat="bill in vm.billList | orderBy:'dateCreated' | filter:searchText">
+        <td>{{ bill.billSeq }}</td>
+        <td>{{ bill.dateCreated | date :  "dd/MM/yyyy"}}</td>
+        <td>{{ bill.client.name }}</td>
+        <td>{{ bill.total }}</td>
+        <td>
+          <!-- <button type="button" class="btn btn-primary" ng-click="vm.clientSelect(clientPreSelect)">
+            Facturar
+          </button>
+          <button type="button" class="btn btn-primary" ng-click="vm.clientConsult(clientPreSelect)">
             Consultar
           </button> -->
         </td>
       </tr>
     </tbody>
   </table>
+  <div class="row">
+    <div class="form-group col-md-12">
+      <button type="button" class="btn btn-primary" ng-click="vm.billList = undefined">
+        Cancelar
+      </button>
+    </div>
+  </div>
 
 </div>
 
@@ -171,6 +217,13 @@
           ng-model="vm.bill.otir" class="form-control">
         </div>
       </div>
+      <div class="row" print-hide>
+        <div class="form-group col-md-6">
+          <b>DESCUENTO &#37;: </b>
+          <input type="text" ng-change="vm.reCalculateTotal()" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+          ng-model="vm.bill.discountPercentage" class="form-control" maxlength="9" ng-change="vm.getFechaCobro()">
+        </div>
+      </div>
     </div>
   </div>
 
@@ -209,11 +262,11 @@
               <tr ng-repeat="detail in vm.bill.details">
                 <td>{{$index + 1}}</td>
                 <td>{{detail.product.codeIntegridad}}</td>
-                <td>{{detail.product.name}}</td>
+                <td>{{detail.product.subgroup.groupLine.line.name}} - {{detail.product.subgroup.groupLine.name}} - {{detail.product.subgroup.name}} - {{detail.product.name}}</td>
                 <td>{{detail.quantity}}</td>
                 <td>{{detail.product.unitOfMeasurementFull}}</td>
                 <td>{{detail.costEach}}</td>
-                <td></td>
+                <td>{{detail.discount}}</td>
                 <td>{{detail.total}}</td>
                 <td>
                   <button type="button" class="btn btn-primary"
@@ -235,6 +288,28 @@
                 <td></td>
                 <td><b>SUBTOTAL: </b></td>
                 <td>{{vm.bill.subTotal}}</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td><b>DESCUENTO: </b></td>
+                <td>{{vm.bill.discount}}</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td><b>BASE 12%: </b></td>
+                <td>{{vm.bill.baseTaxes}}</td>
                 <td> </td>
               </tr>
               <tr>

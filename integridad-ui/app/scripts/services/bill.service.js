@@ -21,4 +21,10 @@ angular
       });
     };
 
+    this.getByClientId = function (id) {
+      return securityService.get('/bill/client/'+ id).then(function successCallback(response) {
+        return response.data;
+      });
+    };
+
   });
