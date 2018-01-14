@@ -322,20 +322,26 @@ angular.module('integridadUiApp')
     };
 
     vm.loadMedio = function(){
+      var payed = 0;
+      _.each(vm.pagos, function(pago){
+        payed +=(parseFloat(pago.total));
+      });
+
+      vm.pagos
       if(vm.medio.medio === 'efectivo' || vm.medio.medio === 'dinero_electronico_ec'){
         vm.medio.payForm = '01 - SIN UTILIZACION DEL SISTEMA FINANCIERO';
       }
       if(vm.medio.medio === 'credito'){
         vm.medio.payForm = '01 - SIN UTILIZACION DEL SISTEMA FINANCIERO';
-        vm.medio.total = vm.bill.total;
+        vm.medio.total = (vm.bill.total - payed).toFixed(2);
       }
       if(vm.medio.medio === 'cheque' || vm.medio.medio === 'cheque_posfechado'){
         vm.medio.payForm = '20 - OTROS CON UTILIZACION DEL SISTEMA FINANCIERO';
-        vm.medio.total = vm.bill.total;
+        vm.medio.total = (vm.bill.total - payed).toFixed(2);
       }
       if(vm.medio.medio === 'tarjeta_credito' || vm.medio.medio === 'tarjeta_debito'){
         vm.medio.payForm = '19 - TARJETA DE CREDITO';
-        vm.medio.total = vm.bill.total;
+        vm.medio.total = (vm.bill.total - payed).toFixed(2);
       }
     };
 
@@ -389,6 +395,7 @@ angular.module('integridadUiApp')
     };
 
     vm.getClaveAcceso = function(){
+      vm.loading = true;
       vm.impuestosTotales.push(vm.impuestoICE,vm.impuestoIVA);
       vm.bill.billSeq = vm.numberAddedOne;
 
@@ -484,6 +491,9 @@ angular.module('integridadUiApp')
         billService.create(vm.bill).then(function(respBill){
           vm.billed = true;
           $localStorage.user.cashier.billNumberSeq = vm.bill.billSeq;
+          $('#modalAddPago').modal('hide');
+          _activate();
+          vm.loading = false;
         }).catch(function (error) {
           vm.loading = false;
           vm.errorValidateAdm = error.data;
