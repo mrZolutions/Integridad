@@ -74,6 +74,7 @@ public class BillServicesTest {
 		
 		Mockito.when(billRepository.findOne(id)).thenReturn(bill);
 		Mockito.when(detailRepository.findByBill(bill)).thenReturn(details);
+		Mockito.when(pagoRepository.findByBill(bill)).thenReturn(new ArrayList<>());
 		
 		Bill retrieved = service.getById(id);
 		ListValidation.childsLisAndFathertValidation(Bill.class, retrieved);

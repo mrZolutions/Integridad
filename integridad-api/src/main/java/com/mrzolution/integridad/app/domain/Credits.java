@@ -16,6 +16,7 @@ public class Credits {
     private int diasPlazo;
     private long fecha;
     private int payNumber;
+    private double valor;
 
     @ManyToOne
     @JoinColumn(name = "pago_id")
