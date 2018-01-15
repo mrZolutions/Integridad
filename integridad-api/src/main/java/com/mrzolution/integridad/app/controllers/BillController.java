@@ -48,6 +48,19 @@ public class BillController {
 		return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
 	}
 
+	@RequestMapping(method = RequestMethod.GET, value="/{id}")
+	public ResponseEntity getById(@PathVariable("id") UUID id){
+		log.info("BillController getId: {}", id);
+		Bill response = null;
+		try {
+			response = service.getById(id);
+		}catch(BadRequestException e) {
+			log.error("BillController getId Exception thrown: {}", e.getMessage());
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+		}
+		return new ResponseEntity<Bill>(response, HttpStatus.ACCEPTED);
+	}
+
 	@RequestMapping(method = RequestMethod.POST)
     public ResponseEntity create(@RequestBody Bill bill){
 		log.info("BillController create: {}", bill.getBillSeq());

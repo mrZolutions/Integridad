@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.UUID;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.Iterables;
 import com.mrzolution.integridad.app.domain.*;
 import com.mrzolution.integridad.app.domain.ebill.Requirement;
 import com.mrzolution.integridad.app.repositories.*;
@@ -158,7 +159,9 @@ public class BillServices {
 		log.info("BillServices populateChildren billId: {}", bill.getId());
 		List<Detail> detailList = new ArrayList<>();
 		Iterable<Detail> details = detailRepository.findByBill(bill);
-		
+        List<Pago> pagoList = new ArrayList<>();
+        Iterable<Pago> pagos = pagoRepository.findByBill(bill);
+
 		details.forEach(detail -> {
 			detail.setListsNull();
 			detail.setFatherListToNull();
@@ -168,8 +171,32 @@ public class BillServices {
 			
 			detailList.add(detail);
 		});
+
+		pagos.forEach(pago ->{
+		    if("credito".equals(pago.getMedio())){
+		        Iterable<Credits> credits = creditsRepository.findByPago(pago);
+		        List<Credits> creditsList = new ArrayList<>();
+
+		        credits.forEach(credit ->{
+		            credit.setListsNull();
+		            credit.setFatherListToNull();
+		            credit.setPago(null);
+
+		            creditsList.add(credit);
+                });
+
+		        pago.setCredits(creditsList);
+            } else {
+		        pago.setListsNull();
+            }
+		    pago.setFatherListToNull();
+		    pago.setBill(null);
+
+		    pagoList.add(pago);
+        });
 		
 		bill.setDetails(detailList);
+		bill.setPagos(pagoList);
 		bill.setFatherListToNull();
 		log.info("BillServices populateChildren FINISHED billId: {}", bill.getId());
 	}
