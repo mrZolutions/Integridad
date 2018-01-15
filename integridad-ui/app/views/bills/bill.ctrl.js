@@ -394,8 +394,25 @@ angular.module('integridadUiApp')
       return vm.varPago;
     };
 
+    vm.billSelect = function(bill){
+      vm.loading = true;
+      billService.getById(bill.id).then(function (response) {
+        console.log(response);
+        vm.billList = undefined;
+        vm.bill = response;
+        vm.companyData = $localStorage.user.subsidiary;
+        vm.clientSelected = response.client;
+        vm.loading = false;
+      }).catch(function (error) {
+        vm.loading = false;
+        vm.error = error.data;
+      });
+
+    }
+
     vm.getClaveAcceso = function(){
       vm.loading = true;
+      $('#modalAddPago').modal('hide');
       vm.impuestosTotales.push(vm.impuestoICE,vm.impuestoIVA);
       vm.bill.billSeq = vm.numberAddedOne;
 
@@ -491,7 +508,6 @@ angular.module('integridadUiApp')
         billService.create(vm.bill).then(function(respBill){
           vm.billed = true;
           $localStorage.user.cashier.billNumberSeq = vm.bill.billSeq;
-          $('#modalAddPago').modal('hide');
           _activate();
           vm.loading = false;
         }).catch(function (error) {
