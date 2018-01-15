@@ -1,5 +1,6 @@
 package com.mrzolution.integridad.app.services;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.UUID;
 
@@ -178,12 +179,19 @@ public class UserIntegridadServices {
 				code, subsidiaryId);
 		UserType userType = userTypeServices.getByCode(code);
 		log.info("UserIntegridadServices getByCodeTypeAndSubsidiaryIdActivesLazy userType retreived");
-		Subsidiary subsidiary = subsidiaryServices.getById(subsidiaryId);
-		log.info("UserIntegridadServices getByCodeTypeAndSubsidiaryIdActivesLazy subsidiary retreived");
-		Iterable<UserIntegridad> userIntegridadList = userIntegridadRepository.
-				findByUserTypeAndActiveAndSubsidiary(userType,true, subsidiary);
-		log.info("UserIntegridadServices getByCodeTypeAndSubsidiaryIdActivesLazy userIntegridad list retreived");
-		userIntegridadList.forEach(user->{user.setFatherListToNull();});
+		Iterable<UserIntegridad> userIntegridadList = new ArrayList<>();
+		if("SAD".equals(code)){
+			userIntegridadList = userIntegridadRepository.
+					findByUserTypeAndActive(userType,true);
+			log.info("UserIntegridadServices getByCodeTypeAndSubsidiaryIdActivesLazy userIntegridad list retreived");
+		} else {
+			Subsidiary subsidiary = subsidiaryServices.getById(subsidiaryId);
+			log.info("UserIntegridadServices getByCodeTypeAndSubsidiaryIdActivesLazy subsidiary retreived");
+			userIntegridadList = userIntegridadRepository.
+					findByUserTypeAndActiveAndSubsidiary(userType,true, subsidiary);
+			log.info("UserIntegridadServices getByCodeTypeAndSubsidiaryIdActivesLazy userIntegridad list retreived");
+		}
+		userIntegridadList.forEach(user-> user.setFatherListToNull());
 		return userIntegridadList;
 	}
 
