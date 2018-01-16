@@ -51,6 +51,7 @@ angular.module('integridadUiApp')
 
 
     function _activate(){
+      vm.newBill = true;
       vm.billed = false;
       vm.clientSelected = undefined;
       vm.dateBill = undefined;
@@ -168,8 +169,23 @@ angular.module('integridadUiApp')
     }
 
     vm.acceptNewSeq = function(){
-      vm.seqNumber =  vm.seqNumberFirstPart + '-'
+      vm.seqErrorNumber = undefined;
+      vm.loading = true;
+      var stringSeq =  vm.seqNumberFirstPart + '-'
         + vm.seqNumberSecondPart;
+
+      billService.getByStringSeq(stringSeq).then(function (response) {
+        if(response.length === 0){
+          vm.seqNumber = stringSeq;
+          $('#modalEditBillNumber').modal('hide');
+        } else {
+          vm.seqErrorNumber = "NUMERO DE FACTURA YA EXISTENTE"
+        }
+        vm.loading = false;
+      }).catch(function (error) {
+        vm.loading = false;
+        vm.error = error.data;
+      });
     };
 
     vm.reCalculateTotal = function(){
@@ -196,6 +212,9 @@ angular.module('integridadUiApp')
       vm.clientSelected = client;
       _getSeqNumber();
       _initializeBill();
+      var today = new Date();
+      $('#pickerBillDate').data("DateTimePicker").date(today);
+      vm.newBill = true;
     };
 
     vm.clientConsult = function(client){
@@ -402,6 +421,10 @@ angular.module('integridadUiApp')
         vm.bill = response;
         vm.companyData = $localStorage.user.subsidiary;
         vm.clientSelected = response.client;
+        var dateToShow = new Date(response.dateCreated);
+        vm.seqNumber = response.stringSeq;
+        $('#pickerBillDate').data("DateTimePicker").date(dateToShow);
+        vm.newBill = false;
         vm.loading = false;
       }).catch(function (error) {
         vm.loading = false;
@@ -505,6 +528,8 @@ angular.module('integridadUiApp')
         }
         console.log('resp',resp)
         console.log('bill',vm.bill)
+        vm.bill.stringSeq = vm.seqNumber;
+        vm.bill.priceType = vm.priceType.name;
         billService.create(vm.bill).then(function(respBill){
           vm.billed = true;
           $localStorage.user.cashier.billNumberSeq = vm.bill.billSeq;
