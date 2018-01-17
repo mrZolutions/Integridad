@@ -33,4 +33,10 @@ angular
       });
     };
 
+    this.getByStringSeq = function (stringSeq) {
+      return securityService.get('/bill/seq/'+ stringSeq).then(function successCallback(response) {
+        return response.data;
+      });
+    };
+
   });

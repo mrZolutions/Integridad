@@ -180,7 +180,7 @@ public class UserIntegridadServices {
 		UserType userType = userTypeServices.getByCode(code);
 		log.info("UserIntegridadServices getByCodeTypeAndSubsidiaryIdActivesLazy userType retreived");
 		Iterable<UserIntegridad> userIntegridadList = new ArrayList<>();
-		if("SAD".equals(code)){
+		if(Constants.USER_TYPE_SAD_CODE.equals(code)){
 			userIntegridadList = userIntegridadRepository.
 					findByUserTypeAndActive(userType,true);
 			log.info("UserIntegridadServices getByCodeTypeAndSubsidiaryIdActivesLazy userIntegridad list retreived");
