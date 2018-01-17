@@ -48,6 +48,19 @@ public class BillController {
 		return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
 	}
 
+	@RequestMapping(method = RequestMethod.GET, value="/seq/{seq}")
+	public ResponseEntity getByStringSeq(@PathVariable("seq") String stringSeq){
+		log.info("BillController getByStringSeq: {}", stringSeq);
+		Iterable<Bill> response = null;
+		try {
+			response = service.getByStringSeq(stringSeq);
+		}catch(BadRequestException e) {
+			log.error("BillController getByStringSeq Exception thrown: {}", e.getMessage());
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+		}
+		return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
+	}
+
 	@RequestMapping(method = RequestMethod.GET, value="/{id}")
 	public ResponseEntity getById(@PathVariable("id") UUID id){
 		log.info("BillController getId: {}", id);

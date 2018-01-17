@@ -7,6 +7,7 @@ import java.util.UUID;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Iterables;
+import com.mrzolution.integridad.app.cons.Constants;
 import com.mrzolution.integridad.app.domain.*;
 import com.mrzolution.integridad.app.domain.ebill.Requirement;
 import com.mrzolution.integridad.app.repositories.*;
@@ -126,9 +127,11 @@ public class BillServices {
 			detail.setBill(saved);
 			detailRepository.save(detail);
 
-			ProductBySubsidiary ps =productBySubsidiairyRepository.findBySubsidiaryIdAndProductId(bill.getSubsidiary().getId(), detail.getProduct().getId());
-			ps.setQuantity(ps.getQuantity() - detail.getQuantity());
-			productBySubsidiairyRepository.save(ps);
+			if(!detail.getProduct().getProductType().getCode().equals("SER")){
+				ProductBySubsidiary ps =productBySubsidiairyRepository.findBySubsidiaryIdAndProductId(bill.getSubsidiary().getId(), detail.getProduct().getId());
+				ps.setQuantity(ps.getQuantity() - detail.getQuantity());
+				productBySubsidiairyRepository.save(ps);
+			}
 
 			detail.setBill(null);
 		});
@@ -153,6 +156,19 @@ public class BillServices {
 		Bill updated = billRepository.save(bill);
 		log.info("BillServices update id: {}", updated.getId());
 		return updated;
+	}
+
+
+	public Iterable<Bill> getByStringSeq(String stringSeq){
+		log.info("BillServices getByStringSeq : {}", stringSeq);
+		Iterable<Bill> bills = billRepository.findByStringSeq(stringSeq);
+
+		bills.forEach(bill->{
+			bill.setFatherListToNull();
+			bill.setListsNull();
+		});
+
+		return bills;
 	}
 	
 	private void populateChildren(Bill bill) {

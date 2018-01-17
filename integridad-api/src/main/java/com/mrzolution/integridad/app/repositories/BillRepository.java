@@ -23,4 +23,5 @@ public interface BillRepository extends CrudRepository<Bill, UUID>{
 	@Query("SELECT p FROM Bill p WHERE p.client.id = (:id)")
 	Iterable<Bill> findByClientId(@Param("id") UUID id);
 
+	Iterable<Bill> findByStringSeq(String stringSeq);
 }
