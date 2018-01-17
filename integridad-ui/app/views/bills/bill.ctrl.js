@@ -210,6 +210,7 @@ angular.module('integridadUiApp')
       vm.companyData = $localStorage.user.subsidiary;
       vm.dateBill = new Date();
       vm.clientSelected = client;
+      vm.pagos=[];
       _getSeqNumber();
       _initializeBill();
       var today = new Date();
@@ -421,6 +422,7 @@ angular.module('integridadUiApp')
         vm.bill = response;
         vm.companyData = $localStorage.user.subsidiary;
         vm.clientSelected = response.client;
+        vm.pagos = response.pagos;
         var dateToShow = new Date(response.dateCreated);
         vm.seqNumber = response.stringSeq;
         $('#pickerBillDate').data("DateTimePicker").date(dateToShow);
