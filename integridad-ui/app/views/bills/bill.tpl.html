@@ -335,6 +335,17 @@
                 <td></td>
                 <td></td>
                 <td></td>
+                <td><b>BASE 0%: </b></td>
+                <td>0</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
                 <td><b>BASE 12%: </b></td>
                 <td>{{vm.bill.baseTaxes}}</td>
                 <td> </td>
@@ -475,7 +486,23 @@
             </thead>
             <tbody>
               <tr ng-repeat="pago in vm.pagos">
-                <td>{{ pago.medio }}</td>
+                <td>
+                  {{ pago.medio }}<br/>
+                  <span ng-if="pago.medio === 'cheque'">
+                      {{ pago.chequeBank }} - {{ pago.chequeAccount }} - {{pago.chequeNumber}}<br/>
+                  </span>
+                  <span ng-if="pago.medio === 'credito'">
+                      NUMER DE PAGOS: {{ pago.creditoNumeroPagos }} - INTERVALOS: {{ pago.creditoIntervalos }}<br/>
+                  </span>
+                  <span ng-if="pago.medio === 'cheque_posfechado'">
+                      {{ pago.chequeBank }} - {{ pago.chequeAccount }} - {{pago.chequeNumber}} - {{pago.fechaCobro | date :  "dd/MM/yyyy"}}<br/>
+                  </span>
+                  <span ng-if="pago.medio === 'tarjeta_credito' || pago.medio === 'tarjeta_debito'">
+                      {{ pago.cardBrand }}<br/>
+                  </span>
+
+                  {{ pago.payForm }}
+                </td>
                 <td>{{ pago.total }}</td>
                 <td>
                 </td>

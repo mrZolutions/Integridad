@@ -14,4 +14,10 @@ angular
       });
     };
 
+    this.update = function (brand) {
+      return securityService.put('/brand', brand).then(function successCallback(response) {
+        return response.data;
+      });
+    };
+
   });

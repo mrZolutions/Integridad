@@ -8,8 +8,8 @@ angular
     };
 
 
-    this.getClaveDeAcceso = function (req) {
-      return securityService.post('/bill/clave_acceso/', req).then(function successCallback(response) {
+    this.getClaveDeAcceso = function (req, id) {
+      return securityService.post('/bill/clave_acceso/'+id, req).then(function successCallback(response) {
         console.log(response)
         return response;
       });
