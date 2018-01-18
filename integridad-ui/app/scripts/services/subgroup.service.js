@@ -14,4 +14,10 @@ angular
       });
     };
 
+    this.update = function (sugroup) {
+      return securityService.put('/sub_group', sugroup).then(function successCallback(response) {
+        return response.data;
+      });
+    };
+
   });

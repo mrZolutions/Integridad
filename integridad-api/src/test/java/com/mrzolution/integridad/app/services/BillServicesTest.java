@@ -38,6 +38,8 @@ public class BillServicesTest {
 	ProductBySubsidiairyRepository productBySubsidiairyRepository;
 	@Mock
 	PagoRepository pagoRepository;
+	@Mock
+	UserClientRepository userClientRepository;
 	
 	Bill bill;
 	
@@ -124,6 +126,7 @@ public class BillServicesTest {
 		UUID idCashier = UUID.randomUUID();
 		Detail detail = Detail.newDetailTest();
 		List<Detail> detailList = new ArrayList<>();
+		detail.getProduct().getProductType().setCode("SER");
 		detailList.add(detail);
 		bill.getUserIntegridad().getCashier().setId(idCashier);
 		bill.getUserIntegridad().getCashier().setBillNumberSeq(1);
@@ -161,6 +164,7 @@ public class BillServicesTest {
 		Subsidiary subsidiary = bill.getSubsidiary(); 
 		Detail detail = Detail.newDetailTest();
 		List<Detail> detailList = new ArrayList<>();
+		detail.getProduct().getProductType().setCode("SER");
 		detailList.add(detail);
 		bill.setDetails(detailList);
 

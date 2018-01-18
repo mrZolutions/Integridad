@@ -22,12 +22,12 @@ public class BillController {
 	@Autowired
 	BillServices service;
 
-	@RequestMapping(method = RequestMethod.POST, value="/clave_acceso")
-	public ResponseEntity getDatil(@RequestBody Requirement requirement){
+	@RequestMapping(method = RequestMethod.POST, value="/clave_acceso/{id}")
+	public ResponseEntity getDatil(@RequestBody Requirement requirement, @PathVariable("id") UUID userClientId){
 		log.info("BillController getAllDatil");
 		String response = null;
 		try {
-			response = service.getDatil(requirement);
+			response = service.getDatil(requirement, userClientId);
 		}catch(Exception e) {
 			log.error("BillController getDatil Exception thrown: {}", e.getMessage());
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
