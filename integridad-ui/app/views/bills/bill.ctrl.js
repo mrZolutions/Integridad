@@ -523,7 +523,7 @@ angular.module('integridadUiApp')
         "pagos": vm.pagos
       };
 
-      billService.getClaveDeAcceso(req).then(function(resp){
+      billService.getClaveDeAcceso(req, vm.companyData.userClient.id).then(function(resp){
         vm.bill.pagos = vm.pagos;
         if(vm.bill.discountPercentage === undefined){
           vm.bill.discountPercentage = 0;

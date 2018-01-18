@@ -14,4 +14,10 @@ angular
       });
     };
 
+    this.update = function (line) {
+      return securityService.put('/line', line).then(function successCallback(response) {
+        return response.data;
+      });
+    };
+
   });

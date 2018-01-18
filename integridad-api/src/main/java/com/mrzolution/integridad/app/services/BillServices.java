@@ -40,13 +40,21 @@ public class BillServices {
 	PagoRepository pagoRepository;
 	@Autowired
 	CreditsRepository creditsRepository;
+	@Autowired
+	UserClientRepository userClientRepository;
 
-	public String getDatil(Requirement requirement) throws Exception{
+	public String getDatil(Requirement requirement, UUID userClientId) throws Exception{
+		UserClient userClient = userClientRepository.findOne(userClientId);
+
+		if(userClient == null){
+			throw new BadRequestException("Empresa Invalida");
+		}
+
 		ObjectMapper mapper = new ObjectMapper();
 		String data = mapper.writeValueAsString(requirement);
 
 		String url = "https://link.datil.co/invoices/issue";
-		String response = httpCallerService.post(url, data);
+		String response = httpCallerService.post(url, data, userClient);
 //		String response = "OK";
 		return response;
 	}

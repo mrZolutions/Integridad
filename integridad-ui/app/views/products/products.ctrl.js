@@ -75,6 +75,24 @@ angular.module('integridadUiApp')
       });
     }
 
+    function _getBrands(){
+      brandService.getBrandsLazy($localStorage.user.subsidiary.userClient.id).then(function(response){
+        vm.brands = response;
+      }).catch(function (error) {
+        vm.loading = false;
+        vm.error = error.data;
+      });
+    }
+
+    function _getLines(){
+      lineService.getLinesLazy($localStorage.user.subsidiary.userClient.id).then(function(response){
+        vm.lineas = response;
+      }).catch(function (error) {
+        vm.loading = false;
+        vm.error = error.data;
+      });
+    }
+
     function create(){
       vm.product.productBySubsidiaries = vm.productBySubsidiaries;
       productService.create(vm.product).then(function (response) {
@@ -218,21 +236,25 @@ angular.module('integridadUiApp')
     };
 
     vm.getGroups = function(){
-      groupService.getGroupsByLineLazy(vm.selectedLine.id).then(function(response){
-        vm.groups = response;
-      }).catch(function (error) {
-        vm.loading = false;
-        vm.error = error.data;
-      });
+      if(vm.selectedLine !== null && vm.selectedLine !== undefined){
+        groupService.getGroupsByLineLazy(vm.selectedLine.id).then(function(response){
+          vm.groups = response;
+        }).catch(function (error) {
+          vm.loading = false;
+          vm.error = error.data;
+        });
+      }
     };
 
     vm.getSubGroups = function(){
-      subgroupService.getSubGroupsByGroupLazy(vm.selectedGroup.id).then(function(response){
-        vm.subGroups = response;
-      }).catch(function (error) {
-        vm.loading = false;
-        vm.error = error.data;
-      });
+      if(vm.selectedGroup !== null && vm.selectedGroup !== undefined){
+        subgroupService.getSubGroupsByGroupLazy(vm.selectedGroup.id).then(function(response){
+          vm.subGroups = response;
+        }).catch(function (error) {
+          vm.loading = false;
+          vm.error = error.data;
+        });
+      }
     };
 
     vm.createBrand = function(){
@@ -334,25 +356,63 @@ angular.module('integridadUiApp')
         }
       });
 
-      brandService.getBrandsLazy($localStorage.user.subsidiary.userClient.id).then(function(response){
-        vm.brands = response;
-      }).catch(function (error) {
-        vm.loading = false;
-        vm.error = error.data;
-      });
+      _getBrands();
 
-      lineService.getLinesLazy($localStorage.user.subsidiary.userClient.id).then(function(response){
-        vm.lineas = response;
-      }).catch(function (error) {
-        vm.loading = false;
-        vm.error = error.data;
-      });
+      _getLines();
 
       vm.wizard = 2;
     };
 
     vm.wiz3 = function(){
       vm.wizard = 3;
+    };
+
+    vm.deleteBrand = function(brand){
+      vm.loading = true;
+      brand.active = false;
+      brandService.update(brand).then(function(response){
+        vm.loading = false;
+        _getBrands();
+      }).catch(function (error) {
+        vm.loading = false;
+        vm.error = error.data;
+      });
+    };
+
+    vm.deleteLine = function(line){
+      vm.loading = true;
+      line.active = false;
+      lineService.update(line).then(function(response){
+        vm.loading = false;
+        _getLines();
+      }).catch(function (error) {
+        vm.loading = false;
+        vm.error = error.data;
+      });
+    };
+
+    vm.deleteGroup = function(group){
+      vm.loading = true;
+      group.active = false;
+      groupService.update(group).then(function(response){
+        vm.loading = false;
+        vm.getGroups();
+      }).catch(function (error) {
+        vm.loading = false;
+        vm.error = error.data;
+      });
+    };
+
+    vm.deleteSubGroup = function(subGroup){
+      vm.loading = true;
+      subGroup.active = false;
+      subgroupService.update(subGroup).then(function(response){
+        vm.getSubGroups();
+        vm.loading = false;
+      }).catch(function (error) {
+        vm.loading = false;
+        vm.error = error.data;
+      });
     };
 
     vm.save = function(){
