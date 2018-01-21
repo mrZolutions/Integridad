@@ -11,6 +11,8 @@ angular.module('integridadUiApp')
   .controller('UsersCtrl', function (utilStringService, userTypeService, authService, projectService,
     subsidiaryService, validatorService, cashierService)  {
     var vm = this;
+    vm.error = undefined;
+    vm.success = undefined;
 
     vm.loading = false;
     vm.userIntegridad = undefined;

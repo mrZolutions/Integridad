@@ -10,6 +10,8 @@
 angular.module('integridadUiApp')
   .controller('UserEditCtrl', function ($rootScope, utilStringService, userTypeService, authService, $localStorage) {
     var vm = this;
+    vm.error = undefined;
+    vm.success = undefined;
 
     vm.loading = false;
     vm.userIntegridad = angular.copy($localStorage.user);

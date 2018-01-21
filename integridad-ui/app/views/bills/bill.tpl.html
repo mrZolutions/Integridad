@@ -130,7 +130,7 @@
         <div class="form-group col-md-12 ">
           <table width="100%">
             <tr>
-              <td width="30%"><img src="images/{{vm.companyData.userClient.logo}}" ><br></td>
+              <td width="30%" align="center"><img src="images/{{vm.companyData.userClient.logo}}" ><br></td>
               <td width="70%">
                 <b>{{vm.companyData.userClient.name}}</b><br/></br>
                 <b>Matriz: {{vm.companyData.userClient.address1}}</b><br/>
@@ -289,7 +289,7 @@
               <tr ng-repeat="detail in vm.bill.details">
                 <td>{{$index + 1}}</td>
                 <td>{{detail.product.codeIntegridad}}</td>
-                <td>{{detail.product.subgroup.groupLine.line.name}} - {{detail.product.subgroup.groupLine.name}} - {{detail.product.subgroup.name}} - {{detail.product.name}}</td>
+                <td><span print-only>{{detail.product.subgroup.groupLine.line.name}} - {{detail.product.subgroup.groupLine.name}} - {{detail.product.subgroup.name}} - <br></span>{{detail.product.name}}</td>
                 <td>{{detail.quantity}}</td>
                 <td>{{detail.product.unitOfMeasurementFull}}</td>
                 <td>{{detail.costEach}}</td>
@@ -336,7 +336,7 @@
                 <td></td>
                 <td></td>
                 <td><b>BASE 0%: </b></td>
-                <td>0</td>
+                <td>{{vm.bill.baseNoTaxes}}</td>
                 <td> </td>
               </tr>
               <tr>
@@ -350,7 +350,7 @@
                 <td>{{vm.bill.baseTaxes}}</td>
                 <td> </td>
               </tr>
-              <tr ng-if="!vm.companyData.userClient.espTemp">
+              <!-- <tr ng-if="!vm.companyData.userClient.espTemp">
                 <td></td>
                 <td></td>
                 <td></td>
@@ -360,7 +360,7 @@
                 <td><b>ICE: </b></td>
                 <td>{{vm.bill.ice}}</td>
                 <td></td>
-              </tr>
+              </tr> -->
               <tr>
                 <td></td>
                 <td></td>

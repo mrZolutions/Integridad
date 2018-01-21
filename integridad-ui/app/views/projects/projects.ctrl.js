@@ -10,6 +10,8 @@
 angular.module('integridadUiApp')
   .controller('ProjectsCtrl', function ($localStorage, $location, projectService, utilStringService, validatorService) {
     var vm = this;
+    vm.error = undefined;
+    vm.success = undefined;
 
     vm.loading = false;
     vm.project = undefined;

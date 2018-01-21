@@ -36,6 +36,7 @@ public class Bill {
     private double ice;
     private double total;
     private double subTotal;
+    private double baseNoTaxes;
     private double baseTaxes;
 
     private String ordenDecompra;
