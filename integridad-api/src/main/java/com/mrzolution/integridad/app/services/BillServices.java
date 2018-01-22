@@ -52,8 +52,15 @@ public class BillServices {
 		}
 
 //		requirement.setExportacion(new Exportacion());
-		requirement.setCredito(new Credito());
-		requirement.getPagos().forEach(pago -> pago.setPropiedades(new PagoPropiedades()));
+		Credito credito =new Credito();
+		credito.setFecha_vencimiento("");
+		requirement.setCredito(credito);
+		requirement.getPagos().forEach(pago ->{
+			if("credito".equals(pago.getMedio())){
+				pago.setMedio("otros");
+			}
+			pago.setPropiedades(new PagoPropiedades());
+		});
 		requirement.getItems().forEach(item -> item.setDetalles_adicionales(new DetalleAdicional()));
 		ObjectMapper mapper = new ObjectMapper();
 		String data = mapper.writeValueAsString(requirement);
