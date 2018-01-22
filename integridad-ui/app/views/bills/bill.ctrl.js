@@ -492,7 +492,6 @@ angular.module('integridadUiApp')
           "descripcion": det.product.name,
           "precio_total_sin_impuestos": det.costEach,
           "impuestos": impuestos,
-          "detalles_adicionales": null,
           "descuento": vm.bill.discountPercentage,
           "unidad_medida": det.product.unitOfMeasurementFull
         }
@@ -539,37 +538,18 @@ angular.module('integridadUiApp')
         "valor_retenido_iva": 0,
         "valor_retenido_renta": 0,
         "pagos": vm.pagos,
-        "exportacion": {
-          "incoterm": {
-            "termino": "",
-            "lugar": "",
-            "total_sin_impuestos": ""
-          },
-          "origen": {
-            "codigo_pais":"",
-            "puerto": ""
-          },
-          "destino": {
-            "codigo_pais":"",
-            "puerto": ""
-          },
-          "codigo_pais_adquisicion": "EC",
-          "totales": {
-            "flete_internacional": 0,
-            "seguro_internacional": 0,
-            "gastos_aduaneros": 0,
-            "otros_gastos_transporte": 0
-          }
-        }
+
       };
 
+      console.log(JSON.stringify(req, null, 4))
       billService.getClaveDeAcceso(req, vm.companyData.userClient.id).then(function(resp){
         vm.bill.pagos = vm.pagos;
         if(vm.bill.discountPercentage === undefined){
           vm.bill.discountPercentage = 0;
         }
         console.log('resp',resp)
-        console.log('bill',vm.bill)
+        console.log(JSON.stringify(resp, null, 4))
+        // console.log('bill',vm.bill)
         vm.bill.stringSeq = vm.seqNumber;
         vm.bill.priceType = vm.priceType.name;
         billService.create(vm.bill).then(function(respBill){

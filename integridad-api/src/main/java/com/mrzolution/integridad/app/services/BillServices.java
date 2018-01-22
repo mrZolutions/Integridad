@@ -51,20 +51,18 @@ public class BillServices {
 			throw new BadRequestException("Empresa Invalida");
 		}
 
-//		requirement.setExportacion(new Exportacion());
-		Credito credito =new Credito();
-		credito.setFecha_vencimiento("");
-		requirement.setCredito(credito);
 		requirement.getPagos().forEach(pago ->{
 			if("credito".equals(pago.getMedio())){
 				pago.setMedio("otros");
 			}
 			pago.setPropiedades(new PagoPropiedades());
 		});
-		requirement.getItems().forEach(item -> item.setDetalles_adicionales(new DetalleAdicional()));
+
 		ObjectMapper mapper = new ObjectMapper();
 		String data = mapper.writeValueAsString(requirement);
 
+		System.out.println("===============================");
+		System.out.println(data);
 		String response = httpCallerService.post(Constants.DATIL_LINK, data, userClient);
 //		String response = "OK";
 		return response;
