@@ -536,9 +536,31 @@ angular.module('integridadUiApp')
           "telefono":vm.clientSelected.phone
         },
         "items":vm.items,
-        "valor_retenido_iva": 70.40,
-        "valor_retenido_renta": 29.60,
-        "pagos": vm.pagos
+        "valor_retenido_iva": 0,
+        "valor_retenido_renta": 0,
+        "pagos": vm.pagos,
+        "exportacion": {
+          "incoterm": {
+            "termino": "",
+            "lugar": "",
+            "total_sin_impuestos": ""
+          },
+          "origen": {
+            "codigo_pais":"",
+            "puerto": ""
+          },
+          "destino": {
+            "codigo_pais":"",
+            "puerto": ""
+          },
+          "codigo_pais_adquisicion": "EC",
+          "totales": {
+            "flete_internacional": 0,
+            "seguro_internacional": 0,
+            "gastos_aduaneros": 0,
+            "otros_gastos_transporte": 0
+          }
+        }
       };
 
       billService.getClaveDeAcceso(req, vm.companyData.userClient.id).then(function(resp){

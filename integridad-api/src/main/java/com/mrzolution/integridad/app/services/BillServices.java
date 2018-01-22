@@ -51,7 +51,7 @@ public class BillServices {
 			throw new BadRequestException("Empresa Invalida");
 		}
 
-		requirement.setExportacion(new Exportacion());
+//		requirement.setExportacion(new Exportacion());
 		requirement.setCredito(new Credito());
 		requirement.getPagos().forEach(pago -> pago.setPropiedades(new PagoPropiedades()));
 		requirement.getItems().forEach(item -> item.setDetalles_adicionales(new DetalleAdicional()));
