@@ -9,7 +9,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Iterables;
 import com.mrzolution.integridad.app.cons.Constants;
 import com.mrzolution.integridad.app.domain.*;
-import com.mrzolution.integridad.app.domain.ebill.Requirement;
+import com.mrzolution.integridad.app.domain.Pago;
+import com.mrzolution.integridad.app.domain.ebill.*;
 import com.mrzolution.integridad.app.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -50,10 +51,10 @@ public class BillServices {
 			throw new BadRequestException("Empresa Invalida");
 		}
 
-		requirement.setExportacion(null);
-		requirement.setCredito(null);
-		requirement.getPagos().forEach(pago -> pago.setPropiedades(null));
-		requirement.getItems().forEach(item -> item.setDetalles_adicionales(null));
+		requirement.setExportacion(new Exportacion());
+		requirement.setCredito(new Credito());
+		requirement.getPagos().forEach(pago -> pago.setPropiedades(new PagoPropiedades()));
+		requirement.getItems().forEach(item -> item.setDetalles_adicionales(new DetalleAdicional()));
 		ObjectMapper mapper = new ObjectMapper();
 		String data = mapper.writeValueAsString(requirement);
 
