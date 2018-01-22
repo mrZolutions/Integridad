@@ -50,6 +50,10 @@ public class BillServices {
 			throw new BadRequestException("Empresa Invalida");
 		}
 
+		requirement.setExportacion(null);
+		requirement.setCredito(null);
+		requirement.getPagos().forEach(pago -> pago.setPropiedades(null));
+		requirement.getItems().forEach(item -> item.setDetalles_adicionales(null));
 		ObjectMapper mapper = new ObjectMapper();
 		String data = mapper.writeValueAsString(requirement);
 
