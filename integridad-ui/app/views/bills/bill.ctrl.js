@@ -170,8 +170,6 @@ angular.module('integridadUiApp')
       vm.impuestoIVA.base_imponible = vm.bill.subTotal;
       vm.impuestoICE.valor = vm.bill.ice;
       vm.impuestoIVA.valor = vm.bill.iva;
-      console.log('vm.bill.baseTaxes ', vm.bill.baseTaxes);
-      console.log('discountWithIva ', discountWithIva);
       vm.bill.baseTaxes = (vm.bill.baseTaxes - discountWithIva).toFixed(3);
       vm.bill.baseNoTaxes = (vm.bill.baseNoTaxes - discountWithNoIva).toFixed(3);
       vm.bill.total = (parseFloat(vm.bill.baseTaxes)

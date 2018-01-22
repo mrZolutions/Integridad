@@ -11,6 +11,8 @@ public final class Constants {
     
     public static final String ID_TYPE_RUC = "RUC";
     public static final String ID_TYPE_CEDULA = "CED";
+
+    public static final String DATIL_LINK = "https://link.datil.co/invoices/issue";
     
 
 }
