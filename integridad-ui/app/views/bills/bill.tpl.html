@@ -146,8 +146,8 @@
         <div class="form-group col-md-12 ">
           <table width="100%">
             <tr>
-              <td width="50%">
-                <label>FECHA</label>
+              <td width="30%">
+                <label>FECHA: </label>
                 <div class="input-group date" id="pickerBillDate">
                   <input type="text" class="form-control input-group-addon" ng-disabled="!vm.newBill"/>
                   <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"/></span>
@@ -159,8 +159,11 @@
                   });
                 </script>
               </td>
-              <td width="50%">
-                &nbsp;
+              <td width="70%">
+                <div style=" padding-left: 10px" ng-show="!vm.newBill">
+                  <label>CLAVE DE ACCESO: </label><br/>
+                  {{vm.bill.claveDeAcceso}}
+                </div>
               </td>
             </tr>
           </table>

@@ -51,20 +51,19 @@ public class BillServices {
 			throw new BadRequestException("Empresa Invalida");
 		}
 
+		log.info("BillServices getDatil Empresa valida: {}", userClient.getName());
 		requirement.getPagos().forEach(pago ->{
 			if("credito".equals(pago.getMedio())){
 				pago.setMedio("otros");
 			}
-//			pago.setPropiedades(new PagoPropiedades());
 		});
 
 		ObjectMapper mapper = new ObjectMapper();
 		String data = mapper.writeValueAsString(requirement);
 
-		System.out.println("===============================");
-		System.out.println(data);
+		log.info("BillServices getDatil maper creado");
 		String response = httpCallerService.post(Constants.DATIL_LINK, data, userClient);
-//		String response = "OK";
+		log.info("BillServices getDatil httpcall success");
 		return response;
 	}
 	

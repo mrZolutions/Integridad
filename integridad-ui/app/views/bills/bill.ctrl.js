@@ -435,7 +435,6 @@ angular.module('integridadUiApp')
     vm.billSelect = function(bill){
       vm.loading = true;
       billService.getById(bill.id).then(function (response) {
-        console.log(response);
         vm.billList = undefined;
         vm.bill = response;
         vm.companyData = $localStorage.user.subsidiary;
@@ -456,7 +455,8 @@ angular.module('integridadUiApp')
     vm.getClaveAcceso = function(){
       vm.loading = true;
       $('#modalAddPago').modal('hide');
-      vm.impuestosTotales.push(vm.impuestoICE,vm.impuestoIVA);
+      // vm.impuestosTotales.push(vm.impuestoICE,vm.impuestoIVA);
+      vm.impuestosTotales.push(vm.impuestoIVA);
       vm.bill.billSeq = vm.numberAddedOne;
 
       _.each(vm.bill.details, function(det){
@@ -540,30 +540,34 @@ angular.module('integridadUiApp')
 
       };
 
-      console.log(JSON.stringify(req, null, 4))
       billService.getClaveDeAcceso(req, vm.companyData.userClient.id).then(function(resp){
         vm.bill.pagos = vm.pagos;
         if(vm.bill.discountPercentage === undefined){
           vm.bill.discountPercentage = 0;
         }
-        console.log('resp',resp)
-        console.log(JSON.stringify(resp, null, 4))
-        // console.log('bill',vm.bill)
-        vm.bill.stringSeq = vm.seqNumber;
-        vm.bill.priceType = vm.priceType.name;
-        billService.create(vm.bill).then(function(respBill){
-          vm.billed = true;
-          $localStorage.user.cashier.billNumberSeq = vm.bill.billSeq;
-          _activate();
+        var obj = JSON.parse(resp.data);
+        if(obj.error === undefined){
+          vm.bill.claveDeAcceso = obj.clave_acceso;
+          vm.bill.idSri = obj.id;
+          vm.bill.stringSeq = vm.seqNumber;
+          vm.bill.priceType = vm.priceType.name;
+          billService.create(vm.bill).then(function(respBill){
+            vm.billed = true;
+            $localStorage.user.cashier.billNumberSeq = vm.bill.billSeq;
+            _activate();
+            vm.loading = false;
+          }).catch(function (error) {
+            vm.loading = false;
+            vm.errorValidateAdm = error.data;
+          });
+        } else {
           vm.loading = false;
-        }).catch(function (error) {
-          vm.loading = false;
-          vm.errorValidateAdm = error.data;
-        });
+          vm.error = "Error al obtener Clave de Acceso";
+        }
 
       }).catch(function (error) {
         vm.loading = false;
-        vm.errorValidateAdm = error.data;
+        vm.error = error.data;
       });
     };
 

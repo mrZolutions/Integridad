@@ -46,6 +46,9 @@ public class Bill {
     private double discount;
     private int discountPercentage;
 
+    private String claveDeAcceso;
+    private String idSri;
+
     //TODO
     //propina
     //descuento
