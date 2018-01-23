@@ -9,7 +9,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Iterables;
 import com.mrzolution.integridad.app.cons.Constants;
 import com.mrzolution.integridad.app.domain.*;
-import com.mrzolution.integridad.app.domain.ebill.Requirement;
+import com.mrzolution.integridad.app.domain.Pago;
+import com.mrzolution.integridad.app.domain.ebill.*;
 import com.mrzolution.integridad.app.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -50,12 +51,19 @@ public class BillServices {
 			throw new BadRequestException("Empresa Invalida");
 		}
 
+		log.info("BillServices getDatil Empresa valida: {}", userClient.getName());
+		requirement.getPagos().forEach(pago ->{
+			if("credito".equals(pago.getMedio())){
+				pago.setMedio("otros");
+			}
+		});
+
 		ObjectMapper mapper = new ObjectMapper();
 		String data = mapper.writeValueAsString(requirement);
 
-		String url = "https://link.datil.co/invoices/issue";
-		String response = httpCallerService.post(url, data, userClient);
-//		String response = "OK";
+		log.info("BillServices getDatil maper creado");
+		String response = httpCallerService.post(Constants.DATIL_LINK, data, userClient);
+		log.info("BillServices getDatil httpcall success");
 		return response;
 	}
 	

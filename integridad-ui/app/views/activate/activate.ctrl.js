@@ -10,6 +10,8 @@
 angular.module('integridadUiApp')
   .controller('ActivateCtrl', function ($routeParams, $location, authService, permissionService, $rootScope, $localStorage) {
     var vm = this;
+    vm.error = undefined;
+    vm.success = undefined;
 
     vm.errorActive = false;
     function getPermissions(){

@@ -36,6 +36,7 @@ public class Bill {
     private double ice;
     private double total;
     private double subTotal;
+    private double baseNoTaxes;
     private double baseTaxes;
 
     private String ordenDecompra;
@@ -44,6 +45,9 @@ public class Bill {
     private String otir;
     private double discount;
     private int discountPercentage;
+
+    private String claveDeAcceso;
+    private String idSri;
 
     //TODO
     //propina

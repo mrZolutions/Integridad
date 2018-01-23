@@ -12,6 +12,8 @@ angular.module('integridadUiApp')
     subsidiaryService, productTypeService, messurementListService, brandService, lineService, groupService,
     subgroupService, $routeParams) {
     var vm = this;
+    vm.error = undefined;
+    vm.success = undefined;
 
     vm.loading = false;
     vm.product = undefined;
