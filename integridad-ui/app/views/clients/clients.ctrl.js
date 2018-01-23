@@ -10,6 +10,8 @@
 angular.module('integridadUiApp')
   .controller('ClientsCtrl', function ($routeParams, $location, projectService, utilStringService, countryListService, clientService, $localStorage, validatorService) {
     var vm = this;
+    vm.error = undefined;
+    vm.success = undefined;
 
     vm.loading = false;
     vm.client=undefined;

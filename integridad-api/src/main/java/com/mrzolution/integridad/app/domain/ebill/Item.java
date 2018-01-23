@@ -1,9 +1,11 @@
 package com.mrzolution.integridad.app.domain.ebill;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
 import java.util.List;
 @Data
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Item {
     private String descripcion;
     private String codigo_principal;

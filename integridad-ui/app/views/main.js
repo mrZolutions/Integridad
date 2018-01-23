@@ -10,6 +10,8 @@
 angular.module('integridadUiApp')
   .controller('MainCtrl', function ($rootScope, $location, authService, utilStringService, permissionService, $localStorage) {
     var vm = this;
+    vm.error = undefined;
+    vm.success = undefined;
     vm.loading = false;
 
     vm.init = true;

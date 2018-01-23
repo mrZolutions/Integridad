@@ -10,7 +10,7 @@ angular
 
     this.getClaveDeAcceso = function (req, id) {
       return securityService.post('/bill/clave_acceso/'+id, req).then(function successCallback(response) {
-        console.log(response)
+        // console.log(response)
         return response;
       });
     };
