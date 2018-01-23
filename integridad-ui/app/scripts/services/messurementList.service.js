@@ -11,9 +11,10 @@ angular
         {shortName: 'LB', name:'LIBRA'},
         {shortName: 'MT', name:'METRO'},
         {shortName: 'GR', name:'GRAMO'},
-        {shortName: 'GL', name:'GALON'}
+        {shortName: 'CJ', name:'CAJA'},
+        {shortName: 'PQ', name:'PAQUETE'},
       ];
-      
+
       return messurementList;
     }
 
