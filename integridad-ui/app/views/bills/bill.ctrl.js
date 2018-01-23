@@ -518,7 +518,6 @@ angular.module('integridadUiApp')
           }
         },
         "moneda":"USD",
-        "informacion_adicional":{},
         "totales":{
           "total_sin_impuestos":vm.bill.subTotal,
           "impuestos":vm.impuestosTotales,

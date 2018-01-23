@@ -55,7 +55,7 @@ public class BillServices {
 			if("credito".equals(pago.getMedio())){
 				pago.setMedio("otros");
 			}
-			pago.setPropiedades(new PagoPropiedades());
+//			pago.setPropiedades(new PagoPropiedades());
 		});
 
 		ObjectMapper mapper = new ObjectMapper();
