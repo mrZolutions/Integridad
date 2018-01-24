@@ -488,7 +488,7 @@ angular.module('integridadUiApp')
           "cantidad":det.quantity,
           "codigo_principal": det.product.barCode,
           "codigo_auxiliar": det.product.barCode,
-          "precio_unitario": costWithIva,
+          "precio_unitario": det.costEach,
           "descripcion": det.product.name,
           "precio_total_sin_impuestos": (parseFloat(det.costEach)*parseFloat(det.quantity)).toFixed(2),
           "impuestos": impuestos,
