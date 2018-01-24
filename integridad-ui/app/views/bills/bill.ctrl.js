@@ -490,7 +490,7 @@ angular.module('integridadUiApp')
           "codigo_auxiliar": det.product.barCode,
           "precio_unitario": costWithIva,
           "descripcion": det.product.name,
-          "precio_total_sin_impuestos": det.costEach,
+          "precio_total_sin_impuestos": (parseFloat(det.costEach)*parseFloat(det.quantity)).toFixed(2),
           "impuestos": impuestos,
           "descuento": vm.bill.discountPercentage,
           "unidad_medida": det.product.unitOfMeasurementFull
