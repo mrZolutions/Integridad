@@ -705,7 +705,7 @@
         <div class="modal-body">
           <div class="row">
             <div class="col-md-12" ng-if="vm.productToAdd === undefined">
-              <input ng-model="searchText" class="form-control" placeholder="Buscar">
+              <input ng-model="searchTextProd" class="form-control" placeholder="Buscar">
               <table class="table table-striped">
                 <thead>
                   <tr>
@@ -722,7 +722,7 @@
                       No hay proyectos ingresados
                     </td>
                   </tr>
-                  <tr ng-repeat="productSelect in vm.productList | orderBy:'name' | filter:searchText">
+                  <tr ng-repeat="productSelect in vm.productList | orderBy:'name' | filter:searchTextProd">
                     <td>{{ productSelect.name }}</td>
                     <td>{{ productSelect.quantity }}</td>
                     <td>{{ vm.getCost('1.'+ productSelect[vm.priceType.cod], productSelect.averageCost) }}</td>
@@ -784,7 +784,7 @@
 
           <button type="button" class="btn btn-primary" ng-click="vm.acceptProduct(false)"
             ng-disabled="vm.productToAdd === undefined">
-            Aceptar y Agreagar Mas productos
+            Aceptar y Agregar Mas productos
           </button>
         </div>
       </div>
