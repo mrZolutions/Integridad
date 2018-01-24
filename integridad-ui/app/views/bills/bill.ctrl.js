@@ -562,7 +562,7 @@ angular.module('integridadUiApp')
           });
         } else {
           vm.loading = false;
-          vm.error = "Error al obtener Clave de Acceso: " + obj.errors;
+          vm.error = "Error al obtener Clave de Acceso: " + JSON.stringify(obj.errors);
         }
 
       }).catch(function (error) {
