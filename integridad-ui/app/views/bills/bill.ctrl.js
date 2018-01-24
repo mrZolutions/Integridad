@@ -512,8 +512,8 @@ angular.module('integridadUiApp')
           "razon_social":$localStorage.user.cashier.subsidiary.userClient.name,
           "direccion":$localStorage.user.cashier.subsidiary.userClient.address1,
           "establecimiento":{
-            "punto_emision":$localStorage.user.cashier.subsidiary.threeCode,
-            "codigo":$localStorage.user.cashier.threeCode,
+            "punto_emision":$localStorage.user.cashier.threeCode,
+            "codigo":$localStorage.user.cashier.subsidiary.threeCode,
             "direccion":$localStorage.user.cashier.subsidiary.address1
           }
         },
