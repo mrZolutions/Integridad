@@ -456,6 +456,7 @@ angular.module('integridadUiApp')
       vm.loading = true;
       $('#modalAddPago').modal('hide');
       // vm.impuestosTotales.push(vm.impuestoICE,vm.impuestoIVA);
+      vm.impuestosTotales = [];
       vm.impuestosTotales.push(vm.impuestoIVA);
       vm.bill.billSeq = vm.numberAddedOne;
 
@@ -465,7 +466,7 @@ angular.module('integridadUiApp')
         var impuestos = [];
         var impuesto ={};
         if(det.product.iva){
-          impuesto.base_imponible=det.costEach;
+          impuesto.base_imponible=(parseFloat(det.costEach)*parseFloat(det.quantity)).toFixed(2);
           impuesto.valor=costWithIva;
           impuesto.tarifa=12.0;
           impuesto.codigo='2';
