@@ -160,7 +160,7 @@
                 </script>
               </td>
               <td width="70%">
-                <div style=" padding-left: 10px" ng-show="!vm.newBill">
+                <div style=" padding-left: 10px" ng-show="!vm.newBill" print-if="!vm.newBill">
                   <label>CLAVE DE ACCESO: </label><br/>
                   {{vm.bill.claveDeAcceso}}
                 </div>
@@ -465,6 +465,10 @@
           <button type="button" class="btn btn-primary"
           ng-click="vm.clientSelected = undefined">
             Cancelar
+          </button>
+          <button print-btn type="button" class="btn btn-primary"
+                  ng-if="!vm.newBill" print-remove>
+            Imprimir
           </button>
         </div>
       </div>
