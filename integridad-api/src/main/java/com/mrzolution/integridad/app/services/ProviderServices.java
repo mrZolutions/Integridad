@@ -1,20 +1,14 @@
 package com.mrzolution.integridad.app.services;
 
 import com.google.common.collect.Iterables;
-import com.mrzolution.integridad.app.domain.Bill;
-import com.mrzolution.integridad.app.domain.Client;
 import com.mrzolution.integridad.app.domain.Provider;
 import com.mrzolution.integridad.app.exceptions.BadRequestException;
-import com.mrzolution.integridad.app.repositories.BillRepository;
-import com.mrzolution.integridad.app.repositories.ClientRepository;
 import com.mrzolution.integridad.app.repositories.ProviderRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.UUID;
 
 @Slf4j
@@ -35,7 +29,7 @@ public class ProviderServices {
 		log.info("ProviderServices created id: {}", saved.getId());
 		return saved;
 	}
-	
+
 //	public void update(Client client) throws BadRequestException{
 //		if(client.getId() == null){
 //			throw new BadRequestException("Invalid Client");

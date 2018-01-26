@@ -34,6 +34,10 @@ public class Provider {
     @Email
     private String email;
 
+    @ManyToOne
+    @JoinColumn(name = "user_client_id")
+    private UserClient userClient;
+
 
     private long dateCreated;
     
@@ -42,7 +46,10 @@ public class Provider {
 //    @OneToMany(mappedBy = "userClient", cascade = CascadeType.ALL)
 //    private List<Subsidiary> subsidiaries;
     
-    public void setListsNull(){}
+    public void setListsNull(){
+        userClient.setListsNull();
+        userClient.setFatherListToNull();
+    }
     
     public void setFatherListToNull(){
     }
@@ -50,6 +57,7 @@ public class Provider {
     @Transient
     public static Provider newProviderTest(){
         Provider provider = new Provider();
+        provider.setUserClient(UserClient.newUserClientTest());
         
         return provider;
     }

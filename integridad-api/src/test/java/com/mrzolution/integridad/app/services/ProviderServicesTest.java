@@ -1,11 +1,6 @@
 package com.mrzolution.integridad.app.services;
 
-import com.mrzolution.integridad.app.domain.Product;
-import com.mrzolution.integridad.app.domain.ProductBySubsidiary;
 import com.mrzolution.integridad.app.domain.Provider;
-import com.mrzolution.integridad.app.repositories.ProductBySubsidiairyRepository;
-import com.mrzolution.integridad.app.repositories.ProductBySubsidiaryChildRepository;
-import com.mrzolution.integridad.app.repositories.ProductRepository;
 import com.mrzolution.integridad.app.repositories.ProviderRepository;
 import org.junit.Assert;
 import org.junit.Before;
@@ -16,8 +11,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -41,12 +34,12 @@ public class ProviderServicesTest {
 	public void getByIdTest() throws Exception{
 		UUID id = UUID.randomUUID();
 		provider.setId(id);
-		
+
 		Mockito.when(providerRepository.findOne(id)).thenReturn(provider);
 
 		Provider retrieved = service.getById(id);
 		ListValidation.childsLisAndFathertValidation(Provider.class, retrieved);
-		
+
 		Assert.assertNotNull(retrieved);
 	}
 

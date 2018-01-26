@@ -32,7 +32,7 @@ public class ProviderController {
 	    }
 		return new ResponseEntity<Provider>(response, HttpStatus.CREATED);
 	}
-	
+
 //	@RequestMapping(method = RequestMethod.PUT)
 //    public ResponseEntity update(@RequestBody Client client){
 //		log.info("ClientController update: {}", client);

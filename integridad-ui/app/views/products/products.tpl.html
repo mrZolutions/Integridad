@@ -41,6 +41,8 @@
     <thead>
       <tr>
         <th> Nombre </th>
+        <th> Cantidad Disponible</th>
+        <th> Precio Unitario $</th>
         <th>
           <button type="button" class="btn btn-primary" ng-click="vm.productCreate()">
             Crear
@@ -56,6 +58,8 @@
       </tr>
       <tr ng-repeat="productEdit in vm.productList | orderBy:'name' | filter:searchText">
         <td>{{ productEdit.name }}</td>
+        <td>{{ productEdit.quantity }}</td>
+        <td>{{ vm.getCost('1.'+ productEdit['cashPercentage'], productEdit.averageCost) }}</td>
         <td>
           <button type="button" class="btn btn-primary" ng-click="vm.editProduct(productEdit)">
             Editar
