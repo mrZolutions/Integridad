@@ -156,6 +156,7 @@ public class UserClientServicesTest {
 		System.out.println(retrieved);
 
 		Assert.assertNotNull(retrieved);
+		Assert.assertNull(retrieved.getProviders());
 		Assert.assertNotNull(retrieved.getSubsidiaries().get(0));
 		Assert.assertNull(retrieved.getSubsidiaries().get(0).getUsers());
 		Assert.assertNotNull(retrieved.getSubsidiaries().get(0).getCashiers());
