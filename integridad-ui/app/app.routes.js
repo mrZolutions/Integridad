@@ -48,6 +48,10 @@ function routes($routeProvider) {
       templateUrl: 'views/products/products.tpl.html',
       controller: 'ProductsCtrl',
       controllerAs: 'vm'
+    }).when('/provider/providers', {
+      templateUrl: 'views/providers/providers.tpl.html',
+      controller: 'ProvidersCtrl',
+      controllerAs: 'vm'
     }).otherwise({
     redirectTo: '/'
   });

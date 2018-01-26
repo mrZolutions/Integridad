@@ -17,7 +17,7 @@ angular.module('integridadUiApp')
 
     vm.loading = false;
     vm.product = undefined;
-    vm.productList = undefined;
+    vm.productList = [];
     vm.subsidiaryId = undefined;
     vm.productTypes = undefined;
     vm.messurements = undefined;
@@ -41,20 +41,31 @@ angular.module('integridadUiApp')
 
       if($routeParams.subsidiaryId){
         productService.getLazyBySusidiaryId($routeParams.subsidiaryId).then(function (response) {
-          vm.productList = response;
+          _getProductQuantities(response);
           vm.loading = false;
         }).catch(function (error) {
           vm.loading = false;
           vm.error = error.data;
         });
       } else {
-        productService.getLazyByProjectId($localStorage.user.subsidiary.userClient.id).then(function (response) {
-          vm.productList = response;
+        // productService.getLazyByProjectId($localStorage.user.subsidiary.userClient.id).then(function (response) {
+        productService.getLazyBySusidiaryId($localStorage.user.subsidiary.id).then(function(response){
+          _getProductQuantities(response);
           vm.loading = false;
         }).catch(function (error) {
           vm.loading = false;
           vm.error = error.data;
         });
+      }
+    }
+
+    function _getProductQuantities(listResponse){
+      for (var i = 0; i < listResponse.length; i++) {
+        var sub = _.find(listResponse[i].productBySubsidiaries, function (s) {
+          return (s.subsidiary.id === $localStorage.user.subsidiary.id && s.active === true);
+        });
+        listResponse[i].quantity = sub.quantity
+        vm.productList.push(listResponse[i]);
       }
     }
 
@@ -157,6 +168,12 @@ angular.module('integridadUiApp')
         });
       }
     }
+
+    vm.getCost = function(textCost, averageCost){
+      var aC = parseFloat(textCost)
+      var cost = aC * averageCost;
+      return (cost).toFixed(2);
+    };
 
     vm.editProduct = function(productEdit){
       vm.selectedGroup = productEdit.subgroup.groupLine;

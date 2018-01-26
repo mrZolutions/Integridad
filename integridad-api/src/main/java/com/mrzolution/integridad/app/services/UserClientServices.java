@@ -124,6 +124,8 @@ public class UserClientServices {
 		});
 		
 		userClient.setSubsidiaries(subsidiaryList);
+		//***** Se setea en null porque los proveedores se los maneja aparte de los userClient/Empresas
+		userClient.setProviders(null);
 		userClient.setFatherListToNull();
 		log.info("UserClientServices populateChildren FINISHED userClientId: {}", userClient.getId());
 		
