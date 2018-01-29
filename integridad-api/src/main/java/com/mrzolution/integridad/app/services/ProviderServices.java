@@ -30,16 +30,16 @@ public class ProviderServices {
 		return saved;
 	}
 
-//	public void update(Client client) throws BadRequestException{
-//		if(client.getId() == null){
-//			throw new BadRequestException("Invalid Client");
-//		}
-//		log.info("ClientServices update: {}", client.getName());
-//		client.setListsNull();
-//		Client updated = clientRepository.save(client);
-//		log.info("ClientServices updated id: {}", updated.getId());
-//	}
-//
+	public void update(Provider provider) throws BadRequestException{
+		if(provider.getId() == null){
+			throw new BadRequestException("Invalid Provider");
+		}
+		log.info("ProviderServices update: {}", provider.getName());
+		provider.setListsNull();
+		Provider updated = providerRepository.save(provider);
+		log.info("ProviderServices updated id: {}", updated.getId());
+	}
+
 	public Provider getById(UUID id){
 		log.info("ProviderServices getById: {}", id);
 		Provider retrieved = providerRepository.findOne(id);
@@ -71,6 +71,17 @@ public class ProviderServices {
 			provider.setFatherListToNull();
 		}
 		log.info("ProviderServices getAllLazy size retrieved: {}", Iterables.size(providers));
+		return providers;
+	}
+
+	public Iterable<Provider> getLazyByUserClient(UUID id){
+		log.info("ProviderServices getLazyByUserClient");
+		Iterable<Provider> providers = providerRepository.findByUserClientId(id);
+		for (Provider provider : providers) {
+			provider.setListsNull();
+			provider.setFatherListToNull();
+		}
+		log.info("ProviderServices getLazyByUserClient size retrieved: {}", Iterables.size(providers));
 		return providers;
 	}
 //

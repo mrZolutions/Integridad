@@ -19,7 +19,7 @@
 
 <div class="header">
   <h4>
-    Productos
+    Proveedores
   </h4>
 </div>
 
@@ -40,7 +40,9 @@
   <table class="table table-striped">
     <thead>
       <tr>
+        <th> C&oacute;digo </th>
         <th> Nombre </th>
+        <th> Tipo </th>
         <th>
           <button type="button" class="btn btn-primary" ng-click="vm.providerCreate()">
             Crear
@@ -55,7 +57,9 @@
         </td>
       </tr>
       <tr ng-repeat="providerEdit in vm.providerList | orderBy:'name' | filter:searchText">
+        <td>{{ providerEdit.codeIntegridad }}</td>
         <td>{{ providerEdit.name }}</td>
+        <td>{{ providerEdit.providerType }}</td>
         <td>
           <button type="button" class="btn btn-primary" ng-click="vm.editProvider(providerEdit)">
             Editar
@@ -68,5 +72,119 @@
       </tr>
     </tbody>
   </table>
+</div>
 
+<div ng-show="vm.provider !== undefined">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <b>Datos del Proveedor</b>
+    </div>
+    <div class="panel-body">
+      <div class="row">
+        <div class="form-group col-md-4">
+          <label>C&oacute;digo: </label>
+          <input type="text" ng-model="vm.provider.codeIntegridad" class="form-control">
+        </div>
+        <div class="form-group col-md-4">
+          <label>Tipo de proveedor: </label>
+          <select ng-options="tipo as tipo for tipo in vm.providerType" ng-model="vm.provider.providerType"
+          class="form-control"></select>
+        </div>
+        <div class="form-group col-md-4">
+          <label>RUC: </label>
+          <input type="text" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+          ng-model="vm.provider.ruc" class="form-control" maxlength="13">
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="form-group col-md-12">
+          <label>Nombre Comercial: </label>
+          <input type="text" ng-model="vm.provider.name" class="form-control">
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="form-group col-md-12">
+          <label>Raz&oacute;n Social: </label>
+          <input type="text" ng-model="vm.provider.razonSocial" class="form-control">
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="form-group col-md-12">
+          <label>Direcci&oacute;n: </label>
+          <input type="text" ng-model="vm.provider.address1" class="form-control">
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="form-group col-md-6">
+          <label>Pa&iacute;s: </label>
+          <input type="text" ng-model="vm.provider.country" class="form-control">
+        </div>
+        <div class="form-group col-md-6">
+          <label>Ciudad: </label>
+          <input type="text" ng-model="vm.provider.city" class="form-control">
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="form-group col-md-6">
+          <label>Tel&eacute;fono: (incluir c&oacute;digo de provincia ej: 02) </label>
+          <input type="text" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+          ng-model="vm.provider.phone" class="form-control" maxlength="9">
+        </div>
+        <div class="form-group col-md-6">
+          <label>Tel&eacute;fono celular: </label>
+          <input type="text" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+          ng-model="vm.provider.celPhone" class="form-control" maxlength="10">
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="form-group col-md-6">
+          <label>Email: </label>
+          <input type="text" ng-model="vm.provider.email" class="form-control">
+        </div>
+        <div class="form-group col-md-6">
+          <label>Contacto: </label>
+          <input type="text" ng-model="vm.provider.contact" class="form-control">
+        </div>
+      </div>
+    </div>
+    <div class="panel-footer">
+      <button type="button" class="btn btn-primary" ng-click="vm.register()"
+        ng-disabled="vm.disableSave()">
+        Guardar
+      </button>
+      <button type="button" class="btn btn-success"
+      ng-click="vm.cancel()">
+        Cancelar
+      </button>
+    </div>
+  </div>
+</div>
+
+<div id="modalEliminar" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" ng-click="vm.provider=undefined">&times;</button>
+        <h4 class="modal-title">Advertencia</h4>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-md-12" >
+            Esta seguro que desea Eliminar el Proveedor: {{vm.provider.name}}
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" ng-click="vm.remove()" data-dismiss="modal">
+          Eliminar
+        </button>
+      </div>
+    </div>
+  </div>
 </div>
