@@ -62,9 +62,9 @@ public class BillServices {
 		String data = mapper.writeValueAsString(requirement);
 
 		log.info("BillServices getDatil maper creado");
-//		String response = httpCallerService.post(Constants.DATIL_LINK, data, userClient);
+		String response = httpCallerService.post(Constants.DATIL_LINK, data, userClient);
 		log.info("BillServices getDatil httpcall success");
-		return "OK";
+		return response;
 	}
 	
 	public Iterable<Bill> getByUserLazy(UserIntegridad user){
