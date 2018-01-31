@@ -410,7 +410,7 @@
     </div>
   </div>
 
-  <div class="panel panel-default" ng-if="!vm.newBill">
+  <div class="panel panel-default" ng-if="!vm.newBill" print-remove>
     <div class="panel-heading">
       <b>Forma de Pago</b>
     </div>
@@ -527,6 +527,37 @@
       </div>
     </div>
   </div>
+
+  <div class="row" print-only print-if="vm.companyData.userClient.espTemp">
+    <div class="panel panel-default" print-only>
+      <div class="panel-body">
+        <div class="row">
+          <div class="col-md-12">
+            <table width="100%">
+              <tr>
+                <td align="center" colspan="2">
+                  Debo y pagaré incondicionalmente a la orden de Petroleum & Power Engineers S.A. el valor total de esta factura sin protesto.
+                </td>
+              </tr>
+              <tr>
+                <td width="50%" align="center">
+                  <br/><br/><br/>
+                  ________________<br/>
+                  FIRMA AUTORIZADA
+                </td>
+                <td width="50%" align="center">
+                  <br/><br/><br/>
+                  ________________<br/>
+                  RECIBI CONFORME
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </div>
 
   <div id="modalAddPago" class="modal fade" role="dialog">
