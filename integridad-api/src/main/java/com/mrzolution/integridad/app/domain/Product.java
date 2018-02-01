@@ -69,9 +69,13 @@ public class Product implements Child{
     	userClient.setListsNull();
     	userClient.setFatherListToNull();
         productType.setListsNull();
-        brand.setListsNull();
-        subgroup.setListsNull();
-        subgroup.setFatherListToNull();
+        if(brand != null){
+            brand.setListsNull();
+        }
+        if(subgroup != null){
+            subgroup.setListsNull();
+            subgroup.setFatherListToNull();
+        }
     }
 
     @Transient

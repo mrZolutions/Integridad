@@ -464,11 +464,16 @@ angular.module('integridadUiApp')
       vm.impuestosTotales.push(vm.impuestoIVA);
       vm.bill.billSeq = vm.numberAddedOne;
 
+      if(vm.bill.discountPercentage === undefined){
+        vm.bill.discountPercentage = 0;
+      }
+
       _.each(vm.bill.details, function(det){
         var costWithIva = (det.costEach*1.12).toFixed(2);
         var costWithIce = (det.costEach*1.10).toFixed(2);
         var impuestos = [];
         var impuesto ={};
+
         if(det.product.iva){
           impuesto.base_imponible=(parseFloat(det.costEach)*parseFloat(det.quantity)).toFixed(2);
           impuesto.valor=costWithIva;

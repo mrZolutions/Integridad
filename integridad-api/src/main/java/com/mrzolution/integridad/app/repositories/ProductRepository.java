@@ -30,4 +30,7 @@ public interface ProductRepository extends CrudRepository<Product, UUID>{
 
 	Iterable<Product> findByCodeIntegridadAndActive(String code, boolean active);
 
+	@Query("SELECT p FROM Product p WHERE p.codeIntegridad = (:code) and  p.userClient.id = (:clientId) and p.active = true")
+	Iterable<Product> findByCodeIntegridadAndClientId(@Param("code")String code, @Param("clientId") UUID clientId);
+
 }
