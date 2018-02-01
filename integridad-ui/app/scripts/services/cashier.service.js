@@ -8,4 +8,10 @@ angular
       });
     };
 
+    this.update = function (cashier) {
+      return securityService.put('/cashier', cashier).then(function successCallback(response) {
+        return response.data;
+      });
+    };
+
   });
