@@ -7,10 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
@@ -35,4 +32,17 @@ public class CashierController {
 	    }
 		return new ResponseEntity<Iterable>(response, HttpStatus.OK);
 	}
+
+	@RequestMapping(method = RequestMethod.PUT)
+    public ResponseEntity update(@RequestBody Cashier cashier){
+		log.info("CashierController update");
+		try {
+			service.update(cashier);
+		}catch(BadRequestException e) {
+			log.error("CashierController update Exception thrown: {}", e.getMessage());
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+	    }
+		return new ResponseEntity<Void>(HttpStatus.ACCEPTED);
+	}
+
 }

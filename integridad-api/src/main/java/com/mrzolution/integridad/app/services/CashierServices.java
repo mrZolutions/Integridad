@@ -4,6 +4,7 @@ import com.mrzolution.integridad.app.domain.Brand;
 import com.mrzolution.integridad.app.domain.Cashier;
 import com.mrzolution.integridad.app.domain.Product;
 import com.mrzolution.integridad.app.domain.Subsidiary;
+import com.mrzolution.integridad.app.exceptions.BadRequestException;
 import com.mrzolution.integridad.app.repositories.BrandRepository;
 import com.mrzolution.integridad.app.repositories.CashierRepository;
 import com.mrzolution.integridad.app.repositories.ProductRepository;
@@ -31,6 +32,16 @@ public class CashierServices {
 			cashier.setListsNull();
 		});
 		return actives;
+	}
 
+	public Cashier update(Cashier cashier) throws BadRequestException{
+		if(cashier.getId() == null){
+			throw new BadRequestException("Invalid Cashier");
+		}
+		log.info("CashierServices update: {}", cashier.getId());
+		cashier.setListsNull();
+		Cashier updated = cashierRepository.save(cashier);
+		log.info("CashierServices update id: {}", updated.getId());
+		return updated;
 	}
 }

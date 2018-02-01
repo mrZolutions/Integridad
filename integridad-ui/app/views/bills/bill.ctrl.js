@@ -9,7 +9,8 @@
  */
 angular.module('integridadUiApp')
   .controller('BillCtrl', function ( _, $rootScope, $location, utilStringService, $localStorage,
-                                     clientService, productService, authService, billService, $window) {
+                                     clientService, productService, authService, billService, $window,
+                                     cashierService) {
     var vm = this;
     vm.error = undefined;
     vm.success = undefined;
@@ -50,7 +51,7 @@ angular.module('integridadUiApp')
       'MASTERCARD',
       'AMERICAN'
     ];
-
+    vm.seqChanged = false;
 
     function _activate(){
       vm.newBill = true;
@@ -64,6 +65,7 @@ angular.module('integridadUiApp')
       vm.loading = true;
       vm.indexDetail = undefined;
       vm.priceType = vm.prices[0];
+      vm.seqChanged = false;
 
       vm.impuestosTotales = [];
       vm.items = [];
@@ -195,6 +197,8 @@ angular.module('integridadUiApp')
       billService.getByStringSeq(stringSeq).then(function (response) {
         if(response.length === 0){
           vm.seqNumber = stringSeq;
+          vm.numberAddedOne = parseInt(vm.seqNumberSecondPart);
+          vm.seqChanged = true;
           $('#modalEditBillNumber').modal('hide');
         } else {
           vm.seqErrorNumber = "NUMERO DE FACTURA YA EXISTENTE"
@@ -560,11 +564,19 @@ angular.module('integridadUiApp')
           billService.create(vm.bill).then(function(respBill){
             vm.billed = true;
             $localStorage.user.cashier.billNumberSeq = vm.bill.billSeq;
+            if(vm.seqChanged){
+              cashierService.update($localStorage.user.cashier).then(function(resp){
+                // cashier updated
+              }).catch(function (error) {
+                vm.loading = false;
+                vm.error = error.data;
+              });
+            }
             _activate();
             vm.loading = false;
           }).catch(function (error) {
             vm.loading = false;
-            vm.errorValidateAdm = error.data;
+            vm.error = error.data;
           });
         } else {
           vm.loading = false;
