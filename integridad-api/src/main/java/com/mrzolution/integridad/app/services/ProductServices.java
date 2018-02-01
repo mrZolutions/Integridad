@@ -34,7 +34,7 @@ public class ProductServices {
 	public Product create(Product product) throws BadRequestException{
 		log.info("ProductServices create");
 
-		Iterable<Product> products = productRepository.findByCodeIntegridadAndActive(product.getCodeIntegridad(), true);
+		Iterable<Product> products = productRepository.findByCodeIntegridadAndClientId(product.getCodeIntegridad(), product.getUserClient().getId());
 		if(Iterables.size(products) >0){
 			throw new BadRequestException("CODIGO DUPLICADO");
 		}
@@ -141,8 +141,10 @@ public class ProductServices {
 		});
 
 		product.setProductBySubsidiaries(productBySubsidiaryList);
-		product.getBrand().setFatherListToNull();
-		product.getBrand().setListsNull();
+		if(product.getBrand() != null){
+			product.getBrand().setFatherListToNull();
+			product.getBrand().setListsNull();
+		}
 		product.setFatherListToNull();
 		log.info("ProductServices populateChildren FINISHED productId: {}", product.getId());
 		
