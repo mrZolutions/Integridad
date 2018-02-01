@@ -30,6 +30,7 @@ angular.module('integridadUiApp')
     vm.wizard = 0;
 
     function _activate(){
+      vm.productList = [];
       vm.loading = true;
       vm.messurements = messurementListService.getMessurementList();
       productTypeService.getproductTypesLazy().then(function(response){
