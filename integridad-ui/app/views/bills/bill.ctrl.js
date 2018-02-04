@@ -10,7 +10,7 @@
 angular.module('integridadUiApp')
   .controller('BillCtrl', function ( _, $rootScope, $location, utilStringService, $localStorage,
                                      clientService, productService, authService, billService, $window,
-                                     cashierService) {
+                                     cashierService, requirementService) {
     var vm = this;
     vm.error = undefined;
     vm.success = undefined;
@@ -22,10 +22,6 @@ angular.module('integridadUiApp')
       { name: 'EFECTIVO', cod: 'cashPercentage'}, { name: 'MAYORISTA', cod: 'majorPercentage'},
       { name: 'CREDITO', cod: 'creditPercentage'}, { name: 'TARJETA', cod: 'cardPercentage'}
     ];
-    vm.tipyIdCode = {
-      RUC : '04',
-      CED : '05'
-    };
     vm.medList = [
       {code: 'efectivo', name: 'Efectivo' },
       {code: 'cheque', name: 'Cheque' },
@@ -509,46 +505,7 @@ angular.module('integridadUiApp')
         vm.items.push(item);
       });
 
-      var req = {
-        "ambiente": 1,
-        "tipo_emision": 1,
-        "secuencial": vm.bill.billSeq,
-        "fecha_emision": billService.getIsoDate($('#pickerBillDate').data("DateTimePicker").date().toDate()),
-        "emisor":{
-          "ruc":$localStorage.user.cashier.subsidiary.userClient.ruc,
-          "obligado_contabilidad":true,
-          "contribuyente_especial":"",
-          "nombre_comercial":$localStorage.user.cashier.subsidiary.userClient.name,
-          "razon_social":$localStorage.user.cashier.subsidiary.userClient.name,
-          "direccion":$localStorage.user.cashier.subsidiary.userClient.address1,
-          "establecimiento":{
-            "punto_emision":$localStorage.user.cashier.threeCode,
-            "codigo":$localStorage.user.cashier.subsidiary.threeCode,
-            "direccion":$localStorage.user.cashier.subsidiary.address1
-          }
-        },
-        "moneda":"USD",
-        "totales":{
-          "total_sin_impuestos":vm.bill.subTotal,
-          "impuestos":vm.impuestosTotales,
-          "importe_total":vm.bill.total,
-          "propina":0.0,
-          "descuento":vm.bill.discount
-        },
-        "comprador":{
-          "email":vm.clientSelected.email,
-          "identificacion":vm.clientSelected.identification,
-          "tipo_identificacion":vm.tipyIdCode[vm.clientSelected.typeId],
-          "razon_social":vm.clientSelected.name,
-          "direccion":vm.clientSelected.address,
-          "telefono":vm.clientSelected.phone
-        },
-        "items":vm.items,
-        "valor_retenido_iva": 0,
-        "valor_retenido_renta": 0,
-        "pagos": vm.pagos,
-
-      };
+      var req = requirementService.createRequirement(vm.clientSelected, vm.bill, $localStorage.user, vm.impuestosTotales, vm.items, vm.pagos);
 
       billService.getClaveDeAcceso(req, vm.companyData.userClient.id).then(function(resp){
         vm.bill.pagos = vm.pagos;

@@ -2,12 +2,6 @@ angular
   .module('app.services')
   .service('billService', function (securityService) {
 
-    this.getIsoDate = function(dateBillPre){
-      var dateReturn = new Date(dateBillPre.getTime() - (5*60*60*1000));
-      return dateReturn.toISOString().toString();
-    };
-
-
     this.getClaveDeAcceso = function (req, id) {
       return securityService.post('/bill/clave_acceso/'+id, req).then(function successCallback(response) {
         // console.log(response)
