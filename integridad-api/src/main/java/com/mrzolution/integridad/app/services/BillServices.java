@@ -52,11 +52,13 @@ public class BillServices {
 		}
 
 		log.info("BillServices getDatil Empresa valida: {}", userClient.getName());
-		requirement.getPagos().forEach(pago ->{
-			if("credito".equals(pago.getMedio())){
-				pago.setMedio("otros");
-			}
-		});
+		if(requirement.getPagos() != null){
+			requirement.getPagos().forEach(pago ->{
+				if("credito".equals(pago.getMedio())){
+					pago.setMedio("otros");
+				}
+			});
+		}
 
 		ObjectMapper mapper = new ObjectMapper();
 		String data = mapper.writeValueAsString(requirement);
