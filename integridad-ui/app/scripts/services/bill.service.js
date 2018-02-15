@@ -27,8 +27,8 @@ angular
       });
     };
 
-    this.getByStringSeq = function (stringSeq) {
-      return securityService.get('/bill/seq/'+ stringSeq).then(function successCallback(response) {
+    this.getByStringSeq = function (stringSeq, subsidiaryId) {
+      return securityService.get('/bill/seq/'+ stringSeq + '/'+ subsidiaryId).then(function successCallback(response) {
         return response.data;
       });
     };

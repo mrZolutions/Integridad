@@ -177,9 +177,9 @@ public class BillServices {
 	}
 
 
-	public Iterable<Bill> getByStringSeq(String stringSeq){
-		log.info("BillServices getByStringSeq : {}", stringSeq);
-		Iterable<Bill> bills = billRepository.findByStringSeq(stringSeq);
+	public Iterable<Bill> getByStringSeqAndSubId(String stringSeq, UUID subId){
+		log.info("BillServices getByStringSeq : {}, {}", stringSeq, subId);
+		Iterable<Bill> bills = billRepository.findByStringSeqAndSubsidiaryId(stringSeq, subId);
 
 		bills.forEach(bill->{
 			bill.setFatherListToNull();

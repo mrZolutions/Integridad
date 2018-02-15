@@ -190,7 +190,7 @@ angular.module('integridadUiApp')
       var stringSeq =  vm.seqNumberFirstPart + '-'
         + vm.seqNumberSecondPart;
 
-      billService.getByStringSeq(stringSeq).then(function (response) {
+      billService.getByStringSeq(stringSeq, vm.companyData.id).then(function (response) {
         if(response.length === 0){
           vm.seqNumber = stringSeq;
           vm.numberAddedOne = parseInt(vm.seqNumberSecondPart);
@@ -226,6 +226,7 @@ angular.module('integridadUiApp')
 
     vm.clientSelect = function(client){
       vm.companyData = $localStorage.user.subsidiary;
+      console.log(vm.companyData);
       vm.dateBill = new Date();
       vm.clientSelected = client;
       vm.pagos=[];
