@@ -478,6 +478,14 @@ angular.module('integridadUiApp')
           impuesto.codigo_porcentaje='2';
 
           impuestos.push(impuesto);
+        } else {
+          impuesto.base_imponible=(parseFloat(det.costEach)*parseFloat(det.quantity)).toFixed(2);
+          impuesto.valor=det.costEach;
+          impuesto.tarifa=0.0;
+          impuesto.codigo='0';
+          impuesto.codigo_porcentaje='0';
+
+          impuestos.push(impuesto);
         }
 
         if(det.product.ice){
