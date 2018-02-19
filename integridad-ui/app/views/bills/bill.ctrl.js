@@ -226,7 +226,6 @@ angular.module('integridadUiApp')
 
     vm.clientSelect = function(client){
       vm.companyData = $localStorage.user.subsidiary;
-      console.log(vm.companyData);
       vm.dateBill = new Date();
       vm.clientSelected = client;
       vm.pagos=[];
@@ -498,9 +497,12 @@ angular.module('integridadUiApp')
           "precio_unitario": det.costEach,
           "descripcion": det.product.name,
           "precio_total_sin_impuestos": (parseFloat(det.costEach)*parseFloat(det.quantity)).toFixed(2),
-          "impuestos": impuestos,
           "descuento": (parseFloat(det.costEach)*(parseInt(vm.bill.discountPercentage)/100)).toFixed(2),
           "unidad_medida": det.product.unitOfMeasurementFull
+        }
+
+        if(!_.isEmpty(impuestos)){
+          item.impuestos = impuestos;
         }
 
         vm.items.push(item);
