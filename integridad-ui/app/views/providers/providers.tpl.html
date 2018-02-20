@@ -34,7 +34,7 @@
   </div>
 </div>
 
-<div ng-show="vm.provider === undefined">
+<div ng-show="vm.provider === undefined && vm.providerToUse === undefined">
 
   <input ng-model="searchText" class="form-control" placeholder="Buscar">
   <table class="table table-striped">
@@ -67,6 +67,9 @@
           <button type="button" class="btn btn-primary" ng-click="vm.provider=providerEdit"
             data-toggle="modal" data-target="#modalEliminar">
             Eliminar
+          </button>
+          <button type="button" class="btn btn-primary" ng-click="vm.createRetention(providerEdit)">
+            Retenci&oacute;n
           </button>
         </td>
       </tr>
@@ -162,6 +165,30 @@
       ng-click="vm.cancel()">
         Cancelar
       </button>
+    </div>
+  </div>
+</div>
+
+<div ng-show="vm.providerToUse !== undefined">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <b>Datos para La Retenci&oacute;n</b>
+    </div>
+    <div class="panel-body">
+      <div class="row">
+        <div class="form-group col-md-6">
+          <label>Ejercicio Fiscal: </label>
+          <input type="text" ng-model="vm.retention.ejercicio" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+          class="form-control">
+        </div>
+
+        <div class="form-group col-md-6">
+          <label>Tipo de Impuesto: </label><br/>
+          <label class="radio-inline"><input type="radio" ng-model="vm.retention.type" value="1" name="tipo">Fuente</label>
+          <label class="radio-inline"><input type="radio" ng-model="vm.retention.type" value="2" name="tipo">IVA</label>
+        </div>
+
+      </div>
     </div>
   </div>
 </div>
