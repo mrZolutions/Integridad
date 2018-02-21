@@ -193,8 +193,10 @@
       <div class="row">
         <div class="form-group col-md-12 ">
           <table width="100%">
-            <tr><td><b>DIRECCION: </b>{{vm.clientSelected.address}}</td></tr>
-            <tr><td><b>E-MAIL: </b>{{vm.clientSelected.email}}</td></tr>
+            <tr>
+              <td><b>DIRECCION: </b>{{vm.clientSelected.address}}</td>
+              <td><b>E-MAIL: </b>{{vm.clientSelected.email}}</td>
+            </tr>
             <tr>
               <td>
                 <b>NUMERO DE FACTURA: </b> {{vm.seqNumber}}
@@ -203,9 +205,7 @@
                   Editar
                 </a>
               </td>
-            </tr>
-            <tr print-remove>
-              <td>
+              <td print-remove>
                 <b>PRECIO CONVENIDO: </b>
                 <select ng-options="price as price.name for price in vm.prices"  ng-if="vm.newBill"
                 ng-model="vm.priceType" class="form-control" ng-change="vm.reCalculateTotal()" ng-disabled="vm.bill.details.length > 0"></select>
@@ -410,6 +410,82 @@
     </div>
   </div>
 
+  <div class="panel panel-default" print-only print-avoid-break>
+    <div class="panel-heading">
+      <b>Forma de Pago</b>
+    </div>
+    <div class="panel-body">
+      <div class="row">
+        <div class="col-md-12">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th> Medio </th>
+                <th> Valor</th>
+                <th>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="pago in vm.pagos">
+                <td>
+                  {{ pago.medio }}<br/>
+                  <span ng-if="pago.medio === 'cheque'">
+                      {{ pago.chequeBank }} - {{ pago.chequeAccount }} - {{pago.chequeNumber}}<br/>
+                  </span>
+                  <span ng-if="pago.medio === 'credito'">
+                      NUMER DE PAGOS: {{ pago.creditoNumeroPagos }} - DIAS: {{ pago.creditoIntervalos }}<br/>
+                  </span>
+                  <span ng-if="pago.medio === 'cheque_posfechado'">
+                      {{ pago.chequeBank }} - {{ pago.chequeAccount }} - {{pago.chequeNumber}} - {{pago.fechaCobro | date :  "dd/MM/yyyy"}}<br/>
+                  </span>
+                  <span ng-if="pago.medio === 'tarjeta_credito' || pago.medio === 'tarjeta_debito'">
+                      {{ pago.cardBrand }}<br/>
+                  </span>
+
+                  {{ pago.payForm }}
+                </td>
+                <td>{{ pago.total }}</td>
+                <td>
+                </td>
+              </tr>
+              <tr>
+                <td><b>TOTAL</b></td>
+                <td>{{vm.getTotalPago()}}</td>
+                <td>
+                  Vuelto: {{vm.getCambio}}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div print-only print-if="vm.companyData.userClient.espTemp" print-avoid-break>
+        <div class="col-md-12">
+          <table width="100%">
+            <tr>
+              <td align="center" colspan="2">
+                Debo y pagaré incondicionalmente a la orden de Petroleum & Power Engineers S.A. el valor total de esta factura sin protesto.
+              </td>
+            </tr>
+            <tr>
+              <td width="50%" align="center">
+                <br/><br/><br/>
+                ________________<br/>
+                FIRMA AUTORIZADA
+              </td>
+              <td width="50%" align="center">
+                <br/><br/><br/>
+                ________________<br/>
+                RECIBI CONFORME
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="panel panel-default" ng-if="!vm.newBill" print-remove>
     <div class="panel-heading">
       <b>Forma de Pago</b>
@@ -434,7 +510,7 @@
                       {{ pago.chequeBank }} - {{ pago.chequeAccount }} - {{pago.chequeNumber}}<br/>
                   </span>
                   <span ng-if="pago.medio === 'credito'">
-                      NUMER DE PAGOS: {{ pago.creditoNumeroPagos }} - INTERVALOS: {{ pago.creditoIntervalos }}<br/>
+                      NUMER DE PAGOS: {{ pago.creditoNumeroPagos }} - DIAS: {{ pago.creditoIntervalos }}<br/>
                   </span>
                   <span ng-if="pago.medio === 'cheque_posfechado'">
                       {{ pago.chequeBank }} - {{ pago.chequeAccount }} - {{pago.chequeNumber}} - {{pago.fechaCobro | date :  "dd/MM/yyyy"}}<br/>
@@ -470,89 +546,6 @@
                   ng-if="!vm.newBill" print-remove>
             Imprimir
           </button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="panel panel-default" print-only>
-    <div class="panel-heading">
-      <b>Forma de Pago</b>
-    </div>
-    <div class="panel-body">
-      <div class="row">
-        <div class="col-md-12">
-          <table class="table table-striped">
-            <thead>
-              <tr>
-                <th> Medio </th>
-                <th> Valor</th>
-                <th>
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr ng-repeat="pago in vm.pagos">
-                <td>
-                  {{ pago.medio }}<br/>
-                  <span ng-if="pago.medio === 'cheque'">
-                      {{ pago.chequeBank }} - {{ pago.chequeAccount }} - {{pago.chequeNumber}}<br/>
-                  </span>
-                  <span ng-if="pago.medio === 'credito'">
-                      NUMER DE PAGOS: {{ pago.creditoNumeroPagos }} - INTERVALOS: {{ pago.creditoIntervalos }}<br/>
-                  </span>
-                  <span ng-if="pago.medio === 'cheque_posfechado'">
-                      {{ pago.chequeBank }} - {{ pago.chequeAccount }} - {{pago.chequeNumber}} - {{pago.fechaCobro | date :  "dd/MM/yyyy"}}<br/>
-                  </span>
-                  <span ng-if="pago.medio === 'tarjeta_credito' || pago.medio === 'tarjeta_debito'">
-                      {{ pago.cardBrand }}<br/>
-                  </span>
-
-                  {{ pago.payForm }}
-                </td>
-                <td>{{ pago.total }}</td>
-                <td>
-                </td>
-              </tr>
-              <tr>
-                <td><b>TOTAL</b></td>
-                <td>{{vm.getTotalPago()}}</td>
-                <td>
-                  Vuelto: {{vm.getCambio}}
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="row" print-only print-if="vm.companyData.userClient.espTemp">
-    <div class="panel panel-default" print-only>
-      <div class="panel-body">
-        <div class="row">
-          <div class="col-md-12">
-            <table width="100%">
-              <tr>
-                <td align="center" colspan="2">
-                  Debo y pagaré incondicionalmente a la orden de Petroleum & Power Engineers S.A. el valor total de esta factura sin protesto.
-                </td>
-              </tr>
-              <tr>
-                <td width="50%" align="center">
-                  <br/><br/><br/>
-                  ________________<br/>
-                  FIRMA AUTORIZADA
-                </td>
-                <td width="50%" align="center">
-                  <br/><br/><br/>
-                  ________________<br/>
-                  RECIBI CONFORME
-                </td>
-              </tr>
-            </table>
-          </div>
         </div>
       </div>
     </div>
