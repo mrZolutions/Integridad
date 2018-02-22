@@ -175,20 +175,55 @@
       <b>Datos para La Retenci&oacute;n</b>
     </div>
     <div class="panel-body">
+
       <div class="row">
         <div class="form-group col-md-6">
           <label>Ejercicio Fiscal: </label>
           <input type="text" ng-model="vm.retention.ejercicio" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
-          class="form-control">
+          class="form-control" maxlength="4">
         </div>
 
         <div class="form-group col-md-6">
           <label>Tipo de Impuesto: </label><br/>
-          <label class="radio-inline"><input type="radio" ng-model="vm.retention.type" value="1" name="tipo">Fuente</label>
-          <label class="radio-inline"><input type="radio" ng-model="vm.retention.type" value="2" name="tipo">IVA</label>
+          <label class="radio-inline"><input type="radio" ng-model="vm.retention.typeRetention" value="1" name="tipo" ng-change="vm.getPercentageTable()">Fuente</label>
+          <label class="radio-inline"><input type="radio" ng-model="vm.retention.typeRetention" value="2" name="tipo" ng-change="vm.getPercentageTable()">IVA</label>
         </div>
-
       </div>
+      <div class="row">
+        <div class="form-group col-md-12">
+          <input ng-model="searchTextPercentage" class="form-control" placeholder="Buscar">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th> Descripci&oacute;n </th>
+                <th> % </th>
+                <th>  </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-show="vm.tablePercentage == 0">
+                <td colspan="2">
+                  No hay Fuente Seleccionada
+                </td>
+              </tr>
+              <tr dir-paginate="p in vm.tablePercentage | filter:searchTextPercentage | itemsPerPage: 10"  pagination-id="clientPagination">
+                <td>{{ p.name }}</td>
+                <td>{{ p.percentage }}</td>
+                <td>
+                  <button type="button" class="btn btn-primary"
+                    ng-click="vm.selecPercentage(p)">
+                    Seleccionar
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <dir-pagination-controls pagination-id="clientPagination"></dir-pagination-controls>
+        </div>
+      </div>
+
+
+
     </div>
   </div>
 </div>
