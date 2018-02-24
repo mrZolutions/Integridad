@@ -1,11 +1,6 @@
 angular
   .module('app.services')
-  .service('requirementService', function () {
-
-    function getIsoDate(dateBillPre){
-      var dateReturn = new Date(dateBillPre.getTime() - (5*60*60*1000));
-      return dateReturn.toISOString().toString();
-    }
+  .service('requirementService', function (dateService) {
 
     function getTipyCode(code){
       tipyIdCode = {
@@ -42,7 +37,7 @@ angular
         "ambiente": 2,
         "tipo_emision": 1,
         "secuencial": bill.billSeq,
-        "fecha_emision": getIsoDate($('#pickerBillDate').data("DateTimePicker").date().toDate()),
+        "fecha_emision": dateService.getIsoDate($('#pickerBillDate').data("DateTimePicker").date().toDate()),
         "emisor":{
           "ruc":user.cashier.subsidiary.userClient.ruc,
           "obligado_contabilidad":true,
