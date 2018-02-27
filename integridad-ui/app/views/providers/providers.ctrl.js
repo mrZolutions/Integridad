@@ -190,7 +190,7 @@ angular.module('integridadUiApp')
 
     vm.createRetention = function(prov){
       var today = new Date();
-      $('#pickerBillDate').data("DateTimePicker").date(today);
+      $('#pickerBillDateRetention').data("DateTimePicker").date(today);
       vm.retention = {
         typeRetention: undefined,
         items: []
@@ -213,7 +213,7 @@ angular.module('integridadUiApp')
       vm.item = undefined;
       vm.item = {
         codigo: parseInt(vm.retention.typeRetention),
-        fecha_emision_documento_sustento: dateService.getIsoDate($('#pickerBillDate').data("DateTimePicker").date().toDate()),
+        fecha_emision_documento_sustento: dateService.getIsoDate($('#pickerBillDateRetention').data("DateTimePicker").date().toDate()),
         numero_documento_sustento:vm.retention.numero,
         codigo_porcentaje: percentage.codigo,
         porcentaje: percentage.percentage,
