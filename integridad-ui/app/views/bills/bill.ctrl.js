@@ -500,11 +500,11 @@ angular.module('integridadUiApp')
 
         var item={
           "cantidad":det.quantity,
-          "codigo_principal": det.product.barCode,
+          "codigo_principal": det.product.codeIntegridad,
           "codigo_auxiliar": det.product.barCode,
           "precio_unitario": det.costEach,
           "descripcion": det.product.name,
-          "precio_total_sin_impuestos": (parseFloat(det.costEach)*parseFloat(det.quantity)).toFixed(2),
+          "precio_total_sin_impuestos": ((parseFloat(det.costEach) - (parseFloat(det.costEach)*(parseInt(vm.bill.discountPercentage)/100)))*parseFloat(det.quantity)).toFixed(2),
           "descuento": (parseFloat(det.costEach)*(parseInt(vm.bill.discountPercentage)/100)).toFixed(2),
           "unidad_medida": det.product.unitOfMeasurementFull
         }
