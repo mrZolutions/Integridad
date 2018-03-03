@@ -8,7 +8,7 @@
  * Controller of the menu
  */
 angular.module('integridadUiApp')
-  .controller('ProvidersCtrl', function (_, $localStorage, $location, providerService, utilStringService, dateService) {
+  .controller('ProvidersCtrl', function (_, $localStorage, $location, providerService, utilStringService, dateService, eretentionService) {
     var vm = this;
     vm.error = undefined;
     vm.success = undefined;
@@ -19,10 +19,8 @@ angular.module('integridadUiApp')
     vm.providerToUse = undefined;
     vm.providerList = undefined;
     vm.providerType = [
-      'PROVEEDOR TIPO 1',
-      'PROVEEDOR TIPO 2',
-      'PROVEEDOR TIPO 3',
-      'PROVEEDOR TIPO 4',
+      'PROVEEDORES LOCALES O NACIONALES 01',
+      'PROVEEDORES DEL EXTERIOR 02',
     ];
 
     vm.fuenteTipo = [
@@ -191,11 +189,18 @@ angular.module('integridadUiApp')
     vm.createRetention = function(prov){
       var today = new Date();
       $('#pickerBillDateRetention').data("DateTimePicker").date(today);
+      $('#pickerBillDateDocumentRetention').data("DateTimePicker").date(today);
+
       vm.retention = {
+        provider: prov,
         typeRetention: undefined,
-        items: []
+        items: [],
+        ejercicio: today.getFullYear()
       };
-      vm.providerToUse = prov;
+
+      $('#pickerBillDateDocumentRetention').on("dp.change", function (data) {
+          vm.retention.ejercicio = $('#pickerBillDateDocumentRetention').data("DateTimePicker").date().toDate().getFullYear();
+        });
     };
 
     vm.getPercentageTable = function(){
@@ -210,10 +215,11 @@ angular.module('integridadUiApp')
     };
 
     vm.selecPercentage =function(percentage){
+      vm.baseImponibleItem = undefined;
       vm.item = undefined;
       vm.item = {
         codigo: parseInt(vm.retention.typeRetention),
-        fecha_emision_documento_sustento: dateService.getIsoDate($('#pickerBillDateRetention').data("DateTimePicker").date().toDate()),
+        fecha_emision_documento_sustento: dateService.getIsoDate($('#pickerBillDateDocumentRetention').data("DateTimePicker").date().toDate()),
         numero_documento_sustento:vm.retention.numero,
         codigo_porcentaje: percentage.codigo,
         porcentaje: percentage.percentage,
@@ -222,10 +228,27 @@ angular.module('integridadUiApp')
     };
 
     vm.addItem = function() {
-      vm.item.base_imponible = vm.baseImponibleItem,
+      vm.item.valor_retenido = parseFloat(vm.item.base_imponible) * (parseFloat(vm.item.porcentaje)/100).toFixed(2);
+      if(vm.indexEdit !== undefined){
+        vm.retention.items.splice(vm.indexEdit, 1);
+        vm.indexEdit = undefined
+      }
       vm.retention.items.push(vm.item);
       vm.item = undefined;
-      console.log(vm.retention);
+      vm.retention.typeRetention = undefined;
+      vm.tablePercentage = undefined;
+
+      var eRet = eretentionService.createERetention(vm.retention, $localStorage.user);
+      console.log(JSON.stringify(eRet, null, 4));
+    };
+
+    vm.editItem = function(index){
+      vm.item = angular.copy(vm.retention.items[index]);
+      vm.indexEdit = index;
+    };
+
+    vm.deleteItem = function(index){
+      vm.retention.items.splice(index, 1);
     };
 
     (function initController() {

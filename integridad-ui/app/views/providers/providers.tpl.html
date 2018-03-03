@@ -34,7 +34,7 @@
   </div>
 </div>
 
-<div ng-show="vm.provider === undefined && vm.providerToUse === undefined">
+<div ng-show="vm.provider === undefined && vm.retention === undefined">
 
   <input ng-model="searchText" class="form-control" placeholder="Buscar">
   <table class="table table-striped">
@@ -169,7 +169,7 @@
   </div>
 </div>
 
-<div ng-show="vm.providerToUse !== undefined">
+<div ng-show="vm.retention !== undefined">
   <div class="panel panel-default">
     <div class="panel-heading">
       <b>Datos para La Retenci&oacute;n</b>
@@ -178,7 +178,7 @@
 
       <div class="row">
         <div class="form-group col-md-6">
-          <label>Fecha de Factura: </label>
+          <label>Fecha: </label>
           <div class="input-group date" id="pickerBillDateRetention">
             <input type="text" class="form-control input-group-addon"/>
             <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"/></span>
@@ -199,24 +199,41 @@
       </div>
 
       <div class="row">
-        <div class="form-group col-md-6">
-          <label>Ejercicio Fiscal: </label>
-          <input type="text" ng-model="vm.retention.ejercicio" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
-          class="form-control" maxlength="4">
+        <div class="form-group col-md-4">
+          <label>Fecha Documento: </label>
+          <div class="input-group date" id="pickerBillDateDocumentRetention">
+            <input type="text" class="form-control input-group-addon"/>
+            <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"/></span>
+          </div>
+          <script>
+            $('#pickerBillDateDocumentRetention').datetimepicker({
+              format: "DD/MM/YY",
+            });
+          </script>
         </div>
 
-        <div class="form-group col-md-6">
+        <div class="form-group col-md-4">
           <label>Tipo de Impuesto: </label><br/>
-          <label class="radio-inline"><input type="radio" ng-model="vm.retention.typeRetention" value="1" name="tipo" ng-change="vm.getPercentageTable()">Fuente</label>
-          <label class="radio-inline"><input type="radio" ng-model="vm.retention.typeRetention" value="2" name="tipo" ng-change="vm.getPercentageTable()">IVA</label>
+          <label class="radio-inline"><input type="radio" ng-model="vm.retention.typeRetention" value="1" name="tipo"
+            ng-change="vm.getPercentageTable()" ng-disabled="vm.retention.numero === undefined">Fuente</label>
+          <label class="radio-inline"><input type="radio" ng-model="vm.retention.typeRetention" value="2" name="tipo"
+            ng-change="vm.getPercentageTable()" ng-disabled="vm.retention.numero === undefined">IVA</label>
+        </div>
+
+        <div class="form-group col-md-4">
+          <label>Ejercicio Fiscal: </label><br/>
+          <label>{{vm.retention.ejercicio}} </label>
+          <!-- <input type="text" ng-model="vm.retention.ejercicio"
+          class="form-control" ng-disabled="true"> -->
         </div>
       </div>
-      <div class="row">
+      <div class="row" ng-show="vm.tablePercentage !== undefined">
         <div class="form-group col-md-12">
           <input ng-model="searchTextPercentage" class="form-control" placeholder="Buscar">
           <table class="table table-striped">
             <thead>
               <tr>
+                <th> C&oacute;digo </th>
                 <th> Descripci&oacute;n </th>
                 <th> % </th>
                 <th>  </th>
@@ -229,6 +246,7 @@
                 </td>
               </tr>
               <tr dir-paginate="p in vm.tablePercentage | filter:searchTextPercentage | itemsPerPage: 5"  pagination-id="clientPagination">
+                <td>{{ p.codigo }}</td>
                 <td>{{ p.name }}</td>
                 <td>{{ p.percentage }}</td>
                 <td>
@@ -244,7 +262,49 @@
         </div>
       </div>
 
-
+      <div class="row">
+        <div class="form-group col-md-12">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th> IMPUESTO TIPO </th>
+                <th> CODIGO </th>
+                <th> BASE IMPONIBLE </th>
+                <th> RETENCIONES %</th>
+                <th> VALOR $</th>
+                <th> </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-show="vm.retention.items == 0">
+                <td colspan="5">
+                  No hay Fuente Seleccionada
+                </td>
+              </tr>
+              <tr ng-repeat="i in vm.retention.items" >
+                <td>
+                  <span ng-if="i.codigo === 1">RETENCION EN LA FUENTE</span>
+                  <span ng-if="i.codigo === 2">RETENCION EN EL IVA</span>
+                </td>
+                <td>{{ i.codigo_porcentaje }}</td>
+                <td>{{ i.base_imponible }}</td>
+                <td>{{ i.porcentaje }}</td>
+                <td>{{ i.valor_retenido }}</td>
+                <td>
+                  <button type="button" class="btn btn-primary"
+                    ng-click="vm.editItem($index)" data-toggle="modal" data-target="#modalBaseImponible">
+                    Editar
+                  </button>
+                  <button type="button" class="btn btn-primary"
+                    ng-click="vm.deleteItem($index)">
+                    Eliminar
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
 
     </div>
   </div>
@@ -274,15 +334,16 @@
           <div class="col-md-3" >
             <label>Valor</label>
             <input type="text" onkeypress="return ((event.which >= 46 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
-            class="form-control" maxlength="9" ng-model="vm.baseImponibleItem">
+            class="form-control" maxlength="9" ng-model="vm.item.base_imponible">
           </div>
         </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="vm.addItem()">
-          Agregar
+          Aceptar
         </button>
-        <button type="button" class="btn btn-primary"  data-dismiss="modal">
+        <button type="button" class="btn btn-primary"  data-dismiss="modal"
+          ng-click="vm.item = undefined; vm.indexEdit = undefined;">
           Cancelar
         </button>
       </div>
