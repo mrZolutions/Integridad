@@ -41,6 +41,9 @@ angular
         "items":retention.items,
       };
 
+      if (user.cashier.subsidiary.userClient.testMode){
+        eRet.ambiente = 1;
+      }
       return eRet;
     }
 

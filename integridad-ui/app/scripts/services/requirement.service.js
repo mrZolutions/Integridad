@@ -72,6 +72,10 @@ angular
         "valor_retenido_renta": 0,
       };
 
+      if (user.cashier.subsidiary.userClient.testMode){
+        req.ambiente = 1;
+      }
+
       if(credito !== undefined){
         req.credito = credito;
       }
