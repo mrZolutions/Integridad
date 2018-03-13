@@ -1,5 +1,7 @@
 package com.mrzolution.integridad.app.services;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mrzolution.integridad.app.cons.Constants;
 import com.mrzolution.integridad.app.domain.*;
 import com.mrzolution.integridad.app.exceptions.BadRequestException;
 import com.mrzolution.integridad.app.father.Father;
@@ -37,30 +39,23 @@ public class RetentionServices {
 	@Autowired
 	UserClientRepository userClientRepository;
 
-//	public String getDatil(Requirement requirement, UUID userClientId) throws Exception{
-//		UserClient userClient = userClientRepository.findOne(userClientId);
-//
-//		if(userClient == null){
-//			throw new BadRequestException("Empresa Invalida");
-//		}
-//
-//		log.info("BillServices getDatil Empresa valida: {}", userClient.getName());
-//		if(requirement.getPagos() != null){
-//			requirement.getPagos().forEach(pago ->{
-//				if("credito".equals(pago.getMedio())){
-//					pago.setMedio("otros");
-//				}
-//			});
-//		}
-//
-//		ObjectMapper mapper = new ObjectMapper();
-//		String data = mapper.writeValueAsString(requirement);
-//
-//		log.info("BillServices getDatil maper creado");
-//		String response = httpCallerService.post(Constants.DATIL_LINK, data, userClient);
-//		log.info("BillServices getDatil httpcall success");
-//		return response;
-//	}
+	public String getDatil(com.mrzolution.integridad.app.domain.eretention.Retention requirement, UUID userClientId) throws Exception{
+		UserClient userClient = userClientRepository.findOne(userClientId);
+
+		if(userClient == null){
+			throw new BadRequestException("Empresa Invalida");
+		}
+
+		log.info("RetentionServices getDatil Empresa valida: {}", userClient.getName());
+
+		ObjectMapper mapper = new ObjectMapper();
+		String data = mapper.writeValueAsString(requirement);
+
+		log.info("RetentionServices getDatil maper creado");
+		String response = httpCallerService.post(Constants.DATIL_RETENTION_LINK, data, userClient);
+		log.info("RetentionServices getDatil httpcall success");
+		return response;
+	}
 
 	public Iterable<Retention> getByUserLazy(UserIntegridad user){
 		log.info("RetentionServices getByUserLazy: {}", user.getId());

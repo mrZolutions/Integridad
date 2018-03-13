@@ -10,7 +10,7 @@
 angular.module('integridadUiApp')
   .controller('BillCtrl', function ( _, $rootScope, $location, utilStringService, $localStorage,
                                      clientService, productService, authService, billService, $window,
-                                     cashierService, requirementService) {
+                                     cashierService, requirementService, utilSeqService) {
     var vm = this;
     vm.error = undefined;
     vm.success = undefined;
@@ -95,20 +95,11 @@ angular.module('integridadUiApp')
       });
     }
 
-    function _pad_with_zeroes(number, length) {
-      var my_string = '' + number;
-      while (my_string.length < length) {
-        my_string = '0' + my_string;
-      }
-
-      return my_string;
-    }
-
     function _getSeqNumber(){
       vm.numberAddedOne = parseInt($localStorage.user.cashier.billNumberSeq) + 1;
       vm.seqNumberFirstPart = $localStorage.user.subsidiary.threeCode + '-'
         + $localStorage.user.cashier.threeCode;
-      vm.seqNumberSecondPart = _pad_with_zeroes(vm.numberAddedOne, 10);
+      vm.seqNumberSecondPart = utilSeqService._pad_with_zeroes(vm.numberAddedOne, 10);
       vm.seqNumber =  vm.seqNumberFirstPart + '-'
         + vm.seqNumberSecondPart;
 
@@ -377,10 +368,14 @@ angular.module('integridadUiApp')
 
       vm.pagos
       if(vm.medio.medio === 'efectivo' || vm.medio.medio === 'dinero_electronico_ec'){
-        vm.medio.payForm = '01 - SIN UTILIZACION DEL SISTEMA FINANCIERO';
+        vm.medio.payForm = '20 - OTROS CON UTILIZACION DEL SISTEMA FINANCIERO';
+        // CAMBIO SRI POR CONFIRMAR
+        // vm.medio.payForm = '01 - SIN UTILIZACION DEL SISTEMA FINANCIERO';
       }
       if(vm.medio.medio === 'credito'){
-        vm.medio.payForm = '01 - SIN UTILIZACION DEL SISTEMA FINANCIERO';
+        vm.medio.payForm = '20 - OTROS CON UTILIZACION DEL SISTEMA FINANCIERO';
+        // CAMBIO SRI POR CONFIRMAR
+        // vm.medio.payForm = '01 - SIN UTILIZACION DEL SISTEMA FINANCIERO';
         vm.medio.total = (vm.bill.total - payed).toFixed(2);
       }
       if(vm.medio.medio === 'cheque' || vm.medio.medio === 'cheque_posfechado'){

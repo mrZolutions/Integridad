@@ -17,6 +17,7 @@ angular
         "tipo_emision": 1,
         "secuencial": retention.retentionSeq,
         "fecha_emision": dateService.getIsoDate($('#pickerBillDateRetention').data("DateTimePicker").date().toDate()),
+        "periodo_fiscal": retention.ejercicio,
         "emisor":{
           "ruc":user.cashier.subsidiary.userClient.ruc,
           "obligado_contabilidad":true,
@@ -30,7 +31,7 @@ angular
             "direccion":user.cashier.subsidiary.address1
           }
         },
-        "suejto":{
+        "sujeto":{
           "email":retention.provider.email,
           "identificacion":retention.provider.ruc,
           "tipo_identificacion":'04',

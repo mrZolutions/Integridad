@@ -8,7 +8,7 @@
  * Controller of the menu
  */
 angular.module('integridadUiApp')
-  .controller('ProvidersCtrl', function (_, $localStorage, $location, providerService, utilStringService, dateService, eretentionService) {
+  .controller('ProvidersCtrl', function (_, $localStorage, $location, providerService, utilStringService, dateService, eretentionService, utilSeqService) {
     var vm = this;
     vm.error = undefined;
     vm.success = undefined;
@@ -137,6 +137,16 @@ angular.module('integridadUiApp')
       });
     }
 
+    function _getSeqNumber(){
+      vm.numberAddedOne = parseInt($localStorage.user.cashier.retentionNumberSeq) + 1;
+      vm.seqNumberFirstPart = $localStorage.user.subsidiary.threeCode + '-'
+        + $localStorage.user.cashier.threeCode;
+      vm.seqNumberSecondPart = utilSeqService._pad_with_zeroes(vm.numberAddedOne, 10);
+      vm.seqNumber =  vm.seqNumberFirstPart + '-'
+        + vm.seqNumberSecondPart;
+
+    }
+
     vm.providerCreate = function(){
       vm.error = undefined;
       vm.success = undefined;
@@ -195,12 +205,14 @@ angular.module('integridadUiApp')
         provider: prov,
         typeRetention: undefined,
         items: [],
-        ejercicio: today.getFullYear()
+        ejercicio: ('0' + (today.getMonth() + 1)).slice(-2) + '/' +today.getFullYear()
       };
 
       $('#pickerBillDateDocumentRetention').on("dp.change", function (data) {
-          vm.retention.ejercicio = $('#pickerBillDateDocumentRetention').data("DateTimePicker").date().toDate().getFullYear();
-        });
+        vm.retention.ejercicio = ('0' + ($('#pickerBillDateDocumentRetention').data("DateTimePicker").date().toDate().getMonth() + 1)).slice(-2) + '/' +$('#pickerBillDateDocumentRetention').data("DateTimePicker").date().toDate().getFullYear();
+      });
+
+      _getSeqNumber();
     };
 
     vm.getPercentageTable = function(){
@@ -233,6 +245,7 @@ angular.module('integridadUiApp')
         vm.retention.items.splice(vm.indexEdit, 1);
         vm.indexEdit = undefined
       }
+      vm.retention.retentionSeq = vm.seqNumber;
       vm.retention.items.push(vm.item);
       vm.item = undefined;
       vm.retention.typeRetention = undefined;

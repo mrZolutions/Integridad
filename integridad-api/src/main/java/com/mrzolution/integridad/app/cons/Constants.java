@@ -13,6 +13,7 @@ public final class Constants {
     public static final String ID_TYPE_CEDULA = "CED";
 
     public static final String DATIL_LINK = "https://link.datil.co/invoices/issue";
+    public static final String DATIL_RETENTION_LINK = "https://link.datil.co/retentions/issue";
     
 
 }
