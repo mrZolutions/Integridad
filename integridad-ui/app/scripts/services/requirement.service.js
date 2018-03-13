@@ -78,7 +78,7 @@ angular
       };
 
       if(user.cashier.subsidiary.userClient.espTemp){
-        req.comprador.email = req.comprador.email + ', facturacionelecppe2018@gmail.com, facturacioppecoca@gmail.com';
+        req.comprador.email = req.comprador.email + ', facturacionelecppe2018@gmail.com, facturacionppecoca@gmail.com';
       }
 
       if(credito !== undefined){
