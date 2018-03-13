@@ -77,6 +77,10 @@ angular
         "valor_retenido_renta": 0,
       };
 
+      if(user.cashier.subsidiary.userClient.espTemp){
+        req.comprador.email = req.comprador.email + ', facturacionelecppe2018@gmail.com, facturacioppecoca@gmail.com';
+      }
+
       if(credito !== undefined){
         req.credito = credito;
       }
