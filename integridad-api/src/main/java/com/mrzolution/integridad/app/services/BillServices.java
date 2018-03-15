@@ -1,16 +1,15 @@
 package com.mrzolution.integridad.app.services;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 import com.mrzolution.integridad.app.cons.Constants;
 import com.mrzolution.integridad.app.domain.*;
 import com.mrzolution.integridad.app.domain.Pago;
 import com.mrzolution.integridad.app.domain.ebill.*;
+import com.mrzolution.integridad.app.domain.report.ItemReport;
 import com.mrzolution.integridad.app.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -188,6 +187,22 @@ public class BillServices {
 
 		return bills;
 	}
+
+	public List<ItemReport> getBySubIdAndDates(UUID subId, long dateOne, long dateTwo){
+		log.info("BillServices getBySubIdAndDates: {}, {}, {}", subId, dateOne, dateTwo);
+		Iterable<Bill> bills = billRepository.findBySubsidiaryIdAndDates(subId, dateOne, dateTwo);
+
+		Set<UUID> productIds = new HashSet<>();
+		bills.forEach(bill-> {
+			populateChildren(bill);
+
+			for (Detail detail: bill.getDetails()) {
+				productIds.add(detail.getProduct().getId());
+			}
+		});
+
+		return loadList(Lists.newArrayList(bills), productIds);
+	}
 	
 	private void populateChildren(Bill bill) {
 		log.info("BillServices populateChildren billId: {}", bill.getId());
@@ -233,6 +248,42 @@ public class BillServices {
 		bill.setPagos(pagoList);
 		bill.setFatherListToNull();
 		log.info("BillServices populateChildren FINISHED billId: {}", bill.getId());
+	}
+
+	private List<ItemReport> loadList(List<Bill> bills, Set<UUID> productIds){
+		List<ItemReport> reportList = new ArrayList<>();
+
+		for(UUID uuidCurrent: productIds){
+			Double quantityTotal = new Double(0);
+			Double subTotalTotal = new Double(0);
+			Double ivaTotal = new Double(0);
+			Double totalTotal = new Double(0);
+			String code = "";
+			String desc = "";
+			for (Bill bill: bills) {
+				for(Detail detail: bill.getDetails()){
+					if(uuidCurrent.equals(detail.getProduct().getId())){
+						ItemReport item = new ItemReport(detail.getProduct().getId(),"", bill.getStringSeq(), detail.getProduct().getCodeIntegridad(),
+								detail.getProduct().getName(),Double.valueOf(detail.getQuantity()), detail.getCostEach(), detail.getTotal(), (detail.getTotal() * 0.12), (detail.getTotal() * 1.12));
+						quantityTotal += item.getQuantity();
+						subTotalTotal += item.getSubTotal();
+						ivaTotal += item.getIva();
+						totalTotal += item.getTotal();
+						code = detail.getProduct().getCodeIntegridad();
+						desc = detail.getProduct().getName();
+
+						reportList.add(item);
+					}
+				}
+			}
+
+			ItemReport itemTotal = new ItemReport(uuidCurrent, "R", "", code,
+					desc, quantityTotal, null, subTotalTotal, ivaTotal, totalTotal);
+
+			reportList.add(itemTotal);
+		}
+
+		return reportList;
 	}
 
 }
