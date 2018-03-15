@@ -27,4 +27,7 @@ public interface BillRepository extends CrudRepository<Bill, UUID>{
 
 	@Query("SELECT p FROM Bill p WHERE p.subsidiary.id = (:subId) and p.stringSeq = (:seq)")
 	Iterable<Bill> findByStringSeqAndSubsidiaryId(@Param("seq") String stringSeq, @Param("subId") UUID id);
+
+	@Query("SELECT p FROM Bill p WHERE p.subsidiary.id = (:subId) and p.dateCreated >= (:dateOne)  and p.dateCreated <= (:dateTwo) ")
+	Iterable<Bill> findBySubsidiaryIdAndDates(@Param("subId") UUID id, @Param("dateOne") long dateOne, @Param("dateTwo") long dateTwo);
 }
