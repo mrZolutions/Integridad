@@ -1,8 +1,10 @@
 package com.mrzolution.integridad.app.controllers;
 
+import com.google.common.collect.Lists;
 import com.mrzolution.integridad.app.domain.Bill;
 import com.mrzolution.integridad.app.domain.Brand;
 import com.mrzolution.integridad.app.domain.ebill.Requirement;
+import com.mrzolution.integridad.app.domain.report.ItemReport;
 import com.mrzolution.integridad.app.exceptions.BadRequestException;
 import com.mrzolution.integridad.app.services.BillServices;
 import com.mrzolution.integridad.app.services.BrandServices;
@@ -12,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @Slf4j
@@ -59,6 +62,19 @@ public class BillController {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 		}
 		return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
+	}
+
+	@RequestMapping(method = RequestMethod.GET, value="/rep/{subId}/{dateOne}/{dateTwo}")
+	public ResponseEntity getBySubIdAndDates(@PathVariable("subId") UUID subId, @PathVariable("dateOne") long dateOne, @PathVariable("dateTwo") long dateTwo){
+		log.info("BillController getBySubIdAndDates: {}, {}, {}", subId, dateOne, dateTwo);
+		List<ItemReport> response = null;
+		try {
+			response = service.getBySubIdAndDates(subId,dateOne,dateTwo);
+		}catch(BadRequestException e) {
+			log.error("BillController getBySubIdAndDates Exception thrown: {}", e.getMessage());
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+		}
+		return new ResponseEntity<List>(response, HttpStatus.ACCEPTED);
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value="/{id}")
