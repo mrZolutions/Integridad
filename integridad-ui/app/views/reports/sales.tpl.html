@@ -72,10 +72,14 @@
       ng-click="vm.getReport()">
       Reporte
     </button>
+    <button type="button" class="btn btn-primary"
+      ng-click="vm.exportExcel()">
+      Excel
+    </button>
   </div>
 </div>
 
-<div>
+<div id="exportTable">
   <table class="table table-striped">
     <thead>
       <tr>
@@ -96,7 +100,7 @@
           No hay registros que coincidan con la b&uacute;squeda
         </td>
       </tr>
-      <tr ng-repeat="data in vm.reportList | orderBy:'code'">
+      <tr ng-repeat="data in vm.reportList | orderBy:'code'" >
         <td>{{ data.type }}</td>
         <td>{{ data.billSeqString}}</td>
         <td>{{ data.code }}</td>

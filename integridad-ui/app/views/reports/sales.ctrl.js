@@ -8,7 +8,7 @@
  * Controller of the menu
  */
 angular.module('integridadUiApp')
-  .controller('ReportSalesCtrl', function (_, $localStorage, $location, billService, utilStringService) {
+  .controller('ReportSalesCtrl', function (_, $localStorage, $location, billService, utilStringService, FileSaver) {
     var vm = this;
     var today = new Date();
     $('#pickerBillDateOne').data("DateTimePicker").date(today);
@@ -19,14 +19,23 @@ angular.module('integridadUiApp')
       vm.loading = true;
       var dateOne = $('#pickerBillDateOne').data("DateTimePicker").date().toDate().getTime();
       var dateTwo = $('#pickerBillDateTwo').data("DateTimePicker").date().toDate().getTime();
-      var subId = $localStorage.user.subsidiary.id
+      dateTwo += 86340000;
+      var subId = $localStorage.user.subsidiary.userClient.id
 
-      billService.getBySubsidiaryAndDates(subId, dateOne, dateTwo).then(function (response) {
+      billService.getByUserClientAndDates(subId, dateOne, dateTwo).then(function (response) {
         vm.reportList = response;
         vm.loading = false;
       }).catch(function (error) {
         vm.loading = false;
         vm.error = error.data;
       });
+    };
+
+    vm.exportExcel = function(){
+      var blob = new Blob([document.getElementById('exportTable').innerHTML], {
+            type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8"
+        });
+
+      FileSaver.saveAs(blob, "Report.xls");
     };
   });
