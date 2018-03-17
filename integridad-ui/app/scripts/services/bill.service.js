@@ -33,8 +33,8 @@ angular
       });
     };
 
-    this.getBySubsidiaryAndDates = function (subsidiaryId, dateOne, dateTwo) {
-      return securityService.get('/bill/rep/'+ subsidiaryId + '/' + dateOne + '/'+ dateTwo).then(function successCallback(response) {
+    this.getByUserClientAndDates = function (userClientId, dateOne, dateTwo) {
+      return securityService.get('/bill/rep/'+ userClientId + '/' + dateOne + '/'+ dateTwo).then(function successCallback(response) {
         return response.data;
       });
     };
