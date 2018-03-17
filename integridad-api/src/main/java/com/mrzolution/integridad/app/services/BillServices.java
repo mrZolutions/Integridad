@@ -3,7 +3,6 @@ package com.mrzolution.integridad.app.services;
 import java.util.*;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.mrzolution.integridad.app.cons.Constants;
 import com.mrzolution.integridad.app.domain.*;
@@ -188,9 +187,9 @@ public class BillServices {
 		return bills;
 	}
 
-	public List<ItemReport> getBySubIdAndDates(UUID subId, long dateOne, long dateTwo){
-		log.info("BillServices getBySubIdAndDates: {}, {}, {}", subId, dateOne, dateTwo);
-		Iterable<Bill> bills = billRepository.findBySubsidiaryIdAndDates(subId, dateOne, dateTwo);
+	public List<ItemReport> getBySubIdAndDates(UUID userClientId, long dateOne, long dateTwo){
+		log.info("BillServices getByUserClientIdAndDates: {}, {}, {}", userClientId, dateOne, dateTwo);
+		Iterable<Bill> bills = billRepository.findByUserClientIdAndDates(userClientId, dateOne, dateTwo);
 
 		Set<UUID> productIds = new HashSet<>();
 		bills.forEach(bill-> {

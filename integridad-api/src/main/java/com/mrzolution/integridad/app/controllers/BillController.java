@@ -64,14 +64,14 @@ public class BillController {
 		return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
 	}
 
-	@RequestMapping(method = RequestMethod.GET, value="/rep/{subId}/{dateOne}/{dateTwo}")
-	public ResponseEntity getBySubIdAndDates(@PathVariable("subId") UUID subId, @PathVariable("dateOne") long dateOne, @PathVariable("dateTwo") long dateTwo){
-		log.info("BillController getBySubIdAndDates: {}, {}, {}", subId, dateOne, dateTwo);
+	@RequestMapping(method = RequestMethod.GET, value="/rep/{userClientId}/{dateOne}/{dateTwo}")
+	public ResponseEntity getByUserClientIdAndDates(@PathVariable("userClientId") UUID userClientId, @PathVariable("dateOne") long dateOne, @PathVariable("dateTwo") long dateTwo){
+		log.info("BillController getByUserClientIdAndDates: {}, {}, {}", userClientId, dateOne, dateTwo);
 		List<ItemReport> response = null;
 		try {
-			response = service.getBySubIdAndDates(subId,dateOne,dateTwo);
+			response = service.getBySubIdAndDates(userClientId,dateOne,dateTwo);
 		}catch(BadRequestException e) {
-			log.error("BillController getBySubIdAndDates Exception thrown: {}", e.getMessage());
+			log.error("BillController getByUserClientIdAndDates Exception thrown: {}", e.getMessage());
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 		}
 		return new ResponseEntity<List>(response, HttpStatus.ACCEPTED);
