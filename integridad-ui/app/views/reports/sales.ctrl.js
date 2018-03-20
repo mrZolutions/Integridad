@@ -32,10 +32,11 @@ angular.module('integridadUiApp')
     };
 
     vm.exportExcel = function(){
-      var blob = new Blob([document.getElementById('exportTable').innerHTML], {
-            type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8"
+      var header = '<meta http-equiv="content-type" content="application/vnd.ms-excel; charset=UTF-8">';
+      var blob = new Blob([header + document.getElementById('exportTable').innerHTML], {
+            type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8'
         });
 
-      FileSaver.saveAs(blob, "Report.xls");
+      FileSaver.saveAs(blob, "Report.xlsx");
     };
   });
