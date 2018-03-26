@@ -102,14 +102,26 @@ public class BillController {
 	    }
 		return new ResponseEntity<Bill>(response, HttpStatus.CREATED);
 	}
-//
+
+	@RequestMapping(method = RequestMethod.PUT)
+    public ResponseEntity dactivate(@RequestBody Bill bill){
+		log.info("BillController dactivate: {}", bill.getId());
+		try {
+			service.deactivate(bill);
+		}catch(BadRequestException e) {
+			log.error("BillController dactivate Exception thrown: {}", e.getMessage());
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+	    }
+		return new ResponseEntity<Void>(HttpStatus.ACCEPTED);
+	}
+
 //	@RequestMapping(method = RequestMethod.PUT)
-//    public ResponseEntity update(@RequestBody Brand brand){
-//		log.info("BrandController update: {}", brand);
+//    public ResponseEntity update(@RequestBody Bill bill){
+//		log.info("BillController update: {}", bill.getId());
 //		try {
-//			service.update(brand);
+//			service.update(bill);
 //		}catch(BadRequestException e) {
-//			log.error("BrandController update Exception thrown: {}", e.getMessage());
+//			log.error("BillController update Exception thrown: {}", e.getMessage());
 //	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 //	    }
 //		return new ResponseEntity<Void>(HttpStatus.ACCEPTED);

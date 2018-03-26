@@ -32,11 +32,31 @@ angular.module('integridadUiApp')
     };
 
     vm.exportExcel = function(){
-      var header = '<meta http-equiv="content-type" content="application/vnd.ms-excel; charset=UTF-8">';
-      var blob = new Blob([header + document.getElementById('exportTable').innerHTML], {
-            type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8'
-        });
 
-      FileSaver.saveAs(blob, "Report.xlsx");
+      var dataReport = [];
+      _.each(vm.reportList, function(bill){
+        var data = {
+          TIPO: bill.type,
+          NUMERO: bill.billSeqString,
+          CODIGO: bill.code,
+          DESCRIPCION: bill.description,
+          CANTIDAD: bill.quantity,
+          VAL_UNITARIO: bill.valUnit,
+          SUBTOTAL: parseFloat(bill.subTotal.toFixed(2)),
+          IVA: parseFloat(bill.iva.toFixed(2)),
+          TOTAL: parseFloat(bill.total.toFixed(2))
+        };
+
+        dataReport.push(data)
+      });
+
+      var ws = XLSX.utils.json_to_sheet(dataReport);
+
+      /* add to workbook */
+      var wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, "Ventas");
+
+      /* write workbook and force a download */
+      XLSX.writeFile(wb, "Reporte.xlsx");
     };
   });
