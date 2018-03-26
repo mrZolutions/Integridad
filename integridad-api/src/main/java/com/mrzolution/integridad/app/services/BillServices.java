@@ -156,7 +156,22 @@ public class BillServices {
 		saved.setDetails(details);
 		return saved;
 	}
-	
+
+	public Bill deactivate(Bill bill) throws BadRequestException{
+		if(bill.getId() == null){
+			throw new BadRequestException("Invalid Bill");
+		}
+
+		Bill billToDeactivate = billRepository.findOne(bill.getId());
+		billToDeactivate.setListsNull();
+
+		billToDeactivate.setActive(false);
+
+		billRepository.save(billToDeactivate);
+
+		return billToDeactivate;
+	}
+
 	public Bill update(Bill bill) throws BadRequestException{
 		if(bill.getId() == null){
 			throw new BadRequestException("Invalid Bill");
