@@ -103,9 +103,11 @@
           <button type="button" class="btn btn-primary" ng-click="vm.billSelect(bill)">
             Ver
           </button>
-          <!-- <button type="button" class="btn btn-primary" ng-click="vm.clientConsult(clientPreSelect)">
-            Consultar
-          </button> -->
+          <button type="button" class="btn btn-primary" ng-click="vm.cancelBill = bill"
+                  data-toggle="modal" data-target="#modalAnular">
+            Anular
+          </button>
+          
         </td>
       </tr>
     </tbody>
@@ -881,6 +883,29 @@
 
           <button type="button" class="btn btn-primary" data-dismiss="modal">
             Cancelar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="modalAnular" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" ng-click="vm.client=undefined">&times;</button>
+          <h4 class="modal-title">Advertencia</h4>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-md-12" >
+                Est&aacute; seguro que desea Anular la factura {{vm.cancelBill.stringSeq}}
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" ng-click="vm.billDeactivate()" data-dismiss="modal">
+            Anular
           </button>
         </div>
       </div>
