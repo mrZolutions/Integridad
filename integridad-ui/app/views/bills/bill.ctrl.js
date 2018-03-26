@@ -458,9 +458,7 @@ angular.module('integridadUiApp')
 
     vm.billDeactivate = function(){
       vm.loading = true;
-      console.log(vm.cancelBill);
       var index = vm.billList.indexOf(vm.cancelBill);
-      console.log(index);
       billService.cancelBill(vm.cancelBill).then(function (response) {
         var index = vm.billList.indexOf(vm.cancelBill);
         if (index > -1) {
