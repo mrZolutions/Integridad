@@ -270,6 +270,7 @@ public class BillServices {
 		for(UUID uuidCurrent: productIds){
 			Double quantityTotal = new Double(0);
 			Double subTotalTotal = new Double(0);
+			Double discountTotal = new Double(0);
 			Double ivaTotal = new Double(0);
 			Double totalTotal = new Double(0);
 			String code = "";
@@ -277,10 +278,12 @@ public class BillServices {
 			for (Bill bill: bills) {
 				for(Detail detail: bill.getDetails()){
 					if(uuidCurrent.equals(detail.getProduct().getId())){
+						Double discount = Double.valueOf(Double.valueOf(bill.getDiscountPercentage())/100) * detail.getTotal();
 						ItemReport item = new ItemReport(detail.getProduct().getId(),"", bill.getStringSeq(), detail.getProduct().getCodeIntegridad(),
-								detail.getProduct().getName(),Double.valueOf(detail.getQuantity()), detail.getCostEach(), detail.getTotal(), (detail.getTotal() * 0.12), (detail.getTotal() * 1.12));
+								detail.getProduct().getName(),Double.valueOf(detail.getQuantity()), detail.getCostEach(), detail.getTotal(), discount, ((detail.getTotal()-discount) * 0.12), ((detail.getTotal()-discount) * 1.12));
 						quantityTotal += item.getQuantity();
 						subTotalTotal += item.getSubTotal();
+						discountTotal += item.getDiscount();
 						ivaTotal += item.getIva();
 						totalTotal += item.getTotal();
 						code = detail.getProduct().getCodeIntegridad();
@@ -292,7 +295,7 @@ public class BillServices {
 			}
 
 			ItemReport itemTotal = new ItemReport(uuidCurrent, "R", "", code,
-					desc, quantityTotal, null, subTotalTotal, ivaTotal, totalTotal);
+					desc, quantityTotal, null, subTotalTotal, discountTotal, ivaTotal, totalTotal);
 
 			reportList.add(itemTotal);
 		}

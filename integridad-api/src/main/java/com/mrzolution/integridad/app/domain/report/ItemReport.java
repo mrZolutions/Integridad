@@ -15,10 +15,11 @@ public class ItemReport {
     private Double quantity;
     private Double valUnit;
     private Double subTotal;
+    private Double discount;
     private Double iva;
     private Double total;
 
-    public ItemReport(UUID id, String type, String billSeqString, String code, String description, Double quantity, Double valUnit, Double subTotal, Double iva, Double total) {
+    public ItemReport(UUID id, String type, String billSeqString, String code, String description, Double quantity, Double valUnit, Double subTotal, Double discount, Double iva, Double total) {
         this.type = type;
         this.billSeqString = billSeqString;
         this.code = code;
@@ -26,6 +27,7 @@ public class ItemReport {
         this.quantity = quantity;
         this.valUnit = valUnit;
         this.subTotal = subTotal;
+        this.discount = discount;
         this.iva = iva;
         this.total = total;
     }
