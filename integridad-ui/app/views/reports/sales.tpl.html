@@ -97,6 +97,7 @@
         <th> Cantidad </th>
         <th> V. Unitario </th>
         <th> Subtotal </th>
+        <th> Descuento </th>
         <th> Iva </th>
         <th> Total </th>
       </tr>
@@ -110,6 +111,7 @@
         <td>{{ data.quantity }}</td>
         <td>{{ data.valUnit }}</td>
         <td>{{ data.subTotal.toFixed(2) }}</td>
+        <td>{{ data.discount.toFixed(2) }}</td>
         <td>{{ data.iva.toFixed(2) }}</td>
         <td>{{ data.total.toFixed(2) }}</td>
       </tr>

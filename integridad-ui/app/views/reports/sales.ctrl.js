@@ -43,6 +43,7 @@ angular.module('integridadUiApp')
           CANTIDAD: bill.quantity,
           VAL_UNITARIO: bill.valUnit,
           SUBTOTAL: parseFloat(bill.subTotal.toFixed(2)),
+          DESCUENTO: parseFloat(bill.discount.toFixed(2)),
           IVA: parseFloat(bill.iva.toFixed(2)),
           TOTAL: parseFloat(bill.total.toFixed(2))
         };
