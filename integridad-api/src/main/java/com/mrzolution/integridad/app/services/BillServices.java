@@ -1,5 +1,6 @@
 package com.mrzolution.integridad.app.services;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -9,6 +10,7 @@ import com.mrzolution.integridad.app.domain.*;
 import com.mrzolution.integridad.app.domain.Pago;
 import com.mrzolution.integridad.app.domain.ebill.*;
 import com.mrzolution.integridad.app.domain.report.ItemReport;
+import com.mrzolution.integridad.app.domain.report.SalesReport;
 import com.mrzolution.integridad.app.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -202,9 +204,9 @@ public class BillServices {
 		return bills;
 	}
 
-	public List<ItemReport> getBySubIdAndDates(UUID userClientId, long dateOne, long dateTwo){
+	public List<ItemReport> getBySubIdAndDatesActives(UUID userClientId, long dateOne, long dateTwo){
 		log.info("BillServices getByUserClientIdAndDates: {}, {}, {}", userClientId, dateOne, dateTwo);
-		Iterable<Bill> bills = billRepository.findByUserClientIdAndDates(userClientId, dateOne, dateTwo);
+		Iterable<Bill> bills = billRepository.findByUserClientIdAndDatesActives(userClientId, dateOne, dateTwo);
 
 		Set<UUID> productIds = new HashSet<>();
 		bills.forEach(bill-> {
@@ -215,7 +217,32 @@ public class BillServices {
 			}
 		});
 
-		return loadList(Lists.newArrayList(bills), productIds);
+		return loadListItems(Lists.newArrayList(bills), productIds);
+	}
+
+	public List<SalesReport> getAllBySubIdAndDates(UUID userClientId, long dateOne, long dateTwo){
+		log.info("BillServices getAllBySubIdAndDates: {}, {}, {}", userClientId, dateOne, dateTwo);
+		Iterable<Bill> bills = billRepository.findAllByUserClientIdAndDates(userClientId, dateOne, dateTwo);
+		List<SalesReport> salesReportList = new ArrayList<>();
+
+		bills.forEach(bill-> {
+			bill.setListsNull();
+
+			for (Detail detail: bill.getDetails()) {
+				SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+				String date = dateFormat.format(new Date(bill.getDateCreated()));
+				String status = bill.isActive() ? "ACTIVA" : "ANULADA";
+				String endDate = dateFormat.format(new Date(bill.getDateCreated()));
+
+				SalesReport saleReport= new SalesReport(date, bill.getClient().getCodApp(), bill.getClient().getName(), bill.getClient().getIdentification(),
+						bill.getStringSeq(), status, bill.getOtir(), bill.getSubTotal(), bill.getIva(), bill.getTotal(), null, bill.getUserIntegridad().getCashier().getNameNumber(),
+						null, bill.getSubsidiary().getName(), bill.getUserIntegridad().getFirstName() + " " + bill.getUserIntegridad().getLastName());
+
+				salesReportList.add(saleReport);
+			}
+		});
+
+		return salesReportList;
 	}
 	
 	private void populateChildren(Bill bill) {
@@ -264,7 +291,7 @@ public class BillServices {
 		log.info("BillServices populateChildren FINISHED billId: {}", bill.getId());
 	}
 
-	private List<ItemReport> loadList(List<Bill> bills, Set<UUID> productIds){
+	private List<ItemReport> loadListItems(List<Bill> bills, Set<UUID> productIds){
 		List<ItemReport> reportList = new ArrayList<>();
 
 		for(UUID uuidCurrent: productIds){
