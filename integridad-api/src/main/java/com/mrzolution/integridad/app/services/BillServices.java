@@ -191,7 +191,6 @@ public class BillServices {
 		return updated;
 	}
 
-
 	public Iterable<Bill> getByStringSeqAndSubId(String stringSeq, UUID subId){
 		log.info("BillServices getByStringSeq : {}, {}", stringSeq, subId);
 		Iterable<Bill> bills = billRepository.findByStringSeqAndSubsidiaryId(stringSeq, subId);
@@ -227,19 +226,16 @@ public class BillServices {
 
 		bills.forEach(bill-> {
 			bill.setListsNull();
+			SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+			String date = dateFormat.format(new Date(bill.getDateCreated()));
+			String status = bill.isActive() ? "ACTIVA" : "ANULADA";
+			String endDate = dateFormat.format(new Date(bill.getDateCreated()));
 
-			for (Detail detail: bill.getDetails()) {
-				SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-				String date = dateFormat.format(new Date(bill.getDateCreated()));
-				String status = bill.isActive() ? "ACTIVA" : "ANULADA";
-				String endDate = dateFormat.format(new Date(bill.getDateCreated()));
+			SalesReport saleReport= new SalesReport(date, bill.getClient().getCodApp(), bill.getClient().getName(), bill.getClient().getIdentification(),
+					bill.getStringSeq(), status, bill.getOtir(), bill.getSubTotal(), bill.getIva(), bill.getTotal(), null, bill.getUserIntegridad().getCashier().getNameNumber(),
+					null, bill.getSubsidiary().getName(), bill.getUserIntegridad().getFirstName() + " " + bill.getUserIntegridad().getLastName());
 
-				SalesReport saleReport= new SalesReport(date, bill.getClient().getCodApp(), bill.getClient().getName(), bill.getClient().getIdentification(),
-						bill.getStringSeq(), status, bill.getOtir(), bill.getSubTotal(), bill.getIva(), bill.getTotal(), null, bill.getUserIntegridad().getCashier().getNameNumber(),
-						null, bill.getSubsidiary().getName(), bill.getUserIntegridad().getFirstName() + " " + bill.getUserIntegridad().getLastName());
-
-				salesReportList.add(saleReport);
-			}
+			salesReportList.add(saleReport);
 		});
 
 		return salesReportList;

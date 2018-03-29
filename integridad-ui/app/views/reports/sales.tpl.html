@@ -70,8 +70,12 @@
   <div class="panel-footer">
     <div>
       <button type="button" class="btn btn-primary"
-        ng-click="vm.getReport()">
-        Reporte
+        ng-click="vm.getReportProducts()">
+        Reporte Por Producto
+      </button>
+      <button type="button" class="btn btn-primary"
+              ng-click="vm.getReportSales()">
+        Reporte De Ventas
       </button>
       <button type="button" class="btn btn-primary"
         ng-click="vm.exportExcel()" ng-disabled="vm.reportList === undefined || vm.reportList.length === 0">
@@ -86,7 +90,7 @@
 </div>
 
 
-<div id="exportTable">
+<div ng-if="vm.isProductReportList !== undefined && vm.isProductReportList">
   <table class="table table-striped">
     <thead>
       <tr>
@@ -115,6 +119,49 @@
         <td>{{ data.iva.toFixed(2) }}</td>
         <td>{{ data.total.toFixed(2) }}</td>
       </tr>
+    </tbody>
+  </table>
+</div>
+
+<div ng-if="vm.isProductReportList !== undefined && !vm.isProductReportList">
+  <table class="table table-striped">
+    <thead>
+    <tr>
+      <th> Fecha </th>
+      <th> C&oacute;digo-Cliente </th>
+      <th> Cliente </th>
+      <th> RUC/CI </th>
+      <th> No. Factura </th>
+      <th> Estado </th>
+      <th> OTI </th>
+      <th> Subtotal </th>
+      <th> Iva </th>
+      <th> Total </th>
+      <th> Fecha-Vencimiento </th>
+      <th> Caja </th>
+      <th> Bodega </th>
+      <th> Sucursal </th>
+      <th> Usuario </th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="data in vm.reportList | orderBy:'date'" >
+      <td>{{ data.date }}</td>
+      <td>{{ data.clientCode}}</td>
+      <td>{{ data.clientName }}</td>
+      <td>{{ data.ruc }}</td>
+      <td>{{ data.billNumber }}</td>
+      <td>{{ data.status }}</td>
+      <td>{{ data.oti }}</td>
+      <td>{{ data.subTotal.toFixed(2) }}</td>
+      <td>{{ data.iva.toFixed(2) }}</td>
+      <td>{{ data.total.toFixed(2) }}</td>
+      <td>{{ data.endDate }}</td>
+      <td>{{ data.cashier }}</td>
+      <td>{{ data.warehouse }}</td>
+      <td>{{ data.subsidiary }}</td>
+      <td>{{ data.userName }}</td>
+    </tr>
     </tbody>
   </table>
 </div>

@@ -13,16 +13,37 @@ angular.module('integridadUiApp')
     var today = new Date();
     $('#pickerBillDateOne').data("DateTimePicker").date(today);
     $('#pickerBillDateTwo').data("DateTimePicker").date(today);
+    vm.isProductReportList = undefined;
     vm.reportList = undefined;
 
-    vm.getReport = function(){
+    vm.getReportProducts = function(){
+      vm.isProductReportList = true;
+      vm.reportList = undefined;
       vm.loading = true;
       var dateOne = $('#pickerBillDateOne').data("DateTimePicker").date().toDate().getTime();
       var dateTwo = $('#pickerBillDateTwo').data("DateTimePicker").date().toDate().getTime();
       dateTwo += 86340000;
       var subId = $localStorage.user.subsidiary.userClient.id
 
-      billService.getByUserClientAndDates(subId, dateOne, dateTwo).then(function (response) {
+      billService.getActivesByUserClientAndDates(subId, dateOne, dateTwo).then(function (response) {
+        vm.reportList = response;
+        vm.loading = false;
+      }).catch(function (error) {
+        vm.loading = false;
+        vm.error = error.data;
+      });
+    };
+
+    vm.getReportSales = function(){
+      vm.isProductReportList = false;
+      vm.reportList = undefined;
+      vm.loading = true;
+      var dateOne = $('#pickerBillDateOne').data("DateTimePicker").date().toDate().getTime();
+      var dateTwo = $('#pickerBillDateTwo').data("DateTimePicker").date().toDate().getTime();
+      dateTwo += 86340000;
+      var subId = $localStorage.user.subsidiary.userClient.id
+
+      billService.getAllByUserClientAndDates(subId, dateOne, dateTwo).then(function (response) {
         vm.reportList = response;
         vm.loading = false;
       }).catch(function (error) {
