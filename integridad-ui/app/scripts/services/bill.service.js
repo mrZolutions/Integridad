@@ -39,8 +39,14 @@ angular
       });
     };
 
-    this.getByUserClientAndDates = function (userClientId, dateOne, dateTwo) {
+    this.getActivesByUserClientAndDates = function (userClientId, dateOne, dateTwo) {
       return securityService.get('/bill/rep/'+ userClientId + '/' + dateOne + '/'+ dateTwo).then(function successCallback(response) {
+        return response.data;
+      });
+    };
+
+    this.getAllByUserClientAndDates = function (userClientId, dateOne, dateTwo) {
+      return securityService.get('/bill/rep/sales/'+ userClientId + '/' + dateOne + '/'+ dateTwo).then(function successCallback(response) {
         return response.data;
       });
     };

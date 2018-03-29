@@ -1,5 +1,6 @@
 package com.mrzolution.integridad.app.services;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -9,6 +10,7 @@ import com.mrzolution.integridad.app.domain.*;
 import com.mrzolution.integridad.app.domain.Pago;
 import com.mrzolution.integridad.app.domain.ebill.*;
 import com.mrzolution.integridad.app.domain.report.ItemReport;
+import com.mrzolution.integridad.app.domain.report.SalesReport;
 import com.mrzolution.integridad.app.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -189,7 +191,6 @@ public class BillServices {
 		return updated;
 	}
 
-
 	public Iterable<Bill> getByStringSeqAndSubId(String stringSeq, UUID subId){
 		log.info("BillServices getByStringSeq : {}, {}", stringSeq, subId);
 		Iterable<Bill> bills = billRepository.findByStringSeqAndSubsidiaryId(stringSeq, subId);
@@ -202,9 +203,9 @@ public class BillServices {
 		return bills;
 	}
 
-	public List<ItemReport> getBySubIdAndDates(UUID userClientId, long dateOne, long dateTwo){
+	public List<ItemReport> getBySubIdAndDatesActives(UUID userClientId, long dateOne, long dateTwo){
 		log.info("BillServices getByUserClientIdAndDates: {}, {}, {}", userClientId, dateOne, dateTwo);
-		Iterable<Bill> bills = billRepository.findByUserClientIdAndDates(userClientId, dateOne, dateTwo);
+		Iterable<Bill> bills = billRepository.findByUserClientIdAndDatesActives(userClientId, dateOne, dateTwo);
 
 		Set<UUID> productIds = new HashSet<>();
 		bills.forEach(bill-> {
@@ -215,56 +216,99 @@ public class BillServices {
 			}
 		});
 
-		return loadList(Lists.newArrayList(bills), productIds);
+		return loadListItems(Lists.newArrayList(bills), productIds);
 	}
-	
-	private void populateChildren(Bill bill) {
-		log.info("BillServices populateChildren billId: {}", bill.getId());
-		List<Detail> detailList = new ArrayList<>();
-		Iterable<Detail> details = detailRepository.findByBill(bill);
-        List<Pago> pagoList = new ArrayList<>();
-        Iterable<Pago> pagos = pagoRepository.findByBill(bill);
 
-		details.forEach(detail -> {
-			detail.setListsNull();
-			detail.setFatherListToNull();
-			detail.getProduct().setFatherListToNull();
-			detail.getProduct().setListsNull();
-			detail.setBill(null);
-			
-			detailList.add(detail);
+	public List<SalesReport> getAllBySubIdAndDates(UUID userClientId, long dateOne, long dateTwo){
+		log.info("BillServices getAllBySubIdAndDates: {}, {}, {}", userClientId, dateOne, dateTwo);
+		Iterable<Bill> bills = billRepository.findAllByUserClientIdAndDates(userClientId, dateOne, dateTwo);
+		List<SalesReport> salesReportList = new ArrayList<>();
+
+		bills.forEach(bill-> {
+			bill.setListsNull();
+			Long endDateLong = bill.getDateCreated();
+			List<Pago> pagos = getPagosByBill(bill);
+			for(Pago pago: pagos){
+				for (Credits credit: pago.getCredits()){
+					if(endDateLong < credit.getFecha()){
+						endDateLong = credit.getFecha();
+					}
+				}
+			}
+
+			SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+			String date = dateFormat.format(new Date(bill.getDateCreated()));
+			String status = bill.isActive() ? "ACTIVA" : "ANULADA";
+			String endDate = dateFormat.format(new Date(endDateLong));
+
+			SalesReport saleReport= new SalesReport(date, bill.getClient().getCodApp(), bill.getClient().getName(), bill.getClient().getIdentification(),
+					bill.getStringSeq(), status, bill.getOtir(), bill.getSubTotal(), bill.getIva(), bill.getTotal(), endDate, bill.getUserIntegridad().getCashier().getNameNumber(),
+					null, bill.getSubsidiary().getName(), bill.getUserIntegridad().getFirstName() + " " + bill.getUserIntegridad().getLastName());
+
+			salesReportList.add(saleReport);
 		});
 
-		pagos.forEach(pago ->{
-		    if("credito".equals(pago.getMedio())){
-		        Iterable<Credits> credits = creditsRepository.findByPago(pago);
-		        List<Credits> creditsList = new ArrayList<>();
+		return salesReportList;
+	}
 
-		        credits.forEach(credit ->{
-		            credit.setListsNull();
-		            credit.setFatherListToNull();
-		            credit.setPago(null);
+	private void populateChildren(Bill bill) {
+		log.info("BillServices populateChildren billId: {}", bill.getId());
+		List<Detail> detailList = getDetailsByBill(bill);
+        List<Pago> pagoList = getPagosByBill(bill);
 
-		            creditsList.add(credit);
-                });
-
-		        pago.setCredits(creditsList);
-            } else {
-		        pago.setListsNull();
-            }
-		    pago.setFatherListToNull();
-		    pago.setBill(null);
-
-		    pagoList.add(pago);
-        });
-		
 		bill.setDetails(detailList);
 		bill.setPagos(pagoList);
 		bill.setFatherListToNull();
 		log.info("BillServices populateChildren FINISHED billId: {}", bill.getId());
 	}
 
-	private List<ItemReport> loadList(List<Bill> bills, Set<UUID> productIds){
+	private List<Detail> getDetailsByBill(Bill bill){
+		List<Detail> detailList = new ArrayList<>();
+		Iterable<Detail> details = detailRepository.findByBill(bill);
+		details.forEach(detail -> {
+			detail.setListsNull();
+			detail.setFatherListToNull();
+			detail.getProduct().setFatherListToNull();
+			detail.getProduct().setListsNull();
+			detail.setBill(null);
+
+			detailList.add(detail);
+		});
+
+		return detailList;
+	}
+
+	private List<Pago> getPagosByBill(Bill bill){
+		List<Pago> pagoList = new ArrayList<>();
+		Iterable<Pago> pagos = pagoRepository.findByBill(bill);
+
+		pagos.forEach(pago ->{
+			if("credito".equals(pago.getMedio())){
+				Iterable<Credits> credits = creditsRepository.findByPago(pago);
+				List<Credits> creditsList = new ArrayList<>();
+
+				credits.forEach(credit ->{
+					credit.setListsNull();
+					credit.setFatherListToNull();
+					credit.setPago(null);
+
+					creditsList.add(credit);
+				});
+
+				pago.setCredits(creditsList);
+			} else {
+				pago.setListsNull();
+			}
+			pago.setFatherListToNull();
+			pago.setBill(null);
+
+			pagoList.add(pago);
+		});
+
+		return pagoList;
+	}
+
+	private List<ItemReport> loadListItems(List<Bill> bills, Set<UUID> productIds){
 		List<ItemReport> reportList = new ArrayList<>();
 
 		for(UUID uuidCurrent: productIds){
