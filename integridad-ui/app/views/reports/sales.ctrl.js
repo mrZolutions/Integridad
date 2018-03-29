@@ -53,24 +53,48 @@ angular.module('integridadUiApp')
     };
 
     vm.exportExcel = function(){
-
       var dataReport = [];
-      _.each(vm.reportList, function(bill){
-        var data = {
-          TIPO: bill.type,
-          NUMERO: bill.billSeqString,
-          CODIGO: bill.code,
-          DESCRIPCION: bill.description,
-          CANTIDAD: bill.quantity,
-          VAL_UNITARIO: bill.valUnit,
-          SUBTOTAL: parseFloat(bill.subTotal.toFixed(2)),
-          DESCUENTO: parseFloat(bill.discount.toFixed(2)),
-          IVA: parseFloat(bill.iva.toFixed(2)),
-          TOTAL: parseFloat(bill.total.toFixed(2))
-        };
+      if(vm.isProductReportList){
+        _.each(vm.reportList, function(bill){
+          var data = {
+            TIPO: bill.type,
+            NUMERO: bill.billSeqString,
+            CODIGO: bill.code,
+            DESCRIPCION: bill.description,
+            CANTIDAD: bill.quantity,
+            VAL_UNITARIO: bill.valUnit,
+            SUBTOTAL: parseFloat(bill.subTotal.toFixed(2)),
+            DESCUENTO: parseFloat(bill.discount.toFixed(2)),
+            IVA: parseFloat(bill.iva.toFixed(2)),
+            TOTAL: parseFloat(bill.total.toFixed(2))
+          };
 
-        dataReport.push(data)
-      });
+          dataReport.push(data)
+        });
+      } else {
+        _.each(vm.reportList, function(bill){
+          var data = {
+            FECHA: bill.date,
+            CODIGO_CLIENTE: bill.clientCode,
+            CLIENTE: bill.clientName,
+            RUC_CI: bill.ruc,
+            NUMERO_FACTURA: bill.billNumber,
+            ESTADO: bill.status,
+            OTI: bill.oti,
+            SUBTOTAL: parseFloat(bill.subTotal.toFixed(2)),
+            IVA: parseFloat(bill.iva.toFixed(2)),
+            TOTAL: parseFloat(bill.total.toFixed(2)),
+            FECHA_VENCIMIENTO: bill.endDate,
+            CAJA: bill.cashier,
+            BODEGA: bill.warehouse,
+            SUCURSAL: bill.subsidiary,
+            USUARIO: bill.userName,
+          };
+
+          dataReport.push(data)
+        });
+      }
+
 
       var ws = XLSX.utils.json_to_sheet(dataReport);
 

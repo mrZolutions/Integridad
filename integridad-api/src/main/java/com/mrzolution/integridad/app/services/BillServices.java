@@ -226,13 +226,23 @@ public class BillServices {
 
 		bills.forEach(bill-> {
 			bill.setListsNull();
+			Long endDateLong = bill.getDateCreated();
+			List<Pago> pagos = getPagosByBill(bill);
+			for(Pago pago: pagos){
+				for (Credits credit: pago.getCredits()){
+					if(endDateLong < credit.getFecha()){
+						endDateLong = credit.getFecha();
+					}
+				}
+			}
+
 			SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 			String date = dateFormat.format(new Date(bill.getDateCreated()));
 			String status = bill.isActive() ? "ACTIVA" : "ANULADA";
-			String endDate = dateFormat.format(new Date(bill.getDateCreated()));
+			String endDate = dateFormat.format(new Date(endDateLong));
 
 			SalesReport saleReport= new SalesReport(date, bill.getClient().getCodApp(), bill.getClient().getName(), bill.getClient().getIdentification(),
-					bill.getStringSeq(), status, bill.getOtir(), bill.getSubTotal(), bill.getIva(), bill.getTotal(), null, bill.getUserIntegridad().getCashier().getNameNumber(),
+					bill.getStringSeq(), status, bill.getOtir(), bill.getSubTotal(), bill.getIva(), bill.getTotal(), endDate, bill.getUserIntegridad().getCashier().getNameNumber(),
 					null, bill.getSubsidiary().getName(), bill.getUserIntegridad().getFirstName() + " " + bill.getUserIntegridad().getLastName());
 
 			salesReportList.add(saleReport);
@@ -240,51 +250,62 @@ public class BillServices {
 
 		return salesReportList;
 	}
-	
+
 	private void populateChildren(Bill bill) {
 		log.info("BillServices populateChildren billId: {}", bill.getId());
+		List<Detail> detailList = getDetailsByBill(bill);
+        List<Pago> pagoList = getPagosByBill(bill);
+
+		bill.setDetails(detailList);
+		bill.setPagos(pagoList);
+		bill.setFatherListToNull();
+		log.info("BillServices populateChildren FINISHED billId: {}", bill.getId());
+	}
+
+	private List<Detail> getDetailsByBill(Bill bill){
 		List<Detail> detailList = new ArrayList<>();
 		Iterable<Detail> details = detailRepository.findByBill(bill);
-        List<Pago> pagoList = new ArrayList<>();
-        Iterable<Pago> pagos = pagoRepository.findByBill(bill);
-
 		details.forEach(detail -> {
 			detail.setListsNull();
 			detail.setFatherListToNull();
 			detail.getProduct().setFatherListToNull();
 			detail.getProduct().setListsNull();
 			detail.setBill(null);
-			
+
 			detailList.add(detail);
 		});
 
+		return detailList;
+	}
+
+	private List<Pago> getPagosByBill(Bill bill){
+		List<Pago> pagoList = new ArrayList<>();
+		Iterable<Pago> pagos = pagoRepository.findByBill(bill);
+
 		pagos.forEach(pago ->{
-		    if("credito".equals(pago.getMedio())){
-		        Iterable<Credits> credits = creditsRepository.findByPago(pago);
-		        List<Credits> creditsList = new ArrayList<>();
+			if("credito".equals(pago.getMedio())){
+				Iterable<Credits> credits = creditsRepository.findByPago(pago);
+				List<Credits> creditsList = new ArrayList<>();
 
-		        credits.forEach(credit ->{
-		            credit.setListsNull();
-		            credit.setFatherListToNull();
-		            credit.setPago(null);
+				credits.forEach(credit ->{
+					credit.setListsNull();
+					credit.setFatherListToNull();
+					credit.setPago(null);
 
-		            creditsList.add(credit);
-                });
+					creditsList.add(credit);
+				});
 
-		        pago.setCredits(creditsList);
-            } else {
-		        pago.setListsNull();
-            }
-		    pago.setFatherListToNull();
-		    pago.setBill(null);
+				pago.setCredits(creditsList);
+			} else {
+				pago.setListsNull();
+			}
+			pago.setFatherListToNull();
+			pago.setBill(null);
 
-		    pagoList.add(pago);
-        });
-		
-		bill.setDetails(detailList);
-		bill.setPagos(pagoList);
-		bill.setFatherListToNull();
-		log.info("BillServices populateChildren FINISHED billId: {}", bill.getId());
+			pagoList.add(pago);
+		});
+
+		return pagoList;
 	}
 
 	private List<ItemReport> loadListItems(List<Bill> bills, Set<UUID> productIds){
