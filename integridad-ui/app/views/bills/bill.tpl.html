@@ -107,7 +107,7 @@
                   data-toggle="modal" data-target="#modalAnular">
             Anular
           </button>
-          
+
         </td>
       </tr>
     </tbody>
@@ -739,6 +739,7 @@
               <table class="table table-striped">
                 <thead>
                   <tr>
+                    <th> C&oacute;digo </th>
                     <th> Nombre </th>
                     <th> Cantidad Disponible</th>
                     <th> Precio Unitario $</th>
@@ -749,10 +750,11 @@
                 <tbody>
                   <tr ng-show="vm.productList == 0">
                     <td colspan="4">
-                      No hay proyectos ingresados
+                      No hay productos ingresados
                     </td>
                   </tr>
                   <tr ng-repeat="productSelect in vm.productList | orderBy:'name' | filter:searchTextProd">
+                    <td>{{ productSelect.codeIntegridad }}</td>
                     <td>{{ productSelect.name }}</td>
                     <td>{{ productSelect.quantity }}</td>
                     <td>{{ vm.getCost('1.'+ productSelect[vm.priceType.cod], productSelect.averageCost) }}</td>

@@ -40,6 +40,7 @@
   <table class="table table-striped">
     <thead>
       <tr>
+        <th> C&oacute;digo </th>
         <th> Nombre </th>
         <th> Cantidad Disponible</th>
         <th> Precio Unitario $</th>
@@ -53,10 +54,11 @@
     <tbody>
       <tr ng-show="vm.productList == 0">
         <td colspan="4">
-          No hay proyectos ingresados
+          No hay productos ingresados
         </td>
       </tr>
       <tr ng-repeat="productEdit in vm.productList | orderBy:'name' | filter:searchText">
+        <td>{{ productEdit.codeIntegridad }}</td>
         <td>{{ productEdit.name }}</td>
         <td>{{ productEdit.quantity }}</td>
         <td>{{ vm.getCost('1.'+ productEdit['cashPercentage'], productEdit.averageCost) }}</td>
