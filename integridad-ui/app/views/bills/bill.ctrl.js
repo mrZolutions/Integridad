@@ -266,8 +266,10 @@ angular.module('integridadUiApp')
             var sub = _.find(response[i].productBySubsidiaries, function (s) {
               return (s.subsidiary.id === $localStorage.user.subsidiary.id && s.active === true);
             });
-            response[i].quantity = sub.quantity
-            vm.productList.push(response[i]);
+            if(sub){
+              response[i].quantity = sub.quantity
+              vm.productList.push(response[i]);
+            }
           }
         }
       }).catch(function (error) {
