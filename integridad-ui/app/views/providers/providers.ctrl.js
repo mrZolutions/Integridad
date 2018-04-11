@@ -198,15 +198,15 @@ angular.module('integridadUiApp')
 
     vm.createRetention = function(prov){
       var today = new Date();
-      $('#pickerBillDateRetention').data("DateTimePicker").date(today);
-      $('#pickerBillDateDocumentRetention').data("DateTimePicker").date(today);
-
       vm.retention = {
         provider: prov,
         typeRetention: undefined,
         items: [],
         ejercicio: ('0' + (today.getMonth() + 1)).slice(-2) + '/' +today.getFullYear()
       };
+
+      $('#pickerBillDateRetention').data("DateTimePicker").date(today);
+      $('#pickerBillDateDocumentRetention').data("DateTimePicker").date(today);
 
       $('#pickerBillDateDocumentRetention').on("dp.change", function (data) {
         vm.retention.ejercicio = ('0' + ($('#pickerBillDateDocumentRetention').data("DateTimePicker").date().toDate().getMonth() + 1)).slice(-2) + '/' +$('#pickerBillDateDocumentRetention').data("DateTimePicker").date().toDate().getFullYear();
@@ -240,7 +240,7 @@ angular.module('integridadUiApp')
     };
 
     vm.addItem = function() {
-      vm.item.valor_retenido = parseFloat(vm.item.base_imponible) * (parseFloat(vm.item.porcentaje)/100).toFixed(2);
+      vm.item.valor_retenido = (parseFloat(vm.item.base_imponible) * (parseFloat(vm.item.porcentaje)/100)).toFixed(2);
       if(vm.indexEdit !== undefined){
         vm.retention.items.splice(vm.indexEdit, 1);
         vm.indexEdit = undefined
@@ -251,8 +251,7 @@ angular.module('integridadUiApp')
       vm.retention.typeRetention = undefined;
       vm.tablePercentage = undefined;
 
-      var eRet = eretentionService.createERetention(vm.retention, $localStorage.user);
-      console.log(JSON.stringify(eRet, null, 4));
+
     };
 
     vm.editItem = function(index){
@@ -262,6 +261,53 @@ angular.module('integridadUiApp')
 
     vm.deleteItem = function(index){
       vm.retention.items.splice(index, 1);
+    };
+
+    vm.getClaveAcceso = function(){
+      vm.loading = true;
+      var eRet = eretentionService.createERetention(vm.retention, $localStorage.user);
+
+      eretentionService.getClaveDeAcceso(eRet, $localStorage.user.subsidiary.userClient.id).then(function(resp){
+        // var obj = JSON.parse(resp.data);
+        console.log(resp);
+        var obj = {clave_acceso: '1234560', id:'id12345'};
+        if(obj.errors === undefined){
+          vm.retention.claveDeAcceso = obj.clave_acceso;
+          vm.retention.idSri = obj.id;
+          vm.retention.stringSeq = vm.retention.retentionSeq;
+          vm.retention.retSeq = eRet.secuencial;
+          vm.retention.ejercicioFiscal = vm.retention.ejercicio;
+          vm.retention.documentNumber = vm.retention.numero;
+          vm.retention.documentDate = $('#pickerBillDateDocumentRetention').data("DateTimePicker").date().toDate().getTime()
+          vm.retention.userIntegridad = $localStorage.user;
+          vm.retention.subsidiary = $localStorage.user.subsidiary;
+          vm.retention.detailRetentions = [];
+          _.each(vm.retention.items, function(item){
+            var detail ={
+              taxType: item.codigo === 1 ? 'RETENCION EN LA FUENTE' : 'RETENCION EN EL IVA',
+              code: item.codigo_porcentaje,
+              baseImponible: item.base_imponible,
+              percentage: item.porcentaje,
+              total: item.valor_retenido
+            };
+            vm.retention.detailRetentions.push(detail);
+          });
+
+          eretentionService.create(vm.retention).then(function(respRetention){
+             _activate();
+          }).catch(function (error) {
+            vm.loading = false;
+            vm.error = error;
+          });
+        } else {
+          vm.loading = false;
+          vm.error = "Error al obtener Clave de Acceso: " + JSON.stringify(obj.errors);
+        }
+
+      }).catch(function (error) {
+        vm.loading = false;
+        vm.error = error.data;
+      });
     };
 
     (function initController() {

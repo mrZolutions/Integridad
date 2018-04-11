@@ -532,12 +532,6 @@ angular.module('integridadUiApp')
 
       var req = requirementService.createRequirement(vm.clientSelected, vm.bill, $localStorage.user, vm.impuestosTotales, vm.items, vm.pagos);
 
-      // ***************************
-      console.log(req)
-      vm.bill.claveDeAcceso = '12345';
-      vm.loading = false;
-      // ***************************
-      //
       billService.getClaveDeAcceso(req, vm.companyData.userClient.id).then(function(resp){
         vm.bill.pagos = vm.pagos;
         if(vm.bill.discountPercentage === undefined){

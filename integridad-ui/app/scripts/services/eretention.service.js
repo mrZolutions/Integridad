@@ -1,6 +1,6 @@
 angular
   .module('app.services')
-  .service('eretentionService', function (dateService) {
+  .service('eretentionService', function (dateService, securityService) {
 
     function getTipyCode(code){
       tipyIdCode = {
@@ -11,11 +11,10 @@ angular
     }
 
     this.createERetention = function(retention, user){
-      //TODO falta agregar el numero seq retention.retentionSeq
       var eRet = {
         "ambiente": 2,
         "tipo_emision": 1,
-        "secuencial": retention.retentionSeq,
+        "secuencial": parseInt(user.cashier.retentionNumberSeq) + 1,
         "fecha_emision": dateService.getIsoDate($('#pickerBillDateRetention').data("DateTimePicker").date().toDate()),
         "periodo_fiscal": retention.ejercicio,
         "emisor":{
@@ -46,6 +45,19 @@ angular
         eRet.ambiente = 1;
       }
       return eRet;
-    }
+    };
+
+    this.getClaveDeAcceso = function (req, id) {
+      return securityService.post('/retention/clave_acceso/'+id, req).then(function successCallback(response) {
+        // console.log(response)
+        return response;
+      });
+    };
+
+    this.create = function (retention) {
+      return securityService.post('/retention', retention).then(function successCallback(response) {
+        return response.data;
+      });
+    };
 
   });

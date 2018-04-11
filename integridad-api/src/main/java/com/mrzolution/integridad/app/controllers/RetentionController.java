@@ -79,7 +79,7 @@ public class RetentionController {
 		log.info("RetentionController create: {}", retention.getStringSeq());
 		Retention response = null;
 		try {
-			response = service.create(bill);
+			response = service.create(retention);
 		}catch(BadRequestException e) {
 			log.error("BillController create Exception thrown: {}", e.getMessage());
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());

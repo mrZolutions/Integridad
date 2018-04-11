@@ -52,7 +52,8 @@ public class RetentionServices {
 		String data = mapper.writeValueAsString(requirement);
 
 		log.info("RetentionServices getDatil maper creado");
-		String response = httpCallerService.post(Constants.DATIL_RETENTION_LINK, data, userClient);
+//		String response = httpCallerService.post(Constants.DATIL_RETENTION_LINK, data, userClient);
+		String response = "OK";
 		log.info("RetentionServices getDatil httpcall success");
 		return response;
 	}
@@ -96,7 +97,7 @@ public class RetentionServices {
 		log.info("RetentionServices create");
 		List<DetailRetention> details = retention.getDetailRetentions();
 		if(details == null){
-			throw new BadRequestException("Debe tener una retencion por lo menos");
+			throw new BadRequestException("Debe tener Debe tener el codigo de contabilidaduna retencion por lo menos");
 		}
 
 		retention.setDateCreated(new Date().getTime());
@@ -107,8 +108,9 @@ public class RetentionServices {
 		Retention saved = retentionRepository.save(retention);
 
 		Cashier cashier = cashierRepository.findOne(retention.getUserIntegridad().getCashier().getId());
-		cashier.setBillNumberSeq(cashier.getRetentionNumberSeq() + 1);
+		cashier.setRetentionNumberSeq(cashier.getRetentionNumberSeq() + 1);
 		cashierRepository.save(cashier);
+
 
 		details.forEach(detail->{
 			detail.setRetention(saved);

@@ -69,7 +69,7 @@
             Eliminar
           </button>
           <button type="button" class="btn btn-primary" ng-click="vm.createRetention(providerEdit)">
-            Retenci&oacute;n
+            Retenci&oacute;nxxx
           </button>
         </td>
       </tr>
@@ -296,13 +296,26 @@
                     Editar
                   </button>
                   <button type="button" class="btn btn-primary"
-                    ng-click="vm.deleteItem($index)">
+                    ng-click="vm.retention !== undefined">
                     Eliminar
                   </button>
                 </td>
               </tr>
             </tbody>
           </table>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="form-group col-md-12">
+          <button type="button" class="btn btn-primary"
+            ng-click="vm.getClaveAcceso()" ng-disabled="vm.retention.items == 0">
+            Crear
+          </button>
+          <button type="button" class="btn btn-primary"
+            ng-click="vm.retention = undefined">
+            Cancelar
+          </button>
         </div>
       </div>
 
