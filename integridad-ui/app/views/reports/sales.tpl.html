@@ -1,0 +1,167 @@
+<div style="width: 100%;height: 100%;top: 0px;left: 0px;position: fixed;display: block; z-index: 99; background: rgba(255, 255, 255, 0.3)" ng-show="vm.loading">
+  <div style="position: absolute;top: 15%;z-index: 100; width: 100%; text-align: center;">
+    <div class="sk-circle">
+      <div class="sk-circle1 sk-child"></div>
+      <div class="sk-circle2 sk-child"></div>
+      <div class="sk-circle3 sk-child"></div>
+      <div class="sk-circle4 sk-child"></div>
+      <div class="sk-circle5 sk-child"></div>
+      <div class="sk-circle6 sk-child"></div>
+      <div class="sk-circle7 sk-child"></div>
+      <div class="sk-circle8 sk-child"></div>
+      <div class="sk-circle9 sk-child"></div>
+      <div class="sk-circle10 sk-child"></div>
+      <div class="sk-circle11 sk-child"></div>
+      <div class="sk-circle12 sk-child"></div>
+    </div>
+  </div>
+</div>
+
+<div class="header">
+  <h4>
+    Reporte de Ventas Agrupado por Items
+  </h4>
+</div>
+
+<div class="row" ng-show="vm.error !== undefined">
+  <div class="form-group col-md-12">
+    <div class="alert alert-danger">{{vm.error}}</div>
+  </div>
+</div>
+<div class="row" ng-show="vm.success !== undefined">
+  <div class="form-group col-md-12">
+    <div class="alert alert-success">{{vm.success}}</div>
+  </div>
+</div>
+
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <b>Filtros</b>
+  </div>
+  <div class="panel-body">
+    <div class="row">
+      <div class="form-group col-md-6 ">
+        <label>FECHA INICIO: </label>
+        <div class="input-group date" id="pickerBillDateOne">
+          <input type="text" class="form-control input-group-addon"/>
+          <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"/></span>
+        </div>
+        <script>
+          $('#pickerBillDateOne').datetimepicker({
+            format: "DD/MM/YY",
+          });
+        </script>
+      </div>
+
+      <div class="form-group col-md-6 ">
+        <label>FECHA FIN: </label>
+        <div class="input-group date" id="pickerBillDateTwo">
+          <input type="text" class="form-control input-group-addon"/>
+          <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"/></span>
+        </div>
+        <script>
+          $('#pickerBillDateTwo').datetimepicker({
+            format: "DD/MM/YY",
+          });
+        </script>
+      </div>
+    </div>
+  </div>
+  <div class="panel-footer">
+    <div>
+      <button type="button" class="btn btn-primary"
+        ng-click="vm.getReportProducts()">
+        Reporte Por Producto
+      </button>
+      <button type="button" class="btn btn-primary"
+              ng-click="vm.getReportSales()">
+        Reporte De Ventas
+      </button>
+      <button type="button" class="btn btn-primary"
+        ng-click="vm.exportExcel()" ng-disabled="vm.reportList === undefined || vm.reportList.length === 0">
+        Excel
+      </button>
+    </div>
+    <div ng-show="vm.reportList.length === 0">
+      <br/>
+      <b>No hay registros que coincidan con la b&uacute;squeda</b>
+    </div>
+  </div>
+</div>
+
+
+<div ng-if="vm.isProductReportList !== undefined && vm.isProductReportList">
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th> Tipo </th>
+        <th> Fact. No. </th>
+        <th> C&oacute;digo </th>
+        <th> Descripci&oacute;n </th>
+        <th> Cantidad </th>
+        <th> V. Unitario </th>
+        <th> Subtotal </th>
+        <th> Descuento </th>
+        <th> Iva </th>
+        <th> Total </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="data in vm.reportList | orderBy:'code'" >
+        <td>{{ data.type }}</td>
+        <td>{{ data.billSeqString}}</td>
+        <td>{{ data.code }}</td>
+        <td>{{ data.description }}</td>
+        <td>{{ data.quantity }}</td>
+        <td>{{ data.valUnit }}</td>
+        <td>{{ data.subTotal.toFixed(2) }}</td>
+        <td>{{ data.discount.toFixed(2) }}</td>
+        <td>{{ data.iva.toFixed(2) }}</td>
+        <td>{{ data.total.toFixed(2) }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div ng-if="vm.isProductReportList !== undefined && !vm.isProductReportList">
+  <table class="table table-striped">
+    <thead>
+    <tr>
+      <th> Fecha </th>
+      <th> C&oacute;digo-Cliente </th>
+      <th> Cliente </th>
+      <th> RUC/CI </th>
+      <th> No. Factura </th>
+      <th> Estado </th>
+      <th> OTI </th>
+      <th> Subtotal </th>
+      <th> Iva </th>
+      <th> Total </th>
+      <th> Fecha-Vencimiento </th>
+      <th> Caja </th>
+      <th> Bodega </th>
+      <th> Sucursal </th>
+      <th> Usuario </th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="data in vm.reportList | orderBy:'date'" >
+      <td>{{ data.date }}</td>
+      <td>{{ data.clientCode}}</td>
+      <td>{{ data.clientName }}</td>
+      <td>{{ data.ruc }}</td>
+      <td>{{ data.billNumber }}</td>
+      <td>{{ data.status }}</td>
+      <td>{{ data.oti }}</td>
+      <td>{{ data.subTotal.toFixed(2) }}</td>
+      <td>{{ data.iva.toFixed(2) }}</td>
+      <td>{{ data.total.toFixed(2) }}</td>
+      <td>{{ data.endDate }}</td>
+      <td>{{ data.cashier }}</td>
+      <td>{{ data.warehouse }}</td>
+      <td>{{ data.subsidiary }}</td>
+      <td>{{ data.userName }}</td>
+    </tr>
+    </tbody>
+  </table>
+</div>

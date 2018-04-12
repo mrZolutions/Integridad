@@ -269,8 +269,8 @@ angular.module('integridadUiApp')
       var eRet = eretentionService.createERetention(vm.retention, $localStorage.user);
 
       eretentionService.getClaveDeAcceso(eRet, $localStorage.user.subsidiary.userClient.id).then(function(resp){
-        var obj = JSON.parse(resp.data);
-        // var obj = {clave_acceso: '1234560', id:'id12345'};
+        // var obj = JSON.parse(resp.data);
+        var obj = {clave_acceso: '1234560', id:'id12345'};
         if(obj.errors === undefined){
           vm.retention.claveDeAcceso = obj.clave_acceso;
           vm.retention.idSri = obj.id;
@@ -297,7 +297,7 @@ angular.module('integridadUiApp')
             vm.retention = respRetention;
             vm.totalRetention = 0;
             _.each(vm.retention.detailRetentions, function(detail){
-              vm.totalRetention = parseFloat(vm.totalRetention) +parseFloat(detail.total);
+              vm.totalRetention = (parseFloat(vm.totalRetention) +parseFloat(detail.total)).toFixed(2);
             });
             vm.retentionCreated = true;
             vm.loading = false;

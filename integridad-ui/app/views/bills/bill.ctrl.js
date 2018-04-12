@@ -267,8 +267,10 @@ angular.module('integridadUiApp')
             var sub = _.find(response[i].productBySubsidiaries, function (s) {
               return (s.subsidiary.id === $localStorage.user.subsidiary.id && s.active === true);
             });
-            response[i].quantity = sub.quantity
-            vm.productList.push(response[i]);
+            if(sub){
+              response[i].quantity = sub.quantity
+              vm.productList.push(response[i]);
+            }
           }
         }
       }).catch(function (error) {
@@ -459,6 +461,23 @@ angular.module('integridadUiApp')
 
     vm.cancelBill = function () {
       _activate();
+    }
+
+    vm.billDeactivate = function(){
+      vm.loading = true;
+      var index = vm.billList.indexOf(vm.cancelBill);
+      billService.cancelBill(vm.cancelBill).then(function (response) {
+        var index = vm.billList.indexOf(vm.cancelBill);
+        if (index > -1) {
+            vm.billList.splice(index, 1);
+        }
+        vm.cancelBill = undefined
+        vm.loading = false;
+      }).catch(function (error) {
+        vm.loading = false;
+        vm.error = error.data;
+      });
+
     }
 
     vm.getClaveAcceso = function(){

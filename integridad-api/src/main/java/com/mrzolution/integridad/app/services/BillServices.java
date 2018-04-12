@@ -1,16 +1,16 @@
 package com.mrzolution.integridad.app.services;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 import com.mrzolution.integridad.app.cons.Constants;
 import com.mrzolution.integridad.app.domain.*;
 import com.mrzolution.integridad.app.domain.Pago;
 import com.mrzolution.integridad.app.domain.ebill.*;
+import com.mrzolution.integridad.app.domain.report.ItemReport;
+import com.mrzolution.integridad.app.domain.report.SalesReport;
 import com.mrzolution.integridad.app.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -158,7 +158,22 @@ public class BillServices {
 		saved.setDetails(details);
 		return saved;
 	}
-	
+
+	public Bill deactivate(Bill bill) throws BadRequestException{
+		if(bill.getId() == null){
+			throw new BadRequestException("Invalid Bill");
+		}
+
+		Bill billToDeactivate = billRepository.findOne(bill.getId());
+		billToDeactivate.setListsNull();
+
+		billToDeactivate.setActive(false);
+
+		billRepository.save(billToDeactivate);
+
+		return billToDeactivate;
+	}
+
 	public Bill update(Bill bill) throws BadRequestException{
 		if(bill.getId() == null){
 			throw new BadRequestException("Invalid Bill");
@@ -176,7 +191,6 @@ public class BillServices {
 		return updated;
 	}
 
-
 	public Iterable<Bill> getByStringSeqAndSubId(String stringSeq, UUID subId){
 		log.info("BillServices getByStringSeq : {}, {}", stringSeq, subId);
 		Iterable<Bill> bills = billRepository.findByStringSeqAndSubsidiaryId(stringSeq, subId);
@@ -188,51 +202,149 @@ public class BillServices {
 
 		return bills;
 	}
-	
+
+	public List<ItemReport> getBySubIdAndDatesActives(UUID userClientId, long dateOne, long dateTwo){
+		log.info("BillServices getByUserClientIdAndDates: {}, {}, {}", userClientId, dateOne, dateTwo);
+		Iterable<Bill> bills = billRepository.findByUserClientIdAndDatesActives(userClientId, dateOne, dateTwo);
+
+		Set<UUID> productIds = new HashSet<>();
+		bills.forEach(bill-> {
+			populateChildren(bill);
+
+			for (Detail detail: bill.getDetails()) {
+				productIds.add(detail.getProduct().getId());
+			}
+		});
+
+		return loadListItems(Lists.newArrayList(bills), productIds);
+	}
+
+	public List<SalesReport> getAllBySubIdAndDates(UUID userClientId, long dateOne, long dateTwo){
+		log.info("BillServices getAllBySubIdAndDates: {}, {}, {}", userClientId, dateOne, dateTwo);
+		Iterable<Bill> bills = billRepository.findAllByUserClientIdAndDates(userClientId, dateOne, dateTwo);
+		List<SalesReport> salesReportList = new ArrayList<>();
+
+		bills.forEach(bill-> {
+			bill.setListsNull();
+			Long endDateLong = bill.getDateCreated();
+			List<Pago> pagos = getPagosByBill(bill);
+			for(Pago pago: pagos){
+				for (Credits credit: pago.getCredits()){
+					if(endDateLong < credit.getFecha()){
+						endDateLong = credit.getFecha();
+					}
+				}
+			}
+
+			SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+			String date = dateFormat.format(new Date(bill.getDateCreated()));
+			String status = bill.isActive() ? "ACTIVA" : "ANULADA";
+			String endDate = dateFormat.format(new Date(endDateLong));
+
+			SalesReport saleReport= new SalesReport(date, bill.getClient().getCodApp(), bill.getClient().getName(), bill.getClient().getIdentification(),
+					bill.getStringSeq(), status, bill.getOtir(), bill.getSubTotal(), bill.getIva(), bill.getTotal(), endDate, bill.getUserIntegridad().getCashier().getNameNumber(),
+					null, bill.getSubsidiary().getName(), bill.getUserIntegridad().getFirstName() + " " + bill.getUserIntegridad().getLastName());
+
+			salesReportList.add(saleReport);
+		});
+
+		return salesReportList;
+	}
+
 	private void populateChildren(Bill bill) {
 		log.info("BillServices populateChildren billId: {}", bill.getId());
+		List<Detail> detailList = getDetailsByBill(bill);
+        List<Pago> pagoList = getPagosByBill(bill);
+
+		bill.setDetails(detailList);
+		bill.setPagos(pagoList);
+		bill.setFatherListToNull();
+		log.info("BillServices populateChildren FINISHED billId: {}", bill.getId());
+	}
+
+	private List<Detail> getDetailsByBill(Bill bill){
 		List<Detail> detailList = new ArrayList<>();
 		Iterable<Detail> details = detailRepository.findByBill(bill);
-        List<Pago> pagoList = new ArrayList<>();
-        Iterable<Pago> pagos = pagoRepository.findByBill(bill);
-
 		details.forEach(detail -> {
 			detail.setListsNull();
 			detail.setFatherListToNull();
 			detail.getProduct().setFatherListToNull();
 			detail.getProduct().setListsNull();
 			detail.setBill(null);
-			
+
 			detailList.add(detail);
 		});
 
+		return detailList;
+	}
+
+	private List<Pago> getPagosByBill(Bill bill){
+		List<Pago> pagoList = new ArrayList<>();
+		Iterable<Pago> pagos = pagoRepository.findByBill(bill);
+
 		pagos.forEach(pago ->{
-		    if("credito".equals(pago.getMedio())){
-		        Iterable<Credits> credits = creditsRepository.findByPago(pago);
-		        List<Credits> creditsList = new ArrayList<>();
+			if("credito".equals(pago.getMedio())){
+				Iterable<Credits> credits = creditsRepository.findByPago(pago);
+				List<Credits> creditsList = new ArrayList<>();
 
-		        credits.forEach(credit ->{
-		            credit.setListsNull();
-		            credit.setFatherListToNull();
-		            credit.setPago(null);
+				credits.forEach(credit ->{
+					credit.setListsNull();
+					credit.setFatherListToNull();
+					credit.setPago(null);
 
-		            creditsList.add(credit);
-                });
+					creditsList.add(credit);
+				});
 
-		        pago.setCredits(creditsList);
-            } else {
-		        pago.setListsNull();
-            }
-		    pago.setFatherListToNull();
-		    pago.setBill(null);
+				pago.setCredits(creditsList);
+			} else {
+				pago.setListsNull();
+			}
+			pago.setFatherListToNull();
+			pago.setBill(null);
 
-		    pagoList.add(pago);
-        });
-		
-		bill.setDetails(detailList);
-		bill.setPagos(pagoList);
-		bill.setFatherListToNull();
-		log.info("BillServices populateChildren FINISHED billId: {}", bill.getId());
+			pagoList.add(pago);
+		});
+
+		return pagoList;
+	}
+
+	private List<ItemReport> loadListItems(List<Bill> bills, Set<UUID> productIds){
+		List<ItemReport> reportList = new ArrayList<>();
+
+		for(UUID uuidCurrent: productIds){
+			Double quantityTotal = new Double(0);
+			Double subTotalTotal = new Double(0);
+			Double discountTotal = new Double(0);
+			Double ivaTotal = new Double(0);
+			Double totalTotal = new Double(0);
+			String code = "";
+			String desc = "";
+			for (Bill bill: bills) {
+				for(Detail detail: bill.getDetails()){
+					if(uuidCurrent.equals(detail.getProduct().getId())){
+						Double discount = Double.valueOf(Double.valueOf(bill.getDiscountPercentage())/100) * detail.getTotal();
+						ItemReport item = new ItemReport(detail.getProduct().getId(),"", bill.getStringSeq(), detail.getProduct().getCodeIntegridad(),
+								detail.getProduct().getName(),Double.valueOf(detail.getQuantity()), detail.getCostEach(), detail.getTotal(), discount, ((detail.getTotal()-discount) * 0.12), ((detail.getTotal()-discount) * 1.12));
+						quantityTotal += item.getQuantity();
+						subTotalTotal += item.getSubTotal();
+						discountTotal += item.getDiscount();
+						ivaTotal += item.getIva();
+						totalTotal += item.getTotal();
+						code = detail.getProduct().getCodeIntegridad();
+						desc = detail.getProduct().getName();
+
+						reportList.add(item);
+					}
+				}
+			}
+
+			ItemReport itemTotal = new ItemReport(uuidCurrent, "R", "", code,
+					desc, quantityTotal, null, subTotalTotal, discountTotal, ivaTotal, totalTotal);
+
+			reportList.add(itemTotal);
+		}
+
+		return reportList;
 	}
 
 }
