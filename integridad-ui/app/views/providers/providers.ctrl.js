@@ -198,6 +198,7 @@ angular.module('integridadUiApp')
 
     vm.createRetention = function(prov){
       var today = new Date();
+      vm.retentionCreated = false;
       vm.retention = {
         provider: prov,
         typeRetention: undefined,
@@ -268,9 +269,8 @@ angular.module('integridadUiApp')
       var eRet = eretentionService.createERetention(vm.retention, $localStorage.user);
 
       eretentionService.getClaveDeAcceso(eRet, $localStorage.user.subsidiary.userClient.id).then(function(resp){
-        // var obj = JSON.parse(resp.data);
-        console.log(resp);
-        var obj = {clave_acceso: '1234560', id:'id12345'};
+        var obj = JSON.parse(resp.data);
+        // var obj = {clave_acceso: '1234560', id:'id12345'};
         if(obj.errors === undefined){
           vm.retention.claveDeAcceso = obj.clave_acceso;
           vm.retention.idSri = obj.id;
@@ -294,7 +294,13 @@ angular.module('integridadUiApp')
           });
 
           eretentionService.create(vm.retention).then(function(respRetention){
-             _activate();
+            vm.retention = respRetention;
+            vm.totalRetention = 0;
+            _.each(vm.retention.detailRetentions, function(detail){
+              vm.totalRetention = parseFloat(vm.totalRetention) +parseFloat(detail.total);
+            });
+            vm.retentionCreated = true;
+            vm.loading = false;
           }).catch(function (error) {
             vm.loading = false;
             vm.error = error;
@@ -308,6 +314,11 @@ angular.module('integridadUiApp')
         vm.loading = false;
         vm.error = error.data;
       });
+    };
+
+    vm.cancelRetentionCreated = function(){
+      vm.retentionCreated = false;
+      vm.retention = undefined
     };
 
     (function initController() {
