@@ -94,7 +94,7 @@
           class="form-control"></select>
         </div>
         <div class="form-group col-md-4">
-          <label>RUC: </label>
+          <label>RUC / CEDULA: </label>
           <input type="text" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
           ng-model="vm.provider.ruc" class="form-control" maxlength="13">
         </div>
@@ -300,6 +300,14 @@
                     Eliminar
                   </button>
                 </td>
+              </tr>
+              <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td><b>TOTAL</b></td>
+                <td>{{vm.getTotalRetenciones()}}</td>
+                <td></td>
               </tr>
             </tbody>
           </table>

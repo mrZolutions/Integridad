@@ -8,7 +8,7 @@
  * Controller of the menu
  */
 angular.module('integridadUiApp')
-  .controller('ProvidersCtrl', function (_, $localStorage, $location, providerService, utilStringService, dateService, eretentionService, utilSeqService) {
+  .controller('ProvidersCtrl', function (_, $localStorage, $location, providerService, utilStringService, dateService, eretentionService, utilSeqService, validatorService) {
     var vm = this;
     vm.error = undefined;
     vm.success = undefined;
@@ -184,11 +184,21 @@ angular.module('integridadUiApp')
     };
 
     vm.register = function(){
-      if(vm.provider.id){
+      var idValid = true;
+      if(vm.provider.ruc.length > 10){
+        idValid = validatorService.isRucValid(vm.provider.ruc);
+      } else {
+        idValid = validatorService.isCedulaValid(vm.provider.ruc);
+      }
+
+      if(!idValid){
+        vm.error = 'IDENTIFICACION INVALIDA';
+      } else if(vm.provider.id){
         update();
       } else {
         create();
       }
+
     };
 
     vm.remove = function(){
@@ -262,6 +272,17 @@ angular.module('integridadUiApp')
 
     vm.deleteItem = function(index){
       vm.retention.items.splice(index, 1);
+    };
+
+    vm.getTotalRetenciones = function(){
+      var totalRetorno = 0;
+      if(vm.retention){
+        _.each(vm.retention.items, function(detail){
+          totalRetorno = (parseFloat(totalRetorno) +parseFloat(detail.valor_retenido)).toFixed(2);
+        });
+      }
+
+      return totalRetorno;
     };
 
     vm.getClaveAcceso = function(){
