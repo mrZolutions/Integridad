@@ -25,13 +25,6 @@ public class httpCallerService {
         MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
         RequestBody body = RequestBody.create(JSON, json);
-//        Request request = new Request.Builder()
-//                .addHeader("Content-Type", "application/json")
-//                .addHeader("X-Key", "734de6ccec5c4e688a84f7ab06620baf")
-//                .addHeader("X-Password", "12345")
-//                .url(url)
-//                .post(body)
-//                .build();
         Request request = new Request.Builder()
                 .addHeader("Content-Type", "application/json")
                 .addHeader("X-Key", userClient.getApiKey())

@@ -1,11 +1,6 @@
 angular
   .module('app.services')
-  .service('requirementService', function () {
-
-    function getIsoDate(dateBillPre){
-      var dateReturn = new Date(dateBillPre.getTime() - (5*60*60*1000));
-      return dateReturn.toISOString().toString();
-    }
+  .service('requirementService', function (dateService) {
 
     function getTipyCode(code){
       tipyIdCode = {
@@ -42,7 +37,7 @@ angular
         "ambiente": 2,
         "tipo_emision": 1,
         "secuencial": bill.billSeq,
-        "fecha_emision": getIsoDate($('#pickerBillDate').data("DateTimePicker").date().toDate()),
+        "fecha_emision": dateService.getIsoDate($('#pickerBillDate').data("DateTimePicker").date().toDate()),
         "emisor":{
           "ruc":user.cashier.subsidiary.userClient.ruc,
           "obligado_contabilidad":true,
@@ -76,6 +71,10 @@ angular
         "valor_retenido_iva": 0,
         "valor_retenido_renta": 0,
       };
+
+      if (user.cashier.subsidiary.userClient.testMode){
+        req.ambiente = 1;
+      }
 
       if(user.cashier.subsidiary.userClient.espTemp){
         req.comprador.email = req.comprador.email + ', facturacionelecppe2018@gmail.com, facturacionppecoca@gmail.com';
