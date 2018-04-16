@@ -162,7 +162,7 @@
                 </script>
               </td>
               <td width="70%">
-                <div style=" padding-left: 10px" ng-show="!vm.newBill" print-if="!vm.newBill">
+                <div style=" padding-left: 10px" >
                   <label>CLAVE DE ACCESO: </label><br/>
                   {{vm.bill.claveDeAcceso}}
                 </div>
@@ -396,7 +396,8 @@
       <div class="row" print-remove>
         <div class="form-group col-md-12">
           <button type="button" class="btn btn-primary" ng-if="vm.newBill"
-          data-toggle="modal" data-target="#modalAddPago" ng-disabled="vm.bill.total <= 0 || vm.billed">
+                  data-toggle="modal" data-target="#modalAddPago" ng-disabled="vm.bill.total <= 0 || vm.billed"
+                  ng-show="vm.bill.claveDeAcceso === undefined">
             Forma de Pago
           </button>
           <!-- <button print-btn type="button" class="btn btn-primary" ng-click="vm.getClaveAcceso()"
@@ -404,8 +405,12 @@
             Facturar
           </button> -->
           <button type="button" class="btn btn-primary" ng-if="vm.newBill"
-          ng-click="vm.clientSelected = undefined">
+          ng-click="vm.cancelBill()">
             Cancelar
+          </button>
+          <button print-btn type="button" class="btn btn-success" ng-if="vm.newBill"
+                  ng-disabled="vm.bill.claveDeAcceso === undefined" ng-click="vm.cancelBill()">
+            Imprimir
           </button>
         </div>
       </div>
@@ -716,7 +721,7 @@
             ng-disabled="vm.pagos.length === 0 || vm.getCambio < 0">
             Cerrar
           </button>
-          <button print-btn type="button" class="btn btn-primary" ng-click="vm.getClaveAcceso()"
+          <button type="button" class="btn btn-primary" ng-click="vm.getClaveAcceso()"
           ng-disabled="(vm.pagos.length === 0 || vm.getCambio < 0) || vm.billed" print-remove>
             Facturar
           </button>

@@ -39,7 +39,7 @@ public class UserIntegridad {
     
     private String validation;
     private boolean active;
-    
+
     @Email
     private String email;
 

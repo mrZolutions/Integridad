@@ -40,6 +40,8 @@ public class UserClient {
     private String apiKey;
     private boolean espTemp;
 
+    private boolean testMode;
+
     //TODO
     //razonsocial
     //contribuyente especial
