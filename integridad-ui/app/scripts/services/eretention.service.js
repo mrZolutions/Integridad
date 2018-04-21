@@ -1,6 +1,6 @@
 angular
   .module('app.services')
-  .service('eretentionService', function (dateService, securityService) {
+  .service('eretentionService', function (_, dateService, securityService) {
 
     function getTipyCode(code){
       tipyIdCode = {
@@ -40,6 +40,10 @@ angular
         },
         "items":retention.items,
       };
+
+      _.each(eRet.items, function(item){
+        item.codigo = String(item.codigo);
+      });
 
       if (user.cashier.subsidiary.userClient.testMode){
         eRet.ambiente = 1;
