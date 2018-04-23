@@ -11,7 +11,7 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Item {
     private float base_imponible;
-    private int codigo;
+    private String codigo;
     private String codigo_porcentaje;
     private String fecha_emision_documento_sustento;
     private String numero_documento_sustento;
