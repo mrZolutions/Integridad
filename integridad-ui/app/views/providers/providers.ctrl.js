@@ -89,13 +89,21 @@ angular.module('integridadUiApp')
       {name:'Pago al exterior - Navegación Marítima y/o aérea' ,percentage:22, codigo: '503'},
       {name:'Pago al exterior- Dividendos distribuidos a personas naturales' ,percentage:0, codigo: '504'}
     ];
+    // vm.ivaTipo = [
+    //   {name:'RETENCION DEL 10%' ,percentage:10, codigo:'721'},
+    //   {name:'RETENCION DEL 20%' ,percentage:20, codigo:'723'},
+    //   {name:'RETENCION DEL 30%' ,percentage:30, codigo:'725'},
+    //   {name:'RETENCION DEL 50%' ,percentage:50, codigo:'727'},
+    //   {name:'RETENCION DEL 70%' ,percentage:70, codigo:'729'},
+    //   {name:'RETENCION DEL 100%' ,percentage:100, codigo:'731'}
+    // ];
     vm.ivaTipo = [
-      {name:'RETENCION DEL 10%' ,percentage:10, codigo:'721'},
-      {name:'RETENCION DEL 20%' ,percentage:20, codigo:'723'},
-      {name:'RETENCION DEL 30%' ,percentage:30, codigo:'725'},
-      {name:'RETENCION DEL 50%' ,percentage:50, codigo:'727'},
-      {name:'RETENCION DEL 70%' ,percentage:70, codigo:'729'},
-      {name:'RETENCION DEL 100%' ,percentage:100, codigo:'731'}
+      {name:'RETENCION DEL 10%' ,percentage:10, codigo:'721', codigoDatil:'9'},
+      {name:'RETENCION DEL 20%' ,percentage:20, codigo:'723', codigoDatil:'10'},
+      {name:'RETENCION DEL 30%' ,percentage:30, codigo:'725', codigoDatil:'1'},
+      {name:'RETENCION DEL 50%' ,percentage:50, codigo:'727', codigoDatil:'9'},
+      {name:'RETENCION DEL 70%' ,percentage:70, codigo:'729', codigoDatil:'2'},
+      {name:'RETENCION DEL 100%' ,percentage:100, codigo:'731', codigoDatil:'3'}
     ];
 
     function _activate(){
@@ -244,7 +252,8 @@ angular.module('integridadUiApp')
         codigo: parseInt(vm.retention.typeRetention),
         fecha_emision_documento_sustento: dateService.getIsoDate($('#pickerBillDateDocumentRetention').data("DateTimePicker").date().toDate()),
         numero_documento_sustento:vm.retention.numero,
-        codigo_porcentaje: percentage.codigo,
+        codigo_porcentaje: percentage.codigoDatil,
+        codigo_porcentaje_integridad: percentage.codigo,
         porcentaje: percentage.percentage,
         tipo_documento_sustento: "01",
       };
@@ -306,7 +315,7 @@ angular.module('integridadUiApp')
           _.each(vm.retention.items, function(item){
             var detail ={
               taxType: item.codigo === 1 ? 'RETENCION EN LA FUENTE' : 'RETENCION EN EL IVA',
-              code: item.codigo_porcentaje,
+              code: item.codigo_porcentaje_integridad,
               baseImponible: item.base_imponible,
               percentage: item.porcentaje,
               total: item.valor_retenido
@@ -321,6 +330,7 @@ angular.module('integridadUiApp')
               vm.totalRetention = (parseFloat(vm.totalRetention) +parseFloat(detail.total)).toFixed(2);
             });
             vm.retentionCreated = true;
+            $localStorage.user.cashier.retentionNumberSeq = parseInt($localStorage.user.cashier.retentionNumberSeq) + 1;
             vm.loading = false;
           }).catch(function (error) {
             vm.loading = false;
