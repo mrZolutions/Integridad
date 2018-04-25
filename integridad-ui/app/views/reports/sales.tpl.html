@@ -135,6 +135,7 @@
       <th> Estado </th>
       <th> OTI </th>
       <th> Subtotal </th>
+      <th> Descuento </th>
       <th> Iva </th>
       <th> Total </th>
       <th> Fecha-Vencimiento </th>
@@ -153,9 +154,10 @@
       <td>{{ data.billNumber }}</td>
       <td>{{ data.status }}</td>
       <td>{{ data.oti }}</td>
-      <td>{{ data.subTotal.toFixed(2) }}</td>
-      <td>{{ data.iva.toFixed(2) }}</td>
-      <td>{{ data.total.toFixed(2) }}</td>
+      <td>{{ data.status === 'ACTIVA' ? data.subTotal.toFixed(2) : '' }}</td>
+      <td>{{ data.status === 'ACTIVA' ? data.discount.toFixed(2) : '' }}</td>
+      <td>{{ data.status === 'ACTIVA' ? data.iva.toFixed(2) : '' }}</td>
+      <td>{{ data.status === 'ACTIVA' ? data.total.toFixed(2) : '' }}</td>
       <td>{{ data.endDate }}</td>
       <td>{{ data.cashier }}</td>
       <td>{{ data.warehouse }}</td>

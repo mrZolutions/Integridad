@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.mrzolution.integridad.app.cons.Constants;
 import com.mrzolution.integridad.app.domain.*;
@@ -229,9 +230,11 @@ public class BillServices {
 			Long endDateLong = bill.getDateCreated();
 			List<Pago> pagos = getPagosByBill(bill);
 			for(Pago pago: pagos){
-				for (Credits credit: pago.getCredits()){
-					if(endDateLong < credit.getFecha()){
-						endDateLong = credit.getFecha();
+				if(pago.getCredits() != null){
+					for (Credits credit: pago.getCredits()){
+						if(endDateLong < credit.getFecha()){
+							endDateLong = credit.getFecha();
+						}
 					}
 				}
 			}
@@ -242,7 +245,7 @@ public class BillServices {
 			String endDate = dateFormat.format(new Date(endDateLong));
 
 			SalesReport saleReport= new SalesReport(date, bill.getClient().getCodApp(), bill.getClient().getName(), bill.getClient().getIdentification(),
-					bill.getStringSeq(), status, bill.getOtir(), bill.getSubTotal(), bill.getIva(), bill.getTotal(), endDate, bill.getUserIntegridad().getCashier().getNameNumber(),
+					bill.getStringSeq(), status, bill.getOtir(), bill.getSubTotal(), bill.getDiscount(), bill.getIva(), bill.getTotal(), endDate, bill.getUserIntegridad().getCashier().getNameNumber(),
 					null, bill.getSubsidiary().getName(), bill.getUserIntegridad().getFirstName() + " " + bill.getUserIntegridad().getLastName());
 
 			salesReportList.add(saleReport);
