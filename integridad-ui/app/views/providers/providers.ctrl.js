@@ -298,9 +298,9 @@ angular.module('integridadUiApp')
       vm.loading = true;
       var eRet = eretentionService.createERetention(vm.retention, $localStorage.user);
 
-      // eretentionService.getClaveDeAcceso(eRet, $localStorage.user.subsidiary.userClient.id).then(function(resp){
-        // var obj = JSON.parse(resp.data);
-        var obj = {clave_acceso: '1234560', id:'id12345'};
+      eretentionService.getClaveDeAcceso(eRet, $localStorage.user.subsidiary.userClient.id).then(function(resp){
+        var obj = JSON.parse(resp.data);
+        // var obj = {clave_acceso: '1234560', id:'id12345'};
         if(obj.errors === undefined){
           vm.retention.claveDeAcceso = obj.clave_acceso;
           vm.retention.idSri = obj.id;
@@ -341,10 +341,10 @@ angular.module('integridadUiApp')
           vm.error = "Error al obtener Clave de Acceso: " + JSON.stringify(obj.errors);
         }
 
-      // }).catch(function (error) {
-      //   vm.loading = false;
-      //   vm.error = error.data;
-      // });
+      }).catch(function (error) {
+        vm.loading = false;
+        vm.error = error.data;
+      });
     };
 
     vm.cancelRetentionCreated = function(){
