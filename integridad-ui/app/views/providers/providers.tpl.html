@@ -201,7 +201,7 @@
         <div class="form-group col-md-6">
           <label>N&uacute;mero de Factura: </label>
           <input type="text" ng-model="vm.retention.numero"
-          class="form-control" maxlength="18">
+          class="form-control" maxlength="17">
         </div>
       </div>
 
@@ -350,7 +350,7 @@
             <tr>
               <td width="50%" align="center"><img src="images/{{vm.userData.subsidiary.userClient.logo}}" ><br></td>
               <td width="50%" rowspan="2">
-                <div style="padding:40px;">
+                <div style="padding:0px 20px;">
                   <b>RUC: {{vm.userData.subsidiary.userClient.ruc}}</b><br/>
                   <b>COMPROBANTE DE RETENCION</b><br/><br/>
                   <b>No: {{vm.retention.stringSeq}}</b><br/>
@@ -361,8 +361,8 @@
               </td>
             </tr>
             <tr>
-              <td  width="50%">
-                <div style="padding:40px;">
+              <td  width="50%" valign="top">
+                <div style="padding:10px 20px;">
                   <b>{{vm.userData.subsidiary.userClient.name}}</b><br/></br>
                   <b>Matriz: {{vm.userData.subsidiary.userClient.address1}}</b><br/>
                   <b>Establecimiento: {{vm.userData.subsidiary.address1}}</b><br/>
@@ -378,39 +378,35 @@
         <div class="form-group col-md-12 ">
           <table width="100%">
             <tr>
-              <td width="35%">
+              <td width="50%">
                 <div >
-                  <label>SE&Ntilde;OR(ES): </label>
+                  <label>Raz&oacute;n social / Nombres y Apellidos: </label>
                   {{vm.retention.provider.razonSocial}}
                 </div>
               </td>
-              <td width="65%" style=" padding-left: 10px">
-                <label>FECHA: </label>
-                {{ vm.retention.dateCreated | date : "dd-MM-yyyy" }}
+              <td width="50%" style=" padding-left: 10px">
+                <label>identificaci&oacute;n: </label>
+                {{vm.retention.provider.ruc}}
               </td>
             </tr>
             <tr>
-              <td width="35%">
+              <td>
                 <div >
-                  <label>RUC: </label>
-                  {{vm.retention.provider.ruc}}
+                  <label>Fecha de emisi&oacute;n: </label>
+                  {{ vm.retention.dateCreated | date : "dd-MM-yyyy" }}
                 </div>
               </td>
-              <td width="65%" style=" padding-left: 10px">
-                <label>TIPO DE COMPROBANTE DE VENTA: </label>
-                FACTURA
-              </td>
             </tr>
             <tr>
-              <td width="35%">
+              <td>
                 <div >
-                  <label>DIRECCION: </label>
+                  <label>Direcci&oacute;n: </label>
                   {{vm.retention.provider.address1}}
                 </div>
               </td>
-              <td width="65%" style=" padding-left: 10px">
-                <label>NUMERO DE COMPROBANTE DE VENTA: </label>
-                {{vm.retention.documentNumber}}
+              <td style=" padding-left: 10px">
+                <label>E-mail: </label>
+                {{vm.retention.provider.email}}
               </td>
             </tr>
           </table>
