@@ -61,10 +61,8 @@ angular.module('integridadUiApp')
     }
 
     function _getProductQuantities(listResponse){
-      console.log(listResponse.length)
       for (var i = 0; i < listResponse.length; i++) {
         var sub = _.find(listResponse[i].productBySubsidiaries, function (s) {
-          console.log(s)
           return (s.subsidiary.id === $localStorage.user.subsidiary.id && s.active === true);
         });
         if(sub){
