@@ -13,6 +13,7 @@ import com.mrzolution.integridad.app.father.FatherManageChildren;
 import com.mrzolution.integridad.app.repositories.ProductBySubsidiairyRepository;
 import com.mrzolution.integridad.app.repositories.ProductBySubsidiaryChildRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Component;
 
 import com.mrzolution.integridad.app.domain.Product;
@@ -109,24 +110,29 @@ public class ProductServices {
 		return actives;
 	}
 	
-	public Iterable<Product> getAllActivesBySubsidiaryIdAndActive(UUID subsidiaryId) {
+	public Page<Product> getAllActivesBySubsidiaryIdAndActive(UUID subsidiaryId, String variable, Pageable pageable) {
 		log.info("ProductServices getAllActivesBySubsidiaryIdAndActive");
-		Iterable<UUID> productIdList = productBySubsidiairyRepository.findBySubsidiaryIdAndProductActive(subsidiaryId);
+		Page<UUID> productIdList;
+		if(variable.equals("null")){
+			log.info("ProductServices getAllActivesBySubsidiaryIdAndActive wothout variable");
+			productIdList = productBySubsidiairyRepository.findBySubsidiaryIdAndProductActive(subsidiaryId, pageable);
+		} else {
+			log.info("ProductServices getAllActivesBySubsidiaryIdAndActive with variable");
+			productIdList = productBySubsidiairyRepository.findBySubsidiaryIAndVariabledAndProductActive(subsidiaryId, variable, new PageRequest(0, 15, Sort.Direction.ASC, "product"));
+		}
+
 		List<Product> listReturn = new ArrayList<>();
-		productIdList.forEach(id ->{
-			listReturn.add(getById(id));
-			Product product = getById(id);
+		productIdList.forEach(page ->{
+			listReturn.add(getById(page));
 		});
 
-//		Iterable<Product> actives = productRepository.findBySubsidiaryIdAndActive(subsidiaryId);
-//		actives.forEach(prodcut -> {
-//			prodcut.setFatherListToNull();
-//		});
-		return listReturn;
+		Page<Product> products = new PageImpl<>(listReturn, pageable, productIdList.getTotalElements() );
+
+		return products;
 	}
 	
 	private void populateChildren(Product product) {
-		log.info("ProductServices populateChildren productId: {}", product.getId());
+//		log.info("ProductServices populateChildren productId: {}", product.getId());
 		List<ProductBySubsidiary> productBySubsidiaryList = new ArrayList<>();
 		Iterable<ProductBySubsidiary> productBySubsidiaries = productBySubsidiairyRepository.findByProductId(product.getId());
 
@@ -146,7 +152,7 @@ public class ProductServices {
 			product.getBrand().setListsNull();
 		}
 		product.setFatherListToNull();
-		log.info("ProductServices populateChildren FINISHED productId: {}", product.getId());
+//		log.info("ProductServices populateChildren FINISHED productId: {}", product.getId());
 		
 	}
 }

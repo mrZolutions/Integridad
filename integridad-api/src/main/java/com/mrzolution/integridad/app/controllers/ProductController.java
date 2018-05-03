@@ -3,13 +3,12 @@ package com.mrzolution.integridad.app.controllers;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.mrzolution.integridad.app.domain.Product;
 import com.mrzolution.integridad.app.exceptions.BadRequestException;
@@ -103,17 +102,17 @@ public class ProductController {
 		return new ResponseEntity<Iterable>(response, HttpStatus.CREATED);
 	}
 	
-	@RequestMapping(method = RequestMethod.GET, value="/actives/subsidiary/{subsidiaryId}")
-    public ResponseEntity getAllActivesBySubsidiaryId(@PathVariable("subsidiaryId") UUID subsidiaryId){
+	@RequestMapping(method = RequestMethod.GET, value="/actives/subsidiary/{subsidiaryId}/{page}")
+    public ResponseEntity getAllActivesBySubsidiaryId(@PathVariable("subsidiaryId") UUID subsidiaryId, @PathVariable("page") int page, @RequestParam(required = false, name = "var") String variable){
 		log.info("ProductController getAllActivesBySubsidiaryId: {}", subsidiaryId);
-		Iterable<Product> response = null;
+		Page<Product> response = null;
 		try {
-			response = service.getAllActivesBySubsidiaryIdAndActive(subsidiaryId);
+			response = service.getAllActivesBySubsidiaryIdAndActive(subsidiaryId, variable, new PageRequest(page, 15, Sort.Direction.ASC, "product"));
 		}catch(BadRequestException e) {
 			log.error("ProductController getAllActivesBySubsidiaryId Exception thrown: {}", e.getMessage());	    
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	    }
-		return new ResponseEntity<Iterable>(response, HttpStatus.CREATED);
+		return new ResponseEntity<Page>(response, HttpStatus.CREATED);
 	}
 	
 	

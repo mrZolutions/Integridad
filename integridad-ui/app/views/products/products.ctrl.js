@@ -30,7 +30,7 @@ angular.module('integridadUiApp')
     vm.wizard = 0;
 
     function _activate(){
-      vm.productList = [];
+      vm.searchText = undefined;
       vm.loading = true;
       vm.messurements = messurementListService.getMessurementList();
       productTypeService.getproductTypesLazy().then(function(response){
@@ -40,9 +40,19 @@ angular.module('integridadUiApp')
         vm.error = error.data;
       });
 
+      vm.page = 0;
+      _filter();
+    }
+
+    function _filter(){
+      vm.loading = true;
+      vm.totalPages = 0;
+      vm.productList = [];
+      var variable = vm.searchText? vm.searchText : null;
       if($routeParams.subsidiaryId){
-        productService.getLazyBySusidiaryId($routeParams.subsidiaryId).then(function (response) {
-          _getProductQuantities(response);
+        productService.getLazyBySusidiaryId($routeParams.subsidiaryId, vm.page, variable).then(function (response) {
+          vm.totalPages = response.totalPages;
+          _getProductQuantities(response.content);
           vm.loading = false;
         }).catch(function (error) {
           vm.loading = false;
@@ -50,8 +60,9 @@ angular.module('integridadUiApp')
         });
       } else {
         // productService.getLazyByProjectId($localStorage.user.subsidiary.userClient.id).then(function (response) {
-        productService.getLazyBySusidiaryId($localStorage.user.subsidiary.id).then(function(response){
-          _getProductQuantities(response);
+        productService.getLazyBySusidiaryId($localStorage.user.subsidiary.id, vm.page, variable).then(function(response){
+          vm.totalPages = response.totalPages;
+          _getProductQuantities(response.content);
           vm.loading = false;
         }).catch(function (error) {
           vm.loading = false;
@@ -171,6 +182,25 @@ angular.module('integridadUiApp')
         });
       }
     }
+
+    vm.filter = function(){
+      vm.page = 0;
+      _filter();
+    };
+
+    vm.paginate = function(page){
+      vm.page = page;
+      _filter();
+    };
+
+    vm.getActiveClass = function(index){
+      var classActive = vm.page === index? 'active' : '';
+      return classActive;
+    };
+
+    vm.range = function() {
+        return new Array(vm.totalPages);
+    };
 
     vm.getCost = function(textCost, averageCost){
       var aC = parseFloat(textCost)
