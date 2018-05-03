@@ -249,27 +249,27 @@ angular.module('integridadUiApp')
 
     };
 
-    vm.addProduct = function(){
-      vm.indexDetail = undefined;
-      vm.loading = true;
-      vm.errorQuantity = undefined;
-      productService.getLazyBySusidiaryId($localStorage.user.subsidiary.id)
+    function _filterProduct(){
+      vm.totalPages = 0;
+      var variable = vm.searchText? vm.searchText : null;
+      productService.getLazyBySusidiaryId($localStorage.user.subsidiary.id, vm.page, variable)
       .then(function(response){
         vm.loading = false;
+        vm.totalPages = response.totalPages;
         vm.productList = [];
 
-        for (var i = 0; i < response.length; i++) {
+        for (var i = 0; i < response.content.length; i++) {
           var productFound = _.find(vm.bill.details, function (detail) {
-            return detail.product.id === response[i].id;
+            return detail.product.id === response.content[i].id;
           });
 
           if(productFound === undefined){
-            var sub = _.find(response[i].productBySubsidiaries, function (s) {
+            var sub = _.find(response.content[i].productBySubsidiaries, function (s) {
               return (s.subsidiary.id === $localStorage.user.subsidiary.id && s.active === true);
             });
             if(sub){
-              response[i].quantity = sub.quantity
-              vm.productList.push(response[i]);
+              response.content[i].quantity = sub.quantity
+              vm.productList.push(response.content[i]);
             }
           }
         }
@@ -277,6 +277,35 @@ angular.module('integridadUiApp')
         vm.loading = false;
         vm.error = error.data;
       });
+    }
+
+    vm.filter = function(){
+      vm.page = 0;
+      _filterProduct();
+    };
+
+    vm.paginate = function(page){
+      vm.page = page;
+      _filterProduct();
+    };
+
+    vm.getActiveClass = function(index){
+      var classActive = vm.page === index? 'active' : '';
+      return classActive;
+    };
+
+    vm.range = function() {
+        return new Array(vm.totalPages);
+    };
+
+    vm.addProduct = function(){
+      vm.indexDetail = undefined;
+      vm.loading = true;
+      vm.errorQuantity = undefined;
+      vm.page = 0;
+      vm.searchText = undefined;
+
+      _filterProduct();
     };
 
     vm.selectProductToAdd = function(productSelect){
