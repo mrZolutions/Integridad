@@ -38,8 +38,9 @@ angular
       });
     };
 
-    this.getLazyBySusidiaryId = function (subsidiaryId) {
-      return securityService.get('/product/actives/subsidiary/'+subsidiaryId).then(function successCallback(response) {
+    this.getLazyBySusidiaryId = function (subsidiaryId, page, variable) {
+      return securityService.get('/product/actives/subsidiary/'+subsidiaryId+'/'+page+'?var='+variable).then(function successCallback(response) {
+        // return response.data;
         return response.data;
       });
     };
