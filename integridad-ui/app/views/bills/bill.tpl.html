@@ -740,7 +740,16 @@
         <div class="modal-body">
           <div class="row">
             <div class="col-md-12" ng-if="vm.productToAdd === undefined">
-              <input ng-model="searchTextProd" class="form-control" placeholder="Buscar">
+              <div class="row">
+                <div class="form-group col-md-8">
+                  <input ng-model="vm.searchText" class="form-control" placeholder="Buscar" />
+                </div>
+                <div class="form-group col-md-4">
+                  <button type="button" class="btn btn-primary" ng-click="vm.filter()">
+                    Buscar
+                  </button>
+                </div>
+              </div>
               <table class="table table-striped">
                 <thead>
                   <tr>
@@ -771,6 +780,13 @@
                   </tr>
                 </tbody>
               </table>
+              <nav aria-label="Page navigation example">
+                <ul class="pagination pagination-sm">
+                  <li class="page-item" ng-repeat="page in vm.range() track by $index" ng-class="vm.getActiveClass($index)">
+                    <a class="page-link" ng-click="vm.paginate($index)">{{$index + 1}}</a>
+                  </li>
+                </ul>
+              </nav>
             </div>
 
             <div class="col-md-12" ng-if="vm.productToAdd !== undefined">
