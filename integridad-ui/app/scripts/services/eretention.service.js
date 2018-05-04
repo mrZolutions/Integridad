@@ -35,7 +35,7 @@ angular
           "identificacion":retention.provider.ruc,
           "tipo_identificacion":'04',
           "razon_social":retention.provider.name,
-          "direccion":retention.provider.address,
+          "direccion":retention.provider.address1,
           "telefono":retention.provider.phone
         },
         "items":retention.items,
