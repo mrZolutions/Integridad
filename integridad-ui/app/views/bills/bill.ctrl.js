@@ -595,13 +595,13 @@ angular.module('integridadUiApp')
 
       var req = requirementService.createRequirement(vm.clientSelected, vm.bill, $localStorage.user, vm.impuestosTotales, vm.items, vm.pagos);
 
-      // billService.getClaveDeAcceso(req, vm.companyData.userClient.id).then(function(resp){
+      billService.getClaveDeAcceso(req, vm.companyData.userClient.id).then(function(resp){
         vm.bill.pagos = vm.pagos;
         if(vm.bill.discountPercentage === undefined){
           vm.bill.discountPercentage = 0;
         }
-        // var obj = JSON.parse(resp.data);
-        var obj = {clave_acceso: '1234560', id:'id12345'};
+        var obj = JSON.parse(resp.data);
+        // var obj = {clave_acceso: '1234560', id:'id12345'};
         if(obj.errors === undefined){
           vm.bill.claveDeAcceso = obj.clave_acceso;
           vm.bill.idSri = obj.id;
@@ -629,10 +629,10 @@ angular.module('integridadUiApp')
           vm.error = "Error al obtener Clave de Acceso: " + JSON.stringify(obj.errors);
         }
 
-      // }).catch(function (error) {
-      //   vm.loading = false;
-      //   vm.error = error.data;
-      // });
+      }).catch(function (error) {
+        vm.loading = false;
+        vm.error = error.data;
+      });
     };
 
     (function initController() {
