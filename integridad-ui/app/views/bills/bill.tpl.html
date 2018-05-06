@@ -123,6 +123,7 @@
 </div>
 
 <div ng-show="vm.clientSelected !== undefined" id="printArea" print-section>
+
   <div class="panel panel-default">
     <div class="panel-heading">
       <b>Datos del Cliente</b>
@@ -177,7 +178,7 @@
           <table width="100%">
             <tr>
               <td>
-                <b>NOMBRE: </b>{{vm.clientSelected.name}}
+                <b>NOMBRE: </b>{{vm.clientSelected.name}}<br/>
               </td>
               <td>
                 <b ng-if="vm.clientSelected.typeId === 'CED'">CEDULA: </b>
@@ -294,7 +295,12 @@
               <tr ng-repeat="detail in vm.bill.details">
                 <td>{{$index + 1}}</td>
                 <td>{{detail.product.codeIntegridad}}</td>
-                <td><span print-only>{{detail.product.subgroup.groupLine.line.name}} - {{detail.product.subgroup.groupLine.name}} - {{detail.product.subgroup.name}} - <br></span>{{detail.product.name}}</td>
+                <td>
+                  <span print-only>
+                    {{detail.product.subgroup.groupLine.line.name}} - {{detail.product.subgroup.groupLine.name}} - {{detail.product.subgroup.name}} - <br>
+                  </span>
+                  {{detail.product.name}}
+                </td>
                 <td>{{detail.quantity}}</td>
                 <td>{{detail.product.unitOfMeasurementFull}}</td>
                 <td>{{detail.costEach}}</td>
@@ -408,8 +414,15 @@
           ng-click="vm.cancelBill()">
             Cancelar
           </button>
-          <button print-btn type="button" class="btn btn-success" ng-if="vm.newBill"
+          <button print-btn type="button" class="btn btn-success"
+                  ng-if="vm.newBill && !vm.user.cashier.specialPrint"
                   ng-disabled="vm.bill.claveDeAcceso === undefined" ng-click="vm.cancelBill()">
+            Imprimir
+          </button>
+          <button type="button" class="btn btn-success"
+                  ng-if="vm.newBill && vm.user.cashier.specialPrint"
+                  ng-disabled="vm.bill.claveDeAcceso === undefined"
+                  ng-click="vm.printToCart('printMatrixSectionId')" print-remove>
             Imprimir
           </button>
         </div>
@@ -546,17 +559,64 @@
       <div class="row" print-remove>
         <div class="form-group col-md-12">
           <button type="button" class="btn btn-primary"
-          ng-click="vm.clientSelected = undefined">
+                  ng-click="vm.clientSelected = undefined">
             Cancelar
           </button>
           <button print-btn type="button" class="btn btn-primary"
-                  ng-if="!vm.newBill" print-remove>
+                  ng-if="!vm.newBill && !vm.user.cashier.specialPrint" print-remove>
+            Imprimir
+          </button>
+          <button type="button" class="btn btn-primary"
+                  ng-if="!vm.newBill && vm.user.cashier.specialPrint"
+                  ng-click="vm.printToCart('printMatrixSectionId')" print-remove>
             Imprimir
           </button>
         </div>
       </div>
     </div>
   </div>
+
+</div>
+
+<div  id="printMatrixSectionId" ng-show='false'>
+  <b>{{vm.companyData.userClient.name}}</b><br/></br>
+  <b>Matriz: {{vm.companyData.userClient.address1}}</b><br/>
+  <b>Establecimiento: {{vm.companyData.address1}}</b><br/><br/>
+  <b>RUC: {{vm.companyData.userClient.ruc}}</b><br/>
+  <b>FECHA: {{vm.getDateToPrint()}}</b><br/>
+  <b>CLAVE DE ACCESO: {{vm.bill.claveDeAcceso}}</b><br/><br/>
+
+  NOMBRE: {{vm.clientSelected.name}}<br/>
+  IDENTIFICACION: {{vm.clientSelected.identification}}<br/>
+  TELEFONO: {{vm.clientSelected.phone}}<br/>
+  DIRECCION: </b>{{vm.clientSelected.address}}<br/>
+  E-MAIL: </b>{{vm.clientSelected.email}}<br/><br/>
+
+  <b>NUMERO DE FACTURA: </b> {{vm.seqNumber}}<br/>
+  DETALLE
+  <br/><br/>
+  <table width="100%">
+    <tr ng-repeat="detail in vm.bill.details">
+      <td>{{detail.product.name}} - ({{detail.quantity}})&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+      <td align="right">&#36;{{detail.total}}</td>
+    </tr>
+  </table>
+  <br/>
+  <table width="100%">
+    <tr>
+      <td>SUBTOTAL:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+      <td align="right">&#36;{{vm.bill.subTotal}}</td></tr>
+    <tr>
+      <td>IVA:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+      <td align="right">&#36;{{vm.bill.iva}}</td>
+    </tr>
+    <tr>
+      <td>TOTAL:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+      <td align="right">&#36;{{vm.bill.total}}</td>
+    </tr>
+  </table>
+
+  -----------------------------------------------------------------------
 
 </div>
 

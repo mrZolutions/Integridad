@@ -26,7 +26,8 @@ public class Cashier implements Child{
     private long dateCreated;
     
     private boolean active;
-    
+    private boolean specialPrint;
+
     @ManyToOne
     @JoinColumn(name = "subsidiary_id")
     private Subsidiary subsidiary;

@@ -86,6 +86,7 @@ angular.module('integridadUiApp')
       vm.medio={};
       vm.pagos=[];
 
+      vm.user = $localStorage.user;
       clientService.getLazyByProjectId($localStorage.user.subsidiary.userClient.id).then(function (response) {
         vm.clientList = response;
         vm.loading = false;
@@ -486,11 +487,25 @@ angular.module('integridadUiApp')
         vm.error = error.data;
       });
 
-    }
+    };
 
     vm.cancelBill = function () {
       _activate();
+    };
+
+    vm.getDateToPrint = function(){
+      if(vm.bill != undefined){
+          return $('#pickerBillDate').data("DateTimePicker").date().toDate();
+      }
     }
+
+    vm.printToCart = function (printSectionId) {
+      var innerContents = document.getElementById(printSectionId).innerHTML;
+        var popupWinindow = window.open('', '_blank', 'width=600,height=700,scrollbars=no,menubar=no,toolbar=no,location=no,status=no,titlebar=no');
+        popupWinindow.document.open();
+        popupWinindow.document.write('<html><head><link rel="stylesheet" type="text/css" href="style.css" /></head><body onload="window.print()">' + innerContents + '</html>');
+        popupWinindow.document.close();
+    };
 
     vm.billDeactivate = function(){
       vm.loading = true;
@@ -507,7 +522,7 @@ angular.module('integridadUiApp')
         vm.error = error.data;
       });
 
-    }
+    };
 
     vm.getClaveAcceso = function(){
       vm.loading = true;
@@ -586,6 +601,7 @@ angular.module('integridadUiApp')
           vm.bill.discountPercentage = 0;
         }
         var obj = JSON.parse(resp.data);
+        // var obj = {clave_acceso: '1234560', id:'id12345'};
         if(obj.errors === undefined){
           vm.bill.claveDeAcceso = obj.clave_acceso;
           vm.bill.idSri = obj.id;
