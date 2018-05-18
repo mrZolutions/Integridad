@@ -34,7 +34,7 @@ angular
           "email":retention.provider.email,
           "identificacion":retention.provider.ruc,
           "tipo_identificacion":'04',
-          "razon_social":retention.provider.name,
+          "razon_social":retention.provider.razonSocial,
           "direccion":retention.provider.address1,
           "telefono":retention.provider.phone
         },
