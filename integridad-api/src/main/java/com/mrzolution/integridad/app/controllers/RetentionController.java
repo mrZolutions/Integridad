@@ -3,6 +3,7 @@ package com.mrzolution.integridad.app.controllers;
 import com.mrzolution.integridad.app.domain.Bill;
 import com.mrzolution.integridad.app.domain.Retention;
 import com.mrzolution.integridad.app.domain.ebill.Requirement;
+import com.mrzolution.integridad.app.domain.report.RetentionReport;
 import com.mrzolution.integridad.app.exceptions.BadRequestException;
 import com.mrzolution.integridad.app.services.BillServices;
 import com.mrzolution.integridad.app.services.RetentionServices;
@@ -12,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @Slf4j
@@ -81,10 +83,23 @@ public class RetentionController {
 		try {
 			response = service.create(retention);
 		}catch(BadRequestException e) {
-			log.error("BillController create Exception thrown: {}", e.getMessage());
+			log.error("RetentionController create Exception thrown: {}", e.getMessage());
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	    }
 		return new ResponseEntity<Retention>(response, HttpStatus.CREATED);
+	}
+
+	@RequestMapping(method = RequestMethod.GET, value="/rep/retentions/{userClientId}/{dateOne}/{dateTwo}")
+	public ResponseEntity getAllByUserClientIdAndDatesActives(@PathVariable("userClientId") UUID userClientId, @PathVariable("dateOne") long dateOne, @PathVariable("dateTwo") long dateTwo){
+		log.info("RetentionController getByUserClientIdAndDatesActives: {}, {}, {}", userClientId, dateOne, dateTwo);
+		List<RetentionReport> response = null;
+		try {
+			response = service.getAllBySubIdAndDates(userClientId, dateOne, dateTwo);
+		}catch(BadRequestException e) {
+			log.error("RetentionController getByUserClientIdAndDatesActives Exception thrown: {}", e.getMessage());
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+		}
+		return new ResponseEntity<List>(response, HttpStatus.ACCEPTED);
 	}
 //
 //	@RequestMapping(method = RequestMethod.PUT)
