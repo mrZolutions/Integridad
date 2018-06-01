@@ -3,6 +3,7 @@ package com.mrzolution.integridad.app.services;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mrzolution.integridad.app.cons.Constants;
 import com.mrzolution.integridad.app.domain.*;
+import com.mrzolution.integridad.app.domain.report.RetentionReport;
 import com.mrzolution.integridad.app.exceptions.BadRequestException;
 import com.mrzolution.integridad.app.father.Father;
 import com.mrzolution.integridad.app.father.FatherManageChildren;
@@ -11,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -139,6 +141,33 @@ public class RetentionServices {
 		Retention updated = retentionRepository.save(retention);
 		log.info("RetentionServices update id: {}", updated.getId());
 		return updated;
+	}
+
+	public List<RetentionReport> getAllBySubIdAndDates(UUID userClientId, long dateOne, long dateTwo){
+		log.info("RetentionServices getAllBySubIdAndDates: {}, {}, {}", userClientId, dateOne, dateTwo);
+		Iterable<Retention> retentions = retentionRepository.findAllByUserClientIdAndDates(userClientId, dateOne, dateTwo);
+		List<RetentionReport> retentionReportList = new ArrayList<>();
+
+		retentions.forEach(retention-> {
+			populateChildren(retention);
+
+			Double sum = Double.valueOf(0);
+			for (DetailRetention detail : retention.getDetailRetentions()) {
+				sum = Double.sum(sum, detail.getTotal());
+			}
+
+			SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+			String date = dateFormat.format(new Date(retention.getDateCreated()));
+			String status = retention.isActive() ? "ACTIVA" : "ANULADA";
+			String docDate = dateFormat.format(new Date(retention.getDocumentDate()));
+
+			RetentionReport saleReport= new RetentionReport(date, docDate, retention.getProvider().getCodeIntegridad(), retention.getProvider().getName(), retention.getProvider().getRuc(), retention.getStringSeq(), retention.getClaveDeAcceso(),
+					retention.getEjercicioFiscal(), sum, retention.getSubsidiary().getName(), retention.getUserIntegridad().getFirstName(), status);
+
+			retentionReportList.add(saleReport);
+		});
+
+		return retentionReportList;
 	}
 
 //

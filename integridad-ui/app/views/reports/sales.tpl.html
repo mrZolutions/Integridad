@@ -19,7 +19,7 @@
 
 <div class="header">
   <h4>
-    Reporte de Ventas Agrupado por Items
+    Reportes
   </h4>
 </div>
 
@@ -78,6 +78,10 @@
         Reporte De Ventas
       </button>
       <button type="button" class="btn btn-primary"
+              ng-click="vm.getReportRetention()">
+        Reporte De Retenciones
+      </button>
+      <button type="button" class="btn btn-primary"
         ng-click="vm.exportExcel()" ng-disabled="vm.reportList === undefined || vm.reportList.length === 0">
         Excel
       </button>
@@ -90,7 +94,7 @@
 </div>
 
 
-<div ng-if="vm.isProductReportList !== undefined && vm.isProductReportList">
+<div ng-if="vm.isProductReportList !== undefined && vm.isProductReportList === true">
   <table class="table table-striped">
     <thead>
       <tr>
@@ -123,7 +127,7 @@
   </table>
 </div>
 
-<div ng-if="vm.isProductReportList !== undefined && !vm.isProductReportList">
+<div ng-if="vm.isProductReportList !== undefined && vm.isProductReportList !== true">
   <table class="table table-striped">
     <thead>
     <tr>
@@ -161,6 +165,43 @@
       <td>{{ data.endDate }}</td>
       <td>{{ data.cashier }}</td>
       <td>{{ data.warehouse }}</td>
+      <td>{{ data.subsidiary }}</td>
+      <td>{{ data.userName }}</td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+
+<div ng-if="vm.isProductReportList === undefined && vm.reportList !== undefined">
+  <table class="table table-striped">
+    <thead>
+    <tr>
+      <th> Fecha de Retenci&oacute;n</th>
+      <th> Fecha de Documento</th>
+      <th> C&oacute;digo-Proveedor </th>
+      <th> Proveedor </th>
+      <th> RUC </th>
+      <th> No. Retenci&oacute;n </th>
+      <th> No. Autorizaci&oacute;n </th>
+      <th> Ejercicio Fiscal </th>
+      <th> Estado </th>
+      <th> Total </th>
+      <th> Sucursal </th>
+      <th> Usuario </th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="data in vm.reportList | orderBy:'date'" >
+      <td>{{ data.date }}</td>
+      <td>{{ data.documentDate}}</td>
+      <td>{{ data.providerCode }}</td>
+      <td>{{ data.providerName }}</td>
+      <td>{{ data.ruc }}</td>
+      <td>{{ data.retentionNumber }}</td>
+      <td>{{ data.authorizationNumber }}</td>
+      <td>{{ data.ejercicioFiscal }}</td>
+      <td>{{ data.status }}</td>
+      <td>{{ data.total.toFixed(2) }}</td>
       <td>{{ data.subsidiary }}</td>
       <td>{{ data.userName }}</td>
     </tr>

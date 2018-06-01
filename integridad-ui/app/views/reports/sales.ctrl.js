@@ -8,11 +8,12 @@
  * Controller of the menu
  */
 angular.module('integridadUiApp')
-  .controller('ReportSalesCtrl', function (_, $localStorage, $location, billService, utilStringService, FileSaver) {
+  .controller('ReportSalesCtrl', function (_, $localStorage, $location, billService, eretentionService, utilStringService, FileSaver) {
     var vm = this;
     var today = new Date();
     $('#pickerBillDateOne').data("DateTimePicker").date(today);
     $('#pickerBillDateTwo').data("DateTimePicker").date(today);
+    // undefined = retention; true = products; false = sales
     vm.isProductReportList = undefined;
     vm.reportList = undefined;
 
@@ -52,9 +53,27 @@ angular.module('integridadUiApp')
       });
     };
 
+    vm.getReportRetention = function(){
+      vm.isProductReportList = undefined;
+      vm.reportList = undefined;
+      vm.loading = true;
+      var dateOne = $('#pickerBillDateOne').data("DateTimePicker").date().toDate().getTime();
+      var dateTwo = $('#pickerBillDateTwo').data("DateTimePicker").date().toDate().getTime();
+      dateTwo += 86340000;
+      var subId = $localStorage.user.subsidiary.userClient.id
+
+      eretentionService.getAllByUserClientAndDates(subId, dateOne, dateTwo).then(function (response) {
+        vm.reportList = response;
+        vm.loading = false;
+      }).catch(function (error) {
+        vm.loading = false;
+        vm.error = error.data;
+      });
+    };
+
     vm.exportExcel = function(){
       var dataReport = [];
-      if(vm.isProductReportList){
+      if(vm.isProductReportList === true){
         _.each(vm.reportList, function(bill){
           var data = {
             TIPO: bill.type,
@@ -71,7 +90,7 @@ angular.module('integridadUiApp')
 
           dataReport.push(data)
         });
-      } else {
+      } else if(vm.isProductReportList === false){
         _.each(vm.reportList, function(bill){
           var data = {
             FECHA: bill.date,
@@ -91,6 +110,25 @@ angular.module('integridadUiApp')
             SUCURSAL: bill.subsidiary,
             USUARIO: bill.userName,
           };
+
+          dataReport.push(data)
+        });
+      } else if(vm.isProductReportList === undefined){
+        _.each(vm.reportList, function(retention){
+          var data = {
+            FECHA: retention.date,
+            FECHA_DOCUMENTO: retention.documentDate,
+            CODIGO_PROVEEDOR: retention.providerCode,
+            PROVEEDOR: retention.providerName,
+            RUC: retention.ruc,
+            NUMERO_RETENCION: retention.retentionNumber,
+            NUMERO_AUTORIZACION: retention.authorizationNumber,
+            EJERCICIO_FISCAL: retention.ejercicioFiscal,
+            ESTADO: retention.status,
+            TOTAL:parseFloat(retention.total.toFixed(2)),
+            SUCURSAL: retention.subsidiary,
+          };
+          USUARIO: retention.userName,
 
           dataReport.push(data)
         });
