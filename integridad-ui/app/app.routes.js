@@ -56,6 +56,10 @@ function routes($routeProvider) {
       templateUrl: 'views/reports/sales.tpl.html',
       controller: 'ReportSalesCtrl',
       controllerAs: 'vm'
+    }).when('/note/credit', {
+      templateUrl: 'views/note/credit.tpl.html',
+      controller: 'CreditNoteCtrl',
+      controllerAs: 'vm'
     }).otherwise({
     redirectTo: '/'
   });
