@@ -68,4 +68,10 @@ angular
       });
     };
 
+    this.getAllByUserClientAndDates = function (userClientId, dateOne, dateTwo) {
+      return securityService.get('/retention/rep/retentions/'+ userClientId + '/' + dateOne + '/'+ dateTwo).then(function successCallback(response) {
+        return response.data;
+      });
+    };
+
   });
