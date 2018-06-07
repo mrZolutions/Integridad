@@ -60,16 +60,12 @@ public class CreditNote {
     @JoinColumn(name = "subsidiary_id")
     private Subsidiary subsidiary;
     
-    @OneToMany(mappedBy = "bill", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "creditNote", cascade = CascadeType.ALL)
     private List<Detail> details;
-
-    @OneToMany(mappedBy = "bill", cascade = CascadeType.ALL)
-    private List<Pago> pagos;
     
     
     public void setListsNull(){
     	details = null;
-    	pagos = null;
     }
     
     public void setFatherListToNull(){
@@ -82,10 +78,9 @@ public class CreditNote {
     }
 
     @Transient
-    public static CreditNote newBillTest(){
+    public static CreditNote newCreditNoteTest(){
         CreditNote bill = new CreditNote();
         bill.setDetails(new ArrayList<>());
-        bill.setPagos(new ArrayList<>());
         bill.setClient(Client.newClientTest());
         bill.setUserIntegridad(UserIntegridad.newUserIntegridadTest());
         bill.setSubsidiary(Subsidiary.newSubsidiaryTest());

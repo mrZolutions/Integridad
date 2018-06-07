@@ -23,6 +23,7 @@ angular.module('integridadUiApp')
       vm.clientSelected = undefined;
       vm.billList = undefined;
       vm.bill = undefined;
+      vm.claveDeAcceso = undefined;
 
       vm.user = $localStorage.user;
       clientService.getLazyByProjectId($localStorage.user.subsidiary.userClient.id).then(function (response) {
@@ -32,6 +33,45 @@ angular.module('integridadUiApp')
         vm.loading = false;
         vm.error = error.data;
       });
+    }
+
+    function _getSeqNumber(){
+      vm.numberAddedOne = parseInt($localStorage.user.cashier.creditNoteNumberSeq) + 1;
+      vm.seqNumberFirstPart = $localStorage.user.subsidiary.threeCode + '-'
+        + $localStorage.user.cashier.threeCode;
+      vm.seqNumberSecondPart = utilSeqService._pad_with_zeroes(vm.numberAddedOne, 10);
+      vm.seqNumber =  vm.seqNumberFirstPart + '-'
+        + vm.seqNumberSecondPart;
+    }
+
+    function _getTotales(){
+      var subtotal = 0;
+      var descuento = 0;
+      var baseZero = 0;
+      var baseDoce = 0;
+      var iva = 0;
+      var total = 0;
+      _.each(vm.bill.details, function(detail){
+        subtotal = (parseFloat(subtotal) + (parseFloat(detail.quantity) * parseFloat(detail.costEach))).toFixed(2);
+        if(detail.product.iva){
+          baseDoce = (parseFloat(baseDoce) + (parseFloat(detail.quantity) * parseFloat(detail.costEach))).toFixed(2);
+        } else {
+          baseZero = (parseFloat(baseZero) + (parseFloat(detail.quantity) * parseFloat(detail.costEach))).toFixed(2);
+        }
+      });
+
+      descuento = ((parseFloat(vm.bill.discount) * subtotal)/100).toFixed(2);
+      baseDoce = baseDoce - descuento;
+      iva = baseDoce * parseFloat(0.12);
+
+      total = (baseDoce + baseZero + iva).toFixed(2);
+
+      vm.bill.subTotal = subtotal;
+      vm.bill.discount = descuento;
+      vm.bill.baseNoTaxes = baseZero;
+      vm.bill.baseTaxes = baseDoce;
+      vm.bill.iva = (iva).toFixed(2);
+      vm.bill.total = total;
     }
 
     vm.clientSelect = function(client){
@@ -49,10 +89,26 @@ angular.module('integridadUiApp')
     vm.billSelect = function(billSelected){
       billService.getById(billSelected.id).then(function(response){
         vm.bill = response;
+        _getSeqNumber();
+        var today = new Date();
+        $('#pickerCreditNoteDate').data("DateTimePicker").date(today);
       }).catch(function (error) {
         vm.loading = false;
         vm.error = error.data;
       });
+    };
+
+    vm.cancelCreditNote = function(){
+      _activate();
+    };
+
+    vm.saveCreditNote = function(){
+      
+    };
+
+    vm.removeDetail=function(index){
+      vm.bill.details.splice(index,1);
+      _getTotales();
     };
 
     (function initController() {

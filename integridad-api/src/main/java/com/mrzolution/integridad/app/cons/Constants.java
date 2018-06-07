@@ -14,6 +14,7 @@ public final class Constants {
 
     public static final String DATIL_LINK = "https://link.datil.co/invoices/issue";
     public static final String DATIL_RETENTION_LINK = "https://link.datil.co/retentions/issue";
+    public static final String DATIL_CREDIT_NOTE_LINK = "https://link.datil.co/credit-notes/issue";
     
 
 }

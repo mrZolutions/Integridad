@@ -27,6 +27,10 @@ public class Detail implements Child{
     @ManyToOne
     @JoinColumn(name = "bill_id")
     private Bill bill;
+
+    @ManyToOne
+    @JoinColumn(name = "credit_note_id")
+    private CreditNote creditNote;
     
     @ManyToOne
     @JoinColumn(name = "product_id")
@@ -42,12 +46,15 @@ public class Detail implements Child{
     public void setFatherListToNull(){
     	bill.setListsNull();
     	bill.setFatherListToNull();
+    	creditNote.setListsNull();
+    	creditNote.setFatherListToNull();
     }
 
     @Transient
     public static Detail newDetailTest(){
         Detail detail = new Detail();
         detail.setBill(Bill.newBillTest());
+        detail.setCreditNote(CreditNote.newCreditNoteTest());
         detail.setProduct(Product.newProducTest());
 
         return detail;
