@@ -42,11 +42,7 @@
         <th> C&oacute;digo </th>
         <th> Nombre </th>
         <th> Ruc / C&eacute;dula </th>
-        <th>
-          <button type="button" class="btn btn-primary" ng-click="vm.clientCreate()">
-            Crear Cliente
-          </button>
-        </th>
+        <th></th>
       </tr>
     </thead>
     <tbody>
@@ -96,22 +92,22 @@
       <table width="100%">
         <tr>
           <td width="30%">
-            <label>FECHA: </label>
-            <div class="input-group date" id="pickerBillDate">
-              <input type="text" class="form-control input-group-addon" ng-disabled="!vm.newBill"/>
+            <label>FECHA NOTA DE CREDITO: </label>
+            <div class="input-group date" id="pickerCreditNoteDate">
+              <input type="text" class="form-control input-group-addon"/>
               <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"/></span>
             </div>
             <script>
               var defaultDate = new Date();
-              $('#pickerBillDate').datetimepicker({
-                format: "DD/MM/YY HH:mm",
+              $('#pickerCreditNoteDate').datetimepicker({
+                format: "DD/MM/YY",
               });
             </script>
           </td>
           <td width="70%">
             <div style=" padding-left: 10px" >
               <label>CLAVE DE ACCESO: </label><br/>
-              {{vm.bill.claveDeAcceso}}
+              {{vm.claveDeAcceso}}
             </div>
           </td>
         </tr>
@@ -149,17 +145,21 @@
         </tr>
         <tr>
           <td>
-            <b>NUMERO DE FACTURA: </b> {{vm.bill.stringSeq}}
-            &nbsp;&nbsp;&nbsp;
-            <a data-toggle="modal" data-target="#modalEditBillNumber" ng-click="vm.verifyUser()" ng-if="vm.newBill" print-remove>
-              Editar
-            </a>
+            <b>No FACTURA: </b> {{vm.bill.stringSeq}}
           </td>
           <td print-remove>
             <b>PRECIO CONVENIDO: </b>
             <select ng-options="price as price.name for price in vm.prices"  ng-if="vm.newBill"
             ng-model="vm.priceType" class="form-control" ng-change="vm.reCalculateTotal()" ng-disabled="vm.bill.details.length > 0"></select>
             <span ng-if="!vm.newBill">{{vm.bill.priceType}}</span>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <b>FECHA DE FACTURA: </b> {{vm.bill.dateCreated | date :  "dd/MM/yyyy"}}
+          </td>
+          <td>
+            <b>No NOTA DE CREDITO: </b> {{vm.seqNumber}}
           </td>
         </tr>
       </table>
@@ -335,6 +335,24 @@
         </table>
       </div>
     </div>
+  </div>
+</div>
+
+<div class="row" print-remove>
+  <div class="form-group col-md-12">
+    <button type="button" class="btn btn-primary" ng-disabled="vm.bill.total <= 0"
+            ng-show="vm.claveDeAcceso === undefined" ng-click="vm.saveCreditNote()">
+      Guardar
+    </button>
+    <button type="button" class="btn btn-primary"
+      ng-click="vm.cancelCreditNote()">
+      Cancelar
+    </button>
+    <button print-btn type="button" class="btn btn-success"
+            ng-if="vm.newBill && !vm.user.cashier.specialPrint"
+            ng-disabled="vm.claveDeAcceso === undefined" ng-click="vm.cancelBill()">
+      Imprimir
+    </button>
   </div>
 </div>
 
