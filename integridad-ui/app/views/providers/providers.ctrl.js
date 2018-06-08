@@ -107,6 +107,7 @@ angular.module('integridadUiApp')
     ];
 
     function _activate(){
+      vm.today = new Date();
       vm.provider = undefined;
       vm.providerToUse = undefined;
       vm.providerList = [];
@@ -294,13 +295,32 @@ angular.module('integridadUiApp')
       return totalRetorno;
     };
 
+    vm.previsualisation = function(){
+      vm.retention.documentDate = $('#pickerBillDateDocumentRetention').data("DateTimePicker").date().toDate().getTime();
+      vm.retention.stringSeq = vm.retention.retentionSeq;
+      vm.retention.detailRetentions = [];
+      vm.retention.ejercicioFiscal = vm.retention.ejercicio;
+      vm.totalRetention = 0;
+      _.each(vm.retention.items, function(item){
+        var detail ={
+          taxType: item.codigo === String(1) ? 'RETENCION EN LA FUENTE' : 'RETENCION EN EL IVA',
+          code: item.codigo_porcentaje_integridad,
+          baseImponible: item.base_imponible,
+          percentage: item.porcentaje,
+          total: item.valor_retenido
+        };
+        vm.totalRetention = (parseFloat(vm.totalRetention) +parseFloat(detail.total)).toFixed(2);
+        vm.retention.detailRetentions.push(detail);
+      });
+    };
+
     vm.getClaveAcceso = function(){
       vm.loading = true;
       var eRet = eretentionService.createERetention(vm.retention, $localStorage.user);
 
       eretentionService.getClaveDeAcceso(eRet, $localStorage.user.subsidiary.userClient.id).then(function(resp){
-        var obj = JSON.parse(resp.data);
-        // var obj = {clave_acceso: '1234560', id:'id12345'};
+        // var obj = JSON.parse(resp.data);
+        var obj = {clave_acceso: '1234560', id:'id12345'};
         if(obj.errors === undefined){
           vm.retention.claveDeAcceso = obj.clave_acceso;
           vm.retention.idSri = obj.id;
