@@ -175,6 +175,36 @@
       <b>Datos para La Retenci&oacute;n</b>
     </div>
     <div class="panel-body">
+      <div class="row">
+        <div class="form-group col-md-6">
+          <label>C&oacute;digo Proveedor: </label>
+          {{vm.retention.provider.codeIntegridad}}
+        </div>
+
+        <div class="form-group col-md-6">
+          <label>RUC / CEDULA: </label>
+          {{vm.retention.provider.ruc}}
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="form-group col-md-6">
+          <label>Nombre Comercial: </label>
+          {{vm.retention.provider.name}}
+        </div>
+        <div class="form-group col-md-6">
+          <label>Raz&oacute;n Social: </label>
+          {{vm.retention.provider.razonSocial}}
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="form-group col-md-12">
+          <label>Direcci&oacute;n: </label>
+          {{vm.retention.provider.address1}}
+        </div>
+      </div>
+
 
       <div class="row">
         <div class="form-group col-md-12">
@@ -323,6 +353,11 @@
 
       <div class="row">
         <div class="form-group col-md-12">
+          <button type="button" class="btn btn-primary" ng-click="vm.previsualisation()"
+            data-toggle="modal" data-target="#modalPrevisualizacion"
+            ng-disabled="vm.retention.items == 0">
+            Previsualizar
+          </button>
           <button type="button" class="btn btn-primary"
             ng-click="vm.getClaveAcceso()" ng-disabled="vm.retention.items == 0">
             Crear
@@ -460,6 +495,123 @@
     </div>
   </div>
 </div>
+
+<div id="modalPrevisualizacion"  class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" ng-click="vm.impuesto=undefined">&times;</button>
+        <h4 class="modal-title">Retenci&oacute;n</h4>
+      </div>
+
+      <div class="panel panel-default">
+        <div class="panel-body">
+          <div class="row">
+            <div class="form-group col-md-12 ">
+              <table width="100%">
+                <tr>
+                  <td width="50%" align="center"><img src="images/{{vm.userData.subsidiary.userClient.logo}}" ><br></td>
+                  <td width="50%" rowspan="2">
+                    <div style="padding:0px 20px;">
+                      <b>RUC: {{vm.userData.subsidiary.userClient.ruc}}</b><br/>
+                      <b>COMPROBANTE DE RETENCION</b><br/><br/>
+                      <b>No: {{vm.retention.stringSeq}}</b><br/>
+                      <b>AUTORIZACION: {{vm.retention.claveDeAcceso}}</b><br/>
+                      <b>FECHA: {{ vm.today | date : "dd-MM-yyyy" }}</b><br/><br/>
+                      <b>AMBIENTE: {{vm.retention.userIntegridadcashier.subsidiary.userClient.testMode ? 'PRUEBAS' : 'PRODUCCION'}}</b><br/><br/>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td  width="50%" valign="top">
+                    <div style="padding:10px 20px;">
+                      <b>{{vm.userData.subsidiary.userClient.name}}</b><br/></br>
+                      <b>Matriz: {{vm.userData.subsidiary.userClient.address1}}</b><br/>
+                      <b>Establecimiento: {{vm.userData.subsidiary.address1}}</b><br/>
+                      <b>Tel&eacute;fono: {{vm.userData.subsidiary.phone}}</b><br/>
+                    </div>
+                  </td>
+                </tr>
+              </table>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="form-group col-md-12 ">
+              <table width="100%">
+                <tr>
+                  <td width="50%">
+                    <div >
+                      <label>Raz&oacute;n social / Nombres y Apellidos: </label>
+                      {{vm.retention.provider.razonSocial}}
+                    </div>
+                  </td>
+                  <td width="50%" style=" padding-left: 10px">
+                    <label>identificaci&oacute;n: </label>
+                    {{vm.retention.provider.ruc}}
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <div >
+                      <label>Fecha de emisi&oacute;n: </label>
+                      {{ vm.today | date : "dd-MM-yyyy" }}
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <div >
+                      <label>Direcci&oacute;n: </label>
+                      {{vm.retention.provider.address1}}
+                    </div>
+                  </td>
+                  <td style=" padding-left: 10px">
+                    <label>E-mail: </label>
+                    {{vm.retention.provider.email}}
+                  </td>
+                </tr>
+              </table>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="form-group col-md-12 ">
+              <table width="100%" border="1">
+                <tr>
+                  <td><b>EJERCICIO FISCAL </b></td>
+                  <td><b>TIPO IMPUESTO </b></td>
+                  <td><b>CODIGO </b></td>
+                  <td><b>BASE IMPONIBLE </b></td>
+                  <td><b>RETENCIONES % </b></td>
+                  <td><b>VALOR </b></td>
+                </tr>
+                <tr ng-repeat="detail in vm.retention.detailRetentions">
+                  <td>{{vm.retention.ejercicioFiscal}}</td>
+                  <td>{{detail.taxType}}</td>
+                  <td>{{detail.code}}</td>
+                  <td>{{detail.baseImponible}}</td>
+                  <td>{{detail.percentage}}</td>
+                  <td>{{detail.total}}</td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td><b>TOTAL</b></td>
+                  <td>{{vm.totalRetention}}</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
 
 <div id="modalBaseImponible" class="modal fade" role="dialog">
   <div class="modal-dialog">

@@ -22,6 +22,7 @@ public class Cashier implements Child{
 
     private long billNumberSeq;
     private long retentionNumberSeq;
+    private long creditNoteNumberSeq;
     
     private long dateCreated;
     
