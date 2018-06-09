@@ -69,7 +69,7 @@
   </table>
 </div>
 
-<div ng-show="vm.clientSelected !== undefined && vm.bill !== undefined">
+<div ng-show="vm.clientSelected !== undefined && vm.bill !== undefined"  print-section>
 
   <div class="row">
     <div class="form-group col-md-12 ">
@@ -145,7 +145,7 @@
         </tr>
         <tr>
           <td>
-            <b>No FACTURA: </b> {{vm.bill.stringSeq}}
+            <b>No FACTURA: </b> {{vm.bill.documentStringSeq}}
           </td>
           <td print-remove>
             <b>PRECIO CONVENIDO: </b>
@@ -205,6 +205,13 @@
     </div>
   </div>
 
+  <div class="row">
+    <div class="form-group col-md-12">
+      <b>MOTIVO: </b>
+      <input type="text" ng-model="vm.bill.motivo" class="form-control">
+    </div>
+  </div>
+
   <div class="panel panel-default">
     <div class="panel-heading">
       <b>Detalle</b>
@@ -251,6 +258,10 @@
               <td>
                 <button type="button" class="btn btn-primary" ng-click="vm.removeDetail($index)" print-remove>
                   <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                </button>
+                <button type="button" class="btn btn-primary" ng-click="vm.editDetail($index)" print-remove
+                  data-toggle="modal" data-target="#modalEditDetail">
+                  <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
                 </button>
               </td>
             </tr>
@@ -349,10 +360,43 @@
       Cancelar
     </button>
     <button print-btn type="button" class="btn btn-success"
-            ng-if="vm.newBill && !vm.user.cashier.specialPrint"
             ng-disabled="vm.claveDeAcceso === undefined" ng-click="vm.cancelBill()">
       Imprimir
     </button>
+  </div>
+</div>
+
+<div id="modalEditDetail" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" ng-click="vm.clientSelected=undefined; vm.billList = undefined">&times;</button>
+        <h4 class="modal-title">Detalle</h4>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-md-6" >
+            <b>PRODUCTO: </b>
+            {{vm.detail.product.name}}
+          </div>
+          <div class="col-md-6" >
+            <b>CANTIDAD: </b>
+            <input type="text" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+            ng-model="vm.detail.quantity" class="form-control" maxlength="9">
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal"
+                ng-click="vm.editNewDetail()">
+          Editar
+        </button>
+        <button type="button" class="btn btn-primary" data-dismiss="modal"
+                ng-click="vm.detail = undefined; vm.indexDetail=undefined">
+          Cancelar
+        </button>
+      </div>
+    </div>
   </div>
 </div>
 

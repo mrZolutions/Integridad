@@ -20,8 +20,9 @@ public class CreditNote {
     
     private long dateCreated;
     private boolean active;
-    private String billSeq;
+    private String creditSeq;
     private String stringSeq;
+    private String documentStringSeq;
     private String priceType;
 
     private double iva;
@@ -37,6 +38,7 @@ public class CreditNote {
     private String otir;
     private double discount;
     private int discountPercentage;
+    private String motivo;
 
     private String claveDeAcceso;
     private String idSri;
