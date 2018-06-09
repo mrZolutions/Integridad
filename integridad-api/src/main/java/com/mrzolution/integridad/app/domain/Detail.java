@@ -46,8 +46,10 @@ public class Detail implements Child{
     public void setFatherListToNull(){
     	bill.setListsNull();
     	bill.setFatherListToNull();
-    	creditNote.setListsNull();
-    	creditNote.setFatherListToNull();
+    	if(creditNote != null){
+            creditNote.setListsNull();
+            creditNote.setFatherListToNull();
+        }
     }
 
     @Transient

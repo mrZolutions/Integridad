@@ -1,11 +1,11 @@
 package com.mrzolution.integridad.app.services;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mrzolution.integridad.app.domain.CreditNote;
 import com.google.common.collect.Lists;
 import com.mrzolution.integridad.app.cons.Constants;
 import com.mrzolution.integridad.app.domain.*;
 import com.mrzolution.integridad.app.domain.ebill.Requirement;
-import com.mrzolution.integridad.app.domain.ecreditNote.CreditNote;
 import com.mrzolution.integridad.app.domain.report.ItemReport;
 import com.mrzolution.integridad.app.domain.report.SalesReport;
 import com.mrzolution.integridad.app.exceptions.BadRequestException;
@@ -53,9 +53,10 @@ public class CreditNoteServices {
 		ObjectMapper mapper = new ObjectMapper();
 		String data = mapper.writeValueAsString(requirement);
 
-		log.info("BillServices getDatil maper creado");
+		log.info("CreditNoteServices getDatil maper creado");
 		String response = httpCallerService.post(Constants.DATIL_CREDIT_NOTE_LINK, data, userClient);
-		log.info("BillServices getDatil httpcall success");
+//		String response = "OK";
+		log.info("CreditNoteServices getDatil httpcall success");
 		return response;
 	}
 	
@@ -94,60 +95,43 @@ public class CreditNoteServices {
 //		return retrieved;
 //	}
 //
-//	public Bill create(Bill bill) throws BadRequestException{
-//		log.info("BillServices create");
-//		List<Detail> details = bill.getDetails();
-//		List<Pago> pagos = bill.getPagos();
-//		if(details == null){
-//			throw new BadRequestException("Debe tener un detalle por lo menos");
-//		}
-//		if(pagos == null){
-//			throw new BadRequestException("Debe tener un pago por lo menos");
-//		}
-//
-//		bill.setDateCreated(new Date().getTime());
-//		bill.setActive(true);
-//		bill.setDetails(null);
-//		bill.setPagos(null);
-//		bill.setFatherListToNull();
-//		bill.setListsNull();
-//		Bill saved = billRepository.save(bill);
-//
-//		Cashier cashier = cashierRepository.findOne(bill.getUserIntegridad().getCashier().getId());
-//		cashier.setBillNumberSeq(cashier.getBillNumberSeq() + 1);
-//		cashierRepository.save(cashier);
-//
-//		pagos.forEach(pago -> {
-//			List<Credits> creditsList = pago.getCredits();
-//			pago.setCredits(null);
-//			pago.setBill(saved);
-//			Pago pagoSaved = pagoRepository.save(pago);
-//
-//			if(creditsList != null){
-//				creditsList.forEach(credit ->{
-//					credit.setPago(pagoSaved);
-//					creditsRepository.save(credit);
-//				});
-//			}
-//		});
-//
-//		details.forEach(detail->{
-//			detail.setBill(saved);
-//			detailRepository.save(detail);
-//
+	public CreditNote create(CreditNote creditNote) throws BadRequestException{
+		log.info("CreditNoteServices create");
+		List<Detail> details = creditNote.getDetails();
+		if(details == null){
+			throw new BadRequestException("Debe tener un detalle por lo menos");
+		}
+
+		creditNote.setDateCreated(new Date().getTime());
+		creditNote.setActive(true);
+		creditNote.setDetails(null);
+		creditNote.setFatherListToNull();
+		creditNote.setListsNull();
+		CreditNote saved = creditNoteRepository.save(creditNote);
+
+		Cashier cashier = cashierRepository.findOne(creditNote.getUserIntegridad().getCashier().getId());
+		cashier.setCreditNoteNumberSeq(cashier.getCreditNoteNumberSeq() + 1);
+		cashierRepository.save(cashier);
+
+		details.forEach(detail->{
+			detail.setCreditNote(saved);
+			detailRepository.save(detail);
+
 //			if(!detail.getProduct().getProductType().getCode().equals("SER")){
-//				ProductBySubsidiary ps =productBySubsidiairyRepository.findBySubsidiaryIdAndProductId(bill.getSubsidiary().getId(), detail.getProduct().getId());
+//				ProductBySubsidiary ps =productBySubsidiairyRepository.findBySubsidiaryIdAndProductId(creditNote.getSubsidiary().getId(), detail.getProduct().getId());
 //				ps.setQuantity(ps.getQuantity() - detail.getQuantity());
 //				productBySubsidiairyRepository.save(ps);
 //			}
-//
-//			detail.setBill(null);
-//		});
-//
-//		log.info("BillServices created id: {}", saved.getId());
-//		saved.setDetails(details);
-//		return saved;
-//	}
+
+			detail.setCreditNote(null);
+		});
+
+		log.info("CreditNoteServices created id: {}", saved.getId());
+		saved.setDetails(details);
+		saved.setFatherListToNull();
+
+		return saved;
+	}
 //
 //	public Bill deactivate(Bill bill) throws BadRequestException{
 //		if(bill.getId() == null){
