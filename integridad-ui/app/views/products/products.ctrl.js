@@ -52,6 +52,7 @@ angular.module('integridadUiApp')
       if($routeParams.subsidiaryId){
         productService.getLazyBySusidiaryId($routeParams.subsidiaryId, vm.page, variable).then(function (response) {
           vm.totalPages = response.totalPages;
+          vm.totalElements = response.totalElements;
           _getProductQuantities(response.content);
           vm.loading = false;
         }).catch(function (error) {
@@ -61,6 +62,7 @@ angular.module('integridadUiApp')
       } else {
         // productService.getLazyByProjectId($localStorage.user.subsidiary.userClient.id).then(function (response) {
         productService.getLazyBySusidiaryId($localStorage.user.subsidiary.id, vm.page, variable).then(function(response){
+          vm.totalElements = response.totalElements;
           vm.totalPages = response.totalPages;
           _getProductQuantities(response.content);
           vm.loading = false;
@@ -248,7 +250,7 @@ angular.module('integridadUiApp')
       vm.product={
         userClient: $localStorage.user.subsidiary.userClient,
         productBySubsidiaries: [],
-        codeIntegridad: vm.productList.length + 1,
+        codeIntegridad: vm.totalElements + 1,
       };
       // if($routeParams.subsidiaryId){
       //   subsidiaryService.getById($routeParams.subsidiaryId).then(function(response){
