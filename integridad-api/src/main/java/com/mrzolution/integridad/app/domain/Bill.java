@@ -48,6 +48,10 @@ public class Bill {
 
     private String claveDeAcceso;
     private String idSri;
+    private int typeDocument;
+    private String quotationSeq;
+    private String stringQuotationSeq;
+
 
     //TODO
     //propina

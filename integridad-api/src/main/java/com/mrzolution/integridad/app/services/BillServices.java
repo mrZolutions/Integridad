@@ -65,10 +65,20 @@ public class BillServices {
 		String data = mapper.writeValueAsString(requirement);
 
 		log.info("BillServices getDatil maper creado");
-		String response = httpCallerService.post(Constants.DATIL_LINK, data, userClient);
-//		String response = "OK";
+//		String response = httpCallerService.post(Constants.DATIL_LINK, data, userClient);
+		String response = "OK";
 		log.info("BillServices getDatil httpcall success");
 		return response;
+	}
+
+	public Iterable<Bill> getByTypeDocument(int value) {
+		log.info("BillServices getByTypeDocument: {}", value);
+		Iterable<Bill> bills = billRepository.findBillsByTypeDocument(value);
+		bills.forEach(bill -> {
+			bill.setListsNull();
+			bill.setFatherListToNull();
+		});
+		return bills;
 	}
 	
 	public Iterable<Bill> getByUserLazy(UserIntegridad user){
@@ -106,18 +116,19 @@ public class BillServices {
 		return retrieved;
 	}
 	
-	public Bill create(Bill bill) throws BadRequestException{
+	public Bill create(Bill bill, int typeDocument) throws BadRequestException{
 		log.info("BillServices create");
 		List<Detail> details = bill.getDetails();
 		List<Pago> pagos = bill.getPagos();
 		if(details == null){
 			throw new BadRequestException("Debe tener un detalle por lo menos");
 		}
-		if(pagos == null){
+		if(typeDocument == 1 && pagos == null){
 			throw new BadRequestException("Debe tener un pago por lo menos");
 		}
 		
 		bill.setDateCreated(new Date().getTime());
+		bill.setTypeDocument(typeDocument);
 		bill.setActive(true);
 		bill.setDetails(null);
 		bill.setPagos(null);
@@ -125,29 +136,36 @@ public class BillServices {
 		bill.setListsNull();
 		Bill saved = billRepository.save(bill);
 
-		Cashier cashier = cashierRepository.findOne(bill.getUserIntegridad().getCashier().getId());
-		cashier.setBillNumberSeq(cashier.getBillNumberSeq() + 1);
-		cashierRepository.save(cashier);
+		// typeDocument 1 is Bill 0 is Quotation
+		if(typeDocument == 1){
+			Cashier cashier = cashierRepository.findOne(bill.getUserIntegridad().getCashier().getId());
+			cashier.setBillNumberSeq(cashier.getBillNumberSeq() + 1);
+			cashierRepository.save(cashier);
 
-		pagos.forEach(pago -> {
-			List<Credits> creditsList = pago.getCredits();
-			pago.setCredits(null);
-			pago.setBill(saved);
-			Pago pagoSaved = pagoRepository.save(pago);
+			pagos.forEach(pago -> {
+				List<Credits> creditsList = pago.getCredits();
+				pago.setCredits(null);
+				pago.setBill(saved);
+				Pago pagoSaved = pagoRepository.save(pago);
 
-			if(creditsList != null){
-				creditsList.forEach(credit ->{
-					credit.setPago(pagoSaved);
-					creditsRepository.save(credit);
-				});
-			}
-		});
+				if(creditsList != null){
+					creditsList.forEach(credit ->{
+						credit.setPago(pagoSaved);
+						creditsRepository.save(credit);
+					});
+				}
+			});
+		} else {
+			Cashier cashier = cashierRepository.findOne(bill.getUserIntegridad().getCashier().getId());
+			cashier.setQuotationNumberSeq(cashier.getQuotationNumberSeq() + 1);
+			cashierRepository.save(cashier);
+		}
 
 		details.forEach(detail->{
 			detail.setBill(saved);
 			detailRepository.save(detail);
 
-			if(!detail.getProduct().getProductType().getCode().equals("SER")){
+			if(!detail.getProduct().getProductType().getCode().equals("SER") && typeDocument == 1){
 				ProductBySubsidiary ps =productBySubsidiairyRepository.findBySubsidiaryIdAndProductId(bill.getSubsidiary().getId(), detail.getProduct().getId());
 				ps.setQuantity(ps.getQuantity() - detail.getQuantity());
 				productBySubsidiairyRepository.save(ps);
@@ -160,6 +178,36 @@ public class BillServices {
 		saved.setDetails(details);
 		return saved;
 	}
+
+//	public Bill createQuotation(Bill bill, int typeDocument ) throws BadRequestException{
+//		log.info("BillServices createQuotation");
+//		List<Detail> details = bill.getDetails();
+//		if(details == null){
+//			throw new BadRequestException("Debe tener un detalle por lo menos");
+//		}
+//		bill.setDateCreated(new Date().getTime());
+//		bill.setTypeDocument(typeDocument);
+//		bill.setActive(true);
+//		bill.setDetails(null);
+//		bill.setFatherListToNull();
+//		bill.setListsNull();
+//		Bill saved = billRepository.save(bill);
+//
+//		Cashier cashier = cashierRepository.findOne(bill.getUserIntegridad().getCashier().getId());
+//		cashier.setQuotationNumberSeq(cashier.getQuotationNumberSeq()+1);
+//		cashierRepository.save(cashier);
+//
+//		details.forEach(detail->{
+//			detail.setBill(saved);
+//			detailRepository.save(detail);
+//			detail.setBill(null);
+//		});
+//
+//		log.info("BillServices created id: {}", saved.getId());
+//		saved.setDetails(details);
+//		return saved;
+//	}
+
 
 	public Bill deactivate(Bill bill) throws BadRequestException{
 		if(bill.getId() == null){

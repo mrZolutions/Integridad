@@ -125,11 +125,46 @@ public class BillServicesTest {
 	public void createCallDetailRepository(){
 		UUID idCashier = UUID.randomUUID();
 		Detail detail = Detail.newDetailTest();
+		Pago pago = Pago.newPagoTest();
+		List<Pago> pagoList = new ArrayList<>();
+		List<Detail> detailList = new ArrayList<>();
+		detail.getProduct().getProductType().setCode("SER");
+		detailList.add(detail);
+		pagoList.add(pago);
+		bill.getUserIntegridad().getCashier().setId(idCashier);
+		bill.getUserIntegridad().getCashier().setBillNumberSeq(1);
+		ProductBySubsidiary ps = ProductBySubsidiary.newProductBySubsidiaryTest();
+		ps.setQuantity(Long.valueOf(1));
+		Cashier cashier = bill.getUserIntegridad().getCashier();
+		bill.setDetails(detailList);
+		bill.setPagos(pagoList);
+
+		Mockito.when(productBySubsidiairyRepository.
+				findBySubsidiaryIdAndProductId(Mockito.any(UUID.class), Mockito.any(UUID.class))).thenReturn(ps);
+		Mockito.when(cashierRepository.findOne(idCashier)).thenReturn(cashier);
+		Mockito.when(billRepository.save(Mockito.any(Bill.class))).thenReturn(Bill.newBillTest());
+		Mockito.when(subsidiaryRepository.findOne(Mockito.any(UUID.class))).thenReturn(Subsidiary.newSubsidiaryTest());
+		
+		Bill response = service.create(bill, 1);
+		
+		Mockito.verify(billRepository, Mockito.times(1)).save(Mockito.any(Bill.class));
+		Mockito.verify(detailRepository, Mockito.times(1)).save(detail);
+		Mockito.verify(pagoRepository, Mockito.times(1)).save(Mockito.any(Pago.class));
+		Mockito.verify(cashierRepository, Mockito.times(1)).save(cashier);
+		
+		Assert.assertTrue(!response.getDetails().isEmpty());
+		
+	}
+
+	@Test
+	public void createQuotationShouldntCallPagoNorCashierNorProductBySub(){
+		UUID idCashier = UUID.randomUUID();
+		Detail detail = Detail.newDetailTest();
 		List<Detail> detailList = new ArrayList<>();
 		detail.getProduct().getProductType().setCode("SER");
 		detailList.add(detail);
 		bill.getUserIntegridad().getCashier().setId(idCashier);
-		bill.getUserIntegridad().getCashier().setBillNumberSeq(1);
+		bill.getUserIntegridad().getCashier().setQuotationNumberSeq(1);
 		ProductBySubsidiary ps = ProductBySubsidiary.newProductBySubsidiaryTest();
 		ps.setQuantity(Long.valueOf(1));
 		Cashier cashier = bill.getUserIntegridad().getCashier();
@@ -140,14 +175,15 @@ public class BillServicesTest {
 		Mockito.when(cashierRepository.findOne(idCashier)).thenReturn(cashier);
 		Mockito.when(billRepository.save(Mockito.any(Bill.class))).thenReturn(Bill.newBillTest());
 		Mockito.when(subsidiaryRepository.findOne(Mockito.any(UUID.class))).thenReturn(Subsidiary.newSubsidiaryTest());
-		
-		Bill response = service.create(bill);
-		
+
+		Bill response = service.create(bill, 0);
+
 		Mockito.verify(billRepository, Mockito.times(1)).save(Mockito.any(Bill.class));
-		Mockito.verify(detailRepository, Mockito.times(1)).save(detail);
-		
+		Mockito.verify(cashierRepository, Mockito.times(1)).save(cashier);
+		Mockito.verify(pagoRepository, Mockito.times(0)).save(Mockito.any(Pago.class));
+
 		Assert.assertTrue(!response.getDetails().isEmpty());
-		
+
 	}
 	
 	@Test
@@ -174,7 +210,7 @@ public class BillServicesTest {
 		Mockito.when(cashierRepository.findOne(idCashier)).thenReturn(cashier);
 //		Mockito.when(subsidiaryRepository.findOne(idSubsidiary)).thenReturn(subsidiary);
 		
-		service.create(bill);
+		service.create(bill, 1);
 
 		
 		Mockito.verify(cashierRepository, Mockito.times(1)).findOne(idCashier);
@@ -183,8 +219,24 @@ public class BillServicesTest {
 	}
 	
 	@Test(expected=BadRequestException.class)
-	public void validatAtLeastOneDetail(){
+	public void validateAtLeastOneDetail(){
 		bill.setDetails(null);
-		service.create(bill);
+		service.create(bill, 1);
+	}
+
+	@Test(expected=BadRequestException.class)
+	public void validateAtLeastOneDetailOnQutation(){
+		bill.setDetails(null);
+		service.create(bill, 0);
+	}
+
+	@Test(expected=BadRequestException.class)
+	public void validateAtLeastOnePago(){
+		Detail detail = Detail.newDetailTest();
+		List<Detail> detailList = new ArrayList<>();
+		detailList.add(detail);
+		bill.setDetails(detailList);
+		bill.setPagos(null);
+		service.create(bill, 1);
 	}
 }
