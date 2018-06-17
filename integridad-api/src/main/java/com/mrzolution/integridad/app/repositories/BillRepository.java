@@ -23,17 +23,17 @@ public interface BillRepository extends CrudRepository<Bill, UUID>{
 	@Query("SELECT p FROM Bill p WHERE p.typeDocument = (:value)")
 	Iterable<Bill> findBillsByTypeDocument(@Param("value") int value);
 
-	@Query("SELECT p FROM Bill p WHERE p.client.id = (:id) and p.active = 'true'")
-	Iterable<Bill> findByClientId(@Param("id") UUID id);
+	@Query("SELECT p FROM Bill p WHERE p.client.id = (:id) and typeDocument = (:type) and p.active = 'true'")
+	Iterable<Bill> findByClientIdAndType(@Param("id") UUID id, @Param("type") int type);
 
 	Iterable<Bill> findByStringSeq(String stringSeq);
 
-	@Query("SELECT p FROM Bill p WHERE p.subsidiary.id = (:subId) and p.stringSeq = (:seq)")
+	@Query("SELECT p FROM Bill p WHERE p.subsidiary.id = (:subId) and p.stringSeq = (:seq) and typeDocument = 1")
 	Iterable<Bill> findByStringSeqAndSubsidiaryId(@Param("seq") String stringSeq, @Param("subId") UUID id);
 
-	@Query("SELECT p FROM Bill p WHERE p.subsidiary.userClient.id = (:userClientId) and p.dateCreated >= (:dateOne)  and p.dateCreated <= (:dateTwo) and p.active = 'true'")
+	@Query("SELECT p FROM Bill p WHERE p.subsidiary.userClient.id = (:userClientId) and p.dateCreated >= (:dateOne)  and p.dateCreated <= (:dateTwo) and p.active = 'true' and typeDocument = 1")
 	Iterable<Bill> findByUserClientIdAndDatesActives(@Param("userClientId") UUID id, @Param("dateOne") long dateOne, @Param("dateTwo") long dateTwo);
 
-	@Query("SELECT p FROM Bill p WHERE p.subsidiary.userClient.id = (:userClientId) and p.dateCreated >= (:dateOne) and p.dateCreated <= (:dateTwo)")
+	@Query("SELECT p FROM Bill p WHERE p.subsidiary.userClient.id = (:userClientId) and p.dateCreated >= (:dateOne) and p.dateCreated <= (:dateTwo) and typeDocument = 1")
 	Iterable<Bill> findAllByUserClientIdAndDates(@Param("userClientId") UUID id, @Param("dateOne") long dateOne, @Param("dateTwo") long dateTwo);
 }

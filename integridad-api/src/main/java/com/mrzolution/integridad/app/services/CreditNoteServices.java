@@ -71,8 +71,8 @@ public class CreditNoteServices {
 //		return bills;
 //	}
 //
-//	public Iterable<Bill> getByClientIdLazy(UUID id){
-//		log.info("BillServices getByClientIdLazy: {}", id);
+//	public Iterable<Bill> getByClientIdAndTypeLazy(UUID id){
+//		log.info("BillServices getByClientIdAndTypeLazy: {}", id);
 //		Iterable<Bill> bills = billRepository.findByClientId(id);
 //		bills.forEach(bill->{
 //			bill.setListsNull();

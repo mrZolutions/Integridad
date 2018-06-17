@@ -66,6 +66,12 @@ angular.module('integridadUiApp')
       });
     }
 
+    vm.clientCotizar= function(client) {
+      localStorage.setItem("client", JSON.stringify(client));
+      // $location.path('/quotation/quotation');
+       window.location = "#!/quotation/quotation";
+    }
+
     vm.clientCreate = function(){
       projectService.getNumberOfProjects($localStorage.user.subsidiary.userClient.id).then(function (response) {
         vm.success=undefined;
