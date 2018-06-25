@@ -21,6 +21,7 @@ public class Cashier implements Child{
     private String threeCode;
 
     private long billNumberSeq;
+    private long quotationNumberSeq;
     private long retentionNumberSeq;
     private long creditNoteNumberSeq;
     

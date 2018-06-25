@@ -36,16 +36,43 @@ public class BillController {
 		return new ResponseEntity<String>(response, HttpStatus.ACCEPTED);
 	}
 
-	@RequestMapping(method = RequestMethod.GET, value="/client/{id}")
-	public ResponseEntity getByClientId(@PathVariable("id") UUID id){
+	@RequestMapping(method = RequestMethod.POST, value = "/type_document/{value}")
+	public ResponseEntity getByTypeDocument(@PathVariable("value") int value){
+		log.info("BillController getByTypeDocument");
+		Iterable<Bill> response =null;
+		try {
+			response = service.getByTypeDocument(value);
+		}catch(BadRequestException e) {
+			log.error("BillController getByTypeDocument Exception thrown: {}", e.getMessage());
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+		}
+		return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
+
+	}
+
+	@RequestMapping(method = RequestMethod.GET, value="/bill/client/{id}")
+	public ResponseEntity getBillByClientId(@PathVariable("id") UUID id){
 		log.info("BillController getByClientId: {}", id);
 		Iterable<Bill> response = null;
 		try {
-			response = service.getByClientIdLazy(id);
+			response = service.getByClientIdAndTypeLazy(id, 1);
 		}catch(BadRequestException e) {
 			log.error("BillController getByClientId Exception thrown: {}", e.getMessage());
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	    }
+		return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
+	}
+
+	@RequestMapping(method = RequestMethod.GET, value="/quotation/client/{id}")
+	public ResponseEntity getQuotationByClientId(@PathVariable("id") UUID id){
+		log.info("BillController getByClientId: {}", id);
+		Iterable<Bill> response = null;
+		try {
+			response = service.getByClientIdAndTypeLazy(id, 0);
+		}catch(BadRequestException e) {
+			log.error("BillController getByClientId Exception thrown: {}", e.getMessage());
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+		}
 		return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
 	}
 
@@ -101,12 +128,12 @@ public class BillController {
 		return new ResponseEntity<Bill>(response, HttpStatus.ACCEPTED);
 	}
 
-	@RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity create(@RequestBody Bill bill){
-		log.info("BillController create: {}", bill.getBillSeq());
+	@RequestMapping(method = RequestMethod.POST, value="/{typeDocument}" )
+    public ResponseEntity create(@RequestBody Bill bill, @PathVariable("typeDocument") int typeDocument){
+		log.info("BillController create  bill: {} , quotation: {}", bill.getBillSeq(), bill.getQuotationSeq());
 		Bill response = null;
 		try {
-			response = service.create(bill);
+			response = service.create(bill, typeDocument);
 		}catch(BadRequestException e) {
 			log.error("BillController create Exception thrown: {}", e.getMessage());
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
