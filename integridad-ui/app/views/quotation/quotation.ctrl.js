@@ -1,17 +1,12 @@
 'use strict';
 
-/**
- * @ngdoc function
- * @name integridadUiApp.controller:BillCtrl
- * @description
- * # BillCtrl
- * Controller of the integridadUiApp
- */
+
 angular.module('integridadUiApp')
-  .controller('BillCtrl', function ( _, $rootScope, $location, utilStringService, $localStorage,
+.controller('QuotationCtrl', function ( _, $rootScope, $location, utilStringService, $localStorage,
                                      clientService, productService, authService, billService, $window,
                                      cashierService, requirementService, utilSeqService) {
-    var vm = this;
+
+	var vm = this;
     vm.error = undefined;
     vm.success = undefined;
 
@@ -22,38 +17,14 @@ angular.module('integridadUiApp')
       { name: 'EFECTIVO', cod: 'cashPercentage'}, { name: 'MAYORISTA', cod: 'majorPercentage'},
       { name: 'CREDITO', cod: 'creditPercentage'}, { name: 'TARJETA', cod: 'cardPercentage'}
     ];
-    vm.medList = [
-      {code: 'efectivo', name: 'Efectivo' },
-      {code: 'cheque', name: 'Cheque' },
-      {code: 'cheque_posfechado', name: 'Cheque posfechado' },
-      {code: 'tarjeta_credito', name: 'Tarjeta de crédito' },
-      {code: 'tarjeta_debito', name: 'Tarjeta de débito' },
-      {code: 'dinero_electronico_ec', name: 'Dinero electrónico' },
-      {code: 'credito', name: 'Crédito' },
-    ];
-    vm.formList = [
-      '01 - SIN UTILIZACION DEL SISTEMA FINANCIERO',
-      '15 - COMPENSACION DE DEUDAS',
-      '16 - TARJETAS DE DEBITO',
-      '17 - DINERO ELECTRONICO',
-      '18 - TARJETA PREPAGO',
-      '19 - TARJETA DE CREDITO',
-      '20 - OTROS CON UTILIZACION DEL SISTEMA FINANCIERO',
-      '21 - ENDOSO DE TITULOS'
-    ];
-    vm.creditCardList=[
-      'DINNERS CLUB',
-      'VISA',
-      'MASTERCARD',
-      'AMERICAN'
-    ];
     vm.seqChanged = false;
 
     function _activate(){
-      vm.newBill = true;
+
       vm.billed = false;
-      vm.clientSelected = undefined;
-      vm.dateBill = undefined;
+      vm.clientSelected = JSON.parse(localStorage.getItem("client"));
+      vm.companyData = $localStorage.user.subsidiary;
+      vm.dateBill = new Date();
       vm.seqNumber = undefined;
       vm.productList = undefined;
       vm.productToAdd = undefined;
@@ -84,8 +55,6 @@ angular.module('integridadUiApp')
         "codigo_porcentaje":0
       };
       vm.medio={};
-      vm.pagos=[];
-
       vm.user = $localStorage.user;
       clientService.getLazyByProjectId($localStorage.user.subsidiary.userClient.id).then(function (response) {
         vm.clientList = response;
@@ -94,20 +63,24 @@ angular.module('integridadUiApp')
         vm.loading = false;
         vm.error = error.data;
       });
+      _initializeBill();
+       var today = new Date();
+      $('#pickerBillDate').data("DateTimePicker").date(today);
+      vm.newBill = true;
+      _getSeqNumber();
     }
 
     function _getSeqNumber(){
-      vm.numberAddedOne = parseInt($localStorage.user.cashier.billNumberSeq) + 1;
+      vm.numberAddedOne = parseInt($localStorage.user.cashier.quotationNumberSeq) + 1;
       vm.seqNumberFirstPart = $localStorage.user.subsidiary.threeCode + '-'
         + $localStorage.user.cashier.threeCode;
       vm.seqNumberSecondPart = utilSeqService._pad_with_zeroes(vm.numberAddedOne, 10);
       vm.seqNumber =  vm.seqNumberFirstPart + '-'
         + vm.seqNumberSecondPart;
-
     }
 
     function _initializeBill(){
-      vm.bill ={
+       vm.bill ={
         client: vm.clientSelected,
         userIntegridad: $localStorage.user,
         subsidiary: $localStorage.user.subsidiary,
@@ -169,7 +142,7 @@ angular.module('integridadUiApp')
       vm.impuestoIVAZero.base_imponible = vm.bill.baseNoTaxes;
       vm.impuestoICE.valor = vm.bill.ice;
       vm.impuestoIVA.valor = vm.bill.iva;
-      vm.impuestoIVAZero.valor = 0;
+      vm.impuestoIVAZero.valor = vm.bill.ivaZero;
       vm.bill.baseTaxes = (vm.bill.baseTaxes - discountWithIva).toFixed(2);
       vm.bill.baseNoTaxes = (vm.bill.baseNoTaxes - discountWithNoIva).toFixed(2);
       vm.bill.total = (parseFloat(vm.bill.baseTaxes)
@@ -185,28 +158,6 @@ angular.module('integridadUiApp')
       result.setDate(result.getDate() + days);
       return result.getTime();
     }
-
-    vm.acceptNewSeq = function(){
-      vm.seqErrorNumber = undefined;
-      vm.loading = true;
-      var stringSeq =  vm.seqNumberFirstPart + '-'
-        + vm.seqNumberSecondPart;
-
-      billService.getByStringSeq(stringSeq, vm.companyData.id).then(function (response) {
-        if(response.length === 0){
-          vm.seqNumber = stringSeq;
-          vm.numberAddedOne = parseInt(vm.seqNumberSecondPart);
-          vm.seqChanged = true;
-          $('#modalEditBillNumber').modal('hide');
-        } else {
-          vm.seqErrorNumber = "NUMERO DE FACTURA YA EXISTENTE"
-        }
-        vm.loading = false;
-      }).catch(function (error) {
-        vm.loading = false;
-        vm.error = error.data;
-      });
-    };
 
     vm.reCalculateTotal = function(){
       _.map(vm.bill.details, function(detail){
@@ -226,30 +177,6 @@ angular.module('integridadUiApp')
       $location.path('/clients/create');
     };
 
-    vm.clientSelect = function(client){
-      vm.companyData = $localStorage.user.subsidiary;
-      vm.dateBill = new Date();
-      vm.clientSelected = client;
-      vm.pagos=[];
-      _getSeqNumber();
-      _initializeBill();
-      var today = new Date();
-      $('#pickerBillDate').data("DateTimePicker").date(today);
-      vm.newBill = true;
-    };
-
-    vm.clientConsult = function(client){
-      vm.loading = true;
-      billService.getBillsByClientId(client.id).then(function (response) {
-        vm.billList = response;
-        vm.loading = false;
-      }).catch(function (error) {
-        vm.loading = false;
-        vm.error = error.data;
-      });
-
-    };
-
     function _filterProduct(){
       vm.totalPages = 0;
       var variable = vm.searchText? vm.searchText : null;
@@ -260,6 +187,7 @@ angular.module('integridadUiApp')
         vm.productList = [];
 
         for (var i = 0; i < response.content.length; i++) {
+
           var productFound = _.find(vm.bill.details, function (detail) {
             return detail.product.id === response.content[i].id;
           });
@@ -274,7 +202,7 @@ angular.module('integridadUiApp')
             }
           }
         }
-      }).catch(function (error) {
+       }).catch(function (error) {
         vm.loading = false;
         vm.error = error.data;
       });
@@ -338,7 +266,7 @@ angular.module('integridadUiApp')
       }
 
       if(vm.indexDetail !== undefined){
-        vm.bill.details[vm.indexDetail] = detail;
+          vm.bill.details[vm.indexDetail] = detail;
       } else {
         vm.bill.details.push(detail);
       }
@@ -374,84 +302,9 @@ angular.module('integridadUiApp')
       vm.bill.details.splice(index,1);
     };
 
-    vm.validateAdm = function(){
-      vm.errorValidateAdm = undefined;
-      var userAdm = $localStorage.user.user;
-      userAdm.password = vm.passwordAdm;
-      authService.authUser(userAdm)
-      .then(function(response){
-        vm.loading = false;
-        vm.isEmp = false;
-      }).catch(function (error) {
-        vm.loading = false;
-        vm.errorValidateAdm = error.data;
-      });
-    }
-
-    vm.verifyUser = function(){
-      vm.isEmp = $localStorage.user.userType.code === 'EMP';
-    };
-
-    vm.loadMedio = function(){
-      var payed = 0;
-      _.each(vm.pagos, function(pago){
-        payed +=(parseFloat(pago.total));
-      });
-
-      vm.pagos
-      if(vm.medio.medio === 'efectivo' || vm.medio.medio === 'dinero_electronico_ec'){
-        vm.medio.payForm = '20 - OTROS CON UTILIZACION DEL SISTEMA FINANCIERO';
-        // CAMBIO SRI POR CONFIRMAR
-        // vm.medio.payForm = '01 - SIN UTILIZACION DEL SISTEMA FINANCIERO';
-      }
-      if(vm.medio.medio === 'credito'){
-        vm.medio.payForm = '20 - OTROS CON UTILIZACION DEL SISTEMA FINANCIERO';
-        // CAMBIO SRI POR CONFIRMAR
-        // vm.medio.payForm = '01 - SIN UTILIZACION DEL SISTEMA FINANCIERO';
-        vm.medio.total = (vm.bill.total - payed).toFixed(2);
-      }
-      if(vm.medio.medio === 'cheque' || vm.medio.medio === 'cheque_posfechado'){
-        vm.medio.payForm = '20 - OTROS CON UTILIZACION DEL SISTEMA FINANCIERO';
-        vm.medio.total = (vm.bill.total - payed).toFixed(2);
-      }
-      if(vm.medio.medio === 'tarjeta_credito' || vm.medio.medio === 'tarjeta_debito'){
-        vm.medio.payForm = '19 - TARJETA DE CREDITO';
-        vm.medio.total = (vm.bill.total - payed).toFixed(2);
-      }
-    };
-
-    vm.loadCredit = function(){
-      var creditArray = [];
-      var diasPlazo = parseInt(vm.medio.creditoIntervalos);
-      var d = new Date();
-      var total = parseFloat(parseFloat(vm.bill.total)/parseFloat(vm.medio.creditoNumeroPagos)).toFixed(2);
-      for (var i = 1; i <= parseInt(vm.medio.creditoNumeroPagos); i++) {
-        var credito = {
-          payNumber: i,
-          diasPlazo: diasPlazo,
-          fecha: _addDays(d, diasPlazo),
-          valor: total
-        }
-        diasPlazo += parseInt(vm.medio.creditoIntervalos);
-        creditArray.push(credito)
-      }
-
-      vm.medio.credits = creditArray
-
-    };
-
     vm.getFechaCobro = function() {
       var d = new Date();
       vm.medio.fechaCobro = _addDays(d, parseInt(vm.medio.chequeDiasPlazo));
-    };
-
-    vm.addPago = function(){
-      vm.pagos.push(angular.copy(vm.medio));
-      vm.medio = {};
-    };
-
-    vm.removePago = function(index){
-      vm.pagos.splice(index, 1);
     };
 
     vm.getTotalPago = function(){
@@ -469,65 +322,12 @@ angular.module('integridadUiApp')
       return vm.varPago;
     };
 
-    vm.billSelect = function(bill){
-      vm.loading = true;
-      billService.getById(bill.id).then(function (response) {
-        vm.billList = undefined;
-        vm.bill = response;
-        vm.companyData = $localStorage.user.subsidiary;
-        vm.clientSelected = response.client;
-        vm.pagos = response.pagos;
-        var dateToShow = new Date(response.dateCreated);
-        vm.seqNumber = response.stringSeq;
-        $('#pickerBillDate').data("DateTimePicker").date(dateToShow);
-        vm.newBill = false;
-        vm.loading = false;
-      }).catch(function (error) {
-        vm.loading = false;
-        vm.error = error.data;
-      });
-
-    };
-
     vm.cancelBill = function () {
-      _activate();
+      $location.path('/clients');
     };
 
-    vm.getDateToPrint = function(){
-      if(vm.bill != undefined){
-          return $('#pickerBillDate').data("DateTimePicker").date().toDate();
-      }
-    }
-
-    vm.printToCart = function (printSectionId) {
-      var innerContents = document.getElementById(printSectionId).innerHTML;
-        var popupWinindow = window.open('', '_blank', 'width=600,height=700,scrollbars=no,menubar=no,toolbar=no,location=no,status=no,titlebar=no');
-        popupWinindow.document.open();
-        popupWinindow.document.write('<html><head><link rel="stylesheet" type="text/css" href="style.css" /></head><body onload="window.print()">' + innerContents + '</html>');
-        popupWinindow.document.close();
-    };
-
-    vm.billDeactivate = function(){
+    vm.saveQuotation = function(){
       vm.loading = true;
-      var index = vm.billList.indexOf(vm.cancelBill);
-      billService.cancelBill(vm.cancelBill).then(function (response) {
-        var index = vm.billList.indexOf(vm.cancelBill);
-        if (index > -1) {
-            vm.billList.splice(index, 1);
-        }
-        vm.cancelBill = undefined
-        vm.loading = false;
-      }).catch(function (error) {
-        vm.loading = false;
-        vm.error = error.data;
-      });
-
-    };
-
-    vm.getClaveAcceso = function(){
-      vm.loading = true;
-      $('#modalAddPago').modal('hide');
-      // vm.impuestosTotales.push(vm.impuestoICE,vm.impuestoIVA);
       vm.impuestosTotales = [];
       if(vm.impuestoIVA.base_imponible > 0){
         vm.impuestosTotales.push(vm.impuestoIVA);
@@ -535,7 +335,7 @@ angular.module('integridadUiApp')
       if(vm.impuestoIVAZero.base_imponible > 0){
         vm.impuestosTotales.push(vm.impuestoIVAZero);
       }
-      vm.bill.billSeq = vm.numberAddedOne;
+       vm.bill.quotationSeq = vm.numberAddedOne;
 
       if(vm.bill.discountPercentage === undefined){
         vm.bill.discountPercentage = 0;
@@ -589,51 +389,23 @@ angular.module('integridadUiApp')
         if(!_.isEmpty(impuestos)){
           item.impuestos = impuestos;
         }
-
         vm.items.push(item);
       });
-
-      var req = requirementService.createRequirement(vm.clientSelected, vm.bill, $localStorage.user, vm.impuestosTotales, vm.items, vm.pagos);
-
-      billService.getClaveDeAcceso(req, vm.companyData.userClient.id).then(function(resp){
-        vm.bill.pagos = vm.pagos;
-        if(vm.bill.discountPercentage === undefined){
-          vm.bill.discountPercentage = 0;
-        }
-        var obj = JSON.parse(resp.data);
-        // var obj = {clave_acceso: '1234560', id:'id12345'};
-        if(obj.errors === undefined){
-          vm.bill.claveDeAcceso = obj.clave_acceso;
-          vm.bill.idSri = obj.id;
-          vm.bill.stringSeq = vm.seqNumber;
+          vm.bill.idSri  ;
+          vm.bill.stringQuotationSeq = vm.seqNumber;
           vm.bill.priceType = vm.priceType.name;
-          // 1 is typeDocument Bill **************!!!
-          billService.create(vm.bill, 1).then(function(respBill){
+          // 0 is typeDocument Bill **************!!!
+          billService.create(vm.bill, 0).then(function(respBill){
             vm.billed = true;
-            $localStorage.user.cashier.billNumberSeq = vm.bill.billSeq;
-            if(vm.seqChanged){
-              cashierService.update($localStorage.user.cashier).then(function(resp){
-                // cashier updated
-              }).catch(function (error) {
-                vm.loading = false;
-                vm.error = error.data;
-              });
-            }
+            $localStorage.user.cashier.quotationNumberSeq = vm.bill.quotationSeq;
             vm.loading = false;
           }).catch(function (error) {
             vm.loading = false;
             vm.error = error.data;
           });
-        } else {
-          vm.loading = false;
-          vm.error = "Error al obtener Clave de Acceso: " + JSON.stringify(obj.errors);
-        }
 
-      }).catch(function (error) {
-        vm.loading = false;
-        vm.error = error.data;
-      });
-    };
+           // $location.path('/bills/bill');
+      };
 
     (function initController() {
       _activate();

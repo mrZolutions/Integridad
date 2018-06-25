@@ -42,7 +42,7 @@ public class RetentionController {
 //		log.info("RetentionController getByClientId: {}", id);
 //		Iterable<Bill> response = null;
 //		try {
-//			response = service.getByClientIdLazy(id);
+//			response = service.getByClientIdAndTypeLazy(id);
 //		}catch(BadRequestException e) {
 //			log.error("BillController getByClientId Exception thrown: {}", e.getMessage());
 //	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());

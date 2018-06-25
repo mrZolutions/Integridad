@@ -60,6 +60,10 @@ function routes($routeProvider) {
       templateUrl: 'views/note/credit.tpl.html',
       controller: 'CreditNoteCtrl',
       controllerAs: 'vm'
+    }).when('/quotation/quotation', {
+      templateUrl: 'views/quotation/quotation.tpl.html',
+      controller: 'QuotationCtrl',
+      controllerAs: 'vm'
     }).otherwise({
     redirectTo: '/'
   });

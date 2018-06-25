@@ -9,14 +9,14 @@ angular
       });
     };
 
-    this.create = function (bill) {
-      return securityService.post('/bill', bill).then(function successCallback(response) {
+    this.create = function (bill, type) {
+      return securityService.post('/bill/'+type, bill).then(function successCallback(response) {
         return response.data;
       });
     };
 
-    this.getByClientId = function (id) {
-      return securityService.get('/bill/client/'+ id).then(function successCallback(response) {
+    this.getBillsByClientId = function (id) {
+      return securityService.get('/bill/bill/client/'+ id).then(function successCallback(response) {
         return response.data;
       });
     };
