@@ -40,7 +40,7 @@ public class ProductController {
 	
 	@RequestMapping(method = RequestMethod.PUT)
     public ResponseEntity update(@RequestBody Product product){
-		log.info("ProductController update: {}", product);
+		log.info("ProductController update");
 		try {
 			service.update(product);
 		}catch(BadRequestException e) {
