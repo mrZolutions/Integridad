@@ -62,6 +62,7 @@ angular.module('integridadUiApp')
       vm.indexDetail = undefined;
       vm.priceType = vm.prices[0];
       vm.seqChanged = false;
+      vm.quotations = undefined;
 
       vm.impuestosTotales = [];
       vm.items = [];
@@ -227,6 +228,7 @@ angular.module('integridadUiApp')
     };
 
     vm.clientSelect = function(client){
+      vm.quotations = [];
       vm.companyData = $localStorage.user.subsidiary;
       vm.dateBill = new Date();
       vm.clientSelected = client;
@@ -522,6 +524,17 @@ angular.module('integridadUiApp')
         vm.error = error.data;
       });
 
+    };
+
+    vm.getQuotations = function(){
+      vm.loading = true;
+      billService.getQuotationsByClientId(vm.clientSelected.id).then(function (response) {
+        vm.quotations = response;
+        vm.loading = false;
+      }).catch(function (error) {
+        vm.loading = false;
+        vm.error = error.data;
+      });
     };
 
     vm.getClaveAcceso = function(){
