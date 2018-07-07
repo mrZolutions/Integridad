@@ -537,6 +537,19 @@ angular.module('integridadUiApp')
       });
     };
 
+    vm.selectQuotation = function(quotation){
+      vm.loading = true;
+      billService.getById(quotation.id).then(function(response){
+        vm.bill = response;
+        vm.bill.id = undefined;
+        vm.bill.claveDeAcceso = undefined;
+        vm.loading = false;
+      }).catch(function (error) {
+        vm.loading = false;
+        vm.error = error.data;
+      });
+    };
+
     vm.getClaveAcceso = function(){
       vm.loading = true;
       $('#modalAddPago').modal('hide');

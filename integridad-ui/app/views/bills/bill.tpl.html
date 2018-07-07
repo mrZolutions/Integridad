@@ -149,12 +149,15 @@
         <div class="form-group col-md-12">
           <table width="100%">
             <tr>
-              <td>
-                <button type="button" class="btn btn-primary" ng-click="vm.getQuotations()">
-                  Cotizaci&oacute;n
+              <td width="30%">
+                <button type="button" class="btn btn-primary" ng-click="vm.getQuotations()"
+                  data-toggle="modal" data-target="#modalCotizacion">
+                  Buscar Cotizaci&oacute;n
                 </button>
               </td>
-              <td></td>
+              <td align="left">
+                <b>N&uacute;mero de Cotizaci&oacute;n: </b>{{vm.bill.stringQuotationSeq}}
+              </td>
             </tr>
           </table>
         </div>
@@ -1005,6 +1008,64 @@
           <button type="button" class="btn btn-primary" ng-click="vm.billDeactivate()" data-dismiss="modal">
             Anular
           </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="modalCotizacion" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" ng-click="vm.quotations = []">&times;</button>
+          <h4 class="modal-title">Cotizaciones</h4>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-md-12" >
+
+
+
+              <div class="row">
+                <div class="form-group col-md-8">
+                  <input ng-model="vm.searchTextCotizacion" class="form-control" placeholder="Buscar" />
+                </div>
+              </div>
+              <table class="table table-striped">
+                <thead>
+                  <tr>
+                    <th> N&uacute;mero </th>
+                    <th> Fecha </th>
+                    <th> Total $</th>
+                    <th>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr ng-show="vm.productList == 0">
+                    <td colspan="4">
+                      No hay cotizaciones ingresadas
+                    </td>
+                  </tr>
+                  <tr ng-repeat="quotation in vm.quotations | orderBy:'stringQuotationSeq' | filter:searchTextCotizacion">
+                    <td>{{ quotation.stringQuotationSeq }}</td>
+                    <td>{{ quotation.dateCreated | date :  "dd/MM/yyyy"}}</td>
+                    <td>{{ quotation.total }}</td>
+                    <td>
+                      <button type="button" class="btn btn-primary" ng-click="vm.selectQuotation(quotation)" data-dismiss="modal">
+                        Seleccionar
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+
+
+
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
         </div>
       </div>
     </div>
