@@ -13,7 +13,7 @@ spring:
     password: postgres
     
 email:
-    username: Soporte.tecnico1@mrzolutions.com
+    username: daniel.arcos@mrzolutions.com
     pass: hijodedios
     emailFrom: Integridad - MrZolutions <Soporte.tecnico1@mrzolutions.com>
 
@@ -29,6 +29,6 @@ spring:
     password: 6027e96f707dffdb31d71d2268c69641208a49a46d1088a09be518b8e929077d
 
 email:
-    username: Soporte.tecnico1@mrzolutions.com
+    username: daniel.arcos@mrzolutions.com
     pass: hijodedios
     emailFrom: Integridad - MrZolutions <Soporte.tecnico1@mrzolutions.com>
