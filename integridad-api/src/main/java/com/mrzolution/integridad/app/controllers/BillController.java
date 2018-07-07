@@ -65,12 +65,12 @@ public class BillController {
 
 	@RequestMapping(method = RequestMethod.GET, value="/quotation/client/{id}")
 	public ResponseEntity getQuotationByClientId(@PathVariable("id") UUID id){
-		log.info("BillController getByClientId: {}", id);
+		log.info("BillController getQuotationByClientId: {}", id);
 		Iterable<Bill> response = null;
 		try {
 			response = service.getByClientIdAndTypeLazy(id, 0);
 		}catch(BadRequestException e) {
-			log.error("BillController getByClientId Exception thrown: {}", e.getMessage());
+			log.error("BillController getQuotationByClientId Exception thrown: {}", e.getMessage());
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 		}
 		return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
