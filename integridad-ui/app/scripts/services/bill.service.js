@@ -51,4 +51,10 @@ angular
       });
     };
 
+    this.getQuotationsByClientId = function (id) {
+      return securityService.get('/bill/quotation/client/'+ id).then(function successCallback(response) {
+        return response.data;
+      });
+    };
+
   });
