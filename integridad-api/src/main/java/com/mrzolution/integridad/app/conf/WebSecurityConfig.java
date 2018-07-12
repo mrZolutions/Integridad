@@ -15,7 +15,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	public void configure(AuthenticationManagerBuilder auth) throws Exception {
 	    auth.inMemoryAuthentication()
-	      .withUser("dan").password("12345").roles("USER", "ADMIN");
+	      .withUser("integridaduser").password("e3tkwy").roles("USER", "ADMIN");
 	}
 	
 	@Override
@@ -25,6 +25,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	      .authorizeRequests()
 	        .antMatchers(HttpMethod.POST, "/integridad/**").hasRole("ADMIN")
 	        .antMatchers(HttpMethod.PUT, "/integridad/**").hasRole("ADMIN")
+			.antMatchers(HttpMethod.GET, "/integridad/**").hasRole("ADMIN")
+			.antMatchers(HttpMethod.DELETE, "/integridad/**").hasRole("ADMIN")
 	        .antMatchers(HttpMethod.PATCH, "/integridad/**").hasRole("ADMIN").and()
 	      .csrf().disable();
 	}

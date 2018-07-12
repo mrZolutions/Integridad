@@ -5,18 +5,20 @@ angular
     var baseUrl = 'https://integridad.herokuapp.com/integridad/v1';
     // var baseUrl = 'http://localhost:8080//integridad/v1';
     var config = {};
-    var authdata = $base64.encode("dan:12345");
+    var authdata = $base64.encode("integridaduser:e3tkwy");
     config.headers = {
       'Content-Type':'application/json',
       'Authorization': 'Basic ' + authdata
     };
 
     this.get = function (path) {
-      return $http.get(baseUrl + path);
+      var url = baseUrl + path;
+      return $http.get(url, config);
     };
 
     this.delete = function (path) {
-      return $http.delete(baseUrl + path);
+      var url = baseUrl + path;
+      return $http.delete(url, config);
     };
 
     this.post = function (path, data) {
