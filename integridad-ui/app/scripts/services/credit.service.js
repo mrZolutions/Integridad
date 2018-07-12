@@ -37,9 +37,7 @@ angular
         "totales":{
           "total_sin_impuestos":bill.subTotal,
           "impuestos":impuestosTotales,
-          "importe_total":bill.total,
-          "propina":0.0,
-          "descuento":bill.discount
+          "importe_total":bill.total
         },
         "comprador":{
           "email":clientSelected.email,
