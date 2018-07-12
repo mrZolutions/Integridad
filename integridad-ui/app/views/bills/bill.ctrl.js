@@ -543,6 +543,7 @@ angular.module('integridadUiApp')
         vm.bill = response;
         vm.bill.id = undefined;
         vm.bill.claveDeAcceso = undefined;
+        _getTotalSubtotal();
         vm.loading = false;
       }).catch(function (error) {
         vm.loading = false;

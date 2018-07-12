@@ -138,7 +138,6 @@ angular.module('integridadUiApp')
     };
 
     vm.saveCreditNote = function(){
-      console.log(vm.bill);
       vm.loading = true;
 
       vm.impuestosTotales = [];
