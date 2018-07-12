@@ -303,7 +303,7 @@ angular.module('integridadUiApp')
       vm.totalRetention = 0;
       _.each(vm.retention.items, function(item){
         var detail ={
-          taxType: item.codigo === String(1) ? 'RETENCION EN LA FUENTE' : 'RETENCION EN EL IVA',
+          taxType: item.codigo === 1 ? 'RETENCION EN LA FUENTE' : 'RETENCION EN EL IVA',
           code: item.codigo_porcentaje_integridad,
           baseImponible: item.base_imponible,
           percentage: item.porcentaje,
