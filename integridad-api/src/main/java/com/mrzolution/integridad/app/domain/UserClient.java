@@ -55,10 +55,14 @@ public class UserClient {
 
     @OneToMany(mappedBy = "userClient", cascade = CascadeType.ALL)
     private List<Provider> providers;
+
+    @OneToMany(mappedBy = "userClient", cascade = CascadeType.ALL)
+    private List<CuentaContable> cuentaContables;
     
     public void setListsNull(){
     	subsidiaries = null;
         providers = null;
+        if(cuentaContables != null) cuentaContables = null;
     }
     
     public void setFatherListToNull(){
@@ -69,6 +73,7 @@ public class UserClient {
         UserClient userClient = new UserClient();
         userClient.setSubsidiaries(new ArrayList<>());
         userClient.setProviders(new ArrayList<>());
+        userClient.setCuentaContables(new ArrayList<>());
         
         return userClient;
     }
