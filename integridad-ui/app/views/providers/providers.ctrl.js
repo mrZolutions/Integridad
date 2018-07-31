@@ -23,6 +23,34 @@ angular.module('integridadUiApp')
       'PROVEEDORES DEL EXTERIOR 02',
     ];
 
+    vm.documentType = [
+      {code: '01', name: 'Factura'},
+      {code: '02', name: 'Nota o boleta de venta'},
+      {code: '03', name: 'Liquidación de compra de Bienes o Prestación de servicios'},
+      {code: '04', name: 'Nota de crédito'},
+      {code: '05', name: 'Nota de débito'},
+      {code: '06', name: 'Guías de Remisión'},
+      {code: '07', name: 'Comprobante de Retención'},
+      {code: '08', name: 'Boletos o entradas a espectáculos públicos'},
+      {code: '09', name: 'Tiquetes o vales emitidos por máquinas registradoras'},
+      {code: '11', name: 'Pasajes expedidos por empresas de aviación'},
+      {code: '12', name: 'Documentos emitidos por instituciones financieras'},
+      {code: '15', name: 'Comprobante de venta emitido en el Exterior'},
+      {code: '16', name: 'Formulario Único de Exportación (FUE) o Declaración Aduanera Única (DAU) o Declaración Andina de Valor (DAV)'},
+      {code: '18', name: 'Documentos autorizados utilizados en ventas excepto N/C N/D'},
+      {code: '19', name: 'Comprobantes de Pago de Cuotas o Aportes'},
+      {code: '20', name: 'Documentos por Servicios Administrativos emitidos por Inst. del Estado'},
+      {code: '21', name: 'Carta de Porte Aéreo'},
+      {code: '22', name: 'RECAP'},
+      {code: '23', name: 'Nota de Crédito TC'},
+      {code: '24', name: 'Nota de Débito TC'},
+      {code: '41', name: 'Comprobante de venta emitido por reembolso'},
+      {code: '42', name: 'Documento retención presuntiva y retención emitida por propio vendedor o por intermediario'},
+      {code: '43', name: 'Liquidación para Explotación y Exploracion de Hidrocarburos'},
+      {code: '44', name: 'Comprobante de Contribuciones y Aportes'},
+      {code: '45', name: 'Liquidación por reclamos de aseguradoras'}
+    ];
+
     vm.fuenteTipo = [
       {name:'Honorarios profesionales y demás pagos por servicios relacionados con el título profesional' ,percentage:10, codigo: '303', codigoDatil:'303'},
       {name:'Servicios predomina el intelecto no relacionados con el título profesional' ,percentage:8, codigo: '304', codigoDatil:'304'},
@@ -256,7 +284,7 @@ angular.module('integridadUiApp')
         codigo_porcentaje: percentage.codigoDatil,
         codigo_porcentaje_integridad: percentage.codigo,
         porcentaje: percentage.percentage,
-        tipo_documento_sustento: "01",
+        tipo_documento_sustento: vm.docType,
       };
     };
 
