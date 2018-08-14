@@ -17,6 +17,8 @@ public class CuentaContable {
     private String type;
     private String description;
 
+    private boolean active;
+
     @ManyToOne
     @JoinColumn(name = "user_client_id")
     private UserClient userClient;
