@@ -124,7 +124,8 @@ public class UserClientServices {
 		});
 		
 		userClient.setSubsidiaries(subsidiaryList);
-		//***** Se setea en null porque los proveedores se los maneja aparte de los userClient/Empresas
+		//***** Se setea en null porque los proveedores y cuentas contables se los maneja aparte de los userClient/Empresas
+		userClient.setCuentaContables(null);
 		userClient.setProviders(null);
 		userClient.setFatherListToNull();
 		log.info("UserClientServices populateChildren FINISHED userClientId: {}", userClient.getId());
