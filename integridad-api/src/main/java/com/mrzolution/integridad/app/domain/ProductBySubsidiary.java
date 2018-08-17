@@ -35,10 +35,15 @@ public class ProductBySubsidiary implements Child{
     }
     
     public void setFatherListToNull(){
-    	subsidiary.setListsNull();
-    	subsidiary.setFatherListToNull();
-        product.setFatherListToNull();
-        product.setListsNull();
+        if(subsidiary != null){
+            subsidiary.setListsNull();
+            subsidiary.setFatherListToNull();
+        }
+
+        if(product != null){
+            product.setFatherListToNull();
+            product.setListsNull();
+        }
     }
 
     @Transient

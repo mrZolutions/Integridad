@@ -30,6 +30,8 @@ public class FatherManageChildren {
         List<UUID> childrenOldIdList = new ArrayList<>();
         List<UUID> childrenNewIdList = new ArrayList<>();
 
+        List childList = new ArrayList();
+
         if(father.obtainChildren() != null){
         	List<Child> childrenNew = father.obtainChildren();
             childrenNew.forEach(children -> childrenNewIdList.add(children.getId()));
@@ -49,9 +51,16 @@ public class FatherManageChildren {
                 } catch (IllegalAccessException e) {
                     e.printStackTrace();
                 }
-                crudRepository.save(child);
+
+                childList.add(child);
+//                crudRepository.save(child);
+
             });
-            
+
+            if(!childList.isEmpty()){
+                crudRepository.save(childList);
+            }
+
             childrenOldIdList.stream().filter(
                     childId -> !childrenNewIdList.contains(childId)
             ).forEach(childId -> {crudRepository.delete(childId);});
