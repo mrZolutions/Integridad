@@ -68,6 +68,10 @@ function routes($routeProvider) {
       templateUrl: 'views/cuentas/cuentas.tpl.html',
       controller: 'CuentasContablesCtrl',
       controllerAs: 'vm'
+    }).when('/pagar', {
+      templateUrl: 'views/pagar/pagar.tpl.html',
+      controller: 'CuentasPagarCtrl',
+      controllerAs: 'vm'
     }).otherwise({
     redirectTo: '/'
   });

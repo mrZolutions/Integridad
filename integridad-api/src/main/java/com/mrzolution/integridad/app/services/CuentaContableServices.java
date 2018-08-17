@@ -30,41 +30,13 @@ public class CuentaContableServices {
 		log.info("CuentaContableServices created id: {}", saved.getId());
 		return saved;
 	}
+  
+  public Iterable<CuentaContable> getAll() {
+        Iterable<CuentaContable> result = cuentaContableRepository.findAll();
+        result.forEach(res -> {res.setFatherListToNull(); res.setListsNull();});
+        return result;
+    }
 
-//	public void update(Provider provider) throws BadRequestException{
-//		if(provider.getId() == null){
-//			throw new BadRequestException("Invalid Provider");
-//		}
-//		log.info("ProviderServices update: {}", provider.getName());
-//		provider.setListsNull();
-//		Provider updated = providerRepository.save(provider);
-//		log.info("ProviderServices updated id: {}", updated.getId());
-//	}
-//
-//	public Provider getById(UUID id){
-//		log.info("ProviderServices getById: {}", id);
-//		Provider retrieved = providerRepository.findOne(id);
-//		if(retrieved != null){
-//			log.info("ProviderServices retrieved id: {}", retrieved.getId());
-//		} else {
-//			log.info("ProviderServices retrieved id NULL: {}", id);
-//		}
-//
-////		populateChildren(retrieved);
-//		return retrieved;
-//	}
-//
-//	public Iterable<Provider> getAllLazy(){
-//		log.info("ProviderServices getAllLazy");
-//		Iterable<Provider> providers = providerRepository.findByActive(true);
-//		for (Provider provider : providers) {
-//			provider.setListsNull();
-//			provider.setFatherListToNull();
-//		}
-//		log.info("ProviderServices getAllLazy size retrieved: {}", Iterables.size(providers));
-//		return providers;
-//	}
-//
 	public Iterable<CuentaContable> getLazyByUserClient(UUID id){
 		log.info("CuentaContableServices getLazyByUserClient");
 		Iterable<CuentaContable> cuentas = cuentaContableRepository.findByUserClientId(id);
