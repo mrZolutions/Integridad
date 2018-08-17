@@ -115,8 +115,8 @@ public class BillServicesTest {
         
         service.update(bill);
         
-        Mockito.verify(detailRepository, Mockito.times(1)).save(detailN);
-        Mockito.verify(detailRepository, Mockito.times(1)).save(detailU);
+        Mockito.verify(detailRepository, Mockito.times(1)).save(Mockito.any(Iterable.class));
+//        Mockito.verify(detailRepository, Mockito.times(1)).save(detailU);
         Mockito.verify(detailRepository, Mockito.times(1)).delete(idChildOld);
     	
     }

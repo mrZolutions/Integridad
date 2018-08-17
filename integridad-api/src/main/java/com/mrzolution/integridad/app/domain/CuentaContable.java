@@ -16,6 +16,8 @@ public class CuentaContable {
     private String code;
     private String type;
     private String description;
+    private String account_type;
+    private String name;
 
     private boolean active;
 
