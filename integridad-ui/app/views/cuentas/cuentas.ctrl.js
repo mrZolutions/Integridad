@@ -18,6 +18,10 @@ angular.module('integridadUiApp')
     vm.cuentasContablesList = undefined;
     vm.cuetaSelected = undefined;
 
+    vm.accountType = [
+      'B', 'S', 'MP', 'CM', 'RG', 'TAE',
+    ];
+
     function _activate(){
       vm.loading = true;
       vm.cuentaSelected = undefined;
@@ -40,7 +44,6 @@ angular.module('integridadUiApp')
 
     function create(){
       vm.loading = true;
-      console.log(vm.cuentaSelected);
       cuentasService.create(vm.cuentaSelected).then(function (response) {
         _activate();
         vm.error = undefined;
