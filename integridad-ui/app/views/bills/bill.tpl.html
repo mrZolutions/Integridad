@@ -293,7 +293,7 @@
                 <th> Descripci&oacute;n </th>
                 <th> Cant. </th>
                 <th> U. Med. </th>
-                <th> V. Unit. </th>
+          <!--      <th> V. Unit. </th> -->
                 <th> Desc. </th>
                 <th> V. Total. </th>
                 <th  ng-if="vm.newBill">
@@ -314,13 +314,13 @@
                 <td>{{$index + 1}}</td>
                 <td>{{detail.product.codeIntegridad}}</td>
                 <td>
-                  <span print-only>
+        <!--          <span print-only>
                     {{detail.product.subgroup.groupLine.line.name}} - {{detail.product.subgroup.groupLine.name}} - {{detail.product.subgroup.name}} - <br>
-                  </span>
+                  </span> -->
                   {{detail.product.name}}
                 </td>
                 <td>{{detail.quantity}}</td>
-                <td>{{detail.product.unitOfMeasurementFull}}</td>
+        <!--        <td>{{detail.product.unitOfMeasurementFull}}</td> -->
                 <td>{{detail.costEach}}</td>
                 <td>{{detail.discount}}</td>
                 <td>{{detail.total}}</td>
