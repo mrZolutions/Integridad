@@ -314,7 +314,7 @@
                 <td>{{$index + 1}}</td>
                 <td>{{detail.product.codeIntegridad}}</td>
                 <td>
-        <!--          <span print-only>
+        <!--      <span print-only>
                     {{detail.product.subgroup.groupLine.line.name}} - {{detail.product.subgroup.groupLine.name}} - {{detail.product.subgroup.name}} - <br>
                   </span> -->
                   {{detail.product.name}}
@@ -556,7 +556,6 @@
                   <span ng-if="pago.medio === 'tarjeta_credito' || pago.medio === 'tarjeta_debito'">
                       {{ pago.cardBrand }}<br/>
                   </span>
-
                   {{ pago.payForm }}
                 </td>
                 <td>{{ pago.total }}</td>
@@ -593,7 +592,6 @@
       </div>
     </div>
   </div>
-
 </div>
 
 <div  id="printMatrixSectionId" ng-show='false'>
@@ -904,7 +902,6 @@
                 </div>
               </div>
             </div>
-
           </div>
         </div>
         <div class="modal-footer">
@@ -912,7 +909,6 @@
             ng-disabled="vm.productToAdd === undefined">
             Aceptar y Cerrar
           </button>
-
           <button type="button" class="btn btn-primary" ng-click="vm.acceptProduct(false)"
             ng-disabled="vm.productToAdd === undefined">
             Aceptar y Agregar Mas productos
@@ -981,7 +977,6 @@
           <button type="button" class="btn btn-primary" ng-click="vm.acceptNewSeq()">
             Aceptar
           </button>
-
           <button type="button" class="btn btn-primary" data-dismiss="modal">
             Cancelar
           </button>
@@ -1023,9 +1018,6 @@
         <div class="modal-body">
           <div class="row">
             <div class="col-md-12" >
-
-
-
               <div class="row">
                 <div class="form-group col-md-8">
                   <input ng-model="vm.searchTextCotizacion" class="form-control" placeholder="Buscar" />
@@ -1059,9 +1051,6 @@
                   </tr>
                 </tbody>
               </table>
-
-
-
             </div>
           </div>
         </div>
