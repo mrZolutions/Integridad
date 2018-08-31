@@ -107,7 +107,7 @@ public class ProductController {
 		log.info("ProductController getAllActivesBySubsidiaryId: {}", subsidiaryId);
 		Page<Product> response = null;
 		try {
-			response = service.getAllActivesBySubsidiaryIdAndActive(subsidiaryId, variable, new PageRequest(page, 15, Sort.Direction.ASC, "product"));
+			response = service.getAllActivesBySubsidiaryIdAndActive(subsidiaryId, variable, new PageRequest(page, 50, Sort.Direction.ASC, "product"));
 		}catch(BadRequestException e) {
 			log.error("ProductController getAllActivesBySubsidiaryId Exception thrown: {}", e.getMessage());	    
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());

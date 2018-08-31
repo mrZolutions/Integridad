@@ -161,7 +161,7 @@ public class RetentionServices {
 			String status = retention.isActive() ? "ACTIVA" : "ANULADA";
 			String docDate = dateFormat.format(new Date(retention.getDocumentDate()));
 
-			RetentionReport saleReport= new RetentionReport(date, docDate, retention.getProvider().getCodeIntegridad(), retention.getProvider().getName(), retention.getProvider().getRuc(), retention.getDocumentNumber(), retention.getStringSeq(), retention.getClaveDeAcceso(),
+			RetentionReport saleReport= new RetentionReport(date, docDate, retention.getProvider().getCodeIntegridad(), retention.getProvider().getName(), retention.getProvider().getRuc(), retention.getStringSeq(), retention.getClaveDeAcceso(),
 					retention.getEjercicioFiscal(), sum, retention.getSubsidiary().getName(), retention.getUserIntegridad().getFirstName(), status);
 
 			retentionReportList.add(saleReport);

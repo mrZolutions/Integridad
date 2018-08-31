@@ -114,11 +114,11 @@ public class ProductServices {
 		log.info("ProductServices getAllActivesBySubsidiaryIdAndActive");
 		Page<UUID> productIdList;
 		if(variable.equals("null")){
-			log.info("ProductServices getAllActivesBySubsidiaryIdAndActive wothout variable");
+			log.info("ProductServices getAllActivesBySubsidiaryIdAndActive without variable");
 			productIdList = productBySubsidiairyRepository.findBySubsidiaryIdAndProductActive(subsidiaryId, pageable);
 		} else {
 			log.info("ProductServices getAllActivesBySubsidiaryIdAndActive with variable");
-			productIdList = productBySubsidiairyRepository.findBySubsidiaryIAndVariabledAndProductActive(subsidiaryId, variable, new PageRequest(0, 15, Sort.Direction.ASC, "product"));
+			productIdList = productBySubsidiairyRepository.findBySubsidiaryIAndVariabledAndProductActive(subsidiaryId, variable, new PageRequest(0, 150, Sort.Direction.ASC, "product"));
 		}
 
 		List<Product> listReturn = new ArrayList<>();
