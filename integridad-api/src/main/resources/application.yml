@@ -24,9 +24,9 @@ spring:
       ddl-auto: update
   profiles: production
   datasource:
-    url: jdbc:postgresql://ec2-54-204-21-226.compute-1.amazonaws.com:5432/dbm55jn6lfeaa4?ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory
-    username: stjfpdbrujaxjv
-    password: 6027e96f707dffdb31d71d2268c69641208a49a46d1088a09be518b8e929077d
+    url: jdbc:postgresql://ec2-18-232-218-200.compute-1.amazonaws.com:5432/d43ebuhb7nme89?ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory
+    username: uohu0g16spl52
+    password: pa02a480a39d72dc2574dcd01e6d309c953016f5f244bc88f6e0900450f0eb888
 
 email:
     username: daniel.arcos@mrzolutions.com
