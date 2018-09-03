@@ -14,7 +14,6 @@ angular.module('integridadUiApp')
     var vm = this;
     vm.error = undefined;
     vm.success = undefined;
-
     vm.loading = false;
     vm.product = undefined;
     vm.productList = [];
@@ -34,7 +33,7 @@ angular.module('integridadUiApp')
       vm.loading = true;
       vm.messurements = messurementListService.getMessurementList();
       productTypeService.getproductTypesLazy().then(function(response){
-        vm.productTypes = response;
+        vm.productTypes = response.content;
       }).catch(function (error) {
         vm.loading = false;
         vm.error = error.data;
@@ -45,6 +44,7 @@ angular.module('integridadUiApp')
     }
 
     function _filter(){
+      vm.isProductReportList = 1;
       vm.loading = true;
       vm.totalPages = 0;
       vm.productList = [];
@@ -163,27 +163,47 @@ angular.module('integridadUiApp')
       });
     }
 
-    function _getSubsidiarie(){
-      if($routeParams.subsidiaryId){
-        subsidiaryService.getById($routeParams.subsidiaryId).then(function(response){
-          vm.subsidiaries = [response];
-          vm.success=undefined;
-          vm.error=undefined
-        }).catch(function (error) {
-          vm.loading = false;
-          vm.error = error.data;
-        });
-      } else {
-        projectService.getById($localStorage.user.subsidiary.userClient.id).then(function (response) {
-          vm.subsidiaries = response.subsidiaries;
-          vm.success=undefined;
-          vm.error=undefined
-        }).catch(function (error) {
-          vm.loading = false;
-          vm.error = error.data;
-        });
-      }
-    }
+ //   function _getSubsidiarie(){
+ //     if($routeParams.subsidiaryId){
+ //       subsidiaryService.getById($routeParams.subsidiaryId).then(function(response){
+ //         vm.subsidiaries = [response];
+ //         vm.success=undefined;
+ //         vm.error=undefined
+ //       }).catch(function (error) {
+ //         vm.loading = false;
+ //         vm.error = error.data;
+ //       });
+ //     } else {
+ //       projectService.getById($localStorage.user.subsidiary.userClient.id).then(function (response) {
+ //         vm.subsidiaries = response.subsidiaries;
+ //         vm.success=undefined;
+ //         vm.error=undefined
+ //       }).catch(function (error) {
+ //         vm.loading = false;
+ //         vm.error = error.data;
+ //       });
+ //     }
+ //   }
+
+    vm.ReportExist = function () {
+      var dataReport = [];
+      _.each(vm.reportList, function(exist){ 
+            var data = {
+              CODIGO: exist.code,
+              DESCRIPCION: exist.description,
+              CANTIDAD: exist.quantity,
+              VAL_UNITARIO: exist.valUnit
+            };
+            dataReport.push(data);
+      });
+
+      var ws = XLSX.utils.json_to_sheet(dataReport);
+      /* add to workbook */
+      var wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, "Exixtencia");
+      /* write workbook and force a download */
+      XLSX.writeFile(wb, "Existencia.xlsx");
+    }; 
 
     vm.filter = function(){
       vm.page = 0;
@@ -207,6 +227,13 @@ angular.module('integridadUiApp')
     vm.getCost = function(textCost, averageCost){
       var aC = parseFloat(textCost)
       var cost = aC * averageCost;
+      return (cost).toFixed(2);
+    };
+
+    vm.getIVA = function(textCost, averageCost){
+      const IVA = 1.1200;
+      var aC = parseFloat(textCost)
+      var cost = aC * averageCost * IVA;
       return (cost).toFixed(2);
     };
 

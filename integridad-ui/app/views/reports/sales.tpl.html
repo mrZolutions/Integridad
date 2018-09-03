@@ -71,15 +71,15 @@
     <div>
       <button type="button" class="btn btn-primary"
         ng-click="vm.getReportProducts()">
-        Reporte Por Producto
+        Reporte por Producto
       </button>
       <button type="button" class="btn btn-primary"
               ng-click="vm.getReportSales()">
-        Reporte De Ventas
+        Reporte de Ventas
       </button>
       <button type="button" class="btn btn-primary"
               ng-click="vm.getReportRetention()">
-        Reporte De Retenciones
+        Reporte de Retenciones
       </button>
       <button type="button" class="btn btn-primary"
         ng-click="vm.exportExcel()" ng-disabled="vm.reportList === undefined || vm.reportList.length === 0">
@@ -93,8 +93,7 @@
   </div>
 </div>
 
-
-<div ng-if="vm.isProductReportList !== undefined && vm.isProductReportList === true">
+<div ng-if="vm.isProductReportList !== undefined && vm.isProductReportList === 1">
   <table class="table table-striped">
     <thead>
       <tr>
@@ -127,7 +126,7 @@
   </table>
 </div>
 
-<div ng-if="vm.isProductReportList !== undefined && vm.isProductReportList !== true">
+<div ng-if="vm.isProductReportList !== undefined && vm.isProductReportList === 2">
   <table class="table table-striped">
     <thead>
     <tr>
@@ -172,7 +171,7 @@
   </table>
 </div>
 
-<div ng-if="vm.isProductReportList === undefined && vm.reportList !== undefined">
+<div ng-if="vm.isProductReportList !== undefined && vm.isProductReportList === 3">
   <table class="table table-striped">
     <thead>
     <tr>
@@ -183,6 +182,7 @@
       <th> RUC </th>
       <th> No. Retenci&oacute;n </th>
       <th> No. Autorizaci&oacute;n </th>
+      <th> No. Factura </th>
       <th> Ejercicio Fiscal </th>
       <th> Estado </th>
       <th> Total </th>
@@ -199,6 +199,7 @@
       <td>{{ data.ruc }}</td>
       <td>{{ data.retentionNumber }}</td>
       <td>{{ data.authorizationNumber }}</td>
+      <td>{{ data.documentNumber }}</td>
       <td>{{ data.ejercicioFiscal }}</td>
       <td>{{ data.status }}</td>
       <td>{{ data.total.toFixed(2) }}</td>

@@ -130,7 +130,7 @@ public class ProductServices {
 
 		return products;
 	}
-	
+        
 	private void populateChildren(Product product) {
 //		log.info("ProductServices populateChildren productId: {}", product.getId());
 		List<ProductBySubsidiary> productBySubsidiaryList = new ArrayList<>();

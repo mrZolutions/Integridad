@@ -23,10 +23,10 @@ public interface ProductBySubsidiairyRepository extends CrudRepository<ProductBy
 
 	@Query("SELECT p FROM ProductBySubsidiary p WHERE p.subsidiary.id = (:idS) and p.product.id = (:idP) and p.active = true")
 	ProductBySubsidiary findBySubsidiaryIdAndProductId(@Param("idS") UUID subsidiaryId, @Param("idP") UUID ProductId);
-
-	@Query("SELECT distinct p.product.id FROM ProductBySubsidiary p WHERE p.subsidiary.id = (:id) and p.product.active = true")
+        
+        @Query("SELECT distinct p.product.id FROM ProductBySubsidiary p WHERE p.subsidiary.id = (:id) and p.product.active = true")
 	Page<UUID> findBySubsidiaryIdAndProductActive(@Param("id") UUID subsidiaryId, Pageable pageable);
-
+        
 	@Query("SELECT distinct p.product.id FROM ProductBySubsidiary p WHERE p.subsidiary.id = (:id) and p.product.active = true and (p.product.codeIntegridad like (%:variable%) or p.product.name like (%:variable%))")
 	Page<UUID> findBySubsidiaryIAndVariabledAndProductActive(@Param("id") UUID subsidiaryId, @Param("variable") String variable, Pageable pageable);
 
