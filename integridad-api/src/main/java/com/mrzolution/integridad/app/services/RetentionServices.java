@@ -162,7 +162,7 @@ public class RetentionServices {
 			String docDate = dateFormat.format(new Date(retention.getDocumentDate()));
 
 			RetentionReport saleReport= new RetentionReport(date, docDate, retention.getProvider().getCodeIntegridad(), retention.getProvider().getName(), retention.getProvider().getRuc(), retention.getStringSeq(), retention.getClaveDeAcceso(),
-					retention.getEjercicioFiscal(), sum, retention.getSubsidiary().getName(), retention.getUserIntegridad().getFirstName(), status);
+					retention.getDocumentNumber(),retention.getEjercicioFiscal(), sum, retention.getSubsidiary().getName(), retention.getUserIntegridad().getFirstName(), status);
 
 			retentionReportList.add(saleReport);
 		});
