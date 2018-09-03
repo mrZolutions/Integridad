@@ -210,13 +210,6 @@ angular.module('integridadUiApp')
       return (cost).toFixed(2);
     };
 
-    vm.getIVA = function(textCost, averageCost){
-      const IVA = 1.1200;
-      var aC = parseFloat(textCost)
-      var cost = aC * averageCost * IVA;
-      return (cost).toFixed(2);
-    };
-
     vm.editProduct = function(productEdit){
       vm.selectedGroup = productEdit.subgroup.groupLine;
       vm.selectedLine = productEdit.subgroup.groupLine.line;
