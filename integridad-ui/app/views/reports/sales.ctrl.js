@@ -123,7 +123,7 @@ angular.module('integridadUiApp')
             CAJA: bill.cashier,
             BODEGA: bill.warehouse,
             SUCURSAL: bill.subsidiary,
-            USUARIO: bill.userName,
+            USUARIO: bill.userName
           };
 
           dataReport.push(data)
@@ -143,7 +143,7 @@ angular.module('integridadUiApp')
             ESTADO: retention.status,
             TOTAL:parseFloat(retention.total.toFixed(2)),
             SUCURSAL: retention.subsidiary,
-            USUARIO: retention.userName,
+            USUARIO: retention.userName
           };
           
           dataReport.push(data)
@@ -154,7 +154,7 @@ angular.module('integridadUiApp')
             CODIGO: existency.codeIntegridad,
             DESCRIPCION: existency.name,
             COSTO: existency.averageCost,
-            MAXIMO_MINIMO: existency.maxMinimun,
+            MAXIMO_MINIMO: existency.maxMinimun
           };
 
           dataReport.push(data)
