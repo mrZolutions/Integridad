@@ -12,13 +12,18 @@ import com.mrzolution.integridad.app.domain.Product;
 
 @Repository
 @Qualifier(value="ProductRepository")
-public interface ProductRepository extends CrudRepository<Product, UUID>{
+public interface ProductRepository extends CrudRepository<Product, UUID> {
 	
 	Iterable<Product> findByActive(boolean active);
 	
 	@Query("SELECT p FROM Product p WHERE p.userClient.id = (:id) and p.active = true")
 	Iterable<Product> findByUserClientIdAndActive(@Param("id") UUID userClientId);
 
+        // Query para el Reporte de Existencias
+        @Query("SELECT p FROM Product p WHERE p.id = p.productBySubsidiary.product_id AND p.userClient.id = (:id) AND p.active = true")
+        Iterable<Product> findAllProductsByUserClientID(@Param("id") UUID userClientId);    
+        // Fin del Query
+        
 	@Query("SELECT p FROM Product p WHERE p.productType.id = (:id) and p.active = true")
 	Iterable<Product> findByProductTypeIdAndActive(@Param("id") UUID productTypeId);
 
