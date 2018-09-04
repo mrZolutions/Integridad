@@ -82,6 +82,10 @@
         Reporte de Retenciones
       </button>
       <button type="button" class="btn btn-primary"
+              ng-click="vm.getReportExixtency()">
+        Reporte de Existencias
+      </button>
+      <button type="button" class="btn btn-primary"
         ng-click="vm.exportExcel()" ng-disabled="vm.reportList === undefined || vm.reportList.length === 0">
         Excel
       </button>

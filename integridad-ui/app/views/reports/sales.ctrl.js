@@ -71,6 +71,21 @@ angular.module('integridadUiApp')
       });
     };
 
+    vm.getReportExistency = function() {
+      vm.isProductReportList = 3;
+      vm.reportList = undefined;
+      vm.loading = true;
+      var subId = $localStorage.user.subsidiary.userClient.id;
+
+      productService.getLazyByProjectId(subId).then(function (response){
+        vm.reportList = response;
+        vm.loading = false;
+      }).catch(function (error) {
+        vm.loading = false;
+        vm.error = error.data;
+      });
+    };
+
     vm.exportExcel = function(){
       var dataReport = [];
       if(vm.isProductReportList === 1){
@@ -128,12 +143,23 @@ angular.module('integridadUiApp')
             ESTADO: retention.status,
             TOTAL:parseFloat(retention.total.toFixed(2)),
             SUCURSAL: retention.subsidiary,
+            USUARIO: retention.userName,
           };
-          USUARIO: retention.userName,
+          
+          dataReport.push(data)
+        });
+      } else if(vm.isProductReportList === 4){
+        _.each(vm.reportList, function(existency){
+          var data = {
+            CODIGO: existency.codeIntegridad,
+            DESCRIPCION: existency.name,
+            COSTO: existency.averageCost,
+            MAXIMO_MINIMO: existency.maxMinimun,
+          };
 
           dataReport.push(data)
         });
-      }
+      };
 
 
       var ws = XLSX.utils.json_to_sheet(dataReport);

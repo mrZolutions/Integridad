@@ -185,26 +185,6 @@ angular.module('integridadUiApp')
  //     }
  //   }
 
-    vm.ReportExist = function () {
-      var dataReport = [];
-      _.each(vm.reportList, function(exist){ 
-            var data = {
-              CODIGO: exist.code,
-              DESCRIPCION: exist.description,
-              CANTIDAD: exist.quantity,
-              VAL_UNITARIO: exist.valUnit
-            };
-            dataReport.push(data);
-      });
-
-      var ws = XLSX.utils.json_to_sheet(dataReport);
-      /* add to workbook */
-      var wb = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(wb, ws, "Exixtencia");
-      /* write workbook and force a download */
-      XLSX.writeFile(wb, "Existencia.xlsx");
-    }; 
-
     vm.filter = function(){
       vm.page = 0;
       _filter();
