@@ -213,3 +213,24 @@
     </tbody>
   </table>
 </div>
+
+<div ng-if="vm.isProductReportList !== undefined && vm.isProductReportList === 4">
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th> C&oacute;digo Producto </th>
+        <th> Descripci&oacute;n </th>
+        <th> V. Unitario </th>
+        <th> Cantidad </th>
+      </tr>
+      <tbody>
+        <tr ng-repeat="data in vm.reportList | orderBy:'name'" >
+          <td>{{ data.codeIntegridad }}</td>
+          <td>{{ data.name }}</td>
+          <td>{{ data.averageCost }}</td>
+          <td>{{ data.maxMinimun }}</td>
+        </tr>
+      </tbody>
+    </thead>
+  </table>
+</div>
