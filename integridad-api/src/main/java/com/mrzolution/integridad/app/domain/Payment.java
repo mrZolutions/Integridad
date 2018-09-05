@@ -28,12 +28,20 @@ public class Payment {
     @JoinColumn(name = "cuenta_contable_secondary_id")
     private CuentaContable cuentaContableSecondary;
 
+    @ManyToOne
+    @JoinColumn(name = "credit_id")
+    private Credits credit;
+
+
     public void setFatherListToNull(){
         cuentaContablePrincipal.setFatherListToNull();
         cuentaContablePrincipal.setListsNull();
 
         cuentaContableSecondary.setFatherListToNull();
         cuentaContableSecondary.setListsNull();
+
+        credit.setFatherListToNull();
+        credit.setListsNull();
     }
 
 }
