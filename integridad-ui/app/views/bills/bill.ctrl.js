@@ -10,7 +10,7 @@
 angular.module('integridadUiApp')
   .controller('BillCtrl', function ( _, $rootScope, $location, utilStringService, $localStorage,
                                      clientService, productService, authService, billService, $window,
-                                     cashierService, requirementService, utilSeqService) {
+                                     cashierService, requirementService, utilSeqService, cuentaContableService) {
     var vm = this;
     vm.error = undefined;
     vm.success = undefined;
@@ -63,6 +63,8 @@ angular.module('integridadUiApp')
       vm.priceType = vm.prices[0];
       vm.seqChanged = false;
       vm.quotations = undefined;
+      vm.cuentaContablePrincipal = undefined;
+      vm.cuentaContableAuxiliar = undefined;
 
       vm.impuestosTotales = [];
       vm.items = [];
@@ -94,7 +96,11 @@ angular.module('integridadUiApp')
       }).catch(function (error) {
         vm.loading = false;
         vm.error = error.data;
-      });
+      }); 
+
+      cuentaContableService.getAll().then( response => {
+        vm.cuentaContableList = response;
+      })
     }
 
     function _getSeqNumber(){
@@ -403,6 +409,8 @@ angular.module('integridadUiApp')
       vm.pagos
       if(vm.medio.medio === 'efectivo' || vm.medio.medio === 'dinero_electronico_ec'){
         vm.medio.payForm = '20 - OTROS CON UTILIZACION DEL SISTEMA FINANCIERO';
+        vm.medio.cuentaContablePrincipal = vm.cuentaContablePrincipal;
+        vm.medio.cuentaContableAuxiliar = vm.cuentaContableAuxiliar;
         // CAMBIO SRI POR CONFIRMAR
         // vm.medio.payForm = '01 - SIN UTILIZACION DEL SISTEMA FINANCIERO';
       }
@@ -621,7 +629,7 @@ angular.module('integridadUiApp')
       });
 
       var req = requirementService.createRequirement(vm.clientSelected, vm.bill, $localStorage.user, vm.impuestosTotales, vm.items, vm.pagos);
-
+      
       billService.getClaveDeAcceso(req, vm.companyData.userClient.id).then(function(resp){
         vm.bill.pagos = vm.pagos;
         if(vm.bill.discountPercentage === undefined){
