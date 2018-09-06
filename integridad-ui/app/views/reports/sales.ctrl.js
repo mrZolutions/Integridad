@@ -123,13 +123,14 @@ angular.module('integridadUiApp')
             RUC: retention.ruc,
             NUMERO_RETENCION: retention.retentionNumber,
             NUMERO_AUTORIZACION: retention.authorizationNumber,
+            NUMERO_FACTURA: retention.documentNumber,
             EJERCICIO_FISCAL: retention.ejercicioFiscal,
             ESTADO: retention.status,
             TOTAL:parseFloat(retention.total.toFixed(2)),
             SUCURSAL: retention.subsidiary,
+            USUARIO: retention.userName
           };
-          USUARIO: retention.userName,
-
+          
           dataReport.push(data)
         });
       }

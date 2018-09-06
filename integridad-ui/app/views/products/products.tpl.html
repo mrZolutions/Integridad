@@ -52,7 +52,7 @@
         <th> C&oacute;digo </th>
         <th> Nombre </th>
         <th> Cantidad Disponible</th>
-        <th> Precio Unitario $</th>
+        <th> P.V.P. $</th>
         <th>
           <button type="button" class="btn btn-primary" ng-click="vm.productCreate()">
             Crear
@@ -70,7 +70,7 @@
         <td>{{ productEdit.codeIntegridad }}</td>
         <td>{{ productEdit.name }}</td>
         <td>{{ productEdit.quantity }}</td>
-        <td>{{ vm.getCost('1.'+ productEdit['cashPercentage'], productEdit.averageCost) }}</td>
+        <td>{{ vm.getIva('1.'+ productEdit['cashPercentage'], productEdit.averageCost) }}</td>
         <td>
           <button type="button" class="btn btn-primary" ng-click="vm.editProduct(productEdit)">
             Editar
