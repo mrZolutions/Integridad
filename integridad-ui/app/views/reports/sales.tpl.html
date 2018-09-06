@@ -71,15 +71,19 @@
     <div>
       <button type="button" class="btn btn-primary"
         ng-click="vm.getReportProducts()">
-        Reporte Por Producto
+        Reporte por Producto
       </button>
       <button type="button" class="btn btn-primary"
               ng-click="vm.getReportSales()">
-        Reporte De Ventas
+        Reporte de Ventas
       </button>
       <button type="button" class="btn btn-primary"
               ng-click="vm.getReportRetention()">
-        Reporte De Retenciones
+        Reporte de Retenciones
+      </button>
+      <button type="button" class="btn btn-primary"
+              ng-click="vm.getReportExixtency()">
+        Reporte de Existencias
       </button>
       <button type="button" class="btn btn-primary"
         ng-click="vm.exportExcel()" ng-disabled="vm.reportList === undefined || vm.reportList.length === 0">
@@ -93,8 +97,7 @@
   </div>
 </div>
 
-
-<div ng-if="vm.isProductReportList !== undefined && vm.isProductReportList === true">
+<div ng-if="vm.isProductReportList !== undefined && vm.isProductReportList === 1">
   <table class="table table-striped">
     <thead>
       <tr>
@@ -127,7 +130,7 @@
   </table>
 </div>
 
-<div ng-if="vm.isProductReportList !== undefined && vm.isProductReportList !== true">
+<div ng-if="vm.isProductReportList !== undefined && vm.isProductReportList === 2">
   <table class="table table-striped">
     <thead>
     <tr>
@@ -172,7 +175,7 @@
   </table>
 </div>
 
-<div ng-if="vm.isProductReportList === undefined && vm.reportList !== undefined">
+<div ng-if="vm.isProductReportList !== undefined && vm.isProductReportList === 3">
   <table class="table table-striped">
     <thead>
     <tr>
@@ -208,5 +211,26 @@
       <td>{{ data.userName }}</td>
     </tr>
     </tbody>
+  </table>
+</div>
+
+<div ng-if="vm.isProductReportList !== undefined && vm.isProductReportList === 4">
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th> C&oacute;digo Producto </th>
+        <th> Descripci&oacute;n </th>
+        <th> V. Unitario </th>
+        <th> Cantidad </th>
+      </tr>
+      <tbody>
+        <tr ng-repeat="data in vm.reportList | orderBy:'name'" >
+          <td>{{ data.codeIntegridad }}</td>
+          <td>{{ data.name }}</td>
+          <td>{{ data.averageCost }}</td>
+          <td>{{ data.maxMinimun }}</td>
+        </tr>
+      </tbody>
+    </thead>
   </table>
 </div>

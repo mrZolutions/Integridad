@@ -8,7 +8,7 @@
  * Controller of the menu
  */
 angular.module('integridadUiApp')
-  .controller('ReportSalesCtrl', function (_, $localStorage, $location, billService, eretentionService, utilStringService, FileSaver) {
+  .controller('ReportSalesCtrl', function (_, $localStorage, $location, billService, productService, eretentionService, utilStringService, FileSaver) {
     var vm = this;
     var today = new Date();
     $('#pickerBillDateOne').data("DateTimePicker").date(today);
@@ -18,13 +18,13 @@ angular.module('integridadUiApp')
     vm.reportList = undefined;
 
     vm.getReportProducts = function(){
-      vm.isProductReportList = true;
+      vm.isProductReportList = 1;
       vm.reportList = undefined;
       vm.loading = true;
       var dateOne = $('#pickerBillDateOne').data("DateTimePicker").date().toDate().getTime();
       var dateTwo = $('#pickerBillDateTwo').data("DateTimePicker").date().toDate().getTime();
       dateTwo += 86340000;
-      var subId = $localStorage.user.subsidiary.userClient.id
+      var subId = $localStorage.user.subsidiary.userClient.id;
 
       billService.getActivesByUserClientAndDates(subId, dateOne, dateTwo).then(function (response) {
         vm.reportList = response;
@@ -36,13 +36,13 @@ angular.module('integridadUiApp')
     };
 
     vm.getReportSales = function(){
-      vm.isProductReportList = false;
+      vm.isProductReportList = 2;
       vm.reportList = undefined;
       vm.loading = true;
       var dateOne = $('#pickerBillDateOne').data("DateTimePicker").date().toDate().getTime();
       var dateTwo = $('#pickerBillDateTwo').data("DateTimePicker").date().toDate().getTime();
       dateTwo += 86340000;
-      var subId = $localStorage.user.subsidiary.userClient.id
+      var subId = $localStorage.user.subsidiary.userClient.id;
 
       billService.getAllByUserClientAndDates(subId, dateOne, dateTwo).then(function (response) {
         vm.reportList = response;
@@ -54,13 +54,13 @@ angular.module('integridadUiApp')
     };
 
     vm.getReportRetention = function(){
-      vm.isProductReportList = undefined;
+      vm.isProductReportList = 3;
       vm.reportList = undefined;
       vm.loading = true;
       var dateOne = $('#pickerBillDateOne').data("DateTimePicker").date().toDate().getTime();
       var dateTwo = $('#pickerBillDateTwo').data("DateTimePicker").date().toDate().getTime();
       dateTwo += 86340000;
-      var subId = $localStorage.user.subsidiary.userClient.id
+      var subId = $localStorage.user.subsidiary.userClient.id;
 
       eretentionService.getAllByUserClientAndDates(subId, dateOne, dateTwo).then(function (response) {
         vm.reportList = response;
@@ -71,9 +71,24 @@ angular.module('integridadUiApp')
       });
     };
 
+    vm.getReportExistency = function() {
+      vm.isProductReportList = 3;
+      vm.reportList = undefined;
+      vm.loading = true;
+      var subId = $localStorage.user.subsidiary.userClient.id;
+
+      productService.getLazyByProjectId(subId).then(function (response){
+        vm.reportList = response;
+        vm.loading = false;
+      }).catch(function (error) {
+        vm.loading = false;
+        vm.error = error.data;
+      });
+    };
+
     vm.exportExcel = function(){
       var dataReport = [];
-      if(vm.isProductReportList === true){
+      if(vm.isProductReportList === 1){
         _.each(vm.reportList, function(bill){
           var data = {
             TIPO: bill.type,
@@ -90,7 +105,7 @@ angular.module('integridadUiApp')
 
           dataReport.push(data)
         });
-      } else if(vm.isProductReportList === false){
+      } else if(vm.isProductReportList === 2){
         _.each(vm.reportList, function(bill){
           var data = {
             FECHA: bill.date,
@@ -108,12 +123,12 @@ angular.module('integridadUiApp')
             CAJA: bill.cashier,
             BODEGA: bill.warehouse,
             SUCURSAL: bill.subsidiary,
-            USUARIO: bill.userName,
+            USUARIO: bill.userName
           };
 
           dataReport.push(data)
         });
-      } else if(vm.isProductReportList === undefined){
+      } else if(vm.isProductReportList === 3){
         _.each(vm.reportList, function(retention){
           var data = {
             FECHA: retention.date,
@@ -122,6 +137,7 @@ angular.module('integridadUiApp')
             PROVEEDOR: retention.providerName,
             RUC: retention.ruc,
             NUMERO_RETENCION: retention.retentionNumber,
+            NUMERO_FACTURA: retention.documentNumber,
             NUMERO_AUTORIZACION: retention.authorizationNumber,
             NUMERO_FACTURA: retention.documentNumber,
             EJERCICIO_FISCAL: retention.ejercicioFiscal,
@@ -129,11 +145,27 @@ angular.module('integridadUiApp')
             TOTAL:parseFloat(retention.total.toFixed(2)),
             SUCURSAL: retention.subsidiary,
             USUARIO: retention.userName
+<<<<<<< HEAD
+          };
+          
+=======
           };
           
           dataReport.push(data)
         });
-      }
+      } else if(vm.isProductReportList === 4){
+        _.each(vm.reportList, function(existency){
+          var data = {
+            CODIGO: existency.codeIntegridad,
+            DESCRIPCION: existency.name,
+            COSTO: existency.averageCost,
+            MAXIMO_MINIMO: existency.maxMinimun
+          };
+
+>>>>>>> 49e95d8cc22e7253ba8dda09c521c32f91242a20
+          dataReport.push(data)
+        });
+      };
 
 
       var ws = XLSX.utils.json_to_sheet(dataReport);
