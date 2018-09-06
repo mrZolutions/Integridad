@@ -40,14 +40,8 @@ angular
 
     this.getLazyBySusidiaryId = function (subsidiaryId, page, variable) {
       return securityService.get('/product/actives/subsidiary/'+subsidiaryId+'/'+page+'?var='+variable).then(function successCallback(response) {
+        // return response.data;
         return response.data;
       });
     };
-
-    this.getProductByUserClientID = function (userClientId) {
-      return securityService.get('/product/rep/products/'+userClientId).then(function successCallback(response) {
-        return response.data;
-      });
-    }
-
   });

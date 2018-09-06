@@ -74,7 +74,7 @@ angular.module('integridadUiApp')
       vm.numberAddedOne = parseInt($localStorage.user.cashier.quotationNumberSeq) + 1;
       vm.seqNumberFirstPart = $localStorage.user.subsidiary.threeCode + '-'
         + $localStorage.user.cashier.threeCode;
-      vm.seqNumberSecondPart = utilSeqService._pad_with_zeroes(vm.numberAddedOne, 9);
+      vm.seqNumberSecondPart = utilSeqService._pad_with_zeroes(vm.numberAddedOne, 10);
       vm.seqNumber =  vm.seqNumberFirstPart + '-'
         + vm.seqNumberSecondPart;
     }

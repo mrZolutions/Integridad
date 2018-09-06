@@ -39,7 +39,7 @@
     <div class="form-group col-md-8">
       <input ng-model="vm.searchText" class="form-control" placeholder="Buscar" />
     </div>
-    <div class="form-group col-md-2">
+    <div class="form-group col-md-4">
       <button type="button" class="btn btn-primary" ng-click="vm.filter()">
         Buscar
       </button>
@@ -51,13 +51,8 @@
       <tr>
         <th> C&oacute;digo </th>
         <th> Nombre </th>
-<<<<<<< HEAD
         <th> Cantidad Disponible</th>
-=======
-        <th> Cantidad Disponible </th>
-        <th> Precio sin IVA </th>
->>>>>>> 49e95d8cc22e7253ba8dda09c521c32f91242a20
-        <th> P.V.P. $</th>
+        <th> Precio Unitario $</th>
         <th>
           <button type="button" class="btn btn-primary" ng-click="vm.productCreate()">
             Crear
@@ -75,12 +70,7 @@
         <td>{{ productEdit.codeIntegridad }}</td>
         <td>{{ productEdit.name }}</td>
         <td>{{ productEdit.quantity }}</td>
-<<<<<<< HEAD
-        <td>{{ vm.getIva('1.'+ productEdit['cashPercentage'], productEdit.averageCost) }}</td>
-=======
         <td>{{ vm.getCost('1.'+ productEdit['cashPercentage'], productEdit.averageCost) }}</td>
-        <td>{{ vm.getIVA('1.'+ productEdit['cashPercentage'], productEdit.averageCost) }}</td>
->>>>>>> 49e95d8cc22e7253ba8dda09c521c32f91242a20
         <td>
           <button type="button" class="btn btn-primary" ng-click="vm.editProduct(productEdit)">
             Editar
