@@ -204,9 +204,10 @@ angular.module('integridadUiApp')
         return new Array(vm.totalPages);
     };
 
-    vm.getCost = function(textCost, averageCost){
+    vm.getIva = function(textCost, averageCost){
+      const IVA = 1.1200;
       var aC = parseFloat(textCost)
-      var cost = aC * averageCost;
+      var cost = aC * averageCost * IVA;
       return (cost).toFixed(2);
     };
 
