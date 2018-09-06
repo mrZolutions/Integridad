@@ -178,16 +178,17 @@
     <tr>
       <th> Fecha de Retenci&oacute;n</th>
       <th> Fecha de Documento</th>
-      <th> C&oacute;digo-Proveedor </th>
-      <th> Proveedor </th>
-      <th> RUC </th>
-      <th> No. Retenci&oacute;n </th>
-      <th> No. Autorizaci&oacute;n </th>
-      <th> Ejercicio Fiscal </th>
-      <th> Estado </th>
-      <th> Total </th>
-      <th> Sucursal </th>
-      <th> Usuario </th>
+      <th> C&oacute;digo-Proveedor</th>
+      <th> Proveedor</th>
+      <th> RUC</th>
+      <th> No. Retenci&oacute;n</th>
+      <th> No. Autorizaci&oacute;n</th>
+      <th> No. Factura</th>
+      <th> Ejercicio Fiscal</th>
+      <th> Estado</th>
+      <th> Total</th>
+      <th> Sucursal</th>
+      <th> Usuario</th>
     </tr>
     </thead>
     <tbody>
@@ -199,6 +200,7 @@
       <td>{{ data.ruc }}</td>
       <td>{{ data.retentionNumber }}</td>
       <td>{{ data.authorizationNumber }}</td>
+      <td>{{ data.documentNumber }}</td>
       <td>{{ data.ejercicioFiscal }}</td>
       <td>{{ data.status }}</td>
       <td>{{ data.total.toFixed(2) }}</td>
