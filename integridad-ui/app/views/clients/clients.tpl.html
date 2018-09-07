@@ -42,7 +42,7 @@
       <tr>
         <th> C&oacute;digo </th>
         <th> Nombre </th>
-        <th> Ruc / C&eacute;dula </th>
+        <th> Ruc / C&eacute;dula / Pasaporte</th>
         <th>
           <button type="button" class="btn btn-primary" ng-click="vm.clientCreate()">
             Crear
@@ -123,7 +123,7 @@
     <div class="row">
       <div class="form-group col-md-6">
         <label>Tipo de Identificacion: </label>
-        <select ng-options="item.code as item.name for item in [{code:'CED', name:'CEDULA'}, {code:'RUC', name:'RUC'}]"
+        <select ng-options="item.code as item.name for item in [{code:'CED', name:'CEDULA'}, {code:'RUC', name:'RUC'}, {code:'PAS', name:'PASAPORTE'}]"
         ng-model="vm.client.typeId" class="form-control"></select>
       </div>
 
@@ -137,6 +137,12 @@
         <label>Ruc *: </label>
         <input type="text" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
         ng-model="vm.client.identification" class="form-control" maxlength="13">
+      </div>
+
+      <div class="form-group col-md-6" ng-show="vm.client.typeId === 'PAS'">
+        <label>Pasaporte *: </label>
+        <input type="text" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+        ng-model="vm.client.identification" class="form-control" maxlength="12">
       </div>
     </div>
 
