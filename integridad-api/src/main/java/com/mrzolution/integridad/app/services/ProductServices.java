@@ -18,7 +18,6 @@ import org.springframework.stereotype.Component;
 
 import com.mrzolution.integridad.app.domain.Product;
 import com.mrzolution.integridad.app.repositories.ProductRepository;
-import com.mrzolution.integridad.app.domain.report.ExistReport;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -131,22 +130,6 @@ public class ProductServices {
 
 		return products;
 	}
-        
-        public List<ExistReport> getAllProductsByUserClientID(UUID userClientId) {
-            log.info("ProductServices getAllProductsByUserClientID");
-            Iterable<Product> products = productRepository.findAllProductsByUserClientID(userClientId);
-            List<ExistReport> existReporList = new ArrayList<>();
-            
-            products.forEach(product -> {
-                populateChildren(product);
-                                
-                ExistReport jokeReport = new ExistReport(product.getCodeIntegridad(), product.getName(),product.getAverageCost(), product.getMaxMinimun());
-                
-                existReporList.add(jokeReport);
-            });
-            
-            return existReporList;
-        }
         
 	private void populateChildren(Product product) {
 //		log.info("ProductServices populateChildren productId: {}", product.getId());

@@ -11,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.mrzolution.integridad.app.domain.Product;
-import com.mrzolution.integridad.app.domain.report.ExistReport;
 import com.mrzolution.integridad.app.exceptions.BadRequestException;
 import com.mrzolution.integridad.app.services.ProductServices;
 import java.util.List;
@@ -117,18 +116,5 @@ public class ProductController {
 		return new ResponseEntity<Page>(response, HttpStatus.CREATED);
 	}
 	
-        @RequestMapping(method = RequestMethod.GET, value="/rep/products/{userClientId}")
-    public ResponseEntity getAllProductsByUserClientID(@PathVariable("userClientId") UUID userClientId) {
-                log.info("ProductControler getAllProductsByUserClientId: {}", userClientId);
-                List<ExistReport> response = null;
-                try {
-                    response = service.getAllProductsByUserClientID(userClientId);
-                }catch(BadRequestException e) {
-			log.error("ProductController getAllProductsByUserClientId Exception thrown: {}", e.getMessage());	    
-	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-                }
-                return new ResponseEntity<List>(response, HttpStatus.ACCEPTED);
-    }
-    
 
 }
