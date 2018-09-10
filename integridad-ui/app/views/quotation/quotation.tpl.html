@@ -177,7 +177,7 @@
               <tr ng-repeat="detail in vm.bill.details">
                 <td>{{$index + 1}}</td>
                 <td>{{detail.product.codeIntegridad}}</td>
-                <td><span print-only>{{detail.product.subgroup.groupLine.line.name}} - {{detail.product.subgroup.groupLine.name}} - {{detail.product.subgroup.name}} - <br></span>{{detail.product.name}}</td>
+                <td>{{detail.product.name}}</td>
                 <td>{{detail.quantity}}</td>
                 <td>{{detail.product.unitOfMeasurementFull}}</td>
                 <td>{{detail.costEach}}</td>
