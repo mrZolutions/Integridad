@@ -413,11 +413,11 @@
                   Cancelar
           </button>
           <button print-btn type="button" class="btn btn-primary"
-                  ng-if="!vm.newBill && !vm.user.cashier.specialPrint" print-remove>
+                  ng-if="vm.newBill && !vm.user.cashier.specialPrint" print-remove>
                   Imprimir
           </button>
           <button type="button" class="btn btn-primary"
-                  ng-if="!vm.newBill && !vm.user.cashier.specialPrint"
+                  ng-if="vm.newBill && !vm.user.cashier.specialPrint"
                   ng-click="vm.printToCart('printMatrixSectionId')" print-remove>
                   Imprimir Ticket
           </button>
