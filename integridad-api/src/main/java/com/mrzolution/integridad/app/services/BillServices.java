@@ -44,6 +44,8 @@ public class BillServices {
 	CreditsRepository creditsRepository;
 	@Autowired
 	UserClientRepository userClientRepository;
+	@Autowired
+	PaymentRepository paymentRepository;
 
 	public String getDatil(Requirement requirement, UUID userClientId) throws Exception{
 		UserClient userClient = userClientRepository.findOne(userClientId);
@@ -66,7 +68,7 @@ public class BillServices {
 
 		log.info("BillServices getDatil maper creado");
 		String response = httpCallerService.post(Constants.DATIL_LINK, data, userClient);
-//		String response = "OK";
+		// String response = "OK";
 		log.info("BillServices getDatil httpcall success");
 		return response;
 	}
@@ -148,6 +150,31 @@ public class BillServices {
 				pago.setBill(saved);
 				Pago pagoSaved = pagoRepository.save(pago);
 
+				/*Inicio cambio payment*/
+				if ("efectivo".equalsIgnoreCase(pago.getMedio())) {
+					Credits specialCredit = new Credits();
+					specialCredit.setDiasPlazo(0);
+					specialCredit.setFecha(new Date().getTime());
+					specialCredit.setPayNumber(1);
+					specialCredit.setValor(bill.getTotal());
+					specialCredit.setPago(pagoSaved);
+					specialCredit.setPayments(null);
+					Credits creditSaved = creditsRepository.save(specialCredit);
+
+					Payment specialPayment = new Payment();
+					specialPayment.setCredit(creditSaved);
+					specialPayment.setValue(bill.getTotal());
+					specialPayment.setDetail("");
+					specialPayment.setNoCheck("");
+					specialPayment.setNoAccount("");
+					specialPayment.setNoTransfer("");
+					specialPayment.setNoDocument("");
+					specialPayment.setCuentaContablePrincipal(bill.getCuentaContablePrincipal());
+					specialPayment.setCuentaContablePrincipal(bill.getCuentaContableAuxiliar());
+					paymentRepository.save(specialPayment);
+
+				}
+				/*Fin cambio*/
 				if(creditsList != null){
 					creditsList.forEach(credit ->{
 						credit.setPago(pagoSaved);

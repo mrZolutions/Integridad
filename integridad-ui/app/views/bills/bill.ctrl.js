@@ -50,6 +50,7 @@ angular.module('integridadUiApp')
     vm.seqChanged = false;
 
     function _activate(){
+      vm.error = undefined;
       vm.newBill = true;
       vm.billed = false;
       vm.clientSelected = undefined;
@@ -409,8 +410,6 @@ angular.module('integridadUiApp')
       vm.pagos
       if(vm.medio.medio === 'efectivo' || vm.medio.medio === 'dinero_electronico_ec'){
         vm.medio.payForm = '20 - OTROS CON UTILIZACION DEL SISTEMA FINANCIERO';
-        vm.medio.cuentaContablePrincipal = vm.cuentaContablePrincipal;
-        vm.medio.cuentaContableAuxiliar = vm.cuentaContableAuxiliar;
         // CAMBIO SRI POR CONFIRMAR
         // vm.medio.payForm = '01 - SIN UTILIZACION DEL SISTEMA FINANCIERO';
       }
@@ -457,7 +456,11 @@ angular.module('integridadUiApp')
 
     vm.addPago = function(){
       vm.pagos.push(angular.copy(vm.medio));
+      vm.bill.cuentaContablePrincipal = vm.cuentaContablePrincipal;
+      vm.bill.cuentaContableAuxiliar = vm.cuentaContableAuxiliar;
       vm.medio = {};
+      vm.cuentaContablePrincipal = undefined;
+      vm.cuentaContableAuxiliar = undefined;
     };
 
     vm.removePago = function(index){
@@ -643,22 +646,27 @@ angular.module('integridadUiApp')
           vm.bill.stringSeq = vm.seqNumber;
           vm.bill.priceType = vm.priceType.name;
           // 1 is typeDocument Bill **************!!!
-          billService.create(vm.bill, 1).then(function(respBill){
-            vm.billed = true;
-            $localStorage.user.cashier.billNumberSeq = vm.bill.billSeq;
-            if(vm.seqChanged){
-              cashierService.update($localStorage.user.cashier).then(function(resp){
-                // cashier updated
-              }).catch(function (error) {
-                vm.loading = false;
-                vm.error = error.data;
-              });
-            }
+          if (vm.bill.pagos.map(_ => _.medio).includes('efectivo') && vm.bill.cuentaContablePrincipal === undefined) {
             vm.loading = false;
-          }).catch(function (error) {
-            vm.loading = false;
-            vm.error = error.data;
-          });
+            vm.error = "Debe seleccionar una cuenta contable";
+          } else {
+            billService.create(vm.bill, 1).then(function(respBill){
+              vm.billed = true;
+              $localStorage.user.cashier.billNumberSeq = vm.bill.billSeq;
+              if(vm.seqChanged){
+                cashierService.update($localStorage.user.cashier).then(function(resp){
+                  // cashier updated
+                }).catch(function (error) {
+                  vm.loading = false;
+                  vm.error = error.data;
+                });
+              }
+              vm.loading = false;
+            }).catch(function (error) {
+              vm.loading = false;
+              vm.error = error.data;
+            });
+          }
         } else {
           vm.loading = false;
           vm.error = "Error al obtener Clave de Acceso: " + JSON.stringify(obj.errors);

@@ -660,6 +660,18 @@
               </select>
             </div>
           </div>
+          <div class="row">
+              <div class="form-group col-md-6">
+                <b>CUENTA CONTABLE PRINCIPAL: </b>
+                <select ng-options="cuentaContable as cuentaContable.description for cuentaContable in vm.cuentaContableList"
+                  ng-disabled="vm.medio.medio !== 'efectivo'" ng-model="vm.cuentaContablePrincipal" class="form-control" />
+              </div>
+              <div class="form-group col-md-6">
+                <b>CUENTA CONTABLE AUXILIAR: </b>
+                <select ng-options="cuentaContable as cuentaContable.description for cuentaContable in vm.cuentaContableList"
+                  ng-disabled="vm.medio.medio !== 'efectivo'" ng-model="vm.cuentaContableAuxiliar" class="form-control" />
+              </div>
+          </div>
           <div class="row" ng-show="vm.medio.medio === 'cheque' || vm.medio.medio === 'cheque_posfechado'">
             <div class="form-group col-md-4">
               <b>BANCO: </b>
