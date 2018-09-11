@@ -412,9 +412,10 @@
                   ng-click="vm.cancelBill()">
                   Cancelar
           </button>
-          <button print-btn type="button" class="btn btn-primary"
-                  ng-if="vm.newBill && !vm.user.cashier.specialPrint" print-remove>
-                  Imprimir
+          <button print-btn type="button" class="btn btn-success"
+                  ng-if="vm.newBill && !vm.user.cashier.specialPrint"
+                  ng-disabled="vm.bill.claveDeAcceso === undefined" ng-click="vm.cancelBill()">
+            Imprimir
           </button>
           <button type="button" class="btn btn-primary"
                   ng-if="vm.newBill && !vm.user.cashier.specialPrint"
