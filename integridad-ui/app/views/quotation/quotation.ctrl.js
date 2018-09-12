@@ -248,13 +248,7 @@ angular.module('integridadUiApp')
     }
 
     vm.acceptProduct = function(closeModal){
-      if(vm.productToAdd.productType.code !== 'SER'){
-          if(parseInt(vm.quantity) > parseInt(vm.productToAdd.quantity)){
-            vm.errorQuantity = 'Cantidad disponible insuficiente';
-            return;
-          }
-      }
-
+      vm.productToAdd.productType.code !== 'SER';
       vm.errorQuantity = undefined;
 
       var detail={

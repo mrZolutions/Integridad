@@ -124,7 +124,7 @@
               <td print-remove>
                 <b>PRECIO CONVENIDO: </b>
                 <select ng-options="price as price.name for price in vm.prices"  ng-if="vm.newBill"
-                ng-model="vm.priceType" class="form-control" ng-change="vm.reCalculateTotal()" ng-disabled="vm.bill.details.length > 0"></select>
+                        ng-model="vm.priceType" class="form-control" ng-change="vm.reCalculateTotal()" ng-disabled="vm.bill.details.length > 0"></select>
                 <span ng-if="!vm.newBill">{{vm.bill.priceType}}</span>
               </td>
             </tr>
@@ -136,7 +136,7 @@
         <div class="form-group col-md-6">
           <b>DESCUENTO &#37;: </b>
           <input type="text" ng-change="vm.reCalculateTotal()" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
-          ng-model="vm.bill.discountPercentage" class="form-control" maxlength="9" ng-change="vm.getFechaCobro()" ng-disabled="!vm.newBill">
+                 ng-model="vm.bill.discountPercentage" class="form-control" maxlength="9" ng-change="vm.getFechaCobro()" ng-disabled="!vm.newBill">
         </div>
       </div>
     </div>
@@ -162,8 +162,8 @@
                 <th> V. Total. </th>
                 <th  ng-if="vm.newBill">
                   <button type="button" class="btn btn-primary" ng-click="vm.addProduct()"
-                    data-toggle="modal" data-target="#modalAddProduct" print-remove>
-                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                          data-toggle="modal" data-target="#modalAddProduct" print-remove>
+                          <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                   </button>
                 </th>
               </tr>
@@ -281,15 +281,15 @@
           <button type="button" class="btn btn-primary" ng-click="vm.saveQuotation()" ng-if="vm.newBill"
                   ng-disabled="vm.bill.total <= 0 || vm.billed"
                   ng-show="vm.bill.claveDeAcceso === undefined">
-            Guardar Cotizacion
+                  Guardar Cotizacion
           </button>
           <button print-btn type="button" class="btn btn-success" ng-if="vm.newBill"
                   ng-disabled="!vm.billed">
-            Imprimir
+                  Imprimir
           </button>
           <button type="button" class="btn btn-primary" ng-if="vm.newBill"
-          ng-click="vm.cancelBill()">
-            Cancelar
+                  ng-click="vm.cancelBill()">
+                  Cancelar
           </button>
         </div>
       </div>
@@ -304,7 +304,7 @@
   </div>
 </div>
 
-   <div id="modalAddProduct" class="modal fade" role="dialog">
+  <div id="modalAddProduct" class="modal fade" role="dialog">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
@@ -320,7 +320,7 @@
                 </div>
                 <div class="form-group col-md-4">
                   <button type="button" class="btn btn-primary" ng-click="vm.filter()">
-                    Buscar
+                          Buscar
                   </button>
                 </div>
               </div>
@@ -348,7 +348,7 @@
                     <td>{{ vm.getCost('1.'+ productSelect[vm.priceType.cod], productSelect.averageCost) }}</td>
                     <td>
                       <button type="button" class="btn btn-primary" ng-click="vm.selectProductToAdd(productSelect)">
-                        Seleccionar
+                              Seleccionar
                       </button>
                     </td>
                   </tr>
@@ -381,21 +381,21 @@
                     <div class="form-group col-md-6">
                       <b>CANTIDAD A VENDER: </b>
                       <input type="text" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
-                      ng-model="vm.quantity" class="form-control" maxlength="9">
+                             ng-model="vm.quantity" class="form-control" maxlength="9">
                     </div>
                   </div>
                   <div class="row">
                     <div class="form-group col-md-6">
                       <b>PRECIO UNITARIO: </b>
                       <input type="text"
-                      ng-model="vm.productToAdd.costEachCalculated" class="form-control">
+                             ng-model="vm.productToAdd.costEachCalculated" class="form-control">
                     </div>
                   </div>
                 </div>
                 <div class="panel-footer">
                   <button type="button" class="btn btn-primary"
-                    ng-click="vm.productToAdd = undefined; vm.quantity = undefined">
-                    Cancelar
+                          ng-click="vm.productToAdd = undefined; vm.quantity = undefined">
+                          Cancelar
                   </button>
                 </div>
               </div>
@@ -405,13 +405,13 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-primary" ng-click="vm.acceptProduct(true)"
-            ng-disabled="vm.productToAdd === undefined">
-            Aceptar y Cerrar
+                  ng-disabled="vm.productToAdd === undefined">
+                  Aceptar y Cerrar
           </button>
 
           <button type="button" class="btn btn-primary" ng-click="vm.acceptProduct(false)"
-            ng-disabled="vm.productToAdd === undefined">
-            Aceptar y Agregar Mas productos
+                  ng-disabled="vm.productToAdd === undefined">
+                  Aceptar y Agregar Mas productos
           </button>
         </div>
       </div>

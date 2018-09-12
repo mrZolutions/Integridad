@@ -45,7 +45,7 @@
         <th> Ruc / C&eacute;dula / Pasaporte</th>
         <th>
           <button type="button" class="btn btn-primary" ng-click="vm.clientCreate()">
-            Crear
+                  Crear
           </button>
         </th>
       </tr>
@@ -62,14 +62,14 @@
         <td>{{ clientEdit.identification }}</td>
         <td>
           <button type="button" class="btn btn-primary" ng-click="vm.clientEdit(clientEdit)">
-            <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+                  <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
           </button>
           <button type="button" class="btn btn-primary" ng-click="vm.client=clientEdit"
-            data-toggle="modal" data-target="#modalEliminar">
-            <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                  data-toggle="modal" data-target="#modalEliminar">
+                  <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
           </button>
           <button type="button" class="btn btn-primary" ng-click="vm.clientCotizar(clientEdit)">
-            Cotizar
+                  Cotizar
           </button>
         </td>
       </tr>
@@ -91,13 +91,13 @@
       <div class="form-group col-md-6">
         <label>Tel&eacute;fono: (incluir c&oacute;digo de provincia ej: 02) </label>
         <input type="text" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
-        ng-model="vm.client.phone" class="form-control" maxlength="9">
+               ng-model="vm.client.phone" class="form-control" maxlength="9">
       </div>
 
       <div class="form-group col-md-6">
         <label>Tel&eacute;fono celular: </label>
         <input type="text" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
-        ng-model="vm.client.celPhone" class="form-control" maxlength="10">
+               ng-model="vm.client.celPhone" class="form-control" maxlength="10">
       </div>
     </div>
 
@@ -105,13 +105,13 @@
       <div class="form-group col-md-6">
         <label>Pa&iacute;s: </label>
         <select ng-options="country for country in vm.countryList"
-        ng-model="vm.client.country" class="form-control" ng-change="vm.validateEcuador()"></select>
+                ng-model="vm.client.country" class="form-control" ng-change="vm.validateEcuador()"></select>
       </div>
 
       <div class="form-group col-md-6" ng-show="vm.client.country === 'Ecuador'">
         <label>Ciudad: </label>
         <select ng-options="city for city in vm.citiesList"
-        ng-model="vm.client.city" class="form-control"></select>
+                ng-model="vm.client.city" class="form-control"></select>
       </div>
 
       <div class="form-group col-md-6" ng-show="vm.client.country !== 'Ecuador'">
@@ -124,25 +124,25 @@
       <div class="form-group col-md-6">
         <label>Tipo de Identificacion: </label>
         <select ng-options="item.code as item.name for item in [{code:'CED', name:'CEDULA'}, {code:'RUC', name:'RUC'}, {code:'PAS', name:'PASAPORTE'}]"
-        ng-model="vm.client.typeId" class="form-control"></select>
+                ng-model="vm.client.typeId" class="form-control"></select>
       </div>
 
       <div class="form-group col-md-6" ng-show="vm.client.typeId === 'CED'">
         <label>C&eacute;dula *: </label>
         <input type="text" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
-        ng-model="vm.client.identification" class="form-control" maxlength="10">
+               ng-model="vm.client.identification" class="form-control" maxlength="10">
       </div>
 
       <div class="form-group col-md-6" ng-show="vm.client.typeId === 'RUC'">
         <label>Ruc *: </label>
         <input type="text" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
-        ng-model="vm.client.identification" class="form-control" maxlength="13">
+               ng-model="vm.client.identification" class="form-control" maxlength="13">
       </div>
 
       <div class="form-group col-md-6" ng-show="vm.client.typeId === 'PAS'">
         <label>Pasaporte *: </label>
         <input type="text" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
-        ng-model="vm.client.identification" class="form-control" maxlength="12">
+               ng-model="vm.client.identification" class="form-control" maxlength="12">
       </div>
     </div>
 
@@ -190,13 +190,13 @@
   </div>
   <div class="panel-footer">
     <button type="button" class="btn btn-primary" ng-click="vm.save()"
-      ng-disabled="vm.client.name === undefined || vm.client.identification === undefined ||
-      vm.client.codApp === undefined">
-      Guardar
+            ng-disabled="vm.client.name === undefined || vm.client.identification === undefined ||
+            vm.client.codApp === undefined">
+            Guardar
     </button>
     <button type="button" class="btn btn-success"
-    ng-click="vm.cancel()">
-      Cancelar
+            ng-click="vm.cancel()">
+            Cancelar
     </button>
   </div>
 </div>
