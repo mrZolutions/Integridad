@@ -503,10 +503,13 @@ angular.module('integridadUiApp')
 
     vm.printToCart = function (printSectionId) {
       var innerContents = document.getElementById(printSectionId).innerHTML;
-        var popupWinindow = window.open('', '_blank', 'width=600,height=700,scrollbars=no,menubar=no,toolbar=no,location=no,status=no,titlebar=no');
-        popupWinindow.document.open();
-        popupWinindow.document.write('<html><head><link rel="stylesheet" type="text/css" href="../../style-print.css" /></head><body onload="window.print()">' + innerContents + '</html>');
-        popupWinindow.document.close();
+      var popupWinindow = window.open('', 'printMatrixSectionId', 'width=600,height=700');
+      popupWinindow.document.write('<html><head><title>printMatrixSectionId</title>');
+      popupWinindow.document.write('</head><body>');
+      popupWinindow.document.write(innerContents);
+      popupWinindow.document.write('</body></html>');
+      popupWinindow.print();
+      popupWinindow.close();
     };
 
     vm.billDeactivate = function(){

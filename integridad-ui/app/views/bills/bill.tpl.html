@@ -171,7 +171,7 @@
                 <label>FECHA: </label>
                 <div class="input-group date" id="pickerBillDate">
                   <input type="text" class="form-control input-group-addon" ng-disabled="!vm.newBill"/>
-                  <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"/></span>
+                  <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
                 </div>
                 <script>
                   var defaultDate = new Date();
@@ -563,10 +563,10 @@
             Imprimir
           </button>
           <button type="button" class="btn btn-primary"
-                  ng-if="!vm.newBill && !vm.user.cashier.specialPrint"
+                  ng-if="!vm.newBill && !vm.user.cashier.specialPrint" 
                   ng-click="vm.printToCart('printMatrixSectionId')" print-remove>
             Imprimir Ticket
-          </button> 
+          </button>
         </div>
       </div>
     </div>
@@ -574,39 +574,36 @@
 </div>
 
 <div id="printMatrixSectionId" ng-show='false'>
-------------------------------------------------
+  ------------------------------<br/>
   <b id="mayor">{{vm.companyData.userClient.name}}</b><br/>
   <b id="mayor">RUC: {{vm.companyData.userClient.ruc}}</b><br/>
-  <b id="peque">Dirección Matriz:</b><br/> 
+  <b id="peque">DIRECCION MATRIZ:</b><br/> 
   <b id="normal">{{vm.companyData.userClient.address1}} </b><br/>
-  <b id="normal">Obligado Llevar Contabilidad: SI</b><br/><br/>
 
   <b id="mayor">FACTURA No. {{vm.seqNumber}}</b><br/>
-  <b id="peque">CLAVE DE ACCESO:</b><br/>
-  <b id="normal">{{vm.bill.claveDeAcceso}}</b><br/><br/>
+  <b id="peque">CLAVE ACCESO: {{vm.bill.claveDeAcceso}}</b><br/>
 
-  <b id="peque">Razón Social/Nombres y Apellidos:</b><br/> 
+  <b id="peque">RAZON SOCIAL/NOMBRE-APELLIDO:</b><br/> 
   <b id="normal">{{vm.clientSelected.name}}</b><br/>
-  <b id="normal">Identificación: </b>
-  <b id="normal">{{vm.clientSelected.identification}}</b><br/>
-  <b id="normal">Fecha de Emisión: {{vm.getDateToPrint()}}</b><br/><br/>
+  <b id="normal">IDENTIFICACION: {{vm.clientSelected.identification}}</b><br/>
+  <b id="normal">FECHA: {{vm.getDateToPrint() | date :  "dd/MM/yyyy"}}</b><br/><br/>
   
   <table width="100%">
     <thead>
       <tr>
-        <th id="peque" align="left">Cod.</th>
-        <th id="peque" align="left">Cant.</th>
-        <th id="peque" align="left">Descrip.</th>
-        <th id="peque" align="left">Pre. Unit.</th>
-        <th id="peque" align="right">Total</th>
+        <th id="peque" align="left">COD.</th>
+        <th id="peque" align="left"> CANT.</th>
+        <th id="peque" align="left"> DESCRIP.</th>
+        <th id="peque" align="left">P.UNIT. </th>
+        <th id="peque" align="right">  TOTAL</th>
       </tr>
     </thead>
     <tbody>
       <tr ng-repeat="detail in vm.bill.details">
         <td id="peque" align="left">{{detail.product.codeIntegridad}}</td>
-        <td id="peque" align="left">{{detail.quantity}}</td>
-        <td id="peque" align="left">{{detail.product.name}}</td>
-        <td id="peque" align="left">{{detail.costEach}}</td>
+        <td id="peque" align="left"> {{detail.quantity}}</td>
+        <td id="peque" align="left"> {{detail.product.name}}</td>
+        <td id="peque" align="left">&#36;{{detail.costEach}}</td>
         <td id="peque" align="right">&#36;{{detail.total}}</td>
       </tr>
     </tbody>
@@ -614,18 +611,24 @@
   <br/>
   <table width="100%">
     <tr>
-      <td id="normal">SUBTOTAL:</td>
-      <td id="normal" align="right">&#36;{{vm.bill.subTotal}}</td></tr>
-    <tr>
-      <td id="normal">IVA:</td>
-      <td id="normal" align="right">&#36;{{vm.bill.iva}}</td>
+      <td id="normal">SUBTOTAL: &#36;{{vm.bill.subTotal}}</td>
     </tr>
     <tr>
-      <td id="normal">TOTAL:</td>
-      <td id="normal" align="right">&#36;{{vm.bill.total}}</td>
+      <td id="normal">BASE 0%: &#36;{{vm.bill.baseNoTaxes}}</td>
+    </tr>
+    <tr>
+      <td id="normal">BASE 12%: &#36;{{vm.bill.baseTaxes}}</td>
+    </tr>
+    <tr>
+      <td id="normal">IVA:   &#36;{{vm.bill.iva}}</td>
+    </tr>
+    <tr>
+      <td id="normal">TOTAL: &#36;{{vm.bill.total}}</td>
     </tr>
   </table>
-------------------------------------------------
+
+  ------------------------------------
+
 </div>
 
   <div id="modalAddPago" class="modal fade" role="dialog">
