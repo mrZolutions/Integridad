@@ -1,14 +1,14 @@
 'use strict';
+
 /**
  * @ngdoc function
- * @name integridadUiApp.controller:ProjectsCtrl
+ * @name integridadUiApp.controller:DebsToPayCtrl
  * @description
- * # ProjectsCtrl
+ * # DebsToPayCtrl
  * Controller of the menu
  */
 angular.module('integridadUiApp')
   .controller('DebsToPayCtrl', function (_, $localStorage, debstopayService,providerService, utilStringService, dateService, utilSeqService, validatorService) {
-
     var vm = this;
     vm.error = undefined;
     vm.success = undefined;
@@ -69,4 +69,90 @@ angular.module('integridadUiApp')
       {code: '00', name: 'Casos especiales cuyo sustento no aplica en las opciones anteriores'}
     ];
 
-})
+    function _activate(){
+      vm.today = new Date();
+      vm.provider = undefined;
+      vm.providerToUse = undefined;
+      vm.providerList = [];
+      providerService.getLazyByUserClientId(vm.userData.subsidiary.userClient.id).then(function(response){
+        vm.providerList = response;
+        vm.loading = false;
+      }).catch(function (error) {
+        vm.loading = false;
+        vm.error = error.data;
+      });
+    };
+
+    function create(){
+      providerService.create(vm.provider).then(function (response) {
+        _activate();
+        vm.error = undefined;
+        vm.success = 'Registro realizado con exito';
+      }).catch(function (error) {
+        vm.loading = false;
+        vm.error = error.data;
+      });
+    };
+
+    function update(){
+      providerService.update(vm.provider).then(function (response) {
+        if(vm.provider.active){
+          vm.success = 'Registro actualizado con exito';
+        } else {
+          vm.success = 'Registro eliminado con exito';
+        }
+        _activate();
+        vm.error = undefined;
+      }).catch(function (error) {
+        vm.loading = false;
+        vm.error = error.data;
+      });
+    };
+
+    vm.register = function(){
+      var idValid = true;
+      if(vm.provider.ruc.length > 10){
+        idValid = validatorService.isRucValid(vm.provider.ruc);
+      } else {
+        idValid = validatorService.isCedulaValid(vm.provider.ruc);
+      }
+      if(!idValid){
+        vm.error = 'IDENTIFICACION INVALIDA';
+      } else if(vm.provider.id){
+        update();
+      } else {
+        create();
+      }
+    };
+
+    vm.providerCreate = function(){
+      vm.error = undefined;
+      vm.success = undefined;
+      vm.provider = {
+        codeIntegridad: vm.providerList.length + 1,
+        active: true,
+        userClient: vm.userData.subsidiary.userClient
+      };
+    };
+
+    vm.cancel = function(){
+      vm.provider = undefined;
+    };
+
+    vm.disableSave = function(){
+      if(vm.provider){
+        return utilStringService.isAnyInArrayStringEmpty([
+          vm.provider.codeIntegridad,
+          vm.provider.ruc,
+          vm.provider.name,
+          vm.provider.razonSocial,
+          vm.provider.country,
+          vm.provider.city,
+          vm.provider.address1,
+          vm.provider.contact,
+          vm.provider.providerType
+        ]);
+      }
+    };
+
+});

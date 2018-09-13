@@ -146,7 +146,7 @@ angular.module('integridadUiApp')
         vm.loading = false;
         vm.error = error.data;
       });
-    }
+    };
 
     function create(){
       providerService.create(vm.provider).then(function (response) {
@@ -157,7 +157,7 @@ angular.module('integridadUiApp')
         vm.loading = false;
         vm.error = error.data;
       });
-    }
+    };
 
     function update(){
       providerService.update(vm.provider).then(function (response) {
@@ -172,7 +172,7 @@ angular.module('integridadUiApp')
         vm.loading = false;
         vm.error = error.data;
       });
-    }
+    };
 
     function _getSeqNumber(){
       vm.numberAddedOne = parseInt($localStorage.user.cashier.retentionNumberSeq) + 1;
@@ -182,7 +182,7 @@ angular.module('integridadUiApp')
       vm.seqNumber =  vm.seqNumberFirstPart + '-'
         + vm.seqNumberSecondPart;
 
-    }
+    };
 
     vm.providerCreate = function(){
       vm.error = undefined;
