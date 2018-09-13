@@ -64,12 +64,105 @@
                     <button type="button" class="btn btn-primary" ng-click="vm.editProvider(providerEdit)">
                             Editar
                     </button>
-                    <button type="button" class="btn btn-primary" ng-click="vm.provider=providerEdit"
-                            data-toggle="modal" data-target="#modalEliminar">
-                            Eliminar
+                    <button type="button" class="btn btn-primary" ng-click="vm.createDebs(providerEdit)">
+                            Datos de Factura
                     </button>
                 </td>
             </tr>
         </tbody>
     </table>
+</div>
+
+<div ng-show="vm.debstopay !== undefined && !vm.debstopayCreated">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <p>Datos de la Factura</p>
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="form-group col-md-6">
+                  <label>C&oacute;digo Proveedor: </label>
+                  <!--Codigo del Poveedor-->
+                </div>
+        
+                <div class="form-group col-md-6">
+                  <label>RUC / CEDULA: </label>
+                  <!--Tipo de Identificación-->
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label>Nombre Comercial: </label>
+                    <!--Nombre Comercial -->
+                </div>
+                <div class="form-group col-md-6">
+                    <label>Raz&oacute;n Social: </label>
+                    <!--Razón Social -->
+                </div>
+            </div>
+        
+            <div class="row">
+                <div class="form-group col-md-12">
+                    <label>Direcci&oacute;n: </label>
+                    <!--Dirección -->
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label>Tipo de Comprobante de Compra: </label>
+                    <select ng-options="typeDoc.code as typeDoc.name for typeDoc in vm.comprobanteType  | orderBy:'name'  track by typeDoc.code" ng-model="vm.docType"
+                            class="form-control">
+                    </select>
+                </div> 
+                <div class="form-group col-md-6">
+                    <label>Tipo de C&oacute;digo Sustento: </label>
+                    <select ng-options="typeDoc.code as typeDoc.name for typeDoc in vm.sustentoType  | orderBy:'name'  track by typeDoc.code" ng-model="vm.docType"
+                            class="form-control">
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label>Fecha: </label>
+                    <div class="input-group date" id="pickerBillDateRetention">
+                        <input type="text" class="form-control input-group-addon"/>
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"/></span>
+                    </div>
+                    <script>
+                        var defaultDate = new Date();
+                        $('#pickerBillDateRetention').datetimepicker({format: "DD/MM/YY",});
+                    </script>
+                </div>
+                <div class="form-group col-md-6">
+                    <label>Ejercicio Fiscal: </label>
+                    <!--Ingreso del mes arrojado por la fecha -->
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label>N&uacute;mero de Documento: </label>
+                    <!--Se nececitan tres casillas inputs para el ingreso del numero
+                    de la factura o documento -->
+                </div>
+                <div class="form-group col-md-6">
+                    <label>N&uacute;mero de Autorizaci&oacute;n:</label>
+                    <!--Input para el documento de autorización-->
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label></label>
+                    <!--Input para el monto total del documento, incluye IVA-->
+                </div>
+                <div class="form-group col-md-3">
+                    <label>IVA</label>
+                    <!--Checkbox para activar la opción-->
+                </div>
+                <div class="form-group col-md-3">
+                    <label>ICE</label>
+                    <!--Checkbox para activar la opción-->
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
