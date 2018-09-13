@@ -194,8 +194,8 @@ angular.module('integridadUiApp')
           "precio_unitario": det.costEach,
           "descripcion": det.product.name,
           "precio_total_sin_impuestos": ((parseFloat(det.costEach) - (parseFloat(det.costEach)*(parseInt(vm.bill.discountPercentage)/100)))*parseFloat(det.quantity)).toFixed(2),
-          "descuento": (parseFloat(det.costEach)*(parseInt(vm.bill.discountPercentage)/100)).toFixed(2),
-          "unidad_medida": det.product.unitOfMeasurementFull
+          "descuento": (parseFloat(det.costEach)*(parseInt(vm.bill.discountPercentage)/100)).toFixed(2)
+          //"unidad_medida": det.product.unitOfMeasurementFull
         }
 
         if(!_.isEmpty(impuestos)){
