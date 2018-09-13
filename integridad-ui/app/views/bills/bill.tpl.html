@@ -404,7 +404,8 @@
       <div class="row" print-remove>
         <div class="form-group col-md-12">
           <button type="button" class="btn btn-primary" ng-if="vm.newBill"
-                  data-toggle="modal" data-target="#modalAddPago" ng-disabled="vm.bill.total <= 0 || vm.billed"
+                  data-toggle="modal" data-target="#modalAddPago" 
+                  ng-disabled="vm.bill.total <= 0 || vm.billed"
                   ng-show="vm.bill.claveDeAcceso === undefined">
                   Forma de Pago
           </button>
@@ -414,12 +415,14 @@
           </button>
           <button print-btn type="button" class="btn btn-success"
                   ng-if="vm.newBill && !vm.user.cashier.specialPrint"
-                  ng-disabled="vm.bill.claveDeAcceso === undefined" ng-click="vm.cancelBill()">
+                  ng-disabled="vm.bill.claveDeAcceso === undefined" 
+                  ng-click="vm.cancelBill()">
             Imprimir
           </button>
           <button type="button" class="btn btn-danger"
                   ng-if="vm.newBill && !vm.user.cashier.specialPrint"
-                  ng-click="vm.printToCart('printMatrixSectionId')" print-remove>
+                  ng-disabled="vm.bill.claveDeAcceso === undefined"
+                  ng-click="vm.printToCartAndCancel('printMatrixSectionId')" print-remove>
                   Imprimir Ticket
           </button>
         </div>

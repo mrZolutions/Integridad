@@ -501,6 +501,18 @@ angular.module('integridadUiApp')
       }
     }
 
+    vm.printToCartAndCancel = function (printSectionId) {
+      var innerContents = document.getElementById(printSectionId).innerHTML;
+      var popupWinindow = window.open('', 'printMatrixSectionId', 'width=600,height=700');
+      popupWinindow.document.write('<html><head><title>printMatrixSectionId</title>');
+      popupWinindow.document.write('</head><body>');
+      popupWinindow.document.write(innerContents);
+      popupWinindow.document.write('</body></html>');
+      popupWinindow.print();
+      popupWinindow.close();
+      _activate();
+    };
+
     vm.printToCart = function (printSectionId) {
       var innerContents = document.getElementById(printSectionId).innerHTML;
       var popupWinindow = window.open('', 'printMatrixSectionId', 'width=600,height=700');
