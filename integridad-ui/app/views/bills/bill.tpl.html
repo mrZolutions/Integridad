@@ -578,55 +578,55 @@
 
 <div id="printMatrixSectionId" ng-show='false'>
   ------------------------------<br/>
-  <b id="mayor">{{vm.companyData.userClient.name}}</b><br/>
-  <b id="mayor">RUC: {{vm.companyData.userClient.ruc}}</b><br/>
-  <b id="peque">DIRECCION MATRIZ:</b><br/> 
-  <b id="normal">{{vm.companyData.userClient.address1}} </b><br/>
+  <b>{{vm.companyData.userClient.name}}</b><br/>
+  <b>RUC: {{vm.companyData.userClient.ruc}}</b><br/>
+  <b>DIRECCION MATRIZ:</b><br/> 
+  <b>{{vm.companyData.userClient.address1}} </b><br/>
 
-  <b id="mayor">FACTURA No. {{vm.seqNumber}}</b><br/>
-  <b id="peque">CLAVE ACCESO: {{vm.bill.claveDeAcceso}}</b><br/>
+  <b>FACTURA No. {{vm.seqNumber}}</b><br/>
+  <b>CLAVE ACCESO: {{vm.bill.claveDeAcceso}}</b><br/>
 
-  <b id="peque">RAZON SOCIAL:</b><br/> 
-  <b id="normal">{{vm.clientSelected.name}}</b><br/>
-  <b id="normal">IDENTIFICACION: {{vm.clientSelected.identification}}</b><br/>
-  <b id="normal">FECHA: {{vm.getDateToPrint() | date :  "dd/MM/yyyy"}}</b><br/><br/>
+  <b>RAZON SOCIAL:</b><br/> 
+  <b>{{vm.clientSelected.name}}</b><br/>
+  <b>IDENTIFICACION: {{vm.clientSelected.identification}}</b><br/>
+  <b>FECHA: {{vm.getDateToPrint() | date :  "dd/MM/yyyy"}}</b><br/><br/>
   
   <table width="100%">
     <thead>
       <tr>
-        <th id="peque" align="left">COD.</th>
-        <th id="peque" align="left"> CANT.</th>
-        <th id="peque" align="left"> DESCRIP.</th>
-        <th id="peque" align="left">P.UNIT. </th>
-        <th id="peque" align="right">  TOTAL</th>
+        <th align="left">COD.</th>
+        <th align="left"> CANT.</th>
+        <th align="left"> DESCRIP.</th>
+        <th align="left">P.UNIT. </th>
+        <th align="right">  TOTAL</th>
       </tr>
     </thead>
     <tbody>
       <tr ng-repeat="detail in vm.bill.details">
-        <td id="peque" align="left">{{detail.product.codeIntegridad}}</td>
-        <td id="peque" align="left"> {{detail.quantity}}</td>
-        <td id="peque" align="left"> {{detail.product.name}}</td>
-        <td id="peque" align="left">&#36;{{detail.costEach}}</td>
-        <td id="peque" align="right">&#36;{{detail.total}}</td>
+        <td align="left">{{detail.product.codeIntegridad}}</td>
+        <td align="left"> {{detail.quantity}}</td>
+        <td align="left"> {{detail.product.name}}</td>
+        <td align="left">&#36;{{detail.costEach}}</td>
+        <td align="right">&#36;{{detail.total}}</td>
       </tr>
     </tbody>
   </table>
   <br/>
   <table width="100%">
     <tr>
-      <td id="normal">SUBTOTAL: &#36;{{vm.bill.subTotal}}</td>
+      <td>SUBTOTAL: &#36;{{vm.bill.subTotal}}</td>
     </tr>
     <tr>
-      <td id="normal">BASE 0%: &#36;{{vm.bill.baseNoTaxes}}</td>
+      <td>BASE 0%: &#36;{{vm.bill.baseNoTaxes}}</td>
     </tr>
     <tr>
-      <td id="normal">BASE 12%: &#36;{{vm.bill.baseTaxes}}</td>
+      <td>BASE 12%: &#36;{{vm.bill.baseTaxes}}</td>
     </tr>
     <tr>
-      <td id="normal">IVA:   &#36;{{vm.bill.iva}}</td>
+      <td>IVA:   &#36;{{vm.bill.iva}}</td>
     </tr>
     <tr>
-      <td id="normal">TOTAL: &#36;{{vm.bill.total}}</td>
+      <td>TOTAL: &#36;{{vm.bill.total}}</td>
     </tr>
   </table>
 
