@@ -589,24 +589,24 @@
   <b>RAZON SOCIAL:</b><br/> 
   <b>{{vm.clientSelected.name}}</b><br/>
   <b>IDENTIFICACION: {{vm.clientSelected.identification}}</b><br/>
-  <b>FECHA: {{vm.getDateToPrint() | date :  "dd/MM/yyyy"}}</b><br/><br/>
+  <b>FECHA: {{vm.getDateToPrint() | date :  "dd/MM/yyyy"}}</b><br/>
   
   <table width="100%">
     <thead>
       <tr>
-        <th align="left">COD.</th>
-        <th align="left"> CANT.</th>
-        <th align="left"> DESCRIP.</th>
-        <th align="left">P.UNIT. </th>
+        <th align="left">COD </th>
+        <th align="left"> CANT </th>
+        <th align="left"> DESCRIP </th>
+        <th align="left">P.UNIT </th>
         <th align="right">  TOTAL</th>
       </tr>
     </thead>
     <tbody>
       <tr ng-repeat="detail in vm.bill.details">
-        <td align="left">{{detail.product.codeIntegridad}}</td>
-        <td align="left"> {{detail.quantity}}</td>
-        <td align="left"> {{detail.product.name}}</td>
-        <td align="left">&#36;{{detail.costEach}}</td>
+        <td align="left">{{detail.product.codeIntegridad}} </td>
+        <td align="left"> {{detail.quantity}} </td>
+        <td align="left"> {{detail.product.name}} </td>
+        <td align="left"> &#36;{{detail.costEach}} </td>
         <td align="right">&#36;{{detail.total}}</td>
       </tr>
     </tbody>
