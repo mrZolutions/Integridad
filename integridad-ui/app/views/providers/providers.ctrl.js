@@ -4,7 +4,7 @@
  * @ngdoc function
  * @name integridadUiApp.controller:ProjectsCtrl
  * @description
- * # ProjectsCtrl
+ * # ProvidersCtrl
  * Controller of the menu
  */
 angular.module('integridadUiApp')
@@ -49,6 +49,57 @@ angular.module('integridadUiApp')
       {code: '43', name: 'Liquidación para Explotación y Exploracion de Hidrocarburos'},
       {code: '44', name: 'Comprobante de Contribuciones y Aportes'},
       {code: '45', name: 'Liquidación por reclamos de aseguradoras'}
+    ];
+
+    vm.supportType = [
+      {code: '01', name: 'Crédito Tributario para declaración de IVA (servicios y bienes distintos de inventarios y activos fijos)'},
+      {code: '02', name: 'Costo o Gasto para declaración de IR (servicios y bienes distintos de inventarios y activos fijos)'},
+      {code: '03', name: 'Activo Fijo - Crédito Tributario para declaración de IVA'},
+      {code: '04', name: 'Activo Fijo - Costo o Gasto para declaración de IR'},
+      {code: '05', name: 'Liquidación Gastos de Viaje, hospedaje y alimentación Gastos IR (a nombre de empleados y no de la empresa)'},
+      {code: '06', name: 'Inventario - Crédito Tributario para declaración de IVA'},
+      {code: '07', name: 'Inventario - Costo o Gasto para declaración de IR'},
+      {code: '08', name: 'Valor pagado para solicitar Reembolso de Gasto (intermediario)'},
+      {code: '09', name: 'Reembolso por Siniestros'},
+      {code: '10', name: 'Distribución de Dividendos, Beneficios o Utilidades'},
+      {code: '11', name: 'Convenios de débito o recaudación para IFI´s'},
+      {code: '12', name: 'Impuestos y retenciones presuntivos'},
+      {code: '13', name: 'Valores reconocidos por entidades del sector público a favor de sujetos pasivos'},
+      {code: '14', name: 'Valores facturados por socios a operadoras de transporte (que no constituyen gasto de dicha operadora)'},
+      {code: '00', name: 'Casos especiales cuyo sustento no aplica en las opciones anteriores'}
+    ];
+
+    vm.formPayment = [
+      {code: '01', name: 'SIN UTILIZACION DEL SISTEMA FINANCIERO'},
+      {code: '02', name: 'CHEQUE PROPIO'},
+      {code: '03', name: 'CHEQUE CERTIFICADO'},
+      {code: '04', name: 'CHEQUE DE GERENCIA'},
+      {code: '05', name: 'CHEQUE DEL EXTERIOR'},
+      {code: '06', name: 'DÉBITO DE CUENTA'},
+      {code: '07', name: 'TRANSFERENCIA PROPIO BANCO'},
+      {code: '08', name: 'TRANSFERENCIA OTRO BANCO NACIONAL'},
+      {code: '09', name: 'TRANSFERENCIA  BANCO EXTERIOR'},
+      {code: '10', name: 'TARJETA DE CRÉDITO NACIONAL'},
+      {code: '11', name: 'TARJETA DE CRÉDITO INTERNACIONAL'},
+      {code: '12', name: 'GIRO'},
+      {code: '13', name: 'DEPOSITO EN CUENTA (CORRIENTE/AHORROS)'},
+      {code: '14', name: 'ENDOSO DE INVERSIÒN'},
+      {code: '15', name: 'COMPENSACIÓN DE DEUDAS'},
+      {code: '16', name: 'TARJETA DE DÉBITO'},
+      {code: '17', name: 'DINERO ELECTRÓNICO'},
+      {code: '18', name: 'TARJETA PREPAGO'},
+      {code: '19', name: 'TARJETA DE CRÉDITO'},
+      {code: '20', name: 'OTROS CON UTILIZACION DEL SISTEMA FINANCIERO'},
+      {code: '21', name: 'ENDOSO DE TÍTULOS'}
+    ];
+
+    vm.purchaseType = [
+      {code: 'B', name: 'BIENES'},
+      {code: 'S', name: 'SERVICIOS'},
+      {code: 'M', name: 'MATERIA PRIMA'},
+      {code: 'C', name: 'CONSUMIBLES'},
+      {code: 'R', name: 'REEMBOLSO DE GASTOS'},
+      {code: 'TAE', name: 'TIKETS AEREOS'}
     ];
 
     vm.fuenteTipo = [
@@ -132,6 +183,16 @@ angular.module('integridadUiApp')
       {name:'RETENCION DEL 50%' ,percentage:50, codigo:'727', codigoDatil:'9'},
       {name:'RETENCION DEL 70%' ,percentage:70, codigo:'729', codigoDatil:'2'},
       {name:'RETENCION DEL 100%' ,percentage:100, codigo:'731', codigoDatil:'3'}
+    ];
+
+    vm.ctasctables = [
+      {code: '1.01.05.01.01', desc: 'IVA EN COMPRAS', tipo:'DEBITO (D)', name: 'DEFINIDA PARA TODAS LAS COMPRAS'},
+      {code: '2.01.03.01.01', desc: 'PROVEEDORES LOCALES', tipo:'CREDITO (C)', name: 'DEFINIDA PARA TODOS LOS PROVEEDORES'},
+      {code: '6.1.03.03', desc: 'SUMINISTROS MATERIALES', tipo:'DEBITO (D)', name: 'COMPRAS PARA INVENTARIO'},
+      {code: '6.2.04.04', desc: 'SUMINISTROS DE OFICINA QUITO', tipo:'DEBITO (D)', name: 'SUMINISTROS DE PAPELERIA-COMPUTACION- OTROS'},
+      {code: '6.1.03.17', desc: 'SERVICIOS BASICOS COCA', tipo:'DEBITO (D)', name: 'PAGOS BASE COCA - AGUA - LUZ- TELEFONO - INTERNET - OTROS'},
+      {code: '6.1.03.18', desc: 'MATERIALES PARA OBRAS', tipo:'DEBITO (D)', name: 'COMPRA DE MATERIALES Y HERRAMIENTAS PARA TRABAJOS- INCLUYE FERRETERIA'},
+      {code: '6.03.100.3', desc: 'COMPRAS DE INVENTARIOS', tipo:'DEBITO (D)', name: 'RESORTES - VALVULAS - ACOPLES'}
     ];
 
     function _activate(){
@@ -263,6 +324,23 @@ angular.module('integridadUiApp')
       _getSeqNumber();
     };
 
+    vm.createDetailFactura = function(prov){
+      var today = new Date;
+      vm.debstopayCreated = false;
+      vm.debstopay = {
+        provider: prov,
+        typeTaxes: undefined,
+        items: [],
+        ejercicio: ('0' + (today.getMonth() + 1)).slice(-2) + '/' +today.getFullYear()
+      };
+      $('#pickerBillDateDebsToPay').data("DateTimePicker").date(today);
+      $('#pickerBillDateDocumentDebsToPay').data("DateTimePicker").date(today);
+
+      $('#pickerBillDateDocumentDebsToPay').on("dp.change", function (data) {
+        vm.debstopay.ejercicio = ('0' + ($('#pickerBillDateDocumentDebsToPay').data("DateTimePicker").date().toDate().getMonth() + 1)).slice(-2) + '/' +$('#pickerBillDateDocumentDebsToPay').data("DateTimePicker").date().toDate().getFullYear();
+      });
+    };
+
     vm.getPercentageTable = function(){
       vm.tablePercentage = undefined;
       if(vm.retention.typeRetention === '2'){
@@ -272,6 +350,13 @@ angular.module('integridadUiApp')
       if(vm.retention.typeRetention === '1'){
         vm.tablePercentage = vm.fuenteTipo;
       }
+    };
+
+    vm.getTaxesTable = function(){
+      vm.tableTaxes = undefined;
+      if(vm.debstopay.typeTaxes === '1'){
+        vm.tableTaxes = vm.ctasctables;
+      };
     };
 
     vm.selecPercentage =function(percentage){
@@ -285,6 +370,19 @@ angular.module('integridadUiApp')
         codigo_porcentaje_integridad: percentage.codigo,
         porcentaje: percentage.percentage,
         tipo_documento_sustento: vm.docType,
+      };
+    };
+
+    vm.selecTaxes = function(taxes){
+      vm.item = undefined;
+      vm.item = {
+        codigo: parseInt(vm.debstopay.typeTaxes),
+        numero_documento_sustento:vm.debstopay.numero,
+        name: vm.debstopay.name,
+        tipo_documento_comprobante: vm.docType1,
+        tipo_documento_ctascontables: vm.docType2,
+        tipo_documento_purchase: vm.docType3,
+        tipo_documento_sustento: vm.docType
       };
     };
 
@@ -305,6 +403,11 @@ angular.module('integridadUiApp')
 
     vm.editItem = function(index){
       vm.item = angular.copy(vm.retention.items[index]);
+      vm.indexEdit = index;
+    };
+
+    vm.editItemTaxes = function(index){
+      vm.item = angular.copy(vm.debstopay.items[index]);
       vm.indexEdit = index;
     };
 
