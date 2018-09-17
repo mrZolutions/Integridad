@@ -23,6 +23,16 @@ angular.module('integridadUiApp')
       'PROVEEDORES DEL EXTERIOR 02',
     ];
 
+    vm.ctasctables = [
+      {code: '1.01.05.01.01', desc: 'IVA EN COMPRAS', tipo:'DEBITO (D)', name: 'DEFINIDA PARA TODAS LAS COMPRAS'},
+      {code: '2.01.03.01.01', desc: 'PROVEEDORES LOCALES', tipo:'CREDITO (C)', name: 'DEFINIDA PARA TODOS LOS PROVEEDORES'},
+      {code: '6.1.03.03', desc: 'SUMINISTROS MATERIALES', tipo:'DEBITO (D)', name: 'COMPRAS PARA INVENTARIO'},
+      {code: '6.2.04.04', desc: 'SUMINISTROS DE OFICINA QUITO', tipo:'DEBITO (D)', name: 'SUMINISTROS DE PAPELERIA-COMPUTACION- OTROS'},
+      {code: '6.1.03.17', desc: 'SERVICIOS BASICOS COCA', tipo:'DEBITO (D)', name: 'PAGOS BASE COCA - AGUA - LUZ- TELEFONO - INTERNET - OTROS'},
+      {code: '6.1.03.18', desc: 'MATERIALES PARA OBRAS', tipo:'DEBITO (D)', name: 'COMPRA DE MATERIALES Y HERRAMIENTAS PARA TRABAJOS- INCLUYE FERRETERIA'},
+      {code: '6.03.100.3', desc: 'COMPRAS DE INVENTARIOS', tipo:'DEBITO (D)', name: 'RESORTES - VALVULAS - ACOPLES'}
+    ];
+
     vm.voucherType = [
       {code: '01', name: 'Factura'},
       {code: '02', name: 'Nota o boleta de venta'},
@@ -191,11 +201,29 @@ angular.module('integridadUiApp')
     vm.getTaxesTable = function(){
       vm.taxesTable = undefined;
       if(vm.debsToPay.typeTaxes === '1'){
-        vm.taxesTable = vm.ivaTipo;
+        vm.taxesTable = vm.ctasctables;
       };
-      if(vm.debsToPay.typeTaxes === '2'){
-        vm.taxesTable = vm.fuenteTipo;
+    };
+
+    vm.selecTaxes =function(taxes){
+      vm.baseImponibleItem = undefined;
+      vm.item = undefined;
+      vm.item = {
+        codigo: parseInt(vm.debsToPay.typeTaxes),
+        name: taxes.name,
+        tipo_documento_sustento: vm.docType
       };
+    };
+
+    vm.addItem = function() {
+      vm.item.valor_retenido = parseFloat(vm.item.valor_item).toFixed(2);
+      if(vm.indexEdit !== undefined){
+        vm.debsToPay.items.splice(vm.indexEdit, 1);
+        vm.indexEdit = undefined
+      };
+      vm.debsToPay.items.push(vm.item);
+      vm.item = undefined;
+      vm.taxesTable = undefined;
     };
 
 });

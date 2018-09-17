@@ -164,14 +164,81 @@
                     <label class="radio-inline"><input type="radio" ng-model="vm.debsToPay.typeTaxes" value="1" name="tipo"
                            ng-change="vm.getTaxesTable()" ng-disabled="vm.debsToPay.total === undefined">IVA
                     </label>
-                    <label class="radio-inline"><input type="radio" ng-model="vm.debsToPay.typeTaxes" value="2" name="tipo"
-                           ng-change="vm.getTaxesTable()" ng-disabled="vm.debsToPay.total === undefined">ICE
-                    </label>
+                </div>
+            </div>
+            <div class="row" ng-show="vm.taxesTable !== undefined">
+                <div class="form-group col-md-12">
+                    <input ng-model="searchTextTable" class="form-control" placeholder="Buscar">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th> C&oacute;digo </th>
+                                <th> Nombre Generico </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-show="vm.taxesTable == 0">
+                                <td colspan="2">
+                                    No hay Fuente Seleccionada
+                                </td>
+                            </tr>
+                            <tr dir-paginate="p in vm.taxesTable | filter:searchTextTable | itemsPerPage: 10"  pagination-id="taxesPagination">
+                                <td>{{ p.codigo }}</td>
+                                <td>{{ p.name }}</td>
+                                <td>
+                                    <button type="button" class="btn btn-primary"
+                                            ng-click="vm.selecTaxes(p)" data-toggle="modal" data-target="#modalSelectedTaxes">
+                                            Seleccionar
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<div id="modalSelectedTaxes" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" ng-click="vm.impuesto=undefined">&times;</button>
+                <h4 class="modal-title">Nombre Generico</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-8" >
+                        <b>{{vm.item.name}}</b>
+                    </div>
+                    <div class="col-md-4" >
+                        <label>Valor</label>
+                        <input type="text" onkeypress="return ((event.which >= 46 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+                               class="form-control" maxlength="9" ng-model="vm.item.valor_item">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal"
+                        ng-click="vm.addItem()">
+                        Aceptar
+                </button>
+                <button type="button" class="btn btn-primary"  data-dismiss="modal"
+                        ng-click="vm.item = undefined; vm.indexEdit = undefined;">
+                        Cancelar
+                </button>
+            </div>
+          </div>
+        </div>
+</div>
+
+
+
+
+
+
+
 <div ng-show="vm.provider !== undefined">
     <div class="panel panel-default">
         <div class="panel-heading">
