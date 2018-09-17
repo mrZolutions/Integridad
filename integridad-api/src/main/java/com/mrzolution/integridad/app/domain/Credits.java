@@ -1,13 +1,15 @@
 package com.mrzolution.integridad.app.domain;
 
+import com.mrzolution.integridad.app.interfaces.Child;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
 @Data
-public class Credits {
+public class Credits implements Child {
 
     @Id
     @GeneratedValue
@@ -22,8 +24,11 @@ public class Credits {
     @JoinColumn(name = "pago_id")
     private Pago pago;
 
-    public void setListsNull(){
+    @OneToMany(mappedBy = "credit", cascade = CascadeType.ALL)
+    private List<Payment> payments;
 
+    public void setListsNull(){
+        payments = null;
     }
 
     public void setFatherListToNull(){

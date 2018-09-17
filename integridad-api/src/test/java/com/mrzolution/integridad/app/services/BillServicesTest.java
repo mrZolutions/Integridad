@@ -40,6 +40,10 @@ public class BillServicesTest {
 	PagoRepository pagoRepository;
 	@Mock
 	UserClientRepository userClientRepository;
+	@Mock
+	CreditsRepository creditsRepository;
+	@Mock
+	PaymentRepository paymentRepository;
 	
 	Bill bill;
 	
@@ -238,5 +242,60 @@ public class BillServicesTest {
 		bill.setDetails(detailList);
 		bill.setPagos(null);
 		service.create(bill, 1);
+	}
+
+	@Test
+	public void whenPagoIsCashCreatePayment(){
+		UUID idCashier = UUID.randomUUID();
+		Pago pago = Pago.newPagoTest();
+		pago.setMedio("efectivo");
+		List<Pago> pagoList = new ArrayList<>();
+		pagoList.add(pago);
+		bill.setPagos(pagoList);
+		bill.getUserIntegridad().getCashier().setId(idCashier);
+		bill.getUserIntegridad().getCashier().setBillNumberSeq(1);
+		Cashier cashier = bill.getUserIntegridad().getCashier();
+
+		Payment payment = new Payment();
+		payment.setValue(bill.getTotal());
+		payment.setDetail("");
+		payment.setNoCheck("");
+		payment.setNoAccount("");
+		payment.setNoTransfer("");
+		payment.setNoDocument("");
+		payment.setCuentaContablePrincipal(bill.getCuentaContablePrincipal());
+
+		Mockito.when(cashierRepository.findOne(idCashier)).thenReturn(cashier);
+		Mockito.when(billRepository.save(Mockito.any(Bill.class))).thenReturn(Bill.newBillTest());
+
+		service.create(bill, 1);
+
+		Mockito.verify(billRepository, Mockito.times(1)).save(Mockito.any(Bill.class));
+		Mockito.verify(pagoRepository, Mockito.times(1)).save(Mockito.any(Pago.class));
+		Mockito.verify(creditsRepository, Mockito.times(1)).save(Mockito.any(Credits.class));
+		Mockito.verify(paymentRepository, Mockito.times(1)).save(payment);
+
+	}
+
+	@Test
+	public void whenPagoIsNotCashDoNotCreatePayment(){
+		UUID idCashier = UUID.randomUUID();
+		Pago pago = Pago.newPagoTest();
+		pago.setMedio("cheque");
+		List<Pago> pagoList = new ArrayList<>();
+		pagoList.add(pago);
+		bill.setPagos(pagoList);
+		bill.getUserIntegridad().getCashier().setId(idCashier);
+		bill.getUserIntegridad().getCashier().setBillNumberSeq(1);
+		Cashier cashier = bill.getUserIntegridad().getCashier();
+
+		Mockito.when(cashierRepository.findOne(idCashier)).thenReturn(cashier);
+		Mockito.when(billRepository.save(Mockito.any(Bill.class))).thenReturn(Bill.newBillTest());
+
+		service.create(bill, 1);
+
+		Mockito.verify(billRepository, Mockito.times(1)).save(Mockito.any(Bill.class));
+		Mockito.verify(pagoRepository, Mockito.times(1)).save(Mockito.any(Pago.class));
+		Mockito.verify(paymentRepository, Mockito.times(0)).save(Mockito.any(Payment.class));
 	}
 }

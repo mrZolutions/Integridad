@@ -25,15 +25,23 @@ public class Payment {
     private CuentaContable cuentaContablePrincipal;
 
     @ManyToOne
-    @JoinColumn(name = "cuenta_contable_secondary_id")
-    private CuentaContable cuentaContableSecondary;
+    @JoinColumn(name = "cuenta_contable_auxiliar_id")
+    private CuentaContable cuentaContableAuxiliar;
+
+    @ManyToOne
+    @JoinColumn(name = "credit_id")
+    private Credits credit;
+
 
     public void setFatherListToNull(){
         cuentaContablePrincipal.setFatherListToNull();
         cuentaContablePrincipal.setListsNull();
 
-        cuentaContableSecondary.setFatherListToNull();
-        cuentaContableSecondary.setListsNull();
+        cuentaContableAuxiliar.setFatherListToNull();
+        cuentaContableAuxiliar.setListsNull();
+
+        credit.setFatherListToNull();
+        credit.setListsNull();
     }
 
 }
