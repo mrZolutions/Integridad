@@ -105,4 +105,10 @@ public class Bill {
         return bill;
     }
 
+    @Transient
+    public CuentaContable cuentaContablePrincipal;
+
+    @Transient
+    public CuentaContable cuentaContableAuxiliar;
+
 }
