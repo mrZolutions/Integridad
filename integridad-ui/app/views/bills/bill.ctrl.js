@@ -97,9 +97,9 @@ angular.module('integridadUiApp')
       }).catch(function (error) {
         vm.loading = false;
         vm.error = error.data;
-      }); 
+      });
 
-      cuentaContableService.getAll().then( response => {
+      cuentaContableService.getAll().then( function(response) {
         vm.cuentaContableList = response;
       })
     }
@@ -647,24 +647,25 @@ angular.module('integridadUiApp')
       });
 
       var req = requirementService.createRequirement(vm.clientSelected, vm.bill, $localStorage.user, vm.impuestosTotales, vm.items, vm.pagos);
-      
-      billService.getClaveDeAcceso(req, vm.companyData.userClient.id).then(function(resp){
-        vm.bill.pagos = vm.pagos;
-        if(vm.bill.discountPercentage === undefined){
-          vm.bill.discountPercentage = 0;
-        }
-        var obj = JSON.parse(resp.data);
-        // var obj = {clave_acceso: '1234560', id:'id12345'};
-        if(obj.errors === undefined){
-          vm.bill.claveDeAcceso = obj.clave_acceso;
-          vm.bill.idSri = obj.id;
-          vm.bill.stringSeq = vm.seqNumber;
-          vm.bill.priceType = vm.priceType.name;
-          // 1 is typeDocument Bill **************!!!
-          if (vm.bill.pagos.map(_ => _.medio).includes('efectivo') && vm.bill.cuentaContablePrincipal === undefined) {
-            vm.loading = false;
-            vm.error = "Debe seleccionar una cuenta contable";
-          } else {
+
+      if (!_.isEmpty(_.filter(vm.pagos, function(pago){ return pago.medio === 'efectivo'; }))
+        && vm.bill.cuentaContablePrincipal === undefined) {
+        vm.loading = false;
+        vm.error = "Debe seleccionar una cuenta contable";
+      } else {
+        billService.getClaveDeAcceso(req, vm.companyData.userClient.id).then(function(resp){
+          vm.bill.pagos = vm.pagos;
+          if(vm.bill.discountPercentage === undefined){
+            vm.bill.discountPercentage = 0;
+          }
+          var obj = JSON.parse(resp.data);
+          // var obj = {clave_acceso: '1234560', id:'id12345'};
+          if(obj.errors === undefined){
+            vm.bill.claveDeAcceso = obj.clave_acceso;
+            vm.bill.idSri = obj.id;
+            vm.bill.stringSeq = vm.seqNumber;
+            vm.bill.priceType = vm.priceType.name;
+            // 1 is typeDocument Bill **************!!!
             billService.create(vm.bill, 1).then(function(respBill){
               vm.billed = true;
               $localStorage.user.cashier.billNumberSeq = vm.bill.billSeq;
@@ -681,16 +682,17 @@ angular.module('integridadUiApp')
               vm.loading = false;
               vm.error = error.data;
             });
+          } else {
+            vm.loading = false;
+            vm.error = "Error al obtener Clave de Acceso: " + JSON.stringify(obj.errors);
           }
-        } else {
-          vm.loading = false;
-          vm.error = "Error al obtener Clave de Acceso: " + JSON.stringify(obj.errors);
-        }
 
-      }).catch(function (error) {
-        vm.loading = false;
-        vm.error = error.data;
-      });
+        }).catch(function (error) {
+          vm.loading = false;
+          vm.error = error.data;
+        });
+      }
+
     };
 
     (function initController() {
