@@ -23,7 +23,17 @@ angular.module('integridadUiApp')
       'PROVEEDORES DEL EXTERIOR 02',
     ];
 
-    vm.comprobanteType = [
+    vm.ctasctables = [
+      {code: '1.01.05.01.01', desc: 'IVA EN COMPRAS', tipo:'DEBITO (D)', name: 'DEFINIDA PARA TODAS LAS COMPRAS'},
+      {code: '2.01.03.01.01', desc: 'PROVEEDORES LOCALES', tipo:'CREDITO (C)', name: 'DEFINIDA PARA TODOS LOS PROVEEDORES'},
+      {code: '6.1.03.03', desc: 'SUMINISTROS MATERIALES', tipo:'DEBITO (D)', name: 'COMPRAS PARA INVENTARIO'},
+      {code: '6.2.04.04', desc: 'SUMINISTROS DE OFICINA QUITO', tipo:'DEBITO (D)', name: 'SUMINISTROS DE PAPELERIA-COMPUTACION- OTROS'},
+      {code: '6.1.03.17', desc: 'SERVICIOS BASICOS COCA', tipo:'DEBITO (D)', name: 'PAGOS BASE COCA - AGUA - LUZ- TELEFONO - INTERNET - OTROS'},
+      {code: '6.1.03.18', desc: 'MATERIALES PARA OBRAS', tipo:'DEBITO (D)', name: 'COMPRA DE MATERIALES Y HERRAMIENTAS PARA TRABAJOS- INCLUYE FERRETERIA'},
+      {code: '6.03.100.3', desc: 'COMPRAS DE INVENTARIOS', tipo:'DEBITO (D)', name: 'RESORTES - VALVULAS - ACOPLES'}
+    ];
+
+    vm.voucherType = [
       {code: '01', name: 'Factura'},
       {code: '02', name: 'Nota o boleta de venta'},
       {code: '03', name: 'Liquidación de compra de Bienes o Prestación de servicios'},
@@ -51,7 +61,7 @@ angular.module('integridadUiApp')
       {code: '45', name: 'Liquidación por reclamos de aseguradoras'}
     ];
 
-    vm.sustentoType = [
+    vm.supportType = [
       {code: '01', name: 'Crédito Tributario para declaración de IVA (servicios y bienes distintos de inventarios y activos fijos)'},
       {code: '02', name: 'Costo o Gasto para declaración de IR (servicios y bienes distintos de inventarios y activos fijos)'},
       {code: '03', name: 'Activo Fijo - Crédito Tributario para declaración de IVA'},
@@ -67,6 +77,39 @@ angular.module('integridadUiApp')
       {code: '13', name: 'Valores reconocidos por entidades del sector público a favor de sujetos pasivos'},
       {code: '14', name: 'Valores facturados por socios a operadoras de transporte (que no constituyen gasto de dicha operadora)'},
       {code: '00', name: 'Casos especiales cuyo sustento no aplica en las opciones anteriores'}
+    ];
+
+    vm.formPayment = [
+      {code: '01', name: 'SIN UTILIZACION DEL SISTEMA FINANCIERO'},
+      {code: '02', name: 'CHEQUE PROPIO'},
+      {code: '03', name: 'CHEQUE CERTIFICADO'},
+      {code: '04', name: 'CHEQUE DE GERENCIA'},
+      {code: '05', name: 'CHEQUE DEL EXTERIOR'},
+      {code: '06', name: 'DÉBITO DE CUENTA'},
+      {code: '07', name: 'TRANSFERENCIA PROPIO BANCO'},
+      {code: '08', name: 'TRANSFERENCIA OTRO BANCO NACIONAL'},
+      {code: '09', name: 'TRANSFERENCIA  BANCO EXTERIOR'},
+      {code: '10', name: 'TARJETA DE CRÉDITO NACIONAL'},
+      {code: '11', name: 'TARJETA DE CRÉDITO INTERNACIONAL'},
+      {code: '12', name: 'GIRO'},
+      {code: '13', name: 'DEPOSITO EN CUENTA (CORRIENTE/AHORROS)'},
+      {code: '14', name: 'ENDOSO DE INVERSIÒN'},
+      {code: '15', name: 'COMPENSACIÓN DE DEUDAS'},
+      {code: '16', name: 'TARJETA DE DÉBITO'},
+      {code: '17', name: 'DINERO ELECTRÓNICO'},
+      {code: '18', name: 'TARJETA PREPAGO'},
+      {code: '19', name: 'TARJETA DE CRÉDITO'},
+      {code: '20', name: 'OTROS CON UTILIZACION DEL SISTEMA FINANCIERO'},
+      {code: '21', name: 'ENDOSO DE TÍTULOS'}
+    ];
+
+    vm.purchaseType = [
+      {code: 'BIE', name: 'BIENES'},
+      {code: 'SER', name: 'SERVICIOS'},
+      {code: 'MTP', name: 'MATERIA PRIMA'},
+      {code: 'CON', name: 'CONSUMIBLES'},
+      {code: 'REG', name: 'REEMBOLSO DE GASTOS'},
+      {code: 'TAE', name: 'TIKETS AEREOS'}
     ];
 
     function _activate(){
@@ -153,6 +196,34 @@ angular.module('integridadUiApp')
           vm.provider.providerType
         ]);
       }
+    };
+
+    vm.getTaxesTable = function(){
+      vm.taxesTable = undefined;
+      if(vm.debsToPay.typeTaxes === '1'){
+        vm.taxesTable = vm.ctasctables;
+      };
+    };
+
+    vm.selecTaxes =function(taxes){
+      vm.baseImponibleItem = undefined;
+      vm.item = undefined;
+      vm.item = {
+        codigo: parseInt(vm.debsToPay.typeTaxes),
+        name: taxes.name,
+        tipo_documento_sustento: vm.docType
+      };
+    };
+
+    vm.addItem = function() {
+      vm.item.valor_retenido = parseFloat(vm.item.valor_item).toFixed(2);
+      if(vm.indexEdit !== undefined){
+        vm.debsToPay.items.splice(vm.indexEdit, 1);
+        vm.indexEdit = undefined
+      };
+      vm.debsToPay.items.push(vm.item);
+      vm.item = undefined;
+      vm.taxesTable = undefined;
     };
 
 });

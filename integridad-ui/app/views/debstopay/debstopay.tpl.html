@@ -81,7 +81,6 @@
                   <label>C&oacute;digo Proveedor: </label>
                   <!--Codigo del Poveedor-->
                 </div>
-        
                 <div class="form-group col-md-6">
                   <label>RUC / CEDULA: </label>
                   <!--Tipo de Identificación-->
@@ -106,13 +105,13 @@
             <div class="row">
                 <div class="form-group col-md-6">
                     <label>Tipo de Comprobante de Compra: </label>
-                    <select ng-options="typeDoc.code as typeDoc.name for typeDoc in vm.comprobanteType  | orderBy:'name'  track by typeDoc.code" ng-model="vm.docType"
+                    <select ng-options="typeDoc.code as typeDoc.name for typeDoc in vm.voucherType | orderBy:'name' track by typeDoc.code" ng-model="vm.docType"
                             class="form-control">
                     </select>
                 </div> 
                 <div class="form-group col-md-6">
                     <label>Tipo de C&oacute;digo Sustento: </label>
-                    <select ng-options="typeDoc.code as typeDoc.name for typeDoc in vm.sustentoType  | orderBy:'name'  track by typeDoc.code" ng-model="vm.docType"
+                    <select ng-options="typeDoc.code as typeDoc.name for typeDoc in vm.supportType | orderBy:'name' track by typeDoc.code" ng-model="vm.docType"
                             class="form-control">
                     </select>
                 </div>
@@ -135,33 +134,111 @@
                 </div>
             </div>
             <div class="row">
-                <div class="form-group col-md-6">
+                <div class="form-group col-md-4">
                     <label>N&uacute;mero de Documento: </label>
-                    <!--Se nececitan tres casillas inputs para el ingreso del numero
-                    de la factura o documento -->
                 </div>
-                <div class="form-group col-md-6">
+                <div class="form-group col-md-2">
+                    <!--Primer input-->
+                </div>
+                <div class="form-group col-md-2">
+                    <!--Segundo input-->
+                </div>
+                <div class="form-group col-md-4">
+                    <!--Tercer input-->
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-12">
                     <label>N&uacute;mero de Autorizaci&oacute;n:</label>
-                    <!--Input para el documento de autorización-->
+                    <input type="text" class="form-control" maxlength="90">
                 </div>
             </div>
             <div class="row">
                 <div class="form-group col-md-6">
-                    <label></label>
-                    <!--Input para el monto total del documento, incluye IVA-->
+                    <label>Valor Total a Pagar:</label>
+                    <input type="text" ng-model="vm.debsToPay.total"
+                           class="form-control" maxlength="20">
                 </div>
-                <div class="form-group col-md-3">
-                    <label>IVA</label>
-                    <!--Checkbox para activar la opción-->
+                <div class="form-group col-md-4">
+                    <label>Tipo de Impuesto: </label><br/>
+                    <label class="radio-inline"><input type="radio" ng-model="vm.debsToPay.typeTaxes" value="1" name="tipo"
+                           ng-change="vm.getTaxesTable()" ng-disabled="vm.debsToPay.total === undefined">IVA
+                    </label>
                 </div>
-                <div class="form-group col-md-3">
-                    <label>ICE</label>
-                    <!--Checkbox para activar la opción-->
+            </div>
+            <div class="row" ng-show="vm.taxesTable !== undefined">
+                <div class="form-group col-md-12">
+                    <input ng-model="searchTextTable" class="form-control" placeholder="Buscar">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th> C&oacute;digo </th>
+                                <th> Nombre Generico </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-show="vm.taxesTable == 0">
+                                <td colspan="2">
+                                    No hay Fuente Seleccionada
+                                </td>
+                            </tr>
+                            <tr dir-paginate="p in vm.taxesTable | filter:searchTextTable | itemsPerPage: 10"  pagination-id="taxesPagination">
+                                <td>{{ p.codigo }}</td>
+                                <td>{{ p.name }}</td>
+                                <td>
+                                    <button type="button" class="btn btn-primary"
+                                            ng-click="vm.selecTaxes(p)" data-toggle="modal" data-target="#modalSelectedTaxes">
+                                            Seleccionar
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<div id="modalSelectedTaxes" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" ng-click="vm.impuesto=undefined">&times;</button>
+                <h4 class="modal-title">Nombre Generico</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-8" >
+                        <b>{{vm.item.name}}</b>
+                    </div>
+                    <div class="col-md-4" >
+                        <label>Valor</label>
+                        <input type="text" onkeypress="return ((event.which >= 46 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+                               class="form-control" maxlength="9" ng-model="vm.item.valor_item">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal"
+                        ng-click="vm.addItem()">
+                        Aceptar
+                </button>
+                <button type="button" class="btn btn-primary"  data-dismiss="modal"
+                        ng-click="vm.item = undefined; vm.indexEdit = undefined;">
+                        Cancelar
+                </button>
+            </div>
+          </div>
+        </div>
+</div>
+
+
+
+
+
+
+
 <div ng-show="vm.provider !== undefined">
     <div class="panel panel-default">
         <div class="panel-heading">
@@ -182,7 +259,7 @@
                 <div class="form-group col-md-4">
                     <label>RUC / CEDULA: </label>
                     <input type="text" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
-                    ng-model="vm.provider.ruc" class="form-control" maxlength="13">
+                           ng-model="vm.provider.ruc" class="form-control" maxlength="13">
                 </div>
             </div>
             <div class="row">
