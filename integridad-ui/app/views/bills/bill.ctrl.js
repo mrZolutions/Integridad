@@ -647,7 +647,6 @@ angular.module('integridadUiApp')
       });
 
       var req = requirementService.createRequirement(vm.clientSelected, vm.bill, $localStorage.user, vm.impuestosTotales, vm.items, vm.pagos);
-
       if (!_.isEmpty(_.filter(vm.pagos, function(pago){ return pago.medio === 'efectivo'; }))
         && vm.bill.cuentaContablePrincipal === undefined) {
         vm.loading = false;

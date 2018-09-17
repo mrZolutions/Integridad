@@ -404,7 +404,7 @@
       <div class="row" print-remove>
         <div class="form-group col-md-12">
           <button type="button" class="btn btn-primary" ng-if="vm.newBill"
-                  data-toggle="modal" data-target="#modalAddPago" 
+                  data-toggle="modal" data-target="#modalAddPago"
                   ng-disabled="vm.bill.total <= 0 || vm.billed"
                   ng-show="vm.bill.claveDeAcceso === undefined">
                   Forma de Pago
@@ -415,7 +415,7 @@
           </button>
           <button print-btn type="button" class="btn btn-success"
                   ng-if="vm.newBill && !vm.user.cashier.specialPrint"
-                  ng-disabled="vm.bill.claveDeAcceso === undefined" 
+                  ng-disabled="vm.bill.claveDeAcceso === undefined"
                   ng-click="vm.cancelBill()">
             Imprimir
           </button>
@@ -566,7 +566,7 @@
             Imprimir
           </button>
           <button type="button" class="btn btn-danger"
-                  ng-if="!vm.newBill && !vm.user.cashier.specialPrint" 
+                  ng-if="!vm.newBill && !vm.user.cashier.specialPrint"
                   ng-click="vm.printToCart('printMatrixSectionId')" print-remove>
             Imprimir Ticket
           </button>
@@ -580,17 +580,17 @@
   ------------------------------<br/>
   <b>{{vm.companyData.userClient.name}}</b><br/>
   <b>RUC: {{vm.companyData.userClient.ruc}}</b><br/>
-  <b>DIRECCION MATRIZ:</b><br/> 
+  <b>DIRECCION MATRIZ:</b><br/>
   <b>{{vm.companyData.userClient.address1}} </b><br/>
 
   <b>FACTURA No. {{vm.seqNumber}}</b><br/>
   <b>CLAVE ACCESO: {{vm.bill.claveDeAcceso}}</b><br/>
 
-  <b>RAZON SOCIAL:</b><br/> 
+  <b>RAZON SOCIAL:</b><br/>
   <b>{{vm.clientSelected.name}}</b><br/>
   <b>IDENTIFICACION: {{vm.clientSelected.identification}}</b><br/>
   <b>FECHA: {{vm.getDateToPrint() | date :  "dd/MM/yyyy"}}</b><br/><br/>
-  
+
   <table width="100%">
     <thead>
       <tr>
@@ -671,13 +671,11 @@
           <div class="row" ng-show="vm.medio.medio === 'cheque' || vm.medio.medio === 'cheque_posfechado'">
             <div class="form-group col-md-4">
               <b>BANCO: </b>
-              <input type="text"
-              ng-model="vm.medio.chequeBank" class="form-control" maxlength="9">
+              <input type="text" ng-model="vm.medio.chequeBank" class="form-control" maxlength="9">
             </div>
             <div class="form-group col-md-4">
               <b>CUENTA: </b>
-              <input type="text"
-              ng-model="vm.medio.chequeAccount" class="form-control" maxlength="9">
+              <input type="text" ng-model="vm.medio.chequeAccount" class="form-control" maxlength="9">
             </div>
             <div class="form-group col-md-4">
               <b>NUMERO DE CHEQUE: </b>
