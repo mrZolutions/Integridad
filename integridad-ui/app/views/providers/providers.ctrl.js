@@ -325,7 +325,7 @@ angular.module('integridadUiApp')
     };
 
     vm.createDetailFactura = function(prov){
-      var today = new Date;
+      var today = new Date();
       vm.debstopayCreated = false;
       vm.debstopay = {
         provider: prov,
@@ -333,7 +333,7 @@ angular.module('integridadUiApp')
         items: [],
         ejercicio: ('0' + (today.getMonth() + 1)).slice(-2) + '/' +today.getFullYear()
       };
-      $('#pickerBillDateDebsToPay').data("DateTimePicker").date(today);
+      
       $('#pickerBillDateDocumentDebsToPay').data("DateTimePicker").date(today);
 
       $('#pickerBillDateDocumentDebsToPay').on("dp.change", function (data) {

@@ -34,7 +34,7 @@
   </div>
 </div>
 
-<div ng-show="vm.provider === undefined && vm.retention === undefined">
+<div ng-show="vm.provider === undefined && vm.retention === undefined && vm.debstopay === undefined">
 
   <input ng-model="searchText" class="form-control" placeholder="Buscar">
   <table class="table table-striped">
@@ -698,19 +698,6 @@
       <div class="panel-body">
           <div class="row">
               <div class="form-group col-md-6">
-                  <label>Fecha: </label>
-                  <div class="input-group date" id="pickerBillDateDebsToPay">
-                      <input type="text" class="form-control input-group-addon"/>
-                      <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"/></span>
-                  </div>
-                  <script>
-                      var defaultDate = new Date();
-                      $('#pickerBillDateDebsToPay').datetimepicker({format: "DD/MM/YY",});
-                  </script>
-              </div>
-          </div>
-          <div class="row">
-              <div class="form-group col-md-6">
                   <label>C&oacute;digo Proveedor: </label>
                   {{vm.debstopay.provider.codeIntegridad}}
               </div>
@@ -757,6 +744,7 @@
                       <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"/></span>
                   </div>
                   <script>
+                      var defaultDate = new Date();
                       $('#pickerBillDateDocumentDebsToPay').datetimepicker({format: "DD/MM/YY",});
                   </script>
               </div>
