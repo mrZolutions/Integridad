@@ -44,24 +44,22 @@ public class BillServices {
 	CreditsRepository creditsRepository;
 	@Autowired
 	UserClientRepository userClientRepository;
-	@Autowired
-	PaymentRepository paymentRepository;
-
+	
 	public String getDatil(Requirement requirement, UUID userClientId) throws Exception{
 		UserClient userClient = userClientRepository.findOne(userClientId);
 
 		if(userClient == null){
 			throw new BadRequestException("Empresa Invalida");
-		}
+		};
 
 		log.info("BillServices getDatil Empresa valida: {}", userClient.getName());
 		if(requirement.getPagos() != null){
 			requirement.getPagos().forEach(pago ->{
 				if("credito".equals(pago.getMedio())){
 					pago.setMedio("otros");
-				}
+				};
 			});
-		}
+		};
 
 		ObjectMapper mapper = new ObjectMapper();
 		String data = mapper.writeValueAsString(requirement);
@@ -81,7 +79,7 @@ public class BillServices {
 			bill.setFatherListToNull();
 		});
 		return bills;
-	}
+	};
 	
 	public Iterable<Bill> getByUserLazy(UserIntegridad user){
 		log.info("BillServices getByUserLazy: {}", user.getId());
@@ -92,7 +90,7 @@ public class BillServices {
 			});
 		
 		return bills;
-	}
+	};
 
 	public Iterable<Bill> getByClientIdAndTypeLazy(UUID id, int type){
 		log.info("BillServices getByClientIdAndTypeLazy: {}", id);
@@ -103,7 +101,7 @@ public class BillServices {
 		});
 
 		return bills;
-	}
+	};
 	
 	public Bill getById(UUID id) {
 		log.info("BillServices getById: {}", id);
@@ -112,11 +110,11 @@ public class BillServices {
 			log.info("BillServices retrieved id: {}", retrieved.getId());
 		} else {
 			log.info("BillServices retrieved id NULL: {}", id);
-		}
+		};
 		
 		populateChildren(retrieved);
 		return retrieved;
-	}
+	};
 	
 	public Bill create(Bill bill, int typeDocument) throws BadRequestException{
 		log.info("BillServices create");
@@ -124,10 +122,10 @@ public class BillServices {
 		List<Pago> pagos = bill.getPagos();
 		if(details == null){
 			throw new BadRequestException("Debe tener un detalle por lo menos");
-		}
+		};
 		if(typeDocument == 1 && pagos == null){
 			throw new BadRequestException("Debe tener un pago por lo menos");
-		}
+		};
 		
 		bill.setDateCreated(new Date().getTime());
 		bill.setTypeDocument(typeDocument);
@@ -149,44 +147,19 @@ public class BillServices {
 				pago.setCredits(null);
 				pago.setBill(saved);
 				Pago pagoSaved = pagoRepository.save(pago);
-
-				/*Inicio cambio payment*/
-				if ("efectivo".equalsIgnoreCase(pago.getMedio())) {
-					Credits specialCredit = new Credits();
-					specialCredit.setDiasPlazo(0);
-					specialCredit.setFecha(new Date().getTime());
-					specialCredit.setPayNumber(1);
-					specialCredit.setValor(bill.getTotal());
-					specialCredit.setPago(pagoSaved);
-					specialCredit.setPayments(null);
-					Credits creditSaved = creditsRepository.save(specialCredit);
-
-					Payment specialPayment = new Payment();
-					specialPayment.setCredit(creditSaved);
-					specialPayment.setValue(bill.getTotal());
-					specialPayment.setDetail("");
-					specialPayment.setNoCheck("");
-					specialPayment.setNoAccount("");
-					specialPayment.setNoTransfer("");
-					specialPayment.setNoDocument("");
-					specialPayment.setCuentaContablePrincipal(bill.getCuentaContablePrincipal());
-					specialPayment.setCuentaContablePrincipal(bill.getCuentaContableAuxiliar());
-					paymentRepository.save(specialPayment);
-
-				}
-				/*Fin cambio*/
+				
 				if(creditsList != null){
 					creditsList.forEach(credit ->{
 						credit.setPago(pagoSaved);
 						creditsRepository.save(credit);
 					});
-				}
+				};
 			});
 		} else {
 			Cashier cashier = cashierRepository.findOne(bill.getUserIntegridad().getCashier().getId());
 			cashier.setQuotationNumberSeq(cashier.getQuotationNumberSeq() + 1);
 			cashierRepository.save(cashier);
-		}
+		};
 
 		details.forEach(detail->{
 			detail.setBill(saved);
@@ -196,7 +169,7 @@ public class BillServices {
 				ProductBySubsidiary ps =productBySubsidiairyRepository.findBySubsidiaryIdAndProductId(bill.getSubsidiary().getId(), detail.getProduct().getId());
 				ps.setQuantity(ps.getQuantity() - detail.getQuantity());
 				productBySubsidiairyRepository.save(ps);
-			}
+			};
 
 			detail.setBill(null);
 		});
@@ -204,7 +177,7 @@ public class BillServices {
 		log.info("BillServices created id: {}", saved.getId());
 		saved.setDetails(details);
 		return saved;
-	}
+	};
 
 //	public Bill createQuotation(Bill bill, int typeDocument ) throws BadRequestException{
 //		log.info("BillServices createQuotation");
@@ -239,7 +212,7 @@ public class BillServices {
 	public Bill deactivate(Bill bill) throws BadRequestException{
 		if(bill.getId() == null){
 			throw new BadRequestException("Invalid Bill");
-		}
+		};
 
 		Bill billToDeactivate = billRepository.findOne(bill.getId());
 		billToDeactivate.setListsNull();
@@ -249,12 +222,12 @@ public class BillServices {
 		billRepository.save(billToDeactivate);
 
 		return billToDeactivate;
-	}
+	};
 
 	public Bill update(Bill bill) throws BadRequestException{
 		if(bill.getId() == null){
 			throw new BadRequestException("Invalid Bill");
-		}
+		};
 		log.info("BillServices update: {}", bill.getId());
 		Father<Bill, Detail> father = new Father<>(bill, bill.getDetails());
         FatherManageChildren fatherUpdateChildren = new FatherManageChildren(father, detailChildRepository, detailRepository);
@@ -266,7 +239,7 @@ public class BillServices {
 		Bill updated = billRepository.save(bill);
 		log.info("BillServices update id: {}", updated.getId());
 		return updated;
-	}
+	};
 
 	public Iterable<Bill> getByStringSeqAndSubId(String stringSeq, UUID subId){
 		log.info("BillServices getByStringSeq : {}, {}", stringSeq, subId);
@@ -278,7 +251,7 @@ public class BillServices {
 		});
 
 		return bills;
-	}
+	};
 
 	public List<ItemReport> getBySubIdAndDatesActives(UUID userClientId, long dateOne, long dateTwo){
 		log.info("BillServices getByUserClientIdAndDates: {}, {}, {}", userClientId, dateOne, dateTwo);
@@ -290,11 +263,11 @@ public class BillServices {
 
 			for (Detail detail: bill.getDetails()) {
 				productIds.add(detail.getProduct().getId());
-			}
+			};
 		});
 
 		return loadListItems(Lists.newArrayList(bills), productIds);
-	}
+	};
 
 	public List<SalesReport> getAllBySubIdAndDates(UUID userClientId, long dateOne, long dateTwo){
 		log.info("BillServices getAllBySubIdAndDates: {}, {}, {}", userClientId, dateOne, dateTwo);
@@ -310,10 +283,10 @@ public class BillServices {
 					for (Credits credit: pago.getCredits()){
 						if(endDateLong < credit.getFecha()){
 							endDateLong = credit.getFecha();
-						}
-					}
-				}
-			}
+						};
+					};
+				};
+			};
 
 			SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 			String date = dateFormat.format(new Date(bill.getDateCreated()));
@@ -328,7 +301,7 @@ public class BillServices {
 		});
 
 		return salesReportList;
-	}
+	};
 
 	private void populateChildren(Bill bill) {
 		log.info("BillServices populateChildren billId: {}", bill.getId());
@@ -339,7 +312,7 @@ public class BillServices {
 		bill.setPagos(pagoList);
 		bill.setFatherListToNull();
 		log.info("BillServices populateChildren FINISHED billId: {}", bill.getId());
-	}
+	};
 
 	private List<Detail> getDetailsByBill(Bill bill){
 		List<Detail> detailList = new ArrayList<>();
@@ -355,7 +328,7 @@ public class BillServices {
 		});
 
 		return detailList;
-	}
+	};
 
 	private List<Pago> getPagosByBill(Bill bill){
 		List<Pago> pagoList = new ArrayList<>();
@@ -377,7 +350,7 @@ public class BillServices {
 				pago.setCredits(creditsList);
 			} else {
 				pago.setListsNull();
-			}
+			};
 			pago.setFatherListToNull();
 			pago.setBill(null);
 
@@ -385,7 +358,7 @@ public class BillServices {
 		});
 
 		return pagoList;
-	}
+	};
 
 	private List<ItemReport> loadListItems(List<Bill> bills, Set<UUID> productIds){
 		List<ItemReport> reportList = new ArrayList<>();
@@ -413,17 +386,17 @@ public class BillServices {
 						desc = detail.getProduct().getName();
 
 						reportList.add(item);
-					}
-				}
-			}
+					};
+				};
+			};
 
 			ItemReport itemTotal = new ItemReport(uuidCurrent, "R", "", code,
 					desc, quantityTotal, null, subTotalTotal, discountTotal, ivaTotal, totalTotal);
 
 			reportList.add(itemTotal);
-		}
+		};
 
 		return reportList;
-	}
+	};
 
 }

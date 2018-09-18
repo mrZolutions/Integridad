@@ -1,6 +1,7 @@
 angular
   .module('app.services')
   .service('validatorService', function () {
+
     this.isCedulaValid = function (cedula) {
       if (typeof(cedula) == 'string' && cedula.length == 10 && /^\d+$/.test(cedula)) {
         var digitos = cedula.split('').map(Number);
@@ -15,10 +16,10 @@ angular
           }, 1000) % 10;
           return digito_calculado === digito_verificador;
           // }
-        }
+        };
         return false;
-      }
-    }
+      };
+    };
 
 
 
@@ -30,23 +31,19 @@ angular
         valor = number.substring(i,i+1);
         if(valor==0||valor==1||valor==2||valor==3||valor==4||valor==5||valor==6||valor==7||valor==8||valor==9){
           acu = acu+1;
-        }
-      }
+        };
+      };
 
       if(acu==dto){
         while(number.substring(10,13)!=001){
           return false;
-        }
+        };
         while(number.substring(0,2)>24){
           return false;
-        }
-
+        };
         return true;
-
-      }
-      else{
+      } else {
         return false;
-      }
+      };
     };
-
   });

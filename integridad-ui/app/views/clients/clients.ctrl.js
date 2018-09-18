@@ -109,7 +109,7 @@ angular.module('integridadUiApp')
         idValid = validatorService.isCedulaValid(vm.client.identification);
       } else if(vm.client.typeId === 'RUC'){
         idValid = validatorService.isRucValid(vm.client.identification);
-      }
+      };
 
       if(validationError){
         vm.error = 'Debe ingresar Nombres completos, una identificacion y el Codigo de Contabilidad';
@@ -121,9 +121,8 @@ angular.module('integridadUiApp')
           create();
         }else{
           update(false);
-        }
-      }
-
+        };
+      };
     };
 
     vm.remove = function(){

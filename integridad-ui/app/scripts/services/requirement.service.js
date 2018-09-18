@@ -5,8 +5,7 @@ angular
     function getTipyCode(code){
       tipyIdCode = {
         RUC : '04',
-        CED : '05',
-        PAS : '06'
+        CED : '05'
       };
       return tipyIdCode[code];
     };
