@@ -35,19 +35,23 @@
 </div>
 
 <div ng-show="vm.clientSelected === undefined && vm.billList === undefined">
-
-  <input ng-model="searchText" class="form-control" placeholder="Buscar">
+  <div class="row">
+    <div class="form-group col-md-10">
+      <input ng-model="searchText" class="form-control" placeholder="Buscar">
+    </div>
+    <div class="form-group col-md-2">
+        <button type="button" class="btn btn-primary" ng-click="vm.clientCreate()">
+          Crear Cliente
+        </button>
+    </div>
+  </div>
   <table class="table table-striped">
     <thead>
       <tr>
         <th> C&oacute;digo </th>
         <th> Nombre </th>
-        <th> Ruc / C&eacute;dula </th>
-        <th>
-          <button type="button" class="btn btn-primary" ng-click="vm.clientCreate()">
-            Crear Cliente
-          </button>
-        </th>
+        <th> Tipo ID</th>
+        <th> # Identidad </th>
       </tr>
     </thead>
     <tbody>
@@ -59,12 +63,13 @@
       <tr ng-repeat="clientPreSelect in vm.clientList | orderBy:'name' | filter:searchText">
         <td>{{ clientPreSelect.codApp }}</td>
         <td>{{ clientPreSelect.name }}</td>
+        <td>{{ clientPreSelect.typeId }}</td>
         <td>{{ clientPreSelect.identification }}</td>
         <td>
-          <button type="button" class="btn btn-primary" ng-click="vm.clientSelect(clientPreSelect)">
+          <button type="button" class="btn btn-primary btn-sm" ng-click="vm.clientSelect(clientPreSelect)">
             Facturar
           </button>
-          <button type="button" class="btn btn-primary" ng-click="vm.clientConsult(clientPreSelect)">
+          <button type="button" class="btn btn-primary btn-sm" ng-click="vm.clientConsult(clientPreSelect)">
             Consultar
           </button>
         </td>
@@ -655,18 +660,6 @@
               {{vm.medio.payForm}}
               </select>
             </div>
-          </div>
-          <div class="row">
-              <div class="form-group col-md-6">
-                <b>CUENTA CONTABLE PRINCIPAL:</b>
-                <select ng-options="cuentaContable as cuentaContable.description for cuentaContable in vm.cuentaContableList"
-                  ng-disabled="vm.medio.medio !== 'efectivo'" ng-model="vm.cuentaContablePrincipal" class="form-control" />
-              </div>
-              <div class="form-group col-md-6">
-                <b>CUENTA CONTABLE AUXILIAR:</b>
-                <select ng-options="cuentaContable as cuentaContable.description for cuentaContable in vm.cuentaContableList"
-                  ng-disabled="vm.medio.medio !== 'efectivo'" ng-model="vm.cuentaContableAuxiliar" class="form-control" />
-              </div>
           </div>
           <div class="row" ng-show="vm.medio.medio === 'cheque' || vm.medio.medio === 'cheque_posfechado'">
             <div class="form-group col-md-4">

@@ -5,10 +5,11 @@ angular
     function getTipyCode(code){
       tipyIdCode = {
         RUC : '04',
-        CED : '05'
+        CED : '05',
+        PAS : '06'
       };
       return tipyIdCode[code];
-    }
+    };
 
     this.createRequirement = function(clientSelected, bill, user, impuestosTotales, items, pagos){
       var pagosDatil = [];
@@ -19,19 +20,17 @@ angular
         } else {
           if(credito === undefined){
             credito = {};
-          }
+          };
           var maxDateCred = _.max(pago.credits, function(cred){ return cred.fecha; });
-
           credito.monto = pago.total;
           var dateToFormat = new Date(maxDateCred.fecha);
           var yyyy = dateToFormat.getFullYear().toString();
           var mm = (dateToFormat.getMonth()+1).toString();
           var dd  = dateToFormat.getDate().toString();
-
           var mmChars = mm.split('');
           var ddChars = dd.split('');
           credito.fecha_vencimiento = yyyy + '-' + (mmChars[1]?mm:"0"+mmChars[0]) + '-' + (ddChars[1]?dd:"0"+ddChars[0]);
-        }
+        };
       });
       var req = {
         "ambiente": 2,
@@ -71,11 +70,9 @@ angular
         "valor_retenido_iva": 0,
         "valor_retenido_renta": 0,
       };
-
       if (user.cashier.subsidiary.userClient.testMode){
         req.ambiente = 1;
-      }
-
+      };
       if(user.cashier.subsidiary.userClient.espTemp){
         req.comprador.email = req.comprador.email + ', facturacionelecppe2018@gmail.com, facturacionppecoca@gmail.com, ferrelozada@yahoo.com';
         var infoAdicional = {
@@ -83,17 +80,13 @@ angular
           info2: 'OTI/OTIR: '+bill.otir
         };
         req.informacion_adicional = infoAdicional;
-      }
-
+      };
       if(credito !== undefined){
         req.credito = credito;
-      }
-
+      };
       if(!_.isEmpty(pagosDatil)){
         req.pagos = pagosDatil;
-      }
-
+      };
       return req;
-    }
-
+    };
   });

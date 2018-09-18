@@ -10,11 +10,10 @@
 angular.module('integridadUiApp')
   .controller('BillCtrl', function ( _, $rootScope, $location, utilStringService, $localStorage,
                                      clientService, productService, authService, billService, $window,
-                                     cashierService, requirementService, utilSeqService, cuentaContableService) {
+                                     cashierService, requirementService, utilSeqService) {
     var vm = this;
     vm.error = undefined;
     vm.success = undefined;
-
     vm.loading = false;
     vm.clientList = undefined;
     vm.isEmp = true;
@@ -64,9 +63,6 @@ angular.module('integridadUiApp')
       vm.priceType = vm.prices[0];
       vm.seqChanged = false;
       vm.quotations = undefined;
-      vm.cuentaContablePrincipal = undefined;
-      vm.cuentaContableAuxiliar = undefined;
-
       vm.impuestosTotales = [];
       vm.items = [];
       vm.impuestoICE = {
@@ -89,7 +85,6 @@ angular.module('integridadUiApp')
       };
       vm.medio={};
       vm.pagos=[];
-
       vm.user = $localStorage.user;
       clientService.getLazyByProjectId($localStorage.user.subsidiary.userClient.id).then(function (response) {
         vm.clientList = response;
@@ -98,24 +93,17 @@ angular.module('integridadUiApp')
         vm.loading = false;
         vm.error = error.data;
       });
-
-      cuentaContableService.getAll().then( function(response) {
-        vm.cuentaContableList = response;
-      })
-    }
+    };
 
     function _getSeqNumber(){
       vm.numberAddedOne = parseInt($localStorage.user.cashier.billNumberSeq) + 1;
-      vm.seqNumberFirstPart = $localStorage.user.subsidiary.threeCode + '-'
-        + $localStorage.user.cashier.threeCode;
+      vm.seqNumberFirstPart = $localStorage.user.subsidiary.threeCode + '-' + $localStorage.user.cashier.threeCode;
       vm.seqNumberSecondPart = utilSeqService._pad_with_zeroes(vm.numberAddedOne, 9);
-      vm.seqNumber =  vm.seqNumberFirstPart + '-'
-        + vm.seqNumberSecondPart;
-
-    }
+      vm.seqNumber =  vm.seqNumberFirstPart + '-' + vm.seqNumberSecondPart;
+    };
 
     function _initializeBill(){
-      vm.bill ={
+      vm.bill = {
         client: vm.clientSelected,
         userIntegridad: $localStorage.user,
         subsidiary: $localStorage.user.subsidiary,
@@ -128,7 +116,7 @@ angular.module('integridadUiApp')
         details: [],
         pagos:[],
       };
-    }
+    };
 
     function _getTotalSubtotal(){
       vm.bill.subTotal = 0;
@@ -144,34 +132,29 @@ angular.module('integridadUiApp')
         var tot = detail.total;
         if(vm.bill.discountPercentage){
           tot = (parseFloat(detail.total) - (parseInt(vm.bill.discountPercentage)/100)*(parseFloat(detail.total))).toFixed(2);
-        }
+        };
         if(detail.product.iva){
           vm.bill.baseTaxes += parseFloat(detail.total);
           vm.bill.iva = (parseFloat(vm.bill.iva) + (parseFloat(tot) * 0.12)).toFixed(2);
           if(vm.bill.discountPercentage){
             discountWithIva = (parseFloat(discountWithIva) + ((parseInt(vm.bill.discountPercentage)/100)*detail.total)).toFixed(2);
-          }
+          };
         } else {
           vm.bill.baseNoTaxes += parseFloat(detail.total);
           vm.bill.ivaZero = (parseFloat(vm.bill.ivaZero) + parseFloat(tot)).toFixed(2);
           if(vm.bill.discountPercentage){
             discountWithNoIva = (parseFloat(discountWithNoIva) + ((parseInt(vm.bill.discountPercentage)/100)*detail.total)).toFixed(2);
-          }
-        }
-
+          };
+        };
         if(detail.product.ice){
           vm.bill.ice = (parseFloat(vm.bill.ice) + (parseFloat(tot) * 0.10)).toFixed(2);
-        }
-
+        };
       });
-
       if(vm.bill.discountPercentage){
         vm.bill.discount = ((parseInt(vm.bill.discountPercentage)/100)*vm.bill.subTotal).toFixed(2);
-      }else {
+      } else {
         vm.bill.discount = 0;
-      }
-
-
+      };
       vm.impuestoICE.base_imponible = vm.bill.subTotal;
       vm.impuestoIVA.base_imponible = vm.bill.baseTaxes;
       vm.impuestoIVAZero.base_imponible = vm.bill.baseNoTaxes;
@@ -185,21 +168,18 @@ angular.module('integridadUiApp')
         +  parseFloat(vm.bill.iva)
         +  parseFloat(vm.bill.ice)
       ).toFixed(2);
-
-    }
+    };
 
     function _addDays(date, days) {
       var result = new Date(date);
       result.setDate(result.getDate() + days);
       return result.getTime();
-    }
+    };
 
     vm.acceptNewSeq = function(){
       vm.seqErrorNumber = undefined;
       vm.loading = true;
-      var stringSeq =  vm.seqNumberFirstPart + '-'
-        + vm.seqNumberSecondPart;
-
+      var stringSeq =  vm.seqNumberFirstPart + '-' + vm.seqNumberSecondPart;
       billService.getByStringSeq(stringSeq, vm.companyData.id).then(function (response) {
         if(response.length === 0){
           vm.seqNumber = stringSeq;
@@ -208,7 +188,7 @@ angular.module('integridadUiApp')
           $('#modalEditBillNumber').modal('hide');
         } else {
           vm.seqErrorNumber = "NUMERO DE FACTURA YA EXISTENTE"
-        }
+        };
         vm.loading = false;
       }).catch(function (error) {
         vm.loading = false;
@@ -222,7 +202,7 @@ angular.module('integridadUiApp')
           detail.discount = vm.bill.discountPercentage;
         } else {
           detail.discount = 0;
-        }
+        };
         var costEachCalculated = vm.getCost('1.'+ detail.product[vm.priceType.cod], detail.product.averageCost);
         detail.costEach = costEachCalculated;
         detail.total = (parseFloat(detail.quantity) * parseFloat(detail.costEach)).toFixed(2);
@@ -256,7 +236,6 @@ angular.module('integridadUiApp')
         vm.loading = false;
         vm.error = error.data;
       });
-
     };
 
     function _filterProduct(){
@@ -267,12 +246,10 @@ angular.module('integridadUiApp')
         vm.loading = false;
         vm.totalPages = response.totalPages;
         vm.productList = [];
-
         for (var i = 0; i < response.content.length; i++) {
           var productFound = _.find(vm.bill.details, function (detail) {
             return detail.product.id === response.content[i].id;
           });
-
           if(productFound === undefined){
             var sub = _.find(response.content[i].productBySubsidiaries, function (s) {
               return (s.subsidiary.id === $localStorage.user.subsidiary.id && s.active === true);
@@ -280,14 +257,14 @@ angular.module('integridadUiApp')
             if(sub){
               response.content[i].quantity = sub.quantity
               vm.productList.push(response.content[i]);
-            }
-          }
-        }
+            };
+          };
+        };
       }).catch(function (error) {
         vm.loading = false;
         vm.error = error.data;
       });
-    }
+    };
 
     vm.filter = function(){
       vm.page = 0;
@@ -314,48 +291,42 @@ angular.module('integridadUiApp')
       vm.errorQuantity = undefined;
       vm.page = 0;
       vm.searchText = undefined;
-
       _filterProduct();
     };
 
     vm.selectProductToAdd = function(productSelect){
       if(productSelect.productType.code === 'SER'){
         productSelect.quantity = 1;
-      }
+      };
       vm.productToAdd = angular.copy(productSelect);
       var costEachCalculated = vm.getCost('1.'+ productSelect[vm.priceType.cod], productSelect.averageCost);
       vm.productToAdd.costEachCalculated = costEachCalculated;
       vm.quantity = 1;
-    }
+    };
 
     vm.acceptProduct = function(closeModal){
       if(vm.productToAdd.productType.code !== 'SER'){
           if(parseInt(vm.quantity) > parseInt(vm.productToAdd.quantity)){
             vm.errorQuantity = 'Cantidad disponible insuficiente';
             return;
-          }
-      }
-
+          };
+      };
       vm.errorQuantity = undefined;
-
-      var detail={
+      var detail = {
         discount: vm.bill.discountPercentage? vm.bill.discountPercentage : 0,
         product: angular.copy(vm.productToAdd),
         quantity: vm.quantity,
         costEach: vm.productToAdd.costEachCalculated,
         total: (parseFloat(vm.quantity) * parseFloat(vm.productToAdd.costEachCalculated)).toFixed(2)
-      }
-
+      };
       if(vm.indexDetail !== undefined){
         vm.bill.details[vm.indexDetail] = detail;
       } else {
         vm.bill.details.push(detail);
-      }
-
+      };
       vm.productToAdd = undefined;
       vm.quantity = undefined;
       _getTotalSubtotal();
-
       if(closeModal){
         $('#modalAddProduct').modal('hide');
       } else {
@@ -363,8 +334,7 @@ angular.module('integridadUiApp')
           return prod.id !== detail.product.id;
         });
         vm.productList = newProductList;
-      }
-
+      };
     };
 
     vm.getCost = function(textCost, averageCost){
@@ -395,7 +365,7 @@ angular.module('integridadUiApp')
         vm.loading = false;
         vm.errorValidateAdm = error.data;
       });
-    }
+    };
 
     vm.verifyUser = function(){
       vm.isEmp = $localStorage.user.userType.code === 'EMP';
@@ -406,27 +376,26 @@ angular.module('integridadUiApp')
       _.each(vm.pagos, function(pago){
         payed +=(parseFloat(pago.total));
       });
-
       vm.pagos
       if(vm.medio.medio === 'efectivo' || vm.medio.medio === 'dinero_electronico_ec'){
         vm.medio.payForm = '20 - OTROS CON UTILIZACION DEL SISTEMA FINANCIERO';
         // CAMBIO SRI POR CONFIRMAR
         // vm.medio.payForm = '01 - SIN UTILIZACION DEL SISTEMA FINANCIERO';
-      }
+      };
       if(vm.medio.medio === 'credito'){
         vm.medio.payForm = '20 - OTROS CON UTILIZACION DEL SISTEMA FINANCIERO';
         // CAMBIO SRI POR CONFIRMAR
         // vm.medio.payForm = '01 - SIN UTILIZACION DEL SISTEMA FINANCIERO';
         vm.medio.total = (vm.bill.total - payed).toFixed(2);
-      }
+      };
       if(vm.medio.medio === 'cheque' || vm.medio.medio === 'cheque_posfechado'){
         vm.medio.payForm = '20 - OTROS CON UTILIZACION DEL SISTEMA FINANCIERO';
         vm.medio.total = (vm.bill.total - payed).toFixed(2);
-      }
+      };
       if(vm.medio.medio === 'tarjeta_credito' || vm.medio.medio === 'tarjeta_debito'){
         vm.medio.payForm = '19 - TARJETA DE CREDITO';
         vm.medio.total = (vm.bill.total - payed).toFixed(2);
-      }
+      };
     };
 
     vm.loadCredit = function(){
@@ -440,13 +409,11 @@ angular.module('integridadUiApp')
           diasPlazo: diasPlazo,
           fecha: _addDays(d, diasPlazo),
           valor: total
-        }
+        };
         diasPlazo += parseInt(vm.medio.creditoIntervalos);
         creditArray.push(credito)
-      }
-
+      };
       vm.medio.credits = creditArray
-
     };
 
     vm.getFechaCobro = function() {
@@ -469,16 +436,13 @@ angular.module('integridadUiApp')
 
     vm.getTotalPago = function(){
       vm.varPago=0;
-
       if(vm.bill){
         vm.getCambio=0;
         _.each(vm.pagos, function(med){
           vm.varPago=parseFloat(parseFloat(vm.varPago)+parseFloat(med.total)).toFixed(2);
         });
-
         vm.getCambio = (vm.varPago - vm.bill.total).toFixed(2);
-      }
-
+      };
       return vm.varPago;
     };
 
@@ -499,7 +463,6 @@ angular.module('integridadUiApp')
         vm.loading = false;
         vm.error = error.data;
       });
-
     };
 
     vm.cancelBill = function () {
@@ -509,8 +472,8 @@ angular.module('integridadUiApp')
     vm.getDateToPrint = function(){
       if(vm.bill != undefined){
           return $('#pickerBillDate').data("DateTimePicker").date().toDate();
-      }
-    }
+      };
+    };
 
     vm.printToCartAndCancel = function (printSectionId) {
       var innerContents = document.getElementById(printSectionId).innerHTML;
@@ -542,14 +505,13 @@ angular.module('integridadUiApp')
         var index = vm.billList.indexOf(vm.cancelBill);
         if (index > -1) {
             vm.billList.splice(index, 1);
-        }
+        };
         vm.cancelBill = undefined
         vm.loading = false;
       }).catch(function (error) {
         vm.loading = false;
         vm.error = error.data;
       });
-
     };
 
     vm.getQuotations = function(){
@@ -584,29 +546,25 @@ angular.module('integridadUiApp')
       vm.impuestosTotales = [];
       if(vm.impuestoIVA.base_imponible > 0){
         vm.impuestosTotales.push(vm.impuestoIVA);
-      }
+      };
       if(vm.impuestoIVAZero.base_imponible > 0){
         vm.impuestosTotales.push(vm.impuestoIVAZero);
-      }
+      };
       vm.bill.billSeq = vm.numberAddedOne;
-
       if(vm.bill.discountPercentage === undefined){
         vm.bill.discountPercentage = 0;
-      }
-
+      };
       _.each(vm.bill.details, function(det){
         var costWithIva = (det.costEach*1.12).toFixed(2);
         var costWithIce = (det.costEach*1.10).toFixed(2);
         var impuestos = [];
         var impuesto ={};
-
         if(det.product.iva){
           impuesto.base_imponible=(parseFloat(det.costEach)*parseFloat(det.quantity)).toFixed(2);
           impuesto.valor=(parseFloat(costWithIva)*parseFloat(det.quantity)).toFixed(2);
           impuesto.tarifa=12.0;
           impuesto.codigo='2';
           impuesto.codigo_porcentaje='2';
-
           impuestos.push(impuesto);
         } else {
           impuesto.base_imponible=(parseFloat(det.costEach)*parseFloat(det.quantity)).toFixed(2);
@@ -614,21 +572,17 @@ angular.module('integridadUiApp')
           impuesto.tarifa=0.0;
           impuesto.codigo='0';
           impuesto.codigo_porcentaje='0';
-
           impuestos.push(impuesto);
-        }
-
+        };
         if(det.product.ice){
           impuesto.base_imponible=det.costEach;
           impuesto.valor=costWithIce;
           impuesto.tarifa=10.0;
           impuesto.codigo='3';
           impuesto.codigo_porcentaje='2';
-
           impuestos.push(impuesto);
-        }
-
-        var item={
+        };
+        var item = {
           "cantidad":det.quantity,
           "codigo_principal": det.product.codeIntegridad,
           "codigo_auxiliar": det.product.barCode,
@@ -637,26 +591,21 @@ angular.module('integridadUiApp')
           "precio_total_sin_impuestos": ((parseFloat(det.costEach) - (parseFloat(det.costEach)*(parseInt(vm.bill.discountPercentage)/100)))*parseFloat(det.quantity)).toFixed(2),
           "descuento": (parseFloat(det.costEach)*(parseInt(vm.bill.discountPercentage)/100)).toFixed(2),
           "unidad_medida": det.product.unitOfMeasurementFull
-        }
-
+        };
         if(!_.isEmpty(impuestos)){
           item.impuestos = impuestos;
-        }
-
+        };
         vm.items.push(item);
       });
-
       var req = requirementService.createRequirement(vm.clientSelected, vm.bill, $localStorage.user, vm.impuestosTotales, vm.items, vm.pagos);
-      if (!_.isEmpty(_.filter(vm.pagos, function(pago){ return pago.medio === 'efectivo'; }))
-        && vm.bill.cuentaContablePrincipal === undefined) {
+      if (!_.isEmpty(_.filter(vm.pagos, function(pago){ return pago.medio === 'efectivo'; }))) {
         vm.loading = false;
-        vm.error = "Debe seleccionar una cuenta contable";
       } else {
         billService.getClaveDeAcceso(req, vm.companyData.userClient.id).then(function(resp){
           vm.bill.pagos = vm.pagos;
           if(vm.bill.discountPercentage === undefined){
             vm.bill.discountPercentage = 0;
-          }
+          };
           var obj = JSON.parse(resp.data);
           // var obj = {clave_acceso: '1234560', id:'id12345'};
           if(obj.errors === undefined){
@@ -675,7 +624,7 @@ angular.module('integridadUiApp')
                   vm.loading = false;
                   vm.error = error.data;
                 });
-              }
+              };
               vm.loading = false;
             }).catch(function (error) {
               vm.loading = false;
@@ -684,18 +633,15 @@ angular.module('integridadUiApp')
           } else {
             vm.loading = false;
             vm.error = "Error al obtener Clave de Acceso: " + JSON.stringify(obj.errors);
-          }
-
+          };
         }).catch(function (error) {
           vm.loading = false;
           vm.error = error.data;
         });
-      }
-
+      };
     };
 
     (function initController() {
       _activate();
     })();
-
   });
