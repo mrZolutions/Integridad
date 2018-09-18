@@ -27,7 +27,7 @@ public class Provider {
     private String country;
     private String city;
     private String address1;
-    private String address2;
+    private String ruc_type;
     private String ruc;
     private String contact;
     private String providerType;
