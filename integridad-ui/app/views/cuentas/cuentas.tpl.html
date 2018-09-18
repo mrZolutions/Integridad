@@ -35,17 +35,21 @@
 </div>
 
 <div ng-show="vm.cuentaSelected === undefined">
-  <input ng-model="searchText" class="form-control" placeholder="Buscar">
+  <div class="row">
+    <div class="form-group col-md-10">
+      <input ng-model="searchText" class="form-control" placeholder="Buscar">
+    </div>
+    <div class="form group col-md-2">
+      <button type="button" class="btn btn-primary" ng-click="vm.cuentaCreate()">
+              Crear Cuenta
+      </button>
+    </div>
+  </div>
   <table class="table table-striped">
     <thead>
       <tr>
         <th> C&oacute;digo </th>
         <th> Descripci&oacute;n </th>
-        <th>
-          <button type="button" class="btn btn-primary" ng-click="vm.cuentaCreate()">
-            Crear Cuenta
-          </button>
-        </th>
       </tr>
     </thead>
 
@@ -83,20 +87,6 @@
         <input type="text" ng-model="vm.cuentaSelected.description" class="form-control">
       </div>
     </div>
-
-    <div class="row">
-      <div class="form-group col-md-6">
-        <label>Tipo *: </label>
-        <select ng-options="tipo as tipo for tipo in vm.accountType" ng-model="vm.cuentaSelected.type"
-        class="form-control"></select>
-      </div>
-      <div class="form-group col-md-6">
-        <label>Tipo de Cuenta *: </label><br>
-        <label class="radio-inline"><input type="radio" ng-model="vm.cuentaSelected.account_type" value="D" name="tipo">D&eacute;bito</label>
-        <label class="radio-inline"><input type="radio" ng-model="vm.cuentaSelected.account_type" value="C" name="tipo">Cr&eacute;dito</label>
-      </div>
-    </div>
-
     <div class="row">
       <div class="form-group col-md-6">
         <label>Nombre Gen&eacute;rico *: </label>
