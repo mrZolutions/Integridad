@@ -43,7 +43,7 @@ angular
 
       if(user.cashier.subsidiary.userClient.espTemp){
         eRet.sujeto.email = eRet.sujeto.email + ', facturacionelecppe2018@gmail.com, facturacionppecoca@gmail.com, ferrelozada@yahoo.com';
-      }
+      };
 
       _.each(eRet.items, function(item){
         item.codigo = String(item.codigo);
@@ -51,7 +51,7 @@ angular
 
       if (user.cashier.subsidiary.userClient.testMode){
         eRet.ambiente = 1;
-      }
+      };
       return eRet;
     };
 
