@@ -9,15 +9,14 @@
  */
 angular.module('integridadUiApp')
   .controller('ClientsCtrl', function ($routeParams, $location, projectService, utilStringService, countryListService, clientService, $localStorage, validatorService) {
+    
     var vm = this;
     vm.error = undefined;
     vm.success = undefined;
-
     vm.loading = false;
     vm.client=undefined;
     vm.countryList = countryListService.getCountryList();
     vm.citiesList = countryListService.getCitiesEcuador();
-
     vm.clientList = undefined;
 
     function _activate(){
@@ -32,8 +31,8 @@ angular.module('integridadUiApp')
           vm.loading = false;
           vm.error = error.data;
         });
-      }
-    }
+      };
+    };
 
     function create(){
       clientService.create(vm.client).then(function (response) {
@@ -48,7 +47,7 @@ angular.module('integridadUiApp')
         vm.loading = false;
         vm.error = error.data;
       });
-    }
+    };
 
     function update(isRemove){
       clientService.update(vm.client).then(function (response) {
@@ -64,13 +63,13 @@ angular.module('integridadUiApp')
         vm.loading = false;
         vm.error = error.data;
       });
-    }
+    };
 
     vm.clientCotizar= function(client) {
       localStorage.setItem("client", JSON.stringify(client));
       // $location.path('/quotation/quotation');
        window.location = "#!/quotation/quotation";
-    }
+    };
 
     vm.clientCreate = function(){
       projectService.getNumberOfProjects($localStorage.user.subsidiary.userClient.id).then(function (response) {
@@ -140,5 +139,4 @@ angular.module('integridadUiApp')
     (function initController() {
       _activate();
     })();
-
   });
