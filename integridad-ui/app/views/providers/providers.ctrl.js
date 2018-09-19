@@ -210,7 +210,7 @@ angular.module('integridadUiApp')
     };
 
     function create(){
-      providerService.create(vm.provider).then(function (response) {
+      providerService.create(vm.provider).then(function(response) {
         _activate();
         vm.error = undefined;
         vm.success = 'Registro realizado con exito';
@@ -221,15 +221,15 @@ angular.module('integridadUiApp')
     };
 
     function update(){
-      providerService.update(vm.provider).then(function (response) {
+      providerService.update(vm.provider).then(function(response) {
         if(vm.provider.active){
           vm.success = 'Registro actualizado con exito';
         } else {
           vm.success = 'Registro eliminado con exito';
-        }
+        };
         _activate();
         vm.error = undefined;
-      }).catch(function (error) {
+      }).catch(function(error) {
         vm.loading = false;
         vm.error = error.data;
       });
@@ -242,7 +242,6 @@ angular.module('integridadUiApp')
       vm.seqNumberSecondPart = utilSeqService._pad_with_zeroes(vm.numberAddedOne, 9);
       vm.seqNumber =  vm.seqNumberFirstPart + '-'
         + vm.seqNumberSecondPart;
-
     };
 
     vm.providerCreate = function(){
@@ -266,6 +265,7 @@ angular.module('integridadUiApp')
         return utilStringService.isAnyInArrayStringEmpty([
           vm.provider.codeIntegridad,
           vm.provider.ruc,
+          vm.provider.ruc_type,
           vm.provider.name,
           vm.provider.razonSocial,
           vm.provider.country,
@@ -274,7 +274,7 @@ angular.module('integridadUiApp')
           vm.provider.contact,
           vm.provider.providerType
         ]);
-      }
+      };
     };
 
     vm.cancel = function(){
@@ -287,16 +287,12 @@ angular.module('integridadUiApp')
         idValid = validatorService.isRucValid(vm.provider.ruc);
       } else {
         idValid = validatorService.isCedulaValid(vm.provider.ruc);
-      }
-
-      if(!idValid){
-        vm.error = 'IDENTIFICACION INVALIDA';
-      } else if(vm.provider.id){
+      };
+      if(vm.provider.id){
         update();
       } else {
         create();
-      }
-
+      };
     };
 
     vm.remove = function(){
@@ -313,14 +309,11 @@ angular.module('integridadUiApp')
         items: [],
         ejercicio: ('0' + (today.getMonth() + 1)).slice(-2) + '/' +today.getFullYear()
       };
-
       $('#pickerBillDateRetention').data("DateTimePicker").date(today);
       $('#pickerBillDateDocumentRetention').data("DateTimePicker").date(today);
-
       $('#pickerBillDateDocumentRetention').on("dp.change", function (data) {
         vm.retention.ejercicio = ('0' + ($('#pickerBillDateDocumentRetention').data("DateTimePicker").date().toDate().getMonth() + 1)).slice(-2) + '/' +$('#pickerBillDateDocumentRetention').data("DateTimePicker").date().toDate().getFullYear();
       });
-
       _getSeqNumber();
     };
 
@@ -333,9 +326,7 @@ angular.module('integridadUiApp')
         items: [],
         ejercicio: ('0' + (today.getMonth() + 1)).slice(-2) + '/' +today.getFullYear()
       };
-      
       $('#pickerBillDateDocumentDebsToPay').data("DateTimePicker").date(today);
-
       $('#pickerBillDateDocumentDebsToPay').on("dp.change", function (data) {
         vm.debstopay.ejercicio = ('0' + ($('#pickerBillDateDocumentDebsToPay').data("DateTimePicker").date().toDate().getMonth() + 1)).slice(-2) + '/' +$('#pickerBillDateDocumentDebsToPay').data("DateTimePicker").date().toDate().getFullYear();
       });
@@ -345,11 +336,10 @@ angular.module('integridadUiApp')
       vm.tablePercentage = undefined;
       if(vm.retention.typeRetention === '2'){
         vm.tablePercentage = vm.ivaTipo;
-      }
-
+      };
       if(vm.retention.typeRetention === '1'){
         vm.tablePercentage = vm.fuenteTipo;
-      }
+      };
     };
 
     vm.getTaxesTable = function(){
@@ -391,14 +381,12 @@ angular.module('integridadUiApp')
       if(vm.indexEdit !== undefined){
         vm.retention.items.splice(vm.indexEdit, 1);
         vm.indexEdit = undefined
-      }
+      };
       vm.retention.retentionSeq = vm.seqNumber;
       vm.retention.items.push(vm.item);
       vm.item = undefined;
       vm.retention.typeRetention = undefined;
       vm.tablePercentage = undefined;
-
-
     };
 
     vm.editItem = function(index){
@@ -421,8 +409,7 @@ angular.module('integridadUiApp')
         _.each(vm.retention.items, function(detail){
           totalRetorno = (parseFloat(totalRetorno) +parseFloat(detail.valor_retenido)).toFixed(2);
         });
-      }
-
+      };
       return totalRetorno;
     };
 
@@ -433,7 +420,7 @@ angular.module('integridadUiApp')
       vm.retention.ejercicioFiscal = vm.retention.ejercicio;
       vm.totalRetention = 0;
       _.each(vm.retention.items, function(item){
-        var detail ={
+        var detail = {
           taxType: item.codigo === 1 ? 'RETENCION EN LA FUENTE' : 'RETENCION EN EL IVA',
           code: item.codigo_porcentaje_integridad,
           baseImponible: item.base_imponible,
@@ -490,8 +477,7 @@ angular.module('integridadUiApp')
         } else {
           vm.loading = false;
           vm.error = "Error al obtener Clave de Acceso: " + JSON.stringify(obj.errors);
-        }
-
+        };
       }).catch(function (error) {
         vm.loading = false;
         vm.error = error.data;
