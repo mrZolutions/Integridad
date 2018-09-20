@@ -34,18 +34,85 @@
   </div>
 </div>
 
-<div class="panel panel-default">
-  <div class="panel-body">
-    <div class="row">
-      <div class="form-group col-md-12">
-        <button type="button" class="btn btn-primary"
-                ng-click="">
-                Abonos a Facturas
-        </button>
-        <button type="button" class="btn btn-primary"
-                ng-click="">
-                Reporte por Clientes
-        </button>
+<div ng-show="vm.billList === undefined">
+  <div class="row">
+    <div class="form-group col-md-12">
+      <input ng-model="searchText" class="form-control" placeholder="Buscar Clientes">
+    </div>
+  </div>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>C&oacute;digo</th>
+        <th>Nombre</th>
+        <th>Tipo ID</th>
+        <th>No. Identidad</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-show="vm.clientList == 0">
+        <td colspan="4">
+          No hay clientes ingresados
+        </td>
+      </tr>
+      <tr ng-repeat="clientPreSelect in vm.clientList | orderBy:'name' | filter:searchText">
+        <td>{{clientPreSelect.codApp}}</td>
+        <td>{{clientPreSelect.name}}</td>
+        <td>{{clientPreSelect.typeId}}</td>
+        <td>{{clientPreSelect.identification}}</td>
+        <td>
+          <button type="button" class="btn btn-primary btn-sm" ng-click="vm.clientConsult(clientPreSelect)">
+                  Seleccionar
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<div ng-show="vm.billList !== undefined">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <b>{{bill.client.name}}</b>
+    </div>
+    <div class="panel-body">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>N&uacute;mero</th>
+            <th>Fecha</th>
+            <th>Total</th>
+            <th>Saldo</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-show="vm.billList == 0">
+            <td colspan="4">
+                No hay facturas ingresados
+            </td>
+          </tr>
+          <tr ng-repeat="bill in vm.billList | orderBy:'dateCreated':true | filter:searchText">
+            <td>{{bill.stringSeq}}</td>
+            <td>{{bill.dateCreated | date :  "dd/MM/yyyy"}}</td>
+            <td>{{bill.total}}</td>
+            <td>{{bill.total}}</td>
+            <td>
+              <button type="button" class="btn btn-primary btn-sm" ng-click="vm.billSelect(bill)">
+                      Ver
+              </button>
+              <button type="button" class="btn btn-primary btn-sm" ng-click="">
+                      Seleccionar
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="row">
+        <div class="form-group col-md-12">
+          <button type="button" class="btn btn-primary" ng-click="vm.billList = undefined">
+                  Cancelar
+          </button>
+        </div>
       </div>
     </div>
   </div>
