@@ -73,7 +73,7 @@ angular
         req.ambiente = 1;
       };
       if(user.cashier.subsidiary.userClient.espTemp){
-        req.comprador.email = req.comprador.email + ', facturacionelecppe2018@gmail.com, facturacionppecoca@gmail.com, ferrelozada@yahoo.com';
+        req.comprador.email = req.comprador.email + ', facturacionelecppe2018@gmail.com, facturacionppecoca@gmail.com';
         var infoAdicional = {
           info1: 'ORDEN DE COMPRA: '+bill.ordenDecompra,
           info2: 'OTI/OTIR: '+bill.otir

@@ -42,7 +42,7 @@ angular
       };
 
       if(user.cashier.subsidiary.userClient.espTemp){
-        eRet.sujeto.email = eRet.sujeto.email + ', facturacionelecppe2018@gmail.com, facturacionppecoca@gmail.com, ferrelozada@yahoo.com';
+        eRet.sujeto.email = eRet.sujeto.email + ', facturacionelecppe2018@gmail.com, facturacionppecoca@gmail.com';
       };
 
       _.each(eRet.items, function(item){
