@@ -68,23 +68,27 @@
     </div>
   </div>
   <div class="panel-footer">
-    <div>
-      <button type="button" class="btn btn-primary"
-        ng-click="vm.getReportProducts()">
-        Reporte Por Producto
-      </button>
-      <button type="button" class="btn btn-primary"
-              ng-click="vm.getReportSales()">
-        Reporte De Ventas
-      </button>
-      <button type="button" class="btn btn-primary"
-              ng-click="vm.getReportRetention()">
-        Reporte De Retenciones
-      </button>
-      <button type="button" class="btn btn-primary"
-        ng-click="vm.exportExcel()" ng-disabled="vm.reportList === undefined || vm.reportList.length === 0">
-        Excel
-      </button>
+    <div class="row">
+      <div class="form-group col-md-10">
+        <button type="button" class="btn btn-primary"
+                ng-click="vm.getReportProducts()">
+                De Productos
+        </button>
+        <button type="button" class="btn btn-primary"
+                ng-click="vm.getReportSales()">
+                De Ventas
+        </button>
+        <button type="button" class="btn btn-primary"
+                ng-click="vm.getReportRetention()">
+                De Retenciones
+        </button>
+      </div>
+      <div class="form-group col-md-2">
+        <button type="button" class="btn btn-primary"
+                ng-click="vm.exportExcel()" ng-disabled="vm.reportList === undefined || vm.reportList.length === 0">
+                Excel
+        </button>
+      </div>
     </div>
     <div ng-show="vm.reportList.length === 0">
       <br/>
@@ -140,6 +144,7 @@
       <th> OTI </th>
       <th> Subtotal </th>
       <th> Descuento </th>
+      <th> Base 0% </th>
       <th> Iva </th>
       <th> Total </th>
       <th> Fecha-Vencimiento </th>
@@ -160,6 +165,7 @@
       <td>{{ data.oti }}</td>
       <td>{{ data.status === 'ACTIVA' ? data.subTotal.toFixed(2) : '' }}</td>
       <td>{{ data.status === 'ACTIVA' ? data.discount.toFixed(2) : '' }}</td>
+      <td>{{ data.status === 'ACTIVA' ? data.baseNoTaxes.toFixed(2) : '' }}</td>
       <td>{{ data.status === 'ACTIVA' ? data.iva.toFixed(2) : '' }}</td>
       <td>{{ data.status === 'ACTIVA' ? data.total.toFixed(2) : '' }}</td>
       <td>{{ data.endDate }}</td>

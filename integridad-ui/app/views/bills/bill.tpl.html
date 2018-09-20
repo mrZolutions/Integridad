@@ -599,19 +599,17 @@
   <table width="100%">
     <thead>
       <tr>
-        <th align="left">COD </th>
-        <th align="left"> CANT </th>
-        <th align="left"> DESCRIP </th>
-        <th align="left">P.UNIT </th>
-        <th align="right">  TOTAL</th>
+        <th align="left">DESCRIP&nbsp;</th>
+        <th align="left">&nbsp;CANT&nbsp;</th>
+        <th align="left">&nbsp;P.UNIT</th>
+        <th align="right">&nbsp;TOTAL</th>
       </tr>
     </thead>
     <tbody>
       <tr ng-repeat="detail in vm.bill.details">
-        <td align="left">{{detail.product.codeIntegridad}} </td>
-        <td align="left"> {{detail.quantity}} </td>
-        <td align="left"> {{detail.product.name}} </td>
-        <td align="left"> &#36;{{detail.costEach}} </td>
+        <td align="left">{{detail.product.name}}</td>
+        <td align="left">&nbsp;{{detail.quantity}}&nbsp;</td>
+        <td align="left"> &#36;{{detail.costEach}}&nbsp;</td>
         <td align="right">&#36;{{detail.total}}</td>
       </tr>
     </tbody>

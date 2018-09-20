@@ -15,7 +15,6 @@ angular.module('integridadUiApp')
     var vm = this;
     vm.error = undefined;
     vm.success = undefined;
-
     vm.loading = false;
     vm.clientList = undefined;
 
@@ -24,28 +23,30 @@ angular.module('integridadUiApp')
       vm.billList = undefined;
       vm.bill = undefined;
       vm.claveDeAcceso = undefined;
+
       vm.impuestoIVA = {
-        "base_imponible":0.0,
-        "valor":0.0,
-        "codigo":"2",
-        "codigo_porcentaje":2
+        "base_imponible" : 0.0,
+        "valor" : 0.0,
+        "codigo" : "2",
+        "codigo_porcentaje" : 2
       };
+
       vm.impuestoIVAZero = {
-        "base_imponible":0.0,
-        "valor":0.0,
-        "codigo":"0",
-        "codigo_porcentaje":0
+        "base_imponible" : 0.0,
+        "valor" : 0.0,
+        "codigo" : "0",
+        "codigo_porcentaje" : 0
       };
 
       vm.user = $localStorage.user;
-      clientService.getLazyByProjectId($localStorage.user.subsidiary.userClient.id).then(function (response) {
+      clientService.getLazyByProjectId($localStorage.user.subsidiary.userClient.id).then(function(response){
         vm.clientList = response;
         vm.loading = false;
-      }).catch(function (error) {
+      }).catch(function(error){
         vm.loading = false;
         vm.error = error.data;
       });
-    }
+    };
 
     function _getSeqNumber(){
       vm.numberAddedOne = parseInt($localStorage.user.cashier.creditNoteNumberSeq) + 1;
@@ -54,7 +55,7 @@ angular.module('integridadUiApp')
       vm.seqNumberSecondPart = utilSeqService._pad_with_zeroes(vm.numberAddedOne, 9);
       vm.seqNumber =  vm.seqNumberFirstPart + '-'
         + vm.seqNumberSecondPart;
-    }
+    };
 
     function _getTotales(){
       var subtotal = 0;
@@ -95,19 +96,18 @@ angular.module('integridadUiApp')
         vm.loading = false;
         vm.error = error.data;
       });
-
     };
 
     vm.billSelect = function(billSelected){
       vm.items = [];
       billService.getById(billSelected.id).then(function(response){
         vm.bill = angular.copy(response);
-        vm.bill.details=[];
-        vm.bill.client =vm.clientSelected;
+        vm.bill.details = [];
+        vm.bill.client = vm.clientSelected;
         vm.bill.userIntegridad= $localStorage.user;
         vm.bill.subsidiary= $localStorage.user.subsidiary;
         _.each(response.details, function(detail){
-          detail.id=undefined;
+          detail.id = undefined;
           vm.bill.details.push(detail);
         });
         vm.bill.documentStringSeq = response.stringSeq;
@@ -120,12 +120,12 @@ angular.module('integridadUiApp')
       });
     };
 
-    vm.editDetail=function(index){
+    vm.editDetail = function(index){
       vm.indexDetail = index;
       vm.detail = angular.copy(vm.bill.details[index]);
     };
 
-    vm.editNewDetail=function(){
+    vm.editNewDetail = function(){
       vm.detail.total = parseFloat(vm.detail.quantity) * parseFloat(vm.detail.costEach)
       vm.bill.details[vm.indexDetail] = angular.copy(vm.detail);
       vm.indexDetail = undefined;
@@ -175,7 +175,7 @@ angular.module('integridadUiApp')
           impuesto.codigo_porcentaje='0';
 
           impuestos.push(impuesto);
-        }
+        };
 
         if(det.product.ice){
           impuesto.base_imponible=det.costEach;
@@ -185,9 +185,9 @@ angular.module('integridadUiApp')
           impuesto.codigo_porcentaje='2';
 
           impuestos.push(impuesto);
-        }
+        };
 
-        var item={
+        var item = {
           "cantidad":det.quantity,
           "codigo_principal": det.product.codeIntegridad,
           "codigo_auxiliar": det.product.barCode,
@@ -196,12 +196,11 @@ angular.module('integridadUiApp')
           "precio_total_sin_impuestos": ((parseFloat(det.costEach) - (parseFloat(det.costEach)*(parseInt(vm.bill.discountPercentage)/100)))*parseFloat(det.quantity)).toFixed(2),
           "descuento": (parseFloat(det.costEach)*(parseInt(vm.bill.discountPercentage)/100)).toFixed(2)
           //"unidad_medida": det.product.unitOfMeasurementFull
-        }
+        };
 
         if(!_.isEmpty(impuestos)){
           item.impuestos = impuestos;
-        }
-
+        };
         vm.items.push(item);
       });
 

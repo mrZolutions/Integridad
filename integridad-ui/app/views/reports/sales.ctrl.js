@@ -102,6 +102,7 @@ angular.module('integridadUiApp')
             OTI: bill.oti,
             SUBTOTAL: bill.status === 'ACTIVA' ? parseFloat(bill.subTotal.toFixed(2)) : parseFloat(0),
             DESCUENTO: bill.status === 'ACTIVA' ? parseFloat(bill.discount.toFixed(2)) : parseFloat(0),
+            BASE_CERO: bill.status === 'ACTIVA' ? parseFloat(bill.baseNoTaxes.toFixed(2)) : parseFloat(0),
             IVA: bill.status === 'ACTIVA' ? parseFloat(bill.iva.toFixed(2)) : parseFloat(0),
             TOTAL: bill.status === 'ACTIVA' ? parseFloat(bill.total.toFixed(2)) : parseFloat(0),
             FECHA_VENCIMIENTO: bill.endDate,

@@ -50,16 +50,16 @@ public class BillServices {
 
 		if(userClient == null){
 			throw new BadRequestException("Empresa Invalida");
-		};
+		}
 
 		log.info("BillServices getDatil Empresa valida: {}", userClient.getName());
 		if(requirement.getPagos() != null){
 			requirement.getPagos().forEach(pago ->{
 				if("credito".equals(pago.getMedio())){
 					pago.setMedio("otros");
-				};
+				}
 			});
-		};
+		}
 
 		ObjectMapper mapper = new ObjectMapper();
 		String data = mapper.writeValueAsString(requirement);
@@ -110,7 +110,7 @@ public class BillServices {
 			log.info("BillServices retrieved id: {}", retrieved.getId());
 		} else {
 			log.info("BillServices retrieved id NULL: {}", id);
-		};
+		}
 		
 		populateChildren(retrieved);
 		return retrieved;
@@ -122,10 +122,10 @@ public class BillServices {
 		List<Pago> pagos = bill.getPagos();
 		if(details == null){
 			throw new BadRequestException("Debe tener un detalle por lo menos");
-		};
+		}
 		if(typeDocument == 1 && pagos == null){
 			throw new BadRequestException("Debe tener un pago por lo menos");
-		};
+		}
 		
 		bill.setDateCreated(new Date().getTime());
 		bill.setTypeDocument(typeDocument);
@@ -153,13 +153,13 @@ public class BillServices {
 						credit.setPago(pagoSaved);
 						creditsRepository.save(credit);
 					});
-				};
+				}
 			});
 		} else {
 			Cashier cashier = cashierRepository.findOne(bill.getUserIntegridad().getCashier().getId());
 			cashier.setQuotationNumberSeq(cashier.getQuotationNumberSeq() + 1);
 			cashierRepository.save(cashier);
-		};
+		}
 
 		details.forEach(detail->{
 			detail.setBill(saved);
@@ -169,7 +169,7 @@ public class BillServices {
 				ProductBySubsidiary ps =productBySubsidiairyRepository.findBySubsidiaryIdAndProductId(bill.getSubsidiary().getId(), detail.getProduct().getId());
 				ps.setQuantity(ps.getQuantity() - detail.getQuantity());
 				productBySubsidiairyRepository.save(ps);
-			};
+			}
 
 			detail.setBill(null);
 		});
@@ -212,7 +212,7 @@ public class BillServices {
 	public Bill deactivate(Bill bill) throws BadRequestException{
 		if(bill.getId() == null){
 			throw new BadRequestException("Invalid Bill");
-		};
+		}
 
 		Bill billToDeactivate = billRepository.findOne(bill.getId());
 		billToDeactivate.setListsNull();
@@ -227,7 +227,7 @@ public class BillServices {
 	public Bill update(Bill bill) throws BadRequestException{
 		if(bill.getId() == null){
 			throw new BadRequestException("Invalid Bill");
-		};
+		}
 		log.info("BillServices update: {}", bill.getId());
 		Father<Bill, Detail> father = new Father<>(bill, bill.getDetails());
         FatherManageChildren fatherUpdateChildren = new FatherManageChildren(father, detailChildRepository, detailRepository);
@@ -263,7 +263,7 @@ public class BillServices {
 
 			for (Detail detail: bill.getDetails()) {
 				productIds.add(detail.getProduct().getId());
-			};
+			}
 		});
 
 		return loadListItems(Lists.newArrayList(bills), productIds);
@@ -283,10 +283,10 @@ public class BillServices {
 					for (Credits credit: pago.getCredits()){
 						if(endDateLong < credit.getFecha()){
 							endDateLong = credit.getFecha();
-						};
-					};
-				};
-			};
+						}
+					}
+				}
+			}
 
 			SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 			String date = dateFormat.format(new Date(bill.getDateCreated()));
@@ -350,7 +350,7 @@ public class BillServices {
 				pago.setCredits(creditsList);
 			} else {
 				pago.setListsNull();
-			};
+			}
 			pago.setFatherListToNull();
 			pago.setBill(null);
 
@@ -386,15 +386,15 @@ public class BillServices {
 						desc = detail.getProduct().getName();
 
 						reportList.add(item);
-					};
-				};
-			};
+					}
+				}
+			}
 
 			ItemReport itemTotal = new ItemReport(uuidCurrent, "R", "", code,
 					desc, quantityTotal, null, subTotalTotal, discountTotal, ivaTotal, totalTotal);
 
 			reportList.add(itemTotal);
-		};
+		}
 
 		return reportList;
 	};

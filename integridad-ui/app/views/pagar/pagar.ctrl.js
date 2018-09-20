@@ -4,7 +4,7 @@
  * @ngdoc function
  * @name integridadUiApp.controller:CuentasPagarCtrl
  * @description
- * # CreditNoteCtrl
+ * # CuentasPagarCtrl
  * Controller of the integridadUiApp
  */
 angular.module('integridadUiApp')
@@ -15,4 +15,4 @@ angular.module('integridadUiApp')
     vm.success = undefined;
 
     vm.loading = false;
-  });
+});
