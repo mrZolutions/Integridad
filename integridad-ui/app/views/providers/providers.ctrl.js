@@ -203,7 +203,7 @@ angular.module('integridadUiApp')
       providerService.getLazyByUserClientId(vm.userData.subsidiary.userClient.id).then(function(response){
         vm.providerList = response;
         vm.loading = false;
-      }).catch(function (error) {
+      }).catch(function (error){
         vm.loading = false;
         vm.error = error.data;
       });
@@ -214,7 +214,7 @@ angular.module('integridadUiApp')
         _activate();
         vm.error = undefined;
         vm.success = 'Registro realizado con exito';
-      }).catch(function (error) {
+      }).catch(function (error){
         vm.loading = false;
         vm.error = error.data;
       });
@@ -229,7 +229,7 @@ angular.module('integridadUiApp')
         };
         _activate();
         vm.error = undefined;
-      }).catch(function(error) {
+      }).catch(function(error){
         vm.loading = false;
         vm.error = error.data;
       });
@@ -376,7 +376,7 @@ angular.module('integridadUiApp')
       };
     };
 
-    vm.addItem = function() {
+    vm.addItem = function(){
       vm.item.valor_retenido = (parseFloat(vm.item.base_imponible) * (parseFloat(vm.item.porcentaje)/100)).toFixed(2);
       if(vm.indexEdit !== undefined){
         vm.retention.items.splice(vm.indexEdit, 1);
@@ -451,7 +451,7 @@ angular.module('integridadUiApp')
           vm.retention.subsidiary = $localStorage.user.subsidiary;
           vm.retention.detailRetentions = [];
           _.each(vm.retention.items, function(item){
-            var detail ={
+            var detail = {
               taxType: item.codigo === String(1) ? 'RETENCION EN LA FUENTE' : 'RETENCION EN EL IVA',
               code: item.codigo_porcentaje_integridad,
               baseImponible: item.base_imponible,
@@ -470,7 +470,7 @@ angular.module('integridadUiApp')
             vm.retentionCreated = true;
             $localStorage.user.cashier.retentionNumberSeq = parseInt($localStorage.user.cashier.retentionNumberSeq) + 1;
             vm.loading = false;
-          }).catch(function (error) {
+          }).catch(function (error){
             vm.loading = false;
             vm.error = error;
           });
@@ -478,7 +478,7 @@ angular.module('integridadUiApp')
           vm.loading = false;
           vm.error = "Error al obtener Clave de Acceso: " + JSON.stringify(obj.errors);
         };
-      }).catch(function (error) {
+      }).catch(function (error){
         vm.loading = false;
         vm.error = error.data;
       });
@@ -489,7 +489,7 @@ angular.module('integridadUiApp')
       vm.retention = undefined
     };
 
-    (function initController() {
+    (function initController(){
       _activate();
     })();
 });
