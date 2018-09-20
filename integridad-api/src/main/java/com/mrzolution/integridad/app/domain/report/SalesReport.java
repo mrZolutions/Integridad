@@ -13,6 +13,7 @@ public class SalesReport {
     private String oti;
     private Double subTotal;
     private Double discount;
+    private Double baseNoTaxes;
     private Double iva;
     private Double total;
     private String endDate;
@@ -21,7 +22,7 @@ public class SalesReport {
     private String subsidiary;
     private String userName;
 
-    public SalesReport(String date, String clientCode, String clientName, String ruc, String billNumber, String status, String oti, Double subTotal, Double discount, Double iva, Double total, String endDate, String cashier, String warehouse, String subsidiary, String userName) {
+    public SalesReport(String date, String clientCode, String clientName, String ruc, String billNumber, String status, String oti, Double subTotal, Double discount, Double baseNoTaxes, Double iva, Double total, String endDate, String cashier, String warehouse, String subsidiary, String userName) {
         this.date = date;
         this.clientCode = clientCode;
         this.clientName = clientName;
@@ -31,6 +32,7 @@ public class SalesReport {
         this.oti = oti;
         this.subTotal = subTotal;
         this.discount = discount;
+        this.baseNoTaxes = baseNoTaxes;
         this.iva = iva;
         this.total = total;
         this.endDate = endDate;

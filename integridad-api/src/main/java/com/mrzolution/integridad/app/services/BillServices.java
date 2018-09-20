@@ -294,7 +294,7 @@ public class BillServices {
 			String endDate = dateFormat.format(new Date(endDateLong));
 
 			SalesReport saleReport= new SalesReport(date, bill.getClient().getCodApp(), bill.getClient().getName(), bill.getClient().getIdentification(),
-					bill.getStringSeq(), status, bill.getOtir(), bill.getSubTotal(), bill.getDiscount(), bill.getIva(), bill.getTotal(), endDate, bill.getUserIntegridad().getCashier().getNameNumber(),
+					bill.getStringSeq(), status, bill.getOtir(), bill.getSubTotal(), bill.getDiscount(),bill.getBaseNoTaxes(), bill.getIva(), bill.getTotal(), endDate, bill.getUserIntegridad().getCashier().getNameNumber(),
 					null, bill.getSubsidiary().getName(), bill.getUserIntegridad().getFirstName() + " " + bill.getUserIntegridad().getLastName());
 
 			salesReportList.add(saleReport);
