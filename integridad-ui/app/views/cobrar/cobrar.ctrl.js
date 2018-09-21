@@ -2,13 +2,13 @@
 
 /**
  * @ngdoc function
- * @name integridadUiApp.controller:CuentasPagarCtrl
+ * @name integridadUiApp.controller:CuentasCobrarCtrl
  * @description
- * # CuentasPagarCtrl
+ * # CuentasCobrarCtrl
  * Controller of the integridadUiApp
  */
 angular.module('integridadUiApp')
-  .controller('CuentasPagarCtrl', function ( _, $rootScope, $location, utilStringService, $localStorage,
+  .controller('CuentasCobrarCtrl', function ( _, $rootScope, $location, utilStringService, $localStorage, clientService,
                                                 cuentasService, productService, authService, billService, $window, cashierService, creditService, utilSeqService){
     var vm = this;
     vm.error = undefined;
@@ -61,7 +61,6 @@ angular.module('integridadUiApp')
 
     vm.clientConsult = function(client){
       vm.loading = true;
-      _initializeBill();
       billService.getBillsByClientId(client.id).then(function (response) {
         vm.billList = response;
         vm.loading = false;
@@ -74,7 +73,6 @@ angular.module('integridadUiApp')
     vm.billSelect = function(bill){
       vm.loading = true;
       billService.getById(bill.id).then(function(response){
-        vm.billList = undefined;
         vm.bill = response;
         vm.companyData = $localStorage.user.subsidiary;
         vm.clientSelected = response.client;
@@ -90,11 +88,11 @@ angular.module('integridadUiApp')
       });
     };
 
-    vm.cancel = function () {
+    vm.cancel = function(){
       _activate();
     };
 
-    (function initController() {
+    (function initController(){
       _activate();
     })();
 });

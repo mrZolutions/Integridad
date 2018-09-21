@@ -1,0 +1,390 @@
+<div style="width: 100%;height: 100%;top: 0px;left: 0px;position: fixed;display: block; z-index: 99; background: rgba(255, 255, 255, 0.3)" ng-show="vm.loading">
+  <div style="position: absolute;top: 15%;z-index: 100; width: 100%; text-align: center;">
+    <div class="sk-circle">
+      <div class="sk-circle1 sk-child"></div>
+      <div class="sk-circle2 sk-child"></div>
+      <div class="sk-circle3 sk-child"></div>
+      <div class="sk-circle4 sk-child"></div>
+      <div class="sk-circle5 sk-child"></div>
+      <div class="sk-circle6 sk-child"></div>
+      <div class="sk-circle7 sk-child"></div>
+      <div class="sk-circle8 sk-child"></div>
+      <div class="sk-circle9 sk-child"></div>
+      <div class="sk-circle10 sk-child"></div>
+      <div class="sk-circle11 sk-child"></div>
+      <div class="sk-circle12 sk-child"></div>
+    </div>
+  </div>
+</div>
+
+<div class="header">
+  <h4>
+    Cuentas Por Cobrar
+  </h4>
+</div>
+
+<div class="row" ng-show="vm.error !== undefined">
+  <div class="form-group col-md-12">
+    <div class="alert alert-danger">{{vm.error}}</div>
+  </div>
+</div>
+<div class="row" ng-show="vm.success !== undefined">
+  <div class="form-group col-md-12">
+    <div class="alert alert-success">{{vm.success}}</div>
+  </div>
+</div>
+
+<div ng-show="vm.billList === undefined && vm.clientSelected === undefined">
+  <div class="row">
+    <div class="form-group col-md-12">
+      <input ng-model="searchText" class="form-control" placeholder="Buscar Clientes">
+    </div>
+  </div>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>C&oacute;digo</th>
+        <th>Nombre</th>
+        <th>Tipo ID</th>
+        <th>No. Identidad</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-show="vm.clientList == 0">
+        <td colspan="4">
+          No hay clientes ingresados
+        </td>
+      </tr>
+      <tr ng-repeat="clientPreSelect in vm.clientList | orderBy:'name' | filter:searchText">
+        <td>{{clientPreSelect.codApp}}</td>
+        <td>{{clientPreSelect.name}}</td>
+        <td>{{clientPreSelect.typeId}}</td>
+        <td>{{clientPreSelect.identification}}</td>
+        <td>
+          <button type="button" class="btn btn-primary btn-sm" ng-click="vm.clientConsult(clientPreSelect)">
+                  Seleccionar
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<div ng-show="vm.billList !== undefined">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <b>Listado de Facturas por Cobrar</b>
+    </div>
+    <div class="panel-body">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>N&uacute;mero</th>
+            <th>Fecha</th>
+            <th>Total</th>
+            <th>Saldo</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-show="vm.billList == 0">
+            <td colspan="4">
+                No hay facturas ingresados
+            </td>
+          </tr>
+          <tr ng-repeat="bill in vm.billList | orderBy:'dateCreated':true | filter:searchText">
+            <td>{{bill.stringSeq}}</td>
+            <td>{{bill.dateCreated | date :  "dd/MM/yyyy"}}</td>
+            <td>{{bill.total}}</td>
+            <td>{{bill.total}}</td>
+            <td>
+              <button type="button" class="btn btn-primary btn-sm" ng-click="vm.billSelect(bill)">
+                      Ver
+              </button>
+              <button type="button" class="btn btn-primary btn-sm" ng-click="">
+                      Seleccionar
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="row">
+        <div class="form-group col-md-12">
+          <button type="button" class="btn btn-primary" ng-click="vm.billList = undefined">
+                  Cancelar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div ng-show="vm.clientSelected !== undefined">
+  <div class="panel panel-default">
+    <div class="panel-heading" print-remove>
+      <b>Datos del Cliente</b>
+    </div>
+    <div class="panel-body">
+      <div class="row">
+        <div class="form-group col-md-12">
+          <table width="100%">
+            <tr>
+              <td width="30%" align="center"><img src="images/{{vm.companyData.userClient.logo}}" ><br></td>
+              <td width="70%">
+                <b>{{vm.companyData.userClient.name}}</b><br/></br>
+                <b>Matriz: {{vm.companyData.userClient.address1}}</b><br/>
+                <b>Establecimiento: {{vm.companyData.address1}}</b><br/><br/>
+                <b>RUC: {{vm.companyData.userClient.ruc}}</b><br/>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="row" print-remove>
+        <div class="form-group col-md-12">
+          <table width="100%">
+            <tr>
+              <td width="30%">
+                <button type="button" class="btn btn-primary" ng-click="vm.getQuotations()"
+                  data-toggle="modal" data-target="#modalCotizacion">
+                  Buscar Cotizaci&oacute;n
+                </button>
+              </td>
+              <td align="left">
+                <b>N&uacute;mero de Cotizaci&oacute;n: </b>{{vm.bill.stringQuotationSeq}}
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="form-group col-md-12 ">
+          <table width="100%">
+            <tr>
+              <td width="30%">
+                <label>FECHA: </label>
+                <div class="input-group date" id="pickerBillDate">
+                  <input type="text" class="form-control input-group-addon" ng-disabled="!vm.newBill"/>
+                  <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
+                </div>
+                <script>
+                  var defaultDate = new Date();
+                  $('#pickerBillDate').datetimepicker({
+                    format: "DD/MM/YY HH:mm",
+                  });
+                </script>
+              </td>
+              <td width="70%">
+                <div style=" padding-left: 10px" >
+                  <label>CLAVE DE ACCESO: </label><br/>
+                  {{vm.bill.claveDeAcceso}}
+                </div>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="form-group col-md-12 ">
+          <table width="100%">
+            <tr>
+              <td>
+                <b>NOMBRE: </b>{{vm.clientSelected.name}}<br/>
+              </td>
+              <td>
+                <b ng-if="vm.clientSelected.typeId === 'CED'">CEDULA: </b>
+                <b ng-if="vm.clientSelected.typeId === 'RUC'">RUC: </b>
+                {{vm.clientSelected.identification}}
+              </td>
+              <td>
+                <b>TELEFONO: </b>{{vm.clientSelected.phone}}
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="form-group col-md-12 ">
+          <table width="100%">
+            <tr>
+              <td><b>DIRECCION: </b>{{vm.clientSelected.address}}</td>
+              <td><b>E-MAIL: </b>{{vm.clientSelected.email}}</td>
+            </tr>
+            <tr>
+              <td>
+                <b>NUMERO DE FACTURA: </b> {{vm.seqNumber}}
+                &nbsp;&nbsp;&nbsp;
+              </td>
+              <td print-remove>
+                <b>PRECIO CONVENIDO: </b>
+                <select ng-options="price as price.name for price in vm.prices"  ng-if="vm.newBill"
+                        ng-model="vm.priceType" class="form-control" ng-change="vm.reCalculateTotal()" ng-disabled="vm.bill.details.length > 0"></select>
+                <span ng-if="!vm.newBill">{{vm.bill.priceType}}</span>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <b>Detalle</b>
+    </div>
+    <div class="panel-body">
+      <div class="row">
+        <div class="form-group col-md-12">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th> Item </th>
+                <th> C&oacute;digo </th>
+                <th> Descripci&oacute;n </th>
+                <th> Cant. </th>
+                <th> U. Med. </th>
+                <th> V. Unit. </th>
+                <th> Desc. </th>
+                <th> V. Total. </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="detail in vm.bill.details">
+                <td>{{$index + 1}}</td>
+                <td>{{detail.product.codeIntegridad}}</td>
+                <td>{{detail.product.name}}</td>
+                <td>{{detail.quantity}}</td>
+                <td>{{detail.product.unitOfMeasurementFull}}</td>
+                <td>{{detail.costEach}}</td>
+                <td>{{detail.discount}}</td>
+                <td>{{detail.total}}</td>
+              </tr>
+              <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td><b>SUBTOTAL: </b></td>
+                <td>{{vm.bill.subTotal}}</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td><b>DESCUENTO: </b></td>
+                <td>{{vm.bill.discount}}</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td><b>BASE 0%: </b></td>
+                <td>{{vm.bill.baseNoTaxes}}</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td><b>BASE 12%: </b></td>
+                <td>{{vm.bill.baseTaxes}}</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td><b>IVA: </b></td>
+                <td>{{vm.bill.iva}}</td>
+                <td></td>
+              </tr>
+              <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td><b>TOTAL: </b></td>
+                <td>{{vm.bill.total}}</td>
+                <td></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel panel-default" ng-if="!vm.newBill">
+    <div class="panel-heading">
+      <b>Forma de Pago</b>
+    </div>
+    <div class="panel-body">
+      <div class="row">
+        <div class="col-md-12">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th> Medio </th>
+                <th> Valor</th>
+                <th>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="pago in vm.pagos">
+                <td>
+                  {{ pago.medio }}<br/>
+                  <span ng-if="pago.medio === 'cheque'">
+                      {{ pago.chequeBank }} - {{ pago.chequeAccount }} - {{pago.chequeNumber}}<br/>
+                  </span>
+                  <span ng-if="pago.medio === 'credito'">
+                      NUMER DE PAGOS: {{ pago.creditoNumeroPagos }} - DIAS: {{ pago.creditoIntervalos }}<br/>
+                  </span>
+                  <span ng-if="pago.medio === 'cheque_posfechado'">
+                      {{ pago.chequeBank }} - {{ pago.chequeAccount }} - {{pago.chequeNumber}} - {{pago.fechaCobro | date :  "dd/MM/yyyy"}}<br/>
+                  </span>
+                  <span ng-if="pago.medio === 'tarjeta_credito' || pago.medio === 'tarjeta_debito'">
+                      {{ pago.cardBrand }}<br/>
+                  </span>
+                  {{ pago.payForm }}
+                </td>
+                <td>{{ pago.total }}</td>
+                <td>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="row" print-remove>
+        <div class="form-group col-md-12">
+          <button type="button" class="btn btn-primary"
+                  ng-click="vm.clientSelected = undefined">
+                  Volver
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
