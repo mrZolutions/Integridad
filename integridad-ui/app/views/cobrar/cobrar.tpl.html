@@ -80,6 +80,7 @@
           <tr>
             <th>N&uacute;mero</th>
             <th>Fecha</th>
+            <th>Cliente</th>
             <th>Total</th>
             <th>Saldo</th>
             <th></th>
@@ -88,12 +89,13 @@
         <tbody>
           <tr ng-show="vm.billList == 0">
             <td colspan="4">
-                No hay facturas ingresados
+                El Cliente No Presenta Facturas Pendientes por Cobrar
             </td>
           </tr>
-          <tr ng-repeat="bill in vm.billList | orderBy:'dateCreated':true | filter:searchText">
+          <tr ng-repeat="bill in vm.billList | orderBy:'name':true | filter:searchText">
             <td>{{bill.stringSeq}}</td>
-            <td>{{bill.dateCreated | date :  "dd/MM/yyyy"}}</td>
+            <td>{{bill.dateCreated | date : "dd/MM/yyyy"}}</td>
+            <td>{{bill.client.name}}</td>
             <td>{{bill.total}}</td>
             <td>{{bill.total}}</td>
             <td>
@@ -359,7 +361,7 @@
           </table>
         </div>
       </div>
-      <div class="row" print-remove>
+      <div class="row">
         <div class="form-group col-md-12">
           <button type="button" class="btn btn-primary"
                   ng-click="vm.clientSelected = undefined">

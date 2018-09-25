@@ -23,5 +23,4 @@ public class ReportExistency {
         this.maxMin = maxMin;
         this.quantity = quantity;
     }
-
 }

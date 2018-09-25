@@ -9,7 +9,7 @@
  */
 angular.module('integridadUiApp')
   .controller('CuentasCobrarCtrl', function ( _, $rootScope, $location, utilStringService, $localStorage, clientService,
-                                                cuentasService, productService, authService, billService, $window, cashierService, creditService, utilSeqService){
+                                                cuentasService, authService, billService, $window, cashierService, creditService, utilSeqService){
     var vm = this;
     vm.error = undefined;
     vm.success = undefined;
@@ -48,7 +48,6 @@ angular.module('integridadUiApp')
     };
 
     vm.clientSelect = function(client){
-      vm.quotations = [];
       vm.companyData = $localStorage.user.subsidiary;
       vm.dateBill = new Date();
       vm.clientSelected = client;
@@ -61,7 +60,7 @@ angular.module('integridadUiApp')
 
     vm.clientConsult = function(client){
       vm.loading = true;
-      billService.getBillsByClientId(client.id).then(function (response) {
+      billService.getCreditsBillsByClientId(client.id).then(function(response) {
         vm.billList = response;
         vm.loading = false;
       }).catch(function(error){

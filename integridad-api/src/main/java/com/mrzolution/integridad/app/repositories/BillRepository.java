@@ -26,6 +26,9 @@ public interface BillRepository extends CrudRepository<Bill, UUID>{
 	@Query("SELECT p FROM Bill p WHERE p.client.id = (:id) and typeDocument = (:type) and p.active = 'true'")
 	Iterable<Bill> findByClientIdAndType(@Param("id") UUID id, @Param("type") int type);
 
+        @Query("SELECT p FROM Bill p WHERE p.client.id = (:id) and typeDocument = (:type) and p.active = 'true' and priceType = 'CREDITO'")
+        Iterable<Bill> findAllCreditsByClientIdAndType(@Param("id") UUID id, @Param("type") int type);
+                
 	Iterable<Bill> findByStringSeq(String stringSeq);
 
 	@Query("SELECT p FROM Bill p WHERE p.subsidiary.id = (:subId) and p.stringSeq = (:seq) and typeDocument = 1")

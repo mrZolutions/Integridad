@@ -11,16 +11,16 @@ import java.util.UUID;
 
 import javax.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.Immutable;
 
 @Entity
+@Immutable
 @Table (name="vista_existency")
-@Data
-public class Existency {
+public class VistaExistency {
     
     @Id
-    @Column(name = "code_integridad")
+    private UUID id;
     private String code;
-    
     private String name;
     private Double cost;
     private int maxMin;
@@ -35,8 +35,5 @@ public class Existency {
         userClient.setListsNull();
         userClient.setFatherListToNull();
     }
-
-    public void setListsNull() {
-        
-    }
+    
 }

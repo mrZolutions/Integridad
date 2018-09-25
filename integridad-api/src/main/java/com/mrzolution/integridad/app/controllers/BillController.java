@@ -62,6 +62,19 @@ public class BillController {
 	    }
 		return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
 	}
+        
+        @RequestMapping(method = RequestMethod.GET, value="/bill/credits/client/{id}")
+        public ResponseEntity getCreditBillByClientId(@PathVariable("id") UUID id){
+            log.info("BillControler getCreditBillByClientId: {}", id);
+            Iterable<Bill> response = null;
+            try {
+                response = service.getCreditsByClientIdAndTypeLazy(id, 1);
+            }catch(BadRequestException e) {
+		log.error("BillController getCreditBillByClientId Exception thrown: {}", e.getMessage());
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());   
+            }
+            return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
+        }
 
 	@RequestMapping(method = RequestMethod.GET, value="/quotation/client/{id}")
 	public ResponseEntity getQuotationByClientId(@PathVariable("id") UUID id){

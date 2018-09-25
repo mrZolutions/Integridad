@@ -21,6 +21,12 @@ angular
       });
     };
 
+    this.getCreditsBillsByClientId = function(id) {
+      return securityService.get('/bill/bill/credits/client/'+ id).then(function successCallback(response){
+        return response.data;
+      });
+    };
+
     this.cancelBill = function (bill) {
       return securityService.put('/bill', bill).then(function successCallback(response) {
         return response.data;
