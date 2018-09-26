@@ -92,7 +92,8 @@ public class BillServices {
 		return bills;
 	};
 
-	public Iterable<Bill> getByClientIdAndTypeLazy(UUID id, int type){
+	//Selecciona todas las Facturas
+        public Iterable<Bill> getByClientIdAndTypeLazy(UUID id, int type){
 		log.info("BillServices getByClientIdAndTypeLazy: {}", id);
 		Iterable<Bill> bills = billRepository.findByClientIdAndType(id, type);
 		bills.forEach(bill->{
@@ -103,6 +104,7 @@ public class BillServices {
 		return bills;
 	};
         
+        //Selecciona solo las Facturas tipo Crédito
         public Iterable<Bill> getCreditsByClientIdAndTypeLazy(UUID id, int type){
             log.info("BillServices getAllCreditsByClientIdAndTypeLazy: {}", id);
             Iterable<Bill> bills = billRepository.findAllCreditsByClientIdAndType(id, type);

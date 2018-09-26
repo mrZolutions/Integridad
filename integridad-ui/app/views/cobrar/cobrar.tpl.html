@@ -205,7 +205,7 @@
               <td print-remove>
                 <b>PRECIO CONVENIDO: </b>
                 <select ng-options="price as price.name for price in vm.prices"  ng-if="vm.newBill"
-                        ng-model="vm.priceType" class="form-control" ng-change="vm.reCalculateTotal()" ng-disabled="vm.bill.details.length > 0"></select>
+                        ng-model="vm.priceType" class="form-control" ng-disabled="vm.bill.details.length > 0"></select>
                 <span ng-if="!vm.newBill">{{vm.bill.priceType}}</span>
               </td>
             </tr>

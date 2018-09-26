@@ -54,7 +54,7 @@ angular
 
       if (user.cashier.subsidiary.userClient.testMode){
         req.ambiente = 1;
-      }
+      };
 
       if(user.cashier.subsidiary.userClient.espTemp){
         req.comprador.email = req.comprador.email + ', facturacionelecppe2018@gmail.com, facturacionppecoca@gmail.com';
@@ -63,10 +63,14 @@ angular
           info2: 'OTI/OTIR: '+bill.otir
         };
         req.informacion_adicional = infoAdicional;
-      }
+      };
+
+      if(user.cashier.subsidiary.userClient.id == '1f9c21d7-a485-482b-b5eb-e363728340b2'){
+        req.comprador.email = req.comprador.email + ',ferelozada@yahoo.com';
+      };
 
       return req;
-    }
+    };
 
     this.getClaveDeAcceso = function (req, id) {
       return securityService.post('/credit/clave_acceso/'+id, req).then(function successCallback(response) {
