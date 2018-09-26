@@ -69,6 +69,13 @@ angular.module('integridadUiApp')
       });
     };
 
+    vm.billPayment = function(bill){
+      vm.loading = true;
+      billService.getById(bill.id).then(function(response){
+        vm.payment = response;
+      });
+    };
+
     vm.billSelect = function(bill){
       vm.loading = true;
       billService.getById(bill.id).then(function(response){

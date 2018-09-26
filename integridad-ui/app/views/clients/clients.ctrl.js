@@ -42,7 +42,7 @@ angular.module('integridadUiApp')
         vm.success = 'Registro realizado con exito';
         if($routeParams.create){
           $location.path('/bills/bill');
-        }
+        };
       }).catch(function (error) {
         vm.loading = false;
         vm.error = error.data;
@@ -58,7 +58,7 @@ angular.module('integridadUiApp')
           vm.success = 'Registro eliminado con exito';
         } else {
           vm.success = 'Registro actualizado con exito';
-        }
+        };
       }).catch(function (error) {
         vm.loading = false;
         vm.error = error.data;
@@ -73,12 +73,12 @@ angular.module('integridadUiApp')
 
     vm.clientCreate = function(){
       projectService.getNumberOfProjects($localStorage.user.subsidiary.userClient.id).then(function (response) {
-        vm.success=undefined;
-        vm.error=undefined
+        vm.success = undefined;
+        vm.error = undefined
         var number = parseInt(response);
-        vm.client={
-          country:'Ecuador',
-          city:'Quito',
+        vm.client = {
+          country: 'Ecuador',
+          city: 'Quito',
           codApp: number + 1,
           userClient: $localStorage.user.subsidiary.userClient
         };
@@ -89,9 +89,9 @@ angular.module('integridadUiApp')
     };
 
     vm.clientEdit = function(client){
-      vm.success=undefined;
-      vm.error=undefined
-      vm.client=angular.copy(client);
+      vm.success = undefined;
+      vm.error = undefined
+      vm.client = angular.copy(client);
     };
 
     vm.validateEcuador = function(){
@@ -133,7 +133,7 @@ angular.module('integridadUiApp')
       vm.error=undefined;
       if($routeParams.create){
         $location.path('/bills/bill');
-      }
+      };
     };
 
     (function initController() {
