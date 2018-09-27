@@ -99,9 +99,6 @@
             <td>{{bill.total}}</td>
             <td>{{bill.total}}</td>
             <td>
-              <button type="button" class="btn btn-primary btn-sm" ng-click="vm.billSelect(bill)">
-                      Ver
-              </button>
               <button type="button" class="btn btn-primary btn-sm" ng-click="vm.billSelect(bill)"
                       data-toggle="modal" data-target="#modalAbono">
                       Seleccionar
@@ -121,272 +118,17 @@
   </div>
 </div>
 
-<div ng-show="vm.clientSelected !== undefined">
-  <div class="panel panel-default">
-    <div class="panel-heading">
-      <b>Datos del Cliente</b>
-    </div>
-    <div class="panel-body">
-      <div class="row">
-        <div class="form-group col-md-12">
-          <table width="100%">
-            <tr>
-              <td width="30%" align="center"><img src="images/{{vm.companyData.userClient.logo}}" ><br></td>
-              <td width="70%">
-                <b>{{vm.companyData.userClient.name}}</b><br/></br>
-                <b>Matriz: {{vm.companyData.userClient.address1}}</b><br/>
-                <b>Establecimiento: {{vm.companyData.address1}}</b><br/><br/>
-                <b>RUC: {{vm.companyData.userClient.ruc}}</b><br/>
-              </td>
-            </tr>
-          </table>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="form-group col-md-12 ">
-          <table width="100%">
-            <tr>
-              <td width="30%">
-                <label>FECHA: </label>
-                <div class="input-group date" id="pickerBillDate">
-                  <input type="text" class="form-control input-group-addon" ng-disabled="!vm.newBill"/>
-                  <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
-                </div>
-                <script>
-                  var defaultDate = new Date();
-                  $('#pickerBillDate').datetimepicker({
-                    format: "DD/MM/YY HH:mm",
-                  });
-                </script>
-              </td>
-              <td width="70%">
-                <div style=" padding-left: 10px" >
-                  <label>CLAVE DE ACCESO: </label><br/>
-                  {{vm.bill.claveDeAcceso}}
-                </div>
-              </td>
-            </tr>
-          </table>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="form-group col-md-12 ">
-          <table width="100%">
-            <tr>
-              <td>
-                <b>NOMBRE: </b>{{vm.clientSelected.name}}<br/>
-              </td>
-              <td>
-                <b ng-if="vm.clientSelected.typeId === 'CED'">CEDULA: </b>
-                <b ng-if="vm.clientSelected.typeId === 'RUC'">RUC: </b>
-                <b ng-if="vm.clientSelected.typeId === 'PAS'">PASAPORTE:</b>
-                {{vm.clientSelected.identification}}
-              </td>
-              <td>
-                <b>TELEFONO: </b>{{vm.clientSelected.phone}}
-              </td>
-            </tr>
-          </table>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="form-group col-md-12 ">
-          <table width="100%">
-            <tr>
-              <td><b>DIRECCION: </b>{{vm.clientSelected.address}}</td>
-              <td><b>E-MAIL: </b>{{vm.clientSelected.email}}</td>
-            </tr>
-            <tr>
-              <td>
-                <b>NUMERO DE FACTURA: </b> {{vm.seqNumber}}
-                &nbsp;&nbsp;&nbsp;
-              </td>
-              <td>
-                <b>PRECIO CONVENIDO: </b>
-                <select ng-options="price as price.name for price in vm.prices" ng-if="vm.newBill"
-                        ng-model="vm.priceType" class="form-control" ng-disabled="vm.bill.details.length > 0">
-                </select>
-                <span ng-if="!vm.newBill">{{vm.bill.priceType}}</span>
-              </td>
-            </tr>
-          </table>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="panel panel-default">
-    <div class="panel-heading">
-      <b>Detalle</b>
-    </div>
-    <div class="panel-body">
-      <div class="row">
-        <div class="form-group col-md-12">
-          <table class="table table-striped">
-            <thead>
-              <tr>
-                <th> Item </th>
-                <th> C&oacute;digo </th>
-                <th> Descripci&oacute;n </th>
-                <th> Cant. </th>
-                <th> U. Med. </th>
-                <th> V. Unit. </th>
-                <th> Desc. </th>
-                <th> V. Total. </th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr ng-repeat="detail in vm.bill.details">
-                <td>{{$index + 1}}</td>
-                <td>{{detail.product.codeIntegridad}}</td>
-                <td>{{detail.product.name}}</td>
-                <td>{{detail.quantity}}</td>
-                <td>{{detail.product.unitOfMeasurementFull}}</td>
-                <td>{{detail.costEach}}</td>
-                <td>{{detail.discount}}</td>
-                <td>{{detail.total}}</td>
-              </tr>
-              <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td><b>SUBTOTAL: </b></td>
-                <td>{{vm.bill.subTotal}}</td>
-                <td> </td>
-              </tr>
-              <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td><b>DESCUENTO: </b></td>
-                <td>{{vm.bill.discount}}</td>
-                <td> </td>
-              </tr>
-              <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td><b>BASE 0%: </b></td>
-                <td>{{vm.bill.baseNoTaxes}}</td>
-                <td> </td>
-              </tr>
-              <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td><b>BASE 12%: </b></td>
-                <td>{{vm.bill.baseTaxes}}</td>
-                <td> </td>
-              </tr>
-              <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td><b>IVA: </b></td>
-                <td>{{vm.bill.iva}}</td>
-                <td></td>
-              </tr>
-              <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td><b>TOTAL: </b></td>
-                <td>{{vm.bill.total}}</td>
-                <td></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="panel panel-default" ng-if="!vm.newBill">
-    <div class="panel-heading">
-      <b>Forma de Pago</b>
-    </div>
-    <div class="panel-body">
-      <div class="row">
-        <div class="col-md-12">
-          <table class="table table-striped">
-            <thead>
-              <tr>
-                <th> Medio </th>
-                <th> Valor</th>
-                <th>
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr ng-repeat="pago in vm.pagos">
-                <td>
-                  {{pago.medio}}<br/>
-                  <span ng-if="pago.medio === 'cheque'">
-                      {{pago.chequeBank}} - {{pago.chequeAccount}} - {{pago.chequeNumber}}<br/>
-                  </span>
-                  <span ng-if="pago.medio === 'credito'">
-                      NUMER DE PAGOS: {{pago.creditoNumeroPagos}} - DIAS: {{pago.creditoIntervalos}}<br/>
-                  </span>
-                  <span ng-if="pago.medio === 'cheque_posfechado'">
-                      {{pago.chequeBank}} - {{pago.chequeAccount}} - {{pago.chequeNumber}} - {{pago.fechaCobro | date :  "dd/MM/yyyy"}}<br/>
-                  </span>
-                  <span ng-if="pago.medio === 'tarjeta_credito' || pago.medio === 'tarjeta_debito'">
-                      {{pago.cardBrand}}<br/>
-                  </span>
-                  {{pago.payForm}}
-                </td>
-                <td>{{pago.total}}</td>
-                <td>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-      <div class="row">
-        <div class="form-group col-md-12">
-          <button type="button" class="btn btn-primary"
-                  ng-click="vm.clientSelected = undefined">
-                  Volver
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
 <div id="modalAbono" class="modal fade" role="dialog">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" ng-click="vm.clientSelected=undefined; vm.billList = undefined">&times;</button>
+        <button type="button" class="close" data-dismiss="modal" ng-click="vm.billList = undefined">&times;</button>
         <h4 class="modal-title">Pago de Facturas</h4>
       </div>
       <div class="modal-body">
-        <div class="col-md-12">
+        <div class="row">
           <div class="col-md-4">
-            <label>N&uacute;mero Documento:</label><br/>
+            <label>N&uacute;mero Factura:</label><br/>
             {{vm.seqNumber}}
           </div>  
           <div class="col-md-4">
@@ -396,6 +138,52 @@
             </select>
           </div>
           <div class="col-md-4">
+            <label>Fecha:</label>
+            <div class="input-group date" id="pickerBillDate1">
+              <input type="text" class="form-control input-group-addon"/>
+              <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"/></span>
+            </div>
+            <script>
+              var today = new Date();
+              $('#pickerBillDate1').datetimepicker(today);
+            </script>
+          </div>
+          <br/>
+        </div>
+        <div class="row" ng-show="vm.payment.typePayment === 'NTC'">
+          <div class="col-md-4">
+            <label>N&uacute;mero de Nota Credito:</label> <br/>
+            <input type="text" ng-model="vm.payment.numCreditNote" class="form-control">
+          </div>
+          <div class="col-md-4">
+            <label>Fecha de Documento</label>
+            <div class="input-group date" id="pickerBillDatePayment">
+              <input type="text" class="form-control input-group-addon"/>
+              <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"/></span>
+            </div>
+            <script>
+              var defaultDate = new Date();
+              $('#pickerBillDatePayment').datetimepicker({format: "DD/MM/YY",});
+            </script>
+          </div>
+          <div class="col-md-4">
+            <label>Valor:</label><br/>
+            <input type="text" onkeypress="return ((event.which >= 46 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+                   class="form-control" maxlength="8" ng-model="vm.payment.valor">
+          </div>
+        </div>
+        <div class="row" ng-show="vm.payment.typePayment === 'ABN'">
+          <div class="col-md-4">
+            <label>Seleccione Tipo de Cuenta:</label><br/>
+            <select ng-options="typeItem.code as typeItem.name for typeItem in [{code:'CRE', name:'CUENTA CRÉDITO'}, {code:'DEB', name:'CUENTA DÉBITO'}]"
+                    ng-model="vm.payment.typeAccount" class="form-control">
+            </select>
+          </div>
+          <div class="col-md-4">
+            <label>N&uacute;mero de Cuenta:</label><br/>
+            <input type="text" ng-model="vm.payment.numCta" class="form-control">
+          </div>
+          <div class="col-md-4">
             <label>Valor:</label><br/>
             <input type="text" onkeypress="return ((event.which >= 46 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
                    class="form-control" maxlength="8" ng-model="vm.payment.valor">
@@ -403,11 +191,10 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="vm.addItem()">
+        <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="">
                 Aceptar
         </button>
-        <button type="button" class="btn btn-primary"  data-dismiss="modal"
-                ng-click="vm.item = undefined; vm.indexEdit = undefined;">
+        <button type="button" class="btn btn-primary" data-dismiss="modal">
                 Cancelar
         </button>
       </div>

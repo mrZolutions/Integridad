@@ -46,7 +46,7 @@ angular
       };
 
       if(user.cashier.subsidiary.userClient.id == '1f9c21d7-a485-482b-b5eb-e363728340b2'){
-        eRet.sujeto.email = eRet.sujeto.email + ',ferelozada@yahoo.com';
+        eRet.sujeto.email = eRet.sujeto.email + ',ferrelozada@yahoo.com';
       };
 
       _.each(eRet.items, function(item){
