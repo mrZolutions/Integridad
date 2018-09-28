@@ -7,6 +7,8 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.UUID;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 @Repository
 @Qualifier(value="CreditsRepository")
@@ -14,5 +16,6 @@ public interface CreditsRepository extends CrudRepository<Credits, UUID>{
 
     Iterable<Credits> findByPago(Pago pago);
 
-
+    @Query("SELECT c FROM Credits c JOIN c.pago p JOIN p.bill b WHERE b.id = (:id)")
+    Iterable<Credits> findCreditsOfBillByBillId(@Param("id") UUID id);
 }

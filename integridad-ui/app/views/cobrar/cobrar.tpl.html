@@ -99,7 +99,7 @@
             <td>{{bill.total}}</td>
             <td>{{bill.total}}</td>
             <td>
-              <button type="button" class="btn btn-primary btn-sm" ng-click="vm.billSelect(bill)"
+              <button type="button" class="btn btn-primary btn-sm" ng-click="vm.creditsByBill(bill)"
                       data-toggle="modal" data-target="#modalAbono">
                       Seleccionar
               </button>
@@ -123,76 +123,34 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title">Pago de Facturas</h4>
+        <h4 class="modal-title">Listado de Cŕeditos por Cobrar por Factura</h4>
       </div>
       <div class="modal-body">
-        <div class="row">
-          <div class="col-md-4">
-            <label>N&uacute;mero Factura:</label><br/>
-            {{vm.seqNumber}}
-          </div>  
-          <div class="col-md-4">
-            <label>Tipo de Cobro:</label><br/>
-            <select ng-options="item.code as item.name for item in [{code:'NTC', name:'NOTA CRÉDITO'}, {code:'ABN', name:'ABONO'}, {code:'RTN', name:'RETENCIÓN'}]"
-                    ng-model="vm.payment.typePayment" class="form-control">
-            </select>
-          </div>
-          <div class="col-md-4">
-            <label>Fecha:</label>
-            <div class="input-group date" id="pickerBillDate1">
-              <input type="text" class="form-control input-group-addon"/>
-              <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"/></span>
-            </div>
-            <script>
-              var today = new Date();
-              $('#pickerBillDate1').datetimepicker(today);
-            </script>
-          </div>
-          <br/>
-        </div>
-        <div class="row" ng-show="vm.payment.typePayment === 'NTC'">
-          <div class="col-md-4">
-            <label>N&uacute;mero de Nota Credito:</label> <br/>
-            <input type="text" ng-model="vm.payment.numCreditNote" class="form-control">
-          </div>
-          <div class="col-md-4">
-            <label>Fecha de Documento</label>
-            <div class="input-group date" id="pickerBillDatePayment">
-              <input type="text" class="form-control input-group-addon"/>
-              <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"/></span>
-            </div>
-            <script>
-              var defaultDate = new Date();
-              $('#pickerBillDatePayment').datetimepicker({format: "DD/MM/YY",});
-            </script>
-          </div>
-          <div class="col-md-4">
-            <label>Valor:</label><br/>
-            <input type="text" onkeypress="return ((event.which >= 46 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
-                   class="form-control" maxlength="8" ng-model="vm.payment.valor">
-          </div>
-        </div>
-        <div class="row" ng-show="vm.payment.typePayment === 'ABN'">
-          <div class="col-md-4">
-            <label>Seleccione Tipo de Cuenta:</label><br/>
-            <select ng-options="typeItem.code as typeItem.name for typeItem in [{code:'CRE', name:'CUENTA CRÉDITO'}, {code:'DEB', name:'CUENTA DÉBITO'}]"
-                    ng-model="vm.payment.typeAccount" class="form-control">
-            </select>
-          </div>
-          <div class="col-md-4">
-            <label>N&uacute;mero de Cuenta:</label><br/>
-            <input type="text" ng-model="vm.payment.numCta" class="form-control">
-          </div>
-          <div class="col-md-4">
-            <label>Valor:</label><br/>
-            <input type="text" onkeypress="return ((event.which >= 46 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
-                   class="form-control" maxlength="8" ng-model="vm.payment.valor">
-          </div>
-        </div>
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>Fecha</th>
+              <th>N&uacute;mero de Pago</th>
+              <th>Saldo por Cancelar</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-show="vm.billList == 0">
+              <td colspan="4">
+                  La Factura <b>No Presenta</b> Cobros Pendientes por Cancelar
+              </td>
+            </tr>
+            <tr ng-repeat="bill in vm.billList | orderBy:'name':true | filter:searchText">
+              <td>{{creditsbill.fecha | date : "dd/MM/yyyy"}}</td>
+              <td>{{creditsbill.payNumber}}</td>
+              <td>{{creditsbill.valor}}</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="">
-                Aceptar
+                Abonar
         </button>
         <button type="button" class="btn btn-primary" data-dismiss="modal">
                 Cancelar
