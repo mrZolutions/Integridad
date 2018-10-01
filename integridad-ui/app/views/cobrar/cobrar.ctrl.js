@@ -14,6 +14,7 @@ angular.module('integridadUiApp')
     vm.error = undefined;
     vm.success = undefined;
     vm.loading = false;
+    vm.seqNumber = undefined;
     vm.clientList = undefined;
     vm.creditsbillList = undefined;
 
@@ -46,6 +47,7 @@ angular.module('integridadUiApp')
       vm.loading = true;
       billService.getCreditsBillsByClientId(client.id).then(function(response) {
         vm.billList = response;
+        vm.seqNumber = response.stringSeq;
         vm.loading = false;
       }).catch(function(error){
         vm.loading = false;
@@ -57,6 +59,7 @@ angular.module('integridadUiApp')
       vm.loading = true;
       creditsbillService.getAllCreditsOfBillById(bill.id).then(function(response){
         vm.creditsbillList = response;
+        vm.billNumber = response.stringSeq;
         vm.loading = false;
       }).catch(function (error) {
         vm.loading = false;

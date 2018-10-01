@@ -77,7 +77,7 @@ public class RetentionController {
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity create(@RequestBody Retention retention){
+        public ResponseEntity create(@RequestBody Retention retention){
 		log.info("RetentionController create: {}", retention.getStringSeq());
 		Retention response = null;
 		try {

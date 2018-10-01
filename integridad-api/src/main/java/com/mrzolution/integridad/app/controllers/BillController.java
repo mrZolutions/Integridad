@@ -144,7 +144,7 @@ public class BillController {
 	}
 
 	@RequestMapping(method = RequestMethod.POST, value="/{typeDocument}" )
-    public ResponseEntity create(@RequestBody Bill bill, @PathVariable("typeDocument") int typeDocument){
+        public ResponseEntity create(@RequestBody Bill bill, @PathVariable("typeDocument") int typeDocument){
 		log.info("BillController create  bill: {} , quotation: {}", bill.getBillSeq(), bill.getQuotationSeq());
 		Bill response = null;
 		try {
@@ -157,7 +157,7 @@ public class BillController {
 	}
 
 	@RequestMapping(method = RequestMethod.PUT)
-    public ResponseEntity dactivate(@RequestBody Bill bill){
+        public ResponseEntity dactivate(@RequestBody Bill bill){
 		log.info("BillController dactivate: {}", bill.getId());
 		try {
 			service.deactivate(bill);
