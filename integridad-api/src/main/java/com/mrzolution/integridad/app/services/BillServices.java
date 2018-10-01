@@ -21,6 +21,7 @@ import com.mrzolution.integridad.app.father.Father;
 import com.mrzolution.integridad.app.father.FatherManageChildren;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Async;
 
 @Slf4j
 @Component
@@ -127,6 +128,43 @@ public class BillServices {
 		populateChildren(retrieved);
 		return retrieved;
 	};
+        
+        @Async
+        public void saveDetails(Bill bill){
+            //codigo que guarda details y todo lo demas
+            //basicamente creo que algo asi funcionaria..
+            // mira el skype
+            Cashier cashier = cashierRepository.findOne(bill.getUserIntegridad().getCashier().getId());
+			cashier.setBillNumberSeq(cashier.getBillNumberSeq() + 1);
+			cashierRepository.save(cashier);
+
+			pagos.forEach(pago -> {
+				List<Credits> creditsList = pago.getCredits();
+				pago.setCredits(null);
+				pago.setBill(saved);
+				Pago pagoSaved = pagoRepository.save(pago);
+				
+				if(creditsList != null){
+					creditsList.forEach(credit ->{
+						credit.setPago(pagoSaved);
+						creditsRepository.save(credit);
+					});
+				}
+			});
+                        
+                        details.forEach(detail->{
+			detail.setBill(saved);
+			detailRepository.save(detail);
+
+			if(!detail.getProduct().getProductType().getCode().equals("SER") && typeDocument == 1){
+				ProductBySubsidiary ps =productBySubsidiairyRepository.findBySubsidiaryIdAndProductId(bill.getSubsidiary().getId(), detail.getProduct().getId());
+				ps.setQuantity(ps.getQuantity() - detail.getQuantity());
+				productBySubsidiairyRepository.save(ps);
+			}
+
+			detail.setBill(null);
+		});
+        }
 	
 	public Bill create(Bill bill, int typeDocument) throws BadRequestException{
 		log.info("BillServices create");
@@ -150,41 +188,15 @@ public class BillServices {
 
 		// typeDocument 1 is Bill 0 is Quotation
 		if(typeDocument == 1){
-			Cashier cashier = cashierRepository.findOne(bill.getUserIntegridad().getCashier().getId());
-			cashier.setBillNumberSeq(cashier.getBillNumberSeq() + 1);
-			cashierRepository.save(cashier);
-
-			pagos.forEach(pago -> {
-				List<Credits> creditsList = pago.getCredits();
-				pago.setCredits(null);
-				pago.setBill(saved);
-				Pago pagoSaved = pagoRepository.save(pago);
-				
-				if(creditsList != null){
-					creditsList.forEach(credit ->{
-						credit.setPago(pagoSaved);
-						creditsRepository.save(credit);
-					});
-				}
-			});
+                    saveDetails(saved);
+			
 		} else {
 			Cashier cashier = cashierRepository.findOne(bill.getUserIntegridad().getCashier().getId());
 			cashier.setQuotationNumberSeq(cashier.getQuotationNumberSeq() + 1);
 			cashierRepository.save(cashier);
 		}
 
-		details.forEach(detail->{
-			detail.setBill(saved);
-			detailRepository.save(detail);
-
-			if(!detail.getProduct().getProductType().getCode().equals("SER") && typeDocument == 1){
-				ProductBySubsidiary ps =productBySubsidiairyRepository.findBySubsidiaryIdAndProductId(bill.getSubsidiary().getId(), detail.getProduct().getId());
-				ps.setQuantity(ps.getQuantity() - detail.getQuantity());
-				productBySubsidiairyRepository.save(ps);
-			}
-
-			detail.setBill(null);
-		});
+		
 		
 		log.info("BillServices created id: {}", saved.getId());
 		saved.setDetails(details);
