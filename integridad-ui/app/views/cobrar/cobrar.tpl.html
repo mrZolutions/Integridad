@@ -34,6 +34,7 @@
   </div>
 </div>
 
+<!--SECCIÓN DE CARGA DE LOS LOS CLIENTES-->
 <div ng-show="vm.billList === undefined && vm.clientSelected === undefined">
   <div class="row">
     <div class="form-group col-md-12">
@@ -69,6 +70,8 @@
     </tbody>
   </table>
 </div>
+
+<!--SECCIÓN DE CARGA DE LAS FACTURAS DE LOS CLIENTES-->
 <div ng-show="vm.billList !== undefined">
   <div class="panel panel-default">
     <div class="panel-heading">
@@ -82,7 +85,6 @@
             <th>Fecha</th>
             <th>Cliente</th>
             <th>Total</th>
-            <th>Saldo</th>
             <th></th>
           </tr>
         </thead>
@@ -97,10 +99,8 @@
             <td>{{bill.dateCreated | date : "dd/MM/yyyy"}}</td>
             <td>{{bill.client.name}}</td>
             <td>{{bill.total}}</td>
-            <td>{{bill.total}}</td>
             <td>
-              <button type="button" class="btn btn-primary btn-sm" ng-click="vm.creditsByBill(bill)"
-                      data-toggle="modal" data-target="#modalAbono">
+              <button type="button" class="btn btn-primary btn-sm" ng-click="vm.creditsByBill(bill); vm.billList = undefined">
                       Seleccionar
               </button>
             </td>
@@ -118,32 +118,63 @@
   </div>
 </div>
 
+<!--SECCIÓN DE CARGA DE LOS CRÉDITOS POR CLIENTES-->
+<div ng-show="creditsbillList !== undefined">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <b>Listado de Cŕeditos por Factura por Cobrar</b>
+    </div>
+    <div class="panel-body">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Fecha</th>
+            <th>N&uacute;mero de Pago</th>
+            <th>Saldo por Cancelar</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-show="vm.creditsbillList == 0">
+            <td colspan="4">
+                La Factura <b>No Presenta</b> Cobros Pendientes por Cancelar
+            </td>
+          </tr>
+          <tr ng-repeat="credit in vm.creditsbillList | orderBy:'payNumber':true">
+            <td>{{credits.fecha | date : "dd/MM/yyyy"}}</td>
+            <td>{{credits.payNumber}}</td>
+            <td>{{credits.valor}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!--
 <div id="modalAbono" class="modal fade" role="dialog">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title">Listado de Cŕeditos por Cobrar por Factura</h4>
+        <h4 class="modal-title"></h4>
       </div>
       <div class="modal-body">
         <table class="table table-striped">
           <thead>
             <tr>
-              <th>Fecha</th>
-              <th>N&uacute;mero de Pago</th>
-              <th>Saldo por Cancelar</th>
+              
             </tr>
           </thead>
           <tbody>
-            <tr ng-show="vm.billList == 0">
+            <tr ng-show="vm.creditsbillList == 0">
               <td colspan="4">
                   La Factura <b>No Presenta</b> Cobros Pendientes por Cancelar
               </td>
             </tr>
-            <tr ng-repeat="bill in vm.billList | orderBy:'name':true | filter:searchText">
-              <td>{{creditsbill.fecha | date : "dd/MM/yyyy"}}</td>
-              <td>{{creditsbill.payNumber}}</td>
-              <td>{{creditsbill.valor}}</td>
+            <tr ng-repeat="credits in vm.creditsbillList">
+              <td>{{credits.fecha | date : "dd/MM/yyyy"}}</td>
+              <td>{{credits.payNumber}}</td>
+              <td>{{credits.valor}}</td>
             </tr>
           </tbody>
         </table>
@@ -158,4 +189,4 @@
       </div>
     </div>
   </div>
-</div>
+</div> -->

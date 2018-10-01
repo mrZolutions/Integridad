@@ -49,7 +49,8 @@ public class BillController {
 		return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
 
 	}
-
+        
+        //Selecciona todas las Facturas del Cliente
 	@RequestMapping(method = RequestMethod.GET, value="/bill/client/{id}")
 	public ResponseEntity getBillByClientId(@PathVariable("id") UUID id){
 		log.info("BillController getByClientId: {}", id);
@@ -63,6 +64,7 @@ public class BillController {
 		return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
 	}
         
+        //Selecciona todas las Facturas del Cliente cuyo pago es a Crédito
         @RequestMapping(method = RequestMethod.GET, value="/bill/credits/client/{id}")
         public ResponseEntity getCreditBillByClientId(@PathVariable("id") UUID id){
             log.info("BillControler getCreditBillByClientId: {}", id);

@@ -19,6 +19,7 @@ public class Credits implements Child {
     private long fecha;
     private int payNumber;
     private double valor;
+    private String statusCredits;
 
     @ManyToOne
     @JoinColumn(name = "pago_id")
@@ -39,8 +40,6 @@ public class Credits implements Child {
     public static Credits newCreditsTest(){
         Credits credit = new Credits();
         credit.setPago(Pago.newPagoTest());
-
         return credit;
     }
-
 }

@@ -15,6 +15,7 @@ angular.module('integridadUiApp')
     vm.success = undefined;
     vm.loading = false;
     vm.clientList = undefined;
+    vm.creditsbillList = undefined;
 
     function _activate(){
       vm.error = undefined;
@@ -31,28 +32,11 @@ angular.module('integridadUiApp')
       });
     };
 
-    function _initializeBill(){
-      vm.bill = {
-        client: vm.clientSelected,
-        userIntegridad: $localStorage.user,
-        subsidiary: $localStorage.user.subsidiary,
-        dateCreated: vm.dateBill.getTime(),
-        discount: 0,
-        total: 0,
-        subTotal: 0,
-        iva: 0,
-        ice: 0,
-        details: [],
-        pagos:[],
-      };
-    };
-
     vm.clientSelect = function(client){
       vm.companyData = $localStorage.user.subsidiary;
       vm.dateBill = new Date();
       vm.clientSelected = client;
       vm.pagos=[];
-      _initializeBill();
       var today = new Date();
       $('#pickerBillDate').data("DateTimePicker").date(today);
       vm.newBill = true;
@@ -72,26 +56,7 @@ angular.module('integridadUiApp')
     vm.creditsByBill = function(bill){
       vm.loading = true;
       creditsbillService.getAllCreditsOfBillById(bill.id).then(function(response){
-        vm.creditsbill = response;
-        //vm.billSelected = response.bill;
-        vm.loading = false;
-      }).catch(function (error) {
-        vm.loading = false;
-        vm.error = error.data;
-      });
-    };
-
-    vm.billSelect = function(bill){
-      vm.loading = true;
-      billService.getById(bill.id).then(function(response){
-        vm.bill = response;
-        vm.companyData = $localStorage.user.subsidiary;
-        vm.clientSelected = response.client;
-        vm.pagos = response.pagos;
-        var dateToShow = new Date(response.dateCreated);
-        vm.seqNumber = response.stringSeq;
-        $('#pickerBillDate').data("DateTimePicker").date(dateToShow);
-        vm.newBill = false;
+        vm.creditsbillList = response;
         vm.loading = false;
       }).catch(function (error) {
         vm.loading = false;

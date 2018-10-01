@@ -19,12 +19,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
-@RequestMapping(value = "/integridad/v1/credits_by_bill")
+@RequestMapping(value = "/integridad/v1/creditsbybill")
 public class CreditsBillControler {
     @Autowired
     CreditsServices service;
     
-    @RequestMapping(method = RequestMethod.GET, value="/bill/credits/{id}")
+    @RequestMapping(method = RequestMethod.GET, value="/credits/bill/{id}")
     public ResponseEntity getAllCreditsOfBillById(@PathVariable("id") UUID id){
         log.info("CreditsBillControler getAllCreditsByBillById: {}", id);
         Iterable<Credits> response = null;

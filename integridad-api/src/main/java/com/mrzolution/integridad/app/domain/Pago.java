@@ -26,6 +26,7 @@ public class Pago implements Child {
     private long fechaCobro;
     private int creditoIntervalos;
     private int creditoNumeroPagos;
+    private String statusPago;
 
     @OneToMany(mappedBy = "pago", cascade = CascadeType.ALL)
     private List<Credits> credits;
@@ -46,8 +47,6 @@ public class Pago implements Child {
     public static Pago newPagoTest(){
         Pago pago = new Pago();
         pago.setBill(Bill.newBillTest());
-
         return pago;
     }
-
 }
