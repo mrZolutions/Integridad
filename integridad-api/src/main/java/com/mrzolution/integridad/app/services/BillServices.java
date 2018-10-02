@@ -130,14 +130,7 @@ public class BillServices {
 	};
         
         @Async
-        public void saveDetails(Bill bill){
-            List<Detail> details = bill.getDetails();
-            List<Pago> pagos = bill.getPagos();
-            Bill saved = billRepository.save(bill);
-            Cashier cashier = cashierRepository.findOne(bill.getUserIntegridad().getCashier().getId());
-            cashier.setBillNumberSeq(cashier.getBillNumberSeq() + 1);
-            cashierRepository.save(cashier);
-
+        public void saveDetails(Bill saved, List<Detail> details, List<Pago> pagos){
             pagos.forEach(pago -> {
 		List<Credits> creditsList = pago.getCredits();
 		pago.setCredits(null);
@@ -149,16 +142,15 @@ public class BillServices {
                             creditsRepository.save(credit);
 			});
                     }
-            });
-                        
+            });                        
             details.forEach(detail->{
 		detail.setBill(saved);
 		detailRepository.save(detail);
-		if(!detail.getProduct().getProductType().getCode().equals("SER") && typeDocument == 1){
-                    ProductBySubsidiary ps =productBySubsidiairyRepository.findBySubsidiaryIdAndProductId(bill.getSubsidiary().getId(), detail.getProduct().getId());
-                    ps.setQuantity(ps.getQuantity() - detail.getQuantity());
-                    productBySubsidiairyRepository.save(ps);
-		}
+		//if(!detail.getProduct().getProductType().getCode().equals("SER") && typeDocument == 1){
+                //    ProductBySubsidiary ps =productBySubsidiairyRepository.findBySubsidiaryIdAndProductId(bill.getSubsidiary().getId(), detail.getProduct().getId());
+                //    ps.setQuantity(ps.getQuantity() - detail.getQuantity());
+                //    productBySubsidiairyRepository.save(ps);
+		//}
 		detail.setBill(null);
             });
         }
@@ -173,7 +165,6 @@ public class BillServices {
 		if(typeDocument == 1 && pagos == null){
 			throw new BadRequestException("Debe tener un pago por lo menos");
 		}
-		
 		bill.setDateCreated(new Date().getTime());
 		bill.setTypeDocument(typeDocument);
 		bill.setActive(true);
@@ -185,16 +176,16 @@ public class BillServices {
 
 		// typeDocument 1 is Bill 0 is Quotation
 		if(typeDocument == 1){
-                    saveDetails(saved);
+                    Cashier cashier = cashierRepository.findOne(bill.getUserIntegridad().getCashier().getId());
+                    cashier.setBillNumberSeq(cashier.getBillNumberSeq() + 1);
+                    cashierRepository.save(cashier);
+                    saveDetails(saved, details, pagos);
 			
 		} else {
 			Cashier cashier = cashierRepository.findOne(bill.getUserIntegridad().getCashier().getId());
 			cashier.setQuotationNumberSeq(cashier.getQuotationNumberSeq() + 1);
 			cashierRepository.save(cashier);
 		}
-
-		
-		
 		log.info("BillServices created id: {}", saved.getId());
 		saved.setDetails(details);
 		return saved;
