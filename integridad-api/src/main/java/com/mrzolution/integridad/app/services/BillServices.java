@@ -131,39 +131,36 @@ public class BillServices {
         
         @Async
         public void saveDetails(Bill bill){
-            //codigo que guarda details y todo lo demas
-            //basicamente creo que algo asi funcionaria..
-            // mira el skype
+            List<Detail> details = bill.getDetails();
+            List<Pago> pagos = bill.getPagos();
+            Bill saved = billRepository.save(bill);
             Cashier cashier = cashierRepository.findOne(bill.getUserIntegridad().getCashier().getId());
-			cashier.setBillNumberSeq(cashier.getBillNumberSeq() + 1);
-			cashierRepository.save(cashier);
+            cashier.setBillNumberSeq(cashier.getBillNumberSeq() + 1);
+            cashierRepository.save(cashier);
 
-			pagos.forEach(pago -> {
-				List<Credits> creditsList = pago.getCredits();
-				pago.setCredits(null);
-				pago.setBill(saved);
-				Pago pagoSaved = pagoRepository.save(pago);
-				
-				if(creditsList != null){
-					creditsList.forEach(credit ->{
-						credit.setPago(pagoSaved);
-						creditsRepository.save(credit);
-					});
-				}
+            pagos.forEach(pago -> {
+		List<Credits> creditsList = pago.getCredits();
+		pago.setCredits(null);
+		pago.setBill(saved);
+		Pago pagoSaved = pagoRepository.save(pago);		
+                    if(creditsList != null){
+			creditsList.forEach(credit ->{
+                            credit.setPago(pagoSaved);
+                            creditsRepository.save(credit);
 			});
+                    }
+            });
                         
-                        details.forEach(detail->{
-			detail.setBill(saved);
-			detailRepository.save(detail);
-
-			if(!detail.getProduct().getProductType().getCode().equals("SER") && typeDocument == 1){
-				ProductBySubsidiary ps =productBySubsidiairyRepository.findBySubsidiaryIdAndProductId(bill.getSubsidiary().getId(), detail.getProduct().getId());
-				ps.setQuantity(ps.getQuantity() - detail.getQuantity());
-				productBySubsidiairyRepository.save(ps);
-			}
-
-			detail.setBill(null);
-		});
+            details.forEach(detail->{
+		detail.setBill(saved);
+		detailRepository.save(detail);
+		if(!detail.getProduct().getProductType().getCode().equals("SER") && typeDocument == 1){
+                    ProductBySubsidiary ps =productBySubsidiairyRepository.findBySubsidiaryIdAndProductId(bill.getSubsidiary().getId(), detail.getProduct().getId());
+                    ps.setQuantity(ps.getQuantity() - detail.getQuantity());
+                    productBySubsidiairyRepository.save(ps);
+		}
+		detail.setBill(null);
+            });
         }
 	
 	public Bill create(Bill bill, int typeDocument) throws BadRequestException{
