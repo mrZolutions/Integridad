@@ -248,7 +248,6 @@ angular.module('integridadUiApp')
     }
 
     vm.acceptProduct = function(closeModal){
-      vm.productToAdd.productType.code !== 'SER';
       vm.errorQuantity = undefined;
 
       var detail={

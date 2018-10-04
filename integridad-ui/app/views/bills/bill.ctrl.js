@@ -305,12 +305,6 @@ angular.module('integridadUiApp')
     };
 
     vm.acceptProduct = function(closeModal){
-      if(vm.productToAdd.productType.code !== 'SER'){
-          if(parseInt(vm.quantity) > parseInt(vm.productToAdd.quantity)){
-            vm.errorQuantity = 'Cantidad disponible insuficiente';
-            return;
-          };
-      };
       vm.errorQuantity = undefined;
       var detail = {
         discount: vm.bill.discountPercentage? vm.bill.discountPercentage : 0,
@@ -603,8 +597,8 @@ angular.module('integridadUiApp')
         if(vm.bill.discountPercentage === undefined){
           vm.bill.discountPercentage = 0;
         };
-        //var obj = JSON.parse(resp.data);
-        var obj = {clave_acceso: '1234560', id:'id12345'};
+        var obj = JSON.parse(resp.data);
+        //var obj = {clave_acceso: '1234560', id:'id12345'};
         if(obj.errors === undefined){
           vm.bill.claveDeAcceso = obj.clave_acceso;
           vm.bill.idSri = obj.id;

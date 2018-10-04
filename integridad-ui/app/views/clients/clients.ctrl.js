@@ -112,11 +112,13 @@ angular.module('integridadUiApp')
 
       if(validationError){
         vm.error = 'Debe ingresar Nombres completos, una identificacion y el Codigo de Contabilidad';
+      } else if(!idValid){
+        vm.error = 'Identificacion invalida';
       } else {
         vm.loading = true;
         if(vm.client.id === undefined){
           create();
-        }else{
+        } else {
           update(false);
         };
       };
