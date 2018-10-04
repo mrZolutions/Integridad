@@ -100,7 +100,7 @@ angular.module('integridadUiApp')
             NUMERO_FACTURA: bill.billNumber,
             ESTADO: bill.status,
             OTI: bill.oti,
-            SUBTOTAL: bill.status === 'ACTIVA' ? parseFloat(bill.subTotal.toFixed(2)) : parseFloat(0),
+            BASE_DOCE: bill.status === 'ACTIVA' ? parseFloat(bill.baseTaxes.toFixed(2)) : parseFloat(0),
             DESCUENTO: bill.status === 'ACTIVA' ? parseFloat(bill.discount.toFixed(2)) : parseFloat(0),
             BASE_CERO: bill.status === 'ACTIVA' ? parseFloat(bill.baseNoTaxes.toFixed(2)) : parseFloat(0),
             IVA: bill.status === 'ACTIVA' ? parseFloat(bill.iva.toFixed(2)) : parseFloat(0),
@@ -131,8 +131,7 @@ angular.module('integridadUiApp')
             SUCURSAL: retention.subsidiary,
             USUARIO: retention.userName
           };
-          
-
+        
           dataReport.push(data)
         });
       }

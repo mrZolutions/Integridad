@@ -142,7 +142,7 @@
       <th> No. Factura </th>
       <th> Estado </th>
       <th> OTI </th>
-      <th> Subtotal </th>
+      <th> Base 12% </th>
       <th> Descuento </th>
       <th> Base 0% </th>
       <th> Iva </th>
@@ -163,7 +163,7 @@
       <td>{{ data.billNumber }}</td>
       <td>{{ data.status }}</td>
       <td>{{ data.oti }}</td>
-      <td>{{ data.status === 'ACTIVA' ? data.subTotal.toFixed(2) : '' }}</td>
+      <td>{{ data.status === 'ACTIVA' ? data.baseTaxes.toFixed(2) : '' }}</td>
       <td>{{ data.status === 'ACTIVA' ? data.discount.toFixed(2) : '' }}</td>
       <td>{{ data.status === 'ACTIVA' ? data.baseNoTaxes.toFixed(2) : '' }}</td>
       <td>{{ data.status === 'ACTIVA' ? data.iva.toFixed(2) : '' }}</td>

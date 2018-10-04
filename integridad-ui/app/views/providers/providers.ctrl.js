@@ -418,6 +418,7 @@ angular.module('integridadUiApp')
       vm.retention.stringSeq = vm.retention.retentionSeq;
       vm.retention.detailRetentions = [];
       vm.retention.ejercicioFiscal = vm.retention.ejercicio;
+      vm.retention.documentNumber = vm.retention.documentNumber;
       vm.totalRetention = 0;
       _.each(vm.retention.items, function(item){
         var detail = {
@@ -435,7 +436,6 @@ angular.module('integridadUiApp')
     vm.getClaveAcceso = function(){
       vm.loading = true;
       var eRet = eretentionService.createERetention(vm.retention, $localStorage.user);
-
       eretentionService.getClaveDeAcceso(eRet, $localStorage.user.subsidiary.userClient.id).then(function(resp){
         var obj = JSON.parse(resp.data);
         // var obj = {clave_acceso: '1234560', id:'id12345'};

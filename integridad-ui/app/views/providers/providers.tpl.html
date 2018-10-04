@@ -536,7 +536,6 @@
           <button type="button" class="close" data-dismiss="modal" ng-click="vm.impuesto=undefined">&times;</button>
           <h4 class="modal-title">Retenci&oacute;n</h4>
         </div>
-  
         <div class="panel panel-default">
           <div class="panel-body">
             <div class="row">
@@ -550,7 +549,8 @@
                         <b>COMPROBANTE DE RETENCION</b><br/><br/>
                         <b>No: {{vm.retention.stringSeq}}</b><br/>
                         <b>AUTORIZACION: {{vm.retention.claveDeAcceso}}</b><br/>
-                        <b>FECHA: {{ vm.today | date : "dd-MM-yyyy" }}</b><br/><br/>
+                        <b>FECHA: {{ vm.today | date : "dd-MM-yyyy" }}</b><br/>
+                        <b>NUMERO DE FACTURA: {{vm.retention.documentNumber"}}</b><br/><br/>
                         <b>AMBIENTE: {{vm.retention.userIntegridadcashier.subsidiary.userClient.testMode ? 'PRUEBAS' : 'PRODUCCION'}}</b><br/><br/>
                       </div>
                     </td>
@@ -568,7 +568,6 @@
                 </table>
               </div>
             </div>
-  
             <div class="row">
               <div class="form-group col-md-12 ">
                 <table width="100%">
