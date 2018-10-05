@@ -8,7 +8,7 @@
  * Controller of the integridadUiApp
  */
 angular.module('integridadUiApp')
-  .controller('CuentasCobrarCtrl', function ( _, $rootScope, $location, utilStringService, $localStorage, clientService,
+  .controller('CuentasCobrarCtrl', function ( _, $rootScope, $location, utilStringService, $localStorage, clientService, cuentaContableService,
                                                 cuentasService, creditsbillService, authService, billService, $window, cashierService, creditService, utilSeqService){
     var vm = this;
     vm.error = undefined;
@@ -17,6 +17,7 @@ angular.module('integridadUiApp')
     vm.seqNumber = undefined;
     vm.clientList = undefined;
     vm.creditsbillList = undefined;
+    vm.cuentaContablePrincipal = undefined;
 
     function _activate(){
       vm.error = undefined;
@@ -30,6 +31,9 @@ angular.module('integridadUiApp')
       }).catch(function (error) {
         vm.loading = false;
         vm.error = error.data;
+      });
+      cuentaContableService.getAll().then(function(response) {
+        vm.cuentaContableList = response;
       });
     };
 

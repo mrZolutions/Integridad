@@ -44,7 +44,7 @@ angular.module('integridadUiApp')
 
     function create(){
       vm.loading = true;
-      cuentasService.create(vm.cuentaSelected).then(function (response) {
+      cuentasService.create(vm.cuentaSelected).then(function(response) {
         _activate();
         vm.error = undefined;
         vm.success = 'Registro realizado con exito';

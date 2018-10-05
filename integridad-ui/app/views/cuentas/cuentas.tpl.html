@@ -52,7 +52,6 @@
         <th> Descripci&oacute;n </th>
       </tr>
     </thead>
-
     <tbody>
       <tr ng-show="vm.cuentasContablesList == 0">
         <td colspan="4">
@@ -66,9 +65,6 @@
           <button type="button" class="btn btn-primary" ng-click="vm.cuentaSelect(cuenta)">
             Editar
           </button>
-          <!-- <button type="button" class="btn btn-primary" ng-click="vm.clientConsult(clientPreSelect)">
-            Consultar
-          </button> -->
         </td>
       </tr>
     </tbody>
@@ -96,8 +92,7 @@
   </div>
   <div class="panel-footer">
     <button type="button" class="btn btn-primary" ng-click="vm.save()"
-      ng-disabled="vm.cuentaSelected.code === undefined || vm.cuentaSelected.type === undefined ||
-      vm.cuentaSelected.description === undefined">
+      ng-disabled="vm.cuentaSelected.code === undefined">
       Guardar
     </button>
     <button type="button" class="btn btn-success"

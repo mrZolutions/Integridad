@@ -52,14 +52,6 @@ public class Bill {
     private String quotationSeq;
     private String stringQuotationSeq;
 
-
-    //TODO
-    //propina
-    //descuento
-    //valor retenido iva
-    //valor retenido renta
-    //pagos
-
     @ManyToOne
     @JoinColumn(name = "client_id")
     private Client client;
