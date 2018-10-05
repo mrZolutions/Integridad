@@ -14,10 +14,13 @@ angular.module('integridadUiApp')
     vm.error = undefined;
     vm.success = undefined;
     vm.loading = false;
-    vm.seqNumber = undefined;
+    vm.billNumber = undefined;
     vm.clientList = undefined;
     vm.creditsbillList = undefined;
     vm.cuentaContablePrincipal = undefined;
+    vm.clientName = undefined;
+    vm.clientId = undefined;
+    vm.clientCodConta = undefined;
 
     function _activate(){
       vm.error = undefined;
@@ -37,21 +40,13 @@ angular.module('integridadUiApp')
       });
     };
 
-    vm.clientSelect = function(client){
-      vm.companyData = $localStorage.user.subsidiary;
-      vm.dateBill = new Date();
-      vm.clientSelected = client;
-      vm.pagos=[];
-      var today = new Date();
-      $('#pickerBillDate').data("DateTimePicker").date(today);
-      vm.newBill = true;
-    };
-
     vm.clientConsult = function(client){
       vm.loading = true;
+      vm.clientId = client.identification;
+      vm.clientName = client.name;
+      vm.clientCodConta = client.codConta;
       billService.getCreditsBillsByClientId(client.id).then(function(response) {
         vm.billList = response;
-        vm.seqNumber = response.stringSeq;
         vm.loading = false;
       }).catch(function(error){
         vm.loading = false;
@@ -61,9 +56,9 @@ angular.module('integridadUiApp')
 
     vm.creditsByBill = function(bill){
       vm.loading = true;
+      vm.billNumber = bill.stringSeq;
       creditsbillService.getAllCreditsOfBillById(bill.id).then(function(response){
         vm.creditsbillList = response;
-        vm.billNumber = response.stringSeq;
         vm.loading = false;
       }).catch(function (error) {
         vm.loading = false;
