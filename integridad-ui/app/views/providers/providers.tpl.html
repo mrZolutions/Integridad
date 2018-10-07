@@ -551,6 +551,7 @@
                         <b>No: {{vm.retention.stringSeq}}</b><br/>
                         <b>AUTORIZACION: {{vm.retention.claveDeAcceso}}</b><br/>
                         <b>FECHA: {{ vm.today | date : "dd-MM-yyyy" }}</b><br/>
+                        <b>FACTURA No: {{vm.retention.numero}}</b>
                         <b>AMBIENTE: {{vm.retention.userIntegridadcashier.subsidiary.userClient.testMode ? 'PRUEBAS' : 'PRODUCCION'}}</b><br/><br/>
                       </div>
                     </td>
