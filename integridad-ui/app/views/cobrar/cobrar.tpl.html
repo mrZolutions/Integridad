@@ -192,13 +192,12 @@
         <div class="row">
           <div class="form-group col-md-6">
             <label>Fecha de Pago: </label>
-            <div class="input-group date" id="pickerDateOfPayment">
+            <div class="input-group date" id="DateOfPayment">
               <input type="text" class="form-control input-group-addon"/>
-              <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"/></span>
+              <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
             </div>
             <script>
-              var defaultDate = new Date();
-              $('#pickerDateOfPayment').datetimepicker({format: "DD/MM/YY",});
+              $('#DateOfPayment').datetimepicker({format: "DD/MM/YY",});
             </script>
           </div>
           <div class="form-group col-md-6">
@@ -233,7 +232,8 @@
                 <input type="text" class="form-control"/>
               </div>
               <div class="form-group col-md-6">
-                <label>Valor a Cancelar:</label><br/>
+                <label>Monto a Abonar:</label><br/>
+                <b>{{vm.creditValue}}</b>
                 <input type="text" class="form-control"/>
               </div>
             </div>
@@ -257,7 +257,7 @@
                 <input type="text" class="form-control"/>
               </div>
               <div class="form-group col-md-6">
-                <label>Valor a Cancelar:</label><br/>
+                <label>Monto a Abonar:</label><br/>
                 <input type="text" class="form-control"/>
               </div>
             </div>
@@ -281,7 +281,7 @@
                 <input type="text" class="form-control"/>
               </div>
               <div class="form-group col-md-6">
-                <label>Valor a Cancelar:</label><br/>
+                <label>Monto a Abonar:</label><br/>
                 <input type="text" class="form-control"/>
               </div>
             </div>
@@ -301,7 +301,7 @@
                 <input type="text" class="form-control"/>
               </div>
               <div class="form-group col-md-6">
-                <label>Valor a Cancelar:</label><br/>
+                <label>Monto a Abonar:</label><br/>
                 <input type="text" class="form-control"/>
               </div>
             </div>
