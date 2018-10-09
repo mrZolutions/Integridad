@@ -143,7 +143,7 @@ public class BillServices {
 			});
                     }
             });                        
-            details.forEach(detail->{
+            details.forEach(detail-> {
 		detail.setBill(saved);
 		detailRepository.save(detail);
 		//if(!detail.getProduct().getProductType().getCode().equals("SER") && typeDocument == 1){
@@ -153,7 +153,7 @@ public class BillServices {
 		//}
 		detail.setBill(null);
             });
-        }
+        };
 	
 	public Bill create(Bill bill, int typeDocument) throws BadRequestException{
 		log.info("BillServices create");

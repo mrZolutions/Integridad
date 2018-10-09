@@ -282,12 +282,12 @@
       <div class="form-group col-md-6">
         <label>M&aacute;ximo / M&iacute;nimo: </label>
         <input type="text" onkeypress="return ((event.which >= 46 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
-ng-model="vm.product.maxMinimun" class="form-control" maxlength="9" ng-disabled="vm.product.productType.code === 'SER'">
+               ng-model="vm.product.maxMinimun" class="form-control" maxlength="9" ng-disabled="vm.product.productType.code === 'SER'">
       </div>
       <div class="form-group col-md-6">
         <label>Costo (promedio): </label>
         <input type="text" onkeypress="return ((event.which >= 46 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
-ng-model="vm.product.averageCost" class="form-control" maxlength="9">
+               ng-model="vm.product.averageCost" class="form-control" maxlength="9">
       </div>
     </div>
 
@@ -295,13 +295,13 @@ ng-model="vm.product.averageCost" class="form-control" maxlength="9">
       <div class="form-group col-md-6">
         <label>Ganancia % efectivo: </label>
         <input type="text" onkeypress="return ((event.which >= 46 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
-ng-model="vm.product.cashPercentage" class="form-control" maxlength="9">
+               ng-model="vm.product.cashPercentage" class="form-control" maxlength="9">
       </div>
 
       <div class="form-group col-md-6">
         <label>Ganancia % cr&eacute;dito: </label>
         <input type="text" onkeypress="return ((event.which >= 46 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
-ng-model="vm.product.creditPercentage" class="form-control" maxlength="9">
+               ng-model="vm.product.creditPercentage" class="form-control" maxlength="9">
       </div>
     </div>
 
@@ -309,13 +309,13 @@ ng-model="vm.product.creditPercentage" class="form-control" maxlength="9">
       <div class="form-group col-md-6">
         <label>Ganancia % tarjeta: </label>
         <input type="text" onkeypress="return ((event.which >= 46 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
-ng-model="vm.product.cardPercentage" class="form-control" maxlength="9">
+               ng-model="vm.product.cardPercentage" class="form-control" maxlength="9">
       </div>
 
       <div class="form-group col-md-6">
         <label>Ganancia % mayorista: </label>
         <input type="text" onkeypress="return ((event.which >= 46 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
-ng-model="vm.product.majorPercentage" class="form-control" maxlength="9">
+               ng-model="vm.product.majorPercentage" class="form-control" maxlength="9">
       </div>
     </div>
 
@@ -331,7 +331,13 @@ ng-model="vm.product.majorPercentage" class="form-control" maxlength="9">
       </div>
     </div>
 
-
+    <div class="row">
+      <div class="form-group col-md-6">
+        <label>Costo Previsualizado:</label>
+        <b></b>
+      </div>
+    </div>
+    
   </div>
   <div class="panel-footer">
     <button type="button" class="btn btn-primary" ng-click="vm.save()">

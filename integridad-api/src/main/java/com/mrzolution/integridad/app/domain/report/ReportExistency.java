@@ -9,7 +9,6 @@ import lombok.Data;
 
 @Data
 public class ReportExistency {
-    private UUID id;
     private String code;
     private String name;
     private Double cost;

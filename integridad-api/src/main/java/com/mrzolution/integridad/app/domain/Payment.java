@@ -13,11 +13,12 @@ public class Payment {
     @GeneratedValue
     private UUID id;
 
-    private double value;
     private String detail;
-    private String noCheck;
+    private long datePayment;
+    private String typePayment;
+    private String modePayment;
+    private double valor;
     private String noAccount;
-    private String noTransfer;
     private String noDocument;
 
     @ManyToOne
@@ -25,8 +26,8 @@ public class Payment {
     private CuentaContable cuentaContablePrincipal;
 
     @ManyToOne
-    @JoinColumn(name = "cuenta_contable_auxiliar_id")
-    private CuentaContable cuentaContableAuxiliar;
+    @JoinColumn(name = "code_conta")
+    private Client clientCodeConta;
 
     @ManyToOne
     @JoinColumn(name = "credit_id")
@@ -37,8 +38,8 @@ public class Payment {
         cuentaContablePrincipal.setFatherListToNull();
         cuentaContablePrincipal.setListsNull();
 
-        cuentaContableAuxiliar.setFatherListToNull();
-        cuentaContableAuxiliar.setListsNull();
+        clientCodeConta.setFatherListToNull();
+        clientCodeConta.setListsNull();
 
         credit.setFatherListToNull();
         credit.setListsNull();

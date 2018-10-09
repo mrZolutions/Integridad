@@ -114,7 +114,7 @@ angular.module('integridadUiApp')
         iva: 0,
         ice: 0,
         details: [],
-        pagos:[],
+        pagos: []
       };
     };
 
@@ -219,7 +219,7 @@ angular.module('integridadUiApp')
       vm.companyData = $localStorage.user.subsidiary;
       vm.dateBill = new Date();
       vm.clientSelected = client;
-      vm.pagos=[];
+      vm.pagos = [];
       _getSeqNumber();
       _initializeBill();
       var today = new Date();
@@ -373,6 +373,7 @@ angular.module('integridadUiApp')
       vm.pagos
       if(vm.medio.medio === 'efectivo' || vm.medio.medio === 'dinero_electronico_ec'){
         vm.medio.payForm = '20 - OTROS CON UTILIZACION DEL SISTEMA FINANCIERO';
+        vm.medio.statusPago = 'PAGADO';
         // CAMBIO SRI POR CONFIRMAR
         // vm.medio.payForm = '01 - SIN UTILIZACION DEL SISTEMA FINANCIERO';
       };
@@ -381,20 +382,24 @@ angular.module('integridadUiApp')
         // CAMBIO SRI POR CONFIRMAR
         // vm.medio.payForm = '01 - SIN UTILIZACION DEL SISTEMA FINANCIERO';
         vm.medio.total = (vm.bill.total - payed).toFixed(2);
+        vm.medio.statusPago = 'PENDIENTE';
       };
       if(vm.medio.medio === 'cheque' || vm.medio.medio === 'cheque_posfechado'){
         vm.medio.payForm = '20 - OTROS CON UTILIZACION DEL SISTEMA FINANCIERO';
+        vm.medio.statusPago = 'PAGADO';
         vm.medio.total = (vm.bill.total - payed).toFixed(2);
       };
       if(vm.medio.medio === 'tarjeta_credito' || vm.medio.medio === 'tarjeta_debito'){
         vm.medio.payForm = '19 - TARJETA DE CREDITO';
         vm.medio.total = (vm.bill.total - payed).toFixed(2);
+        vm.medio.statusPago = 'PAGADO';
       };
     };
 
     vm.loadCredit = function(){
       var creditArray = [];
       var diasPlazo = parseInt(vm.medio.creditoIntervalos);
+      var statusCredits = 'PENDIENTE';
       var d = new Date();
       var total = parseFloat(parseFloat(vm.bill.total)/parseFloat(vm.medio.creditoNumeroPagos)).toFixed(2);
       for (var i = 1; i <= parseInt(vm.medio.creditoNumeroPagos); i++) {
@@ -402,12 +407,13 @@ angular.module('integridadUiApp')
           payNumber: i,
           diasPlazo: diasPlazo,
           fecha: _addDays(d, diasPlazo),
+          statusCredits: statusCredits,
           valor: total
         };
         diasPlazo += parseInt(vm.medio.creditoIntervalos);
-        creditArray.push(credito)
+        creditArray.push(credito);
       };
-      vm.medio.credits = creditArray
+      vm.medio.credits = creditArray;
     };
 
     vm.getFechaCobro = function() {
