@@ -72,10 +72,11 @@
 </div>
 
 <!--SECCIÓN DE CARGA DE LAS FACTURAS DE LOS CLIENTES-->
-<div ng-show="vm.billList !== undefined">
+<div ng-show="vm.billList !== undefined && vm.retentionClient === undefined">
   <div class="panel panel-default">
     <div class="panel-heading">
-      <b>Listado de Facturas por Cobrar</b>
+      <b>Listado de Facturas por Cobrar</b><br/>
+      <b>Cliente: {{vm.clientName}}</b>
     </div>
     <div class="panel-body">
       <table class="table table-striped">
@@ -83,8 +84,8 @@
           <tr>
             <th>N&uacute;mero</th>
             <th>Fecha</th>
-            <th>Cliente</th>
             <th>Total</th>
+            <th></th>
             <th></th>
           </tr>
         </thead>
@@ -97,12 +98,15 @@
           <tr ng-repeat="bill in vm.billList | orderBy:'name':true | filter:searchText">
             <td>{{bill.stringSeq}}</td>
             <td>{{bill.dateCreated | date : "dd/MM/yyyy"}}</td>
-            <td>{{bill.client.name}}</td>
             <td>{{bill.total}}</td>
+            <td></td>
             <td>
               <button type="button" class="btn btn-primary btn-sm" 
                       ng-click="vm.creditsByBill(bill)" data-toggle="modal" data-target="#modalCuotas">
                       Seleccionar
+              </button>
+              <button type="button" class="btn btn-primary btn-sm" ng-click="vm.createRetentionClient(bill)">
+                      Retenciones
               </button>
             </td>
           </tr>
@@ -163,6 +167,186 @@
         </button>
         <button type="button" class="btn btn-primary" data-dismiss="modal">
                 Salir
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--RETENCIONES DE FACTURAS DE CLIENTES-->
+<div ng-show="vm.retentionClient !== undefined && !vm.retentionClientCreated">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <b>Retenci&oacute;n de Factura No. {{vm.billNumber}}</b>
+    </div>
+    <div class="panel-body">
+      <div class="row">
+        <div class="form-group col-md-6">
+        <label>N&uacute;mero de Documento:</label><br>
+          <h4>{{vm.billNumber}}</h4>
+        </div>
+        <div class="form-group col-md-6">
+          <label>Fecha del Documento: </label>
+          <div class="input-group date" id="pickerBillDateRetention">
+            <input type="text" class="form-control input-group-addon"/>
+            <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"/></span>
+          </div>
+          <script>
+            var defaultDate = new Date();
+            $('#pickerBillDateRetention').datetimepicker({format: "DD/MM/YY",});
+          </script>
+        </div>
+      </div>
+      <div class="row">
+        <div class="form-group col-md-6">
+          <label>Tipo de documento: </label>
+          <select ng-options="typeDoc.code as typeDoc.name for typeDoc in vm.documentType  | orderBy:'name'  track by typeDoc.code" ng-model="vm.docType"
+                  class="form-control">
+          </select>
+        </div>
+        <div class="form-group col-md-6">
+          <label>Tipo de Impuesto: </label><br/>
+          <label class="radio-inline"><input type="radio" ng-model="vm.retentionClient.typeRetention" value="1" name="tipo"
+                 ng-change="vm.getPercentageTable()">Fuente</label>
+          <label class="radio-inline"><input type="radio" ng-model="vm.retentionClient.typeRetention" value="2" name="tipo"
+                 ng-change="vm.getPercentageTable()">IVA</label>
+        </div>
+      </div>
+      <div class="row" ng-show="vm.tablePercentage !== undefined">
+        <div class="form-group col-md-12">
+          <input ng-model="searchTextPercentage" class="form-control" placeholder="Buscar">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th> C&oacute;digo </th>
+                <th> Descripci&oacute;n </th>
+                <th> % </th>
+                <th>  </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-show="vm.tablePercentage == 0">
+                <td colspan="2">
+                    No hay Fuente Seleccionada
+                </td>
+              </tr>
+              <tr dir-paginate="p in vm.tablePercentage | filter:searchTextPercentage | itemsPerPage: 5"  pagination-id="clientPagination">
+                <td>{{p.codigo}}</td>
+                <td>{{p.name}}</td>
+                <td>{{p.percentage}}</td>
+                <td>
+                  <button type="button" class="btn btn-primary"
+                          ng-click="vm.selecPercentage(p)" data-toggle="modal" data-target="#modalBaseImponible">
+                          Seleccionar
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <dir-pagination-controls pagination-id="clientPagination"></dir-pagination-controls>
+        </div>
+      </div>
+      <div class="row">
+        <div class="form-group col-md-12">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th> IMPUESTO TIPO </th>
+                <th> CODIGO </th>
+                <th> BASE IMPONIBLE </th>
+                <th> RETENCIONES %</th>
+                <th> VALOR $</th>
+                <th> </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-show="vm.retentionClient.items == 0">
+                <td colspan="5">
+                  No hay Fuente Seleccionada
+                </td>
+              </tr>
+              <tr ng-repeat="i in vm.retentionClient.items" >
+                <td>
+                  <span ng-if="i.codigo === 1">RETENCION EN LA FUENTE</span>
+                  <span ng-if="i.codigo === 2">RETENCION EN EL IVA</span>
+                </td>
+                <td>{{ i.codigo_porcentaje }}</td>
+                <td>{{ i.base_imponible }}</td>
+                <td>{{ i.porcentaje }}</td>
+                <td>{{ i.valor_retenido }}</td>
+                <td>
+                  <button type="button" class="btn btn-primary"
+                          ng-click="vm.editItem($index)" data-toggle="modal" data-target="#modalBaseImponible">
+                          Editar
+                  </button>
+                  <button type="button" class="btn btn-primary"
+                          ng-click="vm.deleteItem($index)">
+                          Eliminar
+                  </button>
+                </td>  
+              </tr>
+              <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td><b>TOTAL</b></td>
+                <td>{{vm.getTotalRetencionesClient()}}</td>
+                <td></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="row">
+        <div class="form-group col-md-12">
+          <button type="button" class="btn btn-primary"
+                  ng-click="vm.getClaveAcceso()" ng-disabled="vm.retention.items == 0">
+                  Crear
+          </button>
+          <button type="button" class="btn btn-primary"
+                  ng-click="vm.retentionClient = undefined">
+                  Cancelar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>   
+</div>
+
+<div id="modalBaseImponible" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" ng-click="vm.impuesto=undefined">&times;</button>
+        <h4 class="modal-title">Base Imponible</h4>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-md-3"  ng-if="vm.item.codigo === 1">
+            <b>Retenci&oacute;n en la Fuente</b>
+          </div>
+          <div class="col-md-3"  ng-if="vm.item.codigo === 2">
+            <b>Retenci&oacute;n del IVA</b>
+          </div>
+          <div class="col-md-3" >
+            C&oacute;digo: <b>{{vm.item.codigo_porcentaje}}</b>
+          </div>
+          <div class="col-md-3" >
+            Retenci&oacute;n %: <b>{{vm.item.porcentaje}}</b>
+          </div>
+          <div class="col-md-3" >
+            <label>Valor</label>
+            <b>{{vm.creditValueSubtotal}}</b>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="vm.addItem()">
+          Aceptar
+        </button>
+        <button type="button" class="btn btn-primary"  data-dismiss="modal"
+          ng-click="vm.item = undefined; vm.indexEdit = undefined;">
+          Cancelar
         </button>
       </div>
     </div>
@@ -306,134 +490,7 @@
             </div>
           </div>
         </div>
-        <div class="row" ng-show="vm.payment.typePayment === 'RET'">
-          <div class="form-group col-md-12">
-            <div class="panel panel-default">
-              <div class="panel-heading">
-                <b>Retenci&oacute;n del Cliente</b>
-              </div>
-              <div class="panel-body">
-                <div class="row">
-                  <div class="form-group col-md-6">
-                    <label>N&uacute;mero de Documento: </label>
-                    <input type="text" ng-model="vm.retention.numero"
-                           class="form-control" maxlength="17">
-                  </div>
-                  <div class="form-group col-md-6">
-                    <label>Fecha del Documento: </label>
-                    <div class="input-group date" id="pickerBillDateRetention">
-                      <input type="text" class="form-control input-group-addon"/>
-                      <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"/></span>
-                    </div>
-                    <script>
-                      var defaultDate = new Date();
-                      $('#pickerBillDateRetention').datetimepicker({format: "DD/MM/YY",});
-                    </script>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="form-group col-md-6">
-                    <label>Tipo de documento: </label>
-                    <select ng-options="typeDoc.code as typeDoc.name for typeDoc in vm.documentType  | orderBy:'name'  track by typeDoc.code" ng-model="vm.docType"
-                            class="form-control">
-                    </select>
-                  </div>
-                  <div class="form-group col-md-6">
-                    <label>Tipo de Impuesto: </label><br/>
-                    <label class="radio-inline"><input type="radio" ng-model="vm.retention.typeRetention" value="1" name="tipo"
-                           ng-change="vm.getPercentageTable()">Fuente</label>
-                    <label class="radio-inline"><input type="radio" ng-model="vm.retention.typeRetention" value="2" name="tipo"
-                           ng-change="vm.getPercentageTable()">IVA</label>
-                  </div>
-                  <div class="row" ng-show="vm.tablePercentage !== undefined">
-                    <div class="form-group col-md-12">
-                      <input ng-model="searchTextPercentage" class="form-control" placeholder="Buscar">
-                      <table class="table table-striped">
-                        <thead>
-                          <tr>
-                            <th> C&oacute;digo </th>
-                            <th> Descripci&oacute;n </th>
-                            <th> % </th>
-                            <th>  </th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr ng-show="vm.tablePercentage == 0">
-                            <td colspan="2">
-                              No hay Fuente Seleccionada
-                            </td>
-                          </tr>
-                          <tr dir-paginate="p in vm.tablePercentage | filter:searchTextPercentage | itemsPerPage: 5"  pagination-id="clientPagination">
-                            <td>{{ p.codigo }}</td>
-                            <td>{{ p.name }}</td>
-                            <td>{{ p.percentage }}</td>
-                            <td>
-                              <button type="button" class="btn btn-primary"
-                              ng-click="vm.selecPercentage(p)" data-toggle="modal" data-target="#modalBaseImponible">
-                                Seleccionar
-                              </button>
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
-                      <dir-pagination-controls pagination-id="clientPagination"></dir-pagination-controls>
-                    </div>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="form-group col-md-12">
-                    <table class="table table-striped">
-                      <thead>
-                        <tr>
-                          <th> IMPUESTO TIPO </th>
-                          <th> CODIGO </th>
-                          <th> BASE IMPONIBLE </th>
-                          <th> RETENCIONES %</th>
-                          <th> VALOR $</th>
-                          <th> </th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr ng-show="vm.retention.items == 0">
-                          <td colspan="5">
-                            No hay Fuente Seleccionada
-                          </td>
-                        </tr>
-                        <tr ng-repeat="i in vm.retention.items" >
-                          <td>
-                            <span ng-if="i.codigo === 1">RETENCION EN LA FUENTE</span>
-                            <span ng-if="i.codigo === 2">RETENCION EN EL IVA</span>
-                          </td>
-                          <td>{{ i.codigo_porcentaje }}</td>
-                          <td>{{ i.base_imponible }}</td>
-                          <td>{{ i.porcentaje }}</td>
-                          <td>{{ i.valor_retenido }}</td>
-                          <td>
-                            <button type="button" class="btn btn-primary"
-                                    ng-click="vm.editItem($index)" data-toggle="modal" data-target="#modalBaseImponible">
-                                    Editar
-                            </button>
-                            <button type="button" class="btn btn-primary"
-                                    ng-click="vm.deleteItem($index)">
-                                    Eliminar
-                            </button>
-                          </td>  
-                        </tr>
-                        <tr>
-                          <td></td>
-                          <td></td>
-                          <td></td>
-                          <td><b>TOTAL</b></td>
-                          <td>{{vm.getTotalRetenciones()}}</td>
-                          <td></td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>        
+        <div class="row" ng-show="vm.payment.typePayment === 'RET'">           
         </div>
       </div>
       <div class="modal-footer">

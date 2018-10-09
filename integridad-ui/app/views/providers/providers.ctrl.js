@@ -359,7 +359,7 @@ angular.module('integridadUiApp')
         codigo_porcentaje: percentage.codigoDatil,
         codigo_porcentaje_integridad: percentage.codigo,
         porcentaje: percentage.percentage,
-        tipo_documento_sustento: vm.docType,
+        tipo_documento_sustento: vm.docType
       };
     };
 

@@ -9,18 +9,20 @@
  */
 angular.module('integridadUiApp')
   .controller('CuentasCobrarCtrl', function ( _, $rootScope, $location, utilStringService, $localStorage, clientService, cuentaContableService,
-                                                cuentasService, creditsbillService, authService, billService, $window, cashierService, creditService, utilSeqService){
+                                                cuentasService, creditsbillService, authService, billService, $window, eretentionClientService, utilSeqService){
     var vm = this;
     vm.error = undefined;
     vm.success = undefined;
     vm.loading = false;
     vm.billNumber = undefined;
     vm.clientList = undefined;
+    vm.clientBill = undefined;
     vm.creditsbillList = undefined;
     vm.cuentaContablePrincipal = undefined;
     vm.clientName = undefined;
     vm.clientId = undefined;
     vm.clientCodConta = undefined;
+    vm.retentionClient = undefined;
 
     vm.documentType = [
       {code: '01', name: 'Factura'},
@@ -130,11 +132,12 @@ angular.module('integridadUiApp')
     function _activate(){
       vm.error = undefined;
       vm.today = new Date();
+      vm.clientBill = undefined;
       vm.clientSelected = undefined;
       vm.dateBill = undefined;
       vm.loading = true;
       vm.user = $localStorage.user;
-      clientService.getLazyByProjectId($localStorage.user.subsidiary.userClient.id).then(function (response) {
+      clientService.getLazyByProjectId($localStorage.user.subsidiary.userClient.id).then(function(response){
         vm.clientList = response;
         vm.loading = false;
       }).catch(function (error) {
@@ -175,11 +178,24 @@ angular.module('integridadUiApp')
 
     vm.getPercentageTable = function(){
       vm.tablePercentage = undefined;
-      if(vm.retention.typeRetention === '2'){
+      if(vm.retentionClient.typeRetention === '2'){
         vm.tablePercentage = vm.ivaTipo;
       };
-      if(vm.retention.typeRetention === '1'){
+      if(vm.retentionClient.typeRetention === '1'){
         vm.tablePercentage = vm.fuenteTipo;
+      };
+    };
+
+    vm.createRetentionClient = function(bill){
+      vm.retentionClientCreated = false;
+      vm.billNumber = bill.stringSeq;
+      vm.creditValue = bill.total;
+      vm.creditValueSubtotal = bill.baseTaxes;
+      vm.creditValueIva = bill.iva;
+      vm.retentionClient = {
+        clientBill: bill,
+        typeRetention: undefined,
+        items: []
       };
     };
 
@@ -187,14 +203,46 @@ angular.module('integridadUiApp')
       vm.baseImponibleItem = undefined;
       vm.item = undefined;
       vm.item = {
-        codigo: parseInt(vm.retention.typeRetention),
-        fecha_emision_documento_sustento: dateService.getIsoDate($('#pickerBillDateDocumentRetention').data("DateTimePicker").date().toDate()),
-        numero_documento_sustento:vm.retention.numero,
+        codigo: parseInt(vm.retentionClient.typeRetention),
+        fecha_emision_documento_sustento: dateService.getIsoDate($('#pickerBillDateRetention').data("DateTimePicker").date().toDate()),
+        numero_documento_sustento: vm.billNumber,
         codigo_porcentaje: percentage.codigoDatil,
         codigo_porcentaje_integridad: percentage.codigo,
         porcentaje: percentage.percentage,
-        tipo_documento_sustento: vm.docType,
+        tipo_documento_sustento: vm.docType
       };
+    };
+
+    vm.addItem = function(){
+      vm.item.valor_retenido = (parseFloat(vm.item.base_imponible) * (parseFloat(vm.item.porcentaje)/100)).toFixed(2);
+      if(vm.indexEdit !== undefined){
+        vm.retentionClient.items.splice(vm.indexEdit, 1);
+        vm.indexEdit = undefined
+      };
+      vm.retentionClient.retentionDoc = vm.billNumber;
+      vm.retentionClient.items.push(vm.item);
+      vm.item = undefined;
+      vm.retentionClient.typeRetention = undefined;
+      vm.tablePercentage = undefined;
+    };
+
+    vm.editItem = function(index){
+      vm.item = angular.copy(vm.retentionClient.items[index]);
+      vm.indexEdit = index;
+    };
+
+    vm.deleteItem = function(index){
+      vm.retentionClient.items.splice(index, 1);
+    };
+
+    vm.getTotalRetencionesClient = function(){
+      var totalRetorno = 0;
+      if(vm.retentionClient){
+        _.each(vm.retentionClient.items, function(detail){
+          totalRetorno = (parseFloat(totalRetorno) +parseFloat(detail.valor_retenido)).toFixed(2);
+        });
+      };
+      return totalRetorno;
     };
 
     vm.cancel = function(){
