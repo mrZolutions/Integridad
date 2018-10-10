@@ -355,7 +355,7 @@ angular.module('integridadUiApp')
       vm.item = {
         codigo: parseInt(vm.retention.typeRetention),
         fecha_emision_documento_sustento: dateService.getIsoDate($('#pickerBillDateDocumentRetention').data("DateTimePicker").date().toDate()),
-        numero_documento_sustento:vm.retention.numero,
+        numero_documento_sustento: vm.retention.numero,
         codigo_porcentaje: percentage.codigoDatil,
         codigo_porcentaje_integridad: percentage.codigo,
         porcentaje: percentage.percentage,

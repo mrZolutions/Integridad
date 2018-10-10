@@ -22,7 +22,7 @@ public class DetailRetentionClient implements Child{
     private UUID id;
 
     @ManyToOne
-    @JoinColumn(name = "retention_client_id")
+    @JoinColumn(name = "retentionClient_id")
     private RetentionClient retentionClient;
 
     private String taxType;

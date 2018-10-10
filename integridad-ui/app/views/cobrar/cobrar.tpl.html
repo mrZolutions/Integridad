@@ -182,29 +182,40 @@
     <div class="panel-body">
       <div class="row">
         <div class="form-group col-md-6">
-        <label>N&uacute;mero de Documento:</label><br>
-          <h4>{{vm.billNumber}}</h4>
-        </div>
-        <div class="form-group col-md-6">
-          <label>Fecha del Documento: </label>
-          <div class="input-group date" id="pickerBillDateRetention">
+          <label>Fecha: </label>
+          <div class="input-group date" id="pickerDateToday">
             <input type="text" class="form-control input-group-addon"/>
             <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"/></span>
           </div>
           <script>
-            var defaultDate = new Date();
-            $('#pickerBillDateRetention').datetimepicker({format: "DD/MM/YY",});
+            $('#pickerDateToday').datetimepicker({format: "DD/MM/YY",});
           </script>
         </div>
-      </div>
-      <div class="row">
         <div class="form-group col-md-6">
           <label>Tipo de documento: </label>
           <select ng-options="typeDoc.code as typeDoc.name for typeDoc in vm.documentType  | orderBy:'name'  track by typeDoc.code" ng-model="vm.docType"
                   class="form-control">
           </select>
         </div>
-        <div class="form-group col-md-6">
+      </div>
+      <div class="row">
+        <div class="form-group col-md-4">
+          <label>N&uacute;mero de Retenci&oacute;n:</label><br>
+          <input type="text" ng-model="vm.retentionClient.numero"
+                 class="form-control" maxlength="17">
+        </div>
+        <div class="form-group col-md-4">
+          <label>Fecha del Documento: </label>
+          <div class="input-group date" id="pickerDateRetention">
+            <input type="text" class="form-control input-group-addon"/>
+            <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"/></span>
+          </div>
+          <script>
+            var defaultDate = new Date();
+            $('#pickerDateRetention').datetimepicker({format: "DD/MM/YY",});
+          </script>
+        </div>
+        <div class="form-group col-md-4">
           <label>Tipo de Impuesto: </label><br/>
           <label class="radio-inline"><input type="radio" ng-model="vm.retentionClient.typeRetention" value="1" name="tipo"
                  ng-change="vm.getPercentageTable()">Fuente</label>
@@ -227,16 +238,16 @@
             <tbody>
               <tr ng-show="vm.tablePercentage == 0">
                 <td colspan="2">
-                    No hay Fuente Seleccionada
+                  No hay Fuente Seleccionada
                 </td>
               </tr>
-              <tr dir-paginate="p in vm.tablePercentage | filter:searchTextPercentage | itemsPerPage: 5"  pagination-id="clientPagination">
-                <td>{{p.codigo}}</td>
-                <td>{{p.name}}</td>
-                <td>{{p.percentage}}</td>
+              <tr dir-paginate="p in vm.tablePercentage | filter:searchTextPercentage | itemsPerPage: 5" pagination-id="clientPagination">
+                <td>{{ p.codigo }}</td>
+                <td>{{ p.name }}</td>
+                <td>{{ p.percentage }}</td>
                 <td>
                   <button type="button" class="btn btn-primary"
-                          ng-click="vm.selecPercentage(p)" data-toggle="modal" data-target="#modalBaseImponible">
+                          ng-click="vm.selecPercentage(p)" data-toggle="modal" data-target="#modalBImponible">
                           Seleccionar
                   </button>
                 </td>
@@ -246,6 +257,7 @@
           <dir-pagination-controls pagination-id="clientPagination"></dir-pagination-controls>
         </div>
       </div>
+
       <div class="row">
         <div class="form-group col-md-12">
           <table class="table table-striped">
@@ -270,13 +282,13 @@
                   <span ng-if="i.codigo === 1">RETENCION EN LA FUENTE</span>
                   <span ng-if="i.codigo === 2">RETENCION EN EL IVA</span>
                 </td>
-                <td>{{ i.codigo_porcentaje }}</td>
-                <td>{{ i.base_imponible }}</td>
-                <td>{{ i.porcentaje }}</td>
-                <td>{{ i.valor_retenido }}</td>
+                <td>{{i.codigo_porcentaje}}</td>
+                <td>{{i.base_imponible}}</td>
+                <td>{{i.porcentaje}}</td>
+                <td>{{i.valor_retenido}}</td>
                 <td>
                   <button type="button" class="btn btn-primary"
-                          ng-click="vm.editItem($index)" data-toggle="modal" data-target="#modalBaseImponible">
+                          ng-click="vm.editItem($index)" data-toggle="modal" data-target="#modalBImponible">
                           Editar
                   </button>
                   <button type="button" class="btn btn-primary"
@@ -297,10 +309,11 @@
           </table>
         </div>
       </div>
+
       <div class="row">
         <div class="form-group col-md-12">
           <button type="button" class="btn btn-primary"
-                  ng-click="vm.getClaveAcceso()" ng-disabled="vm.retention.items == 0">
+                  ng-click="vm.saveRetentionClient()" ng-disabled="vm.retentionClient.items == 0">
                   Crear
           </button>
           <button type="button" class="btn btn-primary"
@@ -313,7 +326,7 @@
   </div>   
 </div>
 
-<div id="modalBaseImponible" class="modal fade" role="dialog">
+<div id="modalBImponible" class="modal fade" role="dialog">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -322,10 +335,10 @@
       </div>
       <div class="modal-body">
         <div class="row">
-          <div class="col-md-3"  ng-if="vm.item.codigo === 1">
+          <div class="col-md-3" ng-if="vm.item.codigo === 1">
             <b>Retenci&oacute;n en la Fuente</b>
           </div>
-          <div class="col-md-3"  ng-if="vm.item.codigo === 2">
+          <div class="col-md-3" ng-if="vm.item.codigo === 2">
             <b>Retenci&oacute;n del IVA</b>
           </div>
           <div class="col-md-3" >
@@ -336,7 +349,8 @@
           </div>
           <div class="col-md-3" >
             <label>Valor</label>
-            <b>{{vm.creditValueSubtotal}}</b>
+            <input type="text" onkeypress="return ((event.which >= 46 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+                   class="form-control" maxlength="9" ng-model="vm.item.base_imponible" placeholder="{{vm.creditValueSubtotal}}">
           </div>
         </div>
       </div>

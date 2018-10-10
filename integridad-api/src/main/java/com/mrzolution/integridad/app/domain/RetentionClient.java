@@ -25,9 +25,11 @@ public class RetentionClient {
     @GeneratedValue
     private UUID id;
     
-    private long documentDate;
+    private String retentionNumber;
     private String ejercicioFiscal;
     private String documentNumber;
+    private long dateToday;
+    private long documentDate;
     
     @OneToOne
     @JoinColumn(name = "bill_id")

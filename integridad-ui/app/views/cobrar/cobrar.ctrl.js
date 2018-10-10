@@ -8,21 +8,19 @@
  * Controller of the integridadUiApp
  */
 angular.module('integridadUiApp')
-  .controller('CuentasCobrarCtrl', function ( _, $rootScope, $location, utilStringService, $localStorage, clientService, cuentaContableService,
-                                                cuentasService, creditsbillService, authService, billService, $window, eretentionClientService, utilSeqService){
+  .controller('CuentasCobrarCtrl', function ( _, $rootScope, $location, $localStorage, clientService, cuentaContableService,
+                                                cuentasService, dateService, creditsbillService, authService, billService, $window, eretentionClientService, utilSeqService){
     var vm = this;
     vm.error = undefined;
     vm.success = undefined;
+
     vm.loading = false;
-    vm.billNumber = undefined;
     vm.clientList = undefined;
-    vm.clientBill = undefined;
     vm.creditsbillList = undefined;
     vm.cuentaContablePrincipal = undefined;
     vm.clientName = undefined;
     vm.clientId = undefined;
     vm.clientCodConta = undefined;
-    vm.retentionClient = undefined;
 
     vm.documentType = [
       {code: '01', name: 'Factura'},
@@ -130,13 +128,10 @@ angular.module('integridadUiApp')
 
 
     function _activate(){
-      vm.error = undefined;
       vm.today = new Date();
       vm.clientBill = undefined;
+      vm.clientList = [];
       vm.clientSelected = undefined;
-      vm.dateBill = undefined;
-      vm.loading = true;
-      vm.user = $localStorage.user;
       clientService.getLazyByProjectId($localStorage.user.subsidiary.userClient.id).then(function(response){
         vm.clientList = response;
         vm.loading = false;
@@ -193,26 +188,26 @@ angular.module('integridadUiApp')
       vm.creditValue = bill.total;
       vm.creditValueSubtotal = bill.baseTaxes;
       vm.creditValueIva = bill.iva;
+      vm.BillId = bill.id;
       vm.retentionClient = {
-        clientBill: bill,
+        bill: bill,
         typeRetention: undefined,
         items: [],
         ejercicio: ('0' + (today.getMonth() + 1)).slice(-2) + '/' +today.getFullYear()
       };
-      $('#pickerBillDateRetention').data("DateTimePicker").date(today);
-      $('#pickerBillDateDocumentRetention').data("DateTimePicker").date(today);
-      $('#pickerBillDateDocumentRetention').on("dp.change", function (data) {
-        vm.retentionClient.ejercicio = ('0' + ($('#pickerBillDateDocumentRetention').data("DateTimePicker").date().toDate().getMonth() + 1)).slice(-2) + '/' +$('#pickerBillDateDocumentRetention').data("DateTimePicker").date().toDate().getFullYear();
+      $('#pickerDateToday').data("DateTimePicker").date(today);
+      $('#pickerDateRetention').data("DateTimePicker").date(today);
+      $('#pickerDateRetention').on("dp.change", function (data) {
+        vm.retentionClient.ejercicio = ('0' + ($('#pickerDateRetention').data("DateTimePicker").date().toDate().getMonth() + 1)).slice(-2) + '/' +$('#pickerDateRetention').data("DateTimePicker").date().toDate().getFullYear();
       });
     };
 
     vm.selecPercentage =function(percentage){
-      vm.baseImponibleItem = undefined;
       vm.item = undefined;
       vm.item = {
         codigo: parseInt(vm.retentionClient.typeRetention),
-        fecha_emision_documento_sustento: dateService.getIsoDate($('#pickerBillDateRetention').data("DateTimePicker").date().toDate()),
-        numero_documento_sustento: vm.billNumber,
+        fecha_emision_documento_sustento: dateService.getIsoDate($('#pickerDateRetention').data("DateTimePicker").date().toDate()),
+        numero_documento_sustento: vm.retentionClient.numero,
         codigo_porcentaje: percentage.codigoDatil,
         codigo_porcentaje_integridad: percentage.codigo,
         porcentaje: percentage.percentage,
@@ -251,6 +246,38 @@ angular.module('integridadUiApp')
       };
       return totalRetorno;
     };
+
+//    vm.saveRetentionClient() = function(){
+//      vm.loading = true;
+//      vm.retentionClient.ejercicioFiscal = vm.retentionClient.ejercicio;
+//      vm.retentionClient.documentNumber = vm.billNumber;
+//      vm.retentionClient.retentionNumber = vm.retentionClient.numero;
+//      vm.retentionClient.documentDate = $('#pickerDateRetention').data("DateTimePicker").date().toDate().getTime();
+//      vm.retentionClient.BillId = vm.BillId;
+//      vm.retentionClient.detailRetentionClient = [];
+//      _.each(vm.retentionClient.items, function(item){
+//        var detail = {
+//          taxType: item.codigo === String(1) ? 'RETENCION EN LA FUENTE' : 'RETENCION EN EL IVA',
+//          code: item.codigo_porcentaje_integridad,
+//          baseImponible: item.base_imponible,
+//          percentage: item.porcentaje,
+//          total: item.valor_retenido
+//        };
+//        vm.retention.detailRetentionClient.push(detail);
+//      });
+//      eretentionClientService.create(vm.retentionClient).then(function(respRetentionClient){
+//        vm.retentionClient = respRetentionClient;
+//        vm.totalRetention = 0;
+//        _.each(vm.retention.detailRetentionClient, function(detail){
+//          vm.totalRetention = (parseFloat(vm.totalRetention) +parseFloat(detail.total)).toFixed(2);
+//        });
+//        vm.retentionClientCreated = true;
+//        vm.loading = false;
+//      }).catch(function (error){
+//        vm.loading = false;
+//        vm.error = error;
+//      });
+//    };
 
     vm.cancel = function(){
       _activate();
