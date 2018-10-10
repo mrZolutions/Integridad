@@ -187,6 +187,7 @@ angular.module('integridadUiApp')
     };
 
     vm.createRetentionClient = function(bill){
+      var today = new Date();
       vm.retentionClientCreated = false;
       vm.billNumber = bill.stringSeq;
       vm.creditValue = bill.total;
@@ -195,8 +196,14 @@ angular.module('integridadUiApp')
       vm.retentionClient = {
         clientBill: bill,
         typeRetention: undefined,
-        items: []
+        items: [],
+        ejercicio: ('0' + (today.getMonth() + 1)).slice(-2) + '/' +today.getFullYear()
       };
+      $('#pickerBillDateRetention').data("DateTimePicker").date(today);
+      $('#pickerBillDateDocumentRetention').data("DateTimePicker").date(today);
+      $('#pickerBillDateDocumentRetention').on("dp.change", function (data) {
+        vm.retentionClient.ejercicio = ('0' + ($('#pickerBillDateDocumentRetention').data("DateTimePicker").date().toDate().getMonth() + 1)).slice(-2) + '/' +$('#pickerBillDateDocumentRetention').data("DateTimePicker").date().toDate().getFullYear();
+      });
     };
 
     vm.selecPercentage =function(percentage){
