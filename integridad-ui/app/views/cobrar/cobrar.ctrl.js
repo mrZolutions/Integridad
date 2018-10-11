@@ -247,37 +247,37 @@ angular.module('integridadUiApp')
       return totalRetorno;
     };
 
-//    vm.saveRetentionClient() = function(){
-//      vm.loading = true;
-//      vm.retentionClient.ejercicioFiscal = vm.retentionClient.ejercicio;
-//      vm.retentionClient.documentNumber = vm.billNumber;
-//      vm.retentionClient.retentionNumber = vm.retentionClient.numero;
-//      vm.retentionClient.documentDate = $('#pickerDateRetention').data("DateTimePicker").date().toDate().getTime();
-//      vm.retentionClient.BillId = vm.BillId;
-//      vm.retentionClient.detailRetentionClient = [];
-//      _.each(vm.retentionClient.items, function(item){
-//        var detail = {
-//          taxType: item.codigo === String(1) ? 'RETENCION EN LA FUENTE' : 'RETENCION EN EL IVA',
-//          code: item.codigo_porcentaje_integridad,
-//          baseImponible: item.base_imponible,
-//          percentage: item.porcentaje,
-//          total: item.valor_retenido
-//        };
-//        vm.retention.detailRetentionClient.push(detail);
-//      });
-//      eretentionClientService.create(vm.retentionClient).then(function(respRetentionClient){
-//        vm.retentionClient = respRetentionClient;
-//        vm.totalRetention = 0;
-//        _.each(vm.retention.detailRetentionClient, function(detail){
-//          vm.totalRetention = (parseFloat(vm.totalRetention) +parseFloat(detail.total)).toFixed(2);
-//        });
-//        vm.retentionClientCreated = true;
-//        vm.loading = false;
-//      }).catch(function (error){
-//        vm.loading = false;
-//        vm.error = error;
-//      });
-//    };
+    vm.saveRetentionClient = function(){
+      vm.loading = true;
+      eretentionClientService.create(vm.retentionClient).then(function(respRetentionClient){
+        vm.totalRetention = 0;
+        vm.retentionClient.ejercicioFiscal = vm.retentionClient.ejercicio;
+        vm.retentionClient.documentNumber = vm.billNumber;
+        vm.retentionClient.retentionNumber = vm.retentionClient.numero;
+        vm.retentionClient.documentDate = $('#pickerDateRetention').data("DateTimePicker").date().toDate().getTime();
+        vm.retentionClient.BillId = vm.BillId;
+        vm.retentionClient.detailRetentionClient = [];
+        _.each(vm.retentionClient.items, function(item){
+          var detail = {
+            taxType: item.codigo === String(1) ? 'RETENCION EN LA FUENTE' : 'RETENCION EN EL IVA',
+            code: item.codigo_porcentaje_integridad,
+            baseImponible: item.base_imponible,
+            percentage: item.porcentaje,
+            total: item.valor_retenido
+          };
+          vm.retention.detailRetentionClient.push(detail);
+        });
+        vm.retentionClient = respRetentionClient;
+        _.each(vm.retentionClient.detailRetentionClient, function(detail){
+          vm.totalRetention = (parseFloat(vm.totalRetention) + parseFloat(detail.total)).toFixed(2);
+        });
+        vm.retentionClientCreated = true;
+        vm.loading = false;
+      }).catch(function (error){
+        vm.loading = false;
+        vm.error = error;
+      });
+    };
 
     vm.cancel = function(){
       _activate();

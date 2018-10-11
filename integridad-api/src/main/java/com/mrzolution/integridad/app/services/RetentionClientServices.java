@@ -44,9 +44,9 @@ public class RetentionClientServices {
     public RetentionClient create(RetentionClient retentionClient) throws BadRequestException{
 	log.info("RetentionClientServices create");
 	List<DetailRetentionClient> details = retentionClient.getDetailRetentionClient();
-	if(details == null){
-            throw new BadRequestException("Debe tener Debe tener el codigo de contabilidad una retencion por lo menos");
-	}
+	//if(details == null){
+        //    throw new BadRequestException("Debe tener Debe tener el codigo de contabilidad una retencion por lo menos");
+	//}
 
 	retentionClient.setDocumentDate(new Date().getTime());
 	retentionClient.setDetailRetentionClient(null);

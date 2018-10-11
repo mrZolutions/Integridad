@@ -43,9 +43,7 @@ angular
 
       if(user.cashier.subsidiary.userClient.espTemp){
         eRet.sujeto.email = eRet.sujeto.email + ', facturacionelecppe2018@gmail.com, facturacionppecoca@gmail.com';
-      };
-
-      if(user.cashier.subsidiary.userClient.id == '1f9c21d7-a485-482b-b5eb-e363728340b2'){
+      } else if(user.cashier.subsidiary.userClient.id === '1f9c21d7-a485-482b-b5eb-e363728340b2'){
         eRet.sujeto.email = eRet.sujeto.email + ',ferrelozada@yahoo.com';
       };
 

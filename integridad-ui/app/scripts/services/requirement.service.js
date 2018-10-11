@@ -79,9 +79,7 @@ angular
           info2: 'OTI/OTIR: '+bill.otir
         };
         req.informacion_adicional = infoAdicional;
-      };
-
-      if(user.cashier.subsidiary.userClient.id == '1f9c21d7-a485-482b-b5eb-e363728340b2'){
+      } else if(user.cashier.subsidiary.userClient.id === '1f9c21d7-a485-482b-b5eb-e363728340b2'){
         req.comprador.email = req.comprador.email + ',ferrelozada@yahoo.com';
       };
 
