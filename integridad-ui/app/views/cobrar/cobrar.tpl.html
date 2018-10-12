@@ -257,7 +257,6 @@
           <dir-pagination-controls pagination-id="clientPagination"></dir-pagination-controls>
         </div>
       </div>
-
       <div class="row">
         <div class="form-group col-md-12">
           <table class="table table-striped">
@@ -309,11 +308,10 @@
           </table>
         </div>
       </div>
-
       <div class="row">
         <div class="form-group col-md-12">
           <button type="button" class="btn btn-primary"
-                  ng-click="vm.saveRetentionClient()" ng-disabled="vm.retentionClient.items == 0">
+                  ng-click="vm.saveRetentionClient(vm.retentionClient)" ng-disabled="vm.retentionClient.items == 0">
                   Crear
           </button>
           <button type="button" class="btn btn-primary"
@@ -325,7 +323,69 @@
     </div>
   </div>   
 </div>
-
+<div ng-show="vm.retentionClientCreated">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <b>Retención de la Factura No. {{vm.billNumber}}</b>
+    </div>
+    <div class="panel-body">
+      <div class="row">
+        <div class="form-group col-md-12 ">
+          <table width="100%">
+            <tr>
+              <td>
+                <div style="padding:0px 20px;">
+                  <b>NOMBRE DEL CLIENTE: {{vm.clientName}}</b><br/>
+                  <b>IDENTIFICACIÓN: {{vm.clientId}}</b><br/><br/>
+                  <b>Nro. DE RETENCIÓN: {{vm.retentionClient.retentionNumber}}</b><br/>
+                  <b>FECHA: {{vm.retentionClient.dateToday | date : "dd-MM-yyyy"}}</b><br/>
+                </div>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+      <div class="row">
+        <div class="form-group col-md-12 ">
+          <table width="100%" border="1">
+            <tr>
+              <td><b>EJERCICIO FISCAL </b></td>
+              <td><b>TIPO IMPUESTO </b></td>
+              <td><b>CODIGO </b></td>
+              <td><b>BASE IMPONIBLE </b></td>
+              <td><b>RETENCIONES % </b></td>
+              <td><b>VALOR </b></td>
+            </tr>
+            <tr ng-repeat="detail in vm.retentionClient.detailRetentionClient">
+              <td>{{vm.retentionClient.ejercicioFiscal}}</td>
+              <td>{{detail.taxType}}</td>
+              <td>{{detail.code}}</td>
+              <td>{{detail.baseImponible}}</td>
+              <td>{{detail.percentage}}</td>
+              <td>{{detail.total}}</td>
+            </tr>
+            <tr>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td><b>TOTAL</b></td>
+              <td>{{vm.totalRetention}}</td>
+            </tr>
+          </table>
+        </div>
+      </div>
+      <div class="row">
+        <div class="form-group col-md-12">
+          <button type="button" class="btn btn-primary"
+                  ng-click="vm.cancelRetentionClientCreated()">
+            Finalizar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 <div id="modalBImponible" class="modal fade" role="dialog">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -341,16 +401,21 @@
           <div class="col-md-3" ng-if="vm.item.codigo === 2">
             <b>Retenci&oacute;n del IVA</b>
           </div>
-          <div class="col-md-3" >
+          <div class="col-md-3">
             C&oacute;digo: <b>{{vm.item.codigo_porcentaje}}</b>
           </div>
-          <div class="col-md-3" >
+          <div class="col-md-3">
             Retenci&oacute;n %: <b>{{vm.item.porcentaje}}</b>
           </div>
-          <div class="col-md-3" >
+          <div class="col-md-3" ng-if="vm.item.codigo === 1">
             <label>Valor</label>
             <input type="text" onkeypress="return ((event.which >= 46 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
                    class="form-control" maxlength="9" ng-model="vm.item.base_imponible" placeholder="{{vm.creditValueSubtotal}}">
+          </div>
+          <div class="col-md-3" ng-if="vm.item.codigo === 2">
+            <label>Valor</label>
+            <input type="text" onkeypress="return ((event.which >= 46 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+                   class="form-control" maxlength="9" ng-model="vm.item.base_imponible" placeholder="{{vm.creditValueIva}}">
           </div>
         </div>
       </div>
@@ -366,6 +431,7 @@
     </div>
   </div>
 </div>
+<!--FIN DE SECCIÓN DE RETENCIONES-->
 
 <!--SECCIÓN DE PAGO DE LAS CUOTAS POR FACTURA-->
 <div id="modalAbonar" class="modal fade" role="dialog">

@@ -149,6 +149,9 @@ angular.module('integridadUiApp')
       vm.clientId = client.identification;
       vm.clientName = client.name;
       vm.clientCodConta = client.codConta;
+      vm.clientAddress = client.address;
+      vm.clientPhone = client.cel_phone;
+      vm.clientEmail = client.email;
       billService.getCreditsBillsByClientId(client.id).then(function(response) {
         vm.billList = response;
         vm.loading = false;
@@ -171,16 +174,8 @@ angular.module('integridadUiApp')
       });
     };
 
-    vm.getPercentageTable = function(){
-      vm.tablePercentage = undefined;
-      if(vm.retentionClient.typeRetention === '2'){
-        vm.tablePercentage = vm.ivaTipo;
-      };
-      if(vm.retentionClient.typeRetention === '1'){
-        vm.tablePercentage = vm.fuenteTipo;
-      };
-    };
 
+//Inicio de Creación de Retenciones...
     vm.createRetentionClient = function(bill){
       var today = new Date();
       vm.retentionClientCreated = false;
@@ -200,6 +195,16 @@ angular.module('integridadUiApp')
       $('#pickerDateRetention').on("dp.change", function (data) {
         vm.retentionClient.ejercicio = ('0' + ($('#pickerDateRetention').data("DateTimePicker").date().toDate().getMonth() + 1)).slice(-2) + '/' +$('#pickerDateRetention').data("DateTimePicker").date().toDate().getFullYear();
       });
+    };
+
+    vm.getPercentageTable = function(){
+      vm.tablePercentage = undefined;
+      if(vm.retentionClient.typeRetention === '2'){
+        vm.tablePercentage = vm.ivaTipo;
+      };
+      if(vm.retentionClient.typeRetention === '1'){
+        vm.tablePercentage = vm.fuenteTipo;
+      };
     };
 
     vm.selecPercentage =function(percentage){
@@ -247,37 +252,46 @@ angular.module('integridadUiApp')
       return totalRetorno;
     };
 
-    vm.saveRetentionClient = function(){
+    vm.saveRetentionClient = function(retentionClient){
       vm.loading = true;
-      eretentionClientService.create(vm.retentionClient).then(function(respRetentionClient){
-        vm.totalRetention = 0;
-        vm.retentionClient.ejercicioFiscal = vm.retentionClient.ejercicio;
+      vm.retentionClient.ejercicioFiscal = vm.retentionClient.ejercicio;
         vm.retentionClient.documentNumber = vm.billNumber;
         vm.retentionClient.retentionNumber = vm.retentionClient.numero;
+        vm.retentionClient.dateToday = $('#pickerDateToday').data("DateTimePicker").date().toDate().getTime();
         vm.retentionClient.documentDate = $('#pickerDateRetention').data("DateTimePicker").date().toDate().getTime();
         vm.retentionClient.BillId = vm.BillId;
         vm.retentionClient.detailRetentionClient = [];
         _.each(vm.retentionClient.items, function(item){
           var detail = {
-            taxType: item.codigo === String(1) ? 'RETENCION EN LA FUENTE' : 'RETENCION EN EL IVA',
+            taxType: item.codigo === 1 ? 'RETENCION EN LA FUENTE' : 'RETENCION EN EL IVA',
             code: item.codigo_porcentaje_integridad,
             baseImponible: item.base_imponible,
             percentage: item.porcentaje,
             total: item.valor_retenido
           };
-          vm.retention.detailRetentionClient.push(detail);
+          vm.retentionClient.detailRetentionClient.push(detail);
         });
+      eretentionClientService.create(retentionClient).then(function(respRetentionClient){
+        vm.totalRetention = 0;
         vm.retentionClient = respRetentionClient;
         _.each(vm.retentionClient.detailRetentionClient, function(detail){
           vm.totalRetention = (parseFloat(vm.totalRetention) + parseFloat(detail.total)).toFixed(2);
         });
         vm.retentionClientCreated = true;
+        vm.success = 'Retención almacenada con exito';
         vm.loading = false;
       }).catch(function (error){
-        vm.loading = false;
-        vm.error = error;
+      vm.loading = false;
+      vm.error = error;
       });
     };
+
+    vm.cancelRetentionClientCreated = function(){
+      vm.retentionClientCreated = false;
+      vm.retentionClient = undefined;
+      vm.success = undefined;
+    };
+// Fin de Creación de Retenciones....
 
     vm.cancel = function(){
       _activate();
