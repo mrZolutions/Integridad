@@ -281,8 +281,8 @@ angular.module('integridadUiApp')
         vm.success = 'Retención almacenada con exito';
         vm.loading = false;
       }).catch(function (error){
-      vm.loading = false;
-      vm.error = error;
+        vm.loading = false;
+        vm.error = 'Ya existe una Retención Asociada a esta Factura';
       });
     };
 
@@ -290,11 +290,15 @@ angular.module('integridadUiApp')
       vm.retentionClientCreated = false;
       vm.retentionClient = undefined;
       vm.success = undefined;
+      vm.error = undefined;
     };
 // Fin de Creación de Retenciones....
 
     vm.cancel = function(){
-      _activate();
+      vm.retentionClient = undefined;
+      vm.retentionClient = undefined;
+      vm.success = undefined;
+      vm.error = undefined;
     };
 
     (function initController(){

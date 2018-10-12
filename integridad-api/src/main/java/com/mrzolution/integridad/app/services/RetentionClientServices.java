@@ -44,8 +44,8 @@ public class RetentionClientServices {
     public RetentionClient create(RetentionClient retentionClient) throws BadRequestException{
 	log.info("RetentionClientServices create");
 	List<DetailRetentionClient> details = retentionClient.getDetailRetentionClient();
-
-	retentionClient.setDocumentDate(new Date().getTime());
+        
+        retentionClient.setDocumentDate(new Date().getTime());
 	retentionClient.setDetailRetentionClient(null);
 	retentionClient.setFatherListToNull();
 	retentionClient.setListsNull();
