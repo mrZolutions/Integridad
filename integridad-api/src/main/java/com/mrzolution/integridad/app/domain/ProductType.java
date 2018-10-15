@@ -11,7 +11,7 @@ import java.util.UUID;
 @Data
 public class ProductType {
 
-	@Id
+    @Id
     @GeneratedValue
     private UUID id;
 

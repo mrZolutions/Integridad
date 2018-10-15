@@ -17,6 +17,7 @@ import org.springframework.data.domain.*;
 import org.springframework.stereotype.Component;
 
 import com.mrzolution.integridad.app.domain.Product;
+import com.mrzolution.integridad.app.domain.report.ExistencyReport;
 import com.mrzolution.integridad.app.repositories.ProductRepository;
 
 import lombok.extern.slf4j.Slf4j;
@@ -109,6 +110,18 @@ public class ProductServices {
 		});
 		return actives;
 	}
+        
+        public List<ExistencyReport> getAllProductsByUserClientIdAndActive(UUID Id) {
+            log.info("ProductServices getAllProductsByUserClientIdAndActive: {}", Id);
+            Iterable<ProductBySubsidiary> allProducts = productBySubsidiairyRepository.findAllProductsByUserClientId(Id);
+            List<ExistencyReport> existencyReportList = new ArrayList<>();
+            allProducts.forEach(product -> {
+                ExistencyReport existencyReport = new ExistencyReport(product.getProduct().getCodeIntegridad(), product.getProduct().getName(), product.getProduct().getAverageCost(), product.getProduct().getMaxMinimun(), product.getQuantity());
+                
+                existencyReportList.add(existencyReport);
+            });
+            return existencyReportList;
+        }
 	
 	public Page<Product> getAllActivesBySubsidiaryIdAndActive(UUID subsidiaryId, String variable, Pageable pageable) {
 		log.info("ProductServices getAllActivesBySubsidiaryIdAndActive");

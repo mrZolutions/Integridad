@@ -32,4 +32,9 @@ public interface ProductBySubsidiairyRepository extends CrudRepository<ProductBy
 
 	@Query("SELECT p FROM ProductBySubsidiary p WHERE p.product.id = (:id)")
 	Iterable<ProductBySubsidiary> findByProductId(@Param("id") UUID productId);
+        
+        // Query para el Reporte de Existencias
+        @Query("SELECT p FROM ProductBySubsidiary p WHERE p.subsidiary.userClient.id = (:id) AND p.active = true")
+        Iterable<ProductBySubsidiary> findAllProductsByUserClientId(@Param("id") UUID id);
+        // Fin del Query
 }

@@ -44,4 +44,10 @@ angular
         return response.data;
       });
     };
+
+    this.getProductsBySusidiaryId = function (userClientId) {
+      return securityService.get('/product/allproducts/'+ userClientId).then(function successCallback(response){
+        return response.data;
+      });
+    };
   });

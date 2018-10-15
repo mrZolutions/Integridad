@@ -82,6 +82,10 @@
                 ng-click="vm.getReportRetention()">
                 De Retenciones
         </button>
+        <button type="button" class="btn btn-primary"
+                ng-click="vm.getReportExistency()">
+                De Existencias
+        </button>
       </div>
       <div class="form-group col-md-2">
         <button type="button" class="btn btn-primary"
@@ -98,7 +102,7 @@
 </div>
 
 
-<div ng-if="vm.isProductReportList !== undefined && vm.isProductReportList === true">
+<div ng-if="vm.isProductReportList === '1'">
   <table class="table table-striped">
     <thead>
       <tr>
@@ -131,7 +135,7 @@
   </table>
 </div>
 
-<div ng-if="vm.isProductReportList !== undefined && vm.isProductReportList !== true">
+<div ng-if="vm.isProductReportList === '2'">
   <table class="table table-striped">
     <thead>
     <tr>
@@ -178,7 +182,7 @@
   </table>
 </div>
 
-<div ng-if="vm.isProductReportList === undefined && vm.reportList !== undefined">
+<div ng-if="vm.isProductReportList === '3' && vm.reportList !== undefined">
   <table class="table table-striped">
     <thead>
     <tr>

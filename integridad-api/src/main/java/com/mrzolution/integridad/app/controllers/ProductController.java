@@ -11,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.mrzolution.integridad.app.domain.Product;
+import com.mrzolution.integridad.app.domain.ProductBySubsidiary;
+import com.mrzolution.integridad.app.domain.report.ExistencyReport;
 import com.mrzolution.integridad.app.exceptions.BadRequestException;
 import com.mrzolution.integridad.app.services.ProductServices;
 import java.util.List;
@@ -27,7 +29,7 @@ public class ProductController {
 
 
 	@RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity create(@RequestBody Product product){
+        public ResponseEntity create(@RequestBody Product product){
 		log.info("ProductController create: {}", product.getName());
 		Product response = null;
 		try {
@@ -40,7 +42,7 @@ public class ProductController {
 	}
 	
 	@RequestMapping(method = RequestMethod.PUT)
-    public ResponseEntity update(@RequestBody Product product){
+        public ResponseEntity update(@RequestBody Product product){
 		log.info("ProductController update");
 		try {
 			service.update(product);
@@ -52,7 +54,7 @@ public class ProductController {
 	}
 	
 	@RequestMapping(method = RequestMethod.DELETE, value = "/{productId}")
-    public ResponseEntity delete(@PathVariable("productId") UUID productId){
+        public ResponseEntity delete(@PathVariable("productId") UUID productId){
 		log.info("ProductController delete: {}", productId);
 		Product response = null;
 		try {
@@ -65,7 +67,7 @@ public class ProductController {
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, value="/{productId}")
-    public ResponseEntity getById(@PathVariable(value = "productId") UUID productId){
+        public ResponseEntity getById(@PathVariable(value = "productId") UUID productId){
 		log.info("ProductController getById");
 		Product response = null;
 		try {
@@ -78,7 +80,7 @@ public class ProductController {
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, value="/actives")
-    public ResponseEntity getAllActives(){
+        public ResponseEntity getAllActives(){
 		log.info("ProductController getAllActives");
 		Iterable<Product> response = null;
 		try {
@@ -91,7 +93,7 @@ public class ProductController {
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, value="/actives/user_client/{userClientId}")
-    public ResponseEntity getAllActivesByUserClientId(@PathVariable("userClientId") UUID userClientId){
+        public ResponseEntity getAllActivesByUserClientId(@PathVariable("userClientId") UUID userClientId){
 		log.info("ProductController getAllActivesByUserClientId: {}", userClientId);
 		Iterable<Product> response = null;
 		try {
@@ -102,9 +104,22 @@ public class ProductController {
 	    }
 		return new ResponseEntity<Iterable>(response, HttpStatus.CREATED);
 	}
+        
+        @RequestMapping(method = RequestMethod.GET, value="/allproducts/{userClientId}")
+        public ResponseEntity getProductsBySubsidiaryId(@PathVariable("userClientId") UUID userClientId){
+            log.info("ProductController getProductsBySubsidiaryId: {}", userClientId);
+            List<ExistencyReport> response = null;
+            try {
+                response = service.getAllProductsByUserClientIdAndActive(userClientId);
+            }catch(BadRequestException e) {
+                log.error("ProductController getProductsByUserClientId Exception thrown: {}", e.getMessage());
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+            }
+            return new ResponseEntity<Iterable>(response, HttpStatus.CREATED);
+        }
 	
 	@RequestMapping(method = RequestMethod.GET, value="/actives/subsidiary/{subsidiaryId}/{page}")
-    public ResponseEntity getAllActivesBySubsidiaryId(@PathVariable("subsidiaryId") UUID subsidiaryId, @PathVariable("page") int page, @RequestParam(required = false, name = "var") String variable){
+        public ResponseEntity getAllActivesBySubsidiaryId(@PathVariable("subsidiaryId") UUID subsidiaryId, @PathVariable("page") int page, @RequestParam(required = false, name = "var") String variable){
 		log.info("ProductController getAllActivesBySubsidiaryId: {}", subsidiaryId);
 		Page<Product> response = null;
 		try {

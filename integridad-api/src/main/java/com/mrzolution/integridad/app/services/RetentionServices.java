@@ -132,10 +132,10 @@ public class RetentionServices {
 		}
 		log.info("RetentionServices update: {}", retention.getId());
 		Father<Retention, DetailRetention> father = new Father<>(retention, retention.getDetailRetentions());
-        FatherManageChildren fatherUpdateChildren = new FatherManageChildren(father, detailRetentionChildRepository, detailRetentionRepository);
-        fatherUpdateChildren.updateChildren();
+                FatherManageChildren fatherUpdateChildren = new FatherManageChildren(father, detailRetentionChildRepository, detailRetentionRepository);
+                fatherUpdateChildren.updateChildren();
 
-        log.info("RetentionServices CHILDREN updated: {}", retention.getId());
+                log.info("RetentionServices CHILDREN updated: {}", retention.getId());
 
 		retention.setListsNull();
 		Retention updated = retentionRepository.save(retention);

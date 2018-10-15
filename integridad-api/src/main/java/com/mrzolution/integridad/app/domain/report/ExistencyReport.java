@@ -11,10 +11,10 @@ public class ExistencyReport {
     private String code;
     private String name;
     private Double cost;
-    private int maxMin;
-    private int quantity;
+    private long maxMin;
+    private long quantity;
     
-    public ExistencyReport(String code, String name, Double cost, int maxMin, int quantity) {
+    public ExistencyReport(String code, String name, Double cost, long maxMin, long quantity) {
         this.code = code;
         this.name = name;
         this.cost = cost;
