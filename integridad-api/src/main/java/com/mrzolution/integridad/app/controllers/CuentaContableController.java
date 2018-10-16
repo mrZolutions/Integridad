@@ -24,28 +24,28 @@ public class CuentaContableController {
 
 
 	@RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity create(@RequestBody CuentaContable cuentaContable){
+        public ResponseEntity create(@RequestBody CuentaContable cuentaContable){
 		log.info("CuentaContableController create");
 		CuentaContable response = null;
 		try {
-			response = service.create(cuentaContable);
+                    response = service.create(cuentaContable);
 		}catch(BadRequestException e) {
-			log.error("CuentaContableController create Exception thrown: {}", e.getMessage());
-	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-	    }
+                    log.error("CuentaContableController create Exception thrown: {}", e.getMessage());
+                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+                }
 		return new ResponseEntity<CuentaContable>(response, HttpStatus.CREATED);
 	}
   
-  @RequestMapping(method = RequestMethod.GET)
-    public ResponseEntity getAll() {
-        Iterable<CuentaContable> result = null;
-        try {
-            result = service.getAll();
-        }catch (BadRequestException e) {
+        @RequestMapping(method = RequestMethod.GET)
+        public ResponseEntity getAll() {
+            Iterable<CuentaContable> result = null;
+            try {
+                result = service.getAll();
+            }catch (BadRequestException e) {
 
+            }
+            return new ResponseEntity<Iterable>(result, HttpStatus.ACCEPTED);
         }
-        return new ResponseEntity<Iterable>(result, HttpStatus.ACCEPTED);
-    }
 
 	@RequestMapping(method = RequestMethod.GET, value="/lazy/client/{id}")
 	public ResponseEntity getLazyByUserClient(@PathVariable("id") UUID id){

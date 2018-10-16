@@ -22,27 +22,13 @@ public class Payment {
     private String noDocument;
 
     @ManyToOne
-    @JoinColumn(name = "cuenta_contable_principal_id")
-    private CuentaContable cuentaContablePrincipal;
-
-    @ManyToOne
-    @JoinColumn(name = "code_conta")
-    private Client clientCodeConta;
-
-    @ManyToOne
     @JoinColumn(name = "credit_id")
-    private Credits credit;
+    private Credits credits;
 
 
     public void setFatherListToNull(){
-        cuentaContablePrincipal.setFatherListToNull();
-        cuentaContablePrincipal.setListsNull();
-
-        clientCodeConta.setFatherListToNull();
-        clientCodeConta.setListsNull();
-
-        credit.setFatherListToNull();
-        credit.setListsNull();
+        credits.setFatherListToNull();
+        credits.setListsNull();
     }
 
 }

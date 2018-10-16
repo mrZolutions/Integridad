@@ -107,7 +107,7 @@ public class BillServices {
         
         //Selecciona solo las Facturas tipo Crédito
         public Iterable<Bill> getCreditsByClientIdAndTypeLazy(UUID id, int type){
-            log.info("BillServices getAllCreditsByClientIdAndTypeLazy: {}", id);
+            log.info("BillServices getCreditsByClientIdAndTypeLazy: {}", id);
             Iterable<Bill> bills = billRepository.findAllCreditsByClientIdAndType(id, type);
             bills.forEach(bill->{
 		bill.setListsNull();

@@ -1,6 +1,6 @@
 angular
   .module('app.services')
-  .service('eretentionClientService', function (_, dateService, securityService) {
+  .service('eretentionClientService', function (securityService) {
 
     this.create = function (retentionClient) {
         return securityService.post('/retenclient', retentionClient).then(function successCallback(response) {

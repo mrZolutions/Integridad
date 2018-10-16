@@ -115,8 +115,8 @@ public class ProductServices {
             log.info("ProductServices getAllProductsByUserClientIdAndActive: {}", Id);
             Iterable<ProductBySubsidiary> allProducts = productBySubsidiairyRepository.findAllProductsByUserClientId(Id);
             List<ExistencyReport> existencyReportList = new ArrayList<>();
-            allProducts.forEach(product -> {
-                ExistencyReport existencyReport = new ExistencyReport(product.getProduct().getCodeIntegridad(), product.getProduct().getName(), product.getProduct().getAverageCost(), product.getProduct().getMaxMinimun(), product.getQuantity());
+            allProducts.forEach(productBySubsidiary -> {
+                ExistencyReport existencyReport = new ExistencyReport(productBySubsidiary.getProduct().getCodeIntegridad(), productBySubsidiary.getProduct().getName(), productBySubsidiary.getProduct().getAverageCost(), productBySubsidiary.getProduct().getMaxMinimun(), productBySubsidiary.getQuantity());
                 
                 existencyReportList.add(existencyReport);
             });

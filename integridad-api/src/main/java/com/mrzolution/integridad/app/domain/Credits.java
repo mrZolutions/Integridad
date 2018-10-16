@@ -25,7 +25,7 @@ public class Credits implements Child {
     @JoinColumn(name = "pago_id")
     private Pago pago;
 
-    @OneToMany(mappedBy = "credit", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "credits", cascade = CascadeType.ALL)
     private List<Payment> payments;
 
     public void setListsNull(){

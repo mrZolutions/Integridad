@@ -30,21 +30,21 @@ angular.module('integridadUiApp')
       cuentasService.getLazyByUserClientId(vm.user.subsidiary.userClient.id).then(function (response) {
         vm.cuentasContablesList = response;
         vm.loading = false;
-      }).catch(function (error) {
+      }).catch(function(error){
         vm.loading = false;
         vm.error = error.data;
       });
-    }
+    };
 
     function _initializeCuenta(){
       vm.cuentaSelected = {
         userClient: vm.user.subsidiary.userClient
       };
-    }
+    };
 
     function create(){
       vm.loading = true;
-      cuentasService.create(vm.cuentaSelected).then(function(response) {
+      cuentasService.create(vm.cuentaSelected).then(function(response){
         _activate();
         vm.error = undefined;
         vm.success = 'Registro realizado con exito';
@@ -52,7 +52,7 @@ angular.module('integridadUiApp')
         vm.loading = false;
         vm.error = error.data;
       });
-    }
+    };
 
     vm.cuentaCreate = function(){
       _initializeCuenta();

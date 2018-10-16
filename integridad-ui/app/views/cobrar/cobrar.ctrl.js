@@ -8,8 +8,8 @@
  * Controller of the integridadUiApp
  */
 angular.module('integridadUiApp')
-  .controller('CuentasCobrarCtrl', function ( _, $rootScope, $location, $localStorage, clientService, cuentaContableService,
-                                                cuentasService, dateService, creditsbillService, authService, billService, $window, eretentionClientService, utilSeqService){
+  .controller('CuentasCobrarCtrl', function ( _, $localStorage, clientService, cuentaContableService, paymentService, dateService, 
+                                            creditsbillService, authService, billService, eretentionClientService){
     var vm = this;
     vm.error = undefined;
     vm.success = undefined;
@@ -17,7 +17,6 @@ angular.module('integridadUiApp')
     vm.loading = false;
     vm.clientList = undefined;
     vm.creditsbillList = undefined;
-    vm.cuentaContablePrincipal = undefined;
     vm.clientName = undefined;
     vm.clientId = undefined;
     vm.clientCodConta = undefined;
@@ -139,7 +138,7 @@ angular.module('integridadUiApp')
         vm.loading = false;
         vm.error = error.data;
       });
-      cuentaContableService.getAll().then(function(response) {
+      cuentaContableService.getAll().then(function(response){
         vm.cuentaContableList = response;
       });
     };
@@ -152,7 +151,7 @@ angular.module('integridadUiApp')
       vm.clientAddress = client.address;
       vm.clientPhone = client.cel_phone;
       vm.clientEmail = client.email;
-      billService.getCreditsBillsByClientId(client.id).then(function(response) {
+      billService.getCreditsBillsByClientId(client.id).then(function(response){
         vm.billList = response;
         vm.loading = false;
       }).catch(function(error){
@@ -168,12 +167,38 @@ angular.module('integridadUiApp')
       creditsbillService.getAllCreditsOfBillById(bill.id).then(function(response){
         vm.creditsbillList = response;
         vm.loading = false;
-      }).catch(function (error) {
+      }).catch(function (error){
         vm.loading = false;
         vm.error = error.data;
       });
     };
 
+    vm.createAbono = function(credits){
+      vm.loading = true;
+      vm.payment = {
+        creditsId : credits.id,
+        detail: undefined,
+        no_acount: undefined,
+        no_document: undefined,
+        date_payment: 
+      };
+    };
+
+    vm.pAbono = function(payment){
+      vm.loading = true;
+      vm.payment.datePayment = $('#DateOfPayment').data("DateTimePicker").date().toDate().getTime();
+      console.log(payment);
+      //vm.payment.creditId = 
+      paymentService.create(payment).then(function(response){
+        console.log(payment);
+        vm.error = undefined;
+        vm.success = 'Abono realizado con exito';
+        vm.loading = false;
+      }).catch(function(error){
+        vm.loading = false;
+        vm.error = error.data;
+      });
+    };
 
 //Inicio de Creación de Retenciones...
     vm.createRetentionClient = function(bill){
@@ -255,22 +280,22 @@ angular.module('integridadUiApp')
     vm.saveRetentionClient = function(retentionClient){
       vm.loading = true;
       vm.retentionClient.ejercicioFiscal = vm.retentionClient.ejercicio;
-        vm.retentionClient.documentNumber = vm.billNumber;
-        vm.retentionClient.retentionNumber = vm.retentionClient.numero;
-        vm.retentionClient.dateToday = $('#pickerDateToday').data("DateTimePicker").date().toDate().getTime();
-        vm.retentionClient.documentDate = $('#pickerDateRetention').data("DateTimePicker").date().toDate().getTime();
-        vm.retentionClient.BillId = vm.BillId;
-        vm.retentionClient.detailRetentionClient = [];
-        _.each(vm.retentionClient.items, function(item){
-          var detail = {
-            taxType: item.codigo === 1 ? 'RETENCION EN LA FUENTE' : 'RETENCION EN EL IVA',
-            code: item.codigo_porcentaje_integridad,
-            baseImponible: item.base_imponible,
-            percentage: item.porcentaje,
-            total: item.valor_retenido
-          };
-          vm.retentionClient.detailRetentionClient.push(detail);
-        });
+      vm.retentionClient.documentNumber = vm.billNumber;
+      vm.retentionClient.retentionNumber = vm.retentionClient.numero;
+      vm.retentionClient.dateToday = $('#pickerDateToday').data("DateTimePicker").date().toDate().getTime();
+      vm.retentionClient.documentDate = $('#pickerDateRetention').data("DateTimePicker").date().toDate().getTime();
+      vm.retentionClient.BillId = vm.BillId;
+      vm.retentionClient.detailRetentionClient = [];
+      _.each(vm.retentionClient.items, function(item){
+        var detail = {
+          taxType: item.codigo === 1 ? 'RETENCION EN LA FUENTE' : 'RETENCION EN EL IVA',
+          code: item.codigo_porcentaje_integridad,
+          baseImponible: item.base_imponible,
+          percentage: item.porcentaje,
+          total: item.valor_retenido
+        };
+        vm.retentionClient.detailRetentionClient.push(detail);
+      });
       eretentionClientService.create(retentionClient).then(function(respRetentionClient){
         vm.totalRetention = 0;
         vm.retentionClient = respRetentionClient;

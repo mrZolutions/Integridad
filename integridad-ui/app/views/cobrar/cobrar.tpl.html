@@ -56,13 +56,13 @@
           No hay clientes ingresados
         </td>
       </tr>
-      <tr ng-repeat="clientPreSelect in vm.clientList | orderBy:'name' | filter:searchText">
-        <td>{{clientPreSelect.codApp}}</td>
-        <td>{{clientPreSelect.name}}</td>
-        <td>{{clientPreSelect.typeId}}</td>
-        <td>{{clientPreSelect.identification}}</td>
+      <tr ng-repeat="client in vm.clientList | orderBy:'name' | filter:searchText">
+        <td>{{client.codApp}}</td>
+        <td>{{client.name}}</td>
+        <td>{{client.typeId}}</td>
+        <td>{{client.identification}}</td>
         <td>
-          <button type="button" class="btn btn-primary btn-sm" ng-click="vm.clientConsult(clientPreSelect)">
+          <button type="button" class="btn btn-primary btn-sm" ng-click="vm.clientConsult(client)">
                   Seleccionar
           </button>
         </td>
@@ -76,7 +76,8 @@
   <div class="panel panel-default">
     <div class="panel-heading">
       <b>Listado de Facturas por Cobrar</b><br/>
-      <b>Cliente: {{vm.clientName}}</b>
+      <b>Cliente: {{vm.clientName}}</b><br/>
+      <b>{{vm.clientCodConta}}</b>
     </div>
     <div class="panel-body">
       <table class="table table-striped">
@@ -147,12 +148,12 @@
                   La Factura <b>No Presenta</b> Cobros Pendientes por Cancelar
               </td>
             </tr>
-            <tr ng-repeat="credit in vm.creditsbillList | orderBy:'payNumber':true">
-              <td>{{credit.fecha | date : "dd/MM/yyyy"}}</td>
-              <td>{{credit.payNumber}}</td>
-              <td>{{credit.valor}}</td>
+            <tr ng-repeat="credits in vm.creditsbillList | orderBy:'payNumber':true">
+              <td>{{credits.fecha | date : "dd/MM/yyyy"}}</td>
+              <td>{{credits.payNumber}}</td>
+              <td>{{credits.valor}}</td>
               <td>
-                <button type="button" class="btn btn-primary btn-sm" ng-click=""
+                <button type="button" class="btn btn-primary btn-sm" ng-click="vm.createAbono(credits)"
                         data-dismiss="modal" data-toggle="modal" data-target="#modalAbonar">
                         Abonar
                 </button>
@@ -162,10 +163,135 @@
         </table>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="">
+        <button type="button" class="btn btn-primary" data-dismiss="modal">
+                Salir
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--SECCIÓN DE PAGO DE LAS CUOTAS POR FACTURA-->
+<div id="modalAbonar" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Pago de Cuotas</h4>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="form-group col-md-6">
+            <label>Nombre del Cliente:</label><br/>
+            <b>{{vm.clientName}}</b>
+          </div>
+          <div class="form-group col-md-6">
+            <label>Identificación del Cliente:</label><br/>
+            <b>{{vm.clientId}}</b><br/>
+            <b>{{vm.clientCodConta}}</b>
+          </div>
+        </div>
+        <div class="row">
+          <div class="form-group col-md-6">
+            <label>Fecha de Pago: </label>
+            <div class="input-group date" id="DateOfPayment">
+              <input type="text" class="form-control input-group-addon" ng-model="vm.payment.datePayment"/>
+              <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+            </div>
+            <script>
+              $('#DateOfPayment').datetimepicker({format: "DD/MM/YY",});
+            </script>
+          </div>
+          <div class="form-group col-md-6">
+            <label>Seleccione el Tipo de Abono:</label>
+            <select ng-options="item.code as item.name for item in [{code:'PAC', name:'PAGO CORRIENTE'}]"
+                    ng-model="vm.payment.typePayment" class="form-control">
+            </select>
+          </div>
+        </div>
+        <div class="row" ng-show="vm.payment.typePayment === 'PAC'">
+          <div class="form-group col-md-12">
+            <label>Seleccione Modalidad de Pago:</label><br/>
+            <label class="radio-inline"><input type="radio" ng-model="vm.payment.modePayment" 
+                   value="EFC" name="efectivo">Efectivo</label>
+            <label class="radio-inline"><input type="radio" ng-model="vm.payment.modePayment" 
+                   value="CHQ" name="cheque">Cheque</label>
+            <label class="radio-inline"><input type="radio" ng-model="vm.payment.modePayment" 
+                   value="TRF" name="transfer">Transferencia</label>
+            <label class="radio-inline"><input type="radio" ng-model="vm.payment.modePayment" 
+                   value="TDC" name="tdc">Tarjeta de Cŕedito</label>
+          </div>
+          <div class="form-group col-md-12">
+            <div class="row" ng-show="vm.payment.modePayment === 'EFC'">
+              <div class="form-group col-md-6">
+                <label>Detalle:</label><br/>
+                <input type="text" class="form-control" ng-model="vm.payment.detail"/>
+              </div>
+              <div class="form-group col-md-6">
+                <label>Monto a Abonar:</label><br/>
+                <input type="text" class="form-control" ng-model="vm.payment.valor" placeholder="{{vm.creditValue}}"/>
+              </div>
+            </div>
+            <div class="row" ng-show="vm.payment.modePayment === 'CHQ'">
+              <div class="form-group col-md-6">
+                <label>Número de Cheque:</label><br/>
+                <input type="text" class="form-control" ng-model="vm.payment.noDocument"/>
+              </div>
+              <div class="form-group col-md-6">
+                <label>Número de Cuenta:</label><br/>
+                <input type="text" class="form-control" ng-model="vm.payment.noAccount"/>
+              </div>
+              <div class="form-group col-md-6">
+                <label>Detalle:</label><br/>
+                <input type="text" class="form-control" ng-model="vm.payment.detail"/>
+              </div>
+              <div class="form-group col-md-6">
+                <label>Monto a Abonar:</label><br/>
+                <input type="text" class="form-control" ng-model="vm.payment.valor" placeholder="{{vm.creditValue}}"/>
+              </div>
+            </div>
+            <div class="row" ng-show="vm.payment.modePayment === 'TRF'">
+              <div class="form-group col-md-6">
+                <label>Número de Transferencia:</label><br/>
+                <input type="text" class="form-control" ng-model="vm.payment.noDocument"/>
+              </div>
+              <div class="form-group col-md-6">
+                <label>Número de Cuenta:</label><br/>
+                <input type="text" class="form-control" ng-model="vm.payment.noAccount"/>
+              </div>
+              <div class="form-group col-md-6">
+                <label>Detalle:</label><br/>
+                <input type="text" class="form-control" ng-model="vm.payment.detail"/>
+              </div>
+              <div class="form-group col-md-6">
+                <label>Monto a Abonar:</label><br/>
+                <input type="text" class="form-control" ng-model="vm.payment.valor" placeholder="{{vm.creditValue}}"/>
+              </div>
+            </div>
+            <div class="row" ng-show="vm.payment.modePayment === 'TDC'">
+              <div class="form-group col-md-6">
+                <label>Número de Tarjeta:</label><br/>
+                <input type="text" class="form-control" ng-model="vm.payment.noDocument"/>
+              </div>
+              <div class="form-group col-md-6">
+                <label>Detalle:</label><br/>
+                <input type="text" class="form-control" ng-model="vm.payment.detail"/>
+              </div>
+              <div class="form-group col-md-6">
+                <label>Monto a Abonar:</label><br/>
+                <input type="text" class="form-control" ng-model="vm.payment.valor" placeholder="{{vm.creditValue}}"/>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row" ng-show="vm.payment.typePayment === 'RET'">           
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" ng-click="vm.pAbono(vm.payment)" data-dismiss="modal">
                 Aceptar
         </button>
-        <button type="button" class="btn btn-primary" data-dismiss="modal">
+        <button type="button" class="btn btn-primary" ng-click="vm.cancel()" data-dismiss="modal">
                 Salir
         </button>
       </div>
@@ -432,155 +558,3 @@
   </div>
 </div>
 <!--FIN DE SECCIÓN DE RETENCIONES-->
-
-<!--SECCIÓN DE PAGO DE LAS CUOTAS POR FACTURA-->
-<div id="modalAbonar" class="modal fade" role="dialog">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title">Pago de Cuotas</h4>
-      </div>
-      <div class="modal-body">
-        <div class="row">
-          <div class="form-group col-md-6">
-            <label>Nombre del Cliente:</label><br/>
-            <b>{{vm.clientName}}</b>
-          </div>
-          <div class="form-group col-md-6">
-            <label>Identificación del Cliente:</label><br/>
-            <b>{{vm.clientId}}</b><br/>
-            <b>{{vm.clientCodConta}}</b>
-          </div>
-        </div>
-        <div class="row">
-          <div class="form-group col-md-6">
-            <label>Fecha de Pago: </label>
-            <div class="input-group date" id="DateOfPayment">
-              <input type="text" class="form-control input-group-addon"/>
-              <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
-            </div>
-            <script>
-              $('#DateOfPayment').datetimepicker({format: "DD/MM/YY",});
-            </script>
-          </div>
-          <div class="form-group col-md-6">
-            <label>Seleccione el Tipo de Abono:</label>
-            <select ng-options="item.code as item.name for item in [{code:'PAC', name:'PAGO CORRIENTE'}, {code:'RET', name:'RETENCIÓN'}]"
-                    ng-model="vm.payment.typePayment" class="form-control">
-            </select>
-          </div>
-        </div>
-        <div class="row" ng-show="vm.payment.typePayment === 'PAC'">
-          <div class="form-group col-md-12">
-            <label>Seleccione Modalidad de Pago:</label><br/>
-            <label class="radio-inline"><input type="radio" ng-model="vm.payment.modePayment" 
-                   value="EFC" name="efectivo">Efectivo</label>
-            <label class="radio-inline"><input type="radio" ng-model="vm.payment.modePayment" 
-                   value="CHQ" name="cheque">Cheque</label>
-            <label class="radio-inline"><input type="radio" ng-model="vm.payment.modePayment" 
-                   value="TRF" name="transfer">Transferencia</label>
-            <label class="radio-inline"><input type="radio" ng-model="vm.payment.modePayment" 
-                   value="TDC" name="tdc">Tarjeta de Cŕedito</label>
-          </div>
-          <div class="form-group col-md-12">
-            <div class="row" ng-show="vm.payment.modePayment === 'EFC'">
-              <div class="form-group col-md-6">
-                <label>Seleccione Cuenta Contable:</label><br/>
-                <select ng-options="cuentaContable as cuentaContable.name for cuentaContable in vm.cuentaContableList"
-                        ng-model="vm.cuentaContablePrincipal" class="form-control">
-                </select>
-              </div>
-              <div class="form-group col-md-6">
-                <label>Detalle:</label><br/>
-                <input type="text" class="form-control"/>
-              </div>
-              <div class="form-group col-md-6">
-                <label>Monto a Abonar:</label><br/>
-                <input type="text" class="form-control" placeholder="{{vm.creditValue}}"/>
-              </div>
-            </div>
-            <div class="row" ng-show="vm.payment.modePayment === 'CHQ'">
-              <div class="form-group col-md-6">
-                <label>Seleccione Cuenta Contable:</label><br/>
-                <select ng-options="cuentaContable as cuentaContable.name for cuentaContable in vm.cuentaContableList"
-                        ng-model="vm.cuentaContablePrincipal" class="form-control">
-                </select>
-              </div>
-              <div class="form-group col-md-6">
-                <label>Número de Cheque:</label><br/>
-                <input type="text" class="form-control"/>
-              </div>
-              <div class="form-group col-md-6">
-                <label>Número de Cuenta:</label><br/>
-                <input type="text" class="form-control"/>
-              </div>
-              <div class="form-group col-md-6">
-                <label>Detalle:</label><br/>
-                <input type="text" class="form-control"/>
-              </div>
-              <div class="form-group col-md-6">
-                <label>Monto a Abonar:</label><br/>
-                <input type="text" class="form-control" placeholder="{{vm.creditValue}}"/>
-              </div>
-            </div>
-            <div class="row" ng-show="vm.payment.modePayment === 'TRF'">
-              <div class="form-group col-md-6">
-                <label>Seleccione Cuenta Contable:</label><br/>
-                <select ng-options="cuentaContable as cuentaContable.name for cuentaContable in vm.cuentaContableList"
-                        ng-model="vm.cuentaContablePrincipal" class="form-control">
-                </select>
-              </div>
-              <div class="form-group col-md-6">
-                <label>Número de Transferencia:</label><br/>
-                <input type="text" class="form-control"/>
-              </div>
-              <div class="form-group col-md-6">
-                <label>Número de Cuenta:</label><br/>
-                <input type="text" class="form-control"/>
-              </div>
-              <div class="form-group col-md-6">
-                <label>Detalle:</label><br/>
-                <input type="text" class="form-control"/>
-              </div>
-              <div class="form-group col-md-6">
-                <label>Monto a Abonar:</label><br/>
-                <input type="text" class="form-control" placeholder="{{vm.creditValue}}"/>
-              </div>
-            </div>
-            <div class="row" ng-show="vm.payment.modePayment === 'TDC'">
-              <div class="form-group col-md-6">
-                <label>Seleccione Cuenta Contable:</label><br/>
-                <select ng-options="cuentaContable as cuentaContable.name for cuentaContable in vm.cuentaContableList"
-                        ng-model="vm.cuentaContablePrincipal" class="form-control">
-                </select>
-              </div>    
-              <div class="form-group col-md-6">
-                <label>Número de Tarjeta:</label><br/>
-                <input type="text" class="form-control"/>
-              </div>
-              <div class="form-group col-md-6">
-                <label>Detalle:</label><br/>
-                <input type="text" class="form-control"/>
-              </div>
-              <div class="form-group col-md-6">
-                <label>Monto a Abonar:</label><br/>
-                <input type="text" class="form-control" placeholder="{{vm.creditValue}}"/>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="row" ng-show="vm.payment.typePayment === 'RET'">           
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="">
-                Aceptar
-        </button>
-        <button type="button" class="btn btn-primary" data-dismiss="modal">
-                Salir
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
