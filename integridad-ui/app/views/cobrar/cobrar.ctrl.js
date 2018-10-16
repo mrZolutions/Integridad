@@ -175,20 +175,21 @@ angular.module('integridadUiApp')
 
     vm.createAbono = function(credits){
       vm.loading = true;
+      vm.creditsId = credits.id;
       vm.payment = {
-        creditsId : credits.id,
+        credits : credits,
         detail: undefined,
-        no_acount: undefined,
-        no_document: undefined,
-        date_payment: 
+        noAcount: undefined,
+        noDocument: undefined 
       };
     };
 
     vm.pAbono = function(payment){
       vm.loading = true;
+      vm.payment.cuentaContablePrincipal = JSON.parse(vm.cuentaContablePrincipal.code);
       vm.payment.datePayment = $('#DateOfPayment').data("DateTimePicker").date().toDate().getTime();
+      vm.payment.creditId = vm.creditsId;
       console.log(payment);
-      //vm.payment.creditId = 
       paymentService.create(payment).then(function(response){
         console.log(payment);
         vm.error = undefined;
