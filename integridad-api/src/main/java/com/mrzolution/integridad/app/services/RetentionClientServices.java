@@ -1,10 +1,14 @@
 package com.mrzolution.integridad.app.services;
 
+import com.mrzolution.integridad.app.domain.Credits;
 import com.mrzolution.integridad.app.domain.DetailRetentionClient;
+import com.mrzolution.integridad.app.domain.Payment;
 import com.mrzolution.integridad.app.domain.RetentionClient;
 import com.mrzolution.integridad.app.exceptions.BadRequestException;
+import com.mrzolution.integridad.app.repositories.CreditsRepository;
 import com.mrzolution.integridad.app.repositories.DetailRetentionClientChildRepository;
 import com.mrzolution.integridad.app.repositories.DetailRetentionClientRepository;
+import com.mrzolution.integridad.app.repositories.PaymentRepository;
 import com.mrzolution.integridad.app.repositories.RetentionClientRepository;
 import java.util.ArrayList;
 import java.util.Date;
@@ -27,7 +31,13 @@ public class RetentionClientServices {
     DetailRetentionClientRepository detailRetentionClientRepository;
     @Autowired
     DetailRetentionClientChildRepository detailRetentionClientChildRepository;
-   
+    @Autowired
+    PaymentRepository paymentRepository;
+    @Autowired
+    CreditsRepository creditsRepository;
+
+    double sum = 0.0;
+    
     public RetentionClient getById(UUID id) {
 	log.info("RetentionClientServices getById: {}", id);
 	RetentionClient retrieved = retentionClientRepository.findOne(id);
@@ -39,10 +49,10 @@ public class RetentionClientServices {
 	populateChildren(retrieved);
 	
         return retrieved;
-    }
+    };
     
     public RetentionClient create(RetentionClient retentionClient) throws BadRequestException{
-	log.info("RetentionClientServices create");
+        log.info("RetentionClientServices create");
 	List<DetailRetentionClient> details = retentionClient.getDetailRetentionClient();
         
         retentionClient.setDocumentDate(new Date().getTime());
@@ -53,14 +63,28 @@ public class RetentionClientServices {
 
 	details.forEach(detail->{
             detail.setRetentionClient(saved);
+            sum += detail.getTotal();
             detailRetentionClientRepository.save(detail);
             detail.setRetentionClient(null);
 	});
-	log.info("RetentionClientServices created id: {}", saved.getId());
+        
+        Payment specialPayment = new Payment();
+        specialPayment.setCredits(null);
+        specialPayment.setCuentaContablePrincipal(null);
+        specialPayment.setDatePayment(retentionClient.getDateToday());
+        specialPayment.setNoDocument(retentionClient.getRetentionNumber());
+        specialPayment.setNoAccount(retentionClient.getDocumentNumber());
+        specialPayment.setTypePayment("RET");
+        specialPayment.setDetail("ABONO POR RETENCION");
+        specialPayment.setModePayment("RET");
+        specialPayment.setValor(sum);
+        paymentRepository.save(specialPayment);
+                
+	log.info("RetentionClientServices retention created id: {}", saved.getId());
 	saved.setDetailRetentionClient(details);
 	
         return saved;
-    }
+    };
     
     private void populateChildren(RetentionClient retentionClient) {
 	log.info("RetentionClientServices populateChildren retentionClientId: {}", retentionClient.getId());
@@ -75,6 +99,6 @@ public class RetentionClientServices {
 
 	retentionClient.setDetailRetentionClient(detailRetentionList);
 	retentionClient.setFatherListToNull();
-	log.info("RetentionServices populateChildren FINISHED retentionId: {}", retentionClient.getId());
-    }
+	log.info("RetentionClientServices populateChildren FINISHED retentionId: {}", retentionClient.getId());
+    };
 }

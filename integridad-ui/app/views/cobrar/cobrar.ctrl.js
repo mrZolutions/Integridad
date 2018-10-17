@@ -19,7 +19,7 @@ angular.module('integridadUiApp')
     vm.creditsbillList = undefined;
     vm.clientName = undefined;
     vm.clientId = undefined;
-    vm.clientCodConta = undefined;
+    
 
     vm.documentType = [
       {code: '01', name: 'Factura'},
@@ -177,21 +177,16 @@ angular.module('integridadUiApp')
       vm.loading = true;
       vm.creditsId = credits.id;
       vm.payment = {
-        credits : credits,
-        detail: undefined,
-        noAcount: undefined,
-        noDocument: undefined 
+        credits: credits
       };
+      vm.loading = false;
     };
 
     vm.pAbono = function(payment){
       vm.loading = true;
-      vm.payment.cuentaContablePrincipal = JSON.parse(vm.cuentaContablePrincipal.code);
       vm.payment.datePayment = $('#DateOfPayment').data("DateTimePicker").date().toDate().getTime();
       vm.payment.creditId = vm.creditsId;
-      console.log(payment);
       paymentService.create(payment).then(function(response){
-        console.log(payment);
         vm.error = undefined;
         vm.success = 'Abono realizado con exito';
         vm.loading = false;
@@ -325,6 +320,7 @@ angular.module('integridadUiApp')
       vm.retentionClient = undefined;
       vm.success = undefined;
       vm.error = undefined;
+      vm.billList = undefined;
     };
 
     (function initController(){

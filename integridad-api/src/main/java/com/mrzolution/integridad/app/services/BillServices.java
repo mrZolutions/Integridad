@@ -66,11 +66,11 @@ public class BillServices {
 		String data = mapper.writeValueAsString(requirement);
 
 		log.info("BillServices getDatil maper creado");
-		//String response = httpCallerService.post(Constants.DATIL_LINK, data, userClient);
-		String response = "OK";
+		String response = httpCallerService.post(Constants.DATIL_LINK, data, userClient);
+		//String response = "OK";
 		log.info("BillServices getDatil httpcall success");
 		return response;
-	}
+	};
 
 	public Iterable<Bill> getByTypeDocument(int value) {
 		log.info("BillServices getByTypeDocument: {}", value);
@@ -114,7 +114,7 @@ public class BillServices {
 		bill.setFatherListToNull();
             });
             return bills;
-        }
+        };
 	
 	public Bill getById(UUID id) {
 		log.info("BillServices getById: {}", id);
@@ -142,16 +142,25 @@ public class BillServices {
                             creditsRepository.save(credit);
 			});
                     }
-            });                        
+            });
             details.forEach(detail-> {
-		detail.setBill(saved);
-		detailRepository.save(detail);
-		//if(!detail.getProduct().getProductType().getCode().equals("SER") && typeDocument == 1){
+                detail.setBill(saved);
+                detailRepository.save(detail);
+                //if(!detail.getProduct().getProductType().getCode().equals("SER") && typeDocument == 1){
                 //    ProductBySubsidiary ps =productBySubsidiairyRepository.findBySubsidiaryIdAndProductId(bill.getSubsidiary().getId(), detail.getProduct().getId());
                 //    ps.setQuantity(ps.getQuantity() - detail.getQuantity());
                 //    productBySubsidiairyRepository.save(ps);
-		//}
-		detail.setBill(null);
+                //}
+                detail.setBill(null);
+            });
+        };
+        
+        @Async
+        public void saveDetailQuotation(Bill saved, List<Detail> details){
+            details.forEach(detail-> {
+                detail.setBill(saved);
+                detailRepository.save(detail);
+                detail.setBill(null);
             });
         };
 	
@@ -179,13 +188,13 @@ public class BillServices {
                     Cashier cashier = cashierRepository.findOne(bill.getUserIntegridad().getCashier().getId());
                     cashier.setBillNumberSeq(cashier.getBillNumberSeq() + 1);
                     cashierRepository.save(cashier);
-                    saveDetails(saved, details, pagos);
-			
+                    saveDetails(saved, details, pagos);	
 		} else {
 			Cashier cashier = cashierRepository.findOne(bill.getUserIntegridad().getCashier().getId());
 			cashier.setQuotationNumberSeq(cashier.getQuotationNumberSeq() + 1);
 			cashierRepository.save(cashier);
-		}
+                        saveDetailQuotation(saved, details);
+                }
 		log.info("BillServices created id: {}", saved.getId());
 		saved.setDetails(details);
 		return saved;

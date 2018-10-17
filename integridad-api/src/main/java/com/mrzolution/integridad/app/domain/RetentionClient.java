@@ -54,4 +54,7 @@ public class RetentionClient {
         retentionClient.setBill(Bill.newBillTest());
         return retentionClient;
     }
+    
+    @Transient
+    public Payment payment;
 }

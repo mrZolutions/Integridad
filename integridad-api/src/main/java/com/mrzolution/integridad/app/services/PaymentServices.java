@@ -23,9 +23,9 @@ public class PaymentServices {
     CreditsRepository creditsRepository;
     
     public Payment create(Payment payment){
-        log.info("PaymentServices create: {}", payment.getId());
+        log.info("PaymentServices preparing for create");
         Payment saved = paymentRepository.save(payment);
-        log.info("PaymentServices created id: {}", saved.getId());
+        log.info("PaymentServices Payment created id: {}", saved.getId());
 	return saved;
-    }
+    };
 }

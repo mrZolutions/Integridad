@@ -13,13 +13,13 @@ public class Payment {
     @GeneratedValue
     private UUID id;
 
-    private String detail;
-    private long datePayment;
     private String typePayment;
     private String modePayment;
-    private double valor;
+    private String detail;
+    private long datePayment;
     private String noAccount;
     private String noDocument;
+    private double valor;
 
     @ManyToOne
     @JoinColumn(name = "credit_id")
