@@ -37,9 +37,9 @@ public class ProductController {
 		}catch(BadRequestException e) {
 			log.error("ProductController create Exception thrown: {}", e.getMessage());	    
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-	    }
+                }
 		return new ResponseEntity<Product>(response, HttpStatus.CREATED);
-	}
+	};
 	
 	@RequestMapping(method = RequestMethod.PUT)
         public ResponseEntity update(@RequestBody Product product){
@@ -49,9 +49,9 @@ public class ProductController {
 		}catch(BadRequestException e) {
 			log.error("ProductController update Exception thrown: {}", e.getMessage());	    
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-	    }
+                }
 		return new ResponseEntity<Void>(HttpStatus.ACCEPTED);
-	}
+	};
 	
 	@RequestMapping(method = RequestMethod.DELETE, value = "/{productId}")
         public ResponseEntity delete(@PathVariable("productId") UUID productId){
@@ -62,9 +62,9 @@ public class ProductController {
 		}catch(BadRequestException e) {
 			log.error("ProductController delete Exception thrown: {}", e.getMessage());	    
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-	    }
+                }
 		return new ResponseEntity<Product>(response, HttpStatus.CREATED);
-	}
+	};
 	
 	@RequestMapping(method = RequestMethod.GET, value="/{productId}")
         public ResponseEntity getById(@PathVariable(value = "productId") UUID productId){
@@ -75,9 +75,9 @@ public class ProductController {
 		}catch(BadRequestException e) {
 			log.error("ProductController getgetById Exception thrown: {}", e.getMessage());	    
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-	    }
+                }
 		return new ResponseEntity<Product>(response, HttpStatus.CREATED);
-	}
+	};
 	
 	@RequestMapping(method = RequestMethod.GET, value="/actives")
         public ResponseEntity getAllActives(){
@@ -88,9 +88,9 @@ public class ProductController {
 		}catch(BadRequestException e) {
 			log.error("ProductController getLazy Exception thrown: {}", e.getMessage());	    
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-	    }
+                }
 		return new ResponseEntity<Iterable>(response, HttpStatus.CREATED);
-	}
+	};
 	
 	@RequestMapping(method = RequestMethod.GET, value="/actives/user_client/{userClientId}")
         public ResponseEntity getAllActivesByUserClientId(@PathVariable("userClientId") UUID userClientId){
@@ -101,23 +101,10 @@ public class ProductController {
 		}catch(BadRequestException e) {
 			log.error("ProductController getAllActivesByUserClientId Exception thrown: {}", e.getMessage());	    
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-	    }
+                }
 		return new ResponseEntity<Iterable>(response, HttpStatus.CREATED);
-	}
+	};
         
-        @RequestMapping(method = RequestMethod.GET, value="/allproducts/{userClientId}")
-        public ResponseEntity getProductsBySubsidiaryId(@PathVariable("userClientId") UUID userClientId){
-            log.info("ProductController getProductsBySubsidiaryId: {}", userClientId);
-            List<ExistencyReport> response = null;
-            try {
-                response = service.getAllProductsByUserClientIdAndActive(userClientId);
-            }catch(BadRequestException e) {
-                log.error("ProductController getProductsByUserClientId Exception thrown: {}", e.getMessage());
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-            }
-            return new ResponseEntity<Iterable>(response, HttpStatus.CREATED);
-        }
-	
 	@RequestMapping(method = RequestMethod.GET, value="/actives/subsidiary/{subsidiaryId}/{page}")
         public ResponseEntity getAllActivesBySubsidiaryId(@PathVariable("subsidiaryId") UUID subsidiaryId, @PathVariable("page") int page, @RequestParam(required = false, name = "var") String variable){
 		log.info("ProductController getAllActivesBySubsidiaryId: {}", subsidiaryId);
@@ -129,7 +116,6 @@ public class ProductController {
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
                 }
 		return new ResponseEntity<Page>(response, HttpStatus.CREATED);
-	}
+	};
 	
-
 }

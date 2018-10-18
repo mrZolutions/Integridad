@@ -57,7 +57,7 @@ public class ProductServices {
 		});
 
 		return saved;
-	}
+	};
 	
 	public void update(Product product){
 		log.info("ProductServices update: {}", product.getId());
@@ -75,14 +75,14 @@ public class ProductServices {
 		product.setFatherListToNull();
 		Product updated = productRepository.save(product);
 		log.info("ProductServices update id: {}", updated.getId());
-	}
+	};
 	
 	public Product getById(UUID id){
 		log.info("ProductServices getById: {}", id);
 		Product findOne = productRepository.findOne(id);
 		populateChildren(findOne);
 		return findOne;
-	}
+	};
 	
 	public Product delete(UUID productId) {
 		log.info("ProductServices delete: {}", productId);
@@ -91,7 +91,7 @@ public class ProductServices {
 		findOne.setActive(false);
 		update(findOne);
 		return findOne;
-	}
+	};
 	
 	public Iterable<Product> getAllActives(){
 		log.info("ProductServices getAllActives");
@@ -99,7 +99,7 @@ public class ProductServices {
 		actives.forEach(this::populateChildren);
 		return actives;
 		
-	}
+	};
 	
 	public Iterable<Product> getAllActivesByUserClientIdAndActive(UUID userClientId) {
 		log.info("ProductServices getAllActivesByUserClientIdAndActive");
@@ -109,20 +109,8 @@ public class ProductServices {
 			populateChildren(product);
 		});
 		return actives;
-	}
+	};
         
-        public List<ExistencyReport> getAllProductsByUserClientIdAndActive(UUID Id) {
-            log.info("ProductServices getAllProductsByUserClientIdAndActive: {}", Id);
-            Iterable<ProductBySubsidiary> allProducts = productBySubsidiairyRepository.findAllProductsByUserClientId(Id);
-            List<ExistencyReport> existencyReportList = new ArrayList<>();
-            allProducts.forEach(productBySubsidiary -> {
-                ExistencyReport existencyReport = new ExistencyReport(productBySubsidiary.getProduct().getCodeIntegridad(), productBySubsidiary.getProduct().getName(), productBySubsidiary.getProduct().getAverageCost(), productBySubsidiary.getProduct().getMaxMinimun(), productBySubsidiary.getQuantity());
-                
-                existencyReportList.add(existencyReport);
-            });
-            return existencyReportList;
-        }
-	
 	public Page<Product> getAllActivesBySubsidiaryIdAndActive(UUID subsidiaryId, String variable, Pageable pageable) {
 		log.info("ProductServices getAllActivesBySubsidiaryIdAndActive");
 		Page<UUID> productIdList;
@@ -142,7 +130,7 @@ public class ProductServices {
 		Page<Product> products = new PageImpl<>(listReturn, pageable, productIdList.getTotalElements() );
 
 		return products;
-	}
+	};
         
 	private void populateChildren(Product product) {
 //		log.info("ProductServices populateChildren productId: {}", product.getId());
@@ -167,5 +155,5 @@ public class ProductServices {
 		product.setFatherListToNull();
 //		log.info("ProductServices populateChildren FINISHED productId: {}", product.getId());
 		
-	}
+	};
 }
