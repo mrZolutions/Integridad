@@ -163,7 +163,7 @@ angular.module('integridadUiApp')
     vm.creditsByBill = function(bill){
       vm.loading = true;
       vm.billNumber = bill.stringSeq;
-      vm.creditValue = bill.total;
+      vm.billValue = (bill.total).toFixed(2);
       creditsbillService.getAllCreditsOfBillById(bill.id).then(function(response){
         vm.creditsbillList = response;
         vm.loading = false;
@@ -175,6 +175,7 @@ angular.module('integridadUiApp')
 
     vm.createAbono = function(credits){
       vm.loading = true;
+      vm.creditValue = (credits.valor).toFixed(2);
       vm.creditsId = credits.id;
       vm.payment = {
         credits: credits
@@ -182,10 +183,15 @@ angular.module('integridadUiApp')
       vm.loading = false;
     };
 
+    function validarMontoAbono(){
+      
+    };
+
     vm.pAbono = function(payment){
       vm.loading = true;
       vm.payment.datePayment = $('#DateOfPayment').data("DateTimePicker").date().toDate().getTime();
       vm.payment.creditId = vm.creditsId;
+      vm.payment.documentNumber = vm.billNumber;
       paymentService.create(payment).then(function(response){
         vm.error = undefined;
         vm.success = 'Abono realizado con exito';

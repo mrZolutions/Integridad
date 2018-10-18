@@ -19,6 +19,7 @@ public class Payment {
     private long datePayment;
     private String noAccount;
     private String noDocument;
+    private String documentNumber;
     private double valor;
 
     @ManyToOne

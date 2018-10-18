@@ -1,17 +1,13 @@
 package com.mrzolution.integridad.app.domain.report;
 
 import java.util.UUID;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import org.hibernate.annotations.Immutable;
+import lombok.Data;
 
 /**
  *
  * @author mrzolutions-daniel
  */
-@Entity
-@Immutable
-@Table(name = "vista_existency")
+@Data
 public class ExistencyReport {
     private UUID userClientId;
     private String code;

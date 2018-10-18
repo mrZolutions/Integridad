@@ -47,7 +47,6 @@ public class RetentionClientServices {
             log.info("RetentionClientServices retrieved id NULL: {}", id);
 	}
 	populateChildren(retrieved);
-	
         return retrieved;
     };
     
@@ -73,7 +72,8 @@ public class RetentionClientServices {
         specialPayment.setCuentaContablePrincipal(null);
         specialPayment.setDatePayment(retentionClient.getDateToday());
         specialPayment.setNoDocument(retentionClient.getRetentionNumber());
-        specialPayment.setNoAccount(retentionClient.getDocumentNumber());
+        specialPayment.setNoAccount(null);
+        specialPayment.setDocumentNumber(retentionClient.getDocumentNumber());
         specialPayment.setTypePayment("RET");
         specialPayment.setDetail("ABONO POR RETENCION");
         specialPayment.setModePayment("RET");
