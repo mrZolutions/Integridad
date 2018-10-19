@@ -26,7 +26,7 @@ public class PaymentServices {
     CreditsRepository creditsRepository;
     
     UUID idCredit;
-    Double abono = 0.0;
+    double abono = 0.0;
     String statusCambio;
        
     public Payment create(Payment payment){

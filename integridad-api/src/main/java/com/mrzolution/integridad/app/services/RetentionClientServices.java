@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 /**
@@ -37,6 +38,8 @@ public class RetentionClientServices {
     CreditsRepository creditsRepository;
 
     double sum = 0.0;
+    String document;
+    String valor;
     
     public RetentionClient getById(UUID id) {
 	log.info("RetentionClientServices getById: {}", id);
@@ -49,24 +52,41 @@ public class RetentionClientServices {
 	populateChildren(retrieved);
         return retrieved;
     };
-    
+      
     public RetentionClient create(RetentionClient retentionClient) throws BadRequestException{
-        log.info("RetentionClientServices create");
+        log.info("RetentionClientServices preparing for create new Retention");
 	List<DetailRetentionClient> details = retentionClient.getDetailRetentionClient();
         
-        retentionClient.setDocumentDate(new Date().getTime());
-	retentionClient.setDetailRetentionClient(null);
-	retentionClient.setFatherListToNull();
-	retentionClient.setListsNull();
-	RetentionClient saved = retentionClientRepository.save(retentionClient);
-
-	details.forEach(detail->{
-            detail.setRetentionClient(saved);
-            sum += detail.getTotal();
-            detailRetentionClientRepository.save(detail);
-            detail.setRetentionClient(null);
-	});
+        document = retentionClient.getDocumentNumber();
+        RetentionClient retrieved = retentionClientRepository.findByDocumentNumber(document);
         
+        if (retrieved == null){
+            retentionClient.setDocumentDate(new Date().getTime());
+            retentionClient.setDetailRetentionClient(null);
+            retentionClient.setFatherListToNull();
+            retentionClient.setListsNull();
+            RetentionClient saved = retentionClientRepository.save(retentionClient);
+
+            details.forEach(detail->{
+                detail.setRetentionClient(saved);
+                sum += detail.getTotal();
+                detailRetentionClientRepository.save(detail);
+                detail.setRetentionClient(null);
+            });
+            
+            updatePayment(retentionClient);
+            
+            log.info("RetentionClientServices Retention created id: {}", saved.getId());
+            saved.setDetailRetentionClient(details);
+            
+            return saved;
+        } else {
+            throw new BadRequestException("Retención ya Existente");
+        }
+    };
+    
+    @Async
+    public void updatePayment(RetentionClient retentionClient){
         Payment specialPayment = new Payment();
         specialPayment.setCredits(null);
         specialPayment.setCuentaContablePrincipal(null);
@@ -79,11 +99,6 @@ public class RetentionClientServices {
         specialPayment.setModePayment("RET");
         specialPayment.setValor(sum);
         paymentRepository.save(specialPayment);
-                
-	log.info("RetentionClientServices retention created id: {}", saved.getId());
-	saved.setDetailRetentionClient(details);
-	
-        return saved;
     };
     
     private void populateChildren(RetentionClient retentionClient) {

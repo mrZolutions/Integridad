@@ -408,6 +408,7 @@ angular.module('integridadUiApp')
           diasPlazo: diasPlazo,
           fecha: _addDays(d, diasPlazo),
           statusCredits: statusCredits,
+          documentNumber: vm.seqNumber,
           valor: total
         };
         diasPlazo += parseInt(vm.medio.creditoIntervalos);

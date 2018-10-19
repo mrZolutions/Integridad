@@ -19,6 +19,7 @@ public class Credits implements Child {
     private long fecha;
     private int payNumber;
     private double valor;
+    private String documentNumber;
     private String statusCredits;
 
     @ManyToOne

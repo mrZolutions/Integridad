@@ -130,7 +130,7 @@ public class BillServices {
 	};
         
         @Async
-        public void saveDetails(Bill saved, List<Detail> details, List<Pago> pagos){
+        public void saveDetailsBill(Bill saved, List<Detail> details, List<Pago> pagos){
             pagos.forEach(pago -> {
 		List<Credits> creditsList = pago.getCredits();
 		pago.setCredits(null);
@@ -156,7 +156,7 @@ public class BillServices {
         };
         
         @Async
-        public void saveDetailQuotation(Bill saved, List<Detail> details){
+        public void saveDetailsQuotation(Bill saved, List<Detail> details){
             details.forEach(detail-> {
                 detail.setBill(saved);
                 detailRepository.save(detail);
@@ -188,12 +188,12 @@ public class BillServices {
                     Cashier cashier = cashierRepository.findOne(bill.getUserIntegridad().getCashier().getId());
                     cashier.setBillNumberSeq(cashier.getBillNumberSeq() + 1);
                     cashierRepository.save(cashier);
-                    saveDetails(saved, details, pagos);	
+                    saveDetailsBill(saved, details, pagos);	
 		} else {
 			Cashier cashier = cashierRepository.findOne(bill.getUserIntegridad().getCashier().getId());
 			cashier.setQuotationNumberSeq(cashier.getQuotationNumberSeq() + 1);
 			cashierRepository.save(cashier);
-                        saveDetailQuotation(saved, details);
+                        saveDetailsQuotation(saved, details);
                 }
 		log.info("BillServices created id: {}", saved.getId());
 		saved.setDetails(details);

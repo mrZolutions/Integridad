@@ -150,7 +150,7 @@
             <tr ng-repeat="credits in vm.creditsbillList | orderBy:'payNumber':true">
               <td>{{credits.fecha | date : "dd/MM/yyyy"}}</td>
               <td>{{credits.payNumber}}</td>
-              <td>{{credits.valor}}</td>
+              <td>{{(credits.valor).toFixed(2)}}</td>
               <td>
                 <button type="button" class="btn btn-primary btn-sm" ng-click="vm.createAbono(credits)"
                         data-dismiss="modal" data-toggle="modal" data-target="#modalAbonar">

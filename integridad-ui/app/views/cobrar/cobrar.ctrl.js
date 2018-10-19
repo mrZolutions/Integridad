@@ -309,7 +309,7 @@ angular.module('integridadUiApp')
         vm.loading = false;
       }).catch(function (error){
         vm.loading = false;
-        vm.error = 'Ya existe una Retención Asociada a esta Factura';
+        vm.error = error.data;
       });
     };
 
