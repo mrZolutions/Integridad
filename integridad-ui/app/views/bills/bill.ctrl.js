@@ -383,6 +383,7 @@ angular.module('integridadUiApp')
         // vm.medio.payForm = '01 - SIN UTILIZACION DEL SISTEMA FINANCIERO';
         vm.medio.total = (vm.bill.total - payed).toFixed(2);
         vm.medio.statusPago = 'PENDIENTE';
+        vm.priceType.name = 'CREDITO';
       };
       if(vm.medio.medio === 'cheque' || vm.medio.medio === 'cheque_posfechado'){
         vm.medio.payForm = '20 - OTROS CON UTILIZACION DEL SISTEMA FINANCIERO';
@@ -602,8 +603,8 @@ angular.module('integridadUiApp')
         if(vm.bill.discountPercentage === undefined){
           vm.bill.discountPercentage = 0;
         };
-        //var obj = JSON.parse(resp.data);
-        var obj = {clave_acceso: '1234560', id:'id12345'};
+        var obj = JSON.parse(resp.data);
+        //var obj = {clave_acceso: '1234560', id:'id12345'};
         if(obj.errors === undefined){
           vm.bill.claveDeAcceso = obj.clave_acceso;
           vm.bill.idSri = obj.id;

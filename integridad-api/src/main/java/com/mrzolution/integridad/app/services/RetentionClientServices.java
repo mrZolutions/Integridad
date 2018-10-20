@@ -73,34 +73,29 @@ public class RetentionClientServices {
                 detailRetentionClientRepository.save(detail);
                 detail.setRetentionClient(null);
             });
-            
-            updatePayment(retentionClient);
-            
+                                  
             log.info("RetentionClientServices Retention created id: {}", saved.getId());
             saved.setDetailRetentionClient(details);
+            
+            Payment specialPayment = new Payment();
+            specialPayment.setCredits(null);
+            specialPayment.setCuentaContablePrincipal(null);
+            specialPayment.setDatePayment(retentionClient.getDateToday());
+            specialPayment.setNoDocument(retentionClient.getRetentionNumber());
+            specialPayment.setNoAccount(null);
+            specialPayment.setDocumentNumber(retentionClient.getDocumentNumber());
+            specialPayment.setTypePayment("RET");
+            specialPayment.setDetail("ABONO POR RETENCION");
+            specialPayment.setModePayment("RET");
+            specialPayment.setValor(sum);
+            paymentRepository.save(specialPayment);
             
             return saved;
         } else {
             throw new BadRequestException("Retención ya Existente");
         }
     };
-    
-    @Async
-    public void updatePayment(RetentionClient retentionClient){
-        Payment specialPayment = new Payment();
-        specialPayment.setCredits(null);
-        specialPayment.setCuentaContablePrincipal(null);
-        specialPayment.setDatePayment(retentionClient.getDateToday());
-        specialPayment.setNoDocument(retentionClient.getRetentionNumber());
-        specialPayment.setNoAccount(null);
-        specialPayment.setDocumentNumber(retentionClient.getDocumentNumber());
-        specialPayment.setTypePayment("RET");
-        specialPayment.setDetail("ABONO POR RETENCION");
-        specialPayment.setModePayment("RET");
-        specialPayment.setValor(sum);
-        paymentRepository.save(specialPayment);
-    };
-    
+     
     private void populateChildren(RetentionClient retentionClient) {
 	log.info("RetentionClientServices populateChildren retentionClientId: {}", retentionClient.getId());
 	List<DetailRetentionClient> detailRetentionList = new ArrayList<>();
