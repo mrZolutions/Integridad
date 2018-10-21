@@ -57,4 +57,7 @@ public class RetentionClient {
     
     @Transient
     public Payment payment;
+    
+    @Transient
+    public Credits credits;
 }

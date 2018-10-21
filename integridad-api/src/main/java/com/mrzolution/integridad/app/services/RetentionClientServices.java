@@ -39,7 +39,9 @@ public class RetentionClientServices {
 
     double sum = 0.0;
     String document;
-    String valor;
+    double valor = 0.0;
+    String doc;
+    long numC = 1;
     
     public RetentionClient getById(UUID id) {
 	log.info("RetentionClientServices getById: {}", id);
@@ -76,24 +78,40 @@ public class RetentionClientServices {
                                   
             log.info("RetentionClientServices Retention created id: {}", saved.getId());
             saved.setDetailRetentionClient(details);
-            
-            Payment specialPayment = new Payment();
-            specialPayment.setCredits(null);
-            specialPayment.setCuentaContablePrincipal(null);
-            specialPayment.setDatePayment(retentionClient.getDateToday());
-            specialPayment.setNoDocument(retentionClient.getRetentionNumber());
-            specialPayment.setNoAccount(null);
-            specialPayment.setDocumentNumber(retentionClient.getDocumentNumber());
-            specialPayment.setTypePayment("RET");
-            specialPayment.setDetail("ABONO POR RETENCION");
-            specialPayment.setModePayment("RET");
-            specialPayment.setValor(sum);
-            paymentRepository.save(specialPayment);
-            
+            updatePayment(retentionClient);
+            updateCredits(document);
             return saved;
         } else {
             throw new BadRequestException("Retención ya Existente");
         }
+    };
+    
+    @Async
+    public void updateCredits(String document){
+        Credits docNumber = creditsRepository.findByDocumentNumber(document);
+        doc = docNumber.getDocumentNumber();
+        if (doc.equals(document) && docNumber.getPayNumber() == numC){
+            valor = docNumber.getValor();
+            docNumber.setValor(valor - sum);
+            creditsRepository.save(docNumber);
+        }
+    };
+    
+    @Async
+    public void updatePayment(RetentionClient retentionClient){
+        Payment specialPayment = new Payment();
+        specialPayment.setCredits(null);
+        specialPayment.setCuentaContablePrincipal(null);
+        specialPayment.setDatePayment(retentionClient.getDateToday());
+        specialPayment.setNoDocument(retentionClient.getRetentionNumber());
+        specialPayment.setNoAccount(null);
+        specialPayment.setDocumentNumber(retentionClient.getDocumentNumber());
+        specialPayment.setTypePayment("RET");
+        specialPayment.setDetail("ABONO POR RETENCION");
+        specialPayment.setModePayment("RET");
+        specialPayment.setValor(sum);
+        paymentRepository.save(specialPayment);
+        log.info("RetentionClientServices Payment updated");
     };
      
     private void populateChildren(RetentionClient retentionClient) {

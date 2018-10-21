@@ -162,6 +162,8 @@ angular.module('integridadUiApp')
 
     vm.creditsByBill = function(bill){
       vm.loading = true;
+      vm.success = undefined;
+      vm.error = undefined;
       vm.billNumber = bill.stringSeq;
       vm.billValue = (bill.total).toFixed(2);
       creditsbillService.getAllCreditsOfBillById(bill.id).then(function(response){

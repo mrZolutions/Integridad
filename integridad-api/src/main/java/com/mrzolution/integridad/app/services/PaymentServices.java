@@ -26,8 +26,10 @@ public class PaymentServices {
     CreditsRepository creditsRepository;
     
     UUID idCredit;
+    double nume = 0.0;
     double abono = 0.0;
     String statusCambio;
+    double resto = 0.0;
        
     public Payment create(Payment payment){
         log.info("PaymentServices preparing for create");
@@ -46,10 +48,13 @@ public class PaymentServices {
     public void updateCredits(UUID credits){
         log.info("PaymentServices updating Credits");
         Credits cambio = creditsRepository.findOne(idCredit);
-        cambio.setValor((cambio.getValor() - abono));
-        if (cambio.getValor() <= 0){
+        nume = cambio.getValor();
+        resto = nume - abono;
+        cambio.setValor(resto);
+        if (resto <= 0.0){
             cambio.setStatusCredits(statusCambio);
         }
         creditsRepository.save(cambio);
+        log.info("PaymentServices Credits updated");
     };
 }

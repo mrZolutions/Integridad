@@ -15,6 +15,8 @@ import org.springframework.data.repository.query.Param;
 public interface CreditsRepository extends CrudRepository<Credits, UUID>{
 
     Iterable<Credits> findByPago(Pago pago);
+    
+    Credits findByDocumentNumber(String documentNumber);
 
     @Query("SELECT c FROM Credits c JOIN c.pago p WHERE p.bill.id = :id AND c.statusCredits = 'PENDIENTE'")
     Iterable<Credits> findCreditsOfBillByBillId(@Param("id") UUID id);

@@ -382,8 +382,11 @@ angular.module('integridadUiApp')
         // CAMBIO SRI POR CONFIRMAR
         // vm.medio.payForm = '01 - SIN UTILIZACION DEL SISTEMA FINANCIERO';
         vm.medio.total = (vm.bill.total - payed).toFixed(2);
-        vm.medio.statusPago = 'PENDIENTE';
-        vm.priceType.name = 'CREDITO';
+        if (vm.priceType.name === 'CREDITO') {
+          vm.medio.statusPago = 'PENDIENTE';
+        } else {
+          vm.medio.statusPago = 'PAGADO';
+        };
       };
       if(vm.medio.medio === 'cheque' || vm.medio.medio === 'cheque_posfechado'){
         vm.medio.payForm = '20 - OTROS CON UTILIZACION DEL SISTEMA FINANCIERO';
@@ -400,16 +403,22 @@ angular.module('integridadUiApp')
     vm.loadCredit = function(){
       var creditArray = [];
       var diasPlazo = parseInt(vm.medio.creditoIntervalos);
-      var statusCredits = 'PENDIENTE';
       var d = new Date();
       var total = parseFloat(parseFloat(vm.bill.total)/parseFloat(vm.medio.creditoNumeroPagos)).toFixed(2);
+      if (vm.priceType.name === 'CREDITO'){
+        var statusCredits = 'PENDIENTE';
+        vm.seqNumberCredits = vm.seqNumber;
+      } else {
+        var statusCredits = 'OTROS';
+        vm.seqNumberCredits = undefined;
+      };
       for (var i = 1; i <= parseInt(vm.medio.creditoNumeroPagos); i++) {
         var credito = {
           payNumber: i,
           diasPlazo: diasPlazo,
           fecha: _addDays(d, diasPlazo),
           statusCredits: statusCredits,
-          documentNumber: vm.seqNumber,
+          documentNumber: vm.seqNumberCredits,
           valor: total
         };
         diasPlazo += parseInt(vm.medio.creditoIntervalos);
