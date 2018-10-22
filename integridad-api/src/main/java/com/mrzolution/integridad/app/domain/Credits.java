@@ -21,6 +21,7 @@ public class Credits implements Child {
     private double valor;
     private String documentNumber;
     private String statusCredits;
+    private String billId;
 
     @ManyToOne
     @JoinColumn(name = "pago_id")

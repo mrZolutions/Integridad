@@ -59,7 +59,7 @@ public class RetentionClientServices {
         log.info("RetentionClientServices preparing for create new Retention");
 	List<DetailRetentionClient> details = retentionClient.getDetailRetentionClient();
         
-        document = retentionClient.getDocumentNumber();
+        document = retentionClient.getBill().getId().toString();
         RetentionClient retrieved = retentionClientRepository.findByDocumentNumber(document);
         
         if (retrieved == null){
@@ -88,20 +88,20 @@ public class RetentionClientServices {
     
     @Async
     public void updateCredits(String document){
-        Credits docNumber = creditsRepository.findByDocumentNumber(document);
-        doc = docNumber.getDocumentNumber();
+        Credits docNumber = creditsRepository.findByBillId(document);
+        doc = docNumber.getBillId();
         if (doc.equals(document) && docNumber.getPayNumber() == numC){
             valor = docNumber.getValor();
             docNumber.setValor(valor - sum);
             creditsRepository.save(docNumber);
         }
+        log.info("RetentionClientServices Credits updated");
     };
     
     @Async
     public void updatePayment(RetentionClient retentionClient){
         Payment specialPayment = new Payment();
         specialPayment.setCredits(null);
-        specialPayment.setCuentaContablePrincipal(null);
         specialPayment.setDatePayment(retentionClient.getDateToday());
         specialPayment.setNoDocument(retentionClient.getRetentionNumber());
         specialPayment.setNoAccount(null);

@@ -45,6 +45,9 @@ public class BillServices {
 	CreditsRepository creditsRepository;
 	@Autowired
 	UserClientRepository userClientRepository;
+        
+        String cadena;
+        String creditBillId;
 	
 	public String getDatil(Requirement requirement, UUID userClientId) throws Exception{
 		UserClient userClient = userClientRepository.findOne(userClientId);
@@ -131,17 +134,19 @@ public class BillServices {
         
         @Async
         public void saveDetailsBill(Bill saved, List<Detail> details, List<Pago> pagos){
+            cadena = saved.getId().toString();
             pagos.forEach(pago -> {
 		List<Credits> creditsList = pago.getCredits();
 		pago.setCredits(null);
 		pago.setBill(saved);
 		Pago pagoSaved = pagoRepository.save(pago);		
-                    if(creditsList != null){
-			creditsList.forEach(credit ->{
-                            credit.setPago(pagoSaved);
-                            creditsRepository.save(credit);
-			});
-                    }
+                if(creditsList != null){
+                    creditsList.forEach(credit ->{
+                    credit.setPago(pagoSaved);
+                    credit.setBillId(cadena);
+                    creditsRepository.save(credit);
+                    });
+                }    
             });
             details.forEach(detail-> {
                 detail.setBill(saved);

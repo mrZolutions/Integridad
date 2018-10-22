@@ -434,9 +434,7 @@ angular.module('integridadUiApp')
 
     vm.addPago = function(){
       vm.pagos.push(angular.copy(vm.medio));
-      vm.bill.cuentaContablePrincipal = vm.cuentaContablePrincipal;
       vm.medio = {};
-      vm.cuentaContablePrincipal = undefined;
     };
 
     vm.removePago = function(index){
