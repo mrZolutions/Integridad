@@ -4,8 +4,10 @@ package com.mrzolution.integridad.app.controllers;
  * @author mrzolutions-daniel
  */
 import com.mrzolution.integridad.app.domain.Credits;
+import com.mrzolution.integridad.app.domain.report.CreditsReport;
 import com.mrzolution.integridad.app.exceptions.BadRequestException;
 import com.mrzolution.integridad.app.services.CreditsServices;
+import java.util.List;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,5 +37,18 @@ public class CreditsBillControler {
 	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
         return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
-    }
+    };
+    
+    @RequestMapping(method = RequestMethod.GET, value="/rep/creditsreport/{userClientId}")
+    public ResponseEntity getAllCreditsOfBillByUserClientId(@PathVariable("userClientId") UUID userClientId){
+        log.info("CreditsBillControler getAllCreditsOfBillByUserClientId: {}", userClientId);
+        List<CreditsReport> response = null;
+        try {
+            response = service.getCreditsOfBillByUserClientId(userClientId);
+	}catch(BadRequestException e) {
+	log.error("CreditsBillControler getAllCreditsOfBillByUserClientId Exception thrown: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+	}
+	return new ResponseEntity<List>(response, HttpStatus.ACCEPTED);
+    };
 }   

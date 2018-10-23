@@ -82,9 +82,9 @@
                 ng-click="vm.getReportRetention()">
                 De Retenciones
         </button>
-        <!--<button type="button" class="btn btn-primary"
-                ng-click="vm.getReportExistency()">
-                De Existencias-->
+        <button type="button" class="btn btn-primary"
+                ng-click="vm.getCreditsReport()">
+                De Ctas Cobrar
         </button>
       </div>
       <div class="form-group col-md-2">
@@ -217,6 +217,31 @@
       <td>{{ data.subsidiary }}</td>
       <td>{{ data.userName }}</td>
     </tr>
+    </tbody>
+  </table>
+</div>
+
+<div ng-if="vm.isProductReportList === '4' && vm.reportList !== undefined">
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Nombre del Cliente</th>
+        <th>Identificaci&oacute;n</th>
+        <th>N&uacute;mero de Factura</th>
+        <th>N&oacute;mero de Cuota</th>
+        <th>Saldo Pendiente</th>
+        <th>Estatus</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="data in vm.reportList | orderBy:'clientName'" >
+        <td>{{data.clientName}}</td>
+        <td>{{data.ruc}}</td>
+        <td>{{data.billNumber}}</td>
+        <td>{{data.payNumber}}</td>
+        <td>{{data.valor}}</td>
+        <td>{{data.statusCredits}}</td>
+      </tr>
     </tbody>
   </table>
 </div>

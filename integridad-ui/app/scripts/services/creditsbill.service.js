@@ -7,4 +7,10 @@ angular
                 return response.data;
             });
         };
+
+        this.getAllCreditsOfBillByUserClientId = function(userClientId){
+            return securityService.get('/creditsbybill/rep/creditsreport/'+ userClientId).then(function successCallback(response){
+                return response.data;
+            });
+        };
 });

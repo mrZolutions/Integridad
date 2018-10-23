@@ -8,7 +8,7 @@
  * Controller of the menu
  */
 angular.module('integridadUiApp')
-  .controller('ReportSalesCtrl', function (_, $localStorage, $location, billService, eretentionService, utilStringService, FileSaver, productService) {
+  .controller('ReportSalesCtrl', function (_, $localStorage, creditsbillService, billService, eretentionService, utilStringService, FileSaver, productService) {
     var vm = this;
     var today = new Date();
     $('#pickerBillDateOne').data("DateTimePicker").date(today);
@@ -71,23 +71,21 @@ angular.module('integridadUiApp')
       });
     };
 
-    vm.getReportExistency = function(){
+    vm.getCreditsReport = function(){
       vm.isProductReportList = '4';
       vm.reportList = undefined;
       vm.loading = true;
       var subId = $localStorage.user.subsidiary.userClient.id;
 
-      productService.getProductsBySusidiaryId(subId).then(function(response){
+      creditsbillService.getAllCreditsOfBillByUserClientId(subId).then(function(response){
         vm.reportList = response;
         vm.loading = false;
       }).catch(function(error){
         vm.loading = false;
         vm.error = error.data;
       });
-      vm.exportExcel();
     };
 
-    
 
     vm.exportExcel = function(){
       var dataReport = [];
@@ -150,6 +148,19 @@ angular.module('integridadUiApp')
             USUARIO: retention.userName
           };
         
+          dataReport.push(data);
+        });
+      } else if(vm.isProductReportList === '4'){
+        _.each(vm.reportList, function(creditsreport){
+          var data = {
+            NOMBRE_CLIENTE: creditsreport.clientName,
+            IDENTIFICACION: creditsreport.ruc,
+            NUMERO_FACTURA: creditsreport.billNumber,
+            NUMERO_CUOTAS: creditsreport.payNumber,
+            SALDO: creditsreport.valor,
+            STATUS: creditsreport.statusCredits
+          };
+
           dataReport.push(data);
         });
       };

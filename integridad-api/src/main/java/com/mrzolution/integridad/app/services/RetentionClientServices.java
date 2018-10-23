@@ -58,32 +58,25 @@ public class RetentionClientServices {
     public RetentionClient create(RetentionClient retentionClient) throws BadRequestException{
         log.info("RetentionClientServices preparing for create new Retention");
 	List<DetailRetentionClient> details = retentionClient.getDetailRetentionClient();
-        
-        RetentionClient retrieved = retentionClientRepository.findByDocumentNumber(retentionClient.getBill().getId().toString());
-        
-        if (retrieved == null){
-            retentionClient.setDocumentDate(new Date().getTime());
-            retentionClient.setDetailRetentionClient(null);
-            retentionClient.setFatherListToNull();
-            retentionClient.setListsNull();
-            RetentionClient saved = retentionClientRepository.save(retentionClient);
-
-            details.forEach(detail->{
-                detail.setRetentionClient(saved);
-                sum += detail.getTotal();
-                detailRetentionClientRepository.save(detail);
-                detail.setRetentionClient(null);
-            });
+        document = retentionClient.getBill().getId().toString();
+        retentionClient.setDocumentDate(new Date().getTime());
+        retentionClient.setDetailRetentionClient(null);
+        retentionClient.setFatherListToNull();
+        retentionClient.setListsNull();
+        RetentionClient saved = retentionClientRepository.save(retentionClient);
+        details.forEach(detail->{
+            detail.setRetentionClient(saved);
+            sum += detail.getTotal();
+            detailRetentionClientRepository.save(detail);
+            detail.setRetentionClient(null);
+        });
                                   
-            log.info("RetentionClientServices Retention created id: {}", saved.getId());
-            saved.setDetailRetentionClient(details);
-            updatePayment(retentionClient);
-            updateCredits(retentionClient.getBill().getId().toString());
-            sum = 0.0;
-            return saved;
-        } else {
-            throw new BadRequestException("Retención ya Existente");
-        }
+        log.info("RetentionClientServices Retention created id: {}", saved.getId());
+        saved.setDetailRetentionClient(details);
+        updatePayment(retentionClient);
+        updateCredits(document);
+        sum = 0.0;
+        return saved;
     };
     
     @Async
