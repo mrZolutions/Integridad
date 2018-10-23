@@ -103,10 +103,10 @@
             <td>
               <button type="button" class="btn btn-primary btn-sm" 
                       ng-click="vm.creditsByBill(bill)" data-toggle="modal" data-target="#modalCuotas">
-                      Seleccionar
+                      Cuotas
               </button>
               <button type="button" class="btn btn-primary btn-sm" ng-click="vm.createRetentionClient(bill)">
-                      Retenciones
+                      Retenci&oacute;n
               </button>
             </td>
           </tr>
@@ -129,7 +129,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title">Listado de Cr&eacute;ditos por Factura por Cobrar</h4>
+        <h4 class="modal-title">Listado de Cuotas por Factura por Cobrar</h4>
       </div>
       <div class="modal-body">
         <table class="table table-striped">
@@ -338,7 +338,7 @@
                  class="form-control" maxlength="17">
         </div>
         <div class="form-group col-md-4">
-          <label>Fecha del Documento: </label>
+          <label>Fecha de la Retenci&oacute;n: </label>
           <div class="input-group date" id="pickerDateRetention">
             <input type="text" class="form-control input-group-addon" ng-model="vm.retentionClient.ejercicio"/>
             <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"/></span>
@@ -443,6 +443,11 @@
       </div>
       <div class="row">
         <div class="form-group col-md-12">
+          <button type="button" class="btn btn-primary" ng-click="vm.previewRetentionClient()" 
+                  data-toggle="modal" data-target="#modalPreview" 
+                  ng-disabled="vm.retentionClient.items == 0">
+                  Previsualizar
+          </button>
           <button type="button" class="btn btn-primary"
                   ng-click="vm.saveRetentionClient(vm.retentionClient)" ng-disabled="vm.retentionClient.items == 0">
                   Crear
@@ -471,7 +476,8 @@
                   <b>NOMBRE DEL CLIENTE: {{vm.clientName}}</b><br/>
                   <b>IDENTIFICACIÓN: {{vm.clientId}}</b><br/><br/>
                   <b>Nro. DE RETENCIÓN: {{vm.retentionClient.retentionNumber}}</b><br/>
-                  <b>FECHA: {{vm.retentionClient.dateToday | date : "dd-MM-yyyy"}}</b><br/>
+                  <b>FECHA: {{vm.retentionClient.documentDate | date : "dd-MM-yyyy"}}</b><br/>
+                  <b>EJERCICIO FISCAL: {{vm.retentionClient.ejercicio}}</b><br/>
                 </div>
               </td>
             </tr>
@@ -519,6 +525,67 @@
     </div>
   </div>
 </div>
+<div id="modalPreview" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" ng-click="vm.impuesto=undefined">&times;</button>
+        <h4>Retención de la Factura No. {{vm.billNumber}}</h4>
+      </div>
+      <div class="panel panel-default">
+        <div class="panel-body">
+          <div class="row">
+            <div class="form-group col-md-12">
+              <table width="100%">
+                <tr>
+                  <td>
+                    <div style="padding:0px 20px;">
+                      <b>NOMBRE DEL CLIENTE: {{vm.clientName}}</b><br/>
+                      <b>IDENTIFICACIÓN: {{vm.clientId}}</b><br/><br/>
+                      <b>Nro. DE RETENCIÓN: {{vm.retentionClient.retentionNumber}}</b><br/>
+                      <b>FECHA: {{vm.retentionClient.documentDate | date : "dd-MM-yyyy"}}</b><br/>
+                      <b>EJERCICIO FISCAL: {{vm.retentionClient.ejercicio}}</b><br/>
+                    </div>
+                  </td>
+                </tr>
+              </table>
+            </div>
+          </div>
+          <div class="row">
+            <div class="form-group col-md-12 ">
+              <table width="100%" border="1">
+                <tr>
+                  <td><b>EJERCICIO FISCAL </b></td>
+                  <td><b>TIPO IMPUESTO </b></td>
+                  <td><b>CODIGO </b></td>
+                  <td><b>BASE IMPONIBLE </b></td>
+                  <td><b>RETENCIONES % </b></td>
+                  <td><b>VALOR </b></td>
+                </tr>
+                <tr ng-repeat="detail in vm.retentionClient.detailRetentionClient">
+                  <td>{{vm.retentionClient.ejercicioFiscal}}</td>
+                  <td>{{detail.taxType}}</td>
+                  <td>{{detail.code}}</td>
+                  <td>{{detail.baseImponible}}</td>
+                  <td>{{detail.percentage}}</td>
+                  <td>{{detail.total}}</td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td><b>TOTAL</b></td>
+                  <td>{{vm.totalRetention}}</td>
+                </tr>
+              </table>
+            </div>
+          </div>  
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 <div id="modalBImponible" class="modal fade" role="dialog">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -543,12 +610,12 @@
           <div class="col-md-3" ng-if="vm.item.codigo === 1">
             <label>Valor</label>
             <input type="text" onkeypress="return ((event.which >= 46 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
-                   class="form-control" maxlength="9" ng-model="vm.item.base_imponible" placeholder="{{vm.creditValueSubtotal}}">
+                   class="form-control" maxlength="9" ng-model="vm.item.base_imponible" placeholder="{{vm.creditValueSubtotal}}"/>
           </div>
           <div class="col-md-3" ng-if="vm.item.codigo === 2">
             <label>Valor</label>
             <input type="text" onkeypress="return ((event.which >= 46 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
-                   class="form-control" maxlength="9" ng-model="vm.item.base_imponible" placeholder="{{vm.creditValueIva}}">
+                   class="form-control" maxlength="9" ng-model="vm.item.base_imponible" placeholder="{{vm.creditValueIva}}"/>
           </div>
         </div>
       </div>

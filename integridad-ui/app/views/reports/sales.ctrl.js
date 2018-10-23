@@ -87,6 +87,8 @@ angular.module('integridadUiApp')
       vm.exportExcel();
     };
 
+    
+
     vm.exportExcel = function(){
       var dataReport = [];
       if(vm.isProductReportList === '1'){
@@ -148,18 +150,6 @@ angular.module('integridadUiApp')
             USUARIO: retention.userName
           };
         
-          dataReport.push(data);
-        });
-      } else if(vm.isProductReportList === '4'){
-        _.each(vm.reportList, function(product){
-          var data = {
-            CODIGO: product.codeIntegridad,
-            NOMBRE: product.name,
-            COSTO: product.averageCost,
-            CANTIDAD_MAXIMA: product.maxMinimun,
-            CANTIDAD: productBySubsidiary.quantity
-          };
-
           dataReport.push(data);
         });
       };

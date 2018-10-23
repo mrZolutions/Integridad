@@ -29,14 +29,10 @@ public class CreditsServices {
         return credits;
     };
     
-    //@Async
-    //public void updatePayment(Credits credits){
-    //    if (credits.getId() == null){
-    //        throw new BadRequestException("Invalid Credit");
-    //    }
-    //    log.info ("CreditsServices updating: {}", credits.getId());
-    //    Credits creditToUpdate = creditsRepository.findOne(credits.getId());
-    //    creditToUpdate.setListsNull();
-        
+    //public Iterable<Credits> getCreditsOfBillByClientId(UUID id){
+    //    log.info("CreditsServices getCreditsOfBillByClientId: {}", id);
+    //    Iterable<Credits> credits = creditsRepository.findCreditsOfBillByClientId(id);
+    //    
+    //    return credits;
     //};
 }

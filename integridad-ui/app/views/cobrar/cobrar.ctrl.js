@@ -281,6 +281,27 @@ angular.module('integridadUiApp')
       return totalRetorno;
     };
 
+    vm.previewRetentionClient = function(){
+      vm.retentionClient.documentDate = $('#pickerDateRetention').data("DateTimePicker").date().toDate().getTime();
+      vm.retentionClient.ejercicioFiscal = vm.retentionClient.ejercicio;
+      vm.retentionClient.documentNumber = vm.billNumber;
+      vm.retentionClient.retentionNumber = vm.retentionClient.numero;
+      vm.retentionClient.BillId = vm.BillId;
+      vm.retentionClient.detailRetentionClient = [];
+      vm.totalRetention = 0;
+      _.each(vm.retentionClient.items, function(item){
+        var detail = {
+          taxType: item.codigo === 1 ? 'RETENCION EN LA FUENTE' : 'RETENCION EN EL IVA',
+          code: item.codigo_porcentaje_integridad,
+          baseImponible: item.base_imponible,
+          percentage: item.porcentaje,
+          total: item.valor_retenido
+        };
+        vm.totalRetention = (parseFloat(vm.totalRetention) + parseFloat(detail.total)).toFixed(2);
+        vm.retentionClient.detailRetentionClient.push(detail);
+      });
+    };
+
     vm.saveRetentionClient = function(retentionClient){
       vm.loading = true;
       vm.retentionClient.ejercicioFiscal = vm.retentionClient.ejercicio;

@@ -59,8 +59,7 @@ public class RetentionClientServices {
         log.info("RetentionClientServices preparing for create new Retention");
 	List<DetailRetentionClient> details = retentionClient.getDetailRetentionClient();
         
-        document = retentionClient.getBill().getId().toString();
-        RetentionClient retrieved = retentionClientRepository.findByDocumentNumber(document);
+        RetentionClient retrieved = retentionClientRepository.findByDocumentNumber(retentionClient.getBill().getId().toString());
         
         if (retrieved == null){
             retentionClient.setDocumentDate(new Date().getTime());
@@ -79,7 +78,8 @@ public class RetentionClientServices {
             log.info("RetentionClientServices Retention created id: {}", saved.getId());
             saved.setDetailRetentionClient(details);
             updatePayment(retentionClient);
-            updateCredits(document);
+            updateCredits(retentionClient.getBill().getId().toString());
+            sum = 0.0;
             return saved;
         } else {
             throw new BadRequestException("Retención ya Existente");
