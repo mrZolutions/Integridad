@@ -4,10 +4,10 @@ import lombok.Data;
 
 /**
  *
- * @author mrzolutions-daniel
+ * @author daniel-one
  */
 @Data
-public class CreditsReport {
+public class CreditsPayedReport {
     private String clientName;
     private String ruc;
     private String billNumber;
@@ -15,7 +15,7 @@ public class CreditsReport {
     private double saldo;
     private String statusCredits;
     
-    public CreditsReport(String clientName, String ruc, String billNumber, double costo, double saldo, String statusCredits) {
+    public CreditsPayedReport(String clientName, String ruc, String billNumber, double costo, double saldo, String statusCredits){
         this.clientName = clientName;
         this.ruc = ruc;
         this.billNumber = billNumber;

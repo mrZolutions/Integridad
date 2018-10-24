@@ -9,8 +9,14 @@ angular
         };
 
         this.getAllCreditsOfBillByUserClientId = function(userClientId){
-            return securityService.get('/creditsbybill/rep/creditsreport/'+ userClientId).then(function successCallback(response){
+            return securityService.get('/creditsbybill/rep/pendingreport/'+ userClientId).then(function successCallback(response){
                 return response.data;
             });
         };
+
+        this.getAllPayedOfBillByUserClientId = function(userClientId){
+            return securityService.get('/creditsbybill/rep/payedreport/'+ userClientId).then(function successCallback(response){
+                return response.data;
+            });
+        }
 });

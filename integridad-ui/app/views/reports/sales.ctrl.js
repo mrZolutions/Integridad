@@ -71,7 +71,7 @@ angular.module('integridadUiApp')
       });
     };
 
-    vm.getCreditsReport = function(){
+    vm.getCreditsPendingReport = function(){
       vm.isProductReportList = '4';
       vm.reportList = undefined;
       vm.loading = true;
@@ -86,6 +86,20 @@ angular.module('integridadUiApp')
       });
     };
 
+    vm.getCreditsPayedReport = function(){
+      vm.isProductReportList = '5';
+      vm.reportList = undefined;
+      vm.loading = true;
+      var subId = $localStorage.user.subsidiary.userClient.id;
+
+      creditsbillService.getAllPayedOfBillByUserClientId(subId).then(function(response){
+        vm.reportList = response;
+        vm.loading = false;
+      }).catch(function(error){
+        vm.loading = false;
+        vm.error = error.data;
+      });
+    };
 
     vm.exportExcel = function(){
       var dataReport = [];
@@ -156,9 +170,24 @@ angular.module('integridadUiApp')
             NOMBRE_CLIENTE: creditsreport.clientName,
             IDENTIFICACION: creditsreport.ruc,
             NUMERO_FACTURA: creditsreport.billNumber,
+            VALOR_FACTURA: creditsreport.costo,
             NUMERO_CUOTAS: creditsreport.payNumber,
-            SALDO: creditsreport.valor,
+            SALDO: creditsreport.saldo,
             STATUS: creditsreport.statusCredits
+          };
+
+          dataReport.push(data);
+        });
+      } else if(vm.isProductReportList === '5'){
+        _.each(vm.reportList, function(creditspayedreport){
+          var data = {
+            NOMBRE_CLIENTE: creditspayedreport.clientName,
+            IDENTIFICACION: creditspayedreport.ruc,
+            NUMERO_FACTURA: creditspayedreport.billNumber,
+            VALOR_FACTURA: creditspayedreport.costo,
+            NUMERO_CUOTAS: creditspayedreport.payNumber,
+            SALDO: creditspayedreport.saldo,
+            STATUS: creditspayedreport.statusCredits
           };
 
           dataReport.push(data);
