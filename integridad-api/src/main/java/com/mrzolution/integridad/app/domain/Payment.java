@@ -39,4 +39,8 @@ public class Payment {
         cuentaContablePrincipal.setListsNull();
     }
 
+    public void setCredits(UUID idCredit) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
 }

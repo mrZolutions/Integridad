@@ -18,5 +18,5 @@ angular
             return securityService.get('/creditsbybill/rep/payedreport/'+ userClientId).then(function successCallback(response){
                 return response.data;
             });
-        }
+        };
 });

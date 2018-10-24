@@ -58,13 +58,13 @@ public class RetentionClientServices {
     public RetentionClient create(RetentionClient retentionClient) throws BadRequestException{
         log.info("RetentionClientServices preparing for create new Retention");
 	List<DetailRetentionClient> details = retentionClient.getDetailRetentionClient();
-        document = retentionClient.getBill().getId().toString();
+        document = retentionClient.getCredits().getPago().getBill().getId().toString();
         retentionClient.setDocumentDate(new Date().getTime());
         retentionClient.setDetailRetentionClient(null);
         retentionClient.setFatherListToNull();
         retentionClient.setListsNull();
         RetentionClient saved = retentionClientRepository.save(retentionClient);
-        details.forEach(detail->{
+        details.forEach(detail-> {
             detail.setRetentionClient(saved);
             sum += detail.getTotal();
             detailRetentionClientRepository.save(detail);
@@ -76,6 +76,7 @@ public class RetentionClientServices {
         updatePayment(retentionClient);
         updateCredits(document);
         sum = 0.0;
+        valor = 0.0;
         return saved;
     };
     
@@ -93,8 +94,9 @@ public class RetentionClientServices {
     
     @Async
     public void updatePayment(RetentionClient retentionClient){
+        UUID idCredit = retentionClient.getCredits().getId();
         Payment specialPayment = new Payment();
-        specialPayment.setCredits(null);
+        specialPayment.setCredits(idCredit);
         specialPayment.setDatePayment(retentionClient.getDateToday());
         specialPayment.setNoDocument(retentionClient.getRetentionNumber());
         specialPayment.setNoAccount(null);

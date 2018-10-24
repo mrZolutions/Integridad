@@ -97,6 +97,12 @@
                 Excel
         </button>
       </div>
+      <div class="form-group col-md-12">
+        <button type="button" class="btn btn-primary"
+                ng-click="vm.getCCResumenReport()">
+                Ctas Resumen
+        </button>
+      </div>
     </div>
     <div ng-show="vm.reportList.length === 0">
       <br/>
@@ -124,16 +130,16 @@
     </thead>
     <tbody>
       <tr ng-repeat="data in vm.reportList | orderBy:'code'" >
-        <td>{{ data.type }}</td>
-        <td>{{ data.billSeqString}}</td>
-        <td>{{ data.code }}</td>
-        <td>{{ data.description }}</td>
-        <td>{{ data.quantity }}</td>
-        <td>{{ data.valUnit }}</td>
-        <td>{{ data.subTotal.toFixed(2) }}</td>
-        <td>{{ data.discount.toFixed(2) }}</td>
-        <td>{{ data.iva.toFixed(2) }}</td>
-        <td>{{ data.total.toFixed(2) }}</td>
+        <td>{{data.type}}</td>
+        <td>{{data.billSeqString}}</td>
+        <td>{{data.code}}</td>
+        <td>{{data.description}}</td>
+        <td>{{data.quantity}}</td>
+        <td>{{data.valUnit}}</td>
+        <td>{{data.subTotal.toFixed(2)}}</td>
+        <td>{{data.discount.toFixed(2)}}</td>
+        <td>{{data.iva.toFixed(2)}}</td>
+        <td>{{data.total.toFixed(2)}}</td>
       </tr>
     </tbody>
   </table>
@@ -164,23 +170,23 @@
     </thead>
     <tbody>
     <tr ng-repeat="data in vm.reportList | orderBy:'date'" >
-      <td>{{ data.date }}</td>
-      <td>{{ data.clientCode}}</td>
-      <td>{{ data.clientName }}</td>
-      <td>{{ data.ruc }}</td>
-      <td>{{ data.billNumber }}</td>
-      <td>{{ data.status }}</td>
-      <td>{{ data.oti }}</td>
-      <td>{{ data.status === 'ACTIVA' ? data.baseTaxes.toFixed(2) : '' }}</td>
-      <td>{{ data.status === 'ACTIVA' ? data.discount.toFixed(2) : '' }}</td>
-      <td>{{ data.status === 'ACTIVA' ? data.baseNoTaxes.toFixed(2) : '' }}</td>
-      <td>{{ data.status === 'ACTIVA' ? data.iva.toFixed(2) : '' }}</td>
-      <td>{{ data.status === 'ACTIVA' ? data.total.toFixed(2) : '' }}</td>
-      <td>{{ data.endDate }}</td>
-      <td>{{ data.cashier }}</td>
-      <td>{{ data.warehouse }}</td>
-      <td>{{ data.subsidiary }}</td>
-      <td>{{ data.userName }}</td>
+      <td>{{data.date}}</td>
+      <td>{{data.clientCode}}</td>
+      <td>{{data.clientName}}</td>
+      <td>{{data.ruc}}</td>
+      <td>{{data.billNumber}}</td>
+      <td>{{data.status}}</td>
+      <td>{{data.oti}}</td>
+      <td>{{data.status === 'ACTIVA' ? data.baseTaxes.toFixed(2) : ''}}</td>
+      <td>{{data.status === 'ACTIVA' ? data.discount.toFixed(2) : ''}}</td>
+      <td>{{data.status === 'ACTIVA' ? data.baseNoTaxes.toFixed(2) : ''}}</td>
+      <td>{{data.status === 'ACTIVA' ? data.iva.toFixed(2) : ''}}</td>
+      <td>{{data.status === 'ACTIVA' ? data.total.toFixed(2) : ''}}</td>
+      <td>{{data.endDate}}</td>
+      <td>{{data.cashier}}</td>
+      <td>{{data.warehouse}}</td>
+      <td>{{data.subsidiary}}</td>
+      <td>{{data.userName}}</td>
     </tr>
     </tbody>
   </table>
@@ -207,19 +213,19 @@
     </thead>
     <tbody>
     <tr ng-repeat="data in vm.reportList | orderBy:'date'" >
-      <td>{{ data.date }}</td>
-      <td>{{ data.documentDate}}</td>
-      <td>{{ data.providerCode }}</td>
-      <td>{{ data.providerName }}</td>
-      <td>{{ data.ruc }}</td>
-      <td>{{ data.retentionNumber }}</td>
-      <td>{{ data.authorizationNumber }}</td>
-      <td>{{ data.documentNumber }}</td>
-      <td>{{ data.ejercicioFiscal }}</td>
-      <td>{{ data.status }}</td>
-      <td>{{ data.total.toFixed(2) }}</td>
-      <td>{{ data.subsidiary }}</td>
-      <td>{{ data.userName }}</td>
+      <td>{{data.date}}</td>
+      <td>{{data.documentDate}}</td>
+      <td>{{data.providerCode}}</td>
+      <td>{{data.providerName}}</td>
+      <td>{{data.ruc}}</td>
+      <td>{{data.retentionNumber}}</td>
+      <td>{{data.authorizationNumber}}</td>
+      <td>{{data.documentNumber}}</td>
+      <td>{{data.ejercicioFiscal}}</td>
+      <td>{{data.status}}</td>
+      <td>{{data.total.toFixed(2)}}</td>
+      <td>{{data.subsidiary}}</td>
+      <td>{{data.userName}}</td>
     </tr>
     </tbody>
   </table>
@@ -270,6 +276,33 @@
         <td>{{data.costo}}</td>
         <td>{{data.saldo}}</td>
         <td>{{data.statusCredits}}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div ng-if="vm.isProductReportList === '6' && vm.reportList !== undefined">
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Identificaci&oacute;n</th>
+        <th>Nombre del Cliente</th>
+        <th>Tipo Transacci&oacute;n</th>
+        <th>Forma de Pago</th>
+        <th>Fecha de Pago</th>
+        <th>N&uacute;mero Factura</th>
+        <th>Valor</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="data in vm.reportList | orderBy:'nomCliente'" >
+        <td>{{data.codCliente}}</td>
+        <td>{{data.nomCliente}}</td>
+        <td>{{data.tipTransac}}</td>
+        <td>{{data.formPago}}</td>
+        <td>{{data.fechPago}}</td>
+        <td>{{data.billNumber}}</td>
+        <td>{{data.valor}}</td>
       </tr>
     </tbody>
   </table>

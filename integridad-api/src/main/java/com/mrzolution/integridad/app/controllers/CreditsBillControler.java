@@ -55,12 +55,12 @@ public class CreditsBillControler {
     
     @RequestMapping(method = RequestMethod.GET, value="/rep/payedreport/{userClientId}")
     public ResponseEntity getAllCreditsPayedOfBillByUserClientId(@PathVariable("userClientId") UUID userClientId){
-        log.info("CreditsBillControler etAllCreditsPayedOfBillByUserClientId: {}", userClientId);
+        log.info("CreditsBillControler getAllCreditsPayedOfBillByUserClientId: {}", userClientId);
         List<CreditsPayedReport> response = null;
         try {
             response = service.getCreditsPayedOfBillByUserClientId(userClientId);
 	}catch(BadRequestException e) {
-	log.error("CreditsBillControler etAllCreditsPayedOfBillByUserClientId Exception thrown: {}", e.getMessage());
+	log.error("CreditsBillControler getAllCreditsPayedOfBillByUserClientId Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
 	return new ResponseEntity<List>(response, HttpStatus.ACCEPTED);

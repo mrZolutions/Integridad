@@ -7,4 +7,9 @@ angular
                 return response.data;
             });
         };
+        this.getAllPaymentsByUserClientId = function(userClientId){
+            return securityService.get('/payment/rep/ccresreport/'+ userClientId).then(function successCallback(response){
+                return response.data;
+            });
+        };
 });

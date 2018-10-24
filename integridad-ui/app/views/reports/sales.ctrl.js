@@ -8,7 +8,7 @@
  * Controller of the menu
  */
 angular.module('integridadUiApp')
-  .controller('ReportSalesCtrl', function (_, $localStorage, creditsbillService, billService, eretentionService, utilStringService, FileSaver, productService) {
+  .controller('ReportSalesCtrl', function (_, $localStorage, creditsbillService, billService, eretentionService, paymentService, FileSaver, productService) {
     var vm = this;
     var today = new Date();
     $('#pickerBillDateOne').data("DateTimePicker").date(today);
@@ -101,6 +101,21 @@ angular.module('integridadUiApp')
       });
     };
 
+    vm.getCCResumenReport = function(){
+      vm.isProductReportList = '6';
+      vm.reportList = undefined;
+      vm.loading = true;
+      var subId = $localStorage.user.subsidiary.userClient.id;
+
+      paymentService.getAllPaymentsByUserClientId(subId).then(function(response){
+        vm.reportList = response;
+        vm.loading = false;
+      }).catch(function(error){
+        vm.loading = false;
+        vm.error = error.data;
+      });
+    };
+
     vm.exportExcel = function(){
       var dataReport = [];
       if(vm.isProductReportList === '1'){
@@ -171,7 +186,6 @@ angular.module('integridadUiApp')
             IDENTIFICACION: creditsreport.ruc,
             NUMERO_FACTURA: creditsreport.billNumber,
             VALOR_FACTURA: creditsreport.costo,
-            NUMERO_CUOTAS: creditsreport.payNumber,
             SALDO: creditsreport.saldo,
             STATUS: creditsreport.statusCredits
           };
@@ -185,9 +199,22 @@ angular.module('integridadUiApp')
             IDENTIFICACION: creditspayedreport.ruc,
             NUMERO_FACTURA: creditspayedreport.billNumber,
             VALOR_FACTURA: creditspayedreport.costo,
-            NUMERO_CUOTAS: creditspayedreport.payNumber,
             SALDO: creditspayedreport.saldo,
             STATUS: creditspayedreport.statusCredits
+          };
+
+          dataReport.push(data);
+        });
+      } else if(vm.isProductReportList === '6'){
+        _.each(vm.reportList, function(ccresumenreport){
+          var data = {
+            IDENTIFICACION: ccresumenreport.codCliente,
+            NOMBRE_CLIENTE: ccresumenreport.nomCliente,
+            TIPO_TRANSAC: ccresumenreport.tipTransac,
+            FORMA_PAGO: ccresumenreport.formPago,
+            FECHA_PAGO: ccresumenreport.fechPago,
+            NUMERO_FACTURA: ccresumenreport.billNumber,
+            VALOR: ccresumenreport.valor
           };
 
           dataReport.push(data);
