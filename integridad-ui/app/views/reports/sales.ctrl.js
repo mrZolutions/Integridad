@@ -116,6 +116,11 @@ angular.module('integridadUiApp')
       });
     };
 
+    vm.getTotal = function(total, subTotal){
+      var total = total - subTotal;
+      return (total).toFixed(2);
+    }
+
     vm.exportExcel = function(){
       var dataReport = [];
       if(vm.isProductReportList === '1'){
@@ -208,13 +213,17 @@ angular.module('integridadUiApp')
       } else if(vm.isProductReportList === '6'){
         _.each(vm.reportList, function(ccresumenreport){
           var data = {
-            IDENTIFICACION: ccresumenreport.codCliente,
-            NOMBRE_CLIENTE: ccresumenreport.nomCliente,
-            TIPO_TRANSAC: ccresumenreport.tipTransac,
-            FORMA_PAGO: ccresumenreport.formPago,
-            FECHA_PAGO: ccresumenreport.fechPago,
+            IDENTIFICACION: ccresumenreport.idClient,
+            NOMBRE_CLIENTE: ccresumenreport.nameClient,
             NUMERO_FACTURA: ccresumenreport.billNumber,
-            VALOR: ccresumenreport.valor
+            COSTO_FACTURA: ccresumenreport.billTotal,
+            TIPO_TRANSAC: ccresumenreport.tipTransac,
+            MODO_PAGO: ccresumenreport.formPago,
+            FECHA_PAGO: ccresumenreport.fechPago,
+            VALOR_ABONO: ccresumenreport.valorAbono,
+            VALOR_RETEN: ccresumenreport.valorReten,
+            SUB_TOTAL: ccresumenreport.valorSubTotal,
+            VALOR_TOTAL: ccresumenreport.valorTotal
           };
 
           dataReport.push(data);

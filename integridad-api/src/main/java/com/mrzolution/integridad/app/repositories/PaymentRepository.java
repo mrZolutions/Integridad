@@ -14,6 +14,6 @@ import org.springframework.data.repository.query.Param;
 public interface PaymentRepository extends CrudRepository<Payment, UUID> {
     Iterable<Payment> findByDocumentNumber(String documentNumber);
     
-    @Query("SELECT py FROM Payment py JOIN py.credits c JOIN c.pago p JOIN p.bill b JOIN b.client cl WHERE cl.userClient.id = :id AND b.active = 'true' ORDER BY cl.name")
-    Iterable<Payment> findPaymentsByUserClientId(@Param("id") UUID id);
+    @Query("SELECT py FROM Payment py JOIN py.credits c JOIN c.pago p JOIN p.bill b JOIN b.client cl WHERE cl.userClient.id = :id ORDER BY cl.name")
+    Iterable<Payment> findAllPaymentsByUserClientId(@Param("id") UUID id);
 }

@@ -50,6 +50,6 @@ public class PaymentController {
 	log.error("PaymentController getAllPaymentsByUserClientId Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
-	return new ResponseEntity<List>(response, HttpStatus.ACCEPTED);
+        return new ResponseEntity<List>(response, HttpStatus.ACCEPTED);
     };
 }

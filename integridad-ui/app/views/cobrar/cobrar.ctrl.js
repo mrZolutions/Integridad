@@ -191,9 +191,13 @@ angular.module('integridadUiApp')
 
     vm.pAbono = function(payment){
       vm.loading = true;
+      vm.valorReten = 0.0;
+      vm.valorNotac = 0.0;
       vm.payment.datePayment = $('#DateOfPayment').data("DateTimePicker").date().toDate().getTime();
       vm.payment.creditId = vm.creditsId;
       vm.payment.documentNumber = vm.billNumber;
+      vm.payment.valorReten = vm.valorReten;
+      vm.payment.valorNotac = vm.valorNotac;
       paymentService.create(payment).then(function(response){
         vm.error = undefined;
         vm.success = 'Abono realizado con exito';

@@ -49,9 +49,11 @@ public class BillServices {
         
 	public String getDatil(Requirement requirement, UUID userClientId) throws Exception{
 		UserClient userClient = userClientRepository.findOne(userClientId);
+
 		if(userClient == null){
 			throw new BadRequestException("Empresa Invalida");
 		}
+
 		log.info("BillServices getDatil Empresa valida: {}", userClient.getName());
 		if(requirement.getPagos() != null){
 			requirement.getPagos().forEach(pago ->{
@@ -60,8 +62,10 @@ public class BillServices {
 				}
 			});
 		}
+
 		ObjectMapper mapper = new ObjectMapper();
 		String data = mapper.writeValueAsString(requirement);
+
 		log.info("BillServices getDatil maper creado");
 		//String response = httpCallerService.post(Constants.DATIL_LINK, data, userClient);
 		String response = "OK";
@@ -85,7 +89,8 @@ public class BillServices {
 		bills.forEach(bill->{
 			bill.setListsNull();
 			bill.setFatherListToNull();
-			});		
+			});
+		
 		return bills;
 	};
 
@@ -97,6 +102,7 @@ public class BillServices {
 			bill.setListsNull();
 			bill.setFatherListToNull();
 		});
+
 		return bills;
 	};
         
@@ -118,7 +124,8 @@ public class BillServices {
 			log.info("BillServices retrieved id: {}", retrieved.getId());
 		} else {
 			log.info("BillServices retrieved id NULL: {}", id);
-		}		
+		}
+		
 		populateChildren(retrieved);
 		return retrieved;
 	};
@@ -229,9 +236,12 @@ public class BillServices {
 		if(bill.getId() == null){
 			throw new BadRequestException("Invalid Bill");
 		}
+
 		Bill billToDeactivate = billRepository.findOne(bill.getId());
 		billToDeactivate.setListsNull();
+
 		billToDeactivate.setActive(false);
+
 		billRepository.save(billToDeactivate);
 
 		return billToDeactivate;
@@ -262,6 +272,7 @@ public class BillServices {
 			bill.setFatherListToNull();
 			bill.setListsNull();
 		});
+
 		return bills;
 	};
 
@@ -277,6 +288,7 @@ public class BillServices {
 				productIds.add(detail.getProduct().getId());
 			}
 		});
+
 		return loadListItems(Lists.newArrayList(bills), productIds);
 	};
 
@@ -298,6 +310,7 @@ public class BillServices {
 					}
 				}
 			}
+
 			SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 			String date = dateFormat.format(new Date(bill.getDateCreated()));
 			String status = bill.isActive() ? "ACTIVA" : "ANULADA";
@@ -306,8 +319,10 @@ public class BillServices {
 			SalesReport saleReport= new SalesReport(date, bill.getClient().getCodApp(), bill.getClient().getName(), bill.getClient().getIdentification(),
 					bill.getStringSeq(), status, bill.getOtir(), bill.getBaseTaxes(), bill.getDiscount(),bill.getBaseNoTaxes(), bill.getIva(), bill.getTotal(), endDate, bill.getUserIntegridad().getCashier().getNameNumber(),
 					null, bill.getSubsidiary().getName(), bill.getUserIntegridad().getFirstName() + " " + bill.getUserIntegridad().getLastName());
+
 			salesReportList.add(saleReport);
 		});
+
 		return salesReportList;
 	};
 
@@ -334,6 +349,7 @@ public class BillServices {
 
 			detailList.add(detail);
 		});
+
 		return detailList;
 	};
 
@@ -353,6 +369,7 @@ public class BillServices {
 
 					creditsList.add(credit);
 				});
+
 				pago.setCredits(creditsList);
 			} else {
 				pago.setListsNull();
@@ -362,6 +379,7 @@ public class BillServices {
 
 			pagoList.add(pago);
 		});
+
 		return pagoList;
 	};
 
@@ -394,10 +412,13 @@ public class BillServices {
 					}
 				}
 			}
+
 			ItemReport itemTotal = new ItemReport(uuidCurrent, "R", "", code,
 					desc, quantityTotal, null, subTotalTotal, discountTotal, ivaTotal, totalTotal);
+
 			reportList.add(itemTotal);
 		}
+
 		return reportList;
 	};
 

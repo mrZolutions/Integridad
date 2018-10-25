@@ -51,7 +51,7 @@ public class CreditsServices {
         
         credits.forEach(creditp -> {
             CreditsPayedReport salesReport = new CreditsPayedReport(creditp.getPago().getBill().getClient().getName(), creditp.getPago().getBill().getClient().getIdentification(),
-                                                 creditp.getPago().getBill().getStringSeq(), creditp.getPago().getBill().getTotal(), creditp.getValor(), creditp.getStatusCredits());
+                                           creditp.getPago().getBill().getStringSeq(), creditp.getPago().getBill().getTotal(), creditp.getValor(), creditp.getStatusCredits());
             creditsPayedReportList.add(salesReport);
         });
         return creditsPayedReportList;

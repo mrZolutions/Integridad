@@ -58,13 +58,13 @@ public class RetentionClientServices {
     public RetentionClient create(RetentionClient retentionClient) throws BadRequestException{
         log.info("RetentionClientServices preparing for create new Retention");
 	List<DetailRetentionClient> details = retentionClient.getDetailRetentionClient();
-        document = retentionClient.getCredits().getPago().getBill().getId().toString();
+        document = retentionClient.getBill().getId().toString();
         retentionClient.setDocumentDate(new Date().getTime());
         retentionClient.setDetailRetentionClient(null);
         retentionClient.setFatherListToNull();
         retentionClient.setListsNull();
         RetentionClient saved = retentionClientRepository.save(retentionClient);
-        details.forEach(detail-> {
+        details.forEach(detail->{
             detail.setRetentionClient(saved);
             sum += detail.getTotal();
             detailRetentionClientRepository.save(detail);
@@ -73,42 +73,38 @@ public class RetentionClientServices {
                                   
         log.info("RetentionClientServices Retention created id: {}", saved.getId());
         saved.setDetailRetentionClient(details);
-        updatePayment(retentionClient);
-        updateCredits(document);
+        updateCreditsAndPayment(retentionClient, document);
         sum = 0.0;
         valor = 0.0;
         return saved;
     };
     
     @Async
-    public void updateCredits(String document){
+    public void updateCreditsAndPayment(RetentionClient retentionClient, String document){
         Credits docNumber = creditsRepository.findByBillId(document);
         doc = docNumber.getBillId();
         if (doc.equals(document) && docNumber.getPayNumber() == numC){
             valor = docNumber.getValor();
             docNumber.setValor(valor - sum);
-            creditsRepository.save(docNumber);
+            Credits spCretits =  creditsRepository.save(docNumber);
+            
+            Payment specialPayment = new Payment();
+            specialPayment.setCredits(spCretits);
+            specialPayment.setDatePayment(retentionClient.getDateToday());
+            specialPayment.setNoDocument(retentionClient.getRetentionNumber());
+            specialPayment.setNoAccount(null);
+            specialPayment.setDocumentNumber(retentionClient.getDocumentNumber());
+            specialPayment.setTypePayment("RET");
+            specialPayment.setDetail("ABONO POR RETENCION");
+            specialPayment.setModePayment("RET");
+            specialPayment.setValorAbono(0.0);
+            specialPayment.setValorReten(sum);
+            specialPayment.setValorNotac(0.0);
+            paymentRepository.save(specialPayment);
         }
-        log.info("RetentionClientServices Credits updated");
+        log.info("RetentionClientServices Credits and Payment updated");
     };
     
-    @Async
-    public void updatePayment(RetentionClient retentionClient){
-        UUID idCredit = retentionClient.getCredits().getId();
-        Payment specialPayment = new Payment();
-        specialPayment.setCredits(idCredit);
-        specialPayment.setDatePayment(retentionClient.getDateToday());
-        specialPayment.setNoDocument(retentionClient.getRetentionNumber());
-        specialPayment.setNoAccount(null);
-        specialPayment.setDocumentNumber(retentionClient.getDocumentNumber());
-        specialPayment.setTypePayment("RET");
-        specialPayment.setDetail("ABONO POR RETENCION");
-        specialPayment.setModePayment("RET");
-        specialPayment.setValor(sum);
-        paymentRepository.save(specialPayment);
-        log.info("RetentionClientServices Payment updated");
-    };
-     
     private void populateChildren(RetentionClient retentionClient) {
 	log.info("RetentionClientServices populateChildren retentionClientId: {}", retentionClient.getId());
 	List<DetailRetentionClient> detailRetentionList = new ArrayList<>();

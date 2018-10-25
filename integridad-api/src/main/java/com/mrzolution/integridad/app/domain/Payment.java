@@ -20,7 +20,9 @@ public class Payment {
     private String noAccount;
     private String noDocument;
     private String documentNumber;
-    private double valor;
+    private double valorAbono;
+    private double valorReten;
+    private double valorNotac;
 
     @ManyToOne
     @JoinColumn(name = "credit_id")
@@ -37,10 +39,6 @@ public class Payment {
         
         cuentaContablePrincipal.setFatherListToNull();
         cuentaContablePrincipal.setListsNull();
-    }
-
-    public void setCredits(UUID idCredit) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

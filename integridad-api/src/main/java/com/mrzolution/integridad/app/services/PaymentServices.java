@@ -42,8 +42,7 @@ public class PaymentServices {
         log.info("PaymentServices Payment created id: {}", saved.getId());
         if (saved.getCredits().getId() != null){
             idCredit = saved.getCredits().getId();
-            abono = saved.getValor();
-            statusCambio = "PAGADO";
+            abono = saved.getValorAbono();
             updateCredits(idCredit);
         }
 	return saved;
@@ -56,28 +55,40 @@ public class PaymentServices {
         nume = cambio.getValor();
         resto = nume - abono;
         cambio.setValor(resto);
-        if (resto <= 0.0){
+        if (cambio.getValor() == 0.0000){
+            statusCambio = "PAGADO";
             cambio.setStatusCredits(statusCambio);
         }
         creditsRepository.save(cambio);
+        resto = 0.0;
         log.info("PaymentServices Credits updated");
     };
     
     public List<CCResumenReport> getPaymentsByUserClientId(UUID id){
-        log.info("PaymentServices getPaymentsByUserClientI: {}", id);
-        Iterable<Payment> payments = paymentRepository.findPaymentsByUserClientId(id);
+        log.info("PaymentServices getPaymentsByUserClientId: {}", id);
+        Iterable<Payment> payments = paymentRepository.findAllPaymentsByUserClientId(id);
         List<CCResumenReport> ccResumenReportList = new ArrayList<>();
         
         payments.forEach(payment -> {
-            
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-            String fechPago = dateFormat.format(new Date(payment.getDatePayment()));
-            Double totalTotal = new Double(0);
-            totalTotal += payment.getValor();
-            CCResumenReport ccReport = new CCResumenReport(payment.getCredits().getPago().getBill().getClient().getIdentification(), payment.getCredits().getPago().getBill().getClient().getName(),
-                                                           payment.getModePayment(), payment.getDetail(), fechPago, payment.getDocumentNumber(), totalTotal);
-            ccResumenReportList.add(ccReport);
+            String fechaPago = dateFormat.format(new Date(payment.getDatePayment()));
+            Double paySubTotal = new Double(0);
+            Double payTotal = new Double(0);
+            Double billTotal = new Double(0);
+            Double payTempo = new Double(0);
+            
+            billTotal = payment.getCredits().getPago().getBill().getTotal();
+            payTempo = billTotal - payment.getValorReten();
+            paySubTotal = billTotal - payment.getValorAbono();
+            payTotal = paySubTotal - payTempo;
+            
+            CCResumenReport resumenReport = new CCResumenReport(payment.getCredits().getPago().getBill().getClient().getIdentification(), payment.getCredits().getPago().getBill().getClient().getName(),
+                                                                payment.getCredits().getPago().getBill().getStringSeq(), billTotal, payment.getTypePayment(), payment.getModePayment(), fechaPago,
+                                                                payment.getValorAbono(), payment.getValorReten(), paySubTotal, payTotal);
+            
+            ccResumenReportList.add(resumenReport);
         });
+        
         return ccResumenReportList;
     };
 }
