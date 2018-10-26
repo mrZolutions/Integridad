@@ -12,6 +12,7 @@ import com.mrzolution.integridad.app.repositories.PaymentRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import com.google.common.collect.Iterables;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -39,6 +40,18 @@ public class CreditsServices {
         log.info("CreditsServices getCreditsOfBillByUserClientId: {}", id);
         Iterable<Credits> credits = creditsRepository.findCreditsPendingOfBillByUserClientId(id);
         List<CreditsReport> creditsReportList = new ArrayList<>();
+        //UUID clientId = null;
+        //Double sumSubTotal = Double.valueOf(0);
+        //Double sumSubTotalOtrasuma = Double.valueOf(0);
+        
+        //if(Iterables.size(credits) > 0){
+      
+         //   Credits firstCredit = Iterables.getFirst(credits, new Credits());
+         //   clientId = firstCredit.getPago().getBill().getClient().getId();
+            
+        //}
+        
+        // cambiale este lambda por un for normal for(int i....)
         
         credits.forEach(credit -> {
             populateChildren(credit);
@@ -46,23 +59,29 @@ public class CreditsServices {
             Double sumAbono = Double.valueOf(0);
             Double sumReten = Double.valueOf(0);
             Double sumNotac = Double.valueOf(0);
-            Double sumSubTotal = Double.valueOf(0);
-            
+                
             for (Payment payments : credit.getPayments()){
                 sumAbono = Double.sum(sumAbono, payments.getValorAbono());
                 sumReten = Double.sum(sumReten, payments.getValorReten());
                 sumNotac = Double.sum(sumNotac, payments.getValorNotac());
             }
             
-            sumSubTotal = (sumAbono + sumReten) - sumNotac;
+            //if(clientId != null && 
+            //        clientId.equals(credit.getPago().getBill().getClient().getId())){
+            //    sumSubTotal = (sumAbono + sumReten) - sumNotac;
+            //    sumSubTotalOtrasuma = suma + suma
+            //} else {
+                //
+                //AQUI con solo el nombre y el sumsubtotal en el campo respectivo, el resto de campos con string vacio o null
+                //CreditsReport saleReport = new CreditsReport(credit.getPago().getBill().getClient().getName(), credit.getPago().getBill().getStringSeq(), credit.getPago().getBill().getDateCreated(), ,credit.getPago().getBill().getTotal(), sumAbono, sumReten, sumNotac, sumSubTotal, credit.getValor(),
+                //                           credit.getStatusCredits());
             
-            //System.out.println(sumAbono);
-            //System.out.println(sumReten);
-            //System.out.println(sumNotac);
-            //System.out.println(sumSubTotal);
+                //creditsReportList.add(saleReport);
+            //    sumSubTotal = Double.valueOf(0);
+            //    clientId = credit.getPago().getBill().getClient().getId();
+           // }
                         
-            CreditsReport saleReport = new CreditsReport(credit.getPago().getBill().getClient().getName(), credit.getPago().getBill().getClient().getIdentification(),
-                                           credit.getPago().getBill().getStringSeq(), credit.getPago().getBill().getTotal(), sumAbono, sumReten, sumNotac, sumSubTotal, credit.getValor(),
+            CreditsReport saleReport = new CreditsReport(credit.getPago().getBill().getClient().getName(), credit.getPago().getBill().getStringSeq(), credit.getPago().getBill().getDateCreated(), ,credit.getPago().getBill().getTotal(), sumAbono, sumReten, sumNotac, sumSubTotal, credit.getValor(),
                                            credit.getStatusCredits());
             
             creditsReportList.add(saleReport);

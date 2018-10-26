@@ -9,26 +9,24 @@ import lombok.Data;
 @Data
 public class CreditsReport {
     private String clientName;
-    private String ruc;
     private String billNumber;
+    private String fechVenta;
+    private String fechVence;
     private double costo;
     private double valorAbono;
     private double valorNotac;
     private double valorReten;
-    private double valorSubTotal;
     private double saldo;
-    private String statusCredits;
     
-    public CreditsReport(String clientName, String ruc, String billNumber, double costo, double valorAbono, double valorReten, double valorNotac, double valorSubTotal, double saldo, String statusCredits) {
+    public CreditsReport(String clientName, String billNumber, String fechVenta, String fechVence, double costo, double valorAbono, double valorReten, double valorNotac, double saldo) {
         this.clientName = clientName;
-        this.ruc = ruc;
         this.billNumber = billNumber;
+        this.fechVenta = fechVenta;
+        this.fechVence = fechVence;
         this.costo = costo;
         this.valorAbono = valorAbono;
         this.valorReten = valorReten;
         this.valorNotac = valorNotac;
-        this.valorSubTotal = valorSubTotal;
         this.saldo = saldo;
-        this.statusCredits = statusCredits;
     };
 }
