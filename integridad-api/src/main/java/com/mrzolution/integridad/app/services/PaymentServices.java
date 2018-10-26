@@ -75,12 +75,10 @@ public class PaymentServices {
             Double paySubTotal = new Double(0);
             Double payTotal = new Double(0);
             Double billTotal = new Double(0);
-            Double payTempo = new Double(0);
             
             billTotal = payment.getCredits().getPago().getBill().getTotal();
-            payTempo = billTotal - payment.getValorReten();
-            paySubTotal = billTotal - payment.getValorAbono();
-            payTotal = paySubTotal - payTempo;
+            paySubTotal = payment.getValorAbono() - payment.getValorReten();
+            payTotal = billTotal - paySubTotal;
             
             CCResumenReport resumenReport = new CCResumenReport(payment.getCredits().getPago().getBill().getClient().getIdentification(), payment.getCredits().getPago().getBill().getClient().getName(),
                                                                 payment.getCredits().getPago().getBill().getStringSeq(), billTotal, payment.getTypePayment(), payment.getModePayment(), fechaPago,
