@@ -77,7 +77,7 @@ public class PaymentServices {
             Double billTotal = new Double(0);
             
             billTotal = payment.getCredits().getPago().getBill().getTotal();
-            paySubTotal = payment.getValorAbono() - payment.getValorReten();
+            paySubTotal = payment.getValorAbono() + payment.getValorReten();
             payTotal = billTotal - paySubTotal;
             
             CCResumenReport resumenReport = new CCResumenReport(payment.getCredits().getPago().getBill().getClient().getIdentification(), payment.getCredits().getPago().getBill().getClient().getName(),
