@@ -1,13 +1,19 @@
 package com.mrzolution.integridad.app.domain;
 
+import com.mrzolution.integridad.app.interfaces.Child;
 import lombok.Data;
 
 import javax.persistence.*;
 import java.util.UUID;
 
+/**
+ *
+ * @author mrzolutions-daniel
+ */
+
 @Entity
 @Data
-public class Payment {
+public class Payment implements Child{
 
     @Id
     @GeneratedValue
@@ -28,17 +34,11 @@ public class Payment {
     @JoinColumn(name = "credit_id")
     private Credits credits;
     
-     @ManyToOne
-    @JoinColumn(name = "cuenta_contable_id")
-    private CuentaContable cuentaContablePrincipal;
-
-
+    public void setListsNull(){
+    };
+    
     public void setFatherListToNull(){
-        credits.setFatherListToNull();
         credits.setListsNull();
-        
-        cuentaContablePrincipal.setFatherListToNull();
-        cuentaContablePrincipal.setListsNull();
-    }
-
+        credits.setFatherListToNull();
+    };
 }

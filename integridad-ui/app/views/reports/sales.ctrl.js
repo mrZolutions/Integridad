@@ -191,6 +191,10 @@ angular.module('integridadUiApp')
             IDENTIFICACION: creditsreport.ruc,
             NUMERO_FACTURA: creditsreport.billNumber,
             VALOR_FACTURA: creditsreport.costo,
+            VALOR_ABONO: creditsreport.valorAbono,
+            VALOR_RETEN: creditsreport.valorReten,
+            VALOR_NOTAC: creditsreport.valorNotac,
+            SUB_TOTAL: creditsreport.valorSubTotal,
             SALDO: creditsreport.saldo,
             STATUS: creditsreport.statusCredits
           };

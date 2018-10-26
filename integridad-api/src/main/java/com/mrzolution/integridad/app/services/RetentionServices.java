@@ -58,7 +58,7 @@ public class RetentionServices {
 		//String response = "OK";
 		log.info("RetentionServices getDatil httpcall success");
 		return response;
-	}
+	};
 
 	public Iterable<Retention> getByUserLazy(UserIntegridad user){
 		log.info("RetentionServices getByUserLazy: {}", user.getId());
@@ -69,7 +69,7 @@ public class RetentionServices {
 			});
 
 		return retentions;
-	}
+	};
 
 //	public Iterable<Bill> getByClientIdAndTypeLazy(UUID id){
 //		log.info("BillServices getByClientIdAndTypeLazy: {}", id);
@@ -93,7 +93,7 @@ public class RetentionServices {
 
 		populateChildren(retrieved);
 		return retrieved;
-	}
+	};
 
 	public Retention create(Retention retention) throws BadRequestException{
 		log.info("RetentionServices create");
@@ -124,7 +124,7 @@ public class RetentionServices {
 		log.info("RetentionServices created id: {}", saved.getId());
 		saved.setDetailRetentions(details);
 		return saved;
-	}
+	};
 
 	public Retention update(Retention retention) throws BadRequestException{
 		if(retention.getId() == null){
@@ -141,7 +141,7 @@ public class RetentionServices {
 		Retention updated = retentionRepository.save(retention);
 		log.info("RetentionServices update id: {}", updated.getId());
 		return updated;
-	}
+	};
 
 	public List<RetentionReport> getAllBySubIdAndDates(UUID userClientId, long dateOne, long dateTwo){
 		log.info("RetentionServices getAllBySubIdAndDates: {}, {}, {}", userClientId, dateOne, dateTwo);
@@ -168,7 +168,7 @@ public class RetentionServices {
 		});
 
 		return retentionReportList;
-	}
+	};
 
 //
 //	public Iterable<Bill> getByStringSeqAndSubId(String stringSeq, UUID subId){
@@ -199,6 +199,6 @@ public class RetentionServices {
 		retention.setDetailRetentions(detailRetentionList);
 		retention.setFatherListToNull();
 		log.info("RetentionServices populateChildren FINISHED retentionId: {}", retention.getId());
-	}
+	};
 
 }

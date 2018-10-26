@@ -21,7 +21,7 @@ public class CCResumenReport {
     private double valorSubTotal;
     private double valorTotal;
     
-    public CCResumenReport(String idClient, String nameClient, String billNumber, double billTotal, String tipTransac, String formPago, String fechPago, double valorAbono, double valorReten, double valorSubTotal,double valorTotal){
+    public CCResumenReport(String idClient, String nameClient, String billNumber, double billTotal, String tipTransac, String formPago, String fechPago, double valorAbono, double valorReten, double valorSubTotal, double valorTotal){
         this.idClient = idClient;
         this.nameClient = nameClient;
         this.billNumber = billNumber;

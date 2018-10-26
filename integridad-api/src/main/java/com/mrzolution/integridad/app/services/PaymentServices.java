@@ -31,10 +31,10 @@ public class PaymentServices {
     CreditsRepository creditsRepository;
     
     UUID idCredit;
-    double nume = 0.0;
-    double abono = 0.0;
+    double nume = 0.00;
+    double abono = 0.00;
     String statusCambio;
-    double resto = 0.0;
+    double resto = 0.00;
        
     public Payment create(Payment payment){
         log.info("PaymentServices preparing for create");
@@ -55,12 +55,12 @@ public class PaymentServices {
         nume = cambio.getValor();
         resto = nume - abono;
         cambio.setValor(resto);
-        if (cambio.getValor() == 0.0000){
+        if (cambio.getValor() <= 0.01){
             statusCambio = "PAGADO";
             cambio.setStatusCredits(statusCambio);
         }
         creditsRepository.save(cambio);
-        resto = 0.0;
+        resto = 0.00;
         log.info("PaymentServices Credits updated");
     };
     

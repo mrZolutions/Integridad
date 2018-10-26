@@ -70,6 +70,7 @@
   <div class="panel-footer">
     <div class="row">
       <div class="form-group col-md-10">
+        <p>Ventas, Productos y Retenciones</p>
         <button type="button" class="btn btn-primary"
                 ng-click="vm.getReportProducts()">
                 De Productos
@@ -82,14 +83,6 @@
                 ng-click="vm.getReportRetention()">
                 De Retenciones
         </button>
-        <button type="button" class="btn btn-primary"
-                ng-click="vm.getCreditsPendingReport()">
-                Ctas Pendientes
-        </button>
-        <button type="button" class="btn btn-primary"
-                ng-click="vm.getCreditsPayedReport()">
-                Ctas Pagadas
-        </button>
       </div>
       <div class="form-group col-md-2">
         <button type="button" class="btn btn-primary"
@@ -98,9 +91,10 @@
         </button>
       </div>
       <div class="form-group col-md-12">
+        <p>Cuentas por Cobrar</p>
         <button type="button" class="btn btn-primary"
-                ng-click="vm.getCCResumenReport()">
-                Ctas Resumen
+                ng-click="vm.getCreditsPendingReport()">
+                Ctas Pendientes
         </button>
       </div>
     </div>
@@ -239,6 +233,10 @@
         <th>Identificaci&oacute;n</th>
         <th>N&uacute;mero de Factura</th>
         <th>Valor de la Factura</th>
+        <th>Abonos</th>
+        <th>Retenciones</th>
+        <th>Notas de Credito</th>
+        <th>SubTotal</th>
         <th>Saldo Pendiente</th>
         <th>Estatus</th>
       </tr>
@@ -249,7 +247,11 @@
         <td>{{data.ruc}}</td>
         <td>{{data.billNumber}}</td>
         <td>{{data.costo}}</td>
-        <td>{{data.saldo}}</td>
+        <td>{{data.valorAbono.toFixed(2)}}</td>
+        <td>{{data.valorReten.toFixed(2)}}</td>
+        <td>{{data.valorNotac.toFixed(2)}}</td>
+        <td>{{data.valorSubTotal.toFixed(2)}}</td>
+        <td>{{data.saldo.toFixed(2)}}</td>
         <td>{{data.statusCredits}}</td>
       </tr>
     </tbody>
