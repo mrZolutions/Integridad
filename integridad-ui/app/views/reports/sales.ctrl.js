@@ -197,7 +197,12 @@ angular.module('integridadUiApp')
             ABONO: creditsreport.valorAbono.toFixed(2),
             RETEN: creditsreport.valorReten.toFixed(2),
             NOTA_CREDIT: creditsreport.valorNotac.toFixed(2),
-            SALDO: creditsreport.saldo.toFixed(2)
+            SALDO: creditsreport.saldo.toFixed(2),
+            PLAZO_MENOR_30: creditsreport.pplazo,
+            PLAZO_31_60: creditsreport.splazo,
+            PLAZO_61_90: creditsreport.tplazo,
+            PLAZO_91_120: creditsreport.cplazo,
+            PLAZO_MAYOR_120: creditsreport.qplazo
           };
 
           dataReport.push(data);
