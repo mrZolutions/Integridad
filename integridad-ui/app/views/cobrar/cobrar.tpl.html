@@ -75,8 +75,7 @@
 <div ng-show="vm.billList !== undefined && vm.retentionClient === undefined">
   <div class="panel panel-default">
     <div class="panel-heading">
-      <b>Listado de Facturas a Cr&eacute;dito</b><br/>
-      <b>Pertenecientes a: {{vm.clientName}}</b>
+      <b>Listado de Facturas Pertenecientes a: {{vm.clientName}}</b>
     </div>
     <div class="panel-body">
       <table class="table table-striped">
@@ -92,7 +91,7 @@
         <tbody>
           <tr ng-show="vm.billList == 0">
             <td colspan="4">
-                El Cliente <b>No Presenta</b> Facturas a Cr&eacute;dito por Cobrar...
+                El Cliente <b>No Presenta</b> Facturas por Cobrar...
             </td>
           </tr>
           <tr ng-repeat="bill in vm.billList | orderBy:'name':true | filter:searchText">

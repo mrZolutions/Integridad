@@ -68,7 +68,7 @@ public class CreditNoteServices {
 			throw new BadRequestException("Debe tener un detalle por lo menos");
 		}
                 
-                document = creditNote.getCredits().getPago().getBill().getId().toString();
+                document = creditNote.getBillSeq();
 		creditNote.setDateCreated(new Date().getTime());
 		creditNote.setActive(true);
 		creditNote.setDetails(null);
@@ -87,6 +87,7 @@ public class CreditNoteServices {
 		});
 
 		log.info("CreditNoteServices created id: {}", saved.getId());
+                updateCreditsAndPayment(saved, document);
 		saved.setDetails(details);
 		saved.setFatherListToNull();
 

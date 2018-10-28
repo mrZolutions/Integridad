@@ -86,8 +86,14 @@ public class CreditsServices {
                 terPlazo = credit.getValor();
             } else if (diasVencim > 90 && diasVencim <= 120) {
                 cuaPlazo = credit.getValor();
-            } else {
+            } else if (diasVencim > 120){
                 quiPlazo = credit.getValor();
+            } else {
+                priPlazo = 0.0;
+                segPlazo = 0.0;
+                terPlazo = 0.0;
+                cuaPlazo = 0.0;
+                quiPlazo = 0.0;
             }
             
             CreditsReport saleReport = new CreditsReport(credit.getPago().getBill().getClient().getName(), credit.getPago().getBill().getStringSeq(), 
@@ -124,7 +130,6 @@ public class CreditsServices {
             
             paymentsList.add(payment);
         });
-        
         credits.setPayments(paymentsList);
         credits.setFatherListToNull();
         log.info("CreditsServices populateChildren FINISHED creditsId: {}", credits.getId());

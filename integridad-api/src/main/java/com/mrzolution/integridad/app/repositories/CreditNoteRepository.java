@@ -17,20 +17,4 @@ import java.util.UUID;
 public interface CreditNoteRepository extends CrudRepository<CreditNote, UUID>{
 	
 	Iterable<Bill> findByClient(Client client);
-	
-//	Iterable<Bill> findByUserIntegridad(UserIntegridad user);
-//
-//	@Query("SELECT p FROM Bill p WHERE p.client.id = (:id) and p.active = 'true'")
-//	Iterable<Bill> findByClientId(@Param("id") UUID id);
-//
-//	Iterable<Bill> findByStringSeq(String stringSeq);
-//
-//	@Query("SELECT p FROM Bill p WHERE p.subsidiary.id = (:subId) and p.stringSeq = (:seq)")
-//	Iterable<Bill> findByStringSeqAndSubsidiaryId(@Param("seq") String stringSeq, @Param("subId") UUID id);
-//
-//	@Query("SELECT p FROM Bill p WHERE p.subsidiary.userClient.id = (:userClientId) and p.dateCreated >= (:dateOne)  and p.dateCreated <= (:dateTwo) and p.active = 'true'")
-//	Iterable<Bill> findByUserClientIdAndDatesActives(@Param("userClientId") UUID id, @Param("dateOne") long dateOne, @Param("dateTwo") long dateTwo);
-//
-//	@Query("SELECT p FROM Bill p WHERE p.subsidiary.userClient.id = (:userClientId) and p.dateCreated >= (:dateOne) and p.dateCreated <= (:dateTwo)")
-//	Iterable<Bill> findAllByUserClientIdAndDates(@Param("userClientId") UUID id, @Param("dateOne") long dateOne, @Param("dateTwo") long dateTwo);
 }

@@ -30,11 +30,11 @@ public class PaymentServices {
     @Autowired
     CreditsRepository creditsRepository;
     
-    UUID idCredit;
-    double nume = 0.00;
-    double abono = 0.00;
-    String statusCambio;
-    double resto = 0.00;
+    private UUID idCredit;
+    private double nume = 0.0;
+    private double abono = 0.0;
+    private String statusCambio;
+    private double resto = 0.0;
        
     public Payment create(Payment payment){
         log.info("PaymentServices preparing for create");
