@@ -40,12 +40,12 @@ public class RetentionClient {
     
     public void setListsNull(){
         detailRetentionClient = null;
-    }
+    };
     
     public void setFatherListToNull(){
         bill.setListsNull();
         bill.setFatherListToNull();
-    }
+    };
     
     @Transient
     public static RetentionClient newRetentionClientTest(){
@@ -53,7 +53,7 @@ public class RetentionClient {
         retentionClient.setDetailRetentionClient(new ArrayList<>());
         retentionClient.setBill(Bill.newBillTest());
         return retentionClient;
-    }
+    };
     
     @Transient
     public Payment payment;

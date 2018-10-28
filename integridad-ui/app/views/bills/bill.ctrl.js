@@ -405,13 +405,8 @@ angular.module('integridadUiApp')
       var diasPlazo = parseInt(vm.medio.creditoIntervalos);
       var d = new Date();
       var total = parseFloat(parseFloat(vm.bill.total)/parseFloat(vm.medio.creditoNumeroPagos)).toFixed(2);
-      if (vm.priceType.name === 'CREDITO'){
-        var statusCredits = 'PENDIENTE';
-        vm.seqNumberCredits = vm.seqNumber;
-      } else {
-        var statusCredits = 'OTROS';
-        vm.seqNumberCredits = undefined;
-      };
+      var statusCredits = 'PENDIENTE';
+      vm.seqNumberCredits = vm.seqNumber;
       for (var i = 1; i <= parseInt(vm.medio.creditoNumeroPagos); i++) {
         var credito = {
           payNumber: i,
@@ -610,8 +605,8 @@ angular.module('integridadUiApp')
         if(vm.bill.discountPercentage === undefined){
           vm.bill.discountPercentage = 0;
         };
-        //var obj = JSON.parse(resp.data);
-        var obj = {clave_acceso: '1234560', id:'id12345'};
+        var obj = JSON.parse(resp.data);
+        //var obj = {clave_acceso: '1234560', id:'id12345'};
         if(obj.errors === undefined){
           vm.bill.claveDeAcceso = obj.clave_acceso;
           vm.bill.idSri = obj.id;

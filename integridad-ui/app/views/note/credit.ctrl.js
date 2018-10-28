@@ -17,6 +17,7 @@ angular.module('integridadUiApp')
     vm.success = undefined;
     vm.loading = false;
     vm.clientList = undefined;
+    vm.idBill = undefined;
 
     function _activate(){
       vm.clientSelected = undefined;
@@ -103,6 +104,7 @@ angular.module('integridadUiApp')
       billService.getById(billSelected.id).then(function(response){
         vm.bill = angular.copy(response);
         vm.bill.details = [];
+        vm.idBill = billSelected.id;
         vm.bill.client = vm.clientSelected;
         vm.bill.userIntegridad= $localStorage.user;
         vm.bill.subsidiary= $localStorage.user.subsidiary;
@@ -208,12 +210,13 @@ angular.module('integridadUiApp')
 
       creditService.getClaveDeAcceso(req, vm.companyData.userClient.id).then(function(resp){
         var obj = JSON.parse(resp.data);
-        // var obj = {clave_acceso: '1234560', id:'id12345'};
+        //var obj = {clave_acceso: '1234560', id:'id12345'};
         if(obj.errors === undefined){
           vm.claveDeAcceso = obj.clave_acceso;
           vm.bill.claveDeAcceso = obj.clave_acceso;
           vm.bill.idSri = obj.id;
           vm.bill.stringSeq = vm.seqNumber;
+          vm.bill.billSeq = vm.idBill;
           creditService.create(vm.bill).then(function(respBill){
             vm.billed = true;
             $localStorage.user.cashier.creditNoteNumberSeq = vm.bill.creditSeq;

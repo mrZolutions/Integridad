@@ -231,29 +231,41 @@
     <thead>
       <tr>
         <th>Nombre del Cliente</th>
-        <th>Identificaci&oacute;n</th>
         <th>N&uacute;mero de Factura</th>
-        <th>Valor de la Factura</th>
+        <th>Fecha de Emision</th>
+        <th>Fecha Vence</th>
+        <th>Dias Credito</th>
+        <th>Dias Vencidos</th>
+        <th>Venta</th>
         <th>Abonos</th>
         <th>Retenciones</th>
-        <th>Notas de Credito</th>
-        <th>SubTotal</th>
+        <th>N/C</th>
         <th>Saldo Pendiente</th>
-        <th>Estatus</th>
+        <th>&lt;30</th>
+        <th>31-60 </th>
+        <th>61-90</th>
+        <th>91-120</th>
+        <th>&gt;120</th>
       </tr>
     </thead>
     <tbody>
       <tr ng-repeat="data in vm.reportList | orderBy:'clientName'" >
         <td>{{data.clientName}}</td>
-        <td>{{data.ruc}}</td>
         <td>{{data.billNumber}}</td>
-        <td>{{data.costo}}</td>
+        <td>{{data.fechVenta}}</td>
+        <td>{{data.fechVence}}</td>
+        <td>{{data.diasCredit}}</td>
+        <td>{{data.diasVencim}}</td>
+        <td>{{data.costo.toFixed(2)}}</td>
         <td>{{data.valorAbono.toFixed(2)}}</td>
         <td>{{data.valorReten.toFixed(2)}}</td>
         <td>{{data.valorNotac.toFixed(2)}}</td>
-        <td>{{data.valorSubTotal.toFixed(2)}}</td>
         <td>{{data.saldo.toFixed(2)}}</td>
-        <td>{{data.statusCredits}}</td>
+        <td>{{data.pplazo}}</td>
+        <td>{{data.splazo}}</td>
+        <td>{{data.tplazo}}</td>
+        <td>{{data.cplazo}}</td>
+        <td>{{data.qplazo}}</td>
       </tr>
     </tbody>
   </table>

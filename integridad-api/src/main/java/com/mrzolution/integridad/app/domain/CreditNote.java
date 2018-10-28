@@ -21,6 +21,7 @@ public class CreditNote {
     private long dateCreated;
     private boolean active;
     private String creditSeq;
+    private String billSeq;
     private String stringSeq;
     private String documentStringSeq;
     private String priceType;
@@ -43,12 +44,6 @@ public class CreditNote {
     private String claveDeAcceso;
     private String idSri;
 
-    //TODO
-    //propina
-    //descuento
-    //valor retenido iva
-    //valor retenido renta
-    //pagos
 
     @ManyToOne
     @JoinColumn(name = "client_id")
@@ -68,7 +63,7 @@ public class CreditNote {
     
     public void setListsNull(){
     	details = null;
-    }
+    };
     
     public void setFatherListToNull(){
     	client.setListsNull();
@@ -77,7 +72,7 @@ public class CreditNote {
     	userIntegridad.setFatherListToNull();
     	subsidiary.setListsNull();
     	subsidiary.setFatherListToNull();
-    }
+    };
 
     @Transient
     public static CreditNote newCreditNoteTest(){
@@ -88,6 +83,11 @@ public class CreditNote {
         bill.setSubsidiary(Subsidiary.newSubsidiaryTest());
 
         return bill;
-    }
-
+    };
+    
+    @Transient
+    public Payment payment;
+    
+    @Transient
+    public Credits credits;
 }

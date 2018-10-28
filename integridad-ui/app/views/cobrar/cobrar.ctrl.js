@@ -151,7 +151,7 @@ angular.module('integridadUiApp')
       vm.clientAddress = client.address;
       vm.clientPhone = client.cel_phone;
       vm.clientEmail = client.email;
-      billService.getCreditsBillsByClientId(client.id).then(function(response){
+      billService.getBillsByClientId(client.id).then(function(response){
         vm.billList = response;
         vm.loading = false;
       }).catch(function(error){
@@ -191,8 +191,8 @@ angular.module('integridadUiApp')
 
     vm.pAbono = function(payment){
       vm.loading = true;
-      vm.valorReten = 0.0;
-      vm.valorNotac = 0.0;
+      vm.valorReten = 0.00;
+      vm.valorNotac = 0.00;
       vm.payment.datePayment = $('#DateOfPayment').data("DateTimePicker").date().toDate().getTime();
       vm.payment.creditId = vm.creditsId;
       vm.payment.documentNumber = vm.billNumber;

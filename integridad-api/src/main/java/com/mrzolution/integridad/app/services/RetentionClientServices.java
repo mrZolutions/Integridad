@@ -36,13 +36,13 @@ public class RetentionClientServices {
     PaymentRepository paymentRepository;
     @Autowired
     CreditsRepository creditsRepository;
-
-    double sum = 0.0;
-    String document;
-    double valor = 0.0;
-    String doc;
-    long numC = 1;
     
+    private double sum = 0.0;
+    private String document = "";
+    private double valor = 0.0;
+    private String doc = "";
+    private int numC = 1;
+ 
     public RetentionClient getById(UUID id) {
 	log.info("RetentionClientServices getById: {}", id);
 	RetentionClient retrieved = retentionClientRepository.findOne(id);
@@ -55,7 +55,7 @@ public class RetentionClientServices {
         return retrieved;
     };
       
-    public RetentionClient create(RetentionClient retentionClient) throws BadRequestException{
+    public RetentionClient create(RetentionClient retentionClient) throws BadRequestException{   
         log.info("RetentionClientServices preparing for create new Retention");
 	List<DetailRetentionClient> details = retentionClient.getDetailRetentionClient();
         document = retentionClient.getBill().getId().toString();
@@ -64,7 +64,7 @@ public class RetentionClientServices {
         retentionClient.setFatherListToNull();
         retentionClient.setListsNull();
         RetentionClient saved = retentionClientRepository.save(retentionClient);
-        details.forEach(detail->{
+        details.forEach(detail -> {
             detail.setRetentionClient(saved);
             sum += detail.getTotal();
             detailRetentionClientRepository.save(detail);

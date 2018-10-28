@@ -188,15 +188,16 @@ angular.module('integridadUiApp')
         _.each(vm.reportList, function(creditsreport){
           var data = {
             NOMBRE_CLIENTE: creditsreport.clientName,
-            IDENTIFICACION: creditsreport.ruc,
             NUMERO_FACTURA: creditsreport.billNumber,
-            VALOR_FACTURA: creditsreport.costo,
-            VALOR_ABONO: creditsreport.valorAbono,
-            VALOR_RETEN: creditsreport.valorReten,
-            VALOR_NOTAC: creditsreport.valorNotac,
-            SUB_TOTAL: creditsreport.valorSubTotal,
-            SALDO: creditsreport.saldo,
-            STATUS: creditsreport.statusCredits
+            FECHA_VENTA: creditsreport.fechVenta,
+            FECHA_VENCE: creditsreport.fechVence,
+            DIAS_CREDIT: creditsreport.diasCredit,
+            DIAS_VENCE: creditsreport.diasVencim,
+            VENTA: creditsreport.costo.toFixed(2),
+            ABONO: creditsreport.valorAbono.toFixed(2),
+            RETEN: creditsreport.valorReten.toFixed(2),
+            NOTA_CREDIT: creditsreport.valorNotac.toFixed(2),
+            SALDO: creditsreport.saldo.toFixed(2)
           };
 
           dataReport.push(data);
