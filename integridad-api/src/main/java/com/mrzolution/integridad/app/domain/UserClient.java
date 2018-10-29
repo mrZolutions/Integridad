@@ -38,7 +38,7 @@ public class UserClient {
     private String ePassword;
     private String logo;
     private String apiKey;
-    private boolean espTemp;
+    private String espTemp;
 
     private boolean testMode;
 

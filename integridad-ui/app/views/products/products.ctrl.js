@@ -201,7 +201,26 @@ angular.module('integridadUiApp')
     };
 
     vm.range = function() {
-        return new Array(vm.totalPages);
+      return new Array(vm.totalPages);
+    };
+
+    vm.costPreview = function(){
+      var avrCost = 0.0;
+      var gEfectivo = 0.0;
+      var avrCost = vm.product.averageCost;
+      var gEfectivo = 1 + ((vm.product.cashPercentage) / 100.00);
+      var preview = avrCost * gEfectivo;
+      return (preview).toFixed(2);
+    };
+
+    vm.costIvaPreview = function(){
+      var avrCost = 0.0;
+      var gEfectivo = 0.0;
+      var iva = 1.12;
+      var avrCost = vm.product.averageCost;
+      var gEfectivo = 1 + ((vm.product.cashPercentage) / 100.00);
+      var preview = avrCost * gEfectivo * iva;
+      return (preview).toFixed(2);
     };
 
     vm.getIva = function(textCost, averageCost){
@@ -227,13 +246,9 @@ angular.module('integridadUiApp')
           vm.messurementSelected = mes;
         }
       });
-
       vm.getGroups();
       vm.getSubGroups();
       _getSubsidiaries(true);
-
-
-
       vm.wizard = 1;
       vm.product= productEdit;
 
@@ -416,11 +431,8 @@ angular.module('integridadUiApp')
           vm.productBySubsidiaries.push(productBySubsidiary);
         }
       });
-
       _getBrands();
-
       _getLines();
-
       vm.wizard = 2;
     };
 
@@ -487,10 +499,10 @@ angular.module('integridadUiApp')
         vm.loading = true;
         if(vm.product.id === undefined){
           create();
-        }else{
+        } else {
           update(false);
-        }
-      }
+        };
+      };
     };
 
     vm.remove = function(){

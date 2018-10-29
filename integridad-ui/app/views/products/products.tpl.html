@@ -334,9 +334,13 @@
     </div>
 
     <div class="row">
-      <div class="form-group col-md-6">
-        <label>Costo Previsualizado:</label>
-        <b></b>
+      <div class="form-group col-md-3">
+        <label>Costo sin IVA:</label><br/>
+        <p>{{vm.costPreview()}}</p>
+      </div>
+      <div class="form-group col-md-3">
+        <label>Costo + IVA:</label><br/>
+        <p>{{vm.costIvaPreview()}}</p>
       </div>
     </div>
     
@@ -385,21 +389,18 @@
         <h4 class="modal-title">Crear Marca</h4>
       </div>
       <div class="modal-body">
-
         <div class="row">
           <div class="form-group col-md-12">
             <label>Nombre : </label>
             <input type="text" ng-model="vm.newBrand.name" class="form-control">
           </div>
         </div>
-
         <div class="row">
           <div class="form-group col-md-6">
             <label>C&oacute;digo: </label>
             <input type="text" ng-model="vm.newBrand.code" class="form-control">
           </div>
         </div>
-
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-primary" ng-click="vm.saveNewBrand()" data-dismiss="modal">

@@ -18,9 +18,7 @@
 </div>
 
 <div class="header">
-    <h4>
-        Cuentas por Pagar
-    </h4>
+    <h4>Cuentas por Pagar</h4>
 </div>
 
 <div class="row" ng-show="vm.error !== undefined">
@@ -28,7 +26,6 @@
         <div class="alert alert-danger">{{vm.error}}</div>
     </div>
 </div>
-
 <div class="row" ng-show="vm.success !== undefined">
     <div class="form-group col-md-12">
         <div class="alert alert-success">{{vm.success}}</div>
@@ -36,18 +33,18 @@
 </div>
 
 <div ng-show="vm.provider === undefined && vm.debsToPay === undefined">
-    <input ng-model="searchText" class="form-control" placeholder="Buscar">
+    <div class="row">
+        <div class="form-group col-md-12">
+            <input ng-model="searchText" class="form-control" placeholder="Buscar Proveedores">
+        </div>
+    </div>
     <table class="table table-striped">
         <thead>
             <tr>
-                <th> C&oacute;digo </th>
-                <th> Nombre </th>
-                <th> Tipo </th>
-                <th>
-                    <button type="button" class="btn btn-primary" ng-click="vm.providerCreate()">
-                            Crear
-                    </button>
-                </th>
+                <th>C&oacute;digo</th>
+                <th>Nombre</th>
+                <th>Tipo ID</th>
+                <th>No. Identidad</th>
             </tr>
         </thead>
         <tbody>
@@ -56,272 +53,17 @@
                     No hay proveedores ingresados
                 </td>
             </tr>
-            <tr ng-repeat="providerEdit in vm.providerList | orderBy:'name' | filter:searchText">
-                <td>{{ providerEdit.codeIntegridad }}</td>
-                <td>{{ providerEdit.name }}</td>
-                <td>{{ providerEdit.providerType }}</td>
+            <tr ng-repeat="provider in vm.providerList | orderBy:'name' | filter:searchText">
+                <td>{{provider.codeIntegridad}}</td>
+                <td>{{provider.name}}</td>
+                <td>{{provider.rucType}}</td>
+                <td>{{provider.ruc}}</td>
                 <td>
-                    <button type="button" class="btn btn-primary" ng-click="vm.createDebs(providerEdit)">
-                            Datos de Factura
+                    <button type="button" class="btn btn-primary" ng-click="">
+                            Factura
                     </button>
                 </td>
             </tr>
         </tbody>
     </table>
-</div>
-
-<div ng-show="vm.debstopay !== undefined && !vm.debstopayCreated">
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <p>Datos de la Factura</p>
-        </div>
-        <div class="panel-body">
-            <div class="row">
-                <div class="form-group col-md-6">
-                  <label>C&oacute;digo Proveedor: </label>
-                  <!--Codigo del Poveedor-->
-                </div>
-                <div class="form-group col-md-6">
-                  <label>RUC / CEDULA: </label>
-                  <!--Tipo de Identificación-->
-                </div>
-            </div>
-            <div class="row">
-                <div class="form-group col-md-6">
-                    <label>Nombre Comercial: </label>
-                    <!--Nombre Comercial -->
-                </div>
-                <div class="form-group col-md-6">
-                    <label>Raz&oacute;n Social: </label>
-                    <!--Razón Social -->
-                </div>
-            </div>
-            <div class="row">
-                <div class="form-group col-md-12">
-                    <label>Direcci&oacute;n: </label>
-                    <!--Dirección -->
-                </div>
-            </div>
-            <div class="row">
-                <div class="form-group col-md-6">
-                    <label>Tipo de Comprobante de Compra: </label>
-                    <select ng-options="typeDoc.code as typeDoc.name for typeDoc in vm.voucherType | orderBy:'name' track by typeDoc.code" ng-model="vm.docType"
-                            class="form-control">
-                    </select>
-                </div> 
-                <div class="form-group col-md-6">
-                    <label>Tipo de C&oacute;digo Sustento: </label>
-                    <select ng-options="typeDoc.code as typeDoc.name for typeDoc in vm.supportType | orderBy:'name' track by typeDoc.code" ng-model="vm.docType"
-                            class="form-control">
-                    </select>
-                </div>
-            </div>
-            <div class="row">
-                <div class="form-group col-md-6">
-                    <label>Fecha: </label>
-                    <div class="input-group date" id="pickerBillDateRetention">
-                        <input type="text" class="form-control input-group-addon"/>
-                        <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
-                    </div>
-                    <script>
-                        var defaultDate = new Date();
-                        $('#pickerBillDateRetention').datetimepicker({format: "DD/MM/YY",});
-                    </script>
-                </div>
-                <div class="form-group col-md-6">
-                    <label>Ejercicio Fiscal: </label>
-                    <!--Ingreso del mes arrojado por la fecha -->
-                </div>
-            </div>
-            <div class="row">
-                <div class="form-group col-md-4">
-                    <label>N&uacute;mero de Documento: </label>
-                </div>
-                <div class="form-group col-md-2">
-                    <!--Primer input-->
-                </div>
-                <div class="form-group col-md-2">
-                    <!--Segundo input-->
-                </div>
-                <div class="form-group col-md-4">
-                    <!--Tercer input-->
-                </div>
-            </div>
-            <div class="row">
-                <div class="form-group col-md-12">
-                    <label>N&uacute;mero de Autorizaci&oacute;n:</label>
-                    <input type="text" class="form-control" maxlength="90">
-                </div>
-            </div>
-            <div class="row">
-                <div class="form-group col-md-6">
-                    <label>Valor Total a Pagar:</label>
-                    <input type="text" ng-model="vm.debsToPay.total"
-                           class="form-control" maxlength="20">
-                </div>
-                <div class="form-group col-md-4">
-                    <label>Tipo de Impuesto: </label><br/>
-                    <label class="radio-inline"><input type="radio" ng-model="vm.debsToPay.typeTaxes" value="1" name="tipo"
-                           ng-change="vm.getTaxesTable()" ng-disabled="vm.debsToPay.total === undefined">IVA
-                    </label>
-                </div>
-            </div>
-            <div class="row" ng-show="vm.taxesTable !== undefined">
-                <div class="form-group col-md-12">
-                    <input ng-model="searchTextTable" class="form-control" placeholder="Buscar">
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th> C&oacute;digo </th>
-                                <th> Nombre Generico </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr ng-show="vm.taxesTable == 0">
-                                <td colspan="2">
-                                    No hay Fuente Seleccionada
-                                </td>
-                            </tr>
-                            <tr dir-paginate="p in vm.taxesTable | filter:searchTextTable | itemsPerPage: 10"  pagination-id="taxesPagination">
-                                <td>{{ p.codigo }}</td>
-                                <td>{{ p.name }}</td>
-                                <td>
-                                    <button type="button" class="btn btn-primary"
-                                            ng-click="vm.selecTaxes(p)" data-toggle="modal" data-target="#modalSelectedTaxes">
-                                            Seleccionar
-                                    </button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div id="modalSelectedTaxes" class="modal fade" role="dialog">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" ng-click="vm.impuesto=undefined">&times;</button>
-                <h4 class="modal-title">Nombre Generico</h4>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-md-8" >
-                        <b>{{vm.item.name}}</b>
-                    </div>
-                    <div class="col-md-4" >
-                        <label>Valor</label>
-                        <input type="text" onkeypress="return ((event.which >= 46 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
-                               class="form-control" maxlength="9" ng-model="vm.item.valor_item">
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" data-dismiss="modal"
-                        ng-click="vm.addItem()">
-                        Aceptar
-                </button>
-                <button type="button" class="btn btn-primary"  data-dismiss="modal"
-                        ng-click="vm.item = undefined; vm.indexEdit = undefined;">
-                        Cancelar
-                </button>
-            </div>
-          </div>
-        </div>
-</div>
-
-
-
-
-
-
-
-<div ng-show="vm.provider !== undefined">
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <b>Datos del Proveedor</b>
-        </div>
-        <div class="panel-body">
-            <div class="row">
-                <div class="form-group col-md-4">
-                    <label>C&oacute;digo: </label>
-                    <input type="text" ng-model="vm.provider.codeIntegridad" class="form-control">
-                </div>
-                <div class="form-group col-md-4">
-                    <label>Tipo de proveedor: </label>
-                    <select ng-options="tipo as tipo for tipo in vm.providerType" ng-model="vm.provider.providerType"
-                            class="form-control">
-                    </select>
-                </div>
-                <div class="form-group col-md-4">
-                    <label>RUC / CEDULA: </label>
-                    <input type="text" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
-                           ng-model="vm.provider.ruc" class="form-control" maxlength="13">
-                </div>
-            </div>
-            <div class="row">
-                <div class="form-group col-md-12">
-                    <label>Nombre Comercial: </label>
-                    <input type="text" ng-model="vm.provider.name" class="form-control">
-                </div>
-            </div>
-            <div class="row">
-                <div class="form-group col-md-12">
-                    <label>Raz&oacute;n Social: </label>
-                    <input type="text" ng-model="vm.provider.razonSocial" class="form-control">
-                </div>
-            </div>
-            <div class="row">
-                <div class="form-group col-md-12">
-                    <label>Direcci&oacute;n: </label>
-                    <input type="text" ng-model="vm.provider.address1" class="form-control">
-                </div>
-            </div>
-            <div class="row">
-                <div class="form-group col-md-6">
-                    <label>Pa&iacute;s: </label>
-                    <input type="text" ng-model="vm.provider.country" class="form-control">
-                </div>
-                <div class="form-group col-md-6">
-                    <label>Ciudad: </label>
-                    <input type="text" ng-model="vm.provider.city" class="form-control">
-                </div>
-            </div>
-            <div class="row">
-                <div class="form-group col-md-6">
-                    <label>Tel&eacute;fono: (incluir c&oacute;digo de provincia ej: 02) </label>
-                    <input type="text" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
-                           ng-model="vm.provider.phone" class="form-control" maxlength="9">
-                </div>
-                <div class="form-group col-md-6">
-                    <label>Tel&eacute;fono celular: </label>
-                    <input type="text" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
-                           ng-model="vm.provider.celPhone" class="form-control" maxlength="10">
-                </div>
-            </div>
-            <div class="row">
-                <div class="form-group col-md-6">
-                    <label>Email: </label>
-                    <input type="text" ng-model="vm.provider.email" class="form-control">
-                </div>
-            <div class="form-group col-md-6">
-                <label>Contacto: </label>
-                <input type="text" ng-model="vm.provider.contact" class="form-control">
-            </div>
-            </div>
-        </div>
-        <div class="panel-footer">
-            <button type="button" class="btn btn-primary" ng-click="vm.register()"
-                    ng-disabled="vm.disableSave()">
-                    Guardar
-            </button>
-            <button type="button" class="btn btn-success"
-                    ng-click="vm.cancel()">
-                    Cancelar
-            </button>
-        </div>
-    </div>
 </div>
