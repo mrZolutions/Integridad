@@ -87,14 +87,15 @@ public class RetentionClientServices {
                                   
         log.info("RetentionClientServices Retention created id: {}", saved.getId());
         saved.setDetailRetentionClient(details);
-        updateBillCreditsAndPayment(retentionClient, document);
+        updateCreditsAndPayment(retentionClient, document);
+        updateBill(retentionClient, document);
         sum = 0.0;
         valor = 0.0;
         return saved;
     };
     
     @Async
-    public void updateBillCreditsAndPayment(RetentionClient retentionClient, String document){
+    public void updateCreditsAndPayment(RetentionClient retentionClient, String document){
         Credits docNumber = creditsRepository.findByBillId(document);
         doc = docNumber.getBillId();
         if (doc.equals(document) && docNumber.getPayNumber() == numC){
@@ -116,6 +117,11 @@ public class RetentionClientServices {
             specialPayment.setValorNotac(0.0);
             paymentRepository.save(specialPayment);
         }
+        log.info("RetentionClientServices Credits and Payment UPDATED");
+    };
+    
+    @Async
+    public void updateBill(RetentionClient retentionClient, String document){
         Bill bill = billRepository.findOne(retentionClient.getBill().getId());
         String nbillId = bill.getId().toString();
         if (nbillId.equals(document)){
@@ -128,7 +134,6 @@ public class RetentionClientServices {
             bill.setSaldo(saldo);
             billRepository.save(bill);
         }
-        log.info("RetentionClientServices Bill, Credits and Payment UPDATED");
     };
     
     private void populateChildren(RetentionClient retentionClient) {
