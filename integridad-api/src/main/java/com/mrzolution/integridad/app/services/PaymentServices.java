@@ -1,11 +1,14 @@
 package com.mrzolution.integridad.app.services;
 
+import com.mrzolution.integridad.app.domain.Bill;
 import com.mrzolution.integridad.app.domain.Credits;
 import com.mrzolution.integridad.app.domain.Payment;
 import com.mrzolution.integridad.app.domain.report.CCResumenReport;
+import com.mrzolution.integridad.app.repositories.BillRepository;
 import com.mrzolution.integridad.app.repositories.CreditsRepository;
 import com.mrzolution.integridad.app.repositories.PagoRepository;
 import com.mrzolution.integridad.app.repositories.PaymentRepository;
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -29,21 +32,29 @@ public class PaymentServices {
     PagoRepository pagoRepository;
     @Autowired
     CreditsRepository creditsRepository;
+    @Autowired
+    BillRepository billRepository;
     
     private UUID idCredit;
     private double nume = 0.0;
     private double abono = 0.0;
-    private String statusCambio;
+    private String statusCambio = "";
     private double resto = 0.0;
+    private String document = "";
+    private String doc = "";
+    private String saldo = "";
+    private double sumado = 0.0;
        
     public Payment create(Payment payment){
         log.info("PaymentServices preparing for create");
         Payment saved = paymentRepository.save(payment);
+        document = saved.getCredits().getPago().getBill().getId().toString();
         log.info("PaymentServices Payment created id: {}", saved.getId());
         if (saved.getCredits().getId() != null){
             idCredit = saved.getCredits().getId();
             abono = saved.getValorAbono();
             updateCredits(idCredit);
+            updateBill(payment, document);
         }
 	return saved;
     };
@@ -64,6 +75,24 @@ public class PaymentServices {
         log.info("PaymentServices Credits updated");
     };
     
+    @Async
+    public void updateBill(Payment payment, String document){
+        log.info("PaymentServices updating Bill");
+        Bill billed = billRepository.findOne(payment.getCredits().getPago().getBill().getId());
+        String nbillId = billed.getId().toString();
+        if (nbillId.equals(document)){
+            saldo = billed.getSaldo();
+            nume = Double.parseDouble(saldo);
+            sumado = nume - abono;
+            BigDecimal vsumado = new BigDecimal(sumado);
+            vsumado = vsumado.setScale(2, BigDecimal.ROUND_HALF_UP);
+            saldo = String.valueOf(vsumado);
+            billed.setSaldo(saldo);
+            billRepository.save(billed);
+        }
+        log.info("PaymentServices Bill UPDATED");
+    };
+    
     public List<CCResumenReport> getPaymentsByUserClientId(UUID id){
         log.info("PaymentServices getPaymentsByUserClientId: {}", id);
         Iterable<Payment> payments = paymentRepository.findAllPaymentsByUserClientId(id);
@@ -72,17 +101,10 @@ public class PaymentServices {
         payments.forEach(payment -> {
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
             String fechaPago = dateFormat.format(new Date(payment.getDatePayment()));
-            Double paySubTotal = new Double(0);
-            Double payTotal = new Double(0);
-            Double billTotal = new Double(0);
-            
-            billTotal = payment.getCredits().getPago().getBill().getTotal();
-            paySubTotal = payment.getValorAbono() + payment.getValorReten();
-            payTotal = billTotal - paySubTotal;
             
             CCResumenReport resumenReport = new CCResumenReport(payment.getCredits().getPago().getBill().getClient().getIdentification(), payment.getCredits().getPago().getBill().getClient().getName(),
-                                                                payment.getCredits().getPago().getBill().getStringSeq(), billTotal, payment.getTypePayment(), payment.getModePayment(), fechaPago,
-                                                                payment.getValorAbono(), payment.getValorReten(), paySubTotal, payTotal);
+                                                                payment.getCredits().getPago().getBill().getStringSeq(), payment.getCredits().getPago().getBill().getTotal(), payment.getTypePayment(), 
+                                                                payment.getModePayment(), fechaPago, payment.getValorAbono(), payment.getValorReten(), payment.getValorNotac());
             
             ccResumenReportList.add(resumenReport);
         });

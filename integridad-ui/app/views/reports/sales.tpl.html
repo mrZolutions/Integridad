@@ -97,6 +97,10 @@
                 ng-click="vm.getCreditsPendingReport()">
                 Ctas Pendientes
         </button>
+        <button type="button" class="btn btn-primary"
+                ng-click="vm.getCCResumenReport()">
+                Abonos y Otros
+        </button>
       </div>
     </div>
     <div ng-show="vm.reportList.length === 0">
@@ -300,7 +304,6 @@
   <table class="table table-striped">
     <thead>
       <tr>
-        <th>Identificaci&oacute;n</th>
         <th>Nombre del Cliente</th>
         <th>N&uacute;mero Factura</th>
         <th>Valor Factura</th>
@@ -309,13 +312,11 @@
         <th>Fecha de Pago</th>
         <th>Abonos</th>
         <th>Retenciones</th>
-        <th>Sub Total</th>
-        <th>Valor Total</th>
+        <th>N/C</th>
       </tr>
     </thead>
     <tbody>
       <tr ng-repeat="data in vm.reportList | orderBy:'nomCliente'" >
-        <td>{{data.idClient}}</td>
         <td>{{data.nameClient}}</td>
         <td>{{data.billNumber}}</td>
         <td>{{data.billTotal.toFixed(2)}}</td>
@@ -324,8 +325,7 @@
         <td>{{data.fechPago}}</td>
         <td>{{data.valorAbono.toFixed(2)}}</td>
         <td>{{data.valorReten.toFixed(2)}}</td>
-        <td>{{data.valorSubTotal.toFixed(2)}}</td>
-        <td>{{data.valorTotal.toFixed(2)}}</td>
+        <td>{{data.valorNotac.toFixed(2)}}</td>
       </tr>
     </tbody>
   </table>

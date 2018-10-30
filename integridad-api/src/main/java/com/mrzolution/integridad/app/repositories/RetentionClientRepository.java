@@ -19,8 +19,6 @@ import org.springframework.stereotype.Repository;
 public interface RetentionClientRepository extends CrudRepository<RetentionClient, UUID>{
     Iterable<RetentionClient> findByBill(Bill Bill);
     
-    RetentionClient findByDocumentNumber (String documentNumber);
-    
-    @Query("SELECT r FROM RetentionClient r WHERE r.bill.id = (:id)")
-    Iterable<RetentionClient> findByBillId(@Param("id") UUID id);
+    @Query("SELECT r FROM RetentionClient r WHERE r.documentNumber = (:docNum) and r.bill.id = (:id)")
+    Iterable<RetentionClient> findByDocumentNumberAndBillId(@Param("docNum") String docNum, @Param("id") UUID id);
 }

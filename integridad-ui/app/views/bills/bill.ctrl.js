@@ -168,6 +168,7 @@ angular.module('integridadUiApp')
         +  parseFloat(vm.bill.iva)
         +  parseFloat(vm.bill.ice)
       ).toFixed(2);
+      vm.bill.saldo = (vm.bill.total).toString();
     };
 
     function _addDays(date, days) {

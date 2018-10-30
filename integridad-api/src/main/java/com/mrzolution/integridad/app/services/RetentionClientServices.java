@@ -1,15 +1,20 @@
 package com.mrzolution.integridad.app.services;
 
+import com.google.common.collect.Iterables;
+import com.mrzolution.integridad.app.domain.Bill;
 import com.mrzolution.integridad.app.domain.Credits;
 import com.mrzolution.integridad.app.domain.DetailRetentionClient;
 import com.mrzolution.integridad.app.domain.Payment;
 import com.mrzolution.integridad.app.domain.RetentionClient;
 import com.mrzolution.integridad.app.exceptions.BadRequestException;
+import com.mrzolution.integridad.app.repositories.BillRepository;
 import com.mrzolution.integridad.app.repositories.CreditsRepository;
 import com.mrzolution.integridad.app.repositories.DetailRetentionClientChildRepository;
 import com.mrzolution.integridad.app.repositories.DetailRetentionClientRepository;
 import com.mrzolution.integridad.app.repositories.PaymentRepository;
 import com.mrzolution.integridad.app.repositories.RetentionClientRepository;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -36,12 +41,16 @@ public class RetentionClientServices {
     PaymentRepository paymentRepository;
     @Autowired
     CreditsRepository creditsRepository;
+    @Autowired
+    BillRepository billRepository;
     
     private double sum = 0.0;
+    private double sumado = 0.0;
     private String document = "";
     private double valor = 0.0;
     private String doc = "";
     private int numC = 1;
+    private String saldo = "";
  
     public RetentionClient getById(UUID id) {
 	log.info("RetentionClientServices getById: {}", id);
@@ -54,9 +63,14 @@ public class RetentionClientServices {
 	populateChildren(retrieved);
         return retrieved;
     };
-      
+    
     public RetentionClient create(RetentionClient retentionClient) throws BadRequestException{   
         log.info("RetentionClientServices preparing for create new Retention");
+        Iterable<RetentionClient> retenCli = retentionClientRepository.findByDocumentNumberAndBillId(retentionClient.getDocumentNumber(), retentionClient.getBill().getId());
+        if (Iterables.size(retenCli) > 0){
+            throw new BadRequestException("Retención Ya Existe");
+        }
+        
 	List<DetailRetentionClient> details = retentionClient.getDetailRetentionClient();
         document = retentionClient.getBill().getId().toString();
         retentionClient.setDocumentDate(new Date().getTime());
@@ -73,14 +87,14 @@ public class RetentionClientServices {
                                   
         log.info("RetentionClientServices Retention created id: {}", saved.getId());
         saved.setDetailRetentionClient(details);
-        updateCreditsAndPayment(retentionClient, document);
+        updateBillCreditsAndPayment(retentionClient, document);
         sum = 0.0;
         valor = 0.0;
         return saved;
     };
     
     @Async
-    public void updateCreditsAndPayment(RetentionClient retentionClient, String document){
+    public void updateBillCreditsAndPayment(RetentionClient retentionClient, String document){
         Credits docNumber = creditsRepository.findByBillId(document);
         doc = docNumber.getBillId();
         if (doc.equals(document) && docNumber.getPayNumber() == numC){
@@ -102,7 +116,19 @@ public class RetentionClientServices {
             specialPayment.setValorNotac(0.0);
             paymentRepository.save(specialPayment);
         }
-        log.info("RetentionClientServices Credits and Payment updated");
+        Bill bill = billRepository.findOne(retentionClient.getBill().getId());
+        String nbillId = bill.getId().toString();
+        if (nbillId.equals(document)){
+            saldo = bill.getSaldo();
+            valor = Double.parseDouble(saldo);
+            sumado = valor - sum;
+            BigDecimal vsumado = new BigDecimal(sumado);
+            vsumado = vsumado.setScale(2, BigDecimal.ROUND_HALF_UP);
+            saldo = String.valueOf(vsumado);
+            bill.setSaldo(saldo);
+            billRepository.save(bill);
+        }
+        log.info("RetentionClientServices Bill, Credits and Payment UPDATED");
     };
     
     private void populateChildren(RetentionClient retentionClient) {

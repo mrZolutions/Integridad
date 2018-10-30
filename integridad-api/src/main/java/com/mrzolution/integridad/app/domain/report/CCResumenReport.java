@@ -18,10 +18,8 @@ public class CCResumenReport {
     private double valorAbono;
     private double valorNotac;
     private double valorReten;
-    private double valorSubTotal;
-    private double valorTotal;
     
-    public CCResumenReport(String idClient, String nameClient, String billNumber, double billTotal, String tipTransac, String formPago, String fechPago, double valorAbono, double valorReten, double valorSubTotal, double valorTotal){
+    public CCResumenReport(String idClient, String nameClient, String billNumber, double billTotal, String tipTransac, String formPago, String fechPago, double valorAbono, double valorReten, double valorNotac){
         this.idClient = idClient;
         this.nameClient = nameClient;
         this.billNumber = billNumber;
@@ -31,7 +29,6 @@ public class CCResumenReport {
         this.fechPago = fechPago;
         this.valorAbono = valorAbono;
         this.valorReten = valorReten;
-        this.valorSubTotal = valorSubTotal;
-        this.valorTotal = valorTotal;
+        this.valorNotac = valorNotac;
     };
 }

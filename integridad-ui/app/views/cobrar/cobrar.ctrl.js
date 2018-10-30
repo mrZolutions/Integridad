@@ -185,10 +185,6 @@ angular.module('integridadUiApp')
       vm.loading = false;
     };
 
-    function validarMontoAbono(){
-      
-    };
-
     vm.pAbono = function(payment){
       vm.loading = true;
       vm.valorReten = 0.00;

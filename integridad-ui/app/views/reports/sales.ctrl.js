@@ -232,8 +232,7 @@ angular.module('integridadUiApp')
             FECHA_PAGO: ccresumenreport.fechPago,
             VALOR_ABONO: ccresumenreport.valorAbono,
             VALOR_RETEN: ccresumenreport.valorReten,
-            SUB_TOTAL: ccresumenreport.valorSubTotal,
-            VALOR_TOTAL: ccresumenreport.valorTotal
+            VALOR_NC: ccresumenreport.valorNotac
           };
 
           dataReport.push(data);

@@ -45,6 +45,7 @@ public class Bill {
     private String otir;
     private double discount;
     private int discountPercentage;
+    private String saldo;
 
     private String claveDeAcceso;
     private String idSri;

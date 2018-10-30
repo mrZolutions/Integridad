@@ -153,14 +153,20 @@ public class BillServices {
             details.forEach(detail-> {
                 detail.setBill(saved);
                 detailRepository.save(detail);
-                //if(!detail.getProduct().getProductType().getCode().equals("SER") && typeDocument == 1){
-                //    ProductBySubsidiary ps =productBySubsidiairyRepository.findBySubsidiaryIdAndProductId(bill.getSubsidiary().getId(), detail.getProduct().getId());
-                //    ps.setQuantity(ps.getQuantity() - detail.getQuantity());
-                //    productBySubsidiairyRepository.save(ps);
-                //}
                 detail.setBill(null);
             });
             log.info("BillServices saveDetailsBill FINISHED");
+        };
+        
+        @Async
+        public void updateProductBySubsidiary(Bill bill, int typeDocument, List<Detail> details){
+            details.forEach(detail-> {
+                if(!detail.getProduct().getProductType().getCode().equals("SER") && typeDocument == 1){
+                    ProductBySubsidiary ps = productBySubsidiairyRepository.findBySubsidiaryIdAndProductId(bill.getSubsidiary().getId(), detail.getProduct().getId());
+                    ps.setQuantity(ps.getQuantity() - detail.getQuantity());
+                    productBySubsidiairyRepository.save(ps);
+                }
+            });
         };
         
         @Async
@@ -200,13 +206,14 @@ public class BillServices {
                     saveDetailsBill(saved, details);
                     savePagosAndCreditsBill(saved, pagos);
 		} else {
-			Cashier cashier = cashierRepository.findOne(bill.getUserIntegridad().getCashier().getId());
-			cashier.setQuotationNumberSeq(cashier.getQuotationNumberSeq() + 1);
-			cashierRepository.save(cashier);
-                        saveDetailsQuotation(saved, details);
+                    Cashier cashier = cashierRepository.findOne(bill.getUserIntegridad().getCashier().getId());
+                    cashier.setQuotationNumberSeq(cashier.getQuotationNumberSeq() + 1);
+                    cashierRepository.save(cashier);
+                    saveDetailsQuotation(saved, details);
                 }
 		log.info("BillServices created id: {}", saved.getId());
 		saved.setDetails(details);
+                //updateProductBySubsidiary(bill, typeDocument, details);
 		return saved;
 	};
 
