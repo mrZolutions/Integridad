@@ -8,29 +8,20 @@
  * Controller of the menu
  */
 angular.module('integridadUiApp')
-  .controller('DebsToPayCtrl', function (_, $localStorage, debstopayService,providerService, utilStringService, dateService, utilSeqService, validatorService) {
+  .controller('DebsToPayCtrl', function (_, $localStorage, providerService, utilStringService, dateService, 
+                                        cuentaContableService, validatorService) {
     var vm = this;
     vm.error = undefined;
     vm.success = undefined;
 
     vm.loading = false;
-    vm.userData = $localStorage.user;
     vm.provider = undefined;
-    vm.providerToUse = undefined;
+    vm.debsToPay = undefined;
+    vm.providerSelected = undefined;
     vm.providerList = undefined;
     vm.providerType = [
       'PROVEEDORES LOCALES O NACIONALES 01',
       'PROVEEDORES DEL EXTERIOR 02',
-    ];
-
-    vm.ctasctables = [
-      {code: '1.01.05.01.01', desc: 'IVA EN COMPRAS', tipo:'DEBITO (D)', name: 'DEFINIDA PARA TODAS LAS COMPRAS'},
-      {code: '2.01.03.01.01', desc: 'PROVEEDORES LOCALES', tipo:'CREDITO (C)', name: 'DEFINIDA PARA TODOS LOS PROVEEDORES'},
-      {code: '6.1.03.03', desc: 'SUMINISTROS MATERIALES', tipo:'DEBITO (D)', name: 'COMPRAS PARA INVENTARIO'},
-      {code: '6.2.04.04', desc: 'SUMINISTROS DE OFICINA QUITO', tipo:'DEBITO (D)', name: 'SUMINISTROS DE PAPELERIA-COMPUTACION- OTROS'},
-      {code: '6.1.03.17', desc: 'SERVICIOS BASICOS COCA', tipo:'DEBITO (D)', name: 'PAGOS BASE COCA - AGUA - LUZ- TELEFONO - INTERNET - OTROS'},
-      {code: '6.1.03.18', desc: 'MATERIALES PARA OBRAS', tipo:'DEBITO (D)', name: 'COMPRA DE MATERIALES Y HERRAMIENTAS PARA TRABAJOS- INCLUYE FERRETERIA'},
-      {code: '6.03.100.3', desc: 'COMPRAS DE INVENTARIOS', tipo:'DEBITO (D)', name: 'RESORTES - VALVULAS - ACOPLES'}
     ];
 
     vm.voucherType = [
@@ -115,115 +106,28 @@ angular.module('integridadUiApp')
     function _activate(){
       vm.today = new Date();
       vm.provider = undefined;
-      vm.providerToUse = undefined;
+      vm.providerSelected= undefined;
+      vm.debsToPay = undefined;
       vm.providerList = [];
-      providerService.getLazyByUserClientId(vm.userData.subsidiary.userClient.id).then(function(response){
+      var usrCliId = $localStorage.user.subsidiary.userClient.id
+      providerService.getLazyByUserClientId(usrCliId).then(function(response){
         vm.providerList = response;
         vm.loading = false;
       }).catch(function (error) {
         vm.loading = false;
         vm.error = error.data;
       });
-    };
-
-    function create(){
-      providerService.create(vm.provider).then(function (response) {
-        _activate();
-        vm.error = undefined;
-        vm.success = 'Registro realizado con exito';
-      }).catch(function (error) {
-        vm.loading = false;
-        vm.error = error.data;
+      cuentaContableService.getAll().then(function(response){
+        vm.cuentaContableList = response;
       });
     };
 
-    function update(){
-      providerService.update(vm.provider).then(function (response) {
-        if(vm.provider.active){
-          vm.success = 'Registro actualizado con exito';
-        } else {
-          vm.success = 'Registro eliminado con exito';
-        }
-        _activate();
-        vm.error = undefined;
-      }).catch(function (error) {
-        vm.loading = false;
-        vm.error = error.data;
-      });
+    vm.providerConsult = function(){
+      vm.loading = true;
+
     };
 
-    vm.register = function(){
-      var idValid = true;
-      if(vm.provider.ruc.length > 10){
-        idValid = validatorService.isRucValid(vm.provider.ruc);
-      } else {
-        idValid = validatorService.isCedulaValid(vm.provider.ruc);
-      }
-      if(!idValid){
-        vm.error = 'IDENTIFICACION INVALIDA';
-      } else if(vm.provider.id){
-        update();
-      } else {
-        create();
-      }
-    };
-
-    vm.providerCreate = function(){
-      vm.error = undefined;
-      vm.success = undefined;
-      vm.provider = {
-        codeIntegridad: vm.providerList.length + 1,
-        active: true,
-        userClient: vm.userData.subsidiary.userClient
-      };
-    };
-
-    vm.cancel = function(){
-      vm.provider = undefined;
-    };
-
-    vm.disableSave = function(){
-      if(vm.provider){
-        return utilStringService.isAnyInArrayStringEmpty([
-          vm.provider.codeIntegridad,
-          vm.provider.ruc,
-          vm.provider.name,
-          vm.provider.razonSocial,
-          vm.provider.country,
-          vm.provider.city,
-          vm.provider.address1,
-          vm.provider.contact,
-          vm.provider.providerType
-        ]);
-      }
-    };
-
-    vm.getTaxesTable = function(){
-      vm.taxesTable = undefined;
-      if(vm.debsToPay.typeTaxes === '1'){
-        vm.taxesTable = vm.ctasctables;
-      };
-    };
-
-    vm.selecTaxes =function(taxes){
-      vm.baseImponibleItem = undefined;
-      vm.item = undefined;
-      vm.item = {
-        codigo: parseInt(vm.debsToPay.typeTaxes),
-        name: taxes.name,
-        tipo_documento_sustento: vm.docType
-      };
-    };
-
-    vm.addItem = function() {
-      vm.item.valor_retenido = parseFloat(vm.item.valor_item).toFixed(2);
-      if(vm.indexEdit !== undefined){
-        vm.debsToPay.items.splice(vm.indexEdit, 1);
-        vm.indexEdit = undefined
-      };
-      vm.debsToPay.items.push(vm.item);
-      vm.item = undefined;
-      vm.taxesTable = undefined;
-    };
-
+    (function initController(){
+      _activate();
+    })();
 });

@@ -223,7 +223,6 @@ angular.module('integridadUiApp')
       } else if(vm.isProductReportList === '6'){
         _.each(vm.reportList, function(ccresumenreport){
           var data = {
-            IDENTIFICACION: ccresumenreport.idClient,
             NOMBRE_CLIENTE: ccresumenreport.nameClient,
             NUMERO_FACTURA: ccresumenreport.billNumber,
             COSTO_FACTURA: ccresumenreport.billTotal,

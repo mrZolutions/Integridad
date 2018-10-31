@@ -460,7 +460,6 @@ angular.module('integridadUiApp')
             };
             vm.retention.detailRetentions.push(detail);
           });
-
           eretentionService.create(vm.retention).then(function(respRetention){
             vm.retention = respRetention;
             vm.totalRetention = 0;
