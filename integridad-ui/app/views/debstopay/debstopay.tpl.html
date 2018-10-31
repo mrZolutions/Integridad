@@ -32,7 +32,7 @@
     </div>
 </div>
 
-<div ng-show="vm.provider === undefined && vm.debsToPay === undefined">
+<div ng-show="vm.provider === undefined && vm.providerSelected === undefined">
     <div class="row">
         <div class="form-group col-md-12">
             <input ng-model="searchText" class="form-control" placeholder="Buscar Proveedores">
@@ -56,10 +56,10 @@
             <tr ng-repeat="provider in vm.providerList | orderBy:'name' | filter:searchText">
                 <td>{{provider.codeIntegridad}}</td>
                 <td>{{provider.name}}</td>
-                <td>{{provider.rucType}}</td>
+                <td>{{provider.ruc_type}}</td>
                 <td>{{provider.ruc}}</td>
                 <td>
-                    <button type="button" class="btn btn-primary" ng-click="">
+                    <button type="button" class="btn btn-primary" ng-click="vm.saveBillOfProvider(provider)">
                             Factura
                     </button>
                 </td>
@@ -67,3 +67,198 @@
         </tbody>
     </table>
 </div>
+
+<!--INICIO MODULO DE CARGA DETALLES DE FACTURA PARA CTAS X PAGAR -->
+
+<div ng-show="vm.provider !== undefined && vm.debstopayCreated === undefined">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <b>Detalles de la Factura</b>
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label>C&oacute;digo Proveedor: </label>
+                    {{vm.debstopay.provider.codeIntegridad}}
+                </div>
+                <div class="form-group col-md-6">
+                    <label>RUC / CEDULA: </label>
+                    {{vm.debstopay.provider.ruc}}
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label>Nombre Comercial: </label>
+                    {{vm.debstopay.provider.name}}
+                </div>
+                <div class="form-group col-md-6">
+                    <label>Raz&oacute;n Social: </label>
+                    {{vm.debstopay.provider.razonSocial}}
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-12">
+                    <label>Direcci&oacute;n: </label>
+                    {{vm.debstopay.provider.address1}}
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label>Tipo de Comprobante de Compra: </label>
+                    <select ng-options="typeDoc.code as typeDoc.name for typeDoc in vm.documentType | orderBy:'name' track by typeDoc.code" ng-model="vm.docType1"
+                            class="form-control">
+                    </select>
+                </div> 
+                <div class="form-group col-md-6">
+                    <label>Tipo de C&oacute;digo Sustento: </label>
+                    <select ng-options="typeDocs.code as typeDocs.name for typeDocs in vm.supportType | orderBy:'name' track by typeDocs.code" ng-model="vm.docType"
+                            class="form-control">
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-4">
+                    <label>Fecha del Documento: </label>
+                    <div class="input-group date" id="pickerBillDateDocumentDebsToPay">
+                        <input type="text" class="form-control input-group-addon"/>
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"/></span>
+                    </div>
+                    <script>
+                        var defaultDate = new Date();
+                        $('#pickerBillDateDocumentDebsToPay').datetimepicker({format: "DD/MM/YY",});
+                    </script>
+                </div>
+                <div class="form-group col-md-2">
+                    <label>Ejercicio Fiscal: </label><br>
+                    <label>{{vm.debstopay.ejercicio}}</label>
+                </div>
+                <div class="form-group col-md-6">
+                    <label>N&uacute;mero de Documento: </label>
+                    <input type="text" ng-model="vm.debstopay.numero"
+                           class="form-control" maxlength="17">
+                </div>
+            </div> 
+            <div class="row">
+                <div class="form-group col-md-12">
+                    <label>N&uacute;mero de Autorizaci&oacute;n:</label>
+                    <input type="text" ng-model="vm.debstopay.autorizationNumber"
+                           class="form-control" maxlength="90">
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-4">
+                    <label>Valor Total a Pagar:</label>
+                    <input type="text" ng-model="vm.debstopay.total"
+                           class="form-control" maxlength="20">
+                </div>
+                <div class="form-group col-md-4">
+                    <label>Tipo de Impuesto: </label><br>
+                    <label class="radio-inline"><input type="radio" ng-model="vm.debstopay.typeTaxes" value="1" name="tipo"
+                           ng-disabled="vm.debstopay.total === undefined">IVA
+                    </label>
+                    <select ng-options="typeDoc.code as typeDoc.name for typeDoc in vm.ctasctables | orderBy:'name' track by typeDoc.code" ng-model="vm.docType2"
+                            class="form-control">
+                    </select>
+                </div>
+                <div class="form-group col-md-4">
+                    <label>Tipo de Compra:</label><br>
+                    <select ng-options="typeDoc.code as typeDoc.name for typeDoc in vm.purchaseType | orderBy:'name' track by typeDoc.code" ng-model="vm.docType3"
+                            class="form-control">
+                    </select>
+                </div>
+            </div>
+            <div class="row" ng-show="vm.tableTaxes !== undefined">
+                <div class="form-group col-md-12">
+                    <input ng-model="searchTextTaxes" class="form-control" placeholder="Buscar">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th> C&oacute;digo </th>
+                                <th> Nombre Generico </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-show="vm.tableTaxes == 0">
+                                <td colspan="2">
+                                    No hay Fuente Seleccionada
+                                </td>
+                            </tr>
+                            <tr dir-paginate="q in vm.tableTaxes | filter:searchTextTaxes | itemsPerPage: 10"  pagination-id="taxesPagination">
+                                <td>{{ q.codigo }}</td>
+                                <td>{{ q.name }}</td>
+                                <td>
+                                    <button type="button" class="btn btn-primary"
+                                            ng-click="vm.selecTaxes(q)" data-toggle="modal" data-target="#modalSelectedTaxes">
+                                            Seleccionar
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <dir-pagination-controls pagination-id="taxesPagination"></dir-pagination-controls>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-12">
+                    <table class="table table-striped">
+                        <thead>
+                          <tr>
+                              <th> CODIGO </th>
+                              <th> CUENTA ASOCIADA </th>
+                              <th> DESCRIPCION </th>
+                              <th> TIPO </th>
+                              <th> VALOR </th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-show="vm.retention.items == 0">
+                                <td colspan="5">
+                                  No hay Fuente Seleccionada
+                                </td>
+                            </tr>
+                            <tr ng-repeat="i in vm.debstopay.items" >
+                                <td>
+                                    <span ng-if="i.codigo === 1">IMPUESTOS EN IVA</span>
+                                </td>
+                                <td>{{i.cuenta_asociada}}</td>
+                                <td>{{i.descripcion}}</td>
+                                <td>{{i.tipo}}</td>
+                                <td>{{i.valor}}</td>
+                                <td>
+                                    <button type="button" class="btn btn-primary"
+                                            ng-click="vm.editItemTaxes($index)" data-toggle="modal" data-target="#modalBaseImponible">
+                                            Corregir
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td>DEBITO: {{i.debito}}</td>
+                                <td>CREDITO: {{i.credito}}</td>
+                                <td><b>SALDO: {{i.saldo}}</b></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-12">
+                    <button type="button" class="btn btn-primary" ng-click="vm.previsualisation()"
+                            data-toggle="modal" data-target="#modalPrevisualizacion"
+                            ng-disabled="vm.debstopay.items == 0">
+                            Previsualizar
+                    </button>
+                    <button type="button" class="btn btn-primary"
+                            ng-click="vm.getClaveAcceso()" ng-disabled="vm.debstopay.items == 0">
+                            Crear
+                    </button>
+                    <button type="button" class="btn btn-primary"
+                            ng-click="vm.debstopay = undefined">
+                            Cancelar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+  </div>

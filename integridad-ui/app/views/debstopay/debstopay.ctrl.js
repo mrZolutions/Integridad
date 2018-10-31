@@ -16,7 +16,9 @@ angular.module('integridadUiApp')
 
     vm.loading = false;
     vm.provider = undefined;
+    vm.providerId = undefined;
     vm.debsToPay = undefined;
+    vm.debstopayCreated = undefined;
     vm.providerSelected = undefined;
     vm.providerList = undefined;
     vm.providerType = [
@@ -106,7 +108,7 @@ angular.module('integridadUiApp')
     function _activate(){
       vm.today = new Date();
       vm.provider = undefined;
-      vm.providerSelected= undefined;
+      vm.providerSelected = undefined;
       vm.debsToPay = undefined;
       vm.providerList = [];
       var usrCliId = $localStorage.user.subsidiary.userClient.id
@@ -122,9 +124,10 @@ angular.module('integridadUiApp')
       });
     };
 
-    vm.providerConsult = function(){
+    vm.saveBillOfProvider = function(provider){
       vm.loading = true;
-
+      vm.providerId = provider.id;
+      vm.providerSelected = true;
     };
 
     (function initController(){
