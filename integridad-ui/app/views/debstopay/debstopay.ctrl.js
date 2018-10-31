@@ -127,6 +127,7 @@ angular.module('integridadUiApp')
     vm.saveBillOfProvider = function(provider){
       vm.loading = true;
       vm.providerId = provider.id;
+      vm.providerName = provider.name;
       vm.providerSelected = true;
     };
 
