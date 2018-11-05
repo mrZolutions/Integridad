@@ -3,6 +3,7 @@ package com.mrzolution.integridad.app.services;
  *
  * @author mrzolutions-daniel
  */
+import com.google.common.collect.Iterables;
 import com.mrzolution.integridad.app.domain.Credits;
 import com.mrzolution.integridad.app.domain.Payment;
 import com.mrzolution.integridad.app.domain.report.CreditsPayedReport;
@@ -62,6 +63,7 @@ public class CreditsServices {
                 Logger.getLogger(CreditsServices.class.getName()).log(Level.SEVERE, null, ex);
             } 
             
+            Double sumSubTotal = Double.valueOf(0);
             Double sumAbono = Double.valueOf(0);
             Double sumReten = Double.valueOf(0);
             Double sumNotac = Double.valueOf(0);

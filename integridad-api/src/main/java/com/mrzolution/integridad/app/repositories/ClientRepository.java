@@ -16,6 +16,9 @@ public interface ClientRepository extends CrudRepository<Client, UUID>{
 
 	Iterable<Client> findByActive(boolean active);
 
-	@Query("SELECT c FROM Client c WHERE c.userClient.id = (:id) and c.active = true")
+	@Query("SELECT c FROM Client c WHERE c.userClient.id = (:id) AND c.active = true")
 	Iterable<Client> findActivesByUserClientId(@Param("id") UUID id);
-}
+        
+        @Query("SELECT c FROM Client c WHERE c.identification = (:ident) AND c.id = (:id) AND c.active = true")
+        Iterable<Client> findByIdentificationAndId(@Param("ident") String ident, @Param("id") UUID id);
+} 
