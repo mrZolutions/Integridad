@@ -67,8 +67,8 @@ public class BillServices {
 		String data = mapper.writeValueAsString(requirement);
 
 		log.info("BillServices getDatil maper creado");
-		String response = httpCallerService.post(Constants.DATIL_LINK, data, userClient);
-		//String response = "OK";
+		//String response = httpCallerService.post(Constants.DATIL_LINK, data, userClient);
+		String response = "OK";
 		log.info("BillServices getDatil httpcall success");
 		return response;
 	};
@@ -130,11 +130,22 @@ public class BillServices {
 		return retrieved;
 	};
         
+        @Async
+        public void saveDetailsBill(Bill saved, List<Detail> details){
+            details.forEach(detail-> {
+                detail.setBill(saved);
+                detailRepository.save(detail);
+                detail.setBill(null);
+            });
+            log.info("BillServices saveDetailsBill FINISHED");
+        };
+        
         @Async void savePagosAndCreditsBill(Bill saved, List<Pago> pagos){
             pagos.forEach(pago -> {
 		List<Credits> creditsList = pago.getCredits();
 		pago.setCredits(null);
 		pago.setBill(saved);
+                //pago.setTotal(saved.getTotal());
 		Pago pagoSaved = pagoRepository.save(pago);		
                 if(creditsList != null){
                     creditsList.forEach(credit ->{
@@ -144,18 +155,7 @@ public class BillServices {
                     });
                 }    
             });
-            log.info("BillServices Pagos and Credits FINISHED");
-        };
-        
-        @Async
-        public void saveDetailsBill(Bill saved, List<Detail> details){
-            log.info("BillServices saveDetailsBill STARTING");
-            details.forEach(detail-> {
-                detail.setBill(saved);
-                detailRepository.save(detail);
-                detail.setBill(null);
-            });
-            log.info("BillServices saveDetailsBill FINISHED");
+            log.info("BillServices savePagosAndCreditsBill FINISHED");
         };
         
         @Async
@@ -167,6 +167,7 @@ public class BillServices {
                     productBySubsidiairyRepository.save(ps);
                 }
             });
+            log.info("BillServices updateProductBySubsidiary FINISHED");
         };
         
         @Async
@@ -203,8 +204,14 @@ public class BillServices {
                     Cashier cashier = cashierRepository.findOne(bill.getUserIntegridad().getCashier().getId());
                     cashier.setBillNumberSeq(cashier.getBillNumberSeq() + 1);
                     cashierRepository.save(cashier);
-                    saveDetailsBill(saved, details);
-                    savePagosAndCreditsBill(saved, pagos);
+                    if("2".equals(bill.getClient().getUserClient().getEspTemp())){
+                        saveDetailsBill(saved, details);
+                        savePagosAndCreditsBill(saved, pagos);
+                    } else {
+                        saveDetailsBill(saved, details);
+                        savePagosAndCreditsBill(saved, pagos);
+                        updateProductBySubsidiary(bill, typeDocument, details);
+                    }
 		} else {
                     Cashier cashier = cashierRepository.findOne(bill.getUserIntegridad().getCashier().getId());
                     cashier.setQuotationNumberSeq(cashier.getQuotationNumberSeq() + 1);

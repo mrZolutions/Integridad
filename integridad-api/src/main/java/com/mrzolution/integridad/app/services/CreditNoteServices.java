@@ -55,8 +55,8 @@ public class CreditNoteServices {
 		String data = mapper.writeValueAsString(requirement);
 
 		log.info("CreditNoteServices getDatil maper creado");
-		String response = httpCallerService.post(Constants.DATIL_CREDIT_NOTE_LINK, data, userClient);
-		//String response = "OK";
+		//String response = httpCallerService.post(Constants.DATIL_CREDIT_NOTE_LINK, data, userClient);
+		String response = "OK";
 		log.info("CreditNoteServices getDatil httpcall success");
 		return response;
 	};

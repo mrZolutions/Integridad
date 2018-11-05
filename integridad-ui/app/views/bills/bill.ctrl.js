@@ -50,6 +50,7 @@ angular.module('integridadUiApp')
 
     function _activate(){
       vm.error = undefined;
+      vm.aux = undefined;
       vm.newBill = true;
       vm.billed = false;
       vm.clientSelected = undefined;
@@ -166,8 +167,7 @@ angular.module('integridadUiApp')
       vm.bill.total = (parseFloat(vm.bill.baseTaxes)
         +  parseFloat(vm.bill.baseNoTaxes)
         +  parseFloat(vm.bill.iva)
-        +  parseFloat(vm.bill.ice)
-      ).toFixed(2);
+        +  parseFloat(vm.bill.ice)).toFixed(2);
       vm.bill.saldo = (vm.bill.total).toString();
     };
 
@@ -371,7 +371,7 @@ angular.module('integridadUiApp')
       _.each(vm.pagos, function(pago){
         payed +=(parseFloat(pago.total));
       });
-      vm.pagos
+      vm.pagos;
       if(vm.medio.medio === 'efectivo' || vm.medio.medio === 'dinero_electronico_ec'){
         vm.medio.payForm = '20 - OTROS CON UTILIZACION DEL SISTEMA FINANCIERO';
         vm.medio.statusPago = 'PAGADO';
@@ -438,14 +438,17 @@ angular.module('integridadUiApp')
     };
 
     vm.getTotalPago = function(){
-      vm.varPago=0;
+      vm.aux = 0;
+      vm.varPago = 0;
       if(vm.bill){
-        vm.getCambio=0;
+        vm.getCambio = 0;
         _.each(vm.pagos, function(med){
-          vm.varPago=parseFloat(parseFloat(vm.varPago)+parseFloat(med.total)).toFixed(2);
+          vm.varPago = parseFloat(parseFloat(vm.varPago) + parseFloat(med.total)).toFixed(2);
         });
         vm.getCambio = (vm.varPago - vm.bill.total).toFixed(2);
+        vm.aux = (vm.varPago - vm.getCambio).toFixed(2);
       };
+      vm.medio.total = vm.aux;
       return vm.varPago;
     };
 

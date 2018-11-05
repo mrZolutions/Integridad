@@ -193,16 +193,16 @@ angular.module('integridadUiApp')
             FECHA_VENCE: creditsreport.fechVence,
             DIAS_CREDIT: creditsreport.diasCredit,
             DIAS_VENCE: creditsreport.diasVencim,
-            VENTA: creditsreport.costo.toFixed(2),
-            ABONO: creditsreport.valorAbono.toFixed(2),
-            RETEN: creditsreport.valorReten.toFixed(2),
-            NOTA_CREDIT: creditsreport.valorNotac.toFixed(2),
-            SALDO: creditsreport.saldo.toFixed(2),
-            PLAZO_MENOR_30: creditsreport.pplazo,
-            PLAZO_31_60: creditsreport.splazo,
-            PLAZO_61_90: creditsreport.tplazo,
-            PLAZO_91_120: creditsreport.cplazo,
-            PLAZO_MAYOR_120: creditsreport.qplazo
+            VENTA: parseFloat(creditsreport.costo.toFixed(2)),
+            ABONO: parseFloat(creditsreport.valorAbono.toFixed(2)),
+            RETEN: parseFloat(creditsreport.valorReten.toFixed(2)),
+            NOTA_CREDIT: parseFloat(creditsreport.valorNotac.toFixed(2)),
+            SALDO: parseFloat(creditsreport.saldo.toFixed(2)),
+            PLAZO_MENOR_30: parseFloat(creditsreport.pplazo.toFixed(2)),
+            PLAZO_31_60: parseFloat(creditsreport.splazo.toFixed(2)),
+            PLAZO_61_90: parseFloat(creditsreport.tplazo.toFixed(2)),
+            PLAZO_91_120: parseFloat(creditsreport.cplazo.toFixed(2)),
+            PLAZO_MAYOR_120: parseFloat(creditsreport.qplazo.toFixed(2))
           };
 
           dataReport.push(data);
