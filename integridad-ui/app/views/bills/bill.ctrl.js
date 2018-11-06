@@ -375,6 +375,7 @@ angular.module('integridadUiApp')
       if(vm.medio.medio === 'efectivo' || vm.medio.medio === 'dinero_electronico_ec'){
         vm.medio.payForm = '20 - OTROS CON UTILIZACION DEL SISTEMA FINANCIERO';
         vm.medio.statusPago = 'PAGADO';
+        vm.medio.total = vm.aux;
         // CAMBIO SRI POR CONFIRMAR
         // vm.medio.payForm = '01 - SIN UTILIZACION DEL SISTEMA FINANCIERO';
       };
@@ -448,7 +449,6 @@ angular.module('integridadUiApp')
         vm.getCambio = (vm.varPago - vm.bill.total).toFixed(2);
         vm.aux = (vm.varPago - vm.getCambio).toFixed(2);
       };
-      vm.medio.total = vm.aux;
       return vm.varPago;
     };
 
@@ -609,8 +609,8 @@ angular.module('integridadUiApp')
         if(vm.bill.discountPercentage === undefined){
           vm.bill.discountPercentage = 0;
         };
-        //var obj = JSON.parse(resp.data);
-        var obj = {clave_acceso: '1234560', id:'id12345'};
+        var obj = JSON.parse(resp.data);
+        //var obj = {clave_acceso: '1234560', id:'id12345'};
         if(obj.errors === undefined){
           vm.bill.claveDeAcceso = obj.clave_acceso;
           vm.bill.idSri = obj.id;

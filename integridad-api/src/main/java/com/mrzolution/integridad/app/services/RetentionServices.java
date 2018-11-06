@@ -43,19 +43,15 @@ public class RetentionServices {
 
 	public String getDatil(com.mrzolution.integridad.app.domain.eretention.Retention requirement, UUID userClientId) throws Exception{
 		UserClient userClient = userClientRepository.findOne(userClientId);
-
 		if(userClient == null){
 			throw new BadRequestException("Empresa Invalida");
 		}
-
 		log.info("RetentionServices getDatil Empresa valida: {}", userClient.getName());
-
 		ObjectMapper mapper = new ObjectMapper();
 		String data = mapper.writeValueAsString(requirement);
-
 		log.info("RetentionServices getDatil maper creado");
-		//String response = httpCallerService.post(Constants.DATIL_RETENTION_LINK, data, userClient);
-		String response = "OK";
+		String response = httpCallerService.post(Constants.DATIL_RETENTION_LINK, data, userClient);
+		//String response = "OK";
 		log.info("RetentionServices getDatil httpcall success");
 		return response;
 	};
@@ -67,7 +63,6 @@ public class RetentionServices {
 			retention.setListsNull();
 			retention.setFatherListToNull();
 			});
-
 		return retentions;
 	};
 
@@ -90,7 +85,6 @@ public class RetentionServices {
 		} else {
 			log.info("RetentionServices retrieved id NULL: {}", id);
 		}
-
 		populateChildren(retrieved);
 		return retrieved;
 	};
@@ -101,26 +95,22 @@ public class RetentionServices {
 		if(details == null){
 			throw new BadRequestException("Debe tener Debe tener el codigo de contabilidaduna retencion por lo menos");
 		}
-
 		retention.setDateCreated(new Date().getTime());
 		retention.setActive(true);
 		retention.setDetailRetentions(null);
 		retention.setFatherListToNull();
 		retention.setListsNull();
 		Retention saved = retentionRepository.save(retention);
-
+                
 		Cashier cashier = cashierRepository.findOne(retention.getUserIntegridad().getCashier().getId());
 		cashier.setRetentionNumberSeq(cashier.getRetentionNumberSeq() + 1);
 		cashierRepository.save(cashier);
-
-
 		details.forEach(detail->{
 			detail.setRetention(saved);
 			detailRetentionRepository.save(detail);
 
 			detail.setRetention(null);
 		});
-
 		log.info("RetentionServices created id: {}", saved.getId());
 		saved.setDetailRetentions(details);
 		return saved;

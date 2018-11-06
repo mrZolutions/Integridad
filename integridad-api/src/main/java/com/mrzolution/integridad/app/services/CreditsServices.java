@@ -31,11 +31,11 @@ public class CreditsServices {
     PaymentRepository paymentRepository;
     
     private UUID clientId;
-    private Double sumTotal = Double.valueOf(0);
-    private Double sumTotalAbono = Double.valueOf(0);
-    private Double sumTotalReten = Double.valueOf(0);
-    private Double sumTotalNotac = Double.valueOf(0);
-    private Double sumTotalValor = Double.valueOf(0);
+    private double sumTotal = 0;
+    private double sumTotalAbono = 0;
+    private double sumTotalReten = 0;
+    private double sumTotalNotac = 0;
+    private double sumTotalValor = 0;
     
     public Iterable<Credits> getCreditsOfBillByBillId(UUID id){
         log.info("CreditsServices getCreditsOfBillByBillId: {}", id);
@@ -115,6 +115,11 @@ public class CreditsServices {
                                                          sumAbono, sumReten, sumNotac, credit.getValor(), priPlazo, segPlazo, terPlazo, cuaPlazo, quiPlazo);
             creditsReportList.add(saleReport);    
             });
+        sumTotal = 0;
+        sumTotalAbono = 0;
+        sumTotalReten = 0;
+        sumTotalNotac = 0;
+        sumTotalValor = 0;
         return creditsReportList;
     };
     
