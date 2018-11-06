@@ -72,14 +72,14 @@ angular
       if (user.cashier.subsidiary.userClient.testMode){
         req.ambiente = 1;
       };
-      if(user.cashier.subsidiary.userClient.espTemp == '1'){
+      if(user.cashier.subsidiary.userClient.espTemp === '1'){
         req.comprador.email = req.comprador.email + ', facturacionelecppe2018@gmail.com, facturacionppecoca@gmail.com';
         var infoAdicional = {
-          info1: 'ORDEN DE COMPRA: '+bill.ordenDecompra,
-          info2: 'OTI/OTIR: '+bill.otir
+          info1: 'ORDEN DE COMPRA: ' + bill.ordenDecompra,
+          info2: 'OTI/OTIR: ' + bill.otir
         };
         req.informacion_adicional = infoAdicional;
-      } else if(user.cashier.subsidiary.userClient.espTemp == '2'){
+      } else if(user.cashier.subsidiary.userClient.espTemp === '2'){
         req.comprador.email = req.comprador.email + ', ferrelozada@yahoo.com';
       };
 

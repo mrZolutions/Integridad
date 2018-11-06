@@ -229,9 +229,9 @@ angular.module('integridadUiApp')
             TIPO_TRANSAC: ccresumenreport.tipTransac,
             MODO_PAGO: ccresumenreport.formPago,
             FECHA_PAGO: ccresumenreport.fechPago,
-            VALOR_ABONO: ccresumenreport.valorAbono,
-            VALOR_RETEN: ccresumenreport.valorReten,
-            VALOR_NC: ccresumenreport.valorNotac
+            VALOR_ABONO: parseFloat(ccresumenreport.valorAbono.toFixed(2)),
+            VALOR_RETEN: parseFloat(ccresumenreport.valorReten.toFixed(2)),
+            VALOR_NC: parseFloat(ccresumenreport.valorNotac.toFixed(2))
           };
 
           dataReport.push(data);

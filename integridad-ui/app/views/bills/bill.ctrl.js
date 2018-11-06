@@ -564,32 +564,32 @@ angular.module('integridadUiApp')
         var costWithIva = (det.costEach*1.12).toFixed(2);
         var costWithIce = (det.costEach*1.10).toFixed(2);
         var impuestos = [];
-        var impuesto ={};
+        var impuesto = {};
         if(det.product.iva){
-          impuesto.base_imponible=(parseFloat(det.costEach)*parseFloat(det.quantity)).toFixed(2);
-          impuesto.valor=(parseFloat(costWithIva)*parseFloat(det.quantity)).toFixed(2);
-          impuesto.tarifa=12.0;
-          impuesto.codigo='2';
-          impuesto.codigo_porcentaje='2';
+          impuesto.base_imponible = (parseFloat(det.costEach)*parseFloat(det.quantity)).toFixed(2);
+          impuesto.valor = (parseFloat(costWithIva)*parseFloat(det.quantity)).toFixed(2);
+          impuesto.tarifa = 12.0;
+          impuesto.codigo = '2';
+          impuesto.codigo_porcentaje = '2';
           impuestos.push(impuesto);
         } else {
-          impuesto.base_imponible=(parseFloat(det.costEach)*parseFloat(det.quantity)).toFixed(2);
-          impuesto.valor=(parseFloat(det.costEach)*parseFloat(det.quantity)).toFixed(2);
-          impuesto.tarifa=0.0;
-          impuesto.codigo='0';
-          impuesto.codigo_porcentaje='0';
+          impuesto.base_imponible = (parseFloat(det.costEach)*parseFloat(det.quantity)).toFixed(2);
+          impuesto.valor = (parseFloat(det.costEach)*parseFloat(det.quantity)).toFixed(2);
+          impuesto.tarifa = 0.0;
+          impuesto.codigo = '0';
+          impuesto.codigo_porcentaje = '0';
           impuestos.push(impuesto);
         };
         if(det.product.ice){
-          impuesto.base_imponible=det.costEach;
-          impuesto.valor=costWithIce;
-          impuesto.tarifa=10.0;
-          impuesto.codigo='3';
-          impuesto.codigo_porcentaje='2';
+          impuesto.base_imponible = det.costEach;
+          impuesto.valor = costWithIce;
+          impuesto.tarifa = 10.0;
+          impuesto.codigo = '3';
+          impuesto.codigo_porcentaje = '2';
           impuestos.push(impuesto);
         };
         var item = {
-          "cantidad":det.quantity,
+          "cantidad": det.quantity,
           "codigo_principal": det.product.codeIntegridad,
           "codigo_auxiliar": det.product.barCode,
           "precio_unitario": det.costEach,
@@ -609,8 +609,8 @@ angular.module('integridadUiApp')
         if(vm.bill.discountPercentage === undefined){
           vm.bill.discountPercentage = 0;
         };
-        var obj = JSON.parse(resp.data);
-        //var obj = {clave_acceso: '1234560', id:'id12345'};
+        //var obj = JSON.parse(resp.data);
+        var obj = {clave_acceso: '1234560', id:'id12345'};
         if(obj.errors === undefined){
           vm.bill.claveDeAcceso = obj.clave_acceso;
           vm.bill.idSri = obj.id;
