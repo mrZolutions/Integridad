@@ -15,16 +15,13 @@ angular.module('integridadUiApp')
     vm.success = undefined;
 
     vm.loading = false;
+    vm.usrCliId = undefined;
     vm.provider = undefined;
     vm.providerId = undefined;
-    vm.debsToPay = undefined;
+    vm.cuentaContableList = undefined;
     vm.debstopayCreated = undefined;
     vm.providerSelected = undefined;
     vm.providerList = undefined;
-    vm.providerType = [
-      'PROVEEDORES LOCALES O NACIONALES 01',
-      'PROVEEDORES DEL EXTERIOR 02',
-    ];
 
     vm.voucherType = [
       {code: '01', name: 'Factura'},
@@ -109,10 +106,9 @@ angular.module('integridadUiApp')
       vm.today = new Date();
       vm.provider = undefined;
       vm.providerSelected = undefined;
-      vm.debsToPay = undefined;
       vm.providerList = [];
-      var usrCliId = $localStorage.user.subsidiary.userClient.id
-      providerService.getLazyByUserClientId(usrCliId).then(function(response){
+      vm.usrCliId = $localStorage.user.subsidiary.userClient.id
+      providerService.getLazyByUserClientId(vm.usrCliId).then(function(response){
         vm.providerList = response;
         vm.loading = false;
       }).catch(function (error) {
@@ -124,11 +120,28 @@ angular.module('integridadUiApp')
       });
     };
 
-    vm.saveBillOfProvider = function(provider){
+    vm.selectProvider = function(provider){
       vm.loading = true;
+      var today = new Date();
+      vm.providerSelected = true;
+      vm.debstopayCreated = undefined;
       vm.providerId = provider.id;
       vm.providerName = provider.name;
-      vm.providerSelected = true;
+      vm.loading = false;
+      vm.debstopay = {
+        provider: provider,
+        ejercicio: ('0' + (today.getMonth() + 1)).slice(-2) + '/' +today.getFullYear(),
+        userClientId: vm.usrCliId
+      };
+      $('#pickerBillDateDocumentDebsToPay').data("DateTimePicker").date(today);
+      $('#pickerBillDateDocumentDebsToPay').on("dp.change", function (data) {
+        vm.debstopay.ejercicio = ('0' + ($('#pickerBillDateDocumentDebsToPay').data("DateTimePicker").date().toDate().getMonth() + 1)).slice(-2) + '/' +$('#pickerBillDateDocumentDebsToPay').data("DateTimePicker").date().toDate().getFullYear();
+      });
+    };
+
+    vm.createDetailFactura = function(prov){
+      
+      vm.debstopayCreated = false;
     };
 
     (function initController(){
