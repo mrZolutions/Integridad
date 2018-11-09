@@ -78,47 +78,47 @@
         <div class="panel-body">
             <div class="row">
                 <div class="form-group col-md-6">
-                    <label>C&oacute;digo Proveedor: </label>
+                    <label>C&oacute;digo Proveedor:</label>
                     {{vm.debstopay.provider.codeIntegridad}}
                 </div>
                 <div class="form-group col-md-6">
-                    <label>RUC / CEDULA: </label>
+                    <label>RUC / CEDULA:</label>
                     {{vm.debstopay.provider.ruc}}
                 </div>
             </div>
             <div class="row">
                 <div class="form-group col-md-6">
-                    <label>Nombre Comercial: </label>
+                    <label>Nombre Comercial:</label>
                     {{vm.debstopay.provider.name}}
                 </div>
                 <div class="form-group col-md-6">
-                    <label>Raz&oacute;n Social: </label>
+                    <label>Raz&oacute;n Social:</label>
                     {{vm.debstopay.provider.razonSocial}}
                 </div>
             </div>
             <div class="row">
                 <div class="form-group col-md-12">
-                    <label>Direcci&oacute;n: </label>
-                    {{vm.debstopay.provider.address1}}
+                    <label>Tipo de Proveedor:</label>
+                    {{vm.debstopay.provider.providerType}}
                 </div>
             </div>
             <div class="row">
                 <div class="form-group col-md-6">
-                    <label>Tipo de Comprobante de Compra: </label>
+                    <label>Tipo de Comprobante de Compra:</label>
                     <select ng-options="typeDoc.code as typeDoc.name for typeDoc in vm.voucherType | orderBy:'name' track by typeDoc.code" ng-model="vm.docType1"
                             class="form-control">
                     </select>
                 </div> 
                 <div class="form-group col-md-6">
-                    <label>Tipo de C&oacute;digo Sustento: </label>
+                    <label>Tipo de C&oacute;digo Sustento:</label>
                     <select ng-options="typeDocs.code as typeDocs.name for typeDocs in vm.supportType | orderBy:'name' track by typeDocs.code" ng-model="vm.docType"
                             class="form-control">
                     </select>
                 </div>
             </div>
             <div class="row">
-                <div class="form-group col-md-4">
-                    <label>Fecha del Documento: </label>
+                <div class="form-group col-md-3">
+                    <label>Fecha del Documento:</label>
                     <div class="input-group date" id="pickerBillDateDocumentDebsToPay">
                         <input type="text" class="form-control input-group-addon"/>
                         <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"/></span>
@@ -129,19 +129,27 @@
                     </script>
                 </div>
                 <div class="form-group col-md-3">
-                    <label>Ejercicio Fiscal: </label><br>
-                    <label>{{vm.debstopay.ejercicio}}</label>
+                    <label>Ejercicio Fiscal:</label><br/>
+                    <label>{{vm.ejercicio}}</label>
                 </div>
-                <div class="form-group col-md-5">
-                    <label>N&uacute;mero de Factura: </label>
-                    <input type="text" ng-model="vm.debstopay.numero"
-                           class="form-control" maxlength="17">
+                <div class="form-group col-md-6">
+                    <label>N&uacute;mero de Factura:</label><br/>
+                    <div class="form-group col-md-3">
+                        <input type="text" ng-model="vm.debstopay.cashierNumber" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+                               class="form-control" maxlength="3">
+                    </div>
+                    <div class="form-group col-md-3">
+                        <input type="text" ng-model="vm.debstopay.sequentialNumber" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+                               class="form-control" maxlength="3">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <input type="text" ng-model="vm.debstopay.billNumber" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+                               class="form-control" maxlength="9">
+                    </div>
                 </div>
-            </div> 
-            <div class="row">
                 <div class="form-group col-md-12">
-                    <label>N&uacute;mero de Autorizaci&oacute;n:</label>
-                    <input type="text" ng-model="vm.debstopay.autorizationNumber"
+                    <label>N&uacute;mero de Autorizaci&oacute;n:</label><br/>
+                    <input type="text" ng-model="vm.debstopay.autorizationNumber" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
                            class="form-control" maxlength="90">
                 </div>
             </div>
@@ -152,36 +160,35 @@
                            class="form-control" maxlength="20">
                 </div>
                 <div class="form-group col-md-4">
-                    <label>Impuesto: </label><br>
+                    <label>Impuesto:</label><br>
                     <label class="radio-inline"><input type="radio" ng-model="vm.debstopay.typeTaxes" value="1" name="tipo"
-                           ng-disabled="vm.debstopay.total === undefined">IVA
-                    </label>
-                </div>
-                <div class="form-group col-md-4">
-                    <label>Tipo de Compra:</label><br>
-                    <select ng-options="typeDoc.code as typeDoc.name for typeDoc in vm.purchaseType | orderBy:'name' track by typeDoc.code" ng-model="vm.docType3"
-                            class="form-control">
-                    </select>
+                           ng-change="vm.getPercentageTable()">IVA</label>
                 </div>
             </div>
-            <div class="row" ng-show="vm.tableTaxes !== undefined">
+            <div class="row" ng-show="vm.cuentaContableList !== undefined">
                 <div class="form-group col-md-12">
                     <input ng-model="searchTextTaxes" class="form-control" placeholder="Buscar">
                     <table class="table table-striped">
                         <thead>
                             <tr>
+                                <th>Tipo Compra</th>
                                 <th>C&oacute;digo</th>
-                                <th>Nombre Generico</th>
+                                <th>Descripci&oacute;n</th>
+                                <th>Tipo de Cuenta</th>
+                                <th>Nombre G&eacute;nerico</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr ng-show="vm.tableTaxes == 0">
+                            <tr ng-show="vm.cuentaContableList == 0">
                                 <td colspan="2">
                                     No hay Fuente Seleccionada
                                 </td>
                             </tr>
-                            <tr dir-paginate="q in vm.tableTaxes | filter:searchTextTaxes | itemsPerPage: 10"  pagination-id="taxesPagination">
-                                <td>{{q.codigo}}</td>
+                            <tr dir-paginate="q in vm.cuentaContableList | filter:searchTextTaxes | itemsPerPage: 10"  pagination-id="taxesPagination">
+                                <td>{{q.type}}</td>
+                                <td>{{q.code}}</td>
+                                <td>{{q.description}}</td>
+                                <td>{{q.accountType}}</td>
                                 <td>{{q.name}}</td>
                                 <td>
                                     <button type="button" class="btn btn-primary"
@@ -258,4 +265,203 @@
             </div>
         </div>
     </div>
-  </div>
+</div>
+
+<div id="#modalSelectedTaxes" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" ng-click="vm.impuesto=undefined">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-3">
+                        C&oacute;digo: <b>{{vm.item.code}}</b>
+                    </div>
+                    <div class="col-md-3">
+                        Nombre: <b>{{vm.item.name}}</b>
+                    </div>
+                    <div class="col-md-3">
+                        <label>Valor</label>
+                        <input type="text" onkeypress="return ((event.which >= 46 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+                               class="form-control" maxlength="9" ng-model="vm.item.base_imponible" placeholder="{{vm.creditValueSubtotal}}"/>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="vm.addItem()">
+                        Aceptar
+                </button>
+                <button type="button" class="btn btn-primary"  data-dismiss="modal"
+                        ng-click="vm.item = undefined; vm.indexEdit = undefined;">
+                        Cancelar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="modalAddPago" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" ng-click="vm.medio={}">&times;</button>
+                <h4 class="modal-title">Agregar Pago</h4>
+                TOTAL: {{vm.bill.total}}
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="form-group col-md-6">
+                        <b>TIPO DE PAGO: </b>
+                        <select ng-options="med.code as med.name for med in vm.medList  | orderBy:'name'  track by med.code"
+                                ng-model="vm.medio.medio" class="form-control" ng-change="vm.loadMedio()">
+                        </select>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <b>FORMA DE PAGO: </b><br />
+                        {{vm.medio.payForm}}
+                    </div>
+                </div>
+                <div class="row" ng-show="vm.medio.medio === 'cheque' || vm.medio.medio === 'cheque_posfechado'">
+                    <div class="form-group col-md-4">
+                        <b>BANCO: </b>
+                        <input type="text" ng-model="vm.medio.chequeBank" class="form-control" maxlength="9">
+                    </div>
+                    <div class="form-group col-md-4">
+                        <b>CUENTA: </b>
+                        <input type="text" ng-model="vm.medio.chequeAccount" class="form-control" maxlength="9">
+                    </div>
+                    <div class="form-group col-md-4">
+                        <b>NUMERO DE CHEQUE: </b>
+                        <input type="text"
+                               ng-model="vm.medio.chequeNumber" class="form-control" maxlength="9">
+                    </div>
+                </div>
+                <div class="row" ng-show="vm.medio.medio === 'cheque_posfechado'">
+                    <div class="form-group col-md-6">
+                        <b>DIAS PLAZO: </b>
+                        <input type="text" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+                               ng-model="vm.medio.chequeDiasPlazo" class="form-control" maxlength="9" ng-change="vm.getFechaCobro()">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <b>FECHA COBRO: </b><br/>
+                        {{vm.medio.fechaCobro | date :  "dd/MM/yyyy"}}
+                    </div>
+                </div>
+                <div class="row" ng-show="vm.medio.medio === 'credito'">
+                    <div class="form-group col-md-4">
+                        <b>NUMERO DE PAGOS: </b>
+                        <input type="text" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+                               ng-model="vm.medio.creditoNumeroPagos" class="form-control" maxlength="2">
+                    </div>
+                    <div class="form-group col-md-4">
+                        <b>INTERVALOS DE DIAS: </b><br/>
+                        <input type="text" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+                               ng-model="vm.medio.creditoIntervalos" class="form-control" maxlength="3">
+                    </div>
+                    <div class="form-group col-md-4">
+                        <br/>
+                        <button type="button" class="btn btn-primary" ng-click="vm.loadCredit()"
+                                ng-disabled="vm.medio.creditoIntervalos === undefinded || vm.medio.creditoNumeroPagos === undefined">
+                                Calcular
+                        </button>
+                    </div>
+                </div>
+                <div class="row" ng-show="vm.medio.medio === 'credito'">
+                    <div class="form-group col-md-12">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th> PAGO </th>
+                                    <th> DIAS PLAZO </th>
+                                    <th> FECHAS </th>
+                                    <th> VALOR </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="cred in vm.medio.credits">
+                                    <td>{{ cred.payNumber }}</td>
+                                    <td>{{ cred.diasPlazo }}</td>
+                                    <td>{{ cred.fecha | date:'dd/MM/yyyy'}}</td>
+                                    <td>{{ cred.valor }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="row" ng-show="vm.medio.medio === 'tarjeta_credito' || vm.medio.medio === 'tarjeta_debito'">
+                    <div class="form-group col-md-6">
+                        <b>TARJETA: </b>
+                        <select ng-options="card as card for card in vm.creditCardList"
+                                ng-model="vm.medio.cardBrand" class="form-control">
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-6" ng-if="vm.medio.medio === 'efectivo' || vm.medio.medio === 'dinero_electronico_ec'">
+                        <b>VALOR: </b>
+                        <input type="text" onkeypress="return ((event.which >= 46 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+                               ng-model="vm.medio.total" class="form-control" maxlength="9">
+                    </div>
+                    <div class="form-group col-md-6" ng-if="vm.medio.medio !== 'efectivo' && vm.medio.medio !== 'dinero_electronico_ec'">
+                        <b>VALOR: </b><br />
+                        ${{vm.medio.total}}
+                    </div>
+                    <div class="form-group col-md-4">
+                        <br/>
+                        <button type="button" class="btn btn-primary" ng-click="vm.addPago()"
+                                ng-disabled="vm.medio.medio === undefinded || vm.medio.total === undefined">
+                                Agregar
+                        </button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Medio</th>
+                                    <th>Valor</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-show="vm.pagos == 0">
+                                    <td colspan="4">
+                                        No hay pagos ingresados
+                                    </td>
+                                </tr>
+                                <tr ng-repeat="pago in vm.pagos">
+                                    <td>{{ pago.medio }}</td>
+                                    <td>{{ pago.total }}</td>
+                                    <td>
+                                        <button type="button" class="btn btn-primary" ng-click="vm.removePago($index)">
+                                                Eliminar
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><b>TOTAL</b></td>
+                                    <td>{{vm.getTotalPago()}}</td>
+                                    <td>
+                                        Vuelto: {{vm.getCambio}}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal"
+                        ng-disabled="vm.pagos.length === 0 || vm.getCambio < 0">
+                        Cerrar
+                </button>
+                <button type="button" class="btn btn-primary" ng-click="vm.getClaveAcceso()"
+                        ng-disabled="(vm.pagos.length === 0 || vm.getCambio < 0) || vm.billed" print-remove>
+                        Facturar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

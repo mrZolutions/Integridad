@@ -74,18 +74,30 @@
 <div class="panel panel-default" ng-show="vm.cuentaSelected !== undefined">
   <div class="panel-body">
     <div class="row">
-      <div class="form-group col-md-6">
-        <label>Code *: </label>
+      <div class="form-group col-md-3">
+        <label>Tipo:</label>
+        <select ng-options="tipe.code as tipe.name for tipe in [{code: 'B' ,name:'BIENES'}, {code: 'S', name:'SERVICIOS'}, {code: 'MP', name:'MATERIA PRIMA'}, {code: 'CM', name:'CONSUMIBLES'}, {code: 'RG', name:'REEMBOLSO GASTOS'}, {code: 'TAE', name:'TICKETS AEREOS'}]"
+                ng-model="vm.cuentaSelected.type" class="form-control">
+        </select>
+      </div>
+      <div class="form-group col-md-3">
+        <label>C&oacute;digo:</label>
         <input type="text" ng-model="vm.cuentaSelected.code" class="form-control">
       </div>
       <div class="form-group col-md-6">
-        <label>Descripci&oacute;n *: </label>
+        <label>Descripci&oacute;n:</label>
         <input type="text" ng-model="vm.cuentaSelected.description" class="form-control">
       </div>
     </div>
     <div class="row">
-      <div class="form-group col-md-6">
-        <label>Nombre Gen&eacute;rico *: </label>
+      <div class="form-group col-md-4">
+        <label>Tipo de Cuenta:</label>
+        <select ng-options="tip.name as tip.code for tip in [{code: 'DEBITO (D)' ,name:'DEBITO (D)'}, {code: 'CREDITO (C)', name:'CREDITO (C)'}]"
+                ng-model="vm.cuentaSelected.accountType" class="form-control">
+        </select>
+      </div>
+      <div class="form-group col-md-8">
+        <label>Nombre Gen&eacute;rico:</label>
         <input type="text" ng-model="vm.cuentaSelected.name" class="form-control">
       </div>
     </div>

@@ -168,14 +168,7 @@ angular.module('integridadUiApp')
       {name:'Pago al exterior - Navegación Marítima y/o aérea' ,percentage:22, codigo: '503', codigoDatil:'503'},
       {name:'Pago al exterior- Dividendos distribuidos a personas naturales' ,percentage:0, codigo: '504', codigoDatil:'504'}
     ];
-    // vm.ivaTipo = [
-    //   {name:'RETENCION DEL 10%' ,percentage:10, codigo:'721'},
-    //   {name:'RETENCION DEL 20%' ,percentage:20, codigo:'723'},
-    //   {name:'RETENCION DEL 30%' ,percentage:30, codigo:'725'},
-    //   {name:'RETENCION DEL 50%' ,percentage:50, codigo:'727'},
-    //   {name:'RETENCION DEL 70%' ,percentage:70, codigo:'729'},
-    //   {name:'RETENCION DEL 100%' ,percentage:100, codigo:'731'}
-    // ];
+   
     vm.ivaTipo = [
       {name:'RETENCION DEL 10%' ,percentage:10, codigo:'721', codigoDatil:'9'},
       {name:'RETENCION DEL 20%' ,percentage:20, codigo:'723', codigoDatil:'10'},

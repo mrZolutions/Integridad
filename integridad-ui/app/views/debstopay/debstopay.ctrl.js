@@ -115,9 +115,6 @@ angular.module('integridadUiApp')
         vm.loading = false;
         vm.error = error.data;
       });
-      cuentaContableService.getAll().then(function(response){
-        vm.cuentaContableList = response;
-      });
     };
 
     vm.selectProvider = function(provider){
@@ -130,13 +127,28 @@ angular.module('integridadUiApp')
       vm.loading = false;
       vm.debstopay = {
         provider: provider,
-        ejercicio: ('0' + (today.getMonth() + 1)).slice(-2) + '/' +today.getFullYear(),
+        typeTaxes: undefined,
+        items: [],
         userClientId: vm.usrCliId
       };
+      vm.ejercicio = ('0' + (today.getMonth() + 1)).slice(-2) + '/' +today.getFullYear();
       $('#pickerBillDateDocumentDebsToPay').data("DateTimePicker").date(today);
       $('#pickerBillDateDocumentDebsToPay').on("dp.change", function (data) {
-        vm.debstopay.ejercicio = ('0' + ($('#pickerBillDateDocumentDebsToPay').data("DateTimePicker").date().toDate().getMonth() + 1)).slice(-2) + '/' +$('#pickerBillDateDocumentDebsToPay').data("DateTimePicker").date().toDate().getFullYear();
+        vm.ejercicio = ('0' + ($('#pickerBillDateDocumentDebsToPay').data("DateTimePicker").date().toDate().getMonth() + 1)).slice(-2) + '/' +$('#pickerBillDateDocumentDebsToPay').data("DateTimePicker").date().toDate().getFullYear();
       });
+    };
+
+    vm.getPercentageTable = function(){
+      if(vm.debstopay.typeTaxes === '1'){
+        cuentaContableService.getAll().then(function(response){
+          vm.cuentaContableList = response;
+        });
+      };
+    };
+
+    vm.selectTaxes = function(taxes){
+      vm.item = undefined;
+      
     };
 
     vm.createDetailFactura = function(prov){

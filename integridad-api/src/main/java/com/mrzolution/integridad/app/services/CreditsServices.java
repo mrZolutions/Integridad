@@ -52,7 +52,7 @@ public class CreditsServices {
         Iterable<Credits> credits = creditsRepository.findCreditsPendingOfBillByUserClientId(id);
         List<CreditsReport> creditsReportList = new ArrayList<>();
         
-        if(Iterables.size(credits) >= 0){
+        if(Iterables.size(credits) > 0){
             Credits firstCredit = Iterables.getFirst(credits, new Credits());
             clientId = firstCredit.getPago().getBill().getClient().getId();
         }  

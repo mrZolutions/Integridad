@@ -23,8 +23,6 @@ public class DebtsToPay {
     private String authorizationNumber;
     private double total;
     private double subTotal;
-    private boolean iva;
-    private boolean ice;
     private String tipoDeCompra;
 
     private String description;
