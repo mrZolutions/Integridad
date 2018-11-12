@@ -87,7 +87,7 @@ public class CreditsServices {
                 sumTotalNotac = Double.sum(sumTotalNotac, sumNotac);
             } else {
                 clientId = credit.getPago().getBill().getClient().getId();
-                CreditsReport saleReport = new CreditsReport("SUB-TOTAL ", null, null, null, 0, 0, sumTotalValor, sumTotalAbono, sumTotalReten, sumTotalNotac, sumTotalValor, 0, 0, 0, 0, 0);
+                CreditsReport saleReport = new CreditsReport("SUB-TOTAL ", null, null, null, 0, 0, sumTotalValor, 0, 0, 0, sumTotalValor, 0, 0, 0, 0, 0);
                 creditsReportList.add(saleReport);
                 sumTotal = credit.getPago().getBill().getTotal();
                 sumTotalValor = credit.getValor();
@@ -130,7 +130,7 @@ public class CreditsServices {
             creditsReportList.add(saleReport);    
         });
         
-        CreditsReport saleReport = new CreditsReport("SUB-TOTAL ", null, null, null, 0, 0, sumTotalValor, sumTotalAbono, sumTotalReten, sumTotalNotac, sumTotalValor, 0, 0, 0, 0, 0);
+        CreditsReport saleReport = new CreditsReport("SUB-TOTAL ", null, null, null, 0, 0, sumTotalValor, 0, 0, 0, sumTotalValor, 0, 0, 0, 0, 0);
         creditsReportList.add(saleReport);
         
         sumTotal = 0;
