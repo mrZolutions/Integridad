@@ -189,8 +189,8 @@ angular.module('integridadUiApp')
           var data = {
             NOMBRE_CLIENTE: creditsreport.clientName,
             NUMERO_FACTURA: creditsreport.billNumber,
-            FECHA_VENTA: creditsreport.fechVenta,
-            FECHA_VENCE: creditsreport.fechVence,
+            FECHA_VENTA: creditsreport.fechVenta !== null ? new Date(creditsreport.fechVenta) : creditsreport.fechVenta,
+            FECHA_VENCE: creditsreport.fechVence !== null ? new Date(creditsreport.fechVence) : creditsreport.fechVence,
             DIAS_CREDIT: creditsreport.diasCredit,
             DIAS_VENCE: creditsreport.diasVencim,
             VENTA: parseFloat(creditsreport.costo.toFixed(2)),
@@ -203,7 +203,7 @@ angular.module('integridadUiApp')
             PLAZO_61_90: parseFloat(creditsreport.tplazo.toFixed(2)),
             PLAZO_91_120: parseFloat(creditsreport.cplazo.toFixed(2)),
             PLAZO_MAYOR_120: parseFloat(creditsreport.qplazo.toFixed(2))
-          };
+          };      
 
           dataReport.push(data);
         });

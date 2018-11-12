@@ -1,5 +1,6 @@
 package com.mrzolution.integridad.app.domain;
 
+import java.util.List;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -42,10 +43,13 @@ public class DebtsToPay {
     @ManyToOne
     @JoinColumn(name = "provider_id")
     private Provider provider;
+    
+    @OneToMany(mappedBy = "debtsToPay", cascade = CascadeType.ALL)
+    private List<DetailDebtsToPay> detailDebtsToPay;
 
     public void setListsNull(){
-
-    }
+        detailDebtsToPay = null;
+    };
 
     public void setFatherListToNull(){
         userClient.setListsNull();
@@ -54,5 +58,5 @@ public class DebtsToPay {
         provider.setFatherListToNull();
         cuentaContable.setListsNull();
         cuentaContable.setFatherListToNull();
-    }
+    };
 }

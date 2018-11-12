@@ -32,12 +32,12 @@ public class DetailRetentionClient implements Child{
     private double total;
     
     public void setListsNull(){
-    }
+    };
     
     public void setFatherListToNull(){
     	retentionClient.setListsNull();
         retentionClient.setFatherListToNull();
-    }
+    };
 
     @Transient
     public static DetailRetentionClient newDetailRetentionClientTest(){
@@ -45,5 +45,5 @@ public class DetailRetentionClient implements Child{
         detail.setRetentionClient(RetentionClient.newRetentionClientTest());
 
         return detail;
-    }
+    };
 }

@@ -73,8 +73,8 @@ function routes($routeProvider) {
       controller: 'CuentasCobrarCtrl',
       controllerAs: 'vm'
     }).when('/pagar', {
-      templateUrl: 'views/debstopay/debstopay.tpl.html',
-      controller: 'DebsToPayCtrl',
+      templateUrl: 'views/debtstopay/debtstopay.tpl.html',
+      controller: 'DebtsToPayCtrl',
       controllerAs: 'vm'
     }).otherwise({
     redirectTo: '/'

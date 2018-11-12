@@ -59,10 +59,11 @@ public class CreditsServices {
         
         credits.forEach(credit -> {
             populateChildren(credit);
-            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+            
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd");
             String fechaVenta = dateFormat.format(new Date(credit.getPago().getBill().getDateCreated()));
             String fechaVence = dateFormat.format(new Date(credit.getFecha()));   
-           
+            
             Double sumAbono = Double.valueOf(0);
             Double sumReten = Double.valueOf(0);
             Double sumNotac = Double.valueOf(0);
@@ -86,7 +87,7 @@ public class CreditsServices {
                 sumTotalNotac = Double.sum(sumTotalNotac, sumNotac);
             } else {
                 clientId = credit.getPago().getBill().getClient().getId();
-                CreditsReport saleReport = new CreditsReport("SUB-TOTAL ", null, null, null, 0, 0, sumTotal, sumTotalAbono, sumTotalReten, sumTotalNotac, sumTotalValor, 0, 0, 0, 0, 0);
+                CreditsReport saleReport = new CreditsReport("SUB-TOTAL ", null, null, null, 0, 0, sumTotalValor, sumTotalAbono, sumTotalReten, sumTotalNotac, sumTotalValor, 0, 0, 0, 0, 0);
                 creditsReportList.add(saleReport);
                 sumTotal = credit.getPago().getBill().getTotal();
                 sumTotalValor = credit.getValor();
@@ -104,7 +105,7 @@ public class CreditsServices {
             } catch (ParseException ex) {
                 Logger.getLogger(CreditsServices.class.getName()).log(Level.SEVERE, null, ex);
             }
-            
+                 
             if(diasVencim > 0 && diasVencim <= 30){
                 pPlazo = credit.getValor();
             } else if(diasVencim > 30 && diasVencim <= 60){
@@ -124,12 +125,12 @@ public class CreditsServices {
             }
             
             CreditsReport saleReport = new CreditsReport(credit.getPago().getBill().getClient().getName(), credit.getPago().getBill().getStringSeq(), 
-                                                         fechaVenta, fechaVence, credit.getDiasPlazo(), diasVencim, credit.getPago().getBill().getTotal(), 
+                                                         fechaVenta, fechaVence, credit.getDiasPlazo(), diasVencim, credit.getValor(), 
                                                          sumAbono, sumReten, sumNotac, credit.getValor(), pPlazo, sPlazo, tPlazo, cPlazo, qPlazo);
             creditsReportList.add(saleReport);    
         });
         
-        CreditsReport saleReport = new CreditsReport("SUB-TOTAL ", null, null, null, 0, 0, sumTotal, sumTotalAbono, sumTotalReten, sumTotalNotac, sumTotalValor,0, 0, 0, 0, 0);
+        CreditsReport saleReport = new CreditsReport("SUB-TOTAL ", null, null, null, 0, 0, sumTotalValor, sumTotalAbono, sumTotalReten, sumTotalNotac, sumTotalValor, 0, 0, 0, 0, 0);
         creditsReportList.add(saleReport);
         
         sumTotal = 0;

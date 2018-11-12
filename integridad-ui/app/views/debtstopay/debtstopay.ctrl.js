@@ -2,13 +2,13 @@
 
 /**
  * @ngdoc function
- * @name integridadUiApp.controller:DebsToPayCtrl
+ * @name integridadUiApp.controller:DebtsToPayCtrl
  * @description
- * # DebsToPayCtrl
+ * # DebtsToPayCtrl
  * Controller of the menu
  */
 angular.module('integridadUiApp')
-  .controller('DebsToPayCtrl', function (_, $localStorage, providerService, utilStringService, dateService, 
+  .controller('DebtsToPayCtrl', function (_, $localStorage, providerService, utilStringService, dateService, 
                                         cuentaContableService, validatorService) {
     var vm = this;
     vm.error = undefined;
@@ -19,6 +19,7 @@ angular.module('integridadUiApp')
     vm.provider = undefined;
     vm.providerId = undefined;
     vm.subTotal = undefined;
+    vm.cuentaCtableId = undefined;
     vm.cuentaContableList = undefined;
     vm.debstopayCreated = undefined;
     vm.providerSelected = undefined;
@@ -152,6 +153,7 @@ angular.module('integridadUiApp')
 
     vm.selectTaxes = function(q){
       vm.item = undefined;
+      vm.cuentaCtableId = q.id;
       vm.item = {
         codigo: parseInt(vm.debstopay.typeTaxes),
         codigo_contable: q.code,

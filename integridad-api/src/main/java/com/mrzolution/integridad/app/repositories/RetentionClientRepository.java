@@ -17,7 +17,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 @Qualifier(value = "RetentionClientRepository")
 public interface RetentionClientRepository extends CrudRepository<RetentionClient, UUID>{
-    Iterable<RetentionClient> findByBill(Bill Bill);
+    Iterable<RetentionClient> findByBill(Bill bill);
     
     @Query("SELECT r FROM RetentionClient r WHERE r.documentNumber = (:docNum) and r.bill.id = (:id)")
     Iterable<RetentionClient> findByDocumentNumberAndBillId(@Param("docNum") String docNum, @Param("id") UUID id);

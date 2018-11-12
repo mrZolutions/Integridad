@@ -1,8 +1,8 @@
 package com.mrzolution.integridad.app.controllers;
 
-import com.mrzolution.integridad.app.domain.RetentionClient;
+import com.mrzolution.integridad.app.domain.DebtsToPay;
 import com.mrzolution.integridad.app.exceptions.BadRequestException;
-import com.mrzolution.integridad.app.services.RetentionClientServices;
+import com.mrzolution.integridad.app.services.DebtsToPayServices;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,34 +21,34 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
-@RequestMapping(value = "/integridad/v1/retenclient")
-public class RetentionClientController {
+@RequestMapping(value = "/integridad/v1/debts")
+public class DebtsToPayController {
     @Autowired
-    RetentionClientServices service;
+    DebtsToPayServices service;
     
     @RequestMapping(method = RequestMethod.GET, value="/{id}")
     public ResponseEntity getById(@PathVariable("id") UUID id){
-        log.info("RetentionClientController getId: {}", id);
-	RetentionClient response = null;
+        log.info("DebtsToPayController getId: {}", id);
+	DebtsToPay response = null;
 	try {
             response = service.getById(id);
 	}catch(BadRequestException e) {
-            log.error("RetentionClientController getId Exception thrown: {}", e.getMessage());
+            log.error("DebtsToPayController getId Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
-	return new ResponseEntity<RetentionClient>(response, HttpStatus.ACCEPTED);
+	return new ResponseEntity<DebtsToPay>(response, HttpStatus.ACCEPTED);
     };
     
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity create(@RequestBody RetentionClient retentionClient){
-	log.info("RetentionClientController create: {}", retentionClient.getDocumentNumber());
-	RetentionClient response = null;
+    public ResponseEntity create(@RequestBody DebtsToPay debtsToPay){
+	log.info("DebtsToPayController create: {}", debtsToPay.getId());
+	DebtsToPay response = null;
 	try {
-            response = service.create(retentionClient);
+            response = service.create(debtsToPay);
 	}catch(BadRequestException e) {
-            log.error("RetentionClientController create Exception thrown: {}", e.getMessage());
+            log.error("DebtsToPayController create Exception thrown: {}", e.getMessage());
 	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
-        return new ResponseEntity<RetentionClient>(response, HttpStatus.CREATED);
+        return new ResponseEntity<DebtsToPay>(response, HttpStatus.CREATED);
     };
 }

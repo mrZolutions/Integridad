@@ -320,13 +320,6 @@ angular.module('integridadUiApp')
       };
     };
 
-    vm.getTaxesTable = function(){
-      vm.tableTaxes = undefined;
-      if(vm.debstopay.typeTaxes === '1'){
-        vm.tableTaxes = vm.ctasctables;
-      };
-    };
-
     vm.selecPercentage =function(percentage){
       vm.baseImponibleItem = undefined;
       vm.item = undefined;
@@ -337,19 +330,6 @@ angular.module('integridadUiApp')
         codigo_porcentaje: percentage.codigoDatil,
         codigo_porcentaje_integridad: percentage.codigo,
         porcentaje: percentage.percentage,
-        tipo_documento_sustento: vm.docType
-      };
-    };
-
-    vm.selecTaxes = function(taxes){
-      vm.item = undefined;
-      vm.item = {
-        codigo: parseInt(vm.debstopay.typeTaxes),
-        numero_documento_sustento:vm.debstopay.numero,
-        name: vm.debstopay.name,
-        tipo_documento_comprobante: vm.docType1,
-        tipo_documento_ctascontables: vm.docType2,
-        tipo_documento_purchase: vm.docType3,
         tipo_documento_sustento: vm.docType
       };
     };
@@ -415,8 +395,8 @@ angular.module('integridadUiApp')
       vm.loading = true;
       var eRet = eretentionService.createERetention(vm.retention, $localStorage.user);
       eretentionService.getClaveDeAcceso(eRet, $localStorage.user.subsidiary.userClient.id).then(function(resp){
-        //var obj = JSON.parse(resp.data);
-        var obj = {clave_acceso: '1234560', id:'id12345'};
+        var obj = JSON.parse(resp.data);
+        //var obj = {clave_acceso: '1234560', id:'id12345'};
         if(obj.errors === undefined){
           vm.retention.claveDeAcceso = obj.clave_acceso;
           vm.retention.idSri = obj.id;
