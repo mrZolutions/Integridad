@@ -76,7 +76,7 @@
     <div class="row">
       <div class="form-group col-md-3">
         <label>Tipo:</label>
-        <select ng-options="tipe.code as tipe.name for tipe in [{code: 'B' ,name:'BIENES'}, {code: 'S', name:'SERVICIOS'}, {code: 'MP', name:'MATERIA PRIMA'}, {code: 'CM', name:'CONSUMIBLES'}, {code: 'RG', name:'REEMBOLSO GASTOS'}, {code: 'TAE', name:'TICKETS AEREOS'}]"
+        <select ng-options="tipe.code as tipe.name for tipe in [{code: 'BIEN' ,name:'BIENES'}, {code: 'SERV', name:'SERVICIOS'}, {code: 'MATEPRIM', name:'MATERIA PRIMA'}, {code: 'CONSUM', name:'CONSUMIBLES'}, {code: 'REEMBGAST', name:'REEMBOLSO GASTOS'}, {code: 'TICKAER', name:'TICKETS AEREOS'}]"
                 ng-model="vm.cuentaSelected.type" class="form-control">
         </select>
       </div>

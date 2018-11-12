@@ -18,10 +18,14 @@ angular.module('integridadUiApp')
     vm.usrCliId = undefined;
     vm.provider = undefined;
     vm.providerId = undefined;
+    vm.subTotal = undefined;
     vm.cuentaContableList = undefined;
     vm.debstopayCreated = undefined;
     vm.providerSelected = undefined;
     vm.providerList = undefined;
+    vm.saldoCredito = undefined;
+    vm.saldoDebito = undefined;
+    vm.saldo = undefined;
 
     vm.voucherType = [
       {code: '01', name: 'Factura'},
@@ -146,9 +150,69 @@ angular.module('integridadUiApp')
       };
     };
 
-    vm.selectTaxes = function(taxes){
+    vm.selectTaxes = function(q){
       vm.item = undefined;
-      
+      vm.item = {
+        codigo: parseInt(vm.debstopay.typeTaxes),
+        codigo_contable: q.code,
+        desc_contable: q.description,
+        tipo: q.accountType,
+        nomb_contable: q.name
+      };
+      vm.item.base_imponible = (parseFloat(vm.debstopay.total) - (parseFloat(vm.debstopay.total) * 0.12)).toFixed(2);
+      vm.subTotal = vm.item.base_imponible;
+    };
+
+    vm.addItem = function(){
+      if(vm.indexEdit !== undefined){
+        vm.debstopay.items.splice(vm.indexEdit, 1);
+        vm.indexEdit = undefined;
+      };
+      vm.debstopay.items.push(vm.item);
+      vm.item = undefined;
+      vm.debstopay.typeTaxes = undefined;
+      vm.cuentaContableList = undefined;
+    };
+
+    vm.editItemTaxes = function(index){
+      vm.item = angular.copy(vm.debstopay.items[index]);
+      vm.indexEdit = index;
+    };
+
+    vm.deleteItemTaxes = function(index){
+      vm.debstopay.items.splice(index, 1);
+    };
+
+    vm.getTotalCredito = function(){
+      var totalCredito = 0;
+      if(vm.debstopay){
+        _.each(vm.debstopay.items, function(detail){
+          if (detail.tipo === 'CREDITO (C)'){
+            totalCredito = (parseFloat(totalCredito) + parseFloat(detail.base_imponible)).toFixed(2);
+          };
+        });
+      };
+      vm.saldoCredito = totalCredito;
+      return totalCredito;
+    };
+
+    vm.getTotalDebito = function(){
+      var totalDebito = 0;
+      if(vm.debstopay){
+        _.each(vm.debstopay.items, function(detail){
+          if (detail.tipo === 'DEBITO (D)'){
+            totalDebito = (parseFloat(totalDebito) + parseFloat(detail.base_imponible)).toFixed(2);
+          };
+        });
+      };
+      vm.saldoDebito = totalDebito;
+      return totalDebito;
+    };
+
+    vm.getTotalSaldo = function(){
+      var totalSaldo = 0;
+      totalSaldo = (parseFloat(vm.saldoCredito) - parseFloat(vm.saldoDebito)).toFixed(2);
+      return totalSaldo;
     };
 
     vm.createDetailFactura = function(prov){
