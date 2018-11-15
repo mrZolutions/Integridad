@@ -67,8 +67,8 @@ public class BillServices {
 		String data = mapper.writeValueAsString(requirement);
 		log.info("BillServices getDatil maper creado");
                 
-		String response = httpCallerService.post(Constants.DATIL_LINK, data, userClient);
-		//String response = "OK";
+		//String response = httpCallerService.post(Constants.DATIL_LINK, data, userClient);
+		String response = "OK";
 		log.info("BillServices getDatil httpcall success");
 		return response;
 	};
@@ -140,12 +140,12 @@ public class BillServices {
             log.info("BillServices saveDetailsBill FINISHED");
         };
         
-        @Async void savePagosAndCreditsBill(Bill saved, List<Pago> pagos){
+        @Async 
+        void savePagosAndCreditsBill(Bill saved, List<Pago> pagos){
             pagos.forEach(pago -> {
 		List<Credits> creditsList = pago.getCredits();
 		pago.setCredits(null);
 		pago.setBill(saved);
-                //pago.setTotal(saved.getTotal());
 		Pago pagoSaved = pagoRepository.save(pago);		
                 if(creditsList != null){
                     creditsList.forEach(credit ->{
@@ -209,7 +209,7 @@ public class BillServices {
                         savePagosAndCreditsBill(saved, pagos);
                     } else {
                         saveDetailsBill(saved, details);
-                        savePagosAndCreditsBill(saved, pagos);
+                        savePagosAndCreditsBill(saved, pagos);                        
                         updateProductBySubsidiary(bill, typeDocument, details);
                     }
 		} else {

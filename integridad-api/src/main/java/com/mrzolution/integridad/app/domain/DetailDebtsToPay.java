@@ -29,12 +29,18 @@ public class DetailDebtsToPay implements Child{
     private String name;
     private double baseImponible;
     
+    @ManyToOne
+    @JoinColumn(name = "cuenta_contable_id")
+    private CuentaContable cuentaContable;
+    
     public void setListsNull(){
     };
     
     public void setFatherListToNull(){
         debtsToPay.setListsNull();
         debtsToPay.setFatherListToNull();
+        cuentaContable.setListsNull();
+        cuentaContable.setFatherListToNull();
     };
 }
 

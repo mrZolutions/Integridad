@@ -1,10 +1,15 @@
 package com.mrzolution.integridad.app.domain;
 
 import java.util.List;
-import lombok.Data;
-
-import javax.persistence.*;
 import java.util.UUID;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import lombok.Data;
 
 @Entity
 @Data
@@ -30,16 +35,6 @@ public class DebtsToPay {
     private String account_type;
     private String name;
 
-    private boolean active;
-
-    @ManyToOne
-    @JoinColumn(name = "cuenta_contable_id")
-    private CuentaContable cuentaContable;
-
-    @ManyToOne
-    @JoinColumn(name = "user_client_id")
-    private UserClient userClient;
-
     @ManyToOne
     @JoinColumn(name = "provider_id")
     private Provider provider;
@@ -52,11 +47,7 @@ public class DebtsToPay {
     };
 
     public void setFatherListToNull(){
-        userClient.setListsNull();
-        userClient.setFatherListToNull();
         provider.setListsNull();
         provider.setFatherListToNull();
-        cuentaContable.setListsNull();
-        cuentaContable.setFatherListToNull();
     };
 }

@@ -346,7 +346,6 @@ angular.module('integridadUiApp')
 
     vm.cancel = function(){
       vm.retentionClient = undefined;
-      vm.retentionClient = undefined;
       vm.success = undefined;
       vm.error = undefined;
       vm.billList = undefined;

@@ -9,7 +9,7 @@
  */
 angular.module('integridadUiApp')
   .controller('DebtsToPayCtrl', function (_, $localStorage, providerService, utilStringService, dateService, 
-                                        cuentaContableService, validatorService) {
+                                        cuentaContableService, validatorService, debtsToPayService) {
     var vm = this;
     vm.error = undefined;
     vm.success = undefined;
@@ -19,9 +19,10 @@ angular.module('integridadUiApp')
     vm.provider = undefined;
     vm.providerId = undefined;
     vm.subTotal = undefined;
+    vm.subIva = undefined;
     vm.cuentaCtableId = undefined;
     vm.cuentaContableList = undefined;
-    vm.debstopayCreated = undefined;
+    vm.debtsToPayCreated = undefined;
     vm.providerSelected = undefined;
     vm.providerList = undefined;
     vm.saldoCredito = undefined;
@@ -126,25 +127,25 @@ angular.module('integridadUiApp')
       vm.loading = true;
       var today = new Date();
       vm.providerSelected = true;
-      vm.debstopayCreated = undefined;
+      vm.debtsToPayCreated = undefined;
       vm.providerId = provider.id;
       vm.providerName = provider.name;
       vm.loading = false;
-      vm.debstopay = {
+      vm.debtsToPay = {
         provider: provider,
         typeTaxes: undefined,
         items: [],
         userClientId: vm.usrCliId
       };
       vm.ejercicio = ('0' + (today.getMonth() + 1)).slice(-2) + '/' +today.getFullYear();
-      $('#pickerBillDateDocumentDebsToPay').data("DateTimePicker").date(today);
-      $('#pickerBillDateDocumentDebsToPay').on("dp.change", function (data) {
-        vm.ejercicio = ('0' + ($('#pickerBillDateDocumentDebsToPay').data("DateTimePicker").date().toDate().getMonth() + 1)).slice(-2) + '/' +$('#pickerBillDateDocumentDebsToPay').data("DateTimePicker").date().toDate().getFullYear();
+      $('#pickerBillDatedebtsToPay').data("DateTimePicker").date(today);
+      $('#pickerBillDatedebtsToPay').on("dp.change", function (data) {
+        vm.ejercicio = ('0' + ($('#pickerBillDatedebtsToPay').data("DateTimePicker").date().toDate().getMonth() + 1)).slice(-2) + '/' +$('#pickerBillDateDocumentdebtsToPay').data("DateTimePicker").date().toDate().getFullYear();
       });
     };
 
     vm.getPercentageTable = function(){
-      if(vm.debstopay.typeTaxes === '1'){
+      if(vm.debtsToPay.typeTaxes === '1'){
         cuentaContableService.getAll().then(function(response){
           vm.cuentaContableList = response;
         });
@@ -153,42 +154,43 @@ angular.module('integridadUiApp')
 
     vm.selectTaxes = function(q){
       vm.item = undefined;
-      vm.cuentaCtableId = q.id;
       vm.item = {
-        codigo: parseInt(vm.debstopay.typeTaxes),
+        cta_contable: q.id,
+        codigo: parseInt(vm.debtsToPay.typeTaxes),
+        fecha_emision_documento: dateService.getIsoDate($('#pickerBillDatedebtsToPay').data("DateTimePicker").date().toDate()),
         codigo_contable: q.code,
         desc_contable: q.description,
         tipo: q.accountType,
         nomb_contable: q.name
       };
-      vm.item.base_imponible = (parseFloat(vm.debstopay.total) - (parseFloat(vm.debstopay.total) * 0.12)).toFixed(2);
-      vm.subTotal = vm.item.base_imponible;
+      vm.subTotal = (parseFloat(vm.debtsToPay.total) - (parseFloat(vm.debtsToPay.total) * 0.12)).toFixed(2);
+      vm.subIva = (parseFloat(vm.debtsToPay.total) * 0.12).toFixed(2);
     };
 
     vm.addItem = function(){
       if(vm.indexEdit !== undefined){
-        vm.debstopay.items.splice(vm.indexEdit, 1);
+        vm.debtsToPay.items.splice(vm.indexEdit, 1);
         vm.indexEdit = undefined;
       };
-      vm.debstopay.items.push(vm.item);
+      vm.debtsToPay.items.push(vm.item);
       vm.item = undefined;
-      vm.debstopay.typeTaxes = undefined;
+      vm.debtsToPay.typeTaxes = undefined;
       vm.cuentaContableList = undefined;
     };
 
     vm.editItemTaxes = function(index){
-      vm.item = angular.copy(vm.debstopay.items[index]);
+      vm.item = angular.copy(vm.debtsToPay.items[index]);
       vm.indexEdit = index;
     };
 
     vm.deleteItemTaxes = function(index){
-      vm.debstopay.items.splice(index, 1);
+      vm.debtsToPay.items.splice(index, 1);
     };
 
     vm.getTotalCredito = function(){
       var totalCredito = 0;
-      if(vm.debstopay){
-        _.each(vm.debstopay.items, function(detail){
+      if(vm.debtsToPay){
+        _.each(vm.debtsToPay.items, function(detail){
           if (detail.tipo === 'CREDITO (C)'){
             totalCredito = (parseFloat(totalCredito) + parseFloat(detail.base_imponible)).toFixed(2);
           };
@@ -200,8 +202,8 @@ angular.module('integridadUiApp')
 
     vm.getTotalDebito = function(){
       var totalDebito = 0;
-      if(vm.debstopay){
-        _.each(vm.debstopay.items, function(detail){
+      if(vm.debtsToPay){
+        _.each(vm.debtsToPay.items, function(detail){
           if (detail.tipo === 'DEBITO (D)'){
             totalDebito = (parseFloat(totalDebito) + parseFloat(detail.base_imponible)).toFixed(2);
           };
@@ -217,9 +219,44 @@ angular.module('integridadUiApp')
       return totalSaldo;
     };
 
-    vm.createDetailFactura = function(prov){
-      
-      vm.debstopayCreated = false;
+    vm.saveDebtsToPay = function(debtsToPay){
+      vm.loading = true;
+      vm.debtsToPay.date = $('#pickerBillDatedebtsToPay').data("DateTimePicker").date().toDate().getTime();
+      vm.debtsToPay.billNumber = vm.debtsToPay.cashierNumber +'-'+ vm.debtsToPay.sequentialNumber +'-'+ vm.debtsToPay.establishmentNumber;
+      vm.debtsToPay.providerId = vm.providerId;
+      vm.debtsToPay.userClientId = vm.usrCliId;
+      vm.debtsToPay.detailDebtsToPay = [];
+      _.each(vm.debtsToPay.items, function(item){
+        var detail = {
+          taxType: vm.debtsToPay.typeTaxes,
+          codeConta: item.codigo_contable,
+          baseImponible: item.base_imponible,
+          name: item.nomb_contable,
+          cuentaContableId: item.cta_contable
+        };
+        vm.debtsToPay.detailDebtsToPay.push(detail);
+      });
+      debtsToPayService.create(debtsToPay).then(function(respDebtsToPay){
+        vm.totalDebtsToPay = 0;
+        vm.debtsToPay = respDebtsToPay;
+        _.each(vm.debtsToPay.detailDebtsToPay, function(detail){
+          vm.totalDebtsToPay = (parseFloat(vm.totalDebtsToPay) + parseFloat(detail.baseImponible)).toFixed(2);
+        });
+        vm.debtsToPayCreated = true;
+        vm.success = 'Factura almacenada con exito';
+        vm.loading = false;
+      }).catch(function (error){
+        vm.loading = false;
+        vm.error = error.data;
+      });
+    };
+
+    vm.cancel = function(){
+      vm.debtsToPay = undefined;
+      vm.success = undefined;
+      vm.error = undefined;
+      vm.providerSelected = undefined;
+      vm.cuentaContableList = undefined;
     };
 
     (function initController(){
