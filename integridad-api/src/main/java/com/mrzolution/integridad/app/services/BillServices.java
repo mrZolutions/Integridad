@@ -67,8 +67,8 @@ public class BillServices {
 		String data = mapper.writeValueAsString(requirement);
 		log.info("BillServices getDatil maper creado");
                 
-		//String response = httpCallerService.post(Constants.DATIL_LINK, data, userClient);
-		String response = "OK";
+		String response = httpCallerService.post(Constants.DATIL_LINK, data, userClient);
+		//String response = "OK";
 		log.info("BillServices getDatil httpcall success");
 		return response;
 	};
@@ -220,7 +220,6 @@ public class BillServices {
                 }
 		log.info("BillServices created id: {}", saved.getId());
 		saved.setDetails(details);
-                //updateProductBySubsidiary(bill, typeDocument, details);
 		return saved;
 	};
 
