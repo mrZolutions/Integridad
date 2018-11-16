@@ -4,9 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
-import com.mrzolution.integridad.app.cons.Constants;
 import com.mrzolution.integridad.app.domain.*;
 import com.mrzolution.integridad.app.domain.Pago;
 import com.mrzolution.integridad.app.domain.ebill.*;
@@ -67,11 +65,11 @@ public class BillServices {
 		String data = mapper.writeValueAsString(requirement);
 		log.info("BillServices getDatil maper creado");
                 
-		String response = httpCallerService.post(Constants.DATIL_LINK, data, userClient);
-		//String response = "OK";
+		//String response = httpCallerService.post(Constants.DATIL_LINK, data, userClient);
+		String response = "OK";
 		log.info("BillServices getDatil httpcall success");
 		return response;
-	};
+	}
 
 	public Iterable<Bill> getByTypeDocument(int value) {
 		log.info("BillServices getByTypeDocument: {}", value);
@@ -81,7 +79,7 @@ public class BillServices {
 			bill.setFatherListToNull();
 		});
 		return bills;
-	};
+	}
 	
 	public Iterable<Bill> getByUserLazy(UserIntegridad user){
 		log.info("BillServices getByUserLazy: {}", user.getId());
@@ -92,7 +90,7 @@ public class BillServices {
 			});
 		
 		return bills;
-	};
+	}
 
 	//Selecciona todas las Facturas
         public Iterable<Bill> getByClientIdAndTypeLazy(UUID id, int type){
@@ -104,7 +102,7 @@ public class BillServices {
 		});
 
 		return bills;
-	};
+	}
         
         //Selecciona solo las Facturas tipo Crédito
         public Iterable<Bill> getCreditsByClientIdAndTypeLazy(UUID id, int type){
@@ -115,7 +113,7 @@ public class BillServices {
 		bill.setFatherListToNull();
             });
             return bills;
-        };
+        }
 	
 	public Bill getById(UUID id) {
 		log.info("BillServices getById: {}", id);
@@ -128,7 +126,7 @@ public class BillServices {
 		
 		populateChildren(retrieved);
 		return retrieved;
-	};
+	}
         
         @Async
         public void saveDetailsBill(Bill saved, List<Detail> details){
@@ -138,7 +136,7 @@ public class BillServices {
                 detail.setBill(null);
             });
             log.info("BillServices saveDetailsBill FINISHED");
-        };
+        }
         
         @Async 
         void savePagosAndCreditsBill(Bill saved, List<Pago> pagos){
@@ -156,7 +154,7 @@ public class BillServices {
                 }    
             });
             log.info("BillServices savePagosAndCreditsBill FINISHED");
-        };
+        }
         
         @Async
         public void updateProductBySubsidiary(Bill bill, int typeDocument, List<Detail> details){
@@ -168,7 +166,7 @@ public class BillServices {
                 }
             });
             log.info("BillServices updateProductBySubsidiary FINISHED");
-        };
+        }
         
         @Async
         public void saveDetailsQuotation(Bill saved, List<Detail> details){
@@ -178,7 +176,7 @@ public class BillServices {
                 detail.setBill(null);
             });
             log.info("BillServices saveDetailsQuotation FINISHED");
-        };
+        }
 	
 	public Bill create(Bill bill, int typeDocument) throws BadRequestException{
 		log.info("BillServices create");
@@ -221,7 +219,7 @@ public class BillServices {
 		log.info("BillServices created id: {}", saved.getId());
 		saved.setDetails(details);
 		return saved;
-	};
+	}
 
 //	public Bill createQuotation(Bill bill, int typeDocument ) throws BadRequestException{
 //		log.info("BillServices createQuotation");
@@ -266,58 +264,51 @@ public class BillServices {
 		billRepository.save(billToDeactivate);
 
 		return billToDeactivate;
-	};
+	}
 
 	public Bill update(Bill bill) throws BadRequestException{
-		if(bill.getId() == null){
-			throw new BadRequestException("Invalid Bill");
-		}
-		log.info("BillServices update: {}", bill.getId());
-		Father<Bill, Detail> father = new Father<>(bill, bill.getDetails());
-        FatherManageChildren fatherUpdateChildren = new FatherManageChildren(father, detailChildRepository, detailRepository);
-        fatherUpdateChildren.updateChildren();
-
-        log.info("BillServices CHILDREN updated: {}", bill.getId());
-        
-		bill.setListsNull();
-		Bill updated = billRepository.save(bill);
-		log.info("BillServices update id: {}", updated.getId());
-		return updated;
-	};
+            if(bill.getId() == null){
+		throw new BadRequestException("Invalid Bill");
+            }
+            log.info("BillServices update: {}", bill.getId());
+            Father<Bill, Detail> father = new Father<>(bill, bill.getDetails());
+            FatherManageChildren fatherUpdateChildren = new FatherManageChildren(father, detailChildRepository, detailRepository);
+            fatherUpdateChildren.updateChildren();
+            log.info("BillServices CHILDREN updated: {}", bill.getId());
+            bill.setListsNull();
+            Bill updated = billRepository.save(bill);
+            log.info("BillServices update id: {}", updated.getId());
+            return updated;
+	}
 
 	public Iterable<Bill> getByStringSeqAndSubId(String stringSeq, UUID subId){
-		log.info("BillServices getByStringSeq : {}, {}", stringSeq, subId);
-		Iterable<Bill> bills = billRepository.findByStringSeqAndSubsidiaryId(stringSeq, subId);
+            log.info("BillServices getByStringSeq : {}, {}", stringSeq, subId);
+            Iterable<Bill> bills = billRepository.findByStringSeqAndSubsidiaryId(stringSeq, subId);
 
-		bills.forEach(bill->{
-			bill.setFatherListToNull();
-			bill.setListsNull();
-		});
-
-		return bills;
-	};
+            bills.forEach(bill->{
+		bill.setFatherListToNull();
+		bill.setListsNull();
+            });
+            return bills;
+	}
 
 	public List<ItemReport> getBySubIdAndDatesActives(UUID userClientId, long dateOne, long dateTwo){
-		log.info("BillServices getByUserClientIdAndDates: {}, {}, {}", userClientId, dateOne, dateTwo);
-		Iterable<Bill> bills = billRepository.findByUserClientIdAndDatesActives(userClientId, dateOne, dateTwo);
-
-		Set<UUID> productIds = new HashSet<>();
-		bills.forEach(bill-> {
-			populateChildren(bill);
-
-			for (Detail detail: bill.getDetails()) {
-				productIds.add(detail.getProduct().getId());
-			}
-		});
-
-		return loadListItems(Lists.newArrayList(bills), productIds);
-	};
+            log.info("BillServices getByUserClientIdAndDates: {}, {}, {}", userClientId, dateOne, dateTwo);
+            Iterable<Bill> bills = billRepository.findByUserClientIdAndDatesActives(userClientId, dateOne, dateTwo);
+            Set<UUID> productIds = new HashSet<>();
+            bills.forEach(bill-> {
+		populateChildren(bill);
+		for (Detail detail: bill.getDetails()) {
+                    productIds.add(detail.getProduct().getId());
+                }
+            });	
+           return loadListItems(Lists.newArrayList(bills), productIds);
+	}
 
 	public List<SalesReport> getAllBySubIdAndDates(UUID userClientId, long dateOne, long dateTwo){
 		log.info("BillServices getAllBySubIdAndDates: {}, {}, {}", userClientId, dateOne, dateTwo);
 		Iterable<Bill> bills = billRepository.findAllByUserClientIdAndDates(userClientId, dateOne, dateTwo);
 		List<SalesReport> salesReportList = new ArrayList<>();
-
 		bills.forEach(bill-> {
 			bill.setListsNull();
 			Long endDateLong = bill.getDateCreated();
@@ -331,7 +322,6 @@ public class BillServices {
 					}
 				}
 			}
-
 			SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 			String date = dateFormat.format(new Date(bill.getDateCreated()));
 			String status = bill.isActive() ? "ACTIVA" : "ANULADA";
@@ -343,20 +333,18 @@ public class BillServices {
 
 			salesReportList.add(saleReport);
 		});
-
 		return salesReportList;
-	};
+	}
 
 	private void populateChildren(Bill bill) {
-		log.info("BillServices populateChildren billId: {}", bill.getId());
-		List<Detail> detailList = getDetailsByBill(bill);
-        List<Pago> pagoList = getPagosByBill(bill);
-
-		bill.setDetails(detailList);
-		bill.setPagos(pagoList);
-		bill.setFatherListToNull();
-		log.info("BillServices populateChildren FINISHED billId: {}", bill.getId());
-	};
+            log.info("BillServices populateChildren billId: {}", bill.getId());
+            List<Detail> detailList = getDetailsByBill(bill);
+            List<Pago> pagoList = getPagosByBill(bill);
+            bill.setDetails(detailList);
+            bill.setPagos(pagoList);
+            bill.setFatherListToNull();
+            log.info("BillServices populateChildren FINISHED billId: {}", bill.getId());
+	}
 
 	private List<Detail> getDetailsByBill(Bill bill){
 		List<Detail> detailList = new ArrayList<>();
@@ -367,42 +355,34 @@ public class BillServices {
 			detail.getProduct().setFatherListToNull();
 			detail.getProduct().setListsNull();
 			detail.setBill(null);
-
 			detailList.add(detail);
 		});
-
 		return detailList;
-	};
+	}
 
 	private List<Pago> getPagosByBill(Bill bill){
 		List<Pago> pagoList = new ArrayList<>();
 		Iterable<Pago> pagos = pagoRepository.findByBill(bill);
-
 		pagos.forEach(pago ->{
 			if("credito".equals(pago.getMedio())){
 				Iterable<Credits> credits = creditsRepository.findByPago(pago);
 				List<Credits> creditsList = new ArrayList<>();
-
 				credits.forEach(credit ->{
 					credit.setListsNull();
 					credit.setFatherListToNull();
 					credit.setPago(null);
-
 					creditsList.add(credit);
 				});
-
 				pago.setCredits(creditsList);
 			} else {
 				pago.setListsNull();
 			}
 			pago.setFatherListToNull();
 			pago.setBill(null);
-
 			pagoList.add(pago);
 		});
-
 		return pagoList;
-	};
+	}
 
 	private List<ItemReport> loadListItems(List<Bill> bills, Set<UUID> productIds){
 		List<ItemReport> reportList = new ArrayList<>();
@@ -433,14 +413,12 @@ public class BillServices {
 					}
 				}
 			}
-
 			ItemReport itemTotal = new ItemReport(uuidCurrent, "R", "", code,
 					desc, quantityTotal, null, subTotalTotal, discountTotal, ivaTotal, totalTotal);
 
 			reportList.add(itemTotal);
 		}
-
 		return reportList;
-	};
+	}
 
 }
