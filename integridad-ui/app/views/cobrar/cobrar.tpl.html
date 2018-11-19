@@ -202,7 +202,7 @@
           </div>
           <div class="form-group col-md-6">
             <label>Seleccione el Tipo de Abono:</label><br/>
-            <select ng-options="item.code as item.name for item in [{code:'PAC', name:'PAGO CORRIENTE'}]"
+            <select ng-options="item.code as item.name for item in [{code:'PAC', name:'PAGO CORRIENTE'}, {code: 'NTC', name: 'NOTA DE CREDITO'}]"
                     ng-model="vm.payment.typePayment" class="form-control">
             </select>
           </div>
@@ -234,11 +234,11 @@
             </div>
             <div class="row" ng-show="vm.payment.modePayment === 'CHQ'">
               <div class="form-group col-md-6">
-                <label>Número de Cheque:</label><br/>
+                <label>N&uacute;mero de Cheque:</label><br/>
                 <input type="text" class="form-control" ng-model="vm.payment.noDocument"/>
               </div>
               <div class="form-group col-md-6">
-                <label>Número de Cuenta:</label><br/>
+                <label>N&uacute;mero de Cuenta:</label><br/>
                 <input type="text" class="form-control" ng-model="vm.payment.noAccount"/>
               </div>
               <div class="form-group col-md-6">
@@ -254,11 +254,11 @@
             </div>
             <div class="row" ng-show="vm.payment.modePayment === 'TRF'">
               <div class="form-group col-md-6">
-                <label>Número de Transferencia:</label><br/>
+                <label>N&uacute;mero de Transferencia:</label><br/>
                 <input type="text" class="form-control" ng-model="vm.payment.noDocument"/>
               </div>
               <div class="form-group col-md-6">
-                <label>Número de Cuenta:</label><br/>
+                <label>N&uacute;mero de Cuenta:</label><br/>
                 <input type="text" class="form-control" ng-model="vm.payment.noAccount"/>
               </div>
               <div class="form-group col-md-6">
@@ -274,7 +274,7 @@
             </div>
             <div class="row" ng-show="vm.payment.modePayment === 'TDC'">
               <div class="form-group col-md-6">
-                <label>Número de Tarjeta:</label><br/>
+                <label>N&uacute;mero de Tarjeta:</label><br/>
                 <input type="text" class="form-control" ng-model="vm.payment.noDocument"/>
               </div>
               <div class="form-group col-md-6">
@@ -290,7 +290,25 @@
             </div>
           </div>
         </div>
-        <div class="row" ng-show="vm.payment.typePayment === 'RET'">           
+        <div class="row" ng-show="vm.payment.typePayment === 'NTC'">
+          <div class="form-group col-md-12">
+            <div class="row">
+              <div class="form-group col-md-6">
+                <label>N&uacute;mero de Nota de Cr&eacute;dito:</label><br/>
+                <input type="text" class="form-control" ng-model="vm.payment.noDocument"/>
+              </div>
+              <div class="form-group col-md-6">
+                <label>Detalle:</label><br/>
+                <select ng-options="deta.name as deta.code for deta in [{code: 'ABONO POR NOTA DE CREDITO' ,name:'ABONO POR NOTA DE CREDITO'}]"
+                        ng-model="vm.payment.detail" class="form-control">
+                </select>
+              </div>
+              <div class="form-group col-md-6">
+                <label>Monto de la Nota de Cr&eacute;dito:</label><br/>
+                <input type="text" class="form-control" ng-model="vm.payment.valorNotac" placeholder="{{vm.creditValue}}"/>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       <div class="modal-footer">

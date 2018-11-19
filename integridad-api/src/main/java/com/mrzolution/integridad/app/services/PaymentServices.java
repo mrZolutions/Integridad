@@ -44,24 +44,27 @@ public class PaymentServices {
     private String doc = "";
     private String saldo = "";
     private double sumado = 0.0;
-       
+    
+    @Async("asyncExecutor")
     public Payment create(Payment payment){
-        log.info("PaymentServices preparing for create");
         Payment saved = paymentRepository.save(payment);
         document = saved.getCredits().getPago().getBill().getId().toString();
         log.info("PaymentServices Payment created id: {}", saved.getId());
         if (saved.getCredits().getId() != null){
             idCredit = saved.getCredits().getId();
-            abono = saved.getValorAbono();
+            if ("PAC".equals(saved.getTypePayment())){
+                abono = saved.getValorAbono();
+            } else {
+                abono = saved.getValorNotac();
+            }
             updateCredits(idCredit);
             updateBill(payment, document);
         }
 	return saved;
     };
     
-    @Async
+    @Async("asyncExecutor")
     public void updateCredits(UUID credits){
-        log.info("PaymentServices updating Credits");
         Credits cambio = creditsRepository.findOne(idCredit);
         nume = cambio.getValor();
         resto = nume - abono;
@@ -72,12 +75,11 @@ public class PaymentServices {
         }
         creditsRepository.save(cambio);
         resto = 0.00;
-        log.info("PaymentServices Credits updated");
+        log.info("PaymentServices updateCredits FINISHED");
     };
     
-    @Async
+    @Async("asyncExecutor")
     public void updateBill(Payment payment, String document){
-        log.info("PaymentServices updating Bill");
         Bill billed = billRepository.findOne(payment.getCredits().getPago().getBill().getId());
         String nbillId = billed.getId().toString();
         if (nbillId.equals(document)){
@@ -90,7 +92,7 @@ public class PaymentServices {
             billed.setSaldo(saldo);
             billRepository.save(billed);
         }
-        log.info("PaymentServices Bill UPDATED");
+        log.info("PaymentServices updateBill FINISHED");
     };
     
     public List<CCResumenReport> getPaymentsByUserClientId(UUID id){

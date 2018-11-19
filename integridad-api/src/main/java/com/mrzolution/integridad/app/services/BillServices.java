@@ -5,6 +5,7 @@ import java.util.*;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
+import com.mrzolution.integridad.app.cons.Constants;
 import com.mrzolution.integridad.app.domain.*;
 import com.mrzolution.integridad.app.domain.Pago;
 import com.mrzolution.integridad.app.domain.ebill.*;
@@ -65,8 +66,8 @@ public class BillServices {
 		String data = mapper.writeValueAsString(requirement);
 		log.info("BillServices getDatil maper creado");
                 
-		//String response = httpCallerService.post(Constants.DATIL_LINK, data, userClient);
-		String response = "OK";
+		String response = httpCallerService.post(Constants.DATIL_LINK, data, userClient);
+		//String response = "OK";
 		log.info("BillServices getDatil httpcall success");
 		return response;
 	}
@@ -128,7 +129,7 @@ public class BillServices {
 		return retrieved;
 	}
         
-        @Async
+        @Async("asyncExecutor")
         public void saveDetailsBill(Bill saved, List<Detail> details){
             details.forEach(detail-> {
                 detail.setBill(saved);
@@ -138,7 +139,7 @@ public class BillServices {
             log.info("BillServices saveDetailsBill FINISHED");
         }
         
-        @Async 
+        @Async("asyncExecutor")
         void savePagosAndCreditsBill(Bill saved, List<Pago> pagos){
             pagos.forEach(pago -> {
 		List<Credits> creditsList = pago.getCredits();
@@ -156,7 +157,7 @@ public class BillServices {
             log.info("BillServices savePagosAndCreditsBill FINISHED");
         }
         
-        @Async
+        @Async("asyncExecutor")
         public void updateProductBySubsidiary(Bill bill, int typeDocument, List<Detail> details){
             details.forEach(detail-> {
                 if(!detail.getProduct().getProductType().getCode().equals("SER") && typeDocument == 1){
@@ -168,7 +169,7 @@ public class BillServices {
             log.info("BillServices updateProductBySubsidiary FINISHED");
         }
         
-        @Async
+        @Async("asyncExecutor")
         public void saveDetailsQuotation(Bill saved, List<Detail> details){
             details.forEach(detail-> {
                 detail.setBill(saved);
@@ -178,47 +179,47 @@ public class BillServices {
             log.info("BillServices saveDetailsQuotation FINISHED");
         }
 	
+        @Async("asyncExecutor")
 	public Bill create(Bill bill, int typeDocument) throws BadRequestException{
-		log.info("BillServices create");
-		List<Detail> details = bill.getDetails();
-		List<Pago> pagos = bill.getPagos();
-		if(details == null){
-			throw new BadRequestException("Debe tener un detalle por lo menos");
-		}
-		if(typeDocument == 1 && pagos == null){
-			throw new BadRequestException("Debe tener un pago por lo menos");
-		}
-		bill.setDateCreated(new Date().getTime());
-		bill.setTypeDocument(typeDocument);
-		bill.setActive(true);
-		bill.setDetails(null);
-		bill.setPagos(null);
-		bill.setFatherListToNull();
-		bill.setListsNull();
-		Bill saved = billRepository.save(bill);
+            List<Detail> details = bill.getDetails();
+            List<Pago> pagos = bill.getPagos();
+            if(details == null){
+            	throw new BadRequestException("Debe tener un detalle por lo menos");
+            }
+            if(typeDocument == 1 && pagos == null){
+		throw new BadRequestException("Debe tener un pago por lo menos");
+            }
+            bill.setDateCreated(new Date().getTime());
+            bill.setTypeDocument(typeDocument);
+            bill.setActive(true);
+            bill.setDetails(null);
+            bill.setPagos(null);
+            bill.setFatherListToNull();
+            bill.setListsNull();
+            Bill saved = billRepository.save(bill);
 
-		// typeDocument 1 is Bill 0 is Quotation
-		if(typeDocument == 1){
-                    Cashier cashier = cashierRepository.findOne(bill.getUserIntegridad().getCashier().getId());
-                    cashier.setBillNumberSeq(cashier.getBillNumberSeq() + 1);
-                    cashierRepository.save(cashier);
-                    if("2".equals(bill.getClient().getUserClient().getEspTemp())){
-                        saveDetailsBill(saved, details);
-                        savePagosAndCreditsBill(saved, pagos);
-                    } else {
-                        saveDetailsBill(saved, details);
-                        savePagosAndCreditsBill(saved, pagos);                        
-                        updateProductBySubsidiary(bill, typeDocument, details);
-                    }
-		} else {
-                    Cashier cashier = cashierRepository.findOne(bill.getUserIntegridad().getCashier().getId());
-                    cashier.setQuotationNumberSeq(cashier.getQuotationNumberSeq() + 1);
-                    cashierRepository.save(cashier);
-                    saveDetailsQuotation(saved, details);
+            // typeDocument 1 is Bill 0 is Quotation
+            if(typeDocument == 1){
+                Cashier cashier = cashierRepository.findOne(bill.getUserIntegridad().getCashier().getId());
+                cashier.setBillNumberSeq(cashier.getBillNumberSeq() + 1);
+                cashierRepository.save(cashier);
+                if("2".equals(bill.getClient().getUserClient().getEspTemp())){
+                    saveDetailsBill(saved, details);
+                    savePagosAndCreditsBill(saved, pagos);
+                } else {
+                    saveDetailsBill(saved, details);
+                    savePagosAndCreditsBill(saved, pagos);
+                    updateProductBySubsidiary(bill, typeDocument, details);
                 }
-		log.info("BillServices created id: {}", saved.getId());
-		saved.setDetails(details);
-		return saved;
+            } else {
+                Cashier cashier = cashierRepository.findOne(bill.getUserIntegridad().getCashier().getId());
+                cashier.setQuotationNumberSeq(cashier.getQuotationNumberSeq() + 1);
+                cashierRepository.save(cashier);
+                saveDetailsQuotation(saved, details);
+            }
+            saved.setDetails(details);
+            log.info("BillServices created id: {}", saved.getId());
+            return saved;
 	}
 
 //	public Bill createQuotation(Bill bill, int typeDocument ) throws BadRequestException{
@@ -252,18 +253,15 @@ public class BillServices {
 
 
 	public Bill deactivate(Bill bill) throws BadRequestException{
-		if(bill.getId() == null){
-			throw new BadRequestException("Invalid Bill");
-		}
+            if(bill.getId() == null){
+		throw new BadRequestException("Invalid Bill");
+            }
 
-		Bill billToDeactivate = billRepository.findOne(bill.getId());
-		billToDeactivate.setListsNull();
-
-		billToDeactivate.setActive(false);
-
-		billRepository.save(billToDeactivate);
-
-		return billToDeactivate;
+            Bill billToDeactivate = billRepository.findOne(bill.getId());
+            billToDeactivate.setListsNull();
+            billToDeactivate.setActive(false);
+            billRepository.save(billToDeactivate);
+            return billToDeactivate;
 	}
 
 	public Bill update(Bill bill) throws BadRequestException{

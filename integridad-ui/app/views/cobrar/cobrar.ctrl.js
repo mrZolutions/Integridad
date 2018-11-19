@@ -187,13 +187,18 @@ angular.module('integridadUiApp')
 
     vm.pAbono = function(payment){
       vm.loading = true;
-      vm.valorReten = 0.00;
-      vm.valorNotac = 0.00;
+      if (vm.payment.typePayment == 'PAC'){
+        vm.valorReten = 0.00;
+        vm.valorNotac = 0.00;
+      } else if (vm.payment.typePayment == 'NTC'){
+        vm.valorAbono = 0.00;
+        vm.valorReten = 0.00;
+        vm.payment.modePayment = 'NTC';
+      };
       vm.payment.datePayment = $('#DateOfPayment').data("DateTimePicker").date().toDate().getTime();
       vm.payment.creditId = vm.creditsId;
       vm.payment.documentNumber = vm.billNumber;
       vm.payment.valorReten = vm.valorReten;
-      vm.payment.valorNotac = vm.valorNotac;
       paymentService.create(payment).then(function(response){
         vm.error = undefined;
         vm.success = 'Abono realizado con exito';

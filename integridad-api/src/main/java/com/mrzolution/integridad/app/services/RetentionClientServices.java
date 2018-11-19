@@ -63,6 +63,7 @@ public class RetentionClientServices {
         return retrieved;
     };
     
+    @Async("asyncExecutor")
     public RetentionClient create(RetentionClient retentionClient) throws BadRequestException{   
         log.info("RetentionClientServices preparing for create new Retention");
         Iterable<RetentionClient> retenCli = retentionClientRepository.findByDocumentNumberAndBillId(retentionClient.getDocumentNumber(), retentionClient.getBill().getId());
@@ -93,7 +94,7 @@ public class RetentionClientServices {
         return saved;
     };
     
-    @Async
+    @Async("asyncExecutor")
     public void updateCreditsAndPayment(RetentionClient retentionClient, String document){
         Credits docNumber = creditsRepository.findByBillId(document);
         doc = docNumber.getBillId();
@@ -119,7 +120,7 @@ public class RetentionClientServices {
         log.info("RetentionClientServices Credits and Payment UPDATED");
     };
     
-    @Async
+    @Async("asyncExecutor")
     public void updateBill(RetentionClient retentionClient, String document){
         Bill bill = billRepository.findOne(retentionClient.getBill().getId());
         String nbillId = bill.getId().toString();
