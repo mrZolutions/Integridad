@@ -101,7 +101,7 @@ public class PaymentServices {
         List<CCResumenReport> ccResumenReportList = new ArrayList<>();
         
         payments.forEach(payment -> {
-            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd");
             String fechaPago = dateFormat.format(new Date(payment.getDatePayment()));
             
             CCResumenReport resumenReport = new CCResumenReport(payment.getCredits().getPago().getBill().getClient().getIdentification(), payment.getCredits().getPago().getBill().getClient().getName(),

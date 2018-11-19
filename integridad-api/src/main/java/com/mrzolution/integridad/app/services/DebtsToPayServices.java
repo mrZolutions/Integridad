@@ -17,6 +17,7 @@ import org.springframework.stereotype.Component;
  *
  * @author mrzolutions-daniel
  */
+
 @Slf4j
 @Component
 public class DebtsToPayServices {
@@ -56,8 +57,7 @@ public class DebtsToPayServices {
         return saved;
     };
     
-    private void populateChildren(DebtsToPay debtsToPay) {
-	log.info("DebtsToPayServices populateChildren debtsToPayId: {}", debtsToPay.getId());
+    private void populateChildren(DebtsToPay debtsToPay){
 	List<DetailDebtsToPay> detailDebtsToPayList = new ArrayList<>();
 	Iterable<DetailDebtsToPay> debts = detailDebtsToPayRepository.findByDebtsToPay(debtsToPay);
 	debts.forEach(detail -> {
@@ -66,9 +66,7 @@ public class DebtsToPayServices {
             detail.setDebtsToPay(null);
             detailDebtsToPayList.add(detail);
 	});
-
 	debtsToPay.setDetailDebtsToPay(detailDebtsToPayList);
 	debtsToPay.setFatherListToNull();
-	log.info("DebtsToPayServices populateChildren FINISHED debtsToPayId: {}", debtsToPay.getId());
     };
 }

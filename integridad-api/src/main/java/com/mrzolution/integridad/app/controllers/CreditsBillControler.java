@@ -40,12 +40,12 @@ public class CreditsBillControler {
         return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
     };
     
-    @RequestMapping(method = RequestMethod.GET, value="/rep/pendingreport/{userClientId}")
-    public ResponseEntity getAllCreditsPendingOfBillByUserClientId(@PathVariable("userClientId") UUID userClientId){
+    @RequestMapping(method = RequestMethod.GET, value="/rep/pendingreport/{userClientId}/{dateTwo}")
+    public ResponseEntity getAllCreditsPendingOfBillByUserClientId(@PathVariable("userClientId") UUID userClientId, @PathVariable("dateTwo") long dateTwo){
         log.info("CreditsBillControler getAllCreditsPendingOfBillByUserClientId: {}", userClientId);
         List<CreditsReport> response = null;
         try {
-            response = service.getCreditsPendingOfBillByUserClientId(userClientId);
+            response = service.getCreditsPendingOfBillByUserClientId(userClientId, dateTwo);
 	}catch(BadRequestException e) {
 	log.error("CreditsBillControler getAllCreditsOfBillByUserClientId Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());

@@ -136,8 +136,7 @@ public class RetentionClientServices {
         }
     };
     
-    private void populateChildren(RetentionClient retentionClient) {
-	log.info("RetentionClientServices populateChildren retentionClientId: {}", retentionClient.getId());
+    private void populateChildren(RetentionClient retentionClient){
 	List<DetailRetentionClient> detailRetentionList = new ArrayList<>();
 	Iterable<DetailRetentionClient> retentions = detailRetentionClientRepository.findByRetentionClient(retentionClient);
 	retentions.forEach(detail -> {
@@ -146,9 +145,7 @@ public class RetentionClientServices {
             detail.setRetentionClient(null);
             detailRetentionList.add(detail);
 	});
-
 	retentionClient.setDetailRetentionClient(detailRetentionList);
 	retentionClient.setFatherListToNull();
-	log.info("RetentionClientServices populateChildren FINISHED retentionId: {}", retentionClient.getId());
     };
 }

@@ -61,12 +61,13 @@ public class CreditNoteServices {
             String data = mapper.writeValueAsString(requirement);
             log.info("CreditNoteServices getDatil maper creado");
 		
-            String response = httpCallerService.post(Constants.DATIL_CREDIT_NOTE_LINK, data, userClient);
-            //String response = "OK";
+            //String response = httpCallerService.post(Constants.DATIL_CREDIT_NOTE_LINK, data, userClient);
+            String response = "OK";
             log.info("CreditNoteServices getDatil httpcall success");
             return response;
 	};
 	
+        @Async("asyncExecutor")
 	public CreditNote create(CreditNote creditNote) throws BadRequestException{
             log.info("CreditNoteServices create");
             List<Detail> details = creditNote.getDetails();
@@ -101,7 +102,7 @@ public class CreditNoteServices {
             return saved;
 	};
         
-        @Async
+        @Async("asyncExecutor")
         public void updateCreditsAndPayment(CreditNote saved, String document){
             Credits docNumber = creditsRepository.findByBillId(document);
             doc = docNumber.getBillId();
@@ -128,7 +129,7 @@ public class CreditNoteServices {
             valor = 0.0;
         };
         
-        @Async
+        @Async("asyncExecutor")
         public void updateBill(CreditNote creditNote, String document){
             Bill bill = billRepository.findOne(creditNote.getCredits().getPago().getBill().getId());
             String nbillId = bill.getId().toString();

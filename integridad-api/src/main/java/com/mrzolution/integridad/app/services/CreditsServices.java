@@ -47,9 +47,9 @@ public class CreditsServices {
         return credits;
     };
     
-    public List<CreditsReport> getCreditsPendingOfBillByUserClientId(UUID id){
+    public List<CreditsReport> getCreditsPendingOfBillByUserClientId(UUID id, long dateTwo){
         log.info("CreditsServices getCreditsOfBillByUserClientId: {}", id);
-        Iterable<Credits> credits = creditsRepository.findCreditsPendingOfBillByUserClientId(id);
+        Iterable<Credits> credits = creditsRepository.findCreditsPendingOfBillByUserClientId(id, dateTwo);
         List<CreditsReport> creditsReportList = new ArrayList<>();
         
         if(Iterables.size(credits) > 0){
@@ -125,7 +125,7 @@ public class CreditsServices {
             }
             
             CreditsReport saleReport = new CreditsReport(credit.getPago().getBill().getClient().getName(), credit.getPago().getBill().getStringSeq(), 
-                                                         fechaVenta, fechaVence, credit.getDiasPlazo(), diasVencim, credit.getValor(), 
+                                                         fechaVenta, fechaVence, credit.getDiasPlazo(), diasVencim, credit.getPago().getBill().getTotal(), 
                                                          sumAbono, sumReten, sumNotac, credit.getValor(), pPlazo, sPlazo, tPlazo, cPlazo, qPlazo);
             creditsReportList.add(saleReport);    
         });
@@ -143,7 +143,6 @@ public class CreditsServices {
     };
     
     private void populateChildren(Credits credits){
-        log.info("CreditsServices populateChildren creditsId: {}", credits.getId());
         List<Payment> paymentsList = new ArrayList<>();
         Iterable<Payment> creditos = paymentRepository.findByCredits(credits);
         
@@ -155,7 +154,6 @@ public class CreditsServices {
         });
         credits.setPayments(paymentsList);
         credits.setFatherListToNull();
-        log.info("CreditsServices populateChildren FINISHED creditsId: {}", credits.getId());
     };
     
 }

@@ -75,9 +75,11 @@ angular.module('integridadUiApp')
       vm.isProductReportList = '4';
       vm.reportList = undefined;
       vm.loading = true;
+      var dateTwo = $('#pickerBillDateTwo').data("DateTimePicker").date().toDate().getTime();
+      dateTwo += 86340000;
       var subId = $localStorage.user.subsidiary.userClient.id;
 
-      creditsbillService.getAllCreditsOfBillByUserClientId(subId).then(function(response){
+      creditsbillService.getAllCreditsOfBillByUserClientId(subId, dateTwo).then(function(response){
         vm.reportList = response;
         vm.loading = false;
       }).catch(function(error){
@@ -228,7 +230,7 @@ angular.module('integridadUiApp')
             COSTO_FACTURA: ccresumenreport.billTotal,
             TIPO_TRANSAC: ccresumenreport.tipTransac,
             MODO_PAGO: ccresumenreport.formPago,
-            FECHA_PAGO: ccresumenreport.fechPago,
+            FECHA_PAGO: ccresumenreport.fechPago !== null ? new Date(ccresumenreport.fechPago) : ccresumenreport.fechPago,
             VALOR_ABONO: parseFloat(ccresumenreport.valorAbono.toFixed(2)),
             VALOR_RETEN: parseFloat(ccresumenreport.valorReten.toFixed(2)),
             VALOR_NC: parseFloat(ccresumenreport.valorNotac.toFixed(2))
