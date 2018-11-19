@@ -51,8 +51,8 @@ public class RetentionServices {
 		String data = mapper.writeValueAsString(requirement);
 		log.info("RetentionServices getDatil maper creado");
 		
-                //String response = httpCallerService.post(Constants.DATIL_RETENTION_LINK, data, userClient);
-		String response = "OK";
+                String response = httpCallerService.post(Constants.DATIL_RETENTION_LINK, data, userClient);
+		//String response = "OK";
 		log.info("RetentionServices getDatil httpcall success");
 		return response;
 	};
