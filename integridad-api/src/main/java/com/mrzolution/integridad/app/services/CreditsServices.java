@@ -31,13 +31,14 @@ public class CreditsServices {
     PaymentRepository paymentRepository;
     
     private UUID clientId;
+    private double saldo = 0;
     private double sumTotal = 0;
     private double sumTotalAbono = 0;
     private double sumTotalReten = 0;
     private double sumTotalNotac = 0;
     private double sumTotalValor = 0;
     
-    public Iterable<Credits> getCreditsOfBillByBillId(UUID id){
+    public Iterable<Credits> getCreditsOfBillByBillId(UUID id) {
         log.info("CreditsServices getCreditsOfBillByBillId: {}", id);
         Iterable<Credits> credits = creditsRepository.findCreditsOfBillByBillId(id);
         credits.forEach(credit ->{
@@ -45,14 +46,14 @@ public class CreditsServices {
             credit.setFatherListToNull();
         });
         return credits;
-    };
+    }
     
-    public List<CreditsReport> getCreditsPendingOfBillByUserClientId(UUID id, long dateTwo){
+    public List<CreditsReport> getCreditsPendingOfBillByUserClientId(UUID id, long dateTwo) {
         log.info("CreditsServices getCreditsOfBillByUserClientId: {}", id);
         Iterable<Credits> credits = creditsRepository.findCreditsPendingOfBillByUserClientId(id, dateTwo);
         List<CreditsReport> creditsReportList = new ArrayList<>();
         
-        if(Iterables.size(credits) > 0){
+        if (Iterables.size(credits) > 0) {
             Credits firstCredit = Iterables.getFirst(credits, new Credits());
             clientId = firstCredit.getPago().getBill().getClient().getId();
         }  
@@ -73,18 +74,20 @@ public class CreditsServices {
             Double cPlazo = Double.valueOf(0);
             Double qPlazo = Double.valueOf(0);
             
-            for (Payment payments : credit.getPayments()){
-                sumAbono = Double.sum(sumAbono, payments.getValorAbono());
-                sumReten = Double.sum(sumReten, payments.getValorReten());
-                sumNotac = Double.sum(sumNotac, payments.getValorNotac());
+            for (Payment payments : credit.getPayments()) {
+                if (payments.getDatePayment() <= dateTwo) {
+                    sumAbono = Double.sum(sumAbono, payments.getValorAbono());
+                    sumReten = Double.sum(sumReten, payments.getValorReten());
+                    sumNotac = Double.sum(sumNotac, payments.getValorNotac());
+                }
             }
             
-            if(clientId != null && clientId.equals(credit.getPago().getBill().getClient().getId())){
+            if (clientId != null && clientId.equals(credit.getPago().getBill().getClient().getId())) {
                 sumTotal = Double.sum(sumTotal, credit.getPago().getBill().getTotal());
-                sumTotalValor = Double.sum(sumTotalValor, credit.getValor());
                 sumTotalAbono = Double.sum(sumTotalAbono, sumAbono);
                 sumTotalReten = Double.sum(sumTotalReten, sumReten);
                 sumTotalNotac = Double.sum(sumTotalNotac, sumNotac);
+                sumTotalValor = sumTotal - (sumTotalAbono + sumTotalReten + sumTotalNotac);
             } else {
                 clientId = credit.getPago().getBill().getClient().getId();
                 CreditsReport saleReport = new CreditsReport("SUB-TOTAL ", null, null, null, 0, 0, sumTotal, sumTotalAbono, sumTotalReten, sumTotalNotac, sumTotalValor, 0, 0, 0, 0, 0);
@@ -105,28 +108,30 @@ public class CreditsServices {
             } catch (ParseException ex) {
                 Logger.getLogger(CreditsServices.class.getName()).log(Level.SEVERE, null, ex);
             }
+            
+            saldo = credit.getPago().getBill().getTotal() - (sumAbono + sumReten + sumNotac);
                  
-            if(diasVencim > 0 && diasVencim <= 30){
-                pPlazo = credit.getValor();
-            } else if(diasVencim > 30 && diasVencim <= 60){
-                sPlazo = credit.getValor();               
-            } else if(diasVencim > 60 && diasVencim <= 90){
-                tPlazo = credit.getValor();
-            } else if(diasVencim > 90 && diasVencim <= 120){
-                cPlazo = credit.getValor();
-            } else if(diasVencim > 120){
-                qPlazo = credit.getValor();
+            if (diasVencim > 0 && diasVencim <= 30) {
+                pPlazo = saldo;
+            } else if (diasVencim > 30 && diasVencim <= 60) {
+                sPlazo = saldo;               
+            } else if (diasVencim > 60 && diasVencim <= 90) {
+                tPlazo = saldo;
+            } else if (diasVencim > 90 && diasVencim <= 120) {
+                cPlazo = saldo;
+            } else if (diasVencim > 120) {
+                qPlazo = saldo;
             } else {
                 pPlazo = 0.0;
                 sPlazo = 0.0;
                 tPlazo = 0.0;
                 cPlazo = 0.0;
                 qPlazo = 0.0;
-            }
+            } 
             
             CreditsReport saleReport = new CreditsReport(credit.getPago().getBill().getClient().getName(), credit.getPago().getBill().getStringSeq(), 
                                                          fechaVenta, fechaVence, credit.getDiasPlazo(), diasVencim, credit.getPago().getBill().getTotal(), 
-                                                         sumAbono, sumReten, sumNotac, credit.getValor(), pPlazo, sPlazo, tPlazo, cPlazo, qPlazo);
+                                                         sumAbono, sumReten, sumNotac, saldo, pPlazo, sPlazo, tPlazo, cPlazo, qPlazo);
             creditsReportList.add(saleReport);    
         });
         
@@ -140,9 +145,9 @@ public class CreditsServices {
         sumTotalValor = 0;
         
         return creditsReportList;
-    };
+    }
     
-    private void populateChildren(Credits credits){
+    private void populateChildren(Credits credits) {
         List<Payment> paymentsList = new ArrayList<>();
         Iterable<Payment> creditos = paymentRepository.findByCredits(credits);
         
@@ -154,6 +159,6 @@ public class CreditsServices {
         });
         credits.setPayments(paymentsList);
         credits.setFatherListToNull();
-    };
+    }
     
 }

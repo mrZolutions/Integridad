@@ -1,6 +1,7 @@
 package com.mrzolution.integridad.app.services;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.Iterables;
 import com.mrzolution.integridad.app.cons.Constants;
 import com.mrzolution.integridad.app.domain.CreditNote;
 import com.mrzolution.integridad.app.domain.*;
@@ -12,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
-import org.springframework.scheduling.annotation.Async;
 
 @Slf4j
 @Component
@@ -42,14 +42,15 @@ public class CreditNoteServices {
         BillRepository billRepository;
         
         private String document = "";
-        private double valor = 0.0;
+        private String statusCambio = "";
         private String doc = "";
+        private String saldo = "";
+        private double valor = 0.0;
         private int numC = 1;
         private double sum = 0.0;
-        private String saldo = "";
         private double sumado = 0.0;
 
-	public String getDatil(com.mrzolution.integridad.app.domain.ecreditNote.CreditNote requirement, UUID userClientId) throws Exception{
+	public String getDatil(com.mrzolution.integridad.app.domain.ecreditNote.CreditNote requirement, UUID userClientId) throws Exception {
             UserClient userClient = userClientRepository.findOne(userClientId);
 
             if(userClient == null){
@@ -61,15 +62,20 @@ public class CreditNoteServices {
             String data = mapper.writeValueAsString(requirement);
             log.info("CreditNoteServices getDatil maper creado");
 		
-            String response = httpCallerService.post(Constants.DATIL_CREDIT_NOTE_LINK, data, userClient);
-            //String response = "OK";
+            //String response = httpCallerService.post(Constants.DATIL_CREDIT_NOTE_LINK, data, userClient);
+            String response = "OK";
             log.info("CreditNoteServices getDatil httpcall success");
             return response;
-	};
+	}
 	
-        @Async("asyncExecutor")
-	public CreditNote create(CreditNote creditNote) throws BadRequestException{
+	public CreditNote create(CreditNote creditNote) throws BadRequestException {
             log.info("CreditNoteServices create");
+            
+            Iterable<CreditNote> credNot = creditNoteRepository.findByDocumentStringSeqAndBillId(creditNote.getDocumentStringSeq(), creditNote.getBillSeq());
+            if (Iterables.size(credNot) > 0){
+                throw new BadRequestException("Nota de Cretido de esta Factura Ya Existe");
+            }
+            
             List<Detail> details = creditNote.getDetails();
             if(details == null){
             	throw new BadRequestException("Debe tener un detalle por lo menos");
@@ -100,15 +106,18 @@ public class CreditNoteServices {
             saved.setFatherListToNull();
 
             return saved;
-	};
+	}
         
-        @Async("asyncExecutor")
-        public void updateCreditsAndPayment(CreditNote saved, String document){
+        public void updateCreditsAndPayment(CreditNote saved, String document) {
             Credits docNumber = creditsRepository.findByBillId(document);
             doc = docNumber.getBillId();
             if (doc.equals(document) && docNumber.getPayNumber() == numC){
                 valor = docNumber.getValor();
                 docNumber.setValor(valor - saved.getTotal());
+                if (docNumber.getValor() <= 0.01) {
+                    statusCambio = "NOTA DE CREDITO APLICADA";
+                    docNumber.setStatusCredits(statusCambio);
+                }
                 Credits spCretits =  creditsRepository.save(docNumber);
             
                 Payment specialPayment = new Payment();
@@ -127,14 +136,14 @@ public class CreditNoteServices {
             }
             log.info("CreditNoteServices Credits and Payment updated");
             valor = 0.0;
-        };
+        }
         
-        @Async("asyncExecutor")
-        public void updateBill(CreditNote creditNote, String document){
-            Bill bill = billRepository.findOne(creditNote.getCredits().getPago().getBill().getId());
+        public void updateBill(CreditNote saved, String document) {
+            Bill bill = billRepository.findOne(saved.getCredits().getPago().getBill().getId());
             String nbillId = bill.getId().toString();
             if (nbillId.equals(document)){
                 saldo = bill.getSaldo();
+                sum = saved.getTotal();
                 valor = Double.parseDouble(saldo);
                 sumado = valor - sum;
                 BigDecimal vsumado = new BigDecimal(sumado);
@@ -146,5 +155,6 @@ public class CreditNoteServices {
             log.info("CreditNoteServices Bill saldo updated");
             sumado = 0.0;
             valor = 0.0;
-        };
+            sum = 0.0;
+        }
 }

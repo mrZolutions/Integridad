@@ -16,5 +16,8 @@ import java.util.UUID;
 @Qualifier(value="CreditNoteRepository")
 public interface CreditNoteRepository extends CrudRepository<CreditNote, UUID>{
 	
-	Iterable<Bill> findByClient(Client client);
+    Iterable<Bill> findByClient(Client client);
+    
+    @Query("SELECT c FROM CreditNote c WHERE c.documentStringSeq = (:docNum) and c.billSeq = (:billId)")
+    Iterable<CreditNote> findByDocumentStringSeqAndBillId(@Param("docNum") String docNum, @Param("billId") String billId);
 }
