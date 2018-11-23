@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 /**
@@ -44,6 +45,7 @@ public class PaymentServices {
     private String saldo = "";
     private double sumado = 0.0;
     
+    @Async("asyncExecutor")
     public Payment create(Payment payment) {
         Payment saved = paymentRepository.save(payment);
         document = saved.getCredits().getPago().getBill().getId().toString();
@@ -61,6 +63,7 @@ public class PaymentServices {
 	return saved;
     }
     
+    @Async("asyncExecutor")
     public void updateCredits(UUID credits){
         Credits cambio = creditsRepository.findOne(idCredit);
         nume = cambio.getValor();
@@ -75,6 +78,7 @@ public class PaymentServices {
         log.info("PaymentServices updateCredits FINISHED");
     }
     
+    @Async("asyncExecutor")
     public void updateBill(Payment payment, String document) {
         Bill billed = billRepository.findOne(payment.getCredits().getPago().getBill().getId());
         String nbillId = billed.getId().toString();

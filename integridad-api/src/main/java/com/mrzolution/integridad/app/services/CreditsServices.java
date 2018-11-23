@@ -143,6 +143,7 @@ public class CreditsServices {
         sumTotalReten = 0;
         sumTotalNotac = 0;
         sumTotalValor = 0;
+        saldo = 0;
         
         return creditsReportList;
     }
