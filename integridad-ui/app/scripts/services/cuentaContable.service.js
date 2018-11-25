@@ -8,4 +8,10 @@ angular
       });
     };
 
+    this.getByType = function(typ) {
+      return securityService.get('/cuenta_contable/cuenta/type/' + typ).then(function successCallback(response) {
+        return response.data;
+      });
+    };
+
   });

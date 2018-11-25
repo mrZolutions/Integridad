@@ -222,37 +222,7 @@ public class BillServices {
             return saved;
 	}
 
-//	public Bill createQuotation(Bill bill, int typeDocument ) throws BadRequestException{
-//		log.info("BillServices createQuotation");
-//		List<Detail> details = bill.getDetails();
-//		if(details == null){
-//			throw new BadRequestException("Debe tener un detalle por lo menos");
-//		}
-//		bill.setDateCreated(new Date().getTime());
-//		bill.setTypeDocument(typeDocument);
-//		bill.setActive(true);
-//		bill.setDetails(null);
-//		bill.setFatherListToNull();
-//		bill.setListsNull();
-//		Bill saved = billRepository.save(bill);
-//
-//		Cashier cashier = cashierRepository.findOne(bill.getUserIntegridad().getCashier().getId());
-//		cashier.setQuotationNumberSeq(cashier.getQuotationNumberSeq()+1);
-//		cashierRepository.save(cashier);
-//
-//		details.forEach(detail->{
-//			detail.setBill(saved);
-//			detailRepository.save(detail);
-//			detail.setBill(null);
-//		});
-//
-//		log.info("BillServices created id: {}", saved.getId());
-//		saved.setDetails(details);
-//		return saved;
-//	}
-
-
-	public Bill deactivate(Bill bill) throws BadRequestException{
+	public Bill deactivate(Bill bill) throws BadRequestException {
             if(bill.getId() == null){
 		throw new BadRequestException("Invalid Bill");
             }
@@ -264,7 +234,7 @@ public class BillServices {
             return billToDeactivate;
 	}
 
-	public Bill update(Bill bill) throws BadRequestException{
+	public Bill update(Bill bill) throws BadRequestException {
             if(bill.getId() == null){
 		throw new BadRequestException("Invalid Bill");
             }
@@ -279,7 +249,7 @@ public class BillServices {
             return updated;
 	}
 
-	public Iterable<Bill> getByStringSeqAndSubId(String stringSeq, UUID subId){
+	public Iterable<Bill> getByStringSeqAndSubId(String stringSeq, UUID subId) {
             log.info("BillServices getByStringSeq : {}, {}", stringSeq, subId);
             Iterable<Bill> bills = billRepository.findByStringSeqAndSubsidiaryId(stringSeq, subId);
 
@@ -290,7 +260,7 @@ public class BillServices {
             return bills;
 	}
 
-	public List<ItemReport> getBySubIdAndDatesActives(UUID userClientId, long dateOne, long dateTwo){
+	public List<ItemReport> getBySubIdAndDatesActives(UUID userClientId, long dateOne, long dateTwo) {
             log.info("BillServices getByUserClientIdAndDates: {}, {}, {}", userClientId, dateOne, dateTwo);
             Iterable<Bill> bills = billRepository.findByUserClientIdAndDatesActives(userClientId, dateOne, dateTwo);
             Set<UUID> productIds = new HashSet<>();

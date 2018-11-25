@@ -20,6 +20,7 @@ angular.module('integridadUiApp')
     vm.providerId = undefined;
     vm.subTotal = undefined;
     vm.subIva = undefined;
+    vm.typeTaxes = undefined;
     vm.cuentaCtableId = undefined;
     vm.cuentaContableList = undefined;
     vm.debtsToPayCreated = undefined;
@@ -55,6 +56,16 @@ angular.module('integridadUiApp')
       {code: '43', name: '43 - Liquidación para Explotación y Exploracion de Hidrocarburos'},
       {code: '44', name: '44 - Comprobante de Contribuciones y Aportes'},
       {code: '45', name: '45 - Liquidación por reclamos de aseguradoras'}
+    ];
+
+    vm.medList = [
+      {code: 'efectivo', name: 'Efectivo' },
+      {code: 'cheque', name: 'Cheque' },
+      {code: 'cheque_posfechado', name: 'Cheque posfechado' },
+      {code: 'tarjeta_credito', name: 'Tarjeta de crédito' },
+      {code: 'tarjeta_debito', name: 'Tarjeta de débito' },
+      {code: 'dinero_electronico_ec', name: 'Dinero electrónico' },
+      {code: 'credito', name: 'Crédito' },
     ];
 
     vm.supportType = [
@@ -100,21 +111,21 @@ angular.module('integridadUiApp')
     ];
 
     vm.purchaseType = [
-      {code: 'BIE', name: 'BIENES'},
-      {code: 'SER', name: 'SERVICIOS'},
-      {code: 'MTP', name: 'MATERIA PRIMA'},
-      {code: 'CON', name: 'CONSUMIBLES'},
-      {code: 'REG', name: 'REEMBOLSO DE GASTOS'},
-      {code: 'TAE', name: 'TIKETS AEREOS'}
+      {code: 'BIEN', name: 'BIENES'},
+      {code: 'SERV', name: 'SERVICIOS'},
+      {code: 'MATP', name: 'MATERIA PRIMA'},
+      {code: 'CONS', name: 'CONSUMIBLES'},
+      {code: 'RMBG', name: 'REEMBOLSO DE GASTOS'},
+      {code: 'TKAE', name: 'TIKETS AEREOS'}
     ];
 
-    function _activate(){
+    function _activate() {
       vm.today = new Date();
       vm.provider = undefined;
       vm.providerSelected = undefined;
       vm.providerList = [];
       vm.usrCliId = $localStorage.user.subsidiary.userClient.id
-      providerService.getLazyByUserClientId(vm.usrCliId).then(function(response){
+      providerService.getLazyByUserClientId(vm.usrCliId).then(function(response) {
         vm.providerList = response;
         vm.loading = false;
       }).catch(function (error) {
@@ -123,7 +134,7 @@ angular.module('integridadUiApp')
       });
     };
 
-    vm.selectProvider = function(provider){
+    vm.selectProvider = function(provider) {
       vm.loading = true;
       var today = new Date();
       vm.providerSelected = true;
@@ -144,26 +155,42 @@ angular.module('integridadUiApp')
       });
     };
 
-    vm.getPercentageTable = function(){
-      if(vm.debtsToPay.typeTaxes === '1'){
+    vm.getPercentageTableAll = function() {
+      if (vm.debtsToPay.typeTaxes === '1') {
         cuentaContableService.getAll().then(function(response){
+          vm.cuentaContableList = response;
+        });
+        vm.typeTaxes = vm.debtsToPay.typeTaxes;
+      } else if (vm.debtsToPay.typeTaxes === '2') {
+        cuentaContableService.getAll().then(function(response){
+          vm.cuentaContableList = response;
+        });
+        vm.typeTaxes = vm.debtsToPay.typeTaxes;
+      };
+    };
+
+    vm.selectPurchaseTable = function(purchaseType) {
+      if (vm.debtsToPay.typeTaxes === '1') {
+        cuentaContableService.getByType(purchaseType).then(function(response){
+          vm.cuentaContableList = response;
+        });
+      } else if (vm.debtsToPay.typeTaxes === '2') {
+        cuentaContableService.getByType(purchaseType).then(function(response){
           vm.cuentaContableList = response;
         });
       };
     };
 
-    vm.selectTaxes = function(q){
+    vm.selectTaxes = function(q) {
       vm.item = undefined;
       vm.item = {
         cta_contable: q.id,
         codigo: parseInt(vm.debtsToPay.typeTaxes),
-        fecha_emision_documento: dateService.getIsoDate($('#pickerBillDatedebtsToPay').data("DateTimePicker").date().toDate()),
         codigo_contable: q.code,
         desc_contable: q.description,
         tipo: q.accountType,
         nomb_contable: q.name
       };
-      console.log(vm.item);
       vm.subIva = (parseFloat(vm.debtsToPay.total) * 0.12).toFixed(2);
       vm.subTotal = (parseFloat(vm.debtsToPay.total) - vm.subIva).toFixed(2);
     };
@@ -185,25 +212,27 @@ angular.module('integridadUiApp')
         vm.indexEdit = undefined;
       };
       vm.itemIva = {
-        cta_contable: q.id,
         codigo: parseInt(vm.debtsToPay.typeTaxes),
-        fecha_emision_documento: dateService.getIsoDate($('#pickerBillDatedebtsToPay').data("DateTimePicker").date().toDate()),
-        codigo_contable: q.code,
-        desc_contable: q.description,
-        tipo: q.accountType,
-        nomb_contable: q.name
+        codigo_contable: '1.01.05.01.01',
+        desc_contable: 'IVA EN COMPRAS',
+        tipo: 'DEBITO (D)',
+        base_imponible: vm.subIva,
+        nomb_contable: 'DEFINIDA PARA TODAS LAS COMPRAS'
       };
       vm.itemProvider = {
-        cta_contable: q.id,
         codigo: parseInt(vm.debtsToPay.typeTaxes),
-        fecha_emision_documento: dateService.getIsoDate($('#pickerBillDatedebtsToPay').data("DateTimePicker").date().toDate()),
-        codigo_contable: q.code,
-        desc_contable: q.description,
-        tipo: q.accountType,
-        nomb_contable: q.name
+        codigo_contable: '2.01.03.01.01',
+        desc_contable: 'PROVEEDORES LOCALES',
+        tipo: 'CREDITO (C)',
+        base_imponible: vm.debtsToPay.total,
+        nomb_contable: 'DEFINIDA PARA TODOS LOS PROVEEDORES'
       };
-      vm.debtsToPay.items.push(vm.itemIva);
-      vm.debtsToPay.items.push(vm.itemProvider);
+      if (vm.typeTaxes === '1') {
+        vm.debtsToPay.items.push(vm.itemIva);
+        vm.debtsToPay.items.push(vm.itemProvider);
+      } else if (vm.typeTaxes === '2') {
+        vm.debtsToPay.items.push(vm.itemProvider);
+      };
       vm.debtsToPay.typeTaxes = undefined;
     };
 
@@ -254,6 +283,8 @@ angular.module('integridadUiApp')
       vm.debtsToPay.billNumber = vm.debtsToPay.cashierNumber +'-'+ vm.debtsToPay.sequentialNumber +'-'+ vm.debtsToPay.establishmentNumber;
       vm.debtsToPay.providerId = vm.providerId;
       vm.debtsToPay.userClientId = vm.usrCliId;
+      vm.debtsToPay.subTotal = vm.subTotal;
+      vm.debtsToPay.period = vm.ejercicio;
       vm.debtsToPay.detailDebtsToPay = [];
       _.each (vm.debtsToPay.items, function(item) {
         var detail = {
@@ -286,6 +317,83 @@ angular.module('integridadUiApp')
       vm.error = undefined;
       vm.providerSelected = undefined;
       vm.cuentaContableList = undefined;
+    };
+
+    vm.loadMedio = function(){
+      var payed = 0;
+      _.each(vm.pagos, function(pago){
+        payed += parseFloat(pago.total);
+      });
+      if(vm.medio.medio === 'efectivo' || vm.medio.medio === 'dinero_electronico_ec'){
+        vm.medio.payForm = '20 - OTROS CON UTILIZACION DEL SISTEMA FINANCIERO';
+        vm.medio.statusPago = 'PAGADO';
+        vm.medio.total = vm.aux;
+      };
+      if(vm.medio.medio === 'credito'){
+        vm.medio.payForm = '20 - OTROS CON UTILIZACION DEL SISTEMA FINANCIERO';
+        vm.medio.total = (vm.bill.total - payed).toFixed(4);
+        vm.priceType.name === 'CREDITO';
+      };
+      if(vm.medio.medio === 'cheque' || vm.medio.medio === 'cheque_posfechado'){
+        vm.medio.payForm = '20 - OTROS CON UTILIZACION DEL SISTEMA FINANCIERO';
+        vm.medio.statusPago = 'PAGADO';
+        vm.medio.total = (vm.bill.total - payed).toFixed(4);
+      };
+      if(vm.medio.medio === 'tarjeta_credito' || vm.medio.medio === 'tarjeta_debito'){
+        vm.medio.payForm = '19 - TARJETA DE CREDITO';
+        vm.medio.total = (vm.bill.total - payed).toFixed(4);
+        vm.medio.statusPago = 'PAGADO';
+      };
+    };
+
+    vm.loadCredit = function(){
+      var creditArray = [];
+      var diasPlazo = parseInt(vm.medio.creditoIntervalos);
+      var d = new Date();
+      var total = parseFloat(parseFloat(vm.bill.total)/parseFloat(vm.medio.creditoNumeroPagos)).toFixed(4);
+      var statusCredits = 'PENDIENTE';
+      vm.seqNumberCredits = vm.seqNumber;
+      for (var i = 1; i <= parseInt(vm.medio.creditoNumeroPagos); i++) {
+        var credito = {
+          payNumber: i,
+          diasPlazo: diasPlazo,
+          fecha: _addDays(d, diasPlazo),
+          statusCredits: statusCredits,
+          documentNumber: vm.seqNumberCredits,
+          valor: total
+        };
+        diasPlazo += parseInt(vm.medio.creditoIntervalos);
+        creditArray.push(credito);
+      };
+      vm.medio.credits = creditArray;
+    };
+
+    vm.getFechaCobro = function() {
+      var d = new Date();
+      vm.medio.fechaCobro = _addDays(d, parseInt(vm.medio.chequeDiasPlazo));
+    };
+
+    vm.addPago = function(){
+      vm.pagos.push(angular.copy(vm.medio));
+      vm.medio = {};
+    };
+
+    vm.removePago = function(index){
+      vm.pagos.splice(index, 1);
+    };
+
+    vm.getTotalPago = function(){
+      vm.aux = 0;
+      vm.varPago = 0;
+      if(vm.bill){
+        vm.getCambio = 0;
+        _.each(vm.pagos, function(med){
+          vm.varPago = parseFloat(parseFloat(vm.varPago) + parseFloat(med.total)).toFixed(2);
+        });
+        vm.getCambio = (vm.varPago - vm.bill.total).toFixed(2);
+        vm.aux = (vm.varPago - vm.getCambio).toFixed(2);
+      };
+      return vm.varPago;
     };
 
     (function initController() {

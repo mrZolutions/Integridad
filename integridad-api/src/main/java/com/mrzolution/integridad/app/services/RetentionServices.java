@@ -41,7 +41,7 @@ public class RetentionServices {
 	@Autowired
 	UserClientRepository userClientRepository;
 
-	public String getDatil(com.mrzolution.integridad.app.domain.eretention.Retention requirement, UUID userClientId) throws Exception{
+	public String getDatil(com.mrzolution.integridad.app.domain.eretention.Retention requirement, UUID userClientId) throws Exception {
 		UserClient userClient = userClientRepository.findOne(userClientId);
 		if(userClient == null){
 			throw new BadRequestException("Empresa Invalida");
@@ -55,9 +55,9 @@ public class RetentionServices {
                 //String response = "OK";
 		log.info("RetentionServices getDatil httpcall success");
 		return response;
-	};
+	}
 
-	public Iterable<Retention> getByUserLazy(UserIntegridad user){
+	public Iterable<Retention> getByUserLazy(UserIntegridad user) {
 		log.info("RetentionServices getByUserLazy: {}", user.getId());
 		Iterable<Retention> retentions = retentionRepository.findByUserIntegridad(user);
 		retentions.forEach(retention->{
@@ -65,18 +65,7 @@ public class RetentionServices {
                     retention.setFatherListToNull();
 		});
 		return retentions;
-	};
-
-//	public Iterable<Bill> getByClientIdAndTypeLazy(UUID id){
-//		log.info("BillServices getByClientIdAndTypeLazy: {}", id);
-//		Iterable<Bill> bills = billRepository.findByClientId(id);
-//		bills.forEach(bill->{
-//			bill.setListsNull();
-//			bill.setFatherListToNull();
-//		});
-//
-//		return bills;
-//	}
+	}
 
 	public Retention getById(UUID id) {
 		log.info("RetentionServices getById: {}", id);
@@ -88,9 +77,9 @@ public class RetentionServices {
 		}
 		populateChildren(retrieved);
 		return retrieved;
-	};
+	}
 
-	public Retention create(Retention retention) throws BadRequestException{
+	public Retention create(Retention retention) throws BadRequestException {
 		log.info("RetentionServices create");
 		List<DetailRetention> details = retention.getDetailRetentions();
 		if(details == null){
@@ -115,9 +104,9 @@ public class RetentionServices {
 		log.info("RetentionServices created id: {}", saved.getId());
 		saved.setDetailRetentions(details);
 		return saved;
-	};
+	}
 
-	public Retention update(Retention retention) throws BadRequestException{
+	public Retention update(Retention retention) throws BadRequestException {
 		if(retention.getId() == null){
 			throw new BadRequestException("Invalid Retention");
 		}
@@ -132,9 +121,9 @@ public class RetentionServices {
 		Retention updated = retentionRepository.save(retention);
 		log.info("RetentionServices update id: {}", updated.getId());
 		return updated;
-	};
+	}
 
-	public List<RetentionReport> getAllBySubIdAndDates(UUID userClientId, long dateOne, long dateTwo){
+	public List<RetentionReport> getAllBySubIdAndDates(UUID userClientId, long dateOne, long dateTwo) {
 		log.info("RetentionServices getAllBySubIdAndDates: {}, {}, {}", userClientId, dateOne, dateTwo);
 		Iterable<Retention> retentions = retentionRepository.findAllByUserClientIdAndDates(userClientId, dateOne, dateTwo);
 		List<RetentionReport> retentionReportList = new ArrayList<>();
@@ -159,21 +148,8 @@ public class RetentionServices {
 		});
 
 		return retentionReportList;
-	};
+	}
 
-//
-//	public Iterable<Bill> getByStringSeqAndSubId(String stringSeq, UUID subId){
-//		log.info("BillServices getByStringSeq : {}, {}", stringSeq, subId);
-//		Iterable<Bill> bills = billRepository.findByStringSeqAndSubsidiaryId(stringSeq, subId);
-//
-//		bills.forEach(retention->{
-//			retention.setFatherListToNull();
-//			retention.setListsNull();
-//		});
-//
-//		return bills;
-//	}
-//
 	private void populateChildren(Retention retention) {
 		log.info("RetentionServices populateChildren retentionId: {}", retention.getId());
 		List<DetailRetention> detailRetentionList = new ArrayList<>();
@@ -190,6 +166,6 @@ public class RetentionServices {
 		retention.setDetailRetentions(detailRetentionList);
 		retention.setFatherListToNull();
 		log.info("RetentionServices populateChildren FINISHED retentionId: {}", retention.getId());
-	};
+	}
 
 }

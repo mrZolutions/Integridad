@@ -146,28 +146,43 @@
                         <input type="text" ng-model="vm.debtsToPay.establishmentNumber" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
                                class="form-control" maxlength="9">
                     </div>
-                </div>
-                <div class="form-group col-md-12">
+                </div>          
+            </div>
+            <div class="row">
+                <div class="form-group col-md-9">
                     <label>N&uacute;mero de Autorizaci&oacute;n:</label><br/>
                     <input type="text" ng-model="vm.debtsToPay.authorizationNumber" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
                            class="form-control" maxlength="90">
                 </div>
-            </div>
-            <div class="row">
-                <div class="form-group col-md-4">
-                    <label>Valor Total a Pagar:</label>
+                <div class="form-group col-md-3">
+                    <label>Valor Total:</label>
                     <input type="text" ng-model="vm.debtsToPay.total"
                            class="form-control" maxlength="20">
                 </div>
+            </div>
+            <div class="row">
                 <div class="form-group col-md-4">
                     <label>Impuesto:</label><br>
                     <label class="radio-inline"><input type="radio" ng-model="vm.debtsToPay.typeTaxes" value="1" name="tipo"
-                           ng-change="vm.getPercentageTable()">IVA</label>
+                           ng-change="vm.getPercentageTableAll()">IVA</label>
+                    <label class="radio-inline"><input type="radio" ng-model="vm.debtsToPay.typeTaxes" value="2" name="tipo"
+                           ng-change="vm.getPercentageTableAll()">IVA "0"</label>
+                </div>
+                <div class="form-group col-md-4">
+                    <label>Tipo de Compra</label>
+                    <select ng-options="purType.code as purType.name for purType in vm.purchaseType | orderBy:'name' track by purType.code" ng-model="vm.debtsToPay.tipoDeCompra"
+                            ng-change="vm.selectPurchaseTable(vm.debtsToPay.tipoDeCompra)" class="form-control">
+                    </select>
+                </div>
+                <div class="form-group col-md-4">
+                    <label>Cuentas Contables:</label><br>
+                    <button type="button" class="btn btn-primary" ng-click="vm.addIvaAndProvider()">
+                            IVA y Proveedor
+                    </button>
                 </div>
             </div>
             <div class="row" ng-show="vm.cuentaContableList !== undefined">
                 <div class="form-group col-md-12">
-                    <input ng-model="searchTextTaxes" class="form-control" placeholder="Buscar">
                     <table class="table table-striped">
                         <thead>
                             <tr>
@@ -184,7 +199,7 @@
                                     No hay Fuente Seleccionada
                                 </td>
                             </tr>
-                            <tr dir-paginate="q in vm.cuentaContableList | orderBy:'type' | filter:searchTextTaxes | itemsPerPage: 4"  pagination-id="taxesPagination">
+                            <tr dir-paginate="q in vm.cuentaContableList | orderBy:'type' | filter:searchTextTaxes | itemsPerPage: 5"  pagination-id="taxesPagination">
                                 <td>{{q.type}}</td>
                                 <td>{{q.code}}</td>
                                 <td>{{q.description}}</td>
@@ -314,7 +329,7 @@
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" ng-click="vm.medio={}">&times;</button>
                 <h4 class="modal-title">Agregar Pago</h4>
-                TOTAL: {{vm.bill.total}}
+                TOTAL: {{vm.debtsToPay.total}}
             </div>
             <div class="modal-body">
                 <div class="row">

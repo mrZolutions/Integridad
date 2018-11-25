@@ -17,11 +17,7 @@ angular.module('integridadUiApp')
     vm.cuentasContablesList = undefined;
     vm.cuetaSelected = undefined;
 
-    vm.accountType = [
-      'B', 'S', 'MP', 'CM', 'RG', 'TAE',
-    ];
-
-    function _activate(){
+    function _activate() {
       vm.loading = true;
       vm.cuentaSelected = undefined;
       vm.user = $localStorage.user;
@@ -29,21 +25,21 @@ angular.module('integridadUiApp')
       cuentasService.getLazyByUserClientId(vm.user.subsidiary.userClient.id).then(function (response) {
         vm.cuentasContablesList = response;
         vm.loading = false;
-      }).catch(function(error){
+      }).catch(function(error) {
         vm.loading = false;
         vm.error = error.data;
       });
     };
 
-    function _initializeCuenta(){
+    function _initializeCuenta() {
       vm.cuentaSelected = {
         userClient: vm.user.subsidiary.userClient
       };
     };
 
-    function create(){
+    function create() {
       vm.loading = true;
-      cuentasService.create(vm.cuentaSelected).then(function(response){
+      cuentasService.create(vm.cuentaSelected).then(function(response) {
         _activate();
         vm.error = undefined;
         vm.success = 'Registro realizado con exito';
@@ -53,15 +49,15 @@ angular.module('integridadUiApp')
       });
     };
 
-    vm.cuentaCreate = function(){
+    vm.cuentaCreate = function() {
       _initializeCuenta();
     };
 
-    vm.save = function(){
+    vm.save = function() {
       create();
     };
 
-    vm.cancel = function(){
+    vm.cancel = function() {
       _activate();
     };
 
