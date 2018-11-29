@@ -21,7 +21,7 @@ public class DebtsToPay {
     private String buyTypeVoucher;
     private String purchaseType;
     private long date;
-    private int period;
+    private String ejercicio;
     private String establishmentNumber;
     private String cashierNumber;
     private String sequentialNumber;
@@ -30,10 +30,7 @@ public class DebtsToPay {
     private double total;
     private double subTotal;
     private String tipoDeCompra;
-
-    private String description;
     private String account_type;
-    private String name;
 
     @ManyToOne
     @JoinColumn(name = "provider_id")

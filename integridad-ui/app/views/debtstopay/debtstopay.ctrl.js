@@ -284,7 +284,7 @@ angular.module('integridadUiApp')
       vm.debtsToPay.providerId = vm.providerId;
       vm.debtsToPay.userClientId = vm.usrCliId;
       vm.debtsToPay.subTotal = vm.subTotal;
-      vm.debtsToPay.period = vm.ejercicio;
+      vm.debtsToPay.ejercicio = vm.ejercicio;
       vm.debtsToPay.detailDebtsToPay = [];
       _.each (vm.debtsToPay.items, function(item) {
         var detail = {
