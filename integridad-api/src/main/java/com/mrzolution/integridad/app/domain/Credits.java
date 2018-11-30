@@ -35,16 +35,16 @@ public class Credits implements Child {
     @OneToMany(mappedBy = "credits", cascade = CascadeType.ALL)
     private List<Payment> payments;
 
-    public void setListsNull(){
+    public void setListsNull() {
         payments = null;
     }
 
-    public void setFatherListToNull(){
+    public void setFatherListToNull() {
         pago.setListsNull();
         pago.setFatherListToNull();
     }
 
-    public static Credits newCreditsTest(){
+    public static Credits newCreditsTest() {
         Credits credit = new Credits();
         credit.setPago(Pago.newPagoTest());
         return credit;
