@@ -149,9 +149,9 @@ angular.module('integridadUiApp')
         userClientId: vm.usrCliId
       };
       vm.ejercicio = ('0' + (today.getMonth() + 1)).slice(-2) + '/' +today.getFullYear();
-      $('#pickerBillDatedebtsToPay').data("DateTimePicker").date(today);
-      $('#pickerBillDatedebtsToPay').on("dp.change", function (data) {
-        vm.ejercicio = ('0' + ($('#pickerBillDatedebtsToPay').data("DateTimePicker").date().toDate().getMonth() + 1)).slice(-2) + '/' +$('#pickerBillDateDocumentdebtsToPay').data("DateTimePicker").date().toDate().getFullYear();
+      $('#pickerDateDebtsToPay').data("DateTimePicker").date(today);
+      $('#pickerDateDebtsToPay').on("dp.change", function (data) {
+        vm.ejercicio = ('0' + ($('#pickerDateDebtsToPay').data("DateTimePicker").date().toDate().getMonth() + 1)).slice(-2) + '/' +$('#pickerBillDateDocumentdebtsToPay').data("DateTimePicker").date().toDate().getFullYear();
       });
     };
 
@@ -279,7 +279,8 @@ angular.module('integridadUiApp')
 
     vm.saveDebtsToPay = function(debtsToPay) {
       vm.loading = true;
-      vm.debtsToPay.date = $('#pickerBillDatedebtsToPay').data("DateTimePicker").date().toDate().getTime();
+      $('#modalAddPago').modal('hide');
+      vm.debtsToPay.date = $('#pickerDateDebtsToPay').data("DateTimePicker").date().toDate().getTime();
       vm.debtsToPay.billNumber = vm.debtsToPay.cashierNumber +'-'+ vm.debtsToPay.sequentialNumber +'-'+ vm.debtsToPay.establishmentNumber;
       vm.debtsToPay.providerId = vm.providerId;
       vm.debtsToPay.userClientId = vm.usrCliId;

@@ -195,7 +195,7 @@ angular.module('integridadUiApp')
         vm.valorReten = 0.00;
         vm.payment.modePayment = 'NTC';
       };
-      vm.payment.datePayment = $('#DateOfPayment').data("DateTimePicker").date().toDate().getTime();
+      vm.payment.datePayment = $('#pickerDateOfPayment').data("DateTimePicker").date().toDate().getTime();
       vm.payment.creditId = vm.creditsId;
       vm.payment.documentNumber = vm.billNumber;
       vm.payment.valorReten = vm.valorReten;

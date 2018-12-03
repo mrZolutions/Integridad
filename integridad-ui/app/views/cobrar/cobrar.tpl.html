@@ -192,12 +192,13 @@
         <div class="row">
           <div class="form-group col-md-6">
             <label>Fecha de Pago: </label>
-            <div class="input-group date" id="DateOfPayment">
-              <input type="text" class="form-control input-group-addon" ng-model="vm.payment.datePayment"/>
+            <div class="input-group date" id="pickerDateOfPayment">
+              <input type="text" class="form-control input-group-addon"/>
               <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"/></span>
             </div>
             <script>
-              $('#DateOfPayment').datetimepicker({format: "DD/MM/YY",});
+              var defaultDate = new Date();
+              $('#pickerDateOfPayment').datetimepicker({format: "DD/MM/YY",});
             </script>
           </div>
           <div class="form-group col-md-6">
