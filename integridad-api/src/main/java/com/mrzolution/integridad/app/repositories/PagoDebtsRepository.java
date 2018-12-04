@@ -1,11 +1,11 @@
 package com.mrzolution.integridad.app.repositories;
 
 import com.mrzolution.integridad.app.domain.DebtsToPay;
-import com.mrzolution.integridad.app.domain.Provider;
-import java.util.UUID;
+import com.mrzolution.integridad.app.domain.PagoDebts;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
+import java.util.UUID;
 
 /**
  *
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Repository;
  */
 
 @Repository
-@Qualifier(value = "DebtsToPayRepository")
-public interface DebtsToPayRepository extends CrudRepository<DebtsToPay, UUID> {
-    Iterable<DebtsToPay> findByProvider(Provider provider);
+@Qualifier(value="PagoDebtsRepository")
+public interface PagoDebtsRepository extends CrudRepository<PagoDebts, UUID> {
+    Iterable<PagoDebts> findByDebtsToPay (DebtsToPay debtsToPay);
 }

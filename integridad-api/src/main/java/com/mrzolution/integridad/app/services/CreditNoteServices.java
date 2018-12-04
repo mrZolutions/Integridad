@@ -53,7 +53,7 @@ public class CreditNoteServices {
 	public String getDatil(com.mrzolution.integridad.app.domain.ecreditNote.CreditNote requirement, UUID userClientId) throws Exception {
             UserClient userClient = userClientRepository.findOne(userClientId);
 
-            if(userClient == null){
+            if (userClient == null) {
 		throw new BadRequestException("Empresa Invalida");
             }
 
@@ -62,8 +62,8 @@ public class CreditNoteServices {
             String data = mapper.writeValueAsString(requirement);
             log.info("CreditNoteServices getDatil maper creado");
 		
-            //String response = httpCallerService.post(Constants.DATIL_CREDIT_NOTE_LINK, data, userClient);
-            String response = "OK";
+            String response = httpCallerService.post(Constants.DATIL_CREDIT_NOTE_LINK, data, userClient);
+            //String response = "OK";
             log.info("CreditNoteServices getDatil httpcall success");
             return response;
 	}
@@ -93,7 +93,7 @@ public class CreditNoteServices {
             cashier.setCreditNoteNumberSeq(cashier.getCreditNoteNumberSeq() + 1);
             cashierRepository.save(cashier);
 
-            details.forEach(detail -> {
+            details.forEach (detail -> {
 		detail.setCreditNote(saved);
 		detailRepository.save(detail);
 		detail.setCreditNote(null);
@@ -111,7 +111,7 @@ public class CreditNoteServices {
         public void updateCreditsAndPayment(CreditNote saved, String document) {
             Credits docNumber = creditsRepository.findByBillId(document);
             doc = docNumber.getBillId();
-            if (doc.equals(document) && docNumber.getPayNumber() == numC){
+            if (doc.equals(document) && docNumber.getPayNumber() == numC) {
                 valor = docNumber.getValor();
                 docNumber.setValor(valor - saved.getTotal());
                 if (docNumber.getValor() <= 0.01) {
@@ -141,7 +141,7 @@ public class CreditNoteServices {
         public void updateBill(CreditNote saved, String document) {
             Bill bill = billRepository.findOne(saved.getCredits().getPago().getBill().getId());
             String nbillId = bill.getId().toString();
-            if (nbillId.equals(document)){
+            if (nbillId.equals(document)) {
                 saldo = bill.getSaldo();
                 sum = saved.getTotal();
                 valor = Double.parseDouble(saldo);

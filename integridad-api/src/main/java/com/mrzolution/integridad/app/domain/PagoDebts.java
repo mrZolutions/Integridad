@@ -36,19 +36,19 @@ public class PagoDebts implements Child {
     private int creditoNumeroPagos;
     private double total;
     
-    @OneToMany(mappedBy = "pagodebts", cascade = CascadeType.ALL)
-    private List<CreditsDebts> creditsdebts;
+    @OneToMany(mappedBy = "pagoDebts", cascade = CascadeType.ALL)
+    private List<CreditsDebts> credits;
     
     @ManyToOne
-    @JoinColumn(name = "debtstopay_id")
-    private DebtsToPay debtstopay;
+    @JoinColumn(name = "debtsToPay_id")
+    private DebtsToPay debtsToPay;
     
     public void setListsNull() {
-        creditsdebts = null;
+        credits = null;
     }
     
     public void setFatherListToNull() {
-        debtstopay.setListsNull();
-        debtstopay.setFatherListToNull();
+        debtsToPay.setListsNull();
+        debtsToPay.setFatherListToNull();
     }
 }

@@ -222,12 +222,12 @@ angular.module('integridadUiApp')
         bill: bill,
         typeRetention: undefined,
         items: [],
-        ejercicio: ('0' + (today.getMonth() + 1)).slice(-2) + '/' +today.getFullYear()
+        ejercicio: ('0' + (today.getMonth() + 1)).slice(-2) + '/' + today.getFullYear()
       };
       $('#pickerDateToday').data("DateTimePicker").date(today);
       $('#pickerDateRetention').data("DateTimePicker").date(today);
       $('#pickerDateRetention').on("dp.change", function (data) {
-        vm.retentionClient.ejercicio = ('0' + ($('#pickerDateRetention').data("DateTimePicker").date().toDate().getMonth() + 1)).slice(-2) + '/' +$('#pickerDateRetention').data("DateTimePicker").date().toDate().getFullYear();
+        vm.retentionClient.ejercicio = ('0' + ($('#pickerDateRetention').data("DateTimePicker").date().toDate().getMonth() + 1)).slice(-2) + '/' + $('#pickerDateRetention').data("DateTimePicker").date().toDate().getFullYear();
       });
     };
 

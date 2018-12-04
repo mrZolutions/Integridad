@@ -12,7 +12,7 @@ import org.springframework.data.repository.query.Param;
 
 @Repository
 @Qualifier(value="CreditsRepository")
-public interface CreditsRepository extends CrudRepository<Credits, UUID>{
+public interface CreditsRepository extends CrudRepository<Credits, UUID> {
 
     Iterable<Credits> findByPago(Pago pago);
     

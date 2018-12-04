@@ -297,10 +297,15 @@
                         <label>Nombre:</label>
                         <b>{{vm.item.desc_contable}}</b>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-3" ng-if="vm.item.codigo === 1">
                         <label>Valor</label>
                         <input type="text" onkeypress="return ((event.which >= 46 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
                                class="form-control" maxlength="9" ng-model="vm.item.base_imponible" placeholder="{{vm.subTotal}}"/>
+                    </div>
+                    <div class="col-md-3" ng-if="vm.item.codigo === 2">
+                        <label>Valor</label>
+                        <input type="text" onkeypress="return ((event.which >= 46 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+                               class="form-control" maxlength="9" ng-model="vm.item.base_imponible" placeholder="{{vm.totalTotal}}"/>
                     </div>
                 </div>
             </div>
@@ -308,7 +313,7 @@
                 <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="vm.addItem()">
                         Aceptar
                 </button>
-                <button type="button" class="btn btn-primary"  data-dismiss="modal"
+                <button type="button" class="btn btn-primary" data-dismiss="modal"
                         ng-click="vm.item = undefined; vm.indexEdit = undefined;">
                         Cancelar
                 </button>
@@ -317,7 +322,7 @@
     </div>
 </div>
 
-<!--MODALIDAD DE PAGO NO CULMINADA-->
+<!--MODALIDAD DE PAGO-->
 
 <div id="modalAddPago" class="modal fade" role="dialog">
     <div class="modal-dialog">
@@ -331,7 +336,7 @@
                 <div class="row">
                     <div class="form-group col-md-6">
                         <b>TIPO DE PAGO: </b>
-                        <select ng-options="med.code as med.name for med in vm.medList  | orderBy:'name'  track by med.code"
+                        <select ng-options="medi.code as medi.name for medi in vm.medLista  | orderBy:'name'  track by medi.code"
                                 ng-model="vm.medio.medio" class="form-control" ng-change="vm.loadMedio()">
                         </select>
                     </div>
@@ -398,10 +403,10 @@
                             </thead>
                             <tbody>
                                 <tr ng-repeat="cred in vm.medio.credits">
-                                    <td>{{ cred.payNumber }}</td>
-                                    <td>{{ cred.diasPlazo }}</td>
-                                    <td>{{ cred.fecha | date:'dd/MM/yyyy'}}</td>
-                                    <td>{{ cred.valor }}</td>
+                                    <td>{{cred.payNumber}}</td>
+                                    <td>{{cred.diasPlazo}}</td>
+                                    <td>{{cred.fecha | date:'dd/MM/yyyy'}}</td>
+                                    <td>{{cred.valor}}</td>
                                 </tr>
                             </tbody>
                         </table>

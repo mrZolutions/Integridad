@@ -8,17 +8,19 @@
  * Controller of the menu
  */
 angular.module('integridadUiApp')
-  .controller('DebtsToPayCtrl', function (_, $localStorage, providerService, utilStringService, dateService, 
-                                        cuentaContableService, validatorService, debtsToPayService) {
+  .controller('DebtsToPayCtrl', function (_, $localStorage, providerService, cuentaContableService, debtsToPayService) {
     var vm = this;
     vm.error = undefined;
     vm.success = undefined;
 
     vm.loading = false;
+    vm.ejercicio = undefined;
     vm.usrCliId = undefined;
     vm.provider = undefined;
     vm.providerId = undefined;
     vm.subTotal = undefined;
+    vm.totalTotal = undefined;
+    vm.aux = undefined;
     vm.subIva = undefined;
     vm.typeTaxes = undefined;
     vm.cuentaCtableId = undefined;
@@ -58,7 +60,7 @@ angular.module('integridadUiApp')
       {code: '45', name: '45 - Liquidación por reclamos de aseguradoras'}
     ];
 
-    vm.medList = [
+    vm.medLista = [
       {code: 'efectivo', name: 'Efectivo' },
       {code: 'cheque', name: 'Cheque' },
       {code: 'cheque_posfechado', name: 'Cheque posfechado' },
@@ -122,13 +124,17 @@ angular.module('integridadUiApp')
     function _activate() {
       vm.today = new Date();
       vm.provider = undefined;
+      vm.aux = undefined;
+      vm.ejercicio = undefined;
       vm.providerSelected = undefined;
       vm.providerList = [];
+      vm.medio = {};
+      vm.pagos = [];
       vm.usrCliId = $localStorage.user.subsidiary.userClient.id
       providerService.getLazyByUserClientId(vm.usrCliId).then(function(response) {
         vm.providerList = response;
         vm.loading = false;
-      }).catch(function (error) {
+      }).catch(function(error) {
         vm.loading = false;
         vm.error = error.data;
       });
@@ -136,7 +142,6 @@ angular.module('integridadUiApp')
 
     vm.selectProvider = function(provider) {
       vm.loading = true;
-      var today = new Date();
       vm.providerSelected = true;
       vm.debtsToPayCreated = undefined;
       vm.providerId = provider.id;
@@ -146,12 +151,13 @@ angular.module('integridadUiApp')
         provider: provider,
         typeTaxes: undefined,
         items: [],
+        pagos: [],
         userClientId: vm.usrCliId
       };
-      vm.ejercicio = ('0' + (today.getMonth() + 1)).slice(-2) + '/' +today.getFullYear();
+      var today = new Date();
       $('#pickerDateDebtsToPay').data("DateTimePicker").date(today);
       $('#pickerDateDebtsToPay').on("dp.change", function (data) {
-        vm.ejercicio = ('0' + ($('#pickerDateDebtsToPay').data("DateTimePicker").date().toDate().getMonth() + 1)).slice(-2) + '/' +$('#pickerBillDateDocumentdebtsToPay').data("DateTimePicker").date().toDate().getFullYear();
+        vm.ejercicio = ('0' + ($('#pickerDateDebtsToPay').data("DateTimePicker").date().toDate().getMonth() + 1)).slice(-2) + '/' + $('#pickerDateDebtsToPay').data("DateTimePicker").date().toDate().getFullYear();
       });
     };
 
@@ -193,6 +199,7 @@ angular.module('integridadUiApp')
       };
       vm.subIva = (parseFloat(vm.debtsToPay.total) * 0.12).toFixed(2);
       vm.subTotal = (parseFloat(vm.debtsToPay.total) - vm.subIva).toFixed(2);
+      vm.totalTotal = (parseFloat(vm.debtsToPay.total)).toFixed(2);
     };
 
     vm.addItem = function() {
@@ -279,6 +286,7 @@ angular.module('integridadUiApp')
 
     vm.saveDebtsToPay = function(debtsToPay) {
       vm.loading = true;
+      vm.pagos.total = vm.aux;
       $('#modalAddPago').modal('hide');
       vm.debtsToPay.date = $('#pickerDateDebtsToPay').data("DateTimePicker").date().toDate().getTime();
       vm.debtsToPay.billNumber = vm.debtsToPay.cashierNumber +'-'+ vm.debtsToPay.sequentialNumber +'-'+ vm.debtsToPay.establishmentNumber;
@@ -287,7 +295,8 @@ angular.module('integridadUiApp')
       vm.debtsToPay.subTotal = vm.subTotal;
       vm.debtsToPay.ejercicio = vm.ejercicio;
       vm.debtsToPay.detailDebtsToPay = [];
-      _.each (vm.debtsToPay.items, function(item) {
+      vm.debtsToPay.pagos = vm.pagos;
+      _.each(vm.debtsToPay.items, function(item) {
         var detail = {
           taxType: vm.debtsToPay.typeTaxes,
           codeConta: item.codigo_contable,
@@ -300,67 +309,58 @@ angular.module('integridadUiApp')
       debtsToPayService.create(debtsToPay).then(function(respDebtsToPay) {
         vm.totalDebtsToPay = 0;
         vm.debtsToPay = respDebtsToPay;
-        _.each (vm.debtsToPay.detailDebtsToPay, function(detail) {
+        _.each(vm.debtsToPay.detailDebtsToPay, function(detail) {
           vm.totalDebtsToPay = (parseFloat(vm.totalDebtsToPay) + parseFloat(detail.baseImponible)).toFixed(2);
         });
         vm.debtsToPayCreated = true;
         vm.success = 'Factura almacenada con exito';
         vm.loading = false;
-      }).catch (function(error) {
+      }).catch(function(error) {
         vm.loading = false;
         vm.error = error.data;
       });
     };
 
-    vm.cancel = function() {
-      vm.debtsToPay = undefined;
-      vm.success = undefined;
-      vm.error = undefined;
-      vm.providerSelected = undefined;
-      vm.cuentaContableList = undefined;
+    function _addDays(date, days) {
+      var result = new Date(date);
+      result.setDate(result.getDate() + days);
+      return result.getTime();
     };
 
-    vm.loadMedio = function(){
+    vm.loadMedio = function() {
       var payed = 0;
       _.each(vm.pagos, function(pago){
         payed += parseFloat(pago.total);
       });
-      if(vm.medio.medio === 'efectivo' || vm.medio.medio === 'dinero_electronico_ec'){
+      vm.pagos;
+      if (vm.medio.medio === 'efectivo' || vm.medio.medio === 'dinero_electronico_ec') {
         vm.medio.payForm = '20 - OTROS CON UTILIZACION DEL SISTEMA FINANCIERO';
-        vm.medio.statusPago = 'PAGADO';
         vm.medio.total = vm.aux;
       };
-      if(vm.medio.medio === 'credito'){
+      if (vm.medio.medio === 'credito') {
         vm.medio.payForm = '20 - OTROS CON UTILIZACION DEL SISTEMA FINANCIERO';
-        vm.medio.total = (vm.bill.total - payed).toFixed(4);
-        vm.priceType.name === 'CREDITO';
+        vm.medio.total = (vm.debtsToPay.total - payed).toFixed(4);
       };
-      if(vm.medio.medio === 'cheque' || vm.medio.medio === 'cheque_posfechado'){
+      if (vm.medio.medio === 'cheque' || vm.medio.medio === 'cheque_posfechado') {
         vm.medio.payForm = '20 - OTROS CON UTILIZACION DEL SISTEMA FINANCIERO';
-        vm.medio.statusPago = 'PAGADO';
-        vm.medio.total = (vm.bill.total - payed).toFixed(4);
+        vm.medio.total = (vm.debtsToPay.total - payed).toFixed(4);
       };
-      if(vm.medio.medio === 'tarjeta_credito' || vm.medio.medio === 'tarjeta_debito'){
+      if (vm.medio.medio === 'tarjeta_credito' || vm.medio.medio === 'tarjeta_debito') {
         vm.medio.payForm = '19 - TARJETA DE CREDITO';
-        vm.medio.total = (vm.bill.total - payed).toFixed(4);
-        vm.medio.statusPago = 'PAGADO';
+        vm.medio.total = (vm.debtsToPay.total - payed).toFixed(4);
       };
     };
 
-    vm.loadCredit = function(){
+    vm.loadCredit = function() {
       var creditArray = [];
       var diasPlazo = parseInt(vm.medio.creditoIntervalos);
       var d = new Date();
-      var total = parseFloat(parseFloat(vm.bill.total)/parseFloat(vm.medio.creditoNumeroPagos)).toFixed(4);
-      var statusCredits = 'PENDIENTE';
-      vm.seqNumberCredits = vm.seqNumber;
+      var total = parseFloat(parseFloat(vm.debtsToPay.total)/parseFloat(vm.medio.creditoNumeroPagos)).toFixed(4);
       for (var i = 1; i <= parseInt(vm.medio.creditoNumeroPagos); i++) {
         var credito = {
           payNumber: i,
           diasPlazo: diasPlazo,
           fecha: _addDays(d, diasPlazo),
-          statusCredits: statusCredits,
-          documentNumber: vm.seqNumberCredits,
           valor: total
         };
         diasPlazo += parseInt(vm.medio.creditoIntervalos);
@@ -374,27 +374,35 @@ angular.module('integridadUiApp')
       vm.medio.fechaCobro = _addDays(d, parseInt(vm.medio.chequeDiasPlazo));
     };
 
-    vm.addPago = function(){
+    vm.addPago = function() {
       vm.pagos.push(angular.copy(vm.medio));
       vm.medio = {};
     };
 
-    vm.removePago = function(index){
+    vm.removePago = function(index) {
       vm.pagos.splice(index, 1);
     };
 
-    vm.getTotalPago = function(){
+    vm.getTotalPago = function() {
       vm.aux = 0;
       vm.varPago = 0;
-      if(vm.bill){
+      if (vm.debtsToPay) {
         vm.getCambio = 0;
-        _.each(vm.pagos, function(med){
+        _.each(vm.pagos, function(med) {
           vm.varPago = parseFloat(parseFloat(vm.varPago) + parseFloat(med.total)).toFixed(2);
         });
-        vm.getCambio = (vm.varPago - vm.bill.total).toFixed(2);
+        vm.getCambio = (vm.varPago - vm.debtsToPay.total).toFixed(2);
         vm.aux = (vm.varPago - vm.getCambio).toFixed(2);
       };
       return vm.varPago;
+    };
+
+    vm.cancel = function() {
+      vm.debtsToPay = undefined;
+      vm.success = undefined;
+      vm.error = undefined;
+      vm.providerSelected = undefined;
+      vm.cuentaContableList = undefined;
     };
 
     (function initController() {

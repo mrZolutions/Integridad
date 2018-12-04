@@ -14,7 +14,7 @@ import com.mrzolution.integridad.app.domain.UserIntegridad;
 
 @Repository
 @Qualifier(value="BillRepository")
-public interface BillRepository extends CrudRepository<Bill, UUID>{
+public interface BillRepository extends CrudRepository<Bill, UUID> {
 	
 	Iterable<Bill> findByClient(Client client);
 	
@@ -23,10 +23,10 @@ public interface BillRepository extends CrudRepository<Bill, UUID>{
 	@Query("SELECT p FROM Bill p WHERE p.typeDocument = (:value)")
 	Iterable<Bill> findBillsByTypeDocument(@Param("value") int value);
 
-	@Query("SELECT p FROM Bill p WHERE p.client.id = (:id) AND typeDocument = (:type) AND p.active = 'true'")
+	@Query("SELECT p FROM Bill p WHERE p.client.id = (:id) AND typeDocument = (:type) AND p.active = 'true' ORDER BY p.stringSeq")
 	Iterable<Bill> findByClientIdAndType(@Param("id") UUID id, @Param("type") int type);
 
-        @Query("SELECT p FROM Bill p WHERE p.client.id = (:id) AND p.typeDocument = (:type) AND p.active = 'true' AND p.priceType = 'CREDITO'")
+        @Query("SELECT p FROM Bill p WHERE p.client.id = (:id) AND p.typeDocument = (:type) AND p.active = 'true' AND p.priceType = 'CREDITO' ORDER BY p.stringSeq")
         Iterable<Bill> findAllCreditsByClientIdAndType(@Param("id") UUID id, @Param("type") int type);
                 
 	Iterable<Bill> findByStringSeq(String stringSeq);

@@ -38,6 +38,9 @@ public class DebtsToPay {
     
     @OneToMany(mappedBy = "debtsToPay", cascade = CascadeType.ALL)
     private List<DetailDebtsToPay> detailDebtsToPay;
+    
+    @OneToMany(mappedBy = "debtsToPay", cascade = CascadeType.ALL)
+    private List<PagoDebts> pagos;
 
     public void setListsNull(){
         detailDebtsToPay = null;
