@@ -7,7 +7,7 @@
 // use this if you want to recursively match all subfolders:
 // 'test/spec/**/*.js'
 
-module.exports = function (grunt) {
+module.exports = function(grunt) {
 
   // Time how long tasks take. Can help when optimizing build times
   require('time-grunt')(grunt);
@@ -217,8 +217,8 @@ module.exports = function (grunt) {
               replace: {
                 js: '\'{{filePath}}\','
               }
-            }
           }
+        }
       }
     }, 
 

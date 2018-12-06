@@ -8,7 +8,7 @@
  * Controller of the integridadUiApp
  */
 angular.module('integridadUiApp')
-  .controller('CuentasContablesCtrl', function ( _, $localStorage, cuentasService){
+  .controller('CuentasContablesCtrl', function( _, $localStorage, cuentasService) {
     var vm = this;
     vm.error = undefined;
     vm.success = undefined;
@@ -22,7 +22,7 @@ angular.module('integridadUiApp')
       vm.cuentaSelected = undefined;
       vm.user = $localStorage.user;
 
-      cuentasService.getLazyByUserClientId(vm.user.subsidiary.userClient.id).then(function (response) {
+      cuentasService.getLazyByUserClientId(vm.user.subsidiary.userClient.id).then(function(response) {
         vm.cuentasContablesList = response;
         vm.loading = false;
       }).catch(function(error) {
@@ -43,7 +43,7 @@ angular.module('integridadUiApp')
         _activate();
         vm.error = undefined;
         vm.success = 'Registro realizado con exito';
-      }).catch(function (error) {
+      }).catch(function(error) {
         vm.loading = false;
         vm.error = error.data;
       });

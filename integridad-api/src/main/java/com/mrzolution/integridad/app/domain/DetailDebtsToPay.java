@@ -24,9 +24,10 @@ public class DetailDebtsToPay implements Child{
     @JoinColumn(name = "debtsToPay_id")
     private DebtsToPay debtsToPay;
     
-    private String taxType;
     private String codeConta;
+    private String descrip;
     private String name;
+    private String tipo;
     private double baseImponible;
     
     public void setListsNull(){

@@ -8,9 +8,9 @@
  * Controller of the integridadUiApp
  */
 angular.module('integridadUiApp')
-  .controller('BillCtrl', function ( _, $rootScope, $location, utilStringService, $localStorage,
-                                     clientService, productService, authService, billService, $window,
-                                     cashierService, requirementService, utilSeqService) {
+  .controller('BillCtrl', function( _, $rootScope, $location, utilStringService, $localStorage,
+                                  clientService, productService, authService, billService, $window,
+                                  cashierService, requirementService, utilSeqService) {
     var vm = this;
     vm.error = undefined;
     vm.success = undefined;
@@ -48,7 +48,7 @@ angular.module('integridadUiApp')
     ];
     vm.seqChanged = false;
 
-    function _activate(){
+    function _activate() {
       vm.error = undefined;
       vm.aux = undefined;
       vm.newBill = true;
@@ -128,7 +128,7 @@ angular.module('integridadUiApp')
       vm.bill.baseNoTaxes = 0;
       var discountWithIva = 0;
       var discountWithNoIva = 0;
-      _.each(vm.bill.details, function(detail){
+      _.each(vm.bill.details, function(detail) {
         vm.bill.subTotal = (parseFloat(vm.bill.subTotal) + parseFloat(detail.total)).toFixed(4);
         var tot = detail.total;
         if (vm.bill.discountPercentage) {
@@ -242,17 +242,16 @@ angular.module('integridadUiApp')
     function _filterProduct() {
       vm.totalPages = 0;
       var variable = vm.searchText? vm.searchText : null;
-      productService.getLazyBySusidiaryId($localStorage.user.subsidiary.id, vm.page, variable)
-      .then(function(response){
+      productService.getLazyBySusidiaryId($localStorage.user.subsidiary.id, vm.page, variable).then(function(response) {
         vm.loading = false;
         vm.totalPages = response.totalPages;
         vm.productList = [];
         for (var i = 0; i < response.content.length; i++) {
-          var productFound = _.find(vm.bill.details, function (detail) {
+          var productFound = _.find(vm.bill.details, function(detail) {
             return detail.product.id === response.content[i].id;
           });
           if (productFound === undefined) {
-            var sub = _.find(response.content[i].productBySubsidiaries, function (s) {
+            var sub = _.find(response.content[i].productBySubsidiaries, function(s) {
               return (s.subsidiary.id === $localStorage.user.subsidiary.id && s.active === true);
             });
             if (sub) {
@@ -338,13 +337,13 @@ angular.module('integridadUiApp')
       return (cost).toFixed(4);
     };
 
-    vm.editDetail=function(detail, index) {
+    vm.editDetail = function(detail, index) {
       vm.indexDetail = index;
       vm.productToAdd= detail.product;
       vm.quantity= detail.quantity
     };
 
-    vm.removeDetail=function(index) {
+    vm.removeDetail = function(index) {
       vm.bill.details.splice(index,1);
     };
 
@@ -476,14 +475,14 @@ angular.module('integridadUiApp')
     };
 
     vm.getDateToPrint = function() {
-      if(vm.bill != undefined){
+      if (vm.bill != undefined) {
           return $('#pickerBillDate').data("DateTimePicker").date().toDate();
       };
     };
 
     vm.printToCartAndCancel = function(printSectionId) {
       var innerContents = document.getElementById(printSectionId).innerHTML;
-      var popupWinindow = window.open('', 'printMatrixSectionId', 'width=600,height=700');
+      var popupWinindow = window.open('', 'printMatrixSectionId', 'width=400,height=500');
       popupWinindow.document.write('<html><head><title>printMatrixSectionId</title>');
       popupWinindow.document.write('</head><body>');
       popupWinindow.document.write(innerContents);
@@ -495,7 +494,7 @@ angular.module('integridadUiApp')
 
     vm.printToCart = function(printSectionId) {
       var innerContents = document.getElementById(printSectionId).innerHTML;
-      var popupWinindow = window.open('', 'printMatrixSectionId', 'width=600,height=700');
+      var popupWinindow = window.open('', 'printMatrixSectionId', 'width=400,height=500');
       popupWinindow.document.write('<html><head><title>printMatrixSectionId</title>');
       popupWinindow.document.write('</head><body>');
       popupWinindow.document.write(innerContents);
@@ -533,7 +532,7 @@ angular.module('integridadUiApp')
 
     vm.selectQuotation = function(quotation) {
       vm.loading = true;
-      billService.getById(quotation.id).then(function(response){
+      billService.getById(quotation.id).then(function(response) {
         vm.bill = response;
         vm.bill.id = undefined;
         vm.bill.claveDeAcceso = undefined;
@@ -610,19 +609,19 @@ angular.module('integridadUiApp')
         if (vm.bill.discountPercentage === undefined) {
           vm.bill.discountPercentage = 0;
         };
-        var obj = JSON.parse(resp.data);
-        //var obj = {clave_acceso: '1234560', id:'id12345'};
+        //var obj = JSON.parse(resp.data);
+        var obj = {clave_acceso: '1234560', id:'id12345'};
         if (obj.errors === undefined) {
           vm.bill.claveDeAcceso = obj.clave_acceso;
           vm.bill.idSri = obj.id;
           vm.bill.stringSeq = vm.seqNumber;
           vm.bill.priceType = vm.priceType.name;
           // 1 is typeDocument Bill **************!!!
-          billService.create(vm.bill, 1).then(function(respBill){
+          billService.create(vm.bill, 1).then(function(respBill) {
             vm.billed = true;
             $localStorage.user.cashier.billNumberSeq = vm.bill.billSeq;
-            if(vm.seqChanged){
-              cashierService.update($localStorage.user.cashier).then(function(resp){
+            if (vm.seqChanged) {
+              cashierService.update($localStorage.user.cashier).then(function(resp) {
                 // cashier updated
               }).catch(function(error) {
                 vm.loading = false;

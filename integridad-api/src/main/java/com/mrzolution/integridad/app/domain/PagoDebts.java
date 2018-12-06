@@ -26,15 +26,15 @@ public class PagoDebts implements Child {
     
     private String medio;
     private String payForm;
+    private long fechaCobro;
+    private int creditoIntervalos;
+    private int creditoNumeroPagos;
+    private double total;
     private String cardBrand;
     private String chequeAccount;
     private String chequeBank;
     private String chequeNumber;
     private String chequeDiasPlazo;
-    private long fechaCobro;
-    private int creditoIntervalos;
-    private int creditoNumeroPagos;
-    private double total;
     
     @OneToMany(mappedBy = "pagoDebts", cascade = CascadeType.ALL)
     private List<CreditsDebts> credits;

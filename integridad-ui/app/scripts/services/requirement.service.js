@@ -1,8 +1,7 @@
 angular
   .module('app.services')
-  .service('requirementService', function (dateService) {
-
-    function getTipyCode(code){
+  .service('requirementService', function(dateService) {
+    function getTipyCode(code) {
       tipyIdCode = {
         RUC : '04',
         CED : '05'
@@ -10,17 +9,17 @@ angular
       return tipyIdCode[code];
     };
 
-    this.createRequirement = function(clientSelected, bill, user, impuestosTotales, items, pagos){
+    this.createRequirement = function(clientSelected, bill, user, impuestosTotales, items, pagos) {
       var pagosDatil = [];
       var credito = undefined;
       _.each(pagos, function(pago){
-        if(pago.medio !== 'credito'){
+        if (pago.medio !== 'credito') {
           pagosDatil.push(pago);
         } else {
-          if(credito === undefined){
+          if (credito === undefined) {
             credito = {};
           };
-          var maxDateCred = _.max(pago.credits, function(cred){ return cred.fecha; });
+          var maxDateCred = _.max(pago.credits, function(cred) { return cred.fecha; });
           credito.monto = pago.total;
           var dateToFormat = new Date(maxDateCred.fecha);
           var yyyy = dateToFormat.getFullYear().toString();
@@ -69,26 +68,25 @@ angular
         "valor_retenido_iva": 0,
         "valor_retenido_renta": 0,
       };
-      if (user.cashier.subsidiary.userClient.testMode){
+      if (user.cashier.subsidiary.userClient.testMode) {
         req.ambiente = 1;
       };
-      if(user.cashier.subsidiary.userClient.espTemp === '1'){
+      if (user.cashier.subsidiary.userClient.espTemp === '1') {
         req.comprador.email = req.comprador.email + ', facturacionelecppe2018@gmail.com, facturacionppecoca@gmail.com';
         var infoAdicional = {
           info1: 'ORDEN DE COMPRA: ' + bill.ordenDecompra,
           info2: 'OTI/OTIR: ' + bill.otir
         };
         req.informacion_adicional = infoAdicional;
-      } else if(user.cashier.subsidiary.userClient.espTemp === '2'){
+      } else if (user.cashier.subsidiary.userClient.espTemp === '2') {
         req.comprador.email = req.comprador.email + ', ferrelozada@yahoo.com';
       };
-
-      if(credito !== undefined){
+      if (credito !== undefined) {
         req.credito = credito;
       };
-      if(!_.isEmpty(pagosDatil)){
+      if (!_.isEmpty(pagosDatil)) {
         req.pagos = pagosDatil;
       };
       return req;
     };
-  });
+});

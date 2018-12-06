@@ -12,10 +12,8 @@ import java.util.UUID;
 @Repository
 @Qualifier(value="CashierRepository")
 public interface CashierRepository extends CrudRepository<Cashier, UUID>{
+    @Query("SELECT c FROM Cashier c WHERE c.subsidiary.id = (:id) and c.active = true")
+    Iterable<Cashier> findBySubsidiaryId(@Param("id") UUID id);
 
-	@Query("SELECT c FROM Cashier c WHERE c.subsidiary.id = (:id) and c.active = true")
-	Iterable<Cashier> findBySubsidiaryId(@Param("id") UUID id);
-
-	Iterable<Cashier> findBySubsidiary(Subsidiary subsidiary);
-
+    Iterable<Cashier> findBySubsidiary(Subsidiary subsidiary);
 }

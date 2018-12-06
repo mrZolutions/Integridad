@@ -1,6 +1,6 @@
 angular
   .module('app.services')
-  .service('ebillService', function ($http) {
+  .service('ebillService', function($http) {
 
     var baseUrl = 'https://link.datil.co/invoices/issue';
     // var baseUrl = 'http://localhost:8080//integridad/v1';
@@ -19,7 +19,7 @@ angular
     //   return $http.delete(baseUrl + path);
     // };
 
-    this.post = function (path, data) {
+    this.post = function(path, data) {
       var url = baseUrl + path;
       return $http.post(url, data, config);
     };
@@ -28,5 +28,4 @@ angular
     //   var url = baseUrl + path;
     //   return $http.put(url, data, config);
     // };
-
-  });
+});

@@ -8,7 +8,7 @@
  * Controller of the menu
  */
 angular.module('integridadUiApp')
-  .controller('ProvidersCtrl', function (_, $localStorage, $location, providerService, utilStringService, dateService, eretentionService, utilSeqService, validatorService) {
+  .controller('ProvidersCtrl', function(_, $localStorage, $location, providerService, utilStringService, dateService, eretentionService, utilSeqService, validatorService) {
     var vm = this;
     vm.error = undefined;
     vm.success = undefined;
@@ -188,56 +188,55 @@ angular.module('integridadUiApp')
       {code: '6.03.100.3', desc: 'COMPRAS DE INVENTARIOS', tipo:'DEBITO (D)', name: 'RESORTES - VALVULAS - ACOPLES'}
     ];
 
-    function _activate(){
+    function _activate() {
       vm.today = new Date();
       vm.provider = undefined;
       vm.providerToUse = undefined;
       vm.providerList = [];
-      providerService.getLazyByUserClientId(vm.userData.subsidiary.userClient.id).then(function(response){
+      providerService.getLazyByUserClientId(vm.userData.subsidiary.userClient.id).then(function(response) {
         vm.providerList = response;
         vm.loading = false;
-      }).catch(function (error){
+      }).catch(function(error) {
         vm.loading = false;
         vm.error = error.data;
       });
     };
 
-    function create(){
+    function create() {
       providerService.create(vm.provider).then(function(response) {
         _activate();
         vm.error = undefined;
         vm.success = 'Registro realizado con exito';
-      }).catch(function (error){
+      }).catch(function(error) {
         vm.loading = false;
         vm.error = error.data;
       });
     };
 
-    function update(){
+    function update() {
       providerService.update(vm.provider).then(function(response) {
-        if(vm.provider.active){
+        if (vm.provider.active) {
           vm.success = 'Registro actualizado con exito';
         } else {
           vm.success = 'Registro eliminado con exito';
         };
         _activate();
         vm.error = undefined;
-      }).catch(function(error){
+      }).catch(function(error) {
         vm.loading = false;
         vm.error = error.data;
       });
     };
 
-    function _getSeqNumber(){
+    function _getSeqNumber() {
       vm.numberAddedOne = parseInt($localStorage.user.cashier.retentionNumberSeq) + 1;
       vm.seqNumberFirstPart = $localStorage.user.subsidiary.threeCode + '-'
         + $localStorage.user.cashier.threeCode;
       vm.seqNumberSecondPart = utilSeqService._pad_with_zeroes(vm.numberAddedOne, 9);
-      vm.seqNumber =  vm.seqNumberFirstPart + '-'
-        + vm.seqNumberSecondPart;
+      vm.seqNumber =  vm.seqNumberFirstPart + '-' + vm.seqNumberSecondPart;
     };
 
-    vm.providerCreate = function(){
+    vm.providerCreate = function() {
       vm.error = undefined;
       vm.success = undefined;
       vm.provider = {
@@ -247,14 +246,14 @@ angular.module('integridadUiApp')
       };
     };
 
-    vm.editProvider = function(providerEdit){
+    vm.editProvider = function(providerEdit) {
       vm.error = undefined;
       vm.success = undefined;
       vm.provider = providerEdit;
     };
 
-    vm.disableSave = function(){
-      if(vm.provider){
+    vm.disableSave = function() {
+      if (vm.provider) {
         return utilStringService.isAnyInArrayStringEmpty([
           vm.provider.codeIntegridad,
           vm.provider.ruc,
@@ -270,30 +269,30 @@ angular.module('integridadUiApp')
       };
     };
 
-    vm.cancel = function(){
+    vm.cancel = function() {
       vm.provider = undefined;
     };
 
-    vm.register = function(){
+    vm.register = function() {
       var idValid = true;
-      if(vm.provider.ruc.length > 10){
+      if (vm.provider.ruc.length > 10) {
         idValid = validatorService.isRucValid(vm.provider.ruc);
       } else {
         idValid = validatorService.isCedulaValid(vm.provider.ruc);
       };
-      if(vm.provider.id){
+      if (vm.provider.id) {
         update();
       } else {
         create();
       };
     };
 
-    vm.remove = function(){
+    vm.remove = function() {
       vm.provider.active=false;
       update();
     };
 
-    vm.createRetention = function(prov){
+    vm.createRetention = function(prov) {
       var today = new Date();
       vm.retentionCreated = false;
       vm.retention = {
@@ -310,17 +309,17 @@ angular.module('integridadUiApp')
       _getSeqNumber();
     };
 
-    vm.getPercentageTable = function(){
+    vm.getPercentageTable = function() {
       vm.tablePercentage = undefined;
-      if(vm.retention.typeRetention === '2'){
+      if (vm.retention.typeRetention === '2') {
         vm.tablePercentage = vm.ivaTipo;
       };
-      if(vm.retention.typeRetention === '1'){
+      if (vm.retention.typeRetention === '1') {
         vm.tablePercentage = vm.fuenteTipo;
       };
     };
 
-    vm.selecPercentage =function(percentage){
+    vm.selecPercentage = function(percentage) {
       vm.baseImponibleItem = undefined;
       vm.item = undefined;
       vm.item = {
@@ -334,9 +333,9 @@ angular.module('integridadUiApp')
       };
     };
 
-    vm.addItem = function(){
+    vm.addItem = function() {
       vm.item.valor_retenido = (parseFloat(vm.item.base_imponible) * (parseFloat(vm.item.porcentaje)/100)).toFixed(2);
-      if(vm.indexEdit !== undefined){
+      if (vm.indexEdit !== undefined) {
         vm.retention.items.splice(vm.indexEdit, 1);
         vm.indexEdit = undefined
       };
@@ -347,38 +346,38 @@ angular.module('integridadUiApp')
       vm.tablePercentage = undefined;
     };
 
-    vm.editItem = function(index){
+    vm.editItem = function(index) {
       vm.item = angular.copy(vm.retention.items[index]);
       vm.indexEdit = index;
     };
 
-    vm.editItemTaxes = function(index){
+    vm.editItemTaxes = function(index) {
       vm.item = angular.copy(vm.debtsToPay.items[index]);
       vm.indexEdit = index;
     };
 
-    vm.deleteItem = function(index){
+    vm.deleteItem = function(index) {
       vm.retention.items.splice(index, 1);
     };
 
-    vm.getTotalRetenciones = function(){
+    vm.getTotalRetenciones = function() {
       var totalRetorno = 0;
-      if(vm.retention){
-        _.each(vm.retention.items, function(detail){
+      if (vm.retention) {
+        _.each(vm.retention.items, function(detail) {
           totalRetorno = (parseFloat(totalRetorno) +parseFloat(detail.valor_retenido)).toFixed(2);
         });
       };
       return totalRetorno;
     };
 
-    vm.previsualisation = function(){
+    vm.previsualisation = function() {
       vm.retention.documentDate = $('#pickerBillDateDocumentRetention').data("DateTimePicker").date().toDate().getTime();
       vm.retention.stringSeq = vm.retention.retentionSeq;
       vm.retention.detailRetentions = [];
       vm.retention.ejercicioFiscal = vm.retention.ejercicio;
       vm.retention.documentNumber = vm.retention.documentNumber;
       vm.totalRetention = 0;
-      _.each(vm.retention.items, function(item){
+      _.each(vm.retention.items, function(item) {
         var detail = {
           taxType: item.codigo === 1 ? 'RETENCION EN LA FUENTE' : 'RETENCION EN EL IVA',
           code: item.codigo_porcentaje_integridad,
@@ -391,13 +390,13 @@ angular.module('integridadUiApp')
       });
     };
 
-    vm.getClaveAcceso = function(){
+    vm.getClaveAcceso = function() {
       vm.loading = true;
       var eRet = eretentionService.createERetention(vm.retention, $localStorage.user);
-      eretentionService.getClaveDeAcceso(eRet, $localStorage.user.subsidiary.userClient.id).then(function(resp){
-        var obj = JSON.parse(resp.data);
-        //var obj = {clave_acceso: '1234560', id:'id12345'};
-        if(obj.errors === undefined){
+      eretentionService.getClaveDeAcceso(eRet, $localStorage.user.subsidiary.userClient.id).then(function(resp) {
+        //var obj = JSON.parse(resp.data);
+        var obj = {clave_acceso: '1234560', id:'id12345'};
+        if (obj.errors === undefined) {
           vm.retention.claveDeAcceso = obj.clave_acceso;
           vm.retention.idSri = obj.id;
           vm.retention.stringSeq = vm.retention.retentionSeq;
@@ -408,7 +407,7 @@ angular.module('integridadUiApp')
           vm.retention.userIntegridad = $localStorage.user;
           vm.retention.subsidiary = $localStorage.user.subsidiary;
           vm.retention.detailRetentions = [];
-          _.each(vm.retention.items, function(item){
+          _.each(vm.retention.items, function(item) {
             var detail = {
               taxType: item.codigo === String(1) ? 'RETENCION EN LA FUENTE' : 'RETENCION EN EL IVA',
               code: item.codigo_porcentaje_integridad,
@@ -418,16 +417,16 @@ angular.module('integridadUiApp')
             };
             vm.retention.detailRetentions.push(detail);
           });
-          eretentionService.create(vm.retention).then(function(respRetention){
+          eretentionService.create(vm.retention).then(function(respRetention) {
             vm.retention = respRetention;
             vm.totalRetention = 0;
-            _.each(vm.retention.detailRetentions, function(detail){
+            _.each(vm.retention.detailRetentions, function(detail) {
               vm.totalRetention = (parseFloat(vm.totalRetention) +parseFloat(detail.total)).toFixed(2);
             });
             vm.retentionCreated = true;
             $localStorage.user.cashier.retentionNumberSeq = parseInt($localStorage.user.cashier.retentionNumberSeq) + 1;
             vm.loading = false;
-          }).catch(function (error){
+          }).catch(function(error) {
             vm.loading = false;
             vm.error = error;
           });
@@ -435,18 +434,18 @@ angular.module('integridadUiApp')
           vm.loading = false;
           vm.error = "Error al obtener Clave de Acceso: " + JSON.stringify(obj.errors);
         };
-      }).catch(function (error){
+      }).catch(function(error) {
         vm.loading = false;
         vm.error = error.data;
       });
     };
 
-    vm.cancelRetentionCreated = function(){
+    vm.cancelRetentionCreated = function() {
       vm.retentionCreated = false;
       vm.retention = undefined
     };
 
-    (function initController(){
+    (function initController() {
       _activate();
     })();
 });

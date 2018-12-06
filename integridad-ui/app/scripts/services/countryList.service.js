@@ -1,8 +1,7 @@
 angular
   .module('app.services')
-  .service('countryListService', function () {
-
-    this.getCountryList = function(){
+  .service('countryListService', function() {
+    this.getCountryList = function() {
       var country_list = ["Afghanistan","Albania","Algeria","Andorra","Angola","Anguilla","Antigua &amp; Barbuda","Argentina","Armenia","Aruba","Australia","Austria","Azerbaijan","Bahamas"
   		,"Bahrain","Bangladesh","Barbados","Belarus","Belgium","Belize","Benin","Bermuda","Bhutan","Bolivia","Bosnia &amp; Herzegovina","Botswana","Brazil","British Virgin Islands"
   		,"Brunei","Bulgaria","Burkina Faso","Burundi","Cambodia","Cameroon","Canada","Cape Verde","Cayman Islands","Chad","Chile","China","Colombia","Congo","Cook Islands","Costa Rica"
@@ -17,16 +16,14 @@ angular
   		,"Sierra Leone","Singapore","Slovakia","Slovenia","South Africa","South Korea","Spain","Sri Lanka","St Kitts &amp; Nevis","St Lucia","St Vincent","St. Lucia","Sudan"
   		,"Suriname","Swaziland","Sweden","Switzerland","Syria","Taiwan","Tajikistan","Tanzania","Thailand","Timor L'Este","Togo","Tonga","Trinidad &amp; Tobago","Tunisia"
   		,"Turkey","Turkmenistan","Turks &amp; Caicos","Uganda","Ukraine","United Arab Emirates","United Kingdom","United States","United States Minor Outlying Islands","Uruguay","Uzbekistan","Venezuela","Vietnam","Virgin Islands (US)"
-  ,"Yemen","Zambia","Zimbabwe"];
+      ,"Yemen","Zambia","Zimbabwe"];
 
-        return country_list;
-    }
+      return country_list;
+    };
 
-    this.getCitiesEcuador = function(){
+    this.getCitiesEcuador = function() {
       var cities= ['Ambato','Arajuno','Babahoyo','Bahía de Caráquez','Baños de Agua Santa','Cuenca', 'Coca','Durán','Esmeraldas','Guaranda','Guayaquil','Ibarra','La Libertad','Lago Agrio','Latacunga','Loja','Macas','Machala','Manta','Milagro','Nueva Loja','Portoviejo'
-      ,'Piñas','Pintag','Quevedo','Quito','Riobamba','Santo Domingo de los Colorados','Salinas','Shell Mera','Tulcán']
-
+      ,'Piñas','Pintag','Quevedo','Quito','Riobamba','Santo Domingo de los Colorados','Salinas','Shell Mera','Tulcán'];
       return cities;
-    }
-
-  });
+    };
+});

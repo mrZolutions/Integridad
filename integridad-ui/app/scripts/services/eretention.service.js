@@ -1,16 +1,16 @@
 angular
   .module('app.services')
-  .service('eretentionService', function (_, dateService, securityService) {
+  .service('eretentionService', function(_, dateService, securityService) {
 
-    function getTipyCode(code){
+    function getTipyCode(code) {
       tipyIdCode = {
         RUC : '04',
         CED : '05'
       };
       return tipyIdCode[code];
-    }
+    };
 
-    this.createERetention = function(retention, user){
+    this.createERetention = function(retention, user) {
       var eRet = {
         "ambiente": 2,
         "tipo_emision": 1,
@@ -40,40 +40,36 @@ angular
         },
         "items":retention.items,
       };
-
-      if(user.cashier.subsidiary.userClient.espTemp == '1'){
+      if (user.cashier.subsidiary.userClient.espTemp == '1') {
         eRet.sujeto.email = eRet.sujeto.email + ', facturacionelecppe2018@gmail.com, facturacionppecoca@gmail.com';
-      } else if(user.cashier.subsidiary.userClient.espTemp == '2'){
+      } else if (user.cashier.subsidiary.userClient.espTemp == '2') {
         eRet.sujeto.email = eRet.sujeto.email + ', ferrelozada@yahoo.com';
       };
-
-      _.each(eRet.items, function(item){
+      _.each(eRet.items, function(item) {
         item.codigo = String(item.codigo);
       });
-
-      if (user.cashier.subsidiary.userClient.testMode){
+      if (user.cashier.subsidiary.userClient.testMode) {
         eRet.ambiente = 1;
       };
       return eRet;
     };
 
-    this.getClaveDeAcceso = function (req, id) {
-      return securityService.post('/retention/clave_acceso/'+id, req).then(function successCallback(response) {
+    this.getClaveDeAcceso = function(req, id) {
+      return securityService.post('/retention/clave_acceso/' + id, req).then(function successCallback(response) {
         // console.log(response)
         return response;
       });
     };
 
-    this.create = function (retention) {
+    this.create = function(retention) {
       return securityService.post('/retention', retention).then(function successCallback(response) {
         return response.data;
       });
     };
 
-    this.getAllByUserClientAndDates = function (userClientId, dateOne, dateTwo) {
-      return securityService.get('/retention/rep/retentions/'+ userClientId + '/' + dateOne + '/'+ dateTwo).then(function successCallback(response) {
+    this.getAllByUserClientAndDates = function(userClientId, dateOne, dateTwo) {
+      return securityService.get('/retention/rep/retentions/' + userClientId + '/' + dateOne + '/' + dateTwo).then(function successCallback(response) {
         return response.data;
       });
     };
-
-  });
+});

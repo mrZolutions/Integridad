@@ -8,30 +8,29 @@
  * Controller of the integridadUiApp
  */
 angular.module('integridadUiApp')
-  .controller('UserEditCtrl', function ($rootScope, utilStringService, userTypeService, authService, $localStorage) {
+  .controller('UserEditCtrl', function($rootScope, utilStringService, userTypeService, authService, $localStorage) {
     var vm = this;
     vm.error = undefined;
     vm.success = undefined;
-
     vm.loading = false;
     vm.userIntegridad = angular.copy($localStorage.user);
     vm.changePassword = false;
     vm.passwordNotMatch = false;
 
-    function _activate(){
+    function _activate() {
       $('#pickerBirthdayEdit').data("DateTimePicker").date(new Date(vm.userIntegridad.birthDay));
-    }
+    };
 
-    vm.validatePassword = function () {
+    vm.validatePassword = function() {
       vm.passwordNotMatch = vm.newPass !== vm.passConfirmation;
     };
 
-    vm.editUser = function(){
-      if(vm.changePassword && !vm.passwordNotMatch){
+    vm.editUser = function() {
+      if (vm.changePassword && !vm.passwordNotMatch) {
         vm.userIntegridad.password = vm.newPass;
       } else {
         vm.userIntegridad.password = '';
-      }
+      };
 
       vm.userIntegridad.birthDay = $('#pickerBirthdayEdit').data("DateTimePicker").date().toDate().getTime();
       vm.userIntegridad.email = vm.userIntegridad.email.trim();
@@ -41,35 +40,34 @@ angular.module('integridadUiApp')
         vm.userIntegridad.lastName
       ]);
 
-      if(validationError){
+      if (validationError) {
         vm.error = 'Debe ingresar Nombres completos y un email';
       } else {
         validationError = utilStringService.isStringEmpty(vm.userIntegridad.cedula) && utilStringService.isStringEmpty(vm.userIntegridad.ruc);
-
-        if(validationError){
+        if (validationError) {
           vm.error = 'Debe ingresar un numero de cedula o ruc';
-        }
-      }
+        };
+      };
 
-      if(!validationError){
+      if (!validationError) {
         vm.loading = true;
-        authService.updateUser(vm.userIntegridad).then(function (response) {
+        authService.updateUser(vm.userIntegridad).then(function(response) {
           vm.loading = false;
           vm.error = undefined;
           vm.success = 'Perfil actualizado con exito';
           $localStorage.user = response;
           $rootScope.updateMenu();
-        }).catch(function (error) {
+        }).catch(function(error) {
           vm.loading = false;
           vm.error = error.data;
         });
-      }
+      };
     };
 
-    vm.cancel=function(){
+    vm.cancel = function() {
       vm.userIntegridad = angular.copy($localStorage.user);
-      vm.success=undefined;
-      vm.error=undefined
+      vm.success = undefined;
+      vm.error = undefined
       vm.changePassword = false;
       vm.passwordNotMatch = false;
     };
@@ -77,5 +75,4 @@ angular.module('integridadUiApp')
     (function initController() {
       _activate();
     })();
-
-  });
+});

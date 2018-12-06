@@ -30,11 +30,15 @@ public class DebtsToPay {
     private double total;
     private double subTotal;
     private String tipoDeCompra;
-    private String account_type;
+    private String debtsSeq;
 
     @ManyToOne
     @JoinColumn(name = "provider_id")
     private Provider provider;
+    
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private UserIntegridad userIntegridad;
     
     @OneToMany(mappedBy = "debtsToPay", cascade = CascadeType.ALL)
     private List<DetailDebtsToPay> detailDebtsToPay;
@@ -44,10 +48,13 @@ public class DebtsToPay {
 
     public void setListsNull(){
         detailDebtsToPay = null;
+        pagos = null;
     };
 
     public void setFatherListToNull(){
         provider.setListsNull();
         provider.setFatherListToNull();
+        userIntegridad.setListsNull();
+        userIntegridad.setFatherListToNull();
     };
 }

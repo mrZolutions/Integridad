@@ -8,7 +8,7 @@
  * Controller of the menu
  */
 angular.module('integridadUiApp')
-  .controller('ProductsCtrl', function (_, $localStorage, $location, productService, utilStringService, projectService,
+  .controller('ProductsCtrl', function(_, $localStorage, $location, productService, utilStringService, projectService,
     subsidiaryService, productTypeService, messurementListService, brandService, lineService, groupService,
     subgroupService, $routeParams) {
     var vm = this;
@@ -29,102 +29,101 @@ angular.module('integridadUiApp')
     vm.productBySubsidiaries = [];
     vm.wizard = 0;
 
-    function _activate(){
+    function _activate() {
       vm.searchText = undefined;
       vm.loading = true;
       vm.messurements = messurementListService.getMessurementList();
-      productTypeService.getproductTypesLazy().then(function(response){
+      productTypeService.getproductTypesLazy().then(function(response) {
         vm.productTypes = response;
-      }).catch(function (error) {
+      }).catch(function(error) {
         vm.loading = false;
         vm.error = error.data;
       });
-
       vm.page = 0;
       _filter();
-    }
+    };
 
-    function _filter(){
+    function _filter() {
       vm.loading = true;
       vm.totalPages = 0;
       vm.productList = [];
       var variable = vm.searchText? vm.searchText : null;
-      if($routeParams.subsidiaryId){
-        productService.getLazyBySusidiaryId($routeParams.subsidiaryId, vm.page, variable).then(function (response) {
+      if ($routeParams.subsidiaryId) {
+        productService.getLazyBySusidiaryId($routeParams.subsidiaryId, vm.page, variable).then(function(response) {
           vm.totalPages = response.totalPages;
           vm.totalElements = response.totalElements;
           _getProductQuantities(response.content);
           vm.loading = false;
-        }).catch(function (error) {
+        }).catch(function(error) {
           vm.loading = false;
           vm.error = error.data;
         });
       } else {
         // productService.getLazyByProjectId($localStorage.user.subsidiary.userClient.id).then(function (response) {
-        productService.getLazyBySusidiaryId($localStorage.user.subsidiary.id, vm.page, variable).then(function(response){
+        productService.getLazyBySusidiaryId($localStorage.user.subsidiary.id, vm.page, variable).then(function(response) {
           vm.totalElements = response.totalElements;
           vm.totalPages = response.totalPages;
           _getProductQuantities(response.content);
           vm.loading = false;
-        }).catch(function (error) {
+        }).catch(function(error) {
           vm.loading = false;
           vm.error = error.data;
         });
-      }
-    }
+      };
+    };
 
-    function _getProductQuantities(listResponse){
+    function _getProductQuantities(listResponse) {
       for (var i = 0; i < listResponse.length; i++) {
-        var sub = _.find(listResponse[i].productBySubsidiaries, function (s) {
+        var sub = _.find(listResponse[i].productBySubsidiaries, function(s) {
           return (s.subsidiary.id === $localStorage.user.subsidiary.id && s.active === true);
         });
-        if(sub){
+        if (sub) {
           listResponse[i].quantity = sub.quantity
           vm.productList.push(listResponse[i]);
-        }
-      }
-    }
+        };
+      };
+    };
 
-    function _getSubsidiaries(edit){
-      subsidiaryService.getByProjectId($localStorage.user.subsidiary.userClient.id).then(function (response) {
+    function _getSubsidiaries(edit) {
+      subsidiaryService.getByProjectId($localStorage.user.subsidiary.userClient.id).then(function(response) {
         vm.subsidiaries = response;
-        if(edit){
-          _.each(vm.subsidiaries, function(sub){
-            _.each(vm.product.productBySubsidiaries, function(ps){
+        if (edit) {
+          _.each(vm.subsidiaries, function(sub) {
+            _.each(vm.product.productBySubsidiaries, function(ps) {
                 if(sub.id === ps.subsidiary.id && ps.active){
                   sub.cantidad = ps.quantity;
                   sub.selected = true;
-                }
+                };
             });
           });
-        }
-      }).catch(function (error) {
+        };
+      }).catch(function(error) {
         vm.loading = false;
         vm.error = error.data;
       });
-    }
+    };
 
-    function _getBrands(){
-      brandService.getBrandsLazy($localStorage.user.subsidiary.userClient.id).then(function(response){
+    function _getBrands() {
+      brandService.getBrandsLazy($localStorage.user.subsidiary.userClient.id).then(function(response) {
         vm.brands = response;
-      }).catch(function (error) {
+      }).catch(function(error) {
         vm.loading = false;
         vm.error = error.data;
       });
-    }
+    };
 
-    function _getLines(){
-      lineService.getLinesLazy($localStorage.user.subsidiary.userClient.id).then(function(response){
+    function _getLines() {
+      lineService.getLinesLazy($localStorage.user.subsidiary.userClient.id).then(function(response) {
         vm.lineas = response;
-      }).catch(function (error) {
+      }).catch(function(error) {
         vm.loading = false;
         vm.error = error.data;
       });
-    }
+    };
 
-    function create(){
+    function create() {
       vm.product.productBySubsidiaries = vm.productBySubsidiaries;
-      productService.create(vm.product).then(function (response) {
+      productService.create(vm.product).then(function(response) {
         vm.product=undefined;
         vm.selectedGroup = undefined;
         vm.selectedLine = undefined;
@@ -134,16 +133,16 @@ angular.module('integridadUiApp')
         _activate();
         vm.error = undefined;
         vm.success = 'Registro realizado con exito';
-      }).catch(function (error) {
+      }).catch(function(error) {
         vm.loading = false;
         vm.error = error.data;
       });
-    }
+    };
 
-    function update(isRemove){
+    function update(isRemove) {
       _.each(vm.product.productBySubsidiaries, function(ps){ps.active=false;});
       _.each(vm.productBySubsidiaries, function(psNew){vm.product.productBySubsidiaries.push(psNew)});
-      productService.update(vm.product).then(function (response) {
+      productService.update(vm.product).then(function(response) {
         vm.product=undefined;
         vm.selectedGroup = undefined;
         vm.selectedLine = undefined;
@@ -152,50 +151,50 @@ angular.module('integridadUiApp')
         vm.wizard = 0;
         _activate();
         vm.error = undefined;
-        if(isRemove){
+        if (isRemove) {
           vm.success = 'Registro eliminado con exito';
         } else {
           vm.success = 'Registro actualizado con exito';
-        }
-      }).catch(function (error) {
+        };
+      }).catch(function(error) {
         vm.loading = false;
         vm.error = error.data;
       });
-    }
+    };
 
-    function _getSubsidiarie(){
-      if($routeParams.subsidiaryId){
-        subsidiaryService.getById($routeParams.subsidiaryId).then(function(response){
+    function _getSubsidiarie() {
+      if ($routeParams.subsidiaryId) {
+        subsidiaryService.getById($routeParams.subsidiaryId).then(function(response) {
           vm.subsidiaries = [response];
-          vm.success=undefined;
-          vm.error=undefined
-        }).catch(function (error) {
+          vm.success = undefined;
+          vm.error = undefined
+        }).catch(function(error) {
           vm.loading = false;
           vm.error = error.data;
         });
       } else {
-        projectService.getById($localStorage.user.subsidiary.userClient.id).then(function (response) {
+        projectService.getById($localStorage.user.subsidiary.userClient.id).then(function(response) {
           vm.subsidiaries = response.subsidiaries;
-          vm.success=undefined;
-          vm.error=undefined
-        }).catch(function (error) {
+          vm.success = undefined;
+          vm.error = undefined
+        }).catch(function(error) {
           vm.loading = false;
           vm.error = error.data;
         });
-      }
-    }
+      };
+    };
 
-    vm.filter = function(){
+    vm.filter = function() {
       vm.page = 0;
       _filter();
     };
 
-    vm.paginate = function(page){
+    vm.paginate = function(page) {
       vm.page = page;
       _filter();
     };
 
-    vm.getActiveClass = function(index){
+    vm.getActiveClass = function(index) {
       var classActive = vm.page === index? 'active' : '';
       return classActive;
     };
@@ -204,7 +203,7 @@ angular.module('integridadUiApp')
       return new Array(vm.totalPages);
     };
 
-    vm.costPreview = function(){
+    vm.costPreview = function() {
       var avrCost = 0.0;
       var gEfectivo = 0.0;
       var avrCost = vm.product.averageCost;
@@ -213,7 +212,7 @@ angular.module('integridadUiApp')
       return (preview).toFixed(2);
     };
 
-    vm.costIvaPreview = function(){
+    vm.costIvaPreview = function() {
       var avrCost = 0.0;
       var gEfectivo = 0.0;
       var iva = 1.12;
@@ -223,34 +222,33 @@ angular.module('integridadUiApp')
       return (preview).toFixed(2);
     };
 
-    vm.getIva = function(textCost, averageCost){
+    vm.getIva = function(textCost, averageCost) {
       const IVA = 1.1200;
       var aC = parseFloat(textCost);
       var cost = aC * averageCost * IVA;
       return (cost).toFixed(2);
     };
 
-    vm.getCost = function(textCost, averageCost){
+    vm.getCost = function(textCost, averageCost) {
       var aC = parseFloat(textCost);
       var cost = aC * averageCost;
       return (cost).toFixed(2);
     };
 
-    vm.editProduct = function(productEdit){
+    vm.editProduct = function(productEdit) {
       vm.selectedGroup = productEdit.subgroup.groupLine;
       vm.selectedLine = productEdit.subgroup.groupLine.line;
       vm.messurements = messurementListService.getMessurementList();
-
-      _.each(vm.messurements, function(mes){
-        if(productEdit.unitOfMeasurementAbbr === mes.shortName){
+      _.each(vm.messurements, function(mes) {
+        if (productEdit.unitOfMeasurementAbbr === mes.shortName) {
           vm.messurementSelected = mes;
-        }
+        };
       });
       vm.getGroups();
       vm.getSubGroups();
       _getSubsidiaries(true);
       vm.wizard = 1;
-      vm.product= productEdit;
+      vm.product = productEdit;
 
       // vm.loading = true;
       // _getSubsidiarie();
@@ -263,13 +261,13 @@ angular.module('integridadUiApp')
       // });
     };
 
-    vm.productCreate = function(){
+    vm.productCreate = function() {
       _getSubsidiaries(false);
-      vm.success=undefined;
-      vm.error=undefined
+      vm.success = undefined;
+      vm.error = undefined
       vm.productBySubsidiaries = [];
       vm.wizard = 1;
-      vm.product={
+      vm.product = {
         userClient: $localStorage.user.subsidiary.userClient,
         productBySubsidiaries: [],
         codeIntegridad: vm.totalElements + 1,
@@ -301,127 +299,127 @@ angular.module('integridadUiApp')
       // }
     };
 
-    vm.changeSub = function(subsidiary){
-      if(vm.product.productType.code !== 'SER'){
-        if(subsidiary.selected){
+    vm.changeSub = function(subsidiary) {
+      if (vm.product.productType.code !== 'SER') {
+        if (subsidiary.selected) {
           subsidiary.cantidad = 0;
         } else {
           subsidiary.cantidad = undefined;
-        }
-      }
+        };
+      };
     };
 
-    vm.getGroups = function(){
-      if(vm.selectedLine !== null && vm.selectedLine !== undefined){
-        groupService.getGroupsByLineLazy(vm.selectedLine.id).then(function(response){
+    vm.getGroups = function() {
+      if (vm.selectedLine !== null && vm.selectedLine !== undefined) {
+        groupService.getGroupsByLineLazy(vm.selectedLine.id).then(function(response) {
           vm.groups = response;
-        }).catch(function (error) {
+        }).catch(function(error) {
           vm.loading = false;
           vm.error = error.data;
         });
-      }
+      };
     };
 
-    vm.getSubGroups = function(){
-      if(vm.selectedGroup !== null && vm.selectedGroup !== undefined){
-        subgroupService.getSubGroupsByGroupLazy(vm.selectedGroup.id).then(function(response){
+    vm.getSubGroups = function() {
+      if (vm.selectedGroup !== null && vm.selectedGroup !== undefined) {
+        subgroupService.getSubGroupsByGroupLazy(vm.selectedGroup.id).then(function(response) {
           vm.subGroups = response;
-        }).catch(function (error) {
+        }).catch(function(error) {
           vm.loading = false;
           vm.error = error.data;
         });
-      }
+      };
     };
 
-    vm.createBrand = function(){
+    vm.createBrand = function() {
       vm.newBrand = {
         userClient: $localStorage.user.subsidiary.userClient,
         code: vm.brands.length +1,
         active: true
-      }
+      };
     };
 
-    vm.createLine = function(){
-      vm.newLine ={
+    vm.createLine = function() {
+      vm.newLine = {
         userClient: $localStorage.user.subsidiary.userClient,
         code: vm.lineas.length +1,
         active: true,
         groupLines:[]
-      }
+      };
     };
 
-    vm.createGroup = function(){
-      vm.newGroup ={
+    vm.createGroup = function() {
+      vm.newGroup = {
         line: vm.selectedLine,
-        code: vm.groups.length +1,
+        code: vm.groups.length + 1,
         active: true,
-        products:[]
-      }
+        products: []
+      };
     };
 
-    vm.createSubGroup = function(){
-      vm.newSubGroup ={
+    vm.createSubGroup = function() {
+      vm.newSubGroup = {
         groupLine: vm.selectedGroup,
-        code: vm.subGroups.length +1,
+        code: vm.subGroups.length + 1,
         active: true,
-        subGroups:[]
-      }
+        subGroups: []
+      };
     };
 
-    vm.saveNewBrand = function(){
-      brandService.create(vm.newBrand).then(function(response){
+    vm.saveNewBrand = function() {
+      brandService.create(vm.newBrand).then(function(response) {
         vm.brands.push(response);
         vm.product.brand = response;
         vm.newBrand = undefined;
-      }).catch(function (error) {
+      }).catch(function(error) {
         vm.loading = false;
         vm.error = error.data;
       });
     };
 
-    vm.saveNewLine = function(){
-      lineService.create(vm.newLine).then(function(response){
+    vm.saveNewLine = function() {
+      lineService.create(vm.newLine).then(function(response) {
         vm.lineas.push(response);
         vm.selectedLine = response;
         vm.newLine = undefined;
         vm.groups = [];
-      }).catch(function (error) {
+      }).catch(function(error) {
         vm.loading = false;
         vm.error = error.data;
       });
     };
 
-    vm.saveNewGroup = function(){
-      groupService.create(vm.newGroup).then(function(response){
+    vm.saveNewGroup = function() {
+      groupService.create(vm.newGroup).then(function(response) {
         vm.groups.push(response);
         vm.selectedGroup = response;
         vm.newGroup = undefined;
         vm.subGroups = [];
-      }).catch(function (error) {
+      }).catch(function(error) {
         vm.loading = false;
         vm.error = error.data;
       });
     };
 
-    vm.saveNewSubGroup = function(){
-      subgroupService.create(vm.newSubGroup).then(function(response){
+    vm.saveNewSubGroup = function() {
+      subgroupService.create(vm.newSubGroup).then(function(response) {
         vm.subGroups.push(response);
         vm.product.subgroup = response;
         vm.newSubGroup = undefined;
-      }).catch(function (error) {
+      }).catch(function(error) {
         vm.loading = false;
         vm.error = error.data;
       });
     };
 
-    vm.wiz2 = function(){
+    vm.wiz2 = function() {
       vm.productBySubsidiaries = [];
-      if(vm.product.productType.code !== 'SER'){
+      if (vm.product.productType.code !== 'SER') {
         vm.product.unitOfMeasurementAbbr = vm.messurementSelected.shortName;
         vm.product.unitOfMeasurementFull = vm.messurementSelected.name;
-      }
-      _.each(vm.subsidiaries, function(sub){
-        if(sub.selected){
+      };
+      _.each(vm.subsidiaries, function(sub) {
+        if (sub.selected) {
           var productBySubsidiary = {
             dateCreated: new Date().getTime(),
             quantity: sub.cantidad,
@@ -429,75 +427,75 @@ angular.module('integridadUiApp')
             active: true
           };
           vm.productBySubsidiaries.push(productBySubsidiary);
-        }
+        };
       });
       _getBrands();
       _getLines();
       vm.wizard = 2;
     };
 
-    vm.wiz3 = function(){
+    vm.wiz3 = function() {
       vm.wizard = 3;
     };
 
-    vm.deleteBrand = function(brand){
+    vm.deleteBrand = function(brand) {
       vm.loading = true;
       brand.active = false;
-      brandService.update(brand).then(function(response){
+      brandService.update(brand).then(function(response) {
         vm.loading = false;
         _getBrands();
-      }).catch(function (error) {
+      }).catch(function(error) {
         vm.loading = false;
         vm.error = error.data;
       });
     };
 
-    vm.deleteLine = function(line){
+    vm.deleteLine = function(line) {
       vm.loading = true;
       line.active = false;
-      lineService.update(line).then(function(response){
+      lineService.update(line).then(function(response) {
         vm.loading = false;
         _getLines();
-      }).catch(function (error) {
+      }).catch(function(error) {
         vm.loading = false;
         vm.error = error.data;
       });
     };
 
-    vm.deleteGroup = function(group){
+    vm.deleteGroup = function(group) {
       vm.loading = true;
       group.active = false;
-      groupService.update(group).then(function(response){
+      groupService.update(group).then(function(response) {
         vm.loading = false;
         vm.getGroups();
-      }).catch(function (error) {
+      }).catch(function(error) {
         vm.loading = false;
         vm.error = error.data;
       });
     };
 
-    vm.deleteSubGroup = function(subGroup){
+    vm.deleteSubGroup = function(subGroup) {
       vm.loading = true;
       subGroup.active = false;
-      subgroupService.update(subGroup).then(function(response){
+      subgroupService.update(subGroup).then(function(response) {
         vm.getSubGroups();
         vm.loading = false;
-      }).catch(function (error) {
+      }).catch(function(error) {
         vm.loading = false;
         vm.error = error.data;
       });
     };
 
-    vm.save = function(){
+    vm.save = function() {
       var validationError = utilStringService.isAnyInArrayStringEmpty([
         vm.product.name
       ]);
 
-      if(validationError){
+      if (validationError) {
         vm.error = 'Debe ingresar Nombre del producto';
       } else {
         vm.loading = true;
-        if(vm.product.id === undefined){
+        if (vm.product.id === undefined) {
           create();
         } else {
           update(false);
@@ -505,23 +503,23 @@ angular.module('integridadUiApp')
       };
     };
 
-    vm.remove = function(){
+    vm.remove = function() {
       vm.product.active = false;
       update(true);
     };
 
-    vm.cancel=function(){
+    vm.cancel = function() {
       vm.wizard = 0;
-      vm.product=undefined;
+      vm.product = undefined;
       vm.selectedGroup = undefined;
       vm.selectedLine = undefined;
       // vm.product.unitOfMeasurementAbbr = undefined;
       // vm.product.unitOfMeasurementFull = undefined;
-      vm.success=undefined;
-      vm.error=undefined;
+      vm.success = undefined;
+      vm.error = undefined;
     };
 
     (function initController() {
       _activate();
     })();
-  });
+});

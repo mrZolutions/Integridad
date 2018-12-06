@@ -1,44 +1,44 @@
 angular
   .module('app.services')
-  .service('authService', function (securityService) {
+  .service('authService', function(securityService) {
 
-    this.authUser = function (user) {
+    this.authUser = function(user) {
       return securityService.post('/user/auth',user).then(function successCallback(response) {
         return response.data;
       });
     };
 
-    this.registerUser = function (user) {
+    this.registerUser = function(user) {
       return securityService.post('/user',user).then(function successCallback(response) {
         return response.data;
       });
     };
 
-    this.activeUser = function (userId, validate) {
+    this.activeUser = function(userId, validate) {
       return securityService.put('/user/'+userId+'/'+validate).then(function successCallback(response) {
         return response.data;
       });
     };
 
-    this.updateUser = function (user) {
+    this.updateUser = function(user) {
       return securityService.put('/user', user).then(function successCallback(response) {
         return response.data;
       });
     };
 
-    this.recoverUser = function (user) {
+    this.recoverUser = function(user) {
       return securityService.post('/user/recover', user).then(function successCallback(response) {
         return response.data;
       });
     };
 
-    this.getLazy = function () {
+    this.getLazy = function() {
       return securityService.get('/user/lazy').then(function successCallback(response) {
         return response.data;
       });
     };
 
-    this.getBosses = function (code, subsidiaryId) {
+    this.getBosses = function(code, subsidiaryId) {
       return securityService.get('/user/lazy/bosses/'+subsidiaryId+'/'+code).then(function successCallback(response) {
         return response.data;
       });
@@ -63,4 +63,4 @@ angular
     //   });
     // };
 
-  });
+});

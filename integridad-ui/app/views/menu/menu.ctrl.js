@@ -8,15 +8,14 @@
  * Controller of the menu
  */
 angular.module('integridadUiApp')
-  .controller('MenuCtrl', function ($rootScope, $scope, $localStorage, $location) {
+  .controller('MenuCtrl', function($rootScope, $scope, $localStorage, $location) {
     $scope.permissions = [];
-
-    $rootScope.updateMenu = function () {
+    $rootScope.updateMenu = function() {
       $scope.permissions = $localStorage.permissions;
       $scope.nameType = $localStorage.user.firstName + ' - ' + $localStorage.user.userType.name;
-    }
+    };
 
-    $scope.logout = function () {
+    $scope.logout = function() {
       $scope.permissions = [];
       $scope.nameType = undefined;
       $localStorage.permissions = undefined;
@@ -25,21 +24,20 @@ angular.module('integridadUiApp')
       $location.path('/');
     };
 
-    $scope.$on('onBeforeUnload', function (e, confirmation) {
+    $scope.$on('onBeforeUnload', function(e, confirmation) {
       $scope.logout();
     });
 
-    if($localStorage.timeloged){
+    if ($localStorage.timeloged) {
       var dateNow = new Date();
       var timeNow = dateNow.getTime()
       var timeLapsed = timeNow - $localStorage.timeloged;
-      if(timeLapsed > 86400000){
+      if (timeLapsed > 86400000) {
         $scope.logout();
-      }
-    }
+      };
+    };
 
-    if($localStorage.permissions){
+    if ($localStorage.permissions) {
       $rootScope.updateMenu();
-    }
-
-  });
+    };
+});

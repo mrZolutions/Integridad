@@ -1,9 +1,7 @@
 angular
   .module('app.services')
-  .service('messurementListService', function () {
-
-    this.getMessurementList = function(){
-
+  .service('messurementListService', function() {
+    this.getMessurementList = function() {
       var messurementList = [
         {shortName: 'UND', name:'UNIDAD'},
         {shortName: 'LT', name:'LITRO'},
@@ -14,8 +12,6 @@ angular
         {shortName: 'CJ', name:'CAJA'},
         {shortName: 'PQ', name:'PAQUETE'},
       ];
-
       return messurementList;
-    }
-
-  });
+    };
+});

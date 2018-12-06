@@ -126,24 +126,24 @@ angular.module('integridadUiApp')
     ];
 
 
-    function _activate(){
+    function _activate() {
       vm.today = new Date();
       vm.clientBill = undefined;
       vm.clientList = [];
       vm.clientSelected = undefined;
-      clientService.getLazyByProjectId($localStorage.user.subsidiary.userClient.id).then(function(response){
+      clientService.getLazyByProjectId($localStorage.user.subsidiary.userClient.id).then(function(response) {
         vm.clientList = response;
         vm.loading = false;
-      }).catch(function (error) {
+      }).catch(function(error) {
         vm.loading = false;
         vm.error = error.data;
       });
-      cuentaContableService.getAll().then(function(response){
+      cuentaContableService.getAll().then(function(response) {
         vm.cuentaContableList = response;
       });
     };
 
-    vm.clientConsult = function(client){
+    vm.clientConsult = function(client) {
       vm.loading = true;
       vm.clientId = client.identification;
       vm.clientName = client.name;
@@ -151,31 +151,31 @@ angular.module('integridadUiApp')
       vm.clientAddress = client.address;
       vm.clientPhone = client.cel_phone;
       vm.clientEmail = client.email;
-      billService.getBillsByClientId(client.id).then(function(response){
+      billService.getBillsByClientId(client.id).then(function(response) {
         vm.billList = response;
         vm.loading = false;
-      }).catch(function(error){
+      }).catch(function(error) {
         vm.loading = false;
         vm.error = error.data;
       });
     };
 
-    vm.creditsByBill = function(bill){
+    vm.creditsByBill = function(bill) {
       vm.loading = true;
       vm.success = undefined;
       vm.error = undefined;
       vm.billNumber = bill.stringSeq;
       vm.billValue = (bill.total).toFixed(2);
-      creditsbillService.getAllCreditsOfBillById(bill.id).then(function(response){
+      creditsbillService.getAllCreditsOfBillById(bill.id).then(function(response) {
         vm.creditsbillList = response;
         vm.loading = false;
-      }).catch(function (error){
+      }).catch(function(error) {
         vm.loading = false;
         vm.error = error.data;
       });
     };
 
-    vm.createAbono = function(credits){
+    vm.createAbono = function(credits) {
       vm.loading = true;
       vm.creditValue = (credits.valor).toFixed(2);
       vm.creditsId = credits.id;
@@ -185,12 +185,12 @@ angular.module('integridadUiApp')
       vm.loading = false;
     };
 
-    vm.pAbono = function(payment){
+    vm.pAbono = function(payment) {
       vm.loading = true;
-      if (vm.payment.typePayment == 'PAC'){
+      if (vm.payment.typePayment == 'PAC') {
         vm.valorReten = 0.00;
         vm.valorNotac = 0.00;
-      } else if (vm.payment.typePayment == 'NTC'){
+      } else if (vm.payment.typePayment == 'NTC') {
         vm.valorAbono = 0.00;
         vm.valorReten = 0.00;
         vm.payment.modePayment = 'NTC';
@@ -199,18 +199,18 @@ angular.module('integridadUiApp')
       vm.payment.creditId = vm.creditsId;
       vm.payment.documentNumber = vm.billNumber;
       vm.payment.valorReten = vm.valorReten;
-      paymentService.create(payment).then(function(response){
+      paymentService.create(payment).then(function(response) {
         vm.error = undefined;
         vm.success = 'Abono realizado con exito';
         vm.loading = false;
-      }).catch(function(error){
+      }).catch(function(error) {
         vm.loading = false;
         vm.error = error.data;
       });
     };
 
 //Inicio de Creación de Retenciones...
-    vm.createRetentionClient = function(bill){
+    vm.createRetentionClient = function(bill) {
       var today = new Date();
       vm.retentionClientCreated = false;
       vm.billNumber = bill.stringSeq;
@@ -231,17 +231,17 @@ angular.module('integridadUiApp')
       });
     };
 
-    vm.getPercentageTable = function(){
+    vm.getPercentageTable = function() {
       vm.tablePercentage = undefined;
-      if(vm.retentionClient.typeRetention === '2'){
+      if (vm.retentionClient.typeRetention === '2') {
         vm.tablePercentage = vm.ivaTipo;
       };
-      if(vm.retentionClient.typeRetention === '1'){
+      if (vm.retentionClient.typeRetention === '1') {
         vm.tablePercentage = vm.fuenteTipo;
       };
     };
 
-    vm.selecPercentage =function(percentage){
+    vm.selecPercentage =function(percentage) {
       vm.item = undefined;
       vm.item = {
         codigo: parseInt(vm.retentionClient.typeRetention),
@@ -254,9 +254,9 @@ angular.module('integridadUiApp')
       };
     };
 
-    vm.addItem = function(){
+    vm.addItem = function() {
       vm.item.valor_retenido = (parseFloat(vm.item.base_imponible) * (parseFloat(vm.item.porcentaje)/100)).toFixed(2);
-      if(vm.indexEdit !== undefined){
+      if (vm.indexEdit !== undefined) {
         vm.retentionClient.items.splice(vm.indexEdit, 1);
         vm.indexEdit = undefined
       };
@@ -267,26 +267,26 @@ angular.module('integridadUiApp')
       vm.tablePercentage = undefined;
     };
 
-    vm.editItem = function(index){
+    vm.editItem = function(index) {
       vm.item = angular.copy(vm.retentionClient.items[index]);
       vm.indexEdit = index;
     };
 
-    vm.deleteItem = function(index){
+    vm.deleteItem = function(index) {
       vm.retentionClient.items.splice(index, 1);
     };
 
     vm.getTotalRetencionesClient = function(){
       var totalRetorno = 0;
-      if(vm.retentionClient){
-        _.each(vm.retentionClient.items, function(detail){
+      if (vm.retentionClient) {
+        _.each(vm.retentionClient.items, function(detail) {
           totalRetorno = (parseFloat(totalRetorno) +parseFloat(detail.valor_retenido)).toFixed(2);
         });
       };
       return totalRetorno;
     };
 
-    vm.previewRetentionClient = function(){
+    vm.previewRetentionClient = function() {
       vm.retentionClient.documentDate = $('#pickerDateRetention').data("DateTimePicker").date().toDate().getTime();
       vm.retentionClient.ejercicioFiscal = vm.retentionClient.ejercicio;
       vm.retentionClient.documentNumber = vm.billNumber;
@@ -294,7 +294,7 @@ angular.module('integridadUiApp')
       vm.retentionClient.BillId = vm.BillId;
       vm.retentionClient.detailRetentionClient = [];
       vm.totalRetention = 0;
-      _.each(vm.retentionClient.items, function(item){
+      _.each(vm.retentionClient.items, function(item) {
         var detail = {
           taxType: item.codigo === 1 ? 'RETENCION EN LA FUENTE' : 'RETENCION EN EL IVA',
           code: item.codigo_porcentaje_integridad,
@@ -307,7 +307,7 @@ angular.module('integridadUiApp')
       });
     };
 
-    vm.saveRetentionClient = function(retentionClient){
+    vm.saveRetentionClient = function(retentionClient) {
       vm.loading = true;
       vm.retentionClient.ejercicioFiscal = vm.retentionClient.ejercicio;
       vm.retentionClient.documentNumber = vm.billNumber;
@@ -316,7 +316,7 @@ angular.module('integridadUiApp')
       vm.retentionClient.documentDate = $('#pickerDateRetention').data("DateTimePicker").date().toDate().getTime();
       vm.retentionClient.BillId = vm.BillId;
       vm.retentionClient.detailRetentionClient = [];
-      _.each(vm.retentionClient.items, function(item){
+      _.each(vm.retentionClient.items, function(item) {
         var detail = {
           taxType: item.codigo === 1 ? 'RETENCION EN LA FUENTE' : 'RETENCION EN EL IVA',
           code: item.codigo_porcentaje_integridad,
@@ -326,22 +326,22 @@ angular.module('integridadUiApp')
         };
         vm.retentionClient.detailRetentionClient.push(detail);
       });
-      eretentionClientService.create(retentionClient).then(function(respRetentionClient){
+      eretentionClientService.create(retentionClient).then(function(respRetentionClient) {
         vm.totalRetention = 0;
         vm.retentionClient = respRetentionClient;
-        _.each(vm.retentionClient.detailRetentionClient, function(detail){
+        _.each(vm.retentionClient.detailRetentionClient, function(detail) {
           vm.totalRetention = (parseFloat(vm.totalRetention) + parseFloat(detail.total)).toFixed(2);
         });
         vm.retentionClientCreated = true;
         vm.success = 'Retención almacenada con exito';
         vm.loading = false;
-      }).catch(function (error){
+      }).catch(function(error) {
         vm.loading = false;
         vm.error = error.data;
       });
     };
 
-    vm.cancelRetentionClientCreated = function(){
+    vm.cancelRetentionClientCreated = function() {
       vm.retentionClientCreated = false;
       vm.retentionClient = undefined;
       vm.success = undefined;
@@ -349,14 +349,14 @@ angular.module('integridadUiApp')
     };
 // Fin de Creación de Retenciones....
 
-    vm.cancel = function(){
+    vm.cancel = function() {
       vm.retentionClient = undefined;
       vm.success = undefined;
       vm.error = undefined;
       vm.billList = undefined;
     };
 
-    (function initController(){
+    (function initController() {
       _activate();
     })();
-});
+  });

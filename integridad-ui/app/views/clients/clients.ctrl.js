@@ -19,47 +19,47 @@ angular.module('integridadUiApp')
     vm.citiesList = countryListService.getCitiesEcuador();
     vm.clientList = undefined;
 
-    function _activate(){
-      if($routeParams.create){
+    function _activate() {
+      if ($routeParams.create) {
         vm.clientCreate();
       } else {
         vm.loading = true;
-        clientService.getLazyByProjectId($localStorage.user.subsidiary.userClient.id).then(function (response) {
+        clientService.getLazyByProjectId($localStorage.user.subsidiary.userClient.id).then(function(response) {
           vm.clientList = response;
           vm.loading = false;
-        }).catch(function (error) {
+        }).catch(function(error) {
           vm.loading = false;
           vm.error = error.data;
         });
       };
     };
 
-    function create(){
-      clientService.create(vm.client).then(function (response) {
+    function create() {
+      clientService.create(vm.client).then(function(response) {
         vm.client=undefined;
         _activate();
         vm.error = undefined;
         vm.success = 'Registro realizado con exito';
-        if($routeParams.create){
+        if ($routeParams.create) {
           $location.path('/bills/bill');
         };
-      }).catch(function (error) {
+      }).catch(function(error) {
         vm.loading = false;
         vm.error = error.data;
       });
     };
 
-    function update(isRemove){
-      clientService.update(vm.client).then(function (response) {
+    function update(isRemove) {
+      clientService.update(vm.client).then(function(response) {
         vm.client=undefined;
         _activate();
         vm.error = undefined;
-        if(isRemove){
+        if (isRemove) {
           vm.success = 'Registro eliminado con exito';
         } else {
           vm.success = 'Registro actualizado con exito';
         };
-      }).catch(function (error) {
+      }).catch(function(error) {
         vm.loading = false;
         vm.error = error.data;
       });
@@ -71,8 +71,8 @@ angular.module('integridadUiApp')
        window.location = "#!/quotation/quotation";
     };
 
-    vm.clientCreate = function(){
-      projectService.getNumberOfProjects($localStorage.user.subsidiary.userClient.id).then(function (response) {
+    vm.clientCreate = function() {
+      projectService.getNumberOfProjects($localStorage.user.subsidiary.userClient.id).then(function(response) {
         vm.success = undefined;
         vm.error = undefined
         var number = parseInt(response);
@@ -82,41 +82,43 @@ angular.module('integridadUiApp')
           codApp: number + 1,
           userClient: $localStorage.user.subsidiary.userClient
         };
-      }).catch(function (error) {
+      }).catch(function(error) {
         vm.loading = false;
         vm.error = error.data;
       });
     };
 
-    vm.clientEdit = function(client){
+    vm.clientEdit = function(client) {
       vm.success = undefined;
       vm.error = undefined
       vm.client = angular.copy(client);
     };
 
-    vm.validateEcuador = function(){
-      if(vm.client.country !== 'Ecuador'){vm.client.city = undefined}
+    vm.validateEcuador = function() {
+      if (vm.client.country !== 'Ecuador') {
+        vm.client.city = undefined;
+      };
     };
 
-    vm.save = function(){
+    vm.save = function() {
       var validationError = utilStringService.isAnyInArrayStringEmpty([
         vm.client.name, vm.client.identification, vm.client.codApp
       ]);
 
       var idValid = true;
-      if(vm.client.typeId === 'CED'){
+      if (vm.client.typeId === 'CED') {
         idValid = validatorService.isCedulaValid(vm.client.identification);
-      } else if(vm.client.typeId === 'RUC'){
+      } else if (vm.client.typeId === 'RUC') {
         idValid = validatorService.isRucValid(vm.client.identification);
       };
 
-      if(validationError){
+      if (validationError) {
         vm.error = 'Debe ingresar Nombres completos, una identificacion y el Codigo de Contabilidad';
-      } else if(!idValid){
+      } else if (!idValid) {
         vm.error = 'Identificacion invalida';
       } else {
         vm.loading = true;
-        if(vm.client.id === undefined){
+        if (vm.client.id === undefined) {
           create();
         } else {
           update(false);
@@ -124,16 +126,16 @@ angular.module('integridadUiApp')
       };
     };
 
-    vm.remove = function(){
+    vm.remove = function() {
       vm.client.active = false;
       update(true);
     };
 
-    vm.cancel=function(){
-      vm.client=undefined;
-      vm.success=undefined;
-      vm.error=undefined;
-      if($routeParams.create){
+    vm.cancel = function() {
+      vm.client = undefined;
+      vm.success = undefined;
+      vm.error = undefined;
+      if ($routeParams.create) {
         $location.path('/bills/bill');
       };
     };
@@ -141,4 +143,4 @@ angular.module('integridadUiApp')
     (function initController() {
       _activate();
     })();
-  });
+});

@@ -8,9 +8,8 @@
  * Controller of the integridadUiApp
  */
 angular.module('integridadUiApp')
-  .controller('HomeCtrl', function () {
+  .controller('HomeCtrl', function() {
     var vm = this;
     vm.error = undefined;
     vm.success = undefined;
-
-  });
+});
