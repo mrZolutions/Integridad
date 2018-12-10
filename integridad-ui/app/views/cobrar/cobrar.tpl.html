@@ -94,7 +94,7 @@
                 El Cliente <b>No Presenta</b> Facturas por Cobrar...
             </td>
           </tr>
-          <tr ng-repeat="bill in vm.billList | orderBy:'name':true | filter:searchText">
+          <tr ng-repeat="bill in vm.billList">
             <td>{{bill.stringSeq}}</td>
             <td>{{bill.dateCreated | date : "dd/MM/yyyy"}}</td>
             <td>{{bill.total}}</td>

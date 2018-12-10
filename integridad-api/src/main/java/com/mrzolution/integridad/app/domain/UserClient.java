@@ -41,10 +41,6 @@ public class UserClient {
     private String espTemp;
 
     private boolean testMode;
-
-    //TODO
-    //razonsocial
-    //contribuyente especial
     
     private long dateCreated;
     

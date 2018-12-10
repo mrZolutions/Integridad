@@ -32,7 +32,7 @@
     </div>
 </div>
 
-<div ng-show="vm.provider === undefined && vm.providerSelected === undefined">
+<div ng-show="vm.providerSelected === undefined && vm.debtsList === undefined">
     <div class="row">
         <div class="form-group col-md-12">
             <input ng-model="searchText" class="form-control" placeholder="Buscar Proveedores">
@@ -59,8 +59,13 @@
                 <td>{{provider.ruc_type}}</td>
                 <td>{{provider.ruc}}</td>
                 <td>
-                    <button type="button" class="btn btn-primary" ng-click="vm.selectProvider(provider)">
-                            Seleccionar
+                    <button type="button" class="btn btn-primary" ng-click="vm.providerSelect(provider)">
+                            Facturas
+                    </button>
+                </td>
+                <td>
+                    <button type="button" class="btn btn-primary" ng-click="vm.providerBills(provider)">
+                            Pagos
                     </button>
                 </td>
             </tr>
@@ -68,12 +73,56 @@
     </table>
 </div>
 
-<!--INICIO MODULO DE CARGA DETALLES DE FACTURA PARA CTAS X PAGAR -->
+<!--SECCIÓN DE CARGA DE LOS DEBTS POR PROVEEDOR-->
+<div ng-show = "vm.debtsList !== undefined">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <b>Listado de Facturas Pertenecientes a: {{vm.providerName}}</b>
+        </div>
+        <div class="panel-body">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>N&uacute;mero</th>
+                        <th>Fecha</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-show="vm.debtsList == 0">
+                        <td colspan="4">
+                            El Proveedor <b>No Presenta</b> Facturas Ingresadas...
+                        </td>
+                    </tr>
+                    <tr ng-repeat="debts in vm.debtsList">
+                        <td>{{debts.billNumber}}</td>
+                        <td>{{debts.fecha | date : "dd/MM/yyyy"}}</td>
+                        <td>{{debts.total}}</td>
+                        <td>
+                            <button type="button" class="btn btn-primary btn-sm" 
+                                    ng-click="" data-toggle="modal" data-target="">
+                                    Abonos
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="row">
+                <div class="form-group col-md-12">
+                    <button type="button" class="btn btn-primary" ng-click="vm.cancel()">
+                            Volver
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
+<!--SECCIÓN DE CARGA DETALLES DE FACTURA PARA CTAS X PAGAR -->
 <div ng-show="vm.providerSelected !== undefined">
     <div class="panel panel-default">
         <div class="panel-heading">
-            <b>Detalles de la Factura</b>
+            <b>Cuenta por Pagar Nro: </b>{{vm.seqNumber}}
         </div>
         <div class="panel-body">
             <div class="row">
@@ -135,15 +184,15 @@
                 <div class="form-group col-md-6">
                     <label>N&uacute;mero de Factura:</label><br/>
                     <div class="form-group col-md-3">
-                        <input type="text" ng-model="vm.debtsToPay.cashierNumber" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+                        <input type="text" ng-model="vm.debtsToPay.threeNumberOne" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
                                class="form-control" maxlength="3">
                     </div>
                     <div class="form-group col-md-3">
-                        <input type="text" ng-model="vm.debtsToPay.sequentialNumber" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+                        <input type="text" ng-model="vm.debtsToPay.threeNumberTwo" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
                                class="form-control" maxlength="3">
                     </div>
                     <div class="form-group col-md-6">
-                        <input type="text" ng-model="vm.debtsToPay.establishmentNumber" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+                        <input type="text" ng-model="vm.debtsToPay.seccondPartNumber" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
                                class="form-control" maxlength="9">
                     </div>
                 </div>          
@@ -265,7 +314,7 @@
             </div>
             <div class="row">
                 <div class="form-group col-md-12">
-                    <button type="button" class="btn btn-primary"
+                    <button type="button" class="btn btn-primary" ng-disabled="vm.debtsToPay.items == 0"
                             data-toggle="modal" data-target="#modalAddPago">
                             Forma de Pago
                     </button>
@@ -278,7 +327,6 @@
         </div>
     </div>
 </div>
-
 <!--FINAL MODULO DE CARGA DETALLES DE FACTURA PARA CTAS X PAGAR -->
 
 <div id="modalSelectedTaxes" class="modal fade" role="dialog">
@@ -477,11 +525,10 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary"
-                        ng-click="vm.saveDebtsToPay(vm.debtsToPay);vm.cancel()" ng-disabled="vm.debtsToPay.items == 0">
+                        ng-click="vm.saveDebtsToPay(vm.debtsToPay); vm.cancel()" ng-disabled="vm.pagos.length === 0">
                         Guardar
                 </button>
-                <button type="button" class="btn btn-primary" data-dismiss="modal"
-                        ng-disabled="vm.pagos.length === 0 || vm.getCambio < 0">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">
                         Cerrar
                 </button>
             </div>

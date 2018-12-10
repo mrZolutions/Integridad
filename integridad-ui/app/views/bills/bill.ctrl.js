@@ -40,7 +40,7 @@ angular.module('integridadUiApp')
       '20 - OTROS CON UTILIZACION DEL SISTEMA FINANCIERO',
       '21 - ENDOSO DE TITULOS'
     ];
-    vm.creditCardList=[
+    vm.creditCardList = [
       'DINNERS CLUB',
       'VISA',
       'MASTERCARD',
@@ -117,6 +117,30 @@ angular.module('integridadUiApp')
         details: [],
         pagos: []
       };
+    };
+
+    vm.clientSelect = function(client) {
+      vm.quotations = [];
+      vm.companyData = $localStorage.user.subsidiary;
+      vm.dateBill = new Date();
+      vm.clientSelected = client;
+      vm.pagos = [];
+      _getSeqNumber();
+      _initializeBill();
+      var today = new Date();
+      $('#pickerBillDate').data("DateTimePicker").date(today);
+      vm.newBill = true;
+    };
+
+    vm.clientConsult = function(client) {
+      vm.loading = true;
+      billService.getBillsByClientId(client.id).then(function(response) {
+        vm.billList = response;
+        vm.loading = false;
+      }).catch(function(error) {
+        vm.loading = false;
+        vm.error = error.data;
+      });
     };
 
     function _getTotalSubtotal() {
@@ -215,30 +239,6 @@ angular.module('integridadUiApp')
       $location.path('/clients/create');
     };
 
-    vm.clientSelect = function(client) {
-      vm.quotations = [];
-      vm.companyData = $localStorage.user.subsidiary;
-      vm.dateBill = new Date();
-      vm.clientSelected = client;
-      vm.pagos = [];
-      _getSeqNumber();
-      _initializeBill();
-      var today = new Date();
-      $('#pickerBillDate').data("DateTimePicker").date(today);
-      vm.newBill = true;
-    };
-
-    vm.clientConsult = function(client) {
-      vm.loading = true;
-      billService.getBillsByClientId(client.id).then(function(response) {
-        vm.billList = response;
-        vm.loading = false;
-      }).catch(function(error) {
-        vm.loading = false;
-        vm.error = error.data;
-      });
-    };
-
     function _filterProduct() {
       vm.totalPages = 0;
       var variable = vm.searchText? vm.searchText : null;
@@ -282,7 +282,7 @@ angular.module('integridadUiApp')
     };
 
     vm.range = function() {
-        return new Array(vm.totalPages);
+      return new Array(vm.totalPages);
     };
 
     vm.addProduct = function() {
@@ -646,4 +646,4 @@ angular.module('integridadUiApp')
     (function initController() {
       _activate();
     })();
-  });
+});

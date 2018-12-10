@@ -1,10 +1,12 @@
 package com.mrzolution.integridad.app.services;
 
+import com.mrzolution.integridad.app.domain.Cashier;
 import com.mrzolution.integridad.app.domain.CreditsDebts;
 import com.mrzolution.integridad.app.domain.DebtsToPay;
 import com.mrzolution.integridad.app.domain.DetailDebtsToPay;
 import com.mrzolution.integridad.app.domain.PagoDebts;
 import com.mrzolution.integridad.app.exceptions.BadRequestException;
+import com.mrzolution.integridad.app.repositories.CashierRepository;
 import com.mrzolution.integridad.app.repositories.CreditsDebtsRepository;
 import com.mrzolution.integridad.app.repositories.DebtsToPayRepository;
 import com.mrzolution.integridad.app.repositories.DetailDebtsToPayChildRepository;
@@ -35,6 +37,8 @@ public class DebtsToPayServices {
     PagoDebtsRepository pagoDebtsRepository;
     @Autowired
     CreditsDebtsRepository creditsDebtsRepository;
+    @Autowired
+    CashierRepository cashierRepository;
     
     public DebtsToPay getById(UUID id) {
         log.info("DebtsToPayServices getById: {}", id);
@@ -63,10 +67,23 @@ public class DebtsToPayServices {
         });
     }
     
+    public Iterable<DebtsToPay> getDebtsByProviderId(UUID id) {
+        log.info("DebtsToPayServices getDebtsByProviderId: {}", id);
+        Iterable<DebtsToPay> debts = debtsToPayRepository.findDebtsByProviderId(id);
+        debts.forEach (debt -> {
+            debt.setListsNull();
+            debt.setFatherListToNull();
+        });
+        return debts;
+    }
+    
     public DebtsToPay create(DebtsToPay debtsToPay) throws BadRequestException{
         log.info("DebtsToPayServices preparing for create new Debts");
         List<DetailDebtsToPay> details = debtsToPay.getDetailDebtsToPay();
         List<PagoDebts> pagos = debtsToPay.getPagos();
+        if (details == null) {
+            throw new BadRequestException("Debe tener una cuenta por lo menos");
+        }
         if (pagos == null) {
             throw new BadRequestException("Debe tener un pago por lo menos");
         }
@@ -75,14 +92,19 @@ public class DebtsToPayServices {
         debtsToPay.setFatherListToNull();
         debtsToPay.setListsNull();
         DebtsToPay saved = debtsToPayRepository.save(debtsToPay);
+        
+        Cashier cashier = cashierRepository.findOne(debtsToPay.getUserIntegridad().getCashier().getId());
+        cashier.setDebtsNumberSeq(cashier.getDebtsNumberSeq() + 1);
+        cashierRepository.save(cashier);
+        
         details.forEach (detail -> {
             detail.setDebtsToPay(saved);
             detailDebtsToPayRepository.save(detail);
             detail.setDebtsToPay(null);
         });
         savePagosAndCreditsOfDebts(saved, pagos);
-        log.info("DebtsToPayServices Debts created id: {}", saved.getId());
         saved.setDetailDebtsToPay(details);
+        log.info("DebtsToPayServices Debts created id: {}", saved.getId());
         return saved;
     }
     

@@ -75,7 +75,7 @@ public class Bill {
     public void setListsNull(){
     	details = null;
     	pagos = null;
-    };
+    }
     
     public void setFatherListToNull(){
     	client.setListsNull();
@@ -84,7 +84,7 @@ public class Bill {
     	userIntegridad.setFatherListToNull();
     	subsidiary.setListsNull();
     	subsidiary.setFatherListToNull();
-    };
+    }
 
     @Transient
     public static Bill newBillTest(){
@@ -96,6 +96,6 @@ public class Bill {
         bill.setSubsidiary(Subsidiary.newSubsidiaryTest());
 
         return bill;
-    };
+    }
 
 }

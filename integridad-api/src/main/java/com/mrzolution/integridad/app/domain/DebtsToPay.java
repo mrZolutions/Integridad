@@ -20,11 +20,11 @@ public class DebtsToPay {
 
     private String buyTypeVoucher;
     private String purchaseType;
-    private long date;
+    private long fecha;
     private String ejercicio;
-    private String establishmentNumber;
-    private String cashierNumber;
-    private String sequentialNumber;
+    private String threeNumberOne;
+    private String threeNumberTwo;
+    private String seccondPartNumber;
     private String billNumber;
     private String authorizationNumber;
     private double total;
@@ -40,6 +40,10 @@ public class DebtsToPay {
     @JoinColumn(name = "user_id")
     private UserIntegridad userIntegridad;
     
+    @ManyToOne
+    @JoinColumn(name = "subsidiary_id")
+    private Subsidiary subsidiary;
+    
     @OneToMany(mappedBy = "debtsToPay", cascade = CascadeType.ALL)
     private List<DetailDebtsToPay> detailDebtsToPay;
     
@@ -49,12 +53,14 @@ public class DebtsToPay {
     public void setListsNull(){
         detailDebtsToPay = null;
         pagos = null;
-    };
+    }
 
     public void setFatherListToNull(){
         provider.setListsNull();
         provider.setFatherListToNull();
         userIntegridad.setListsNull();
-        userIntegridad.setFatherListToNull();
-    };
+    	userIntegridad.setFatherListToNull();
+    	subsidiary.setListsNull();
+    	subsidiary.setFatherListToNull();
+    }
 }

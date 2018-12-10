@@ -27,28 +27,40 @@ public class DebtsToPayController {
     DebtsToPayServices service;
     
     @RequestMapping(method = RequestMethod.GET, value="/{id}")
-    public ResponseEntity getById(@PathVariable("id") UUID id){
+    public ResponseEntity getById(@PathVariable("id") UUID id) {
         log.info("DebtsToPayController getId: {}", id);
 	DebtsToPay response = null;
 	try {
             response = service.getById(id);
-	}catch(BadRequestException e) {
+	} catch(BadRequestException e) {
             log.error("DebtsToPayController getId Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
 	return new ResponseEntity<DebtsToPay>(response, HttpStatus.ACCEPTED);
-    };
+    }
+    
+    @RequestMapping(method = RequestMethod.GET, value="/debts/provider/{id}")
+    public ResponseEntity getAllDebtsByProviderId(@PathVariable("id") UUID id) {
+        log.info("DebtsToPayController getAllDebtsByProviderId: {}", id);
+        Iterable<DebtsToPay> response = null;
+        try {
+            response = service.getDebtsByProviderId(id);
+        } catch(BadRequestException e) {
+            log.error("DebtsToPayController getAllDebtsByProviderId Exception thrown: {}", e.getMessage());
+	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+        return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
+    }
     
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity create(@RequestBody DebtsToPay debtsToPay){
-	log.info("DebtsToPayController create: {}", debtsToPay.getId());
+    public ResponseEntity create(@RequestBody DebtsToPay debtsToPay) {
 	DebtsToPay response = null;
 	try {
             response = service.create(debtsToPay);
-	}catch(BadRequestException e) {
+	} catch(BadRequestException e) {
             log.error("DebtsToPayController create Exception thrown: {}", e.getMessage());
 	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
         return new ResponseEntity<DebtsToPay>(response, HttpStatus.CREATED);
-    };
+    }
 }

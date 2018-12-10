@@ -6,4 +6,10 @@ angular
             return response.data;
         });
     };
+
+    this.getAllDebtsByProviderId = function(id) {
+        return securityService.get('/debts/debts/provider/' + id).then(function successCallback(response) {
+          return response.data;
+        });
+      };
 });

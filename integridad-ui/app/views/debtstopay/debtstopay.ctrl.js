@@ -8,18 +8,22 @@
  * Controller of the menu
  */
 angular.module('integridadUiApp')
-  .controller('DebtsToPayCtrl', function(_, $localStorage, providerService, cuentaContableService, debtsToPayService) {
+  .controller('DebtsToPayCtrl', function(_, $localStorage, providerService, cuentaContableService, debtsToPayService, 
+                                        utilSeqService, cashierService) {
     var vm = this;
     vm.error = undefined;
     vm.success = undefined;
 
     vm.loading = false;
+    vm.seqChanged = false;
     vm.ejercicio = undefined;
     vm.usrCliId = undefined;
     vm.provider = undefined;
     vm.providerId = undefined;
     vm.subTotal = undefined;
     vm.totalTotal = undefined;
+    vm.seqNumber = undefined;
+    vm.debtsList = undefined;
     vm.aux = undefined;
     vm.subIva = undefined;
     vm.typeTaxes = undefined;
@@ -68,6 +72,13 @@ angular.module('integridadUiApp')
       {code: 'tarjeta_debito', name: 'Tarjeta de débito' },
       {code: 'dinero_electronico_ec', name: 'Dinero electrónico' },
       {code: 'credito', name: 'Crédito' },
+    ];
+
+    vm.creditCardList = [
+      'DINNERS CLUB',
+      'VISA',
+      'MASTERCARD',
+      'AMERICAN'
     ];
 
     vm.supportType = [
@@ -122,11 +133,14 @@ angular.module('integridadUiApp')
     ];
 
     function _activate() {
-      vm.today = new Date();
       vm.provider = undefined;
       vm.aux = undefined;
       vm.ejercicio = undefined;
+      vm.debtsList = undefined;
       vm.providerSelected = undefined;
+      vm.debtsToPayCreated = undefined;
+      vm.loading = true;
+      vm.error = undefined;
       vm.providerList = [];
       vm.medio = {};
       vm.pagos = [];
@@ -140,24 +154,47 @@ angular.module('integridadUiApp')
       });
     };
 
-    vm.selectProvider = function(provider) {
-      vm.loading = true;
-      vm.providerSelected = true;
-      vm.debtsToPayCreated = undefined;
-      vm.providerId = provider.id;
-      vm.providerName = provider.name;
-      vm.loading = false;
+    function _getSeqNumber() {
+      vm.numberAddedOne = parseInt($localStorage.user.cashier.debtsNumberSeq) + 1;
+      vm.seqNumberSecondPart = utilSeqService._pad_with_zeroes(vm.numberAddedOne, 6);
+      vm.seqNumber = vm.seqNumberSecondPart;
+    };
+
+    function _initializeDebts() {
       vm.debtsToPay = {
-        provider: provider,
+        provider: vm.providerSelected,
+        userIntegridad: $localStorage.user,
+        subsidiary: $localStorage.user.subsidiary,
         typeTaxes: undefined,
         items: [],
-        pagos: [],
-        userClientId: vm.usrCliId
+        pagos: []
       };
+    };
+
+    vm.providerSelect = function(provider) {
+      vm.loading = true;
+      vm.providerSelected = provider;
+      vm.providerId = provider.id;
+      vm.companyData = $localStorage.user.subsidiary;
+      _getSeqNumber();
+      _initializeDebts();
+      vm.loading = false;
       var today = new Date();
       $('#pickerDateDebtsToPay').data("DateTimePicker").date(today);
       $('#pickerDateDebtsToPay').on("dp.change", function(data) {
         vm.ejercicio = ('0' + ($('#pickerDateDebtsToPay').data("DateTimePicker").date().toDate().getMonth() + 1)).slice(-2) + '/' + $('#pickerDateDebtsToPay').data("DateTimePicker").date().toDate().getFullYear();
+      });
+    };
+
+    vm.providerBills = function(provider) {
+      vm.loading = true;
+      vm.providerName = provider.name;
+      debtsToPayService.getAllDebtsByProviderId(provider.id).then(function(response) {
+        vm.debtsList = response;
+        vm.loading = false;
+      }).catch(function(error) {
+        vm.loading = false;
+        vm.error = error.data;
       });
     };
 
@@ -285,11 +322,11 @@ angular.module('integridadUiApp')
       vm.loading = true;
       vm.pagos.total = vm.aux;
       $('#modalAddPago').modal('hide');
-      vm.debtsToPay.date = $('#pickerDateDebtsToPay').data("DateTimePicker").date().toDate().getTime();
-      vm.debtsToPay.billNumber = vm.debtsToPay.cashierNumber + '-' + vm.debtsToPay.sequentialNumber + '-' + vm.debtsToPay.establishmentNumber;
+      vm.debtsToPay.fecha = $('#pickerDateDebtsToPay').data("DateTimePicker").date().toDate().getTime();
+      vm.debtsToPay.billNumber = vm.debtsToPay.threeNumberOne + '-' + vm.debtsToPay.threeNumberTwo + '-' + vm.debtsToPay.seccondPartNumber;
       vm.debtsToPay.providerId = vm.providerId;
-      vm.debtsToPay.userClientId = vm.usrCliId;
       vm.debtsToPay.subTotal = vm.subTotal;
+      vm.debtsToPay.debtsSeq = vm.numberAddedOne;
       vm.debtsToPay.ejercicio = vm.ejercicio;
       vm.debtsToPay.detailDebtsToPay = [];
       vm.debtsToPay.pagos = vm.pagos;
@@ -307,11 +344,11 @@ angular.module('integridadUiApp')
       debtsToPayService.create(debtsToPay).then(function(respDebtsToPay) {
         vm.totalDebtsToPay = 0;
         vm.debtsToPay = respDebtsToPay;
+        $localStorage.user.cashier.debtsNumberSeq = vm.debtsToPay.debtsSeq;
         _.each(vm.debtsToPay.detailDebtsToPay, function(detail) {
           vm.totalDebtsToPay = (parseFloat(vm.totalDebtsToPay) + parseFloat(detail.baseImponible)).toFixed(2);
         });
         vm.debtsToPayCreated = true;
-        vm.success = 'Factura almacenada con exito';
         vm.loading = false;
       }).catch(function(error) {
         vm.loading = false;
@@ -396,11 +433,7 @@ angular.module('integridadUiApp')
     };
 
     vm.cancel = function() {
-      vm.debtsToPay = undefined;
-      vm.success = undefined;
-      vm.error = undefined;
-      vm.providerSelected = undefined;
-      vm.cuentaContableList = undefined;
+      _activate();
     };
 
     (function initController() {
