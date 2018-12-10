@@ -1,5 +1,5 @@
-<div style="width: 100%;height: 100%;top: 0px;left: 0px;position: fixed;display: block; z-index: 99; background: rgba(255, 255, 255, 0.3)" ng-show="vm.loading">
-  <div style="position: absolute;top: 15%;z-index: 100; width: 100%; text-align: center;">
+<div style="width: 100%; height: 100%; top: 0px; left: 0px; position: fixed; display: block; z-index: 99; background: rgba(255, 255, 255, 0.3)" ng-show="vm.loading">
+  <div style="position: absolute; top: 15%; z-index: 100; width: 100%; text-align: center;">
     <div class="sk-circle">
       <div class="sk-circle1 sk-child"></div>
       <div class="sk-circle2 sk-child"></div>
@@ -59,11 +59,11 @@
         </td>
       </tr>
       <tr ng-repeat="cuenta in vm.cuentasContablesList | orderBy:'code' | filter:searchText">
-        <td>{{ cuenta.code }}</td>
-        <td>{{ cuenta.description }}</td>
+        <td>{{cuenta.code}}</td>
+        <td>{{cuenta.description}}</td>
         <td>
           <button type="button" class="btn btn-primary" ng-click="vm.cuentaSelect(cuenta)">
-            Editar
+                  Editar
           </button>
         </td>
       </tr>
@@ -104,13 +104,12 @@
   </div>
   <div class="panel-footer">
     <button type="button" class="btn btn-primary" ng-click="vm.save()"
-      ng-disabled="vm.cuentaSelected.code === undefined">
-      Guardar
+            ng-disabled="vm.cuentaSelected.code === undefined">
+            Guardar
     </button>
     <button type="button" class="btn btn-success"
-      ng-click="vm.cancel()">
-      Cancelar
+            ng-click="vm.cancel()">
+            Cancelar
     </button>
   </div>
-
 </div>

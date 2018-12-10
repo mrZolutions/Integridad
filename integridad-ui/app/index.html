@@ -1,10 +1,10 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
   <head>
     <meta charset="utf-8">
     <title></title>
     <meta name="description" content="">
-    <meta name="viewport" content="width=device-width">
+    <meta name="viewport" content="width = device-width">
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
     <!-- build:css(.) styles/vendor.css -->
     <!-- bower:css -->
@@ -17,7 +17,6 @@
     <!-- endbuild -->
     <!-- build:css(.tmp) styles/main.css -->
     <link rel="stylesheet" href="styles/main.css">
-    <link rel="stylesheet" href="styles/style-print.css">
     <!-- endbuild -->
   </head>
   <body ng-app="integridadUiApp">
@@ -27,60 +26,54 @@
 
     <!-- Add your site or application content here -->
     <div class="header">
-      <div class="navbar navbar-default" role="navigation">
-        <div class="container">
+      <div class="navbar navbar-inverse" role="navigation">
+        <div class="container-fluid">
           <div class="navbar-header">
-
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#js-navbar-collapse">
               <span class="sr-only">Toggle navigation</span>
               <span class="icon-bar"></span>
               <span class="icon-bar"></span>
               <span class="icon-bar"></span>
             </button>
-
-            <a class="navbar-brand">Integridad</a>
+            <a class="atext navbar-brand"><b>Integridad</b></a>
           </div>
 
           <div class="collapse navbar-collapse" id="js-navbar-collapse" ng-controller="MenuCtrl">
-
             <ul class="nav navbar-nav">
               <li ng-repeat="option in permissions">
-                <a href="{{option.path}}">{{option.menuName}}</a>
+                <a class = "atext" href="{{option.path}}">{{option.menuName}}</a>
               </li>
               <li ng-show="nameType != undefined">
-                <a href="" ng-click="logout()">Salir</a>
+                <a class = "atext" href="" ng-click="logout()">Salir</a>
               </li>
-
               <li ng-show="nameType != undefined">
-                <a><b>{{nameType}}</b></a>
+                <a class = "atext"><b>{{nameType}}</b></a>
               </li>
             </ul>
-
           </div>
         </div>
       </div>
     </div>
 
     <div class="container">
-    <div ng-view=""></div>
+      <div ng-view=""></div>
     </div>
 
-    <div class="footer">
-      <div class="container">
-        <p><span class="glyphicon glyphicon-ok-circle"></span> Mr. Zolutions</p>
+    <div class = "footer">
+      <div class="container-fluid">
+        <p class = "ptext pull-right"><span class="glyphicon glyphicon-ok-circle"></span> Developed by Mr. Zolutions</p>
       </div>
     </div>
 
-
     <!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
-     <script>
-       !function(A,n,g,u,l,a,r){A.GoogleAnalyticsObject=l,A[l]=A[l]||function(){
-       (A[l].q=A[l].q||[]).push(arguments)},A[l].l=+new Date,a=n.createElement(g),
-       r=n.getElementsByTagName(g)[0],a.src=u,r.parentNode.insertBefore(a,r)
-       }(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+    <script>
+      !function(A,n,g,u,l,a,r) {A.GoogleAnalyticsObject = l, A[l] = A[l] || function() {
+      (A[l].q = A[l].q || []).push(arguments)}, A[l].l =+ new Date, a = n.createElement(g),
+      r = n.getElementsByTagName(g)[0], a.src = u, r.parentNode.insertBefore(a,r)
+      }(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
 
-       ga('create', 'UA-XXXXX-X');
-       ga('send', 'pageview');
+      ga('create', 'UA-XXXXX-X');
+      ga('send', 'pageview');
     </script>
 
     <!-- build:js(.) scripts/vendor.js -->
@@ -111,64 +104,63 @@
     <!-- endbower -->
     <!-- endbuild -->
 
-        <!-- build:js({.tmp,app}) scripts/scripts.js -->
-        <script src="app.js"></script>
-        <script src="app.routes.js"></script>
-        <script src="app.services.js"></script>
-        <script src="app.core.js"></script>
-        <script src="app.directives.js"></script>
-        <script src="views/main.js"></script>
-        <script src="views/menu/menu.ctrl.js"></script>
-        <script src="views/activate/activate.ctrl.js"></script>
-        <script src="views/home/home.ctrl.js"></script>
-        <script src="views/users/users.ctrl.js"></script>
-        <script src="views/users/edit.ctrl.js"></script>
-        <script src="views/clients/clients.ctrl.js"></script>
-        <script src="views/bills/bill.ctrl.js"></script>
-        <script src="views/projects/projects.ctrl.js"></script>
-        <script src="views/products/products.ctrl.js"></script>
-        <script src="views/providers/providers.ctrl.js"></script>
-        <script src="views/reports/sales.ctrl.js"></script>
-        <script src="views/note/credit.ctrl.js"></script>
-	      <script src="views/quotation/quotation.ctrl.js"></script>
-        <script src="views/cuentas/cuentas.ctrl.js"></script>
-        <script src="views/debtstopay/debtstopay.ctrl.js"></script>
-        <script src="views/cobrar/cobrar.ctrl.js"></script>
-        <script src="scripts/services/beforeunload.service.js"></script>
-        <script src="scripts/services/authorization.service.js"></script>
-        <script src="scripts/services/cuentaContable.service.js"></script>
-        <script src="scripts/services/creditsbill.service.js"></script>
-        <script src="scripts/services/debtsToPay.service.js"></script>
-        <script src="scripts/services/security.service.js"></script>
-        <script src="scripts/services/ebill.service.js"></script>
-        <script src="scripts/services/utilString.service.js"></script>
-        <script src="scripts/services/utilSeq.service.js"></script>
-        <script src="scripts/services/validator.service.js"></script>
-        <script src="scripts/services/countryList.service.js"></script>
-        <script src="scripts/services/auth.service.js"></script>
-        <script src="scripts/services/client.service.js"></script>
-        <script src="scripts/services/permission.service.js"></script>
-        <script src="scripts/services/payment.service.js"></script>
-        <script src="scripts/services/userType.service.js"></script>
-        <script src="scripts/services/subsidiary.service.js"></script>
-        <script src="scripts/services/project.service.js"></script>
-        <script src="scripts/services/product.service.js"></script>
-        <script src="scripts/services/productType.service.js"></script>
-        <script src="scripts/services/messurementList.service.js"></script>
-        <script src="scripts/services/brand.service.js"></script>
-        <script src="scripts/services/line.service.js"></script>
-        <script src="scripts/services/group.service.js"></script>
-        <script src="scripts/services/subgroup.service.js"></script>
-        <script src="scripts/services/cashier.service.js"></script>
-        <script src="scripts/services/bill.service.js"></script>
-        <script src="scripts/services/providers.service.js"></script>
-        <script src="scripts/services/requirement.service.js"></script>
-        <script src="scripts/services/eretention.service.js"></script>
-        <script src="scripts/services/eretentionClient.service.js"></script>
-        <script src="scripts/services/credit.service.js"></script>
-        <script src="scripts/services/cuentas.service.js"></script>
-        <script src="scripts/services/date.service.js"></script>
-        <script src="scripts/services/xlsx.full.min.js"></script>
-        <!-- endbuild -->
+    <!-- build:js({.tmp,app}) scripts/scripts.js -->
+    <script src="app.js"></script>
+    <script src="app.routes.js"></script>
+    <script src="app.services.js"></script>
+    <script src="app.core.js"></script>
+    <script src="app.directives.js"></script>
+    <script src="views/main.js"></script>
+    <script src="views/menu/menu.ctrl.js"></script>
+    <script src="views/activate/activate.ctrl.js"></script>
+    <script src="views/home/home.ctrl.js"></script>
+    <script src="views/users/users.ctrl.js"></script>
+    <script src="views/users/edit.ctrl.js"></script>
+    <script src="views/clients/clients.ctrl.js"></script>
+    <script src="views/bills/bill.ctrl.js"></script>
+    <script src="views/projects/projects.ctrl.js"></script>
+    <script src="views/products/products.ctrl.js"></script>
+    <script src="views/providers/providers.ctrl.js"></script>
+    <script src="views/reports/sales.ctrl.js"></script>
+    <script src="views/note/credit.ctrl.js"></script>
+	  <script src="views/quotation/quotation.ctrl.js"></script>
+    <script src="views/cuentas/cuentas.ctrl.js"></script>
+    <script src="views/debtstopay/debtstopay.ctrl.js"></script>
+    <script src="views/cobrar/cobrar.ctrl.js"></script>
+    <script src="scripts/services/beforeunload.service.js"></script>
+    <script src="scripts/services/authorization.service.js"></script>
+    <script src="scripts/services/cuentaContable.service.js"></script>
+    <script src="scripts/services/creditsbill.service.js"></script>
+    <script src="scripts/services/debtsToPay.service.js"></script>
+    <script src="scripts/services/security.service.js"></script>
+    <script src="scripts/services/ebill.service.js"></script>
+    <script src="scripts/services/utilString.service.js"></script>
+    <script src="scripts/services/utilSeq.service.js"></script>
+    <script src="scripts/services/validator.service.js"></script>
+    <script src="scripts/services/countryList.service.js"></script>
+    <script src="scripts/services/auth.service.js"></script>
+    <script src="scripts/services/client.service.js"></script>
+    <script src="scripts/services/permission.service.js"></script>
+    <script src="scripts/services/payment.service.js"></script>
+    <script src="scripts/services/userType.service.js"></script>
+    <script src="scripts/services/subsidiary.service.js"></script>
+    <script src="scripts/services/project.service.js"></script>
+    <script src="scripts/services/product.service.js"></script>
+    <script src="scripts/services/productType.service.js"></script>
+    <script src="scripts/services/messurementList.service.js"></script>
+    <script src="scripts/services/brand.service.js"></script>
+    <script src="scripts/services/line.service.js"></script>
+    <script src="scripts/services/group.service.js"></script>
+    <script src="scripts/services/subgroup.service.js"></script>
+    <script src="scripts/services/cashier.service.js"></script>
+    <script src="scripts/services/bill.service.js"></script>
+    <script src="scripts/services/providers.service.js"></script>
+    <script src="scripts/services/requirement.service.js"></script>
+    <script src="scripts/services/eretention.service.js"></script>
+    <script src="scripts/services/eretentionClient.service.js"></script>
+    <script src="scripts/services/credit.service.js"></script>
+    <script src="scripts/services/date.service.js"></script>
+    <script src="scripts/services/xlsx.full.min.js"></script>
+    <!-- endbuild -->
 </body>
 </html>

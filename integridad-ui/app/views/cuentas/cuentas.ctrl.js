@@ -1,18 +1,16 @@
 'use strict';
-
 /**
  * @ngdoc function
  * @name integridadUiApp.controller:CuentasContablesCtrl
  * @description
- * # CreditNoteCtrl
+ * # CuentasContablesCtrl
  * Controller of the integridadUiApp
  */
 angular.module('integridadUiApp')
-  .controller('CuentasContablesCtrl', function( _, $localStorage, cuentasService) {
+  .controller('CuentasContablesCtrl', function( _, $localStorage, cuentaContableService) {
     var vm = this;
     vm.error = undefined;
     vm.success = undefined;
-
     vm.loading = false;
     vm.cuentasContablesList = undefined;
     vm.cuetaSelected = undefined;
@@ -21,8 +19,7 @@ angular.module('integridadUiApp')
       vm.loading = true;
       vm.cuentaSelected = undefined;
       vm.user = $localStorage.user;
-
-      cuentasService.getLazyByUserClientId(vm.user.subsidiary.userClient.id).then(function(response) {
+      cuentaContableService.getLazyByUserClientId(vm.user.subsidiary.userClient.id).then(function(response) {
         vm.cuentasContablesList = response;
         vm.loading = false;
       }).catch(function(error) {
@@ -39,7 +36,7 @@ angular.module('integridadUiApp')
 
     function create() {
       vm.loading = true;
-      cuentasService.create(vm.cuentaSelected).then(function(response) {
+      cuentaContableService.create(vm.cuentaSelected).then(function(response) {
         _activate();
         vm.error = undefined;
         vm.success = 'Registro realizado con exito';
