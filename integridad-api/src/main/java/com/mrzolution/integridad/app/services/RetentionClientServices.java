@@ -54,20 +54,20 @@ public class RetentionClientServices {
     public RetentionClient getById(UUID id) {
 	log.info("RetentionClientServices getById: {}", id);
 	RetentionClient retrieved = retentionClientRepository.findOne(id);
-	if(retrieved != null){
+	if (retrieved != null) {
             log.info("RetentionClientServices retrieved id: {}", retrieved.getId());
 	} else {
             log.info("RetentionClientServices retrieved id NULL: {}", id);
 	}
 	populateChildren(retrieved);
         return retrieved;
-    };
+    }
     
     @Async("asyncExecutor")
-    public RetentionClient create(RetentionClient retentionClient) throws BadRequestException{   
+    public RetentionClient create(RetentionClient retentionClient) throws BadRequestException {   
         log.info("RetentionClientServices preparing for create new Retention");
         Iterable<RetentionClient> retenCli = retentionClientRepository.findByDocumentNumberAndBillId(retentionClient.getDocumentNumber(), retentionClient.getBill().getId());
-        if (Iterables.size(retenCli) > 0){
+        if (Iterables.size(retenCli) > 0) {
             throw new BadRequestException("Retención Ya Existe");
         }
         
@@ -78,7 +78,7 @@ public class RetentionClientServices {
         retentionClient.setFatherListToNull();
         retentionClient.setListsNull();
         RetentionClient saved = retentionClientRepository.save(retentionClient);
-        details.forEach(detail -> {
+        details.forEach (detail -> {
             detail.setRetentionClient(saved);
             sum += detail.getTotal();
             detailRetentionClientRepository.save(detail);
@@ -92,13 +92,13 @@ public class RetentionClientServices {
         sum = 0.0;
         valor = 0.0;
         return saved;
-    };
+    }
     
     @Async("asyncExecutor")
-    public void updateCreditsAndPayment(RetentionClient retentionClient, String document){
+    public void updateCreditsAndPayment(RetentionClient retentionClient, String document) {
         Credits docNumber = creditsRepository.findByBillId(document);
         doc = docNumber.getBillId();
-        if (doc.equals(document) && docNumber.getPayNumber() == numC){
+        if (doc.equals(document) && docNumber.getPayNumber() == numC) {
             valor = docNumber.getValor();
             docNumber.setValor(valor - sum);
             Credits spCretits =  creditsRepository.save(docNumber);
@@ -118,13 +118,13 @@ public class RetentionClientServices {
             paymentRepository.save(specialPayment);
         }
         log.info("RetentionClientServices Credits and Payment UPDATED");
-    };
+    }
     
     @Async("asyncExecutor")
-    public void updateBill(RetentionClient retentionClient, String document){
+    public void updateBill(RetentionClient retentionClient, String document) {
         Bill bill = billRepository.findOne(retentionClient.getBill().getId());
         String nbillId = bill.getId().toString();
-        if (nbillId.equals(document)){
+        if (nbillId.equals(document)) {
             saldo = bill.getSaldo();
             valor = Double.parseDouble(saldo);
             sumado = valor - sum;
@@ -134,12 +134,12 @@ public class RetentionClientServices {
             bill.setSaldo(saldo);
             billRepository.save(bill);
         }
-    };
+    }
     
-    private void populateChildren(RetentionClient retentionClient){
+    private void populateChildren(RetentionClient retentionClient) {
 	List<DetailRetentionClient> detailRetentionList = new ArrayList<>();
 	Iterable<DetailRetentionClient> retentions = detailRetentionClientRepository.findByRetentionClient(retentionClient);
-	retentions.forEach(detail -> {
+	retentions.forEach (detail -> {
             detail.setListsNull();
             detail.setFatherListToNull();
             detail.setRetentionClient(null);
@@ -147,5 +147,5 @@ public class RetentionClientServices {
 	});
 	retentionClient.setDetailRetentionClient(detailRetentionList);
 	retentionClient.setFatherListToNull();
-    };
+    }
 }

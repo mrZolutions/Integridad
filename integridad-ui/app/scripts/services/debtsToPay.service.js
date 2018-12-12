@@ -7,7 +7,7 @@ angular
         });
     };
 
-    this.getAllDebtsByProviderId = function(id) {
+    this.getAllDebtsToPayByProviderId = function(id) {
         return securityService.get('/debts/debts/provider/' + id).then(function successCallback(response) {
           return response.data;
         });

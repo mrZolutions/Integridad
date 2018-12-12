@@ -1,7 +1,7 @@
 package com.mrzolution.integridad.app.repositories;
 
-import com.mrzolution.integridad.app.domain.Credits;
-import com.mrzolution.integridad.app.domain.Payment;
+import com.mrzolution.integridad.app.domain.CreditsDebts;
+import com.mrzolution.integridad.app.domain.PaymentDebts;
 import com.mrzolution.integridad.app.interfaces.ChildRepository;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -16,8 +16,8 @@ import org.springframework.stereotype.Repository;
  */
 
 @Repository
-@Qualifier(value = "PaymentChildRepository")
-public interface PaymentChildRepository extends ChildRepository<Credits>, JpaRepository<Payment, UUID> {
-    @Query("SELECT p.id FROM Payment p WHERE p.credits = (:id)")
-    Iterable<UUID> findByFather(@Param("id") Credits credits);
+@Qualifier(value = "PaymentDebtsChildRepository")
+public interface PaymentDebtsChildRepository extends ChildRepository<CreditsDebts>, JpaRepository<PaymentDebts, UUID> {
+    @Query("SELECT p.id FROM PaymentDebts p WHERE p.creditsDebts = (:id)")
+    Iterable<UUID> findByFather(@Param("id") CreditsDebts credits);
 }

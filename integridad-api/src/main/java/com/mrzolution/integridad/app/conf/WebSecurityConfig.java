@@ -10,25 +10,23 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 @Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+    @Override
+    public void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.inMemoryAuthentication()
+            .withUser("integridaduser").password("e3tkwy").roles("USER", "ADMIN");
+    }
 	
-	
-	@Override
-	public void configure(AuthenticationManagerBuilder auth) throws Exception {
-	    auth.inMemoryAuthentication()
-	      .withUser("integridaduser").password("e3tkwy").roles("USER", "ADMIN");
-	}
-	
-	@Override
-	protected void configure(HttpSecurity http) throws Exception {
-		http
-	      .httpBasic().and()
-	      .authorizeRequests()
-	        .antMatchers(HttpMethod.POST, "/integridad/**").hasRole("ADMIN")
-	        .antMatchers(HttpMethod.PUT, "/integridad/**").hasRole("ADMIN")
-			.antMatchers(HttpMethod.GET, "/integridad/**").hasRole("ADMIN")
-			.antMatchers(HttpMethod.DELETE, "/integridad/**").hasRole("ADMIN")
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+	http
+        .httpBasic().and()
+	.authorizeRequests()
+	.antMatchers(HttpMethod.POST, "/integridad/**").hasRole("ADMIN")
+	.antMatchers(HttpMethod.PUT, "/integridad/**").hasRole("ADMIN")
+		.antMatchers(HttpMethod.GET, "/integridad/**").hasRole("ADMIN")
+		.antMatchers(HttpMethod.DELETE, "/integridad/**").hasRole("ADMIN")
 	        .antMatchers(HttpMethod.PATCH, "/integridad/**").hasRole("ADMIN").and()
-	      .csrf().disable();
-	}
+	.csrf().disable();
+    }
 
 }

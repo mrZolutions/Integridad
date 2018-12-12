@@ -4,7 +4,6 @@ package com.mrzolution.integridad.app.controllers;
  * @author mrzolutions-daniel
  */
 import com.mrzolution.integridad.app.domain.Credits;
-import com.mrzolution.integridad.app.domain.report.CreditsPayedReport;
 import com.mrzolution.integridad.app.domain.report.CreditsReport;
 import com.mrzolution.integridad.app.exceptions.BadRequestException;
 import com.mrzolution.integridad.app.services.CreditsServices;
@@ -28,29 +27,29 @@ public class CreditsBillControler {
     CreditsServices service;
     
     @RequestMapping(method = RequestMethod.GET, value="/credits/bill/{id}")
-    public ResponseEntity getAllCreditsOfBillById(@PathVariable("id") UUID id){
+    public ResponseEntity getAllCreditsOfBillById(@PathVariable("id") UUID id) {
         log.info("CreditsBillControler getAllCreditsByBillById: {}", id);
         Iterable<Credits> response = null;
         try {
             response = service.getCreditsOfBillByBillId(id);
-        }catch(BadRequestException e){
+        } catch (BadRequestException e) {
             log.error("CreditsBillControler getAllCreditsByBillById Exception thrown: {}", e.getMessage());
 	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
         return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
-    };
+    }
     
     @RequestMapping(method = RequestMethod.GET, value="/rep/pendingreport/{userClientId}/{dateTwo}")
-    public ResponseEntity getAllCreditsPendingOfBillByUserClientId(@PathVariable("userClientId") UUID userClientId, @PathVariable("dateTwo") long dateTwo){
+    public ResponseEntity getAllCreditsPendingOfBillByUserClientId(@PathVariable("userClientId") UUID userClientId, @PathVariable("dateTwo") long dateTwo) {
         log.info("CreditsBillControler getAllCreditsPendingOfBillByUserClientId: {}", userClientId);
         List<CreditsReport> response = null;
         try {
             response = service.getCreditsPendingOfBillByUserClientId(userClientId, dateTwo);
-	}catch(BadRequestException e) {
-	log.error("CreditsBillControler getAllCreditsOfBillByUserClientId Exception thrown: {}", e.getMessage());
+	} catch (BadRequestException e) {
+            log.error("CreditsBillControler getAllCreditsOfBillByUserClientId Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
 	return new ResponseEntity<List>(response, HttpStatus.ACCEPTED);
-    };
+    }
     
 }   

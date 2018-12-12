@@ -1,8 +1,10 @@
 package com.mrzolution.integridad.app.services;
+
 /**
  *
  * @author mrzolutions-daniel
  */
+
 import com.google.common.collect.Iterables;
 import com.mrzolution.integridad.app.domain.Credits;
 import com.mrzolution.integridad.app.domain.Payment;
@@ -41,7 +43,7 @@ public class CreditsServices {
     public Iterable<Credits> getCreditsOfBillByBillId(UUID id) {
         log.info("CreditsServices getCreditsOfBillByBillId: {}", id);
         Iterable<Credits> credits = creditsRepository.findCreditsOfBillByBillId(id);
-        credits.forEach(credit ->{
+        credits.forEach (credit -> {
             credit.setListsNull();
             credit.setFatherListToNull();
         });
@@ -150,9 +152,8 @@ public class CreditsServices {
     
     private void populateChildren(Credits credits) {
         List<Payment> paymentsList = new ArrayList<>();
-        Iterable<Payment> creditos = paymentRepository.findByCredits(credits);
-        
-        creditos.forEach(payment -> {
+        Iterable<Payment> payments = paymentRepository.findByCredits(credits);
+        payments.forEach (payment -> {
             payment.setListsNull();
             payment.setFatherListToNull();
             payment.setCredits(null);          

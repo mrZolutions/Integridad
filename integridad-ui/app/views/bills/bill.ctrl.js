@@ -405,8 +405,8 @@ angular.module('integridadUiApp')
       var creditArray = [];
       var diasPlazo = parseInt(vm.medio.creditoIntervalos);
       var d = new Date();
-      var total = parseFloat(parseFloat(vm.bill.total)/parseFloat(vm.medio.creditoNumeroPagos)).toFixed(4);
       var statusCredits = 'PENDIENTE';
+      var total = parseFloat(parseFloat(vm.bill.total) / parseFloat(vm.medio.creditoNumeroPagos)).toFixed(4);
       vm.seqNumberCredits = vm.seqNumber;
       for (var i = 1; i <= parseInt(vm.medio.creditoNumeroPagos); i++) {
         var credito = {

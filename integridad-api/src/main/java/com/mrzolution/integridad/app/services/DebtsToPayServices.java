@@ -52,24 +52,25 @@ public class DebtsToPayServices {
         return retrieved;
     }
 
-    void savePagosAndCreditsOfDebts(DebtsToPay saved, List<PagoDebts> pagos) {
-        pagos.forEach (pago -> {
-            List<CreditsDebts> creditsList = pago.getCredits();
-            pago.setCredits(null);
-            pago.setDebtsToPay(saved);
-            PagoDebts pagoSaved = pagoDebtsRepository.save(pago);
-            if (creditsList != null) {
-                creditsList.forEach (credit -> {
-                    credit.setPagoDebts(pagoSaved);
-                    creditsDebtsRepository.save(credit);
+    void savePagosAndCreditsOfDebts(DebtsToPay saved, List<PagoDebts> pagosDebts) {
+        pagosDebts.forEach (pagoDebt -> {
+            List<CreditsDebts> creditsDebtsList = pagoDebt.getCreditsDebts();
+            pagoDebt.setCreditsDebts(null);
+            pagoDebt.setDebtsToPay(saved);
+            PagoDebts pagoDebtSaved = pagoDebtsRepository.save(pagoDebt);
+            if (creditsDebtsList != null) {
+                creditsDebtsList.forEach (creditDebt -> {
+                    creditDebt.setPagoDebts(pagoDebtSaved);
+                    creditDebt.setDebtsToPayId(saved.getId().toString());
+                    creditsDebtsRepository.save(creditDebt);
                 });
             }
         });
     }
     
-    public Iterable<DebtsToPay> getDebtsByProviderId(UUID id) {
+    public Iterable<DebtsToPay> getDebtsToPayByProviderId(UUID id) {
         log.info("DebtsToPayServices getDebtsByProviderId: {}", id);
-        Iterable<DebtsToPay> debts = debtsToPayRepository.findDebtsByProviderId(id);
+        Iterable<DebtsToPay> debts = debtsToPayRepository.findDebtsToPayByProviderId(id);
         debts.forEach (debt -> {
             debt.setListsNull();
             debt.setFatherListToNull();
@@ -81,12 +82,11 @@ public class DebtsToPayServices {
         log.info("DebtsToPayServices preparing for create new Debts");
         List<DetailDebtsToPay> details = debtsToPay.getDetailDebtsToPay();
         List<PagoDebts> pagos = debtsToPay.getPagos();
+        
         if (details == null) {
             throw new BadRequestException("Debe tener una cuenta por lo menos");
         }
-        if (pagos == null) {
-            throw new BadRequestException("Debe tener un pago por lo menos");
-        }
+        
         debtsToPay.setDetailDebtsToPay(null);
         debtsToPay.setPagos(null);
         debtsToPay.setFatherListToNull();
@@ -124,11 +124,11 @@ public class DebtsToPayServices {
     }
     
     private List<PagoDebts> getPagosDebtsToPay (DebtsToPay debtsToPay) {
-        List<PagoDebts> pagoList = new ArrayList<>(); 
-        Iterable<PagoDebts> pagos = pagoDebtsRepository.findByDebtsToPay(debtsToPay);
-        pagos.forEach (pago -> {
-            if ("credito".equals(pago.getMedio())) {
-                Iterable<CreditsDebts> credits = creditsDebtsRepository.findByPagoDebts(pago);
+        List<PagoDebts> pagoDebtsList = new ArrayList<>(); 
+        Iterable<PagoDebts> pagosDebts = pagoDebtsRepository.findByDebtsToPay(debtsToPay);
+        pagosDebts.forEach (pagoDebt -> {
+            if ("credito".equals(pagoDebt.getMedio())) {
+                Iterable<CreditsDebts> credits = creditsDebtsRepository.findByPagoDebts(pagoDebt);
                 List<CreditsDebts> creditsList = new ArrayList<>();
                 credits.forEach (credit -> {
                     credit.setListsNull();
@@ -136,15 +136,15 @@ public class DebtsToPayServices {
                     credit.setPagoDebts(null);
                     creditsList.add(credit);
                 });
-                pago.setCredits(creditsList);
+                pagoDebt.setCreditsDebts(creditsList);
             } else {
-                pago.setListsNull();
+                pagoDebt.setListsNull();
             }
-            pago.setFatherListToNull();
-            pago.setDebtsToPay(null);
-            pagoList.add(pago);
+            pagoDebt.setFatherListToNull();
+            pagoDebt.setDebtsToPay(null);
+            pagoDebtsList.add(pagoDebt);
         });
-        return pagoList;
+        return pagoDebtsList;
     }
     
 }

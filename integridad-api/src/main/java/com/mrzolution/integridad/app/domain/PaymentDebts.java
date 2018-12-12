@@ -1,9 +1,9 @@
 package com.mrzolution.integridad.app.domain;
 
 import com.mrzolution.integridad.app.interfaces.Child;
-import lombok.Data;
-import javax.persistence.*;
 import java.util.UUID;
+import javax.persistence.*;
+import lombok.Data;
 
 /**
  *
@@ -12,7 +12,7 @@ import java.util.UUID;
 
 @Entity
 @Data
-public class Payment implements Child {
+public class PaymentDebts implements Child {
     @Id
     @GeneratedValue
     private UUID id;
@@ -26,17 +26,16 @@ public class Payment implements Child {
     private String documentNumber;
     private double valorAbono;
     private double valorReten;
-    private double valorNotac;
-
+    
     @ManyToOne
     @JoinColumn(name = "credit_id")
-    private Credits credits;
+    private CreditsDebts creditsDebts;
     
     public void setListsNull() {
     }
     
     public void setFatherListToNull() {
-        credits.setListsNull();
-        credits.setFatherListToNull();
+        creditsDebts.setListsNull();
+        creditsDebts.setFatherListToNull();
     }
 }

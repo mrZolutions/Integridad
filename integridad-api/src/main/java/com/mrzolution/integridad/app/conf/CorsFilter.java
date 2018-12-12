@@ -4,7 +4,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -14,6 +13,7 @@ import java.io.IOException;
 /**
  * Created by daniel.
  */
+
 @Component
 public class CorsFilter extends OncePerRequestFilter {
     /**

@@ -23,15 +23,16 @@ import org.springframework.stereotype.Component;
  *
  * @author mrzolutions-daniel
  */
+
 @Slf4j
 @Component
 public class PaymentServices {
     @Autowired
     PaymentRepository paymentRepository;
     @Autowired
-    PagoRepository pagoRepository;
-    @Autowired
     CreditsRepository creditsRepository;
+    @Autowired
+    PagoRepository pagoRepository;
     @Autowired
     BillRepository billRepository;
     
@@ -41,7 +42,6 @@ public class PaymentServices {
     private String statusCambio = "";
     private double resto = 0.0;
     private String document = "";
-    private String doc = "";
     private String saldo = "";
     private double sumado = 0.0;
     
@@ -50,7 +50,7 @@ public class PaymentServices {
         Payment saved = paymentRepository.save(payment);
         document = saved.getCredits().getPago().getBill().getId().toString();
         log.info("PaymentServices Payment created id: {}", saved.getId());
-        if (saved.getCredits().getId() != null){
+        if (saved.getCredits().getId() != null) {
             idCredit = saved.getCredits().getId();
             if ("PAC".equals(saved.getTypePayment())){
                 abono = saved.getValorAbono();
@@ -63,18 +63,17 @@ public class PaymentServices {
 	return saved;
     }
     
-    @Async("asyncExecutor")
     public void updateCredits(UUID credits){
         Credits cambio = creditsRepository.findOne(idCredit);
         nume = cambio.getValor();
         resto = nume - abono;
         cambio.setValor(resto);
-        if (cambio.getValor() <= 0.01){
+        if (cambio.getValor() <= 0.01) {
             statusCambio = "PAGADO";
             cambio.setStatusCredits(statusCambio);
         }
         creditsRepository.save(cambio);
-        resto = 0.00;
+        resto = 0.0;
         log.info("PaymentServices updateCredits FINISHED");
     }
     
@@ -82,7 +81,7 @@ public class PaymentServices {
     public void updateBill(Payment payment, String document) {
         Bill billed = billRepository.findOne(payment.getCredits().getPago().getBill().getId());
         String nbillId = billed.getId().toString();
-        if (nbillId.equals(document)){
+        if (nbillId.equals(document)) {
             saldo = billed.getSaldo();
             nume = Double.parseDouble(saldo);
             sumado = nume - abono;
@@ -100,7 +99,7 @@ public class PaymentServices {
         Iterable<Payment> payments = paymentRepository.findAllPaymentsByUserClientId(id);
         List<CCResumenReport> ccResumenReportList = new ArrayList<>();
         
-        payments.forEach(payment -> {
+        payments.forEach (payment -> {
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd");
             String fechaPago = dateFormat.format(new Date(payment.getDatePayment()));
             

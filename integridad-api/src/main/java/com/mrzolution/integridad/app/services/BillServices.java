@@ -99,17 +99,6 @@ public class BillServices {
         return bills;
     }
         
-    //Selecciona solo las Facturas tipo Crédito del Cliente
-    public Iterable<Bill> getCreditsByClientIdAndTypeLazy(UUID id, int type) {
-        log.info("BillServices getCreditsByClientIdAndTypeLazy: {}", id);
-        Iterable<Bill> bills = billRepository.findAllCreditsByClientIdAndType(id, type);
-        bills.forEach (bill-> {
-            bill.setListsNull();
-            bill.setFatherListToNull();
-        });
-        return bills;
-    }
-	
     public Bill getById(UUID id) {
         log.info("BillServices getById: {}", id);
         Bill retrieved = billRepository.findOne(id);
@@ -141,9 +130,9 @@ public class BillServices {
             Pago pagoSaved = pagoRepository.save(pago);		
             if (creditsList != null) {
                 creditsList.forEach (credit -> {
-                credit.setPago(pagoSaved);
-                credit.setBillId(saved.getId().toString());
-                creditsRepository.save(credit);
+                    credit.setPago(pagoSaved);
+                    credit.setBillId(saved.getId().toString());
+                    creditsRepository.save(credit);
                 });
             }    
         });

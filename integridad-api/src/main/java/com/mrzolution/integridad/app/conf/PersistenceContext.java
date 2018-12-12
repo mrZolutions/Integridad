@@ -6,7 +6,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 /**
  * Created by daniel on 4/24/17.
  */
+
 @EnableJpaRepositories(basePackages = "com.mrzolutions.integridad.app.repositories")
-@EntityScan(basePackages="com.mrzolutions.integridad.app.domain")
+@EntityScan(basePackages = "com.mrzolutions.integridad.app.domain")
 class PersistenceContext {
 }

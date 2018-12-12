@@ -29,6 +29,7 @@ public class DebtsToPay {
     private String authorizationNumber;
     private double total;
     private double subTotal;
+    private double saldo;
     private String tipoDeCompra;
     private String debtsSeq;
 

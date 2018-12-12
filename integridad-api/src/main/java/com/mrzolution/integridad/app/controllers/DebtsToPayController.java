@@ -40,11 +40,11 @@ public class DebtsToPayController {
     }
     
     @RequestMapping(method = RequestMethod.GET, value="/debts/provider/{id}")
-    public ResponseEntity getAllDebtsByProviderId(@PathVariable("id") UUID id) {
+    public ResponseEntity getAllDebtsToPayByProviderId(@PathVariable("id") UUID id) {
         log.info("DebtsToPayController getAllDebtsByProviderId: {}", id);
         Iterable<DebtsToPay> response = null;
         try {
-            response = service.getDebtsByProviderId(id);
+            response = service.getDebtsToPayByProviderId(id);
         } catch(BadRequestException e) {
             log.error("DebtsToPayController getAllDebtsByProviderId Exception thrown: {}", e.getMessage());
 	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());

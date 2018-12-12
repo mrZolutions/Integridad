@@ -19,16 +19,15 @@ public class DetailDebtsToPay implements Child{
     @Id
     @GeneratedValue
     private UUID id;
-    
-    @ManyToOne
-    @JoinColumn(name = "debtsToPay_id")
-    private DebtsToPay debtsToPay;
-    
     private String codeConta;
     private String descrip;
     private String name;
     private String tipo;
     private double baseImponible;
+    
+    @ManyToOne
+    @JoinColumn(name = "debtsToPay_id")
+    private DebtsToPay debtsToPay;
     
     public void setListsNull(){
     };

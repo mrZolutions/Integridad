@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
  *
  * @author mrzolutions-daniel
  */
+
 @Slf4j
 @RestController
 @RequestMapping(value = "/integridad/v1/payment")
@@ -28,28 +29,28 @@ public class PaymentController {
     PaymentServices service;
     
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity create(@RequestBody Payment payment){
+    public ResponseEntity create(@RequestBody Payment payment) {
         log.info("PaymentController create");
         Payment response = null;
         try {
             response = service.create(payment);
-	}catch(BadRequestException e){
+	} catch (BadRequestException e) {
             log.error("PaymentController create Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
         return new ResponseEntity<Payment>(response, HttpStatus.CREATED);
-    };
+    }
     
     @RequestMapping(method = RequestMethod.GET, value="/rep/ccresreport/{userClientId}")
-    public ResponseEntity getAllPaymentsByUserClientId(@PathVariable("userClientId") UUID userClientId){
+    public ResponseEntity getAllPaymentsByUserClientId(@PathVariable("userClientId") UUID userClientId) {
         log.info("PaymentController getAllPaymentsByUserClientId: {}", userClientId);
         List<CCResumenReport> response = null;
         try {
             response = service.getPaymentsByUserClientId(userClientId);
-	}catch(BadRequestException e) {
-	log.error("PaymentController getAllPaymentsByUserClientId Exception thrown: {}", e.getMessage());
+	} catch (BadRequestException e) {
+            log.error("PaymentController getAllPaymentsByUserClientId Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
         return new ResponseEntity<List>(response, HttpStatus.ACCEPTED);
-    };
+    }
 }

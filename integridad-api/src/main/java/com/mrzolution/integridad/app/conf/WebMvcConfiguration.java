@@ -5,12 +5,12 @@ import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
-
 import java.util.List;
 
 /**
  * Created by rene on 19/10/16.
  */
+
 @Configuration
 public class WebMvcConfiguration extends WebMvcConfigurationSupport {
 

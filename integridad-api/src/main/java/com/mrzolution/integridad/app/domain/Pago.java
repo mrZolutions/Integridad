@@ -2,7 +2,6 @@ package com.mrzolution.integridad.app.domain;
 
 import com.mrzolution.integridad.app.interfaces.Child;
 import lombok.Data;
-
 import javax.persistence.*;
 import java.util.List;
 import java.util.UUID;
@@ -10,7 +9,6 @@ import java.util.UUID;
 @Entity
 @Data
 public class Pago implements Child {
-
     @Id
     @GeneratedValue
     private UUID id;
