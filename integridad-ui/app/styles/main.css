@@ -30,6 +30,10 @@ body {
   padding-bottom: 19px;
 }
 
+.nav-backg {
+  background-color: #000;
+}
+
 /* Custom page footer */
 .footer {
   padding-top: 19px;
@@ -59,12 +63,20 @@ body {
   margin-top: 28px;
 }
 
+.inner {
+  display: inline-block;
+  vertical-align: middle;
+  padding: 5px 5px;
+}
+
 .ptext {
   font-size: 15px;
 }
 
 .atext {
+  color: white;
   font-size: 15px;
+  font-weight: bold;
 }
 
 /* Responsive: Portrait tablets and up */

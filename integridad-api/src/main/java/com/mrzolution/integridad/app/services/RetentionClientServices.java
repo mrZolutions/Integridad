@@ -67,6 +67,7 @@ public class RetentionClientServices {
     public RetentionClient create(RetentionClient retentionClient) throws BadRequestException {   
         log.info("RetentionClientServices preparing for create new Retention");
         Iterable<RetentionClient> retenCli = retentionClientRepository.findByDocumentNumberAndBillId(retentionClient.getDocumentNumber(), retentionClient.getBill().getId());
+        
         if (Iterables.size(retenCli) > 0) {
             throw new BadRequestException("Retención Ya Existe");
         }
@@ -87,14 +88,13 @@ public class RetentionClientServices {
                                   
         log.info("RetentionClientServices Retention created id: {}", saved.getId());
         saved.setDetailRetentionClient(details);
-        updateCreditsAndPayment(retentionClient, document);
         updateBill(retentionClient, document);
+        updateCreditsAndPayment(retentionClient, document);
         sum = 0.0;
         valor = 0.0;
         return saved;
     }
-    
-    @Async("asyncExecutor")
+
     public void updateCreditsAndPayment(RetentionClient retentionClient, String document) {
         Credits docNumber = creditsRepository.findByBillId(document);
         doc = docNumber.getBillId();
@@ -120,7 +120,6 @@ public class RetentionClientServices {
         log.info("RetentionClientServices Credits and Payment UPDATED");
     }
     
-    @Async("asyncExecutor")
     public void updateBill(RetentionClient retentionClient, String document) {
         Bill bill = billRepository.findOne(retentionClient.getBill().getId());
         String nbillId = bill.getId().toString();
@@ -134,6 +133,7 @@ public class RetentionClientServices {
             bill.setSaldo(saldo);
             billRepository.save(bill);
         }
+        log.info("RetentionClientServices Bill UPDATED");
     }
     
     private void populateChildren(RetentionClient retentionClient) {

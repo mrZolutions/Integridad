@@ -36,7 +36,7 @@ public class DebtsToPayController {
             log.error("DebtsToPayController getId Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
-	return new ResponseEntity<DebtsToPay>(response, HttpStatus.ACCEPTED);
+        return new ResponseEntity<DebtsToPay>(response, HttpStatus.ACCEPTED);
     }
     
     @RequestMapping(method = RequestMethod.GET, value="/debts/provider/{id}")

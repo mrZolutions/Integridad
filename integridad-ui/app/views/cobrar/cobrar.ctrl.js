@@ -129,6 +129,9 @@ angular.module('integridadUiApp')
     function _activate() {
       vm.today = new Date();
       vm.clientBill = undefined;
+      vm.success = undefined;
+      vm.billList = undefined;
+      vm.retentionClient = undefined;
       vm.clientList = [];
       vm.clientSelected = undefined;
       clientService.getLazyByProjectId($localStorage.user.subsidiary.userClient.id).then(function(response) {
@@ -145,6 +148,7 @@ angular.module('integridadUiApp')
 
     vm.clientConsult = function(client) {
       vm.loading = true;
+      vm.success = undefined;
       vm.clientId = client.identification;
       vm.clientName = client.name;
       vm.clientCodConta = client.codConta;
@@ -207,11 +211,13 @@ angular.module('integridadUiApp')
         vm.loading = false;
         vm.error = error.data;
       });
+      _activate();
     };
 
 //Inicio de Creación de Retenciones...
     vm.createRetentionClient = function(bill) {
       var today = new Date();
+      vm.success = undefined;
       vm.retentionClientCreated = false;
       vm.billNumber = bill.stringSeq;
       vm.creditValue = bill.total;
@@ -309,6 +315,7 @@ angular.module('integridadUiApp')
 
     vm.saveRetentionClient = function(retentionClient) {
       vm.loading = true;
+      vm.success = undefined;
       vm.retentionClient.ejercicioFiscal = vm.retentionClient.ejercicio;
       vm.retentionClient.documentNumber = vm.billNumber;
       vm.retentionClient.retentionNumber = vm.retentionClient.numero;
@@ -333,19 +340,16 @@ angular.module('integridadUiApp')
           vm.totalRetention = (parseFloat(vm.totalRetention) + parseFloat(detail.total)).toFixed(2);
         });
         vm.retentionClientCreated = true;
-        vm.success = 'Retención almacenada con exito';
         vm.loading = false;
       }).catch(function(error) {
         vm.loading = false;
         vm.error = error.data;
       });
+      _activate();
     };
 
     vm.cancelRetentionClientCreated = function() {
-      vm.retentionClientCreated = false;
-      vm.retentionClient = undefined;
-      vm.success = undefined;
-      vm.error = undefined;
+      _activate();
     };
 // Fin de Creación de Retenciones....
 

@@ -318,7 +318,7 @@
                 </div>
             </div>
             <div class = "modal-footer">
-                <button type = "button" title = "Aceptar" class = "btn btn-primary" data-dismiss = "modal" ng-click = "vm.addItem()">
+                <button type = "button" title = "Aceptar" class = "btn btn-success" data-dismiss = "modal" ng-click = "vm.addItem()">
                         <span class = "glyphicon glyphicon-thumbs-up" aria-hidden = "true"></span>
                 </button>
                 <button type = "button" title = "Cancelar" class = "btn btn-primary" data-dismiss = "modal"
@@ -722,7 +722,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type = "button" title = "Aceptar" class = "btn btn-primary" ng-click = "vm.pAbonoDebts(vm.paymentDebts)" data-dismiss = "modal">
+                <button type = "button" title = "Aceptar" class = "btn btn-success" ng-click = "vm.pAbonoDebts(vm.paymentDebts)" data-dismiss = "modal">
                         <span class = "glyphicon glyphicon-thumbs-up" aria-hidden = "true"></span>
                 </button>
                 <button type = "button" title = "Salir" class = "btn btn-primary" ng-click = "vm.cancel()" data-dismiss = "modal">
@@ -884,18 +884,18 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr ng-repeat = "det in vm.debtsToPay.items" >
-                                <td>{{det.codigo_contable}}</td>
-                                <td>{{det.desc_contable}}</td>
-                                <td>{{det.nomb_contable}}</td>
+                            <tr ng-repeat = "det in vm.debtsDetails" >
+                                <td>{{det.codeConta}}</td>
+                                <td>{{det.descrip}}</td>
+                                <td>{{det.name}}</td>
                                 <td>{{det.tipo}}</td>
-                                <td>{{det.base_imponible}}</td>
+                                <td>{{det.baseImponible}}</td>
                             </tr>
                             <tr>
                                 <td></td>
-                                <td>DEBITO: {{vm.getTotalDebito()}}</td>
-                                <td>CREDITO: {{vm.getTotalCredito()}}</td>
-                                <td><b>SALDO: {{vm.getTotalSaldo()}}</b></td>
+                                <td>DEBITO: {{vm.getTotalDebitoRep()}}</td>
+                                <td>CREDITO: {{vm.getTotalCreditoRep()}}</td>
+                                <td><b>SALDO: {{vm.getTotalSaldoRep()}}</b></td>
                                 <td></td>
                             </tr>
                         </tbody>

@@ -581,6 +581,7 @@ angular.module('integridadUiApp')
       debtsToPayService.getById(debts.id).then(function(response) {
         vm.providerDebtsList = undefined;
         vm.debtsToPay = response;
+        vm.debtsDetails = response.detailDebtsToPay;
         vm.companyData = $localStorage.user.subsidiary;
         vm.debtsProviderSelected = response.provider;
         vm.pagos = response.pagos;
@@ -593,7 +594,38 @@ angular.module('integridadUiApp')
         vm.loading = false;
         vm.error = error.data;
       });
-      console.log(vm.debts);
+    };
+
+    vm.getTotalDebitoRep = function() {
+      var totalDebito = 0;
+      if (vm.debtsDetails) {
+        _.each (vm.debtsDetails, function(detail) {
+          if (detail.tipo === 'DEBITO (D)') {
+            totalDebito = (parseFloat(totalDebito) + parseFloat(detail.baseImponible)).toFixed(2);
+          };
+        });
+      };
+      vm.saldoDebito = totalDebito;
+      return totalDebito;
+    };
+
+    vm.getTotalCreditoRep = function() {
+      var totalCredito = 0;
+      if (vm.debtsDetails) {
+        _.each(vm.debtsDetails, function(detail) {
+          if (detail.tipo === 'CREDITO (C)') {
+            totalCredito = (parseFloat(totalCredito) + parseFloat(detail.baseImponible)).toFixed(2);
+          };
+        });
+      };
+      vm.saldoCredito = totalCredito;
+      return totalCredito;
+    };
+
+    vm.getTotalSaldoRep = function() {
+      var totalSaldo = 0;
+      totalSaldo = (parseFloat(vm.saldoCredito) - parseFloat(vm.saldoDebito)).toFixed(2);
+      return totalSaldo;
     };
 
     vm.cancel = function() {
