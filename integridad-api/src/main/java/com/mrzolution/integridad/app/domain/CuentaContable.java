@@ -26,7 +26,6 @@ public class CuentaContable {
     private UserClient userClient;
 
     public void setListsNull(){
-
     }
 
     public void setFatherListToNull(){
@@ -37,7 +36,6 @@ public class CuentaContable {
     public static CuentaContable newCuentaContableTest(){
         CuentaContable cuentaContable = new CuentaContable();
         cuentaContable.setUserClient(UserClient.newUserClientTest());
-
         return cuentaContable;
     }
 }

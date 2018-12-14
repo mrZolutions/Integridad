@@ -80,10 +80,10 @@ public class DebtsToPayServices {
     
     public DebtsToPay create(DebtsToPay debtsToPay) throws BadRequestException{
         log.info("DebtsToPayServices preparing for create new Debts");
-        List<DetailDebtsToPay> details = debtsToPay.getDetailDebtsToPay();
+        List<DetailDebtsToPay> detailDebtsToPay = debtsToPay.getDetailDebtsToPay();
         List<PagoDebts> pagos = debtsToPay.getPagos();
         
-        if (details == null) {
+        if (detailDebtsToPay == null) {
             throw new BadRequestException("Debe tener una cuenta por lo menos");
         }
         
@@ -97,13 +97,13 @@ public class DebtsToPayServices {
         cashier.setDebtsNumberSeq(cashier.getDebtsNumberSeq() + 1);
         cashierRepository.save(cashier);
         
-        details.forEach (detail -> {
+        detailDebtsToPay.forEach (detail -> {
             detail.setDebtsToPay(saved);
             detailDebtsToPayRepository.save(detail);
             detail.setDebtsToPay(null);
         });
         savePagosAndCreditsOfDebts(saved, pagos);
-        saved.setDetailDebtsToPay(details);
+        saved.setDetailDebtsToPay(detailDebtsToPay);
         log.info("DebtsToPayServices Debts created id: {}", saved.getId());
         return saved;
     }

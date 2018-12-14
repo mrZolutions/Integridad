@@ -16,8 +16,7 @@ import lombok.Data;
 @Entity
 @Data
 public class UserType {
-
-	@Id
+    @Id
     @GeneratedValue
     private UUID id;
 

@@ -76,11 +76,9 @@
       </tr>
     </tbody>
   </table>
-
 </div>
 
 <div ng-show="vm.billList !== undefined">
-
   <input ng-model="searchText" class="form-control" placeholder="Buscar">
   <table class="table table-striped">
     <thead>
@@ -124,7 +122,6 @@
       </button>
     </div>
   </div>
-
 </div>
 
 <div ng-show="vm.clientSelected !== undefined" id="printArea" print-section>
@@ -135,10 +132,10 @@
     </div>
     <div class="panel-body">
       <div class="row">
-        <div class="form-group col-md-12 ">
+        <div class="form-group col-md-12">
           <table width="100%">
             <tr>
-              <td width="30%" align="center"><img src="images/{{vm.companyData.userClient.logo}}" ><br></td>
+              <td width="30%" align="center"><img src="images/{{vm.companyData.userClient.logo}}"><br></td>
               <td width="70%">
                 <b>{{vm.companyData.userClient.name}}</b><br/></br>
                 <b>Matriz: {{vm.companyData.userClient.address1}}</b><br/>
@@ -169,7 +166,7 @@
       </div>
 
       <div class="row">
-        <div class="form-group col-md-12 ">
+        <div class="form-group col-md-12">
           <table width="100%">
             <tr>
               <td width="30%">
@@ -186,7 +183,7 @@
                 </script>
               </td>
               <td width="70%">
-                <div style=" padding-left: 10px" >
+                <div style="padding-left: 10px">
                   <label>CLAVE DE ACCESO: </label><br/>
                   {{vm.bill.claveDeAcceso}}
                 </div>
@@ -197,7 +194,7 @@
       </div>
 
       <div class="row">
-        <div class="form-group col-md-12 ">
+        <div class="form-group col-md-12">
           <table width="100%">
             <tr>
               <td>
@@ -217,7 +214,7 @@
       </div>
 
       <div class="row">
-        <div class="form-group col-md-12 ">
+        <div class="form-group col-md-12">
           <table width="100%">
             <tr>
               <td><b>DIRECCION: </b>{{vm.clientSelected.address}}</td>
@@ -243,7 +240,7 @@
       </div>
 
       <div class="row" ng-if="vm.companyData.userClient.espTemp == '1'" print-if="vm.companyData.userClient.espTemp == '1'">
-        <div class="form-group col-md-12 ">
+        <div class="form-group col-md-12">
           <table width="100%" style="border-collapse: separate; border-spacing: 6px;">
             <tr>
               <td width="50%">

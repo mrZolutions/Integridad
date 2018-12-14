@@ -32,7 +32,7 @@ public class DebtsToPayController {
 	DebtsToPay response = null;
 	try {
             response = service.getById(id);
-	} catch(BadRequestException e) {
+	} catch (BadRequestException e) {
             log.error("DebtsToPayController getId Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
@@ -45,7 +45,7 @@ public class DebtsToPayController {
         Iterable<DebtsToPay> response = null;
         try {
             response = service.getDebtsToPayByProviderId(id);
-        } catch(BadRequestException e) {
+        } catch (BadRequestException e) {
             log.error("DebtsToPayController getAllDebtsByProviderId Exception thrown: {}", e.getMessage());
 	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
@@ -57,7 +57,7 @@ public class DebtsToPayController {
 	DebtsToPay response = null;
 	try {
             response = service.create(debtsToPay);
-	} catch(BadRequestException e) {
+	} catch (BadRequestException e) {
             log.error("DebtsToPayController create Exception thrown: {}", e.getMessage());
 	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}

@@ -21,6 +21,7 @@ public class PagoDebts implements Child {
     private String medio;
     private double total;
     private String payForm;
+    private String country;
     private String cardBrand;
     private String chequeAccount;
     private String chequeBank;
