@@ -25,49 +25,54 @@
     <![endif]-->
 
     <!-- Add your site or application content here -->
-    <nav class="navbar navbar-inverse">
-      <div class="container-fluid">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#js-navbar-collapse">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand inner">
-            <img src="images/SVG INTEGRIDAD.svg" width="40" height="40" class="d-inline-block align-top" alt="">
-          </a>
-          <a class="navbar-brand atext">
-            Integridad
-          </a>
+    <header>
+      <nav class="navbar navbar-inverse nav-back">
+        <div class="container-fluid">
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#js-navbar-collapse">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand inner">
+              <img src="images/SVG INTEGRIDAD.svg" width="40" height="40" class="d-inline-block align-top" alt="">
+            </a>
+            <a class="navbar-brand atext">
+              Integridad
+            </a>
+          </div>
+          <div class="collapse navbar-collapse" id="js-navbar-collapse" ng-controller="MenuCtrl">
+            <ul class="nav navbar-nav">
+              <li ng-repeat="option in permissions">
+                <a class = "atext" href="{{option.path}}">{{option.menuName}}</a>
+              </li>
+              <li ng-show="nameType != undefined">
+                <a class = "atext" href="" ng-click="logout()">Salir</a>
+              </li>
+              <li ng-show="nameType != undefined">
+                <a class = "atext"><b>{{nameType}}</b></a>
+              </li>
+            </ul>
+          </div>
         </div>
-        <div class="collapse navbar-collapse" id="js-navbar-collapse" ng-controller="MenuCtrl">
-          <ul class="nav navbar-nav">
-            <li ng-repeat="option in permissions">
-              <a class = "atext" href="{{option.path}}">{{option.menuName}}</a>
-            </li>
-            <li ng-show="nameType != undefined">
-              <a class = "atext" href="" ng-click="logout()">Salir</a>
-            </li>
-            <li ng-show="nameType != undefined">
-              <a class = "atext"><b>{{nameType}}</b></a>
-            </li>
-          </ul>
+      </nav>
+    </header>
+    
+    <div class="container">
+      <div class="panel panel-default">
+        <div class="row">
+          <div class="col-md-12">
+            <div ng-view=""></div>
+          </div>
         </div>
-      </div>
-    </nav>
-    <div class="portada">
-      <div class="container">
-        <div ng-view=""></div>
       </div>
     </div>
-
-    <div class = "footer">
-      <div class="container-fluid">
-        <p class = "ptext pull-right"><span class="glyphicon glyphicon-ok-circle"></span> Developed by Mr. Zolutions</p>
-      </div>
+    
+    <div class="container-fluid footer">
+        <p class = "pull-right ptext"><span class="glyphicon glyphicon-ok-circle"></span> Developed by Mr. Zolutions</p>
     </div>
-
+    
     <!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
     <script>
       !function(A,n,g,u,l,a,r) {A.GoogleAnalyticsObject = l, A[l] = A[l] || function() {

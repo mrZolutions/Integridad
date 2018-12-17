@@ -17,6 +17,7 @@
   </div>
 </div>
 
+<div class="form-group col-md-12">
 <div class="header">
   <h4>
     Proyectos
@@ -35,7 +36,6 @@
 </div>
 
 <div ng-show="vm.project === undefined">
-
   <input ng-model="searchText" class="form-control" placeholder="Buscar">
   <table class="table table-striped">
     <thead>
@@ -72,7 +72,6 @@
       </tr>
     </tbody>
   </table>
-
 </div>
 
 <div class="panel panel-default" ng-show="!vm.updSubsi && vm.project">
@@ -510,4 +509,5 @@
       </div>
     </div>
   </div>
+</div>
 </div>

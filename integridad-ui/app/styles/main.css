@@ -7,21 +7,23 @@
 
 body {
   padding: 0;
+  background: url("../images/mrz-01.jpg") no-repeat fixed center;
+   -webkit-background-size: cover;
+   -moz-background-size: cover;
+   -o-background-size: cover;
+   background-size: cover;
+   height: 100%;
+   width: 100% ;
 }
 
 /* Everything but the jumbotron gets side spacing for mobile first views */
 .header,
-.marketing,
-.footer {
+.marketing
+{
   padding-left: 15px;
   padding-right: 15px;
 }
 
-/* Custom page header */
-.header {
-  border-bottom: 1px solid #e5e5e5;
-  margin-bottom: 10px;
-}
 /* Make the masthead heading the same height as the navigation */
 .header h3 {
   margin-top: 0;
@@ -30,15 +32,58 @@ body {
   padding-bottom: 19px;
 }
 
-.nav-backg {
+.nav-back {
   background-color: #000;
 }
 
-/* Custom page footer */
+html {
+  min-height: 100%;
+  position: relative;
+}
+
+body {
+  margin: 0;
+  margin-bottom: 40px;
+}
+
 .footer {
-  padding-top: 19px;
-  color: #777;
   border-top: 1px solid #e5e5e5;
+  padding-top: 19px;
+  background-color: white;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 50px;
+  color: black;
+}
+
+.inner {
+  display: inline-block;
+  vertical-align: middle;
+  padding: 5px 5px;
+}
+
+.ptext {
+  font-size: 15px;
+}
+
+.atext {
+  color: white;
+  font-size: 15px;
+  font-weight: bold;
+}
+
+.trasluz {
+  filter: alpha(opacity=85);
+  opacity: 0.85;
+}
+
+#cajon1 {
+  float:left;
+}
+
+#cajon2{
+  float:left;
 }
 
 .container-narrow > hr {
@@ -61,22 +106,6 @@ body {
 }
 .marketing p + h4 {
   margin-top: 28px;
-}
-
-.inner {
-  display: inline-block;
-  vertical-align: middle;
-  padding: 5px 5px;
-}
-
-.ptext {
-  font-size: 15px;
-}
-
-.atext {
-  color: white;
-  font-size: 15px;
-  font-weight: bold;
 }
 
 /* Responsive: Portrait tablets and up */

@@ -7,7 +7,7 @@
       <div class="sk-circle4 sk-child"></div>
       <div class="sk-circle5 sk-child"></div>
       <div class="sk-circle6 sk-child"></div>
-      <div class="sk-circle7 sk-child"></div>
+      <div class="sk-circle7 sk-child"></div>        
       <div class="sk-circle8 sk-child"></div>
       <div class="sk-circle9 sk-child"></div>
       <div class="sk-circle10 sk-child"></div>
@@ -17,9 +17,13 @@
   </div>
 </div>
 
-<div class="container-fluid">
-<img src="images/mrz-01.jpg" width="100%"><br>
-<div class="panel panel-default" ng-show="vm.init && !vm.recover">
+<div id="cajon1">
+  <img src="../images/SVG INTEGRIDAD.svg" width="200" height="200">
+</div>
+<div id="cajon2">
+  <h1>SISTEMA INTEGRIDAD</h1>
+</div>
+<div class="container-fluid" ng-show="vm.init && !vm.recover">
   <form>
     <div class="panel-body">
       <div class="row" ng-show="vm.error !== undefined">
@@ -33,14 +37,23 @@
         </div>
       </div>
       <div class="row">
-        <div class="form-group col-md-6">
-          <label>E-mail: </label>
-          <input type="text" ng-model="vm.email"  name="email" id="email" class="form-control">
+        <div class="form-group col-md-12">
+          <div class="form-group col-md-3"></div>
+          <div class="form-group col-md-6">
+            <label class="ptext">E-mail: </label>
+            <input type="text" ng-model="vm.email"  name="email" id="email" class="form-control">
+          </div>
+          <div class="form-group col-md-3"></div>
         </div>
-
-        <div class="form-group col-md-6">
-          <label>Password: </label>
-          <input type="password" ng-model="vm.password" class="form-control">
+      </div>
+      <div class="row">
+        <div class="form-group col-md-12">
+          <div class="form-group col-md-3"></div>
+          <div class="form-group col-md-6">
+            <label class="ptext">Password: </label>
+            <input type="password" ng-model="vm.password" class="form-control">
+          </div>
+          <div class="form-group col-md-3"></div>
         </div>
       </div>
     </div>
@@ -49,10 +62,6 @@
               ng-disabled="vm.email === undefined || vm.password === undefined">
               Ingresar
       </button>
-      <!-- <button type="button" class="btn btn-success"
-      ng-click="vm.init = false; vm.userIntegridad = {}; vm.success=undefined; vm.error=undefined">
-        Registrarse
-      </button> -->
       <button type="button" class="btn btn-warning"
               ng-click="vm.recover = true; vm.success=undefined; vm.error=undefined">
               Olvid&eacute; mi Password
@@ -60,184 +69,177 @@
     </div>
   </form>
 </div>
-
-<div class="panel panel-default" ng-show="vm.recover">
-  <div class="panel-body">
-    <div class="row" ng-show="vm.error !== undefined">
-      <div class="form-group col-md-12">
-        <div class="alert alert-danger">{{vm.error}}</div>
-      </div>
-    </div>
-    <div class="row" ng-show="vm.success !== undefined">
-      <div class="form-group col-md-12">
-        <div class="alert alert-success">{{vm.success}}</div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="form-group col-md-12">
-        <label>Ingrese E-mail de la cuenta a recuperar: </label>
-        <input type="text" ng-model="vm.email" class="form-control">
-      </div>
-    </div>
-  </div>
-  <div class="panel-footer">
-    <button type="button" class="btn btn-primary" ng-click="vm.recoverPass()"
-      ng-disabled="vm.email === undefined">
-      Recuperar
-    </button>
-    <button type="button" class="btn btn-success"
-    ng-click="vm.recover = false; vm.userIntegridad = {}; vm.success=undefined; vm.error=undefined">
-      Cancelar
-    </button>
-  </div>
-</div>
-
-<div class="panel panel-default" ng-show="!vm.init">
-  <div class="panel-body">
-    <div class="row" ng-show="vm.error !== undefined">
-      <div class="form-group col-md-12">
-        <div class="alert alert-danger">{{vm.error}}</div>
-      </div>
-    </div>
-    <div class="row" ng-show="vm.success !== undefined">
-      <div class="form-group col-md-12">
-        <div class="alert alert-success">{{vm.success}}</div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="form-group col-md-6">
-        <label>Nombre *: </label>
-        <input type="text" ng-model="vm.userIntegridad.firstName" class="form-control">
-      </div>
-
-      <div class="form-group col-md-6">
-        <label>Apellido *: </label>
-        <input type="text" ng-model="vm.userIntegridad.lastName" class="form-control">
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="form-group col-md-6">
-        <label>Tel&eacute;fono: (incluir c&oacute;digo de provincia ej: 02) </label>
-        <input type="text" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
-        ng-model="vm.userIntegridad.phone" class="form-control" maxlength="9">
-      </div>
-
-      <div class="form-group col-md-6">
-        <label>Tel&eacute;fono celular: </label>
-        <input type="text" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
-        ng-model="vm.userIntegridad.celPhone" class="form-control" maxlength="10">
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="form-group col-md-6">
-        <label>Fecha de Nacimiento</label>
-        <div class="input-group date" id="pickerBirthday">
-          <input type="text" class="form-control input-group-addon"/>
-          <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"/></span>
+   
+  <div ng-show="vm.recover">
+    <div class="panel-body">
+      <div class="row" ng-show="vm.error !== undefined">
+        <div class="form-group col-md-12">
+          <div class="alert alert-danger">{{vm.error}}</div>
         </div>
-        <script>
-          var defaultDate = new Date();
-          $('#pickerBirthday').datetimepicker({
-            format: "DD/MM/YY",
-            defaultDate: defaultDate
-          });
-        </script>
       </div>
-    </div>
-
-    <div class="row">
-      <div class="form-group col-md-6">
-        <label>Tipo de Identificacion: </label>
-        <select ng-options="item for item in ['Cedula', 'Ruc']"
-        ng-model="vm.typeId" class="form-control"></select>
-      </div>
-
-      <div class="form-group col-md-6" ng-show="vm.typeId === 'Cedula'">
-        <label>C&eacute;dula *: </label>
-        <input type="text" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
-        ng-model="vm.userIntegridad.cedula" class="form-control" maxlength="10">
-      </div>
-
-      <div class="form-group col-md-6" ng-show="vm.typeId === 'Ruc'">
-        <label>Ruc *: </label>
-        <input type="text" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
-        ng-model="vm.userIntegridad.ruc" class="form-control" maxlength="13">
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="form-group col-md-12">
-        <label>Direcci&oacute;n: </label>
-        <input type="text" ng-model="vm.userIntegridad.address1" class="form-control">
-      </div>
-    </div>
-
-    <!-- <div class="row">
-      <div class="form-group col-md-12">
-        <label>Intersecci&oacute;n: </label>
-        <input type="text" ng-model="vm.userIntegridad.address2" class="form-control">
-      </div>
-    </div> -->
-
-    <div class="row">
-      <div class="form-group col-md-6">
-        <label>E-mail *: </label>
-        <input type="text" ng-model="vm.userIntegridad.email" class="form-control">
-      </div>
-
-      <div class="form-group col-md-6">
-        <label>Password *: </label>
-        <input type="password" ng-model="vm.userIntegridad.password" class="form-control">
-      </div>
-    </div>
-  </div>
-  <div class="panel-footer">
-    <button type="button" class="btn btn-primary" ng-click="vm.register()"
-      ng-disabled="vm.userIntegridad.email === undefined || vm.userIntegridad.password === undefined">
-      Registrar
-    </button>
-    <button type="button" class="btn btn-success"
-    ng-click="vm.init = true; vm.userIntegridad = {}; vm.success=undefined; vm.error=undefined">
-      Cancelar
-    </button>
-  </div>
-</div>
-
-<div id="modalChangePassword" class="modal fade" role="dialog">
-  <div class="modal-dialog">
-
-    <div class="modal-content">
-      <div class="modal-header">
-          <h4 class="modal-title">Cambie su clave Temporal</h4>
-      </div>
-      <div class="modal-body">
-        <div class="row">
-          <div class="form-group col-md-6" >
-            <label>Nuevo Password</label>
-            <input type="password" class="form-control" id="password" ng-model="vm.newPass"/>
-          </div>
-
-          <div class="form-group col-md-6" >
-            <label>Confirmar nuevo Password</label>
-            <input type="password" class="form-control" id="passwordConfirmation" ng-model="vm.passConfirmation" ng-change="vm.validatePassword()"/>
-          </div>
+      <div class="row" ng-show="vm.success !== undefined">
+        <div class="form-group col-md-12">
+          <div class="alert alert-success">{{vm.success}}</div>
         </div>
+      </div>
+      <div class="row">
+        <div class="form-group col-md-12">
+          <label>Ingrese E-mail de la cuenta a recuperar: </label>
+          <input type="text" ng-model="vm.email" class="form-control">
+        </div>
+      </div>
+    </div>
+    <div class="panel-footer">
+      <button type="button" class="btn btn-primary" ng-click="vm.recoverPass()"
+              ng-disabled="vm.email === undefined">
+              Recuperar
+      </button>
+      <button type="button" class="btn btn-success"
+              ng-click="vm.recover = false; vm.userIntegridad = {}; vm.success=undefined; vm.error=undefined">
+              Cancelar
+      </button>
+    </div>
+  </div>
+  
+  <div ng-show="!vm.init">
+    <div class="panel-body">
+      <div class="row" ng-show="vm.error !== undefined">
+        <div class="form-group col-md-12">
+          <div class="alert alert-danger">{{vm.error}}</div>
+        </div>
+      </div>
+      <div class="row" ng-show="vm.success !== undefined">
+        <div class="form-group col-md-12">
+          <div class="alert alert-success">{{vm.success}}</div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="form-group col-md-6">
+          <label>Nombre *: </label>
+          <input type="text" ng-model="vm.userIntegridad.firstName" class="form-control">
+        </div>
+  
+        <div class="form-group col-md-6">
+          <label>Apellido *: </label>
+          <input type="text" ng-model="vm.userIntegridad.lastName" class="form-control">
+        </div>
+      </div>
+  
+      <div class="row">
+        <div class="form-group col-md-6">
+          <label>Tel&eacute;fono: (incluir c&oacute;digo de provincia ej: 02) </label>
+          <input type="text" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+          ng-model="vm.userIntegridad.phone" class="form-control" maxlength="9">
+        </div>
+  
+        <div class="form-group col-md-6">
+          <label>Tel&eacute;fono celular: </label>
+          <input type="text" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+          ng-model="vm.userIntegridad.celPhone" class="form-control" maxlength="10">
+        </div>
+      </div>
+  
+      <div class="row">
+        <div class="form-group col-md-6">
+          <label>Fecha de Nacimiento</label>
+          <div class="input-group date" id="pickerBirthday">
+            <input type="text" class="form-control input-group-addon"/>
+            <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"/></span>
+          </div>
+          <script>
+            var defaultDate = new Date();
+            $('#pickerBirthday').datetimepicker({
+              format: "DD/MM/YY",
+              defaultDate: defaultDate
+            });
+          </script>
+        </div>
+      </div>
+  
+      <div class="row">
+        <div class="form-group col-md-6">
+          <label>Tipo de Identificacion: </label>
+          <select ng-options="item for item in ['Cedula', 'Ruc']"
+          ng-model="vm.typeId" class="form-control"></select>
+        </div>
+  
+        <div class="form-group col-md-6" ng-show="vm.typeId === 'Cedula'">
+          <label>C&eacute;dula *: </label>
+          <input type="text" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+          ng-model="vm.userIntegridad.cedula" class="form-control" maxlength="10">
+        </div>
+  
+        <div class="form-group col-md-6" ng-show="vm.typeId === 'Ruc'">
+          <label>Ruc *: </label>
+          <input type="text" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+          ng-model="vm.userIntegridad.ruc" class="form-control" maxlength="13">
+        </div>
+      </div>
+  
+      <div class="row">
+        <div class="form-group col-md-12">
+          <label>Direcci&oacute;n: </label>
+          <input type="text" ng-model="vm.userIntegridad.address1" class="form-control">
+        </div>
+      </div>
+  
+      <div class="row">
+        <div class="form-group col-md-6">
+          <label>E-mail *: </label>
+          <input type="text" ng-model="vm.userIntegridad.email" class="form-control">
+        </div>
+  
+        <div class="form-group col-md-6">
+          <label>Password *: </label>
+          <input type="password" ng-model="vm.userIntegridad.password" class="form-control">
+        </div>
+      </div>
+    </div>
 
-        <div class="row" ng-show="vm.passwordNotMatch">
-          <div class="form-group col-md-12" >
-            <div class="alert alert-danger">El nuevo password no coincide con la confirmacion</div>
+    <div class="panel-footer">
+      <button type="button" class="btn btn-primary" ng-click="vm.register()"
+        ng-disabled="vm.userIntegridad.email === undefined || vm.userIntegridad.password === undefined">
+        Registrar
+      </button>
+      <button type="button" class="btn btn-success"
+      ng-click="vm.init = true; vm.userIntegridad = {}; vm.success=undefined; vm.error=undefined">
+        Cancelar
+      </button>
+    </div>
+  </div>
+  
+  <div id="modalChangePassword" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+  
+      <div class="modal-content">
+        <div class="modal-header">
+            <h4 class="modal-title">Cambie su clave Temporal</h4>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="form-group col-md-6" >
+              <label>Nuevo Password</label>
+              <input type="password" class="form-control" id="password" ng-model="vm.newPass"/>
+            </div>
+  
+            <div class="form-group col-md-6" >
+              <label>Confirmar nuevo Password</label>
+              <input type="password" class="form-control" id="passwordConfirmation" ng-model="vm.passConfirmation" ng-change="vm.validatePassword()"/>
+            </div>
+          </div>
+  
+          <div class="row" ng-show="vm.passwordNotMatch">
+            <div class="form-group col-md-12" >
+              <div class="alert alert-danger">El nuevo password no coincide con la confirmacion</div>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="modal-footer">
-        <div ng-if="vm.passConfirmation">
-          <button class="btn btn-primary" ng-click="vm.update()" data-dismiss="modal"
-          ng-disabled="vm.passwordNotMatch">Cambiar e Ingresar</button>
+        <div class="modal-footer">
+          <div ng-if="vm.passConfirmation">
+            <button class="btn btn-primary" ng-click="vm.update()" data-dismiss="modal"
+            ng-disabled="vm.passwordNotMatch">Cambiar e Ingresar</button>
+          </div>
         </div>
       </div>
     </div>
   </div>
-</div>
-</div>

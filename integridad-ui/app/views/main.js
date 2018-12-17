@@ -22,9 +22,9 @@ angular.module('integridadUiApp')
     vm.error = undefined;
     vm.success = undefined;
 
-    function getPermissions(){
-      permissionService.getPermissions($localStorage.user.userType).then(function (respnse) {
-        $localStorage.permissions = respnse;
+    function getPermissions() {
+      permissionService.getPermissions($localStorage.user.userType).then(function(response) {
+        $localStorage.permissions = response;
         $rootScope.updateMenu();
         vm.loading = false;
         $location.path('/home');
@@ -34,13 +34,12 @@ angular.module('integridadUiApp')
       });
     }
 
-    vm.login = function(){
+    vm.login = function() {
       vm.loading = true;
       var user = {email: vm.email, password: vm.password};
-      authService.authUser(user).then(function (response) {
+      authService.authUser(user).then(function(response) {
         $localStorage.user = response;
-
-        if($localStorage.user.tempPass){
+        if ($localStorage.user.tempPass) {
           vm.loading = false;
           vm.passwordNotMatch = false;
           vm.userIntegridad = angular.copy($localStorage.user);
@@ -51,34 +50,34 @@ angular.module('integridadUiApp')
           getPermissions();
         }
 
-      }).catch(function (error) {
+      }).catch(function(error) {
         vm.loading = false;
         vm.error = error.data;
       });
     };
 
-    vm.update = function(){
+    vm.update = function() {
       vm.loading = true;
       vm.userIntegridad.password = vm.newPass;
       vm.userIntegridad.tempPass = false;
-      authService.updateUser(vm.userIntegridad).then(function (response) {
+      authService.updateUser(vm.userIntegridad).then(function(response) {
         vm.error = undefined;
         vm.success = 'Perfil actualizado con exito';
         $localStorage.user = response;
         var d = new Date();
         $localStorage.timeloged = d.getTime();
         getPermissions();
-      }).catch(function (error) {
+      }).catch(function(error) {
         vm.loading = false;
         vm.error = error.data;
       });
     }
 
-    vm.validatePassword = function () {
+    vm.validatePassword = function() {
       vm.passwordNotMatch = vm.newPass !== vm.passConfirmation;
     };
 
-    vm.register = function(){
+    vm.register = function() {
       vm.userIntegridad.birthDay = $('#pickerBirthday').data("DateTimePicker").date().toDate().getTime();
       vm.userIntegridad.email = vm.userIntegridad.email.trim();
       vm.userIntegridad.password = vm.userIntegridad.password.trim();
@@ -88,7 +87,7 @@ angular.module('integridadUiApp')
         vm.userIntegridad.lastName
       ]);
 
-      if(validationError){
+      if( validationError) {
         vm.error = 'Debe ingresar Nombres completos, email y password';
       } else {
         validationError = utilStringService.isStringEmpty(vm.userIntegridad.cedula) && utilStringService.isStringEmpty(vm.userIntegridad.ruc);
@@ -98,9 +97,9 @@ angular.module('integridadUiApp')
         }
       }
 
-      if(!validationError){
+      if (!validationError) {
         vm.loading = true;
-        authService.registerUser(vm.userIntegridad).then(function (response) {
+        authService.registerUser(vm.userIntegridad).then(function(response) {
           vm.loading = false;
           vm.error = undefined;
           vm.init = true;
@@ -112,17 +111,17 @@ angular.module('integridadUiApp')
       }
     };
 
-    vm.recoverPass = function(){
+    vm.recoverPass = function() {
       vm.loading = true;
       var user = {email: vm.email};
-      authService.recoverUser(user).then(function (response) {
+      authService.recoverUser(user).then(function(response) {
         vm.loading = false;
         vm.recover = false;
         vm.success = 'Se envio un email a la cuenta registrada con un nuevo Password para ingresar al sistema.';
-      }).catch(function (error) {
+      }).catch(function(error) {
         vm.loading = false;
         vm.error = error.data;
       });
     };
 
-  });
+});

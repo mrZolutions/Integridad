@@ -16,11 +16,14 @@
     </div>
   </div>
 </div>
+
+<div class="form-group col-md-12">
 <div class="header">
   <h4>
     Cotizacion
   </h4>
 </div>
+
 <div class="row" ng-show="vm.error !== undefined">
   <div class="form-group col-md-12">
     <div class="alert alert-danger">{{vm.error}}</div>
@@ -31,6 +34,7 @@
     <div class="alert alert-success">{{vm.success}}</div>
   </div>
 </div>
+
 <div ng-show="vm.clientSelected !== undefined" id="printArea" print-section>
   <div print-only>
     <table width="100%">
@@ -417,3 +421,4 @@
       </div>
     </div>
   </div>
+</div>

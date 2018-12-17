@@ -27,28 +27,28 @@ public class RetentionClientController {
     RetentionClientServices service;
     
     @RequestMapping(method = RequestMethod.GET, value="/{id}")
-    public ResponseEntity getById(@PathVariable("id") UUID id){
+    public ResponseEntity getById(@PathVariable("id") UUID id) {
         log.info("RetentionClientController getId: {}", id);
 	RetentionClient response = null;
 	try {
             response = service.getById(id);
-	}catch(BadRequestException e) {
+	} catch (BadRequestException e) {
             log.error("RetentionClientController getId Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
 	return new ResponseEntity<RetentionClient>(response, HttpStatus.ACCEPTED);
-    };
+    }
     
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity create(@RequestBody RetentionClient retentionClient){
+    public ResponseEntity create(@RequestBody RetentionClient retentionClient) {
 	log.info("RetentionClientController create: {}", retentionClient.getDocumentNumber());
 	RetentionClient response = null;
 	try {
             response = service.create(retentionClient);
-	}catch(BadRequestException e) {
+	} catch (BadRequestException e) {
             log.error("RetentionClientController create Exception thrown: {}", e.getMessage());
 	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
         return new ResponseEntity<RetentionClient>(response, HttpStatus.CREATED);
-    };
+    }
 }

@@ -132,6 +132,7 @@ angular.module('integridadUiApp')
       vm.success = undefined;
       vm.billList = undefined;
       vm.retentionClient = undefined;
+      vm.retentionClientCreated = undefined;
       vm.clientList = [];
       vm.clientSelected = undefined;
       clientService.getLazyByProjectId($localStorage.user.subsidiary.userClient.id).then(function(response) {
@@ -345,7 +346,6 @@ angular.module('integridadUiApp')
         vm.loading = false;
         vm.error = error.data;
       });
-      _activate();
     };
 
     vm.cancelRetentionClientCreated = function() {

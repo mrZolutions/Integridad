@@ -18,7 +18,6 @@
 </div>
 
 <div class="panel panel-default">
-
   <div class="panel-body">
     <div class="row" ng-show="vm.error !== undefined">
       <div class="form-group col-md-12">
@@ -75,7 +74,6 @@
     </div>
 
     <div class="row">
-
       <div class="form-group col-md-6" >
         <label>C&eacute;dula *: </label>
         <input type="text" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
@@ -134,10 +132,8 @@
         <div class="alert alert-danger">El nuevo password no coincide con la confirmacion</div>
       </div>
     </div>
-
-
-
   </div>
+  
   <div class="panel-footer">
     <button type="button" class="btn btn-primary" ng-click="vm.editUser()"
       ng-disabled="vm.userIntegridad.email === undefined || vm.passwordNotMatch">
@@ -148,5 +144,4 @@
       Cancelar
     </button>
   </div>
-
 </div>
