@@ -9,9 +9,10 @@ import java.util.UUID;
 /**
  * Created by daniel.
  */
+
 @Entity
 @Data
-public class DetailRetention implements Child{
+public class DetailRetention implements Child {
 
     @Id
     @GeneratedValue
@@ -27,16 +28,16 @@ public class DetailRetention implements Child{
     private double percentage;
     private double total;
     
-    public void setListsNull(){
+    public void setListsNull() {
     }
     
-    public void setFatherListToNull(){
+    public void setFatherListToNull() {
     	retention.setListsNull();
         retention.setFatherListToNull();
     }
 
     @Transient
-    public static DetailRetention newDetailRetentionTest(){
+    public static DetailRetention newDetailRetentionTest() {
         DetailRetention detail = new DetailRetention();
         detail.setRetention(Retention.newRetentionTest());
 

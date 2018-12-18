@@ -41,8 +41,8 @@
       <input ng-model="searchText" class="form-control" placeholder="Buscar">
     </div>
     <div class="form-group col-md-2">
-      <button type="button" class="btn btn-primary" ng-click="vm.providerCreate()">
-              Crear
+      <button type="button" title = "Agregar Nuevo Proveedor" class="btn btn-primary" ng-click="vm.providerCreate()">
+              <span class = "glyphicon glyphicon-user" aria-hidden = "true"></span>
         </button>
     </div>
   </div>
@@ -65,15 +65,15 @@
         <td>{{ providerEdit.name }}</td>
         <td>{{ providerEdit.providerType }}</td>
         <td>
-          <button type="button" class="btn btn-primary btn-sm" ng-click="vm.editProvider(providerEdit)">
+          <button type="button" title = "Editar Proveedor" class="btn btn-primary btn-sm" ng-click="vm.editProvider(providerEdit)">
                   <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
           </button>
-          <button type="button" class="btn btn-primary btn-sm" ng-click="vm.provider=providerEdit"
+          <button type="button" title = "Eliminar Proveedor" class="btn btn-primary btn-sm" ng-click="vm.provider=providerEdit"
                   data-toggle="modal" data-target="#modalEliminar">
                   <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
           </button>
-          <button type="button" class="btn btn-primary btn-sm" ng-click="vm.createRetention(providerEdit)">
-                  Retenci&oacute;n
+          <button type="button" title = "Nueva Retención" class="btn btn-primary btn-sm" ng-click="vm.createRetention(providerEdit)">
+                  <span class = "glyphicon glyphicon-tasks" aria-hidden = "true"></span>
           </button>
         </td>
       </tr>
@@ -161,12 +161,12 @@
         <div class="form-group col-md-6">
           <label>Tel&eacute;fono: (incluir c&oacute;digo de provincia ej: 02) </label>
           <input type="text" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
-          ng-model="vm.provider.phone" class="form-control" maxlength="9">
+                 ng-model="vm.provider.phone" class="form-control" maxlength="9">
         </div>
         <div class="form-group col-md-6">
           <label>Tel&eacute;fono celular: </label>
           <input type="text" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
-          ng-model="vm.provider.celPhone" class="form-control" maxlength="10">
+                 ng-model="vm.provider.celPhone" class="form-control" maxlength="10">
         </div>
       </div>
 
@@ -182,13 +182,13 @@
       </div>
     </div>
     <div class="panel-footer">
-      <button type="button" class="btn btn-primary" ng-click="vm.register()"
-        ng-disabled="vm.disableSave()">
-        Guardar
+      <button type="button" title = "Guardar Proveedor" class="btn btn-primary" ng-click="vm.register()"
+              ng-disabled="vm.disableSave()">
+              <span class = "glyphicon glyphicon-floppy-save" aria-hidden = "true"></span>
       </button>
-      <button type="button" class="btn btn-success"
-      ng-click="vm.cancel()">
-        Cancelar
+      <button type="button" title = "Salir" class="btn btn-primary"
+              ng-click="vm.cancel()">
+              <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
       </button>
     </div>
   </div>
@@ -230,7 +230,6 @@
           {{vm.retention.provider.address1}}
         </div>
       </div>
-
 
       <div class="row">
         <div class="form-group col-md-6">
@@ -282,9 +281,9 @@
         <div class="form-group col-md-4">
           <label>Tipo de Impuesto: </label><br/>
           <label class="radio-inline"><input type="radio" ng-model="vm.retention.typeRetention" value="1" name="tipo"
-            ng-change="vm.getPercentageTable()" ng-disabled="vm.retention.numero === undefined">Fuente</label>
+                 ng-change="vm.getPercentageTable()" ng-disabled="vm.retention.numero === undefined">Fuente</label>
           <label class="radio-inline"><input type="radio" ng-model="vm.retention.typeRetention" value="2" name="tipo"
-            ng-change="vm.getPercentageTable()" ng-disabled="vm.retention.numero === undefined">IVA</label>
+                 ng-change="vm.getPercentageTable()" ng-disabled="vm.retention.numero === undefined">IVA</label>
         </div>
 
         <div class="form-group col-md-4">
@@ -317,9 +316,9 @@
                 <td>{{ p.name }}</td>
                 <td>{{ p.percentage }}</td>
                 <td>
-                  <button type="button" class="btn btn-primary"
-                    ng-click="vm.selecPercentage(p)" data-toggle="modal" data-target="#modalBaseImponible">
-                    Seleccionar
+                  <button type="button" title = "Seleccionar" class="btn btn-primary"
+                          ng-click="vm.selecPercentage(p)" data-toggle="modal" data-target="#modalBaseImponible">
+                          <span class = "glyphicon glyphicon-check" aria-hidden = "true"></span>
                   </button>
                 </td>
               </tr>
@@ -358,13 +357,13 @@
                 <td>{{ i.porcentaje }}</td>
                 <td>{{ i.valor_retenido }}</td>
                 <td>
-                  <button type="button" class="btn btn-primary"
-                    ng-click="vm.editItem($index)" data-toggle="modal" data-target="#modalBaseImponible">
-                    Editar
+                  <button type="button" title = "Editar" class="btn btn-primary"
+                          ng-click="vm.editItem($index)" data-toggle="modal" data-target="#modalBaseImponible">
+                          <span class = "glyphicon glyphicon-pencil" aria-hidden = "true"></span>
                   </button>
-                  <button type="button" class="btn btn-primary"
-                    ng-click="vm.deleteItem($index)">
-                    Eliminar
+                  <button type="button" title = "Eliminar" class="btn btn-primary"
+                          ng-click="vm.deleteItem($index)">
+                          <span class = "glyphicon glyphicon-trash" aria-hidden = "true"></span>
                   </button>
                 </td>
               </tr>
@@ -383,18 +382,18 @@
 
       <div class="row">
         <div class="form-group col-md-12">
-          <button type="button" class="btn btn-primary" ng-click="vm.previsualisation()"
-            data-toggle="modal" data-target="#modalPrevisualizacion"
-            ng-disabled="vm.retention.items == 0">
-            Previsualizar
+          <button type="button" title = "Previsualizar Retención" class="btn btn-primary" ng-click="vm.previsualisation()"
+                  data-toggle="modal" data-target="#modalPrevisualizacion"
+                  ng-disabled="vm.retention.items == 0">
+                  <span class = "glyphicon glyphicon-blackboard" aria-hidden = "true"></span>
           </button>
-          <button type="button" class="btn btn-primary"
-            ng-click="vm.getClaveAcceso()" ng-disabled="vm.retention.items == 0">
-            Crear
+          <button type="button" title = "Guardar Retención" class="btn btn-success"
+                  ng-click="vm.getClaveAcceso()" ng-disabled="vm.retention.items == 0">
+                  <span class = "glyphicon glyphicon-saved" aria-hidden = "true"></span>
           </button>
-          <button type="button" class="btn btn-primary"
-            ng-click="vm.retention = undefined">
-            Cancelar
+          <button type="button" title = "Salir" class="btn btn-primary"
+                  ng-click="vm.retention = undefined">
+                  <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
           </button>
         </div>
       </div>
@@ -511,13 +510,13 @@
 
       <div class="row" print-remove>
         <div class="form-group col-md-12">
-          <button type="button" class="btn btn-primary"
+          <button print-btn type="button" title = "Imprimir Comprobante" class="btn btn-success"
                   ng-click="vm.cancelRetentionCreated()">
-            Cancelar
+                  <span class = "glyphicon glyphicon-print" aria-hidden = "true"></span>
           </button>
-          <button print-btn type="button" class="btn btn-success"
+          <button type="button" title = "Salir" class="btn btn-primary"
                   ng-click="vm.cancelRetentionCreated()">
-            Imprimir
+                  <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
           </button>
         </div>
       </div>
@@ -669,12 +668,12 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="vm.addItem()">
-            Aceptar
+          <button type="button" title = "Aceptar" class="btn btn-primary" data-dismiss="modal" ng-click="vm.addItem()">
+                  <span class = "glyphicon glyphicon-thumbs-up" aria-hidden = "true"></span>
           </button>
-          <button type="button" class="btn btn-primary"  data-dismiss="modal"
-            ng-click="vm.item = undefined; vm.indexEdit = undefined;">
-            Cancelar
+          <button type="button" title = "Salir" class="btn btn-primary"  data-dismiss="modal"
+                  ng-click="vm.item = undefined; vm.indexEdit = undefined;">
+                  <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
           </button>
         </div>
       </div>
@@ -696,8 +695,8 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-primary" ng-click="vm.remove()" data-dismiss="modal">
-            Eliminar
+          <button type="button" title = "Eliminar Proveedor" class="btn btn-primary" ng-click="vm.remove()" data-dismiss="modal">
+                  <span class = "glyphicon glyphicon-trash" aria-hidden = "true"></span>
           </button>
         </div>
       </div>

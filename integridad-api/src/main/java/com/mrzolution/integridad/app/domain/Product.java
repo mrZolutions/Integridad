@@ -3,19 +3,17 @@ package com.mrzolution.integridad.app.domain;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-
 import javax.persistence.*;
-
 import com.mrzolution.integridad.app.interfaces.Child;
-
 import lombok.Data;
 
 /**
  * Created by daniel.
  */
+
 @Entity
 @Data
-public class Product implements Child{
+public class Product implements Child {
 
     @Id
     @GeneratedValue
@@ -62,24 +60,26 @@ public class Product implements Child{
     private List<ProductBySubsidiary> productBySubsidiaries;
     
     public void setListsNull(){
-        if(productBySubsidiaries != null){productBySubsidiaries = null;}
+        if (productBySubsidiaries != null) {
+            productBySubsidiaries = null;
+        }
     }
     
-    public void setFatherListToNull(){
+    public void setFatherListToNull() {
     	userClient.setListsNull();
     	userClient.setFatherListToNull();
         productType.setListsNull();
-        if(brand != null){
+        if (brand != null) {
             brand.setListsNull();
         }
-        if(subgroup != null){
+        if (subgroup != null) {
             subgroup.setListsNull();
             subgroup.setFatherListToNull();
         }
     }
 
     @Transient
-    public static Product newProducTest(){
+    public static Product newProducTest() {
         Product product = new Product();
         product.setUserClient(UserClient.newUserClientTest());
         product.setBrand(Brand.newBrandTest());

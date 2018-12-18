@@ -36,18 +36,21 @@
 </div>
 
 <div ng-show="vm.project === undefined">
-  <input ng-model="searchText" class="form-control" placeholder="Buscar">
+  <div class="form-group col-md-10">
+    <input ng-model="searchText" class="form-control" placeholder="Buscar">
+  </div>
+  <div class="form-group col-md-2">
+    <button type="button" title = "Crear Proyecto" class="btn btn-primary" ng-click="vm.projectCreate()">
+            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+    </button>
+  </div>
   <table class="table table-striped">
     <thead>
       <tr>
         <th> Codigo </th>
         <th> Nombre </th>
         <th> Ruc </th>
-        <th>
-          <button type="button" class="btn btn-primary" ng-click="vm.projectCreate()">
-            Crear
-          </button>
-        </th>
+        <th></th>
       </tr>
     </thead>
     <tbody>
@@ -61,12 +64,12 @@
         <td>{{ projectEdit.name }}</td>
         <td>{{ projectEdit.ruc }}</td>
         <td>
-          <button type="button" class="btn btn-primary" ng-click="vm.editProject(projectEdit)">
-            Editar
+          <button type="button" title = "Editar" class="btn btn-primary" ng-click="vm.editProject(projectEdit)">
+                  <span class = "glyphicon glyphicon-pencil" aria-hidden = "true"></span>
           </button>
-          <button type="button" class="btn btn-primary" ng-click="vm.project=projectEdit"
-            data-toggle="modal" data-target="#modalEliminar">
-            Eliminar
+          <button type="button" title = "Eliminar" class="btn btn-primary" ng-click="vm.project=projectEdit"
+                  data-toggle="modal" data-target="#modalEliminar">
+                  <span class = "glyphicon glyphicon-trash" aria-hidden = "true"></span>
           </button>
         </td>
       </tr>
@@ -87,13 +90,13 @@
       <div class="form-group col-md-6">
         <label>Tel&eacute;fono: (incluir c&oacute;digo de provincia ej: 02) </label>
         <input type="text" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
-        ng-model="vm.project.phone" class="form-control" maxlength="9">
+               ng-model="vm.project.phone" class="form-control" maxlength="9">
       </div>
 
       <div class="form-group col-md-6">
         <label>Tel&eacute;fono celular: </label>
         <input type="text" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
-        ng-model="vm.project.celPhone" class="form-control" maxlength="10">
+               ng-model="vm.project.celPhone" class="form-control" maxlength="10">
       </div>
     </div>
 
@@ -115,13 +118,13 @@
       <div class="form-group col-md-6">
         <label>C&eacute;dula: </label>
         <input type="text" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
-        ng-model="vm.project.cedula" class="form-control" maxlength="10">
+               ng-model="vm.project.cedula" class="form-control" maxlength="10">
       </div>
 
       <div class="form-group col-md-6">
         <label>Ruc *: </label>
         <input type="text" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
-        ng-model="vm.project.ruc" class="form-control" maxlength="13">
+               ng-model="vm.project.ruc" class="form-control" maxlength="13">
       </div>
     </div>
 
@@ -141,7 +144,7 @@
         <label>Fecha de Inicio de Actividades</label>
         <div class="input-group date" id="pickerInitialDate">
           <input type="text" class="form-control input-group-addon"/>
-          <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"/></span>
+                 <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"/></span>
         </div>
         <script>
           var defaultDate = new Date();
@@ -168,9 +171,9 @@
                   <th> Ciudad </th>
                   <th> Direcci&oacute;n </th>
                   <th>
-                    <button type="button" class="btn btn-primary" ng-click="vm.addSubsidiary(); vm.updSubsi = true"
-                      data-toggle="modal" data-target="#modalSubsidiary">
-                      Agregar
+                    <button type="button" title="Agregar Sucursal" class="btn btn-primary" ng-click="vm.addSubsidiary(); vm.updSubsi = true"
+                            data-toggle="modal" data-target="#modalSubsidiary">
+                            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                     </button>
                   </th>
                 </tr>
@@ -187,16 +190,16 @@
                   <td>{{ subsi.city }}</td>
                   <td>{{ subsi.address1 }}</td>
                   <td>
-                    <button type="button" class="btn btn-primary" ng-click="vm.subsidiary=subsi; vm.updSubsi = true"
-                      data-toggle="modal" data-target="#modalSubsidiary">
-                      Editar
+                    <button type="button" title = "Editar Sucursal" class="btn btn-primary" ng-click="vm.subsidiary=subsi; vm.updSubsi = true"
+                            data-toggle="modal" data-target="#modalSubsidiary">
+                            <span class = "glyphicon glyphicon-pencil" aria-hidden = "true"></span>
                     </button>
-                    <button type="button" class="btn btn-primary" ng-click="vm.subsidiary=subsi; vm.updSubsi = false"
-                      data-toggle="modal" data-target="#modalEliminarSubsidiary">
-                      Eliminar
+                    <button type="button" title = "Eliminar Sucursal" class="btn btn-primary" ng-click="vm.subsidiary=subsi; vm.updSubsi = false"
+                            data-toggle="modal" data-target="#modalEliminarSubsidiary">
+                            <span class = "glyphicon glyphicon-trash" aria-hidden = "true"></span>
                     </button>
-                    <button type="button" class="btn btn-primary" ng-click="vm.products(subsi)">
-                      Productos
+                    <button type="button" title = "Productos" class="btn btn-primary" ng-click="vm.products(subsi)">
+                            <span class = "glyphicon glyphicon-phone" aria-hidden = "true"></span>
                     </button>
                   </td>
                 </tr>
@@ -209,13 +212,13 @@
 
   </div>
   <div class="panel-footer">
-    <button type="button" class="btn btn-primary" ng-click="vm.save()"
-      ng-disabled="vm.project.name === undefined">
-      Guardar
+    <button type="button" title = "Guardar Sucursal" class="btn btn-primary" ng-click="vm.save()"
+            ng-disabled="vm.project.name === undefined">
+            <span class = "glyphicon glyphicon-floppy-save" aria-hidden = "true"></span>
     </button>
-    <button type="button" class="btn btn-success"
-    ng-click="vm.cancel()">
-      Cancelar
+    <button type="button" title = "Salir" class="btn btn-primary"
+            ng-click="vm.cancel()">
+            <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
     </button>
   </div>
 </div>
@@ -278,13 +281,12 @@
                   <tr>
                     <th>
                        <!-- N&uacute;mero / Nombre de Bodega  -->
-                       <input type="text" ng-model="vm.warehouseName" class="form-control"
-                       placeholder="Ingrese un Nombre">
-
-                     </th>
+                      <input type="text" ng-model="vm.warehouseCode" class="form-control" placeholder="Ingrese un Código">
+                      <input type="text" ng-model="vm.warehouseName" class="form-control" placeholder="Ingrese un Nombre">
+                    </th>
                     <th>
-                      <button type="button" class="btn btn-primary" ng-click="vm.addWarehouse()">
-                        Agregar
+                      <button type="button" title="Agregar Nueva Bodega" class="btn btn-primary" ng-click="vm.addWarehouse()">
+                              <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                       </button>
                     </th>
                   </tr>
@@ -298,9 +300,9 @@
                   <tr ng-repeat="warehouse in vm.subsidiary.warehouses | filter:{active: true}">
                     <td>{{ warehouse.nameNumber }}</td>
                     <td>
-                      <button type="button" class="btn btn-primary" ng-click="vm.warehouse=warehouse"
-                        data-toggle="modal" data-target="#modalEliminarWarehouse">
-                        Eliminar
+                      <button type="button" title = "Eliminar Bodega" class="btn btn-primary" ng-click="vm.warehouse=warehouse"
+                              data-toggle="modal" data-target="#modalEliminarWarehouse">
+                              <span class = "glyphicon glyphicon-trash" aria-hidden = "true"></span>
                       </button>
                     </td>
                   </tr>
@@ -327,9 +329,9 @@
                   <tr>
                     <th> N&uacute;mero / Nombre de caja </th>
                     <th>
-                      <button type="button" class="btn btn-primary" ng-click="vm.cashier={}"
-                        data-toggle="modal" data-target="#modalCashier">
-                        Agregar
+                      <button type="button" title = "Agregar" class="btn btn-primary" ng-click="vm.cashier={}"
+                              data-toggle="modal" data-target="#modalCashier">
+                              <span class = "glyphicon glyphicon-plus" aria-hidden = "true"></span>
                       </button>
                     </th>
                   </tr>
@@ -343,9 +345,9 @@
                   <tr ng-repeat="cashier in vm.subsidiary.cashiers | filter:{active: true}">
                     <td>{{ cashier.nameNumber }}</td>
                     <td>
-                      <button type="button" class="btn btn-primary" ng-click="vm.cashier=cashier"
-                        data-toggle="modal" data-target="#modalEliminarCashier">
-                        Eliminar
+                      <button type="button" title = "Eliminar" class="btn btn-primary" ng-click="vm.cashier=cashier"
+                              data-toggle="modal" data-target="#modalEliminarCashier">
+                              <span class = "glyphicon glyphicon-trash" aria-hidden = "true"></span>
                       </button>
                     </td>
                   </tr>
@@ -359,13 +361,13 @@
     </div>
 
     <div class="panel-footer">
-      <button type="button" class="btn btn-primary" ng-click="vm.saveSubsidiary()"
-        data-dismiss="modal" >
-        Guardar
+      <button type="button" title = "Guardar Sucursal" class="btn btn-primary" ng-click="vm.saveSubsidiary()"
+              data-dismiss="modal" >
+              <span class = "glyphicon glyphicon-floppy-save" aria-hidden = "true"></span>
       </button>
-      <button type="button" class="btn btn-success"
-        ng-click="vm.cancelSubisdiary()">
-        Cancelar
+      <button type="button" title = "Salir" class="btn btn-primary"
+              ng-click="vm.cancelSubisdiary()">
+              <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
       </button>
     </div>
 
@@ -392,25 +394,25 @@
           <div class="form-group col-md-6">
             <label>C&oacute;digo de facturaci&oacute;n </label>
             <input type="text" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
-            ng-model="vm.cashier.threeCode" class="form-control" maxlength="9">
+                   ng-model="vm.cashier.threeCode" class="form-control" maxlength="9">
           </div>
 
           <div class="form-group col-md-6">
             <label>Secuencial: </label>
             <input type="text" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
-            ng-model="vm.cashier.billNumberSeq" class="form-control" maxlength="10">
+                   ng-model="vm.cashier.billNumberSeq" class="form-control" maxlength="10">
           </div>
         </div>
 
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary" ng-click="vm.saveCashier()"
-          data-dismiss="modal" >
-          Guardar
+        <button type="button" title = "Guardar Caja" class="btn btn-primary" ng-click="vm.saveCashier()"
+                data-dismiss="modal" >
+                <span class = "glyphicon glyphicon-floppy-save" aria-hidden = "true"></span>
         </button>
-        <button type="button" class="btn btn-success"
-          ng-click="vm.cancelCashier()" data-dismiss="modal">
-          Cancelar
+        <button type="button" title = "Salir" class="btn btn-primary"
+                ng-click="vm.cancelCashier()" data-dismiss="modal">
+                <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
         </button>
       </div>
     </div>
@@ -433,8 +435,8 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary" ng-click="vm.remove()" data-dismiss="modal">
-          Eliminar
+        <button type="button" title = "Eliminar Proyecto" class="btn btn-primary" ng-click="vm.remove()" data-dismiss="modal">
+                <span class = "glyphicon glyphicon-trash" aria-hidden = "true"></span>
         </button>
       </div>
     </div>
@@ -457,8 +459,8 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary" ng-click="vm.removeSubsidiary()" data-dismiss="modal">
-          Eliminar
+        <button type="button" title = "Eliminar Sucursal" class="btn btn-primary" ng-click="vm.removeSubsidiary()" data-dismiss="modal">
+                <span class = "glyphicon glyphicon-trash" aria-hidden = "true"></span>
         </button>
       </div>
     </div>
@@ -480,8 +482,8 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary" ng-click="vm.removeCashier()" data-dismiss="modal">
-          Eliminar
+        <button type="button" title = "Eliminar Caja" class="btn btn-primary" ng-click="vm.removeCashier()" data-dismiss="modal">
+                <span class = "glyphicon glyphicon-trash" aria-hidden = "true"></span>
         </button>
       </div>
     </div>
@@ -503,8 +505,8 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary" ng-click="vm.removeWarehouse()" data-dismiss="modal">
-          Eliminar
+        <button type="button" title = "Eliminar Bodega" class="btn btn-primary" ng-click="vm.removeWarehouse()" data-dismiss="modal">
+                <span class = "glyphicon glyphicon-trash" aria-hidden = "true"></span>
         </button>
       </div>
     </div>

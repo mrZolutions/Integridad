@@ -14,9 +14,10 @@ import lombok.Data;
  *
  * @author mrzolutions-daniel
  */
+
 @Entity
 @Data
-public class DetailRetentionClient implements Child{
+public class DetailRetentionClient implements Child {
     @Id
     @GeneratedValue
     private UUID id;
@@ -31,19 +32,19 @@ public class DetailRetentionClient implements Child{
     private double percentage;
     private double total;
     
-    public void setListsNull(){
-    };
+    public void setListsNull() {
+    }
     
-    public void setFatherListToNull(){
+    public void setFatherListToNull() {
     	retentionClient.setListsNull();
         retentionClient.setFatherListToNull();
-    };
+    }
 
     @Transient
-    public static DetailRetentionClient newDetailRetentionClientTest(){
+    public static DetailRetentionClient newDetailRetentionClientTest() {
         DetailRetentionClient detail = new DetailRetentionClient();
         detail.setRetentionClient(RetentionClient.newRetentionClientTest());
 
         return detail;
-    };
+    }
 }

@@ -11,6 +11,11 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import lombok.Data;
 
+/**
+ *
+ * @author mrzolutions-daniel
+ */
+
 @Entity
 @Data
 public class DebtsToPay {

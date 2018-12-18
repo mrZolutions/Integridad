@@ -18,317 +18,317 @@
 </div>
 
 <div class="form-group col-md-12">
-<div class="header">
-  <h4>
-    Reportes
-  </h4>
-</div>
+  <div class="header">
+    <h4>
+      Reportes
+    </h4>
+  </div>
 
-<div class="row" ng-show="vm.error !== undefined">
-  <div class="form-group col-md-12">
-    <div class="alert alert-danger">{{vm.error}}</div>
+  <div class="row" ng-show="vm.error !== undefined">
+    <div class="form-group col-md-12">
+      <div class="alert alert-danger">{{vm.error}}</div>
+    </div>
   </div>
-</div>
-<div class="row" ng-show="vm.success !== undefined">
-  <div class="form-group col-md-12">
-    <div class="alert alert-success">{{vm.success}}</div>
+  
+  <div class="row" ng-show="vm.success !== undefined">
+    <div class="form-group col-md-12">
+      <div class="alert alert-success">{{vm.success}}</div>
+    </div>
   </div>
-</div>
 
-<div class="panel panel-default">
-  <div class="panel-heading">
-    <b>Filtros</b>
-  </div>
-  <div class="panel-body">
-    <div class="row">
-      <div class="form-group col-md-6 ">
-        <label>FECHA INICIO: </label>
-        <div class="input-group date" id="pickerBillDateOne">
-          <input type="text" class="form-control input-group-addon"/>
-          <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"/></span>
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <b>Filtros</b>
+    </div>
+    <div class="panel-body">
+      <div class="row">
+        <div class="form-group col-md-6 ">
+          <label>FECHA INICIO: </label>
+          <div class="input-group date" id="pickerBillDateOne">
+            <input type="text" class="form-control input-group-addon"/>
+            <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"/></span>
+          </div>
+          <script>
+            $('#pickerBillDateOne').datetimepicker({
+              format: "DD/MM/YY",
+            });
+          </script>
         </div>
-        <script>
-          $('#pickerBillDateOne').datetimepicker({
-            format: "DD/MM/YY",
-          });
-        </script>
-      </div>
 
-      <div class="form-group col-md-6 ">
-        <label>FECHA FIN: </label>
-        <div class="input-group date" id="pickerBillDateTwo">
-          <input type="text" class="form-control input-group-addon"/>
-          <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"/></span>
+        <div class="form-group col-md-6 ">
+          <label>FECHA FIN: </label>
+          <div class="input-group date" id="pickerBillDateTwo">
+            <input type="text" class="form-control input-group-addon"/>
+            <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"/></span>
+          </div>
+          <script>
+            $('#pickerBillDateTwo').datetimepicker({
+              format: "DD/MM/YY",
+            });
+          </script>
         </div>
-        <script>
-          $('#pickerBillDateTwo').datetimepicker({
-            format: "DD/MM/YY",
-          });
-        </script>
+      </div>
+    </div>
+    <div class="panel-footer">
+      <div class="row">
+        <div class="form-group col-md-10">
+          <p><b>Productos, Ventas y Retenciones</b></p>
+          <button type="button" class="btn btn-primary"
+                  ng-click="vm.getReportProducts()">
+                  De Productos
+          </button>
+          <button type="button" class="btn btn-primary"
+                  ng-click="vm.getReportSales()">
+                  De Ventas
+          </button>
+          <button type="button" class="btn btn-primary"
+                  ng-click="vm.getReportRetention()">
+                  De Retenciones
+          </button>
+        </div>
+        <div class="form-group col-md-2">
+          <p><b>Exportar</b></p>
+          <button type="button" class="btn btn-primary"
+                  ng-click="vm.exportExcel()" ng-disabled="vm.reportList === undefined || vm.reportList.length === 0">
+                  Excel
+          </button>
+        </div>
+        <div class="form-group col-md-12">
+          <p><b>Cuentas por Cobrar</b></p>
+          <button type="button" class="btn btn-primary"
+                  ng-click="vm.getCreditsPendingReport()">
+                  Ctas Pendientes
+          </button>
+          <button type="button" class="btn btn-primary"
+                  ng-click="vm.getCCResumenReport()">
+                  Abonos y Otros
+          </button>
+        </div>
+      </div>
+      <div ng-show="vm.reportList.length === 0">
+        <br/>
+        <b>No hay registros que coincidan con la b&uacute;squeda</b>
       </div>
     </div>
   </div>
-  <div class="panel-footer">
-    <div class="row">
-      <div class="form-group col-md-10">
-        <p><b>Productos, Ventas y Retenciones</b></p>
-        <button type="button" class="btn btn-primary"
-                ng-click="vm.getReportProducts()">
-                De Productos
-        </button>
-        <button type="button" class="btn btn-primary"
-                ng-click="vm.getReportSales()">
-                De Ventas
-        </button>
-        <button type="button" class="btn btn-primary"
-                ng-click="vm.getReportRetention()">
-                De Retenciones
-        </button>
-      </div>
-      <div class="form-group col-md-2">
-        <p><b>Exportar</b></p>
-        <button type="button" class="btn btn-primary"
-                ng-click="vm.exportExcel()" ng-disabled="vm.reportList === undefined || vm.reportList.length === 0">
-                Excel
-        </button>
-      </div>
-      <div class="form-group col-md-12">
-        <p><b>Cuentas por Cobrar</b></p>
-        <button type="button" class="btn btn-primary"
-                ng-click="vm.getCreditsPendingReport()">
-                Ctas Pendientes
-        </button>
-        <button type="button" class="btn btn-primary"
-                ng-click="vm.getCCResumenReport()">
-                Abonos y Otros
-        </button>
-      </div>
-    </div>
-    <div ng-show="vm.reportList.length === 0">
-      <br/>
-      <b>No hay registros que coincidan con la b&uacute;squeda</b>
-    </div>
+
+  <div class="table-responsive" ng-if="vm.isProductReportList === '1'">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th> Tipo </th>
+          <th> Fact. No. </th>
+          <th> C&oacute;digo </th>
+          <th> Descripci&oacute;n </th>
+          <th> Cantidad </th>
+          <th> V. Unitario </th>
+          <th> Subtotal </th>
+          <th> Descuento </th>
+          <th> Iva </th>
+          <th> Total </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="data in vm.reportList | orderBy:'code'" >
+          <td>{{data.type}}</td>
+          <td>{{data.billSeqString}}</td>
+          <td>{{data.code}}</td>
+          <td>{{data.description}}</td>
+          <td>{{data.quantity}}</td>
+          <td>{{data.valUnit}}</td>
+          <td>{{data.subTotal.toFixed(2)}}</td>
+          <td>{{data.discount.toFixed(2)}}</td>
+          <td>{{data.iva.toFixed(2)}}</td>
+          <td>{{data.total.toFixed(2)}}</td>
+        </tr>
+      </tbody>
+    </table>
   </div>
-</div>
 
+  <div class="table-responsive" ng-if="vm.isProductReportList === '2'">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th> Fecha </th>
+          <th> C&oacute;digo-Cliente </th>
+          <th> Cliente </th>
+          <th> RUC/CI </th>
+          <th> No. Factura </th>
+          <th> Estado </th>
+          <th> OTI </th>
+          <th> Base 12% </th>
+          <th> Descuento </th>
+          <th> Base 0% </th>
+          <th> Iva </th>
+          <th> Total </th>
+          <th> Fecha-Vencimiento </th>
+          <th> Caja </th>
+          <th> Bodega </th>
+          <th> Sucursal </th>
+          <th> Usuario </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="data in vm.reportList | orderBy:'date'" >
+          <td>{{data.date}}</td>
+          <td>{{data.clientCode}}</td>
+          <td>{{data.clientName}}</td>
+          <td>{{data.ruc}}</td>
+          <td>{{data.billNumber}}</td>
+          <td>{{data.status}}</td>
+          <td>{{data.oti}}</td>
+          <td>{{data.status === 'ACTIVA' ? data.baseTaxes.toFixed(2) : ''}}</td>
+          <td>{{data.status === 'ACTIVA' ? data.discount.toFixed(2) : ''}}</td>
+          <td>{{data.status === 'ACTIVA' ? data.baseNoTaxes.toFixed(2) : ''}}</td>
+          <td>{{data.status === 'ACTIVA' ? data.iva.toFixed(2) : ''}}</td>
+          <td>{{data.status === 'ACTIVA' ? data.total.toFixed(2) : ''}}</td>
+          <td>{{data.endDate}}</td>
+          <td>{{data.cashier}}</td>
+          <td>{{data.warehouse}}</td>
+          <td>{{data.subsidiary}}</td>
+          <td>{{data.userName}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 
-<div   ng-if="vm.isProductReportList === '1'">
-  <table class="table table-striped">
-    <thead>
-      <tr>
-        <th> Tipo </th>
-        <th> Fact. No. </th>
-        <th> C&oacute;digo </th>
-        <th> Descripci&oacute;n </th>
-        <th> Cantidad </th>
-        <th> V. Unitario </th>
-        <th> Subtotal </th>
-        <th> Descuento </th>
-        <th> Iva </th>
-        <th> Total </th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr ng-repeat="data in vm.reportList | orderBy:'code'" >
-        <td>{{data.type}}</td>
-        <td>{{data.billSeqString}}</td>
-        <td>{{data.code}}</td>
-        <td>{{data.description}}</td>
-        <td>{{data.quantity}}</td>
-        <td>{{data.valUnit}}</td>
-        <td>{{data.subTotal.toFixed(2)}}</td>
-        <td>{{data.discount.toFixed(2)}}</td>
-        <td>{{data.iva.toFixed(2)}}</td>
-        <td>{{data.total.toFixed(2)}}</td>
-      </tr>
-    </tbody>
-  </table>
-</div>
+  <div class="table-responsive" ng-if="vm.isProductReportList === '3' && vm.reportList !== undefined">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th> Fecha de Retenci&oacute;n</th>
+          <th> Fecha de Documento</th>
+          <th> C&oacute;digo-Proveedor</th>
+          <th> Proveedor</th>
+          <th> RUC</th>
+          <th> No. Retenci&oacute;n</th>
+          <th> No. Autorizaci&oacute;n</th>
+          <th> No. Factura</th>
+          <th> Ejercicio Fiscal</th>
+          <th> Estado</th>
+          <th> Total</th>
+          <th> Sucursal</th>
+          <th> Usuario</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="data in vm.reportList | orderBy:'date'" >
+          <td>{{data.date}}</td>
+          <td>{{data.documentDate}}</td>
+          <td>{{data.providerCode}}</td>
+          <td>{{data.providerName}}</td>
+          <td>{{data.ruc}}</td>
+          <td>{{data.retentionNumber}}</td>
+          <td>{{data.authorizationNumber}}</td>
+          <td>{{data.documentNumber}}</td>
+          <td>{{data.ejercicioFiscal}}</td>
+          <td>{{data.status}}</td>
+          <td>{{data.total.toFixed(2)}}</td>
+          <td>{{data.subsidiary}}</td>
+          <td>{{data.userName}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 
-<div   ng-if="vm.isProductReportList === '2'">
-  <table class="table table-striped">
-    <thead>
-      <tr>
-        <th> Fecha </th>
-        <th> C&oacute;digo-Cliente </th>
-        <th> Cliente </th>
-        <th> RUC/CI </th>
-        <th> No. Factura </th>
-        <th> Estado </th>
-        <th> OTI </th>
-        <th> Base 12% </th>
-        <th> Descuento </th>
-        <th> Base 0% </th>
-        <th> Iva </th>
-        <th> Total </th>
-        <th> Fecha-Vencimiento </th>
-        <th> Caja </th>
-        <th> Bodega </th>
-        <th> Sucursal </th>
-        <th> Usuario </th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr ng-repeat="data in vm.reportList | orderBy:'date'" >
-        <td>{{data.date}}</td>
-        <td>{{data.clientCode}}</td>
-        <td>{{data.clientName}}</td>
-        <td>{{data.ruc}}</td>
-        <td>{{data.billNumber}}</td>
-        <td>{{data.status}}</td>
-        <td>{{data.oti}}</td>
-        <td>{{data.status === 'ACTIVA' ? data.baseTaxes.toFixed(2) : ''}}</td>
-        <td>{{data.status === 'ACTIVA' ? data.discount.toFixed(2) : ''}}</td>
-        <td>{{data.status === 'ACTIVA' ? data.baseNoTaxes.toFixed(2) : ''}}</td>
-        <td>{{data.status === 'ACTIVA' ? data.iva.toFixed(2) : ''}}</td>
-        <td>{{data.status === 'ACTIVA' ? data.total.toFixed(2) : ''}}</td>
-        <td>{{data.endDate}}</td>
-        <td>{{data.cashier}}</td>
-        <td>{{data.warehouse}}</td>
-        <td>{{data.subsidiary}}</td>
-        <td>{{data.userName}}</td>
-      </tr>
-    </tbody>
-  </table>
-</div>
+  <div class="table-responsive" ng-if="vm.isProductReportList === '4' && vm.reportList !== undefined">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Nombre del Cliente</th>
+          <th>N&uacute;mero de Factura</th>
+          <th>Fecha de Emision</th>
+          <th>Fecha Vence</th>
+          <th>Dias Credito</th>
+          <th>Dias Vencidos</th>
+          <th>Venta</th>
+          <th>Abonos</th>
+          <th>Retenciones</th>
+          <th>N/C</th>
+          <th>Saldo Pendiente</th>
+          <th>&lt;30</th>
+          <th>31-60 </th>
+          <th>61-90</th>
+          <th>91-120</th>
+          <th>&gt;120</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="data in vm.reportList | orderBy:'clientName'" >
+          <td>{{data.clientName}}</td>
+          <td>{{data.billNumber}}</td>
+          <td>{{data.fechVenta}}</td>
+          <td>{{data.fechVence}}</td>
+          <td>{{data.diasCredit}}</td>
+          <td>{{data.diasVencim}}</td>
+          <td>{{data.costo.toFixed(2)}}</td>
+          <td>{{data.valorAbono.toFixed(2)}}</td>
+          <td>{{data.valorReten.toFixed(2)}}</td>
+          <td>{{data.valorNotac.toFixed(2)}}</td>
+          <td>{{data.saldo.toFixed(2)}}</td>
+          <td>{{data.pplazo.toFixed(2)}}</td>
+          <td>{{data.splazo.toFixed(2)}}</td>
+          <td>{{data.tplazo.toFixed(2)}}</td>
+          <td>{{data.cplazo.toFixed(2)}}</td>
+          <td>{{data.qplazo.toFixed(2)}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 
-<div   ng-if="vm.isProductReportList === '3' && vm.reportList !== undefined">
-  <table class="table table-striped">
-    <thead>
-      <tr>
-        <th> Fecha de Retenci&oacute;n</th>
-        <th> Fecha de Documento</th>
-        <th> C&oacute;digo-Proveedor</th>
-        <th> Proveedor</th>
-        <th> RUC</th>
-        <th> No. Retenci&oacute;n</th>
-        <th> No. Autorizaci&oacute;n</th>
-        <th> No. Factura</th>
-        <th> Ejercicio Fiscal</th>
-        <th> Estado</th>
-        <th> Total</th>
-        <th> Sucursal</th>
-        <th> Usuario</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr ng-repeat="data in vm.reportList | orderBy:'date'" >
-        <td>{{data.date}}</td>
-        <td>{{data.documentDate}}</td>
-        <td>{{data.providerCode}}</td>
-        <td>{{data.providerName}}</td>
-        <td>{{data.ruc}}</td>
-        <td>{{data.retentionNumber}}</td>
-        <td>{{data.authorizationNumber}}</td>
-        <td>{{data.documentNumber}}</td>
-        <td>{{data.ejercicioFiscal}}</td>
-        <td>{{data.status}}</td>
-        <td>{{data.total.toFixed(2)}}</td>
-        <td>{{data.subsidiary}}</td>
-        <td>{{data.userName}}</td>
-      </tr>
-    </tbody>
-  </table>
-</div>
+  <div class="table-responsive" ng-if="vm.isProductReportList === '5' && vm.reportList !== undefined">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Nombre del Cliente</th>
+          <th>Identificaci&oacute;n</th>
+          <th>N&uacute;mero de Factura</th>
+          <th>Valor de la Factura</th>
+          <th>Saldo Pendiente</th>
+          <th>Estatus</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="data in vm.reportList | orderBy:'clientName'" >
+          <td>{{data.clientName}}</td>
+          <td>{{data.ruc}}</td>
+          <td>{{data.billNumber}}</td>
+          <td>{{data.costo}}</td>
+          <td>{{data.saldo}}</td>
+          <td>{{data.statusCredits}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 
-<div   ng-if="vm.isProductReportList === '4' && vm.reportList !== undefined">
-  <table class="table table-striped">
-    <thead>
-      <tr>
-        <th>Nombre del Cliente</th>
-        <th>N&uacute;mero de Factura</th>
-        <th>Fecha de Emision</th>
-        <th>Fecha Vence</th>
-        <th>Dias Credito</th>
-        <th>Dias Vencidos</th>
-        <th>Venta</th>
-        <th>Abonos</th>
-        <th>Retenciones</th>
-        <th>N/C</th>
-        <th>Saldo Pendiente</th>
-        <th>&lt;30</th>
-        <th>31-60 </th>
-        <th>61-90</th>
-        <th>91-120</th>
-        <th>&gt;120</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr ng-repeat="data in vm.reportList | orderBy:'clientName'" >
-        <td>{{data.clientName}}</td>
-        <td>{{data.billNumber}}</td>
-        <td>{{data.fechVenta}}</td>
-        <td>{{data.fechVence}}</td>
-        <td>{{data.diasCredit}}</td>
-        <td>{{data.diasVencim}}</td>
-        <td>{{data.costo.toFixed(2)}}</td>
-        <td>{{data.valorAbono.toFixed(2)}}</td>
-        <td>{{data.valorReten.toFixed(2)}}</td>
-        <td>{{data.valorNotac.toFixed(2)}}</td>
-        <td>{{data.saldo.toFixed(2)}}</td>
-        <td>{{data.pplazo.toFixed(2)}}</td>
-        <td>{{data.splazo.toFixed(2)}}</td>
-        <td>{{data.tplazo.toFixed(2)}}</td>
-        <td>{{data.cplazo.toFixed(2)}}</td>
-        <td>{{data.qplazo.toFixed(2)}}</td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
-<div   ng-if="vm.isProductReportList === '5' && vm.reportList !== undefined">
-  <table class="table table-striped">
-    <thead>
-      <tr>
-        <th>Nombre del Cliente</th>
-        <th>Identificaci&oacute;n</th>
-        <th>N&uacute;mero de Factura</th>
-        <th>Valor de la Factura</th>
-        <th>Saldo Pendiente</th>
-        <th>Estatus</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr ng-repeat="data in vm.reportList | orderBy:'clientName'" >
-        <td>{{data.clientName}}</td>
-        <td>{{data.ruc}}</td>
-        <td>{{data.billNumber}}</td>
-        <td>{{data.costo}}</td>
-        <td>{{data.saldo}}</td>
-        <td>{{data.statusCredits}}</td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
-<div   ng-if="vm.isProductReportList === '6' && vm.reportList !== undefined">
-  <table class="table table-striped">
-    <thead>
-      <tr>
-        <th>Nombre del Cliente</th>
-        <th>N&uacute;mero Factura</th>
-        <th>Valor Factura</th>
-        <th>Tipo Transacci&oacute;n</th>
-        <th>Forma de Pago</th>
-        <th>Fecha de Pago</th>
-        <th>Abonos</th>
-        <th>Retenciones</th>
-        <th>N/C</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr ng-repeat="data in vm.reportList | orderBy:'nomCliente'" >
-        <td>{{data.nameClient}}</td>
-        <td>{{data.billNumber}}</td>
-        <td>{{data.billTotal.toFixed(2)}}</td>
-        <td>{{data.tipTransac}}</td>
-        <td>{{data.formPago}}</td>
-        <td>{{data.fechPago}}</td>
-        <td>{{data.valorAbono.toFixed(2)}}</td>
-        <td>{{data.valorReten.toFixed(2)}}</td>
-        <td>{{data.valorNotac.toFixed(2)}}</td>
-      </tr>
-    </tbody>
-  </table>
-</div>
+  <div class="table-responsive" ng-if="vm.isProductReportList === '6' && vm.reportList !== undefined">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Nombre del Cliente</th>
+          <th>N&uacute;mero Factura</th>
+          <th>Valor Factura</th>
+          <th>Tipo Transacci&oacute;n</th>
+          <th>Forma de Pago</th>
+          <th>Fecha de Pago</th>
+          <th>Abonos</th>
+          <th>Retenciones</th>
+          <th>N/C</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="data in vm.reportList | orderBy:'nomCliente'" >
+          <td>{{data.nameClient}}</td>
+          <td>{{data.billNumber}}</td>
+          <td>{{data.billTotal.toFixed(2)}}</td>
+          <td>{{data.tipTransac}}</td>
+          <td>{{data.formPago}}</td>
+          <td>{{data.fechPago}}</td>
+          <td>{{data.valorAbono.toFixed(2)}}</td>
+          <td>{{data.valorReten.toFixed(2)}}</td>
+          <td>{{data.valorNotac.toFixed(2)}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>

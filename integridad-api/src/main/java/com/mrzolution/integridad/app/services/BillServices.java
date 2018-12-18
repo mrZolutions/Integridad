@@ -5,6 +5,7 @@ import java.util.*;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
+import com.mrzolution.integridad.app.cons.Constants;
 import com.mrzolution.integridad.app.domain.*;
 import com.mrzolution.integridad.app.domain.Pago;
 import com.mrzolution.integridad.app.domain.ebill.*;
@@ -61,8 +62,8 @@ public class BillServices {
         String data = mapper.writeValueAsString(requirement);
         log.info("BillServices getDatil maper creado");
                 
-        //String response = httpCallerService.post(Constants.DATIL_LINK, data, userClient);
-        String response = "OK";
+        String response = httpCallerService.post(Constants.DATIL_LINK, data, userClient);
+        //String response = "OK";
         log.info("BillServices getDatil httpcall success");
         return response;
     }

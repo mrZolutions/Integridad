@@ -16,27 +16,28 @@ import lombok.Data;
 
 @Entity
 @Data
-public class DetailDebtsToPay implements Child {
+public class DetailBodega implements Child {
     @Id
     @GeneratedValue
     private UUID id;
-    private String codeConta;
-    private String descrip;
-    private String name;
-    private String tipo;
-    private double baseImponible;
+    
+    private long quantity;
+    private Double costEach;
+    private Double total;
     
     @ManyToOne
-    @JoinColumn(name = "debtsToPay_id")
-    private DebtsToPay debtsToPay;
+    @JoinColumn(name = "bodega_id")
+    private Bodega bodega;
+    
+    @ManyToOne
+    @JoinColumn(name = "product_id")
+    private Product product;
     
     public void setListsNull() {
     }
     
     public void setFatherListToNull() {
-        debtsToPay.setListsNull();
-        debtsToPay.setFatherListToNull();
+        bodega.setListsNull();
+        bodega.setFatherListToNull();
     }
 }
-
-

@@ -9,18 +9,17 @@ import java.util.UUID;
 /**
  * Created by daniel.
  */
+
 @Entity
 @Data
-public class Warehouse implements Child{
-
+public class Warehouse implements Child {
     @Id
     @GeneratedValue
     private UUID id;
 
+    private String codeWarehouse;
     private String nameNumber;
-    
     private long dateCreated;
-    
     private boolean active;
     
     @ManyToOne
@@ -28,15 +27,16 @@ public class Warehouse implements Child{
     private Subsidiary subsidiary;
 
     
-    public void setListsNull(){ }
+    public void setListsNull() { 
+    }
     
-    public void setFatherListToNull(){
+    public void setFatherListToNull() {
         subsidiary.setListsNull();
         subsidiary.setFatherListToNull();
     }
 
     @Transient
-    public static Warehouse newWarehouseTest(){
+    public static Warehouse newWarehouseTest() {
         Warehouse warehouse = new Warehouse();
         warehouse.setSubsidiary(Subsidiary.newSubsidiaryTest());
 

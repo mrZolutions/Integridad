@@ -108,11 +108,11 @@ angular.module('integridadUiApp')
 
     vm.removeSubsidiary = function() {
       vm.subsidiary.active = false;
-      // update(true);
     };
 
     vm.addWarehouse = function() {
       var warehouse = {
+        codeWarehouse: vm.warehouseCode,
         nameNumber: vm.warehouseName,
         dateCreated: new Date().getTime(),
         active: true

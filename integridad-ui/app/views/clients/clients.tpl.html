@@ -187,13 +187,13 @@
     </div>
 
     <div class = "panel-footer">
-      <button type = "button" title = "Guardar Registro" class = "btn btn-primary" ng-click = "vm.save()"
+      <button type = "button" title = "Guardar Cliente" class = "btn btn-primary" ng-click = "vm.save()"
               ng-disabled = "vm.client.name === undefined || vm.client.identification === undefined || vm.client.codApp === undefined">
               <span class = "glyphicon glyphicon-floppy-save" aria-hidden = "true"></span>
       </button>
-      <button type = "button" title = "Cancelar" class = "btn btn-danger"
+      <button type = "button" title = "Salir" class = "btn btn-primary"
               ng-click = "vm.cancel()">
-              <span class = "glyphicon glyphicon-remove" aria-hidden = "true"></span>
+              <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
       </button>
     </div>
   </div>
@@ -214,7 +214,7 @@
           </div>
         </div>
         <div class = "modal-footer">
-          <button type = "button" title = "Eliminar" class="btn btn-primary" ng-click="vm.remove()" data-dismiss="modal">
+          <button type = "button" title = "Eliminar Cliente" class="btn btn-primary" ng-click="vm.remove()" data-dismiss="modal">
                   <span class = "glyphicon glyphicon-trash" aria-hidden = "true"></span>
           </button>
         </div>
