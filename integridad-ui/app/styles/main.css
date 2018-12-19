@@ -124,6 +124,20 @@ h1, h2, h3, h4, h5, p, a {
   margin-top: 28px;
 }
 
+/*404 Div Styles*/
+.h1-text {
+  margin: 0 10px;
+  font-size: 50px;
+  text-align: center;
+}
+
+.h4-text {
+  margin: 0 10px;
+  font-size: 20px;
+  text-align: center;
+}
+
+
 /* Responsive: Portrait tablets and up */
 @media screen and (min-width: 768px) {
   .container {

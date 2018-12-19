@@ -62,8 +62,8 @@ public class BillServices {
         String data = mapper.writeValueAsString(requirement);
         log.info("BillServices getDatil maper creado");
                 
-        String response = httpCallerService.post(Constants.DATIL_LINK, data, userClient);
-        //String response = "OK";
+        //String response = httpCallerService.post(Constants.DATIL_LINK, data, userClient);
+        String response = "OK";
         log.info("BillServices getDatil httpcall success");
         return response;
     }
@@ -111,7 +111,6 @@ public class BillServices {
         return retrieved;
     }
         
-    @Async("asyncExecutor")
     public void saveDetailsBill(Bill saved, List<Detail> details) {
         details.forEach (detail-> {
             detail.setBill(saved);
@@ -121,8 +120,7 @@ public class BillServices {
         log.info("BillServices saveDetailsBill FINISHED");
     }
         
-    @Async("asyncExecutor")
-    void savePagosAndCreditsBill(Bill saved, List<Pago> pagos) {
+    public void savePagosAndCreditsBill(Bill saved, List<Pago> pagos) {
         pagos.forEach (pago -> {
             List<Credits> creditsList = pago.getCredits();
             pago.setCredits(null);
@@ -139,7 +137,6 @@ public class BillServices {
         log.info("BillServices savePagosAndCreditsBill FINISHED");
     }
         
-    @Async("asyncExecutor")
     public void updateProductBySubsidiary(Bill bill, int typeDocument, List<Detail> details) {
         details.forEach (detail-> {
             if (!detail.getProduct().getProductType().getCode().equals("SER") && typeDocument == 1) {
@@ -151,7 +148,6 @@ public class BillServices {
         log.info("BillServices updateProductBySubsidiary FINISHED");
     }
         
-    @Async("asyncExecutor")
     public void saveDetailsQuotation(Bill saved, List<Detail> details) {
         details.forEach (detail-> {
             detail.setBill(saved);
@@ -185,6 +181,7 @@ public class BillServices {
             Cashier cashier = cashierRepository.findOne(bill.getUserIntegridad().getCashier().getId());
             cashier.setBillNumberSeq(cashier.getBillNumberSeq() + 1);
             cashierRepository.save(cashier);
+            // (2) Excepción Ferretería Lozada No actualiza ProductBySubsidiary
             if ("2".equals(bill.getClient().getUserClient().getEspTemp())) {
                 saveDetailsBill(saved, details);
                 savePagosAndCreditsBill(saved, pagos);
@@ -234,7 +231,7 @@ public class BillServices {
     public Iterable<Bill> getByStringSeqAndSubId(String stringSeq, UUID subId) {
         log.info("BillServices getByStringSeq : {}, {}", stringSeq, subId);
         Iterable<Bill> bills = billRepository.findByStringSeqAndSubsidiaryId(stringSeq, subId);
-        bills.forEach (bill->{
+        bills.forEach (bill -> {
             bill.setFatherListToNull();
             bill.setListsNull();
         });
@@ -286,13 +283,12 @@ public class BillServices {
     }
 
     private void populateChildren(Bill bill) {
-        log.info("BillServices populateChildren billId: {}", bill.getId());
         List<Detail> detailList = getDetailsByBill(bill);
         List<Pago> pagoList = getPagosByBill(bill);
         bill.setDetails(detailList);
         bill.setPagos(pagoList);
         bill.setFatherListToNull();
-        log.info("BillServices populateChildren FINISHED billId: {}", bill.getId());
+        log.info("BillServices populateChildren billId: {}", bill.getId());
     }
 
     private List<Detail> getDetailsByBill(Bill bill) {

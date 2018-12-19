@@ -17,6 +17,7 @@
   </div>
 </div>
 
+<div class="form-group col-md-12">
 <div class="panel panel-default">
   <div class="panel-body">
     <div class="row" ng-show="vm.error !== undefined">
@@ -135,13 +136,14 @@
   </div>
   
   <div class="panel-footer">
-    <button type="button" class="btn btn-primary" ng-click="vm.editUser()"
-      ng-disabled="vm.userIntegridad.email === undefined || vm.passwordNotMatch">
-      Guardar
+    <button type="button" title = "Guardar" class="btn btn-primary" ng-click="vm.editUser()"
+            ng-disabled="vm.userIntegridad.email === undefined || vm.passwordNotMatch">
+            <span class = "glyphicon glyphicon-floppy-save" aria-hidden = "true"></span>
     </button>
-    <button type="button" class="btn btn-success"
-    ng-click="vm.cancel()">
-      Cancelar
+    <button type="button" title = "Salir" class="btn btn-primary"
+            ng-click="vm.cancel()">
+            <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
     </button>
   </div>
+</div>
 </div>

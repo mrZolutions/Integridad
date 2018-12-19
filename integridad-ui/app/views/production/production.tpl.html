@@ -19,7 +19,7 @@
 
 <div class="form-group col-md-12">
     <div class = "header">
-        <h4>Ingreso a Bodega</h4>
+        <h4>Módulo de Producción</h4>
     </div>
 
     <div class = "row" ng-show = "vm.error !== undefined">
@@ -31,5 +31,47 @@
         <div class = "form-group col-md-12">
             <div class = "alert alert-success">{{vm.success}}</div>
         </div>
+    </div>
+    
+    <div ng-show="vm.warehouseSelected === undefined">
+        <div class="row">
+            <div class="form-group col-md-10">
+                <input ng-model="searchText" class="form-control" placeholder="Buscar">
+            </div>
+        </div>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>
+                        <th> C&oacute;digo </th>
+                        <th> Nombre </th>
+                        <th> Sucursal</th>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-show="vm.warehouseList == 0">
+                    <td colspan="4">
+                        No hay Bodegas registradas para esta Empresa
+                    </td>
+                </tr>
+                <tr ng-repeat="warehouse in vm.warehouseList | orderBy:'name' | filter:searchText">
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>
+                        <button type="button" class="btn btn-primary btn-sm" ng-click="">
+                                Ingreso a Bodega
+                        </button>
+                        <button type="button" class="btn btn-primary btn-sm" ng-click="">
+                                Consumo
+                        </button>
+                        <button type="button" class="btn btn-primary btn-sm" ng-click="">
+                                Transferencia de Bodegas
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 </div>

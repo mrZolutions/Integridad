@@ -18,16 +18,18 @@ import lombok.Data;
 
 @Entity
 @Data
-public class Bodega {
+public class Cellar {
     @Id
     @GeneratedValue
     private UUID id;
     
     private String billNumber;
-    private long dateBillNumber;
+    private long dateBill;
+    private long dateEnterCellar;
     private String authNumber;
     private String statusIngreso;
-    private String BodegaSeq;
+    private String whNumberSeq;
+    private boolean active;
     
     @ManyToOne
     @JoinColumn(name = "warehouse_id")
@@ -38,14 +40,18 @@ public class Bodega {
     private Provider provider;
     
     @ManyToOne
+    @JoinColumn(name = "subsidiary_id")
+    private Subsidiary subsidiary;
+    
+    @ManyToOne
     @JoinColumn(name = "user_id")
     private UserIntegridad userIntegridad;
     
-    @OneToMany(mappedBy = "bodega", cascade = CascadeType.ALL)
-    private List<DetailBodega> detailBodega;
+    @OneToMany(mappedBy = "cellar", cascade = CascadeType.ALL)
+    private List<DetailCellar> detailCellar;
     
     public void setListsNull() {
-        detailBodega = null;
+        detailCellar = null;
     }
     
     public void setFatherListToNull() {
@@ -53,6 +59,8 @@ public class Bodega {
     	warehouse.setFatherListToNull();
     	provider.setListsNull();
     	provider.setFatherListToNull();
+        subsidiary.setListsNull();
+    	subsidiary.setFatherListToNull();
         userIntegridad.setListsNull();
     	userIntegridad.setFatherListToNull();
     }

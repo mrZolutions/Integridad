@@ -11,8 +11,6 @@ import com.mrzolution.integridad.app.domain.Detail;
 
 @Repository
 @Qualifier(value="DetailRepository")
-public interface DetailRepository extends CrudRepository<Detail, UUID>{
-	
-	Iterable<Detail> findByBill(Bill bill);
-
+public interface DetailRepository extends CrudRepository<Detail, UUID> {	
+    Iterable<Detail> findByBill(Bill bill);
 }

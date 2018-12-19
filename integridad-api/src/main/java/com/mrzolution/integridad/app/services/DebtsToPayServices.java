@@ -9,7 +9,6 @@ import com.mrzolution.integridad.app.exceptions.BadRequestException;
 import com.mrzolution.integridad.app.repositories.CashierRepository;
 import com.mrzolution.integridad.app.repositories.CreditsDebtsRepository;
 import com.mrzolution.integridad.app.repositories.DebtsToPayRepository;
-import com.mrzolution.integridad.app.repositories.DetailDebtsToPayChildRepository;
 import com.mrzolution.integridad.app.repositories.DetailDebtsToPayRepository;
 import com.mrzolution.integridad.app.repositories.PagoDebtsRepository;
 import java.util.ArrayList;
@@ -31,8 +30,6 @@ public class DebtsToPayServices {
     DebtsToPayRepository debtsToPayRepository;
     @Autowired
     DetailDebtsToPayRepository detailDebtsToPayRepository;
-    @Autowired
-    DetailDebtsToPayChildRepository detailDebtsToPayChildRepository;
     @Autowired
     PagoDebtsRepository pagoDebtsRepository;
     @Autowired

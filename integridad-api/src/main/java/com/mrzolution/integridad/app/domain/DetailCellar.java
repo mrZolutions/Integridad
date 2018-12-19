@@ -16,7 +16,7 @@ import lombok.Data;
 
 @Entity
 @Data
-public class DetailBodega implements Child {
+public class DetailCellar implements Child {
     @Id
     @GeneratedValue
     private UUID id;
@@ -26,8 +26,8 @@ public class DetailBodega implements Child {
     private Double total;
     
     @ManyToOne
-    @JoinColumn(name = "bodega_id")
-    private Bodega bodega;
+    @JoinColumn(name = "cellar_id")
+    private Cellar cellar;
     
     @ManyToOne
     @JoinColumn(name = "product_id")
@@ -37,7 +37,7 @@ public class DetailBodega implements Child {
     }
     
     public void setFatherListToNull() {
-        bodega.setListsNull();
-        bodega.setFatherListToNull();
+        cellar.setListsNull();
+        cellar.setFatherListToNull();
     }
 }

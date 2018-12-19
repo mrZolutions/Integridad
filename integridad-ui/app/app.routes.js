@@ -72,6 +72,10 @@ function routes($routeProvider) {
       templateUrl: 'views/cobrar/cobrar.tpl.html',
       controller: 'CuentasCobrarCtrl',
       controllerAs: 'vm'
+    }).when('/produc', {
+      templateUrl: 'views/notfound/404.tpl.html'
+    }).when('/contab', {
+      templateUrl: 'views/notfound/404.tpl.html'
     }).when('/pagar', {
       templateUrl: 'views/debtstopay/debtstopay.tpl.html',
       controller: 'DebtsToPayCtrl',
