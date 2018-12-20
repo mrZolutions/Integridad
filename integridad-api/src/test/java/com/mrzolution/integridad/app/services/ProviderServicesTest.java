@@ -80,20 +80,20 @@ public class ProviderServicesTest {
 //
 //	}
 
-	@Test
-	public void createCallProviderBySubRepository(){
+//	@Test
+//	public void createCallProviderBySubRepository(){
+//
+//		Mockito.when(providerRepository.save(Mockito.any(Provider.class))).thenReturn(provider);
+//
+//		Provider response = service.create(provider);
+//
+//		Mockito.verify(providerRepository, Mockito.times(1))
+//				.save(Mockito.any(Provider.class));
+//	Ya estaba	Mockito.verify(productBySubsidiaryRepository, Mockito.times(1))
+//	Ya estaba			.save(Mockito.any(ProductBySubsidiary.class));
 
-		Mockito.when(providerRepository.save(Mockito.any(Provider.class))).thenReturn(provider);
+//	Ya estaba	Assert.assertTrue(response.getProductBySubsidiaries() == null);
 
-		Provider response = service.create(provider);
-
-		Mockito.verify(providerRepository, Mockito.times(1))
-				.save(Mockito.any(Provider.class));
-//		Mockito.verify(productBySubsidiaryRepository, Mockito.times(1))
-//				.save(Mockito.any(ProductBySubsidiary.class));
-
-//		Assert.assertTrue(response.getProductBySubsidiaries() == null);
-
-	}
+//	}
 	
 }

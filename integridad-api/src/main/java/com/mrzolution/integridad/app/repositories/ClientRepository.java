@@ -12,13 +12,12 @@ import com.mrzolution.integridad.app.domain.Client;
 
 @Repository
 @Qualifier(value="ClientRepository")
-public interface ClientRepository extends CrudRepository<Client, UUID>{
+public interface ClientRepository extends CrudRepository<Client, UUID> {
+    Iterable<Client> findByActive(boolean active);
 
-	Iterable<Client> findByActive(boolean active);
-
-	@Query("SELECT c FROM Client c WHERE c.userClient.id = (:id) AND c.active = true")
-	Iterable<Client> findActivesByUserClientId(@Param("id") UUID id);
+    @Query("SELECT c FROM Client c WHERE c.userClient.id = (:id) AND c.active = true")
+    Iterable<Client> findActivesByUserClientId(@Param("id") UUID id);
         
-        @Query("SELECT c FROM Client c WHERE c.identification = (:ident) AND c.id = (:id) AND c.active = true")
-        Iterable<Client> findByIdentificationAndId(@Param("ident") String ident, @Param("id") UUID id);
+    @Query("SELECT c FROM Client c WHERE c.name = (:namecli) AND c.identification = (:ident) AND c.userClient.id = (:id) AND c.active = true")
+    Iterable<Client> findByIdentificationAndId(@Param("namecli") String namecli, @Param("ident") String ident, @Param("id") UUID id);
 } 

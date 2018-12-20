@@ -10,8 +10,7 @@ import java.util.UUID;
 @Entity
 @Data
 public class Brand {
-
-	@Id
+    @Id
     @GeneratedValue
     private UUID id;
 

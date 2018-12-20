@@ -11,13 +11,16 @@ import java.util.UUID;
 
 @Repository
 @Qualifier(value="ProviderRepository")
-public interface ProviderRepository extends CrudRepository<Provider, UUID>{
+public interface ProviderRepository extends CrudRepository<Provider, UUID> {
+    Iterable<Provider> findByActive(boolean active);
+    
+    Iterable<Provider> findByProviderType(String type);
 
-	Iterable<Provider> findByActive(boolean active);
-	Iterable<Provider> findByProviderType(String type);
-
-	@Query("SELECT p FROM Provider p WHERE p.userClient.id = (:id) and p.active = true")
-	Iterable<Provider> findByUserClientId(@Param("id") UUID id);
+    @Query("SELECT p FROM Provider p WHERE p.userClient.id = (:id) AND p.active = true")
+    Iterable<Provider> findByUserClientId(@Param("id") UUID id);
+       
+    @Query("SELECT p FROM Provider p WHERE p. name = (:nameprov) AND p.ruc = (:rucp) AND p.userClient.id = (:id) AND p.active = true")
+    Iterable<Provider> findProviderByRucAndId(@Param("nameprov") String nameprov, @Param("rucp") String rucp, @Param("id") UUID id);
 
 // 	@Query("SELECT c FROM Client c WHERE c.userClient.id = (:id) and c.active = true")
 //	Iterable<Client> findActivesByUserClientId(@Param("id") UUID id);
