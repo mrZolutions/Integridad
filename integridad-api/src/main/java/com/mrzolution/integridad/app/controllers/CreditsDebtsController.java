@@ -1,8 +1,10 @@
 package com.mrzolution.integridad.app.controllers;
 
 import com.mrzolution.integridad.app.domain.CreditsDebts;
+import com.mrzolution.integridad.app.domain.report.CreditsDebtsReport;
 import com.mrzolution.integridad.app.exceptions.BadRequestException;
 import com.mrzolution.integridad.app.services.CreditsDebtsServices;
+import java.util.List;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +38,19 @@ public class CreditsDebtsController {
 	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
         return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
+    }
+    
+    @RequestMapping(method = RequestMethod.GET, value="/rep/pendingreport/{userClientId}/{dateTwo}")
+    public ResponseEntity getAllCreditsDebtsPendingOfDebtsToPayByUserClientId(@PathVariable("userClientId") UUID userClientId, @PathVariable("dateTwo") long dateTwo) {
+        log.info("CreditsDebtsController CreditsDebtsPendingOfDebtsToPayByUserClientId: {}", userClientId);
+        List<CreditsDebtsReport> response = null;
+        try {
+            response = service.getCreditsDebtsPendingOfDebtsToPayByUserClientId(userClientId, dateTwo);
+	} catch (BadRequestException e) {
+            log.error("CreditsDebtsController getAllCreditsDebtsPendingOfDebtsToPayByUserClientId Exception thrown: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+	}
+	return new ResponseEntity<List>(response, HttpStatus.ACCEPTED);
     }
     
 }

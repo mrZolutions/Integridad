@@ -30,7 +30,7 @@ public interface CreditsDebtsRepository extends CrudRepository<CreditsDebts, UUI
     @Query("SELECT c FROM CreditsDebts c WHERE c.pagoDebts.id = :id")
     Iterable<CreditsDebts> findCreditsDebtsByPagoDebtsId(@Param("id") UUID id);
     
-    @Query("SELECT c FROM CreditsDebts c JOIN c.pagoDebts p JOIN p.debtsToPay d JOIN d.provider pr WHERE pr.userClient.id = :id AND c.estadoCredits = 'PENDIENTE' AND d.fecha <= (:dateTwo) ORDER BY pr.name, d.fecha")
+    @Query("SELECT c FROM CreditsDebts c JOIN c.pagoDebts p JOIN p.debtsToPay d JOIN d.provider pr WHERE pr.userClient.id = :id AND c.estadoCredits = 'PENDIENTE' AND d.active = true AND d.fecha <= (:dateTwo) ORDER BY pr.name, d.fecha")
     Iterable<CreditsDebts> findCreditsDebtsPendingOfDebtsToPayByUserClientId(@Param("id") UUID id, @Param("dateTwo") long dateTwo);
     
     @Query("SELECT c FROM CreditsDebts c JOIN c.pagoDebts p JOIN p.debtsToPay d JOIN d.provider pr WHERE pr.userClient.id = :id AND c.estadoCredits = 'PAGADO' ORDER BY pr.name, d.fecha")

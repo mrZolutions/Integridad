@@ -23,6 +23,7 @@ public class DebtsToPay {
     @GeneratedValue
     private UUID id;
 
+    private boolean active;
     private String buyTypeVoucher;
     private String purchaseType;
     private long fecha;

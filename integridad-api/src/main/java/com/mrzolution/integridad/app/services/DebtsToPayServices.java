@@ -84,6 +84,7 @@ public class DebtsToPayServices {
             throw new BadRequestException("Debe tener una cuenta por lo menos");
         }
         
+        debtsToPay.setActive(true);
         debtsToPay.setDetailDebtsToPay(null);
         debtsToPay.setPagos(null);
         debtsToPay.setFatherListToNull();

@@ -8,7 +8,7 @@
  * Controller of the menu
  */
 angular.module('integridadUiApp')
-  .controller('ReportSalesCtrl', function(_, $localStorage, creditsbillService, billService, eretentionService, paymentService, FileSaver, productService) {
+  .controller('ReportSalesCtrl', function(_, $localStorage, creditsbillService, billService, eretentionService, paymentService, creditsDebtsService, productService) {
     var vm = this;
     var today = new Date();
     $('#pickerBillDateOne').data("DateTimePicker").date(today);
@@ -118,6 +118,23 @@ angular.module('integridadUiApp')
       });
     };
 
+    vm.getCreditsDebtsPendingReport = function() {
+      vm.isProductReportList = '7';
+      vm.reportList = undefined;
+      vm.loading = true;
+      var dateTwo = $('#pickerBillDateTwo').data("DateTimePicker").date().toDate().getTime();
+      dateTwo += 86340000;
+      var subId = $localStorage.user.subsidiary.userClient.id;
+
+      creditsDebtsService.getAllCreditsDebtsPendingOfDebtsToPayByUserClientId(subId, dateTwo).then(function(response) {
+        vm.reportList = response;
+        vm.loading = false;
+      }).catch(function(error) {
+        vm.loading = false;
+        vm.error = error.data;
+      });
+    };
+
     vm.getTotal = function(total, subTotal) {
       var total = total - subTotal;
       return (total).toFixed(2);
@@ -189,8 +206,8 @@ angular.module('integridadUiApp')
       } else if (vm.isProductReportList === '4') {
         _.each(vm.reportList, function(creditsreport) {
           var data = {
-            NOMBRE_CLIENTE: creditsreport.clientName,
-            NUMERO_FACTURA: creditsreport.billNumber,
+            CLIENTE: creditsreport.clientName,
+            FACTURA: creditsreport.billNumber,
             FECHA_VENTA: creditsreport.fechVenta !== null ? new Date(creditsreport.fechVenta) : creditsreport.fechVenta,
             FECHA_VENCE: creditsreport.fechVence !== null ? new Date(creditsreport.fechVence) : creditsreport.fechVence,
             DIAS_CREDIT: creditsreport.diasCredit,
@@ -198,7 +215,7 @@ angular.module('integridadUiApp')
             VENTA: parseFloat(creditsreport.costo.toFixed(2)),
             ABONO: parseFloat(creditsreport.valorAbono.toFixed(2)),
             RETEN: parseFloat(creditsreport.valorReten.toFixed(2)),
-            NOTA_CREDIT: parseFloat(creditsreport.valorNotac.toFixed(2)),
+            N_C: parseFloat(creditsreport.valorNotac.toFixed(2)),
             SALDO: parseFloat(creditsreport.saldo.toFixed(2)),
             PLAZO_MENOR_30: parseFloat(creditsreport.pplazo.toFixed(2)),
             PLAZO_31_60: parseFloat(creditsreport.splazo.toFixed(2)),
@@ -212,9 +229,9 @@ angular.module('integridadUiApp')
       } else if (vm.isProductReportList === '5') {
         _.each(vm.reportList, function(creditspayedreport) {
           var data = {
-            NOMBRE_CLIENTE: creditspayedreport.clientName,
+            CLIENTE: creditspayedreport.clientName,
             IDENTIFICACION: creditspayedreport.ruc,
-            NUMERO_FACTURA: creditspayedreport.billNumber,
+            FACTURA: creditspayedreport.billNumber,
             VALOR_FACTURA: creditspayedreport.costo,
             SALDO: creditspayedreport.saldo,
             STATUS: creditspayedreport.statusCredits
@@ -225,9 +242,9 @@ angular.module('integridadUiApp')
       } else if (vm.isProductReportList === '6') {
         _.each(vm.reportList, function(ccresumenreport) {
           var data = {
-            NOMBRE_CLIENTE: ccresumenreport.nameClient,
-            NUMERO_FACTURA: ccresumenreport.billNumber,
-            COSTO_FACTURA: ccresumenreport.billTotal,
+            CLIENTE: ccresumenreport.nameClient,
+            FACTURA: ccresumenreport.billNumber,
+            VENTA: ccresumenreport.billTotal,
             TIPO_TRANSAC: ccresumenreport.tipTransac,
             MODO_PAGO: ccresumenreport.formPago,
             FECHA_PAGO: ccresumenreport.fechPago !== null ? new Date(ccresumenreport.fechPago) : ccresumenreport.fechPago,
@@ -235,6 +252,23 @@ angular.module('integridadUiApp')
             VALOR_RETEN: parseFloat(ccresumenreport.valorReten.toFixed(2)),
             VALOR_NC: parseFloat(ccresumenreport.valorNotac.toFixed(2))
           };
+
+          dataReport.push(data);
+        });
+      } else if (vm.isProductReportList === '7') {
+        _.each(vm.reportList, function(creditsdebtsreport) {
+          var data = {
+            PROVEEDOR: creditsdebtsreport.providerName,
+            FACTURA: creditsdebtsreport.billNumber,
+            FECHA_VENTA: creditsdebtsreport.fechVenta !== null ? new Date(creditsdebtsreport.fechVenta) : creditsdebtsreport.fechVenta,
+            FECHA_VENCE: creditsdebtsreport.fechVence !== null ? new Date(creditsdebtsreport.fechVence) : creditsdebtsreport.fechVence,
+            DIAS_CREDIT: creditsdebtsreport.diasCredit,
+            DIAS_VENCE: creditsdebtsreport.diasVencim,
+            VENTA: parseFloat(creditsdebtsreport.total.toFixed(2)),
+            ABONO: parseFloat(creditsdebtsreport.valorAbono.toFixed(2)),
+            RETEN: parseFloat(creditsdebtsreport.valorReten.toFixed(2)),
+            SALDO: parseFloat(creditsdebtsreport.saldo.toFixed(2))
+          };      
 
           dataReport.push(data);
         });

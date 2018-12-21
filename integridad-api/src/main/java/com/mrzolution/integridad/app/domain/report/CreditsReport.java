@@ -6,6 +6,7 @@ import lombok.Data;
  *
  * @author mrzolutions-daniel
  */
+
 @Data
 public class CreditsReport {
     private String clientName;
@@ -42,5 +43,5 @@ public class CreditsReport {
         this.tplazo = tplazo;
         this.cplazo = cplazo;
         this.qplazo = qplazo;
-    };
+    }
 }

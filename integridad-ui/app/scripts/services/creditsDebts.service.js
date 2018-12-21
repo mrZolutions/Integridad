@@ -6,4 +6,10 @@ angular
                 return response.data;
             });
         };
+
+        this.getAllCreditsDebtsPendingOfDebtsToPayByUserClientId = function(userClientId, dateTwo) {
+            return securityService.get('/creditsdebts/rep/pendingreport/' + userClientId + '/' + dateTwo).then(function successCallback(response) {
+                return response.data;
+            });
+        };
 });

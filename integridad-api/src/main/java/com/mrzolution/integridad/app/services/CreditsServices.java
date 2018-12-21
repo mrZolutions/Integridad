@@ -1,10 +1,5 @@
 package com.mrzolution.integridad.app.services;
 
-/**
- *
- * @author mrzolutions-daniel
- */
-
 import com.google.common.collect.Iterables;
 import com.mrzolution.integridad.app.domain.Credits;
 import com.mrzolution.integridad.app.domain.Payment;
@@ -23,6 +18,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ *
+ * @author mrzolutions-daniel
+ */
 
 @Slf4j
 @Component
@@ -51,21 +50,21 @@ public class CreditsServices {
     }
     
     public List<CreditsReport> getCreditsPendingOfBillByUserClientId(UUID id, long dateTwo) {
-        log.info("CreditsServices getCreditsOfBillByUserClientId: {}", id);
+        log.info("CreditsServices getCreditsPendingOfBillByUserClientId: {}", id);
         Iterable<Credits> credits = creditsRepository.findCreditsPendingOfBillByUserClientId(id, dateTwo);
         List<CreditsReport> creditsReportList = new ArrayList<>();
         
         if (Iterables.size(credits) > 0) {
             Credits firstCredit = Iterables.getFirst(credits, new Credits());
             clientId = firstCredit.getPago().getBill().getClient().getId();
-        }  
+        }
         
-        credits.forEach(credit -> {
+        credits.forEach (credit -> {
             populateChildren(credit);
             
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd");
             String fechaVenta = dateFormat.format(new Date(credit.getPago().getBill().getDateCreated()));
-            String fechaVence = dateFormat.format(new Date(credit.getFecha()));   
+            String fechaVence = dateFormat.format(new Date(credit.getFecha()));
             
             Double sumAbono = Double.valueOf(0);
             Double sumReten = Double.valueOf(0);
@@ -103,7 +102,6 @@ public class CreditsServices {
             
             Date today = new Date();
             int diasVencim = 0;
-            
             try {
                 Date fVence = dateFormat.parse(fechaVence);
                 diasVencim = (int) ((today.getTime()-fVence.getTime())/86400000);
@@ -136,7 +134,6 @@ public class CreditsServices {
                                                          sumAbono, sumReten, sumNotac, saldo, pPlazo, sPlazo, tPlazo, cPlazo, qPlazo);
             creditsReportList.add(saleReport);    
         });
-        
         CreditsReport saleReport = new CreditsReport("SUB-TOTAL ", null, null, null, 0, 0, sumTotal, sumTotalAbono, sumTotalReten, sumTotalNotac, sumTotalValor, 0, 0, 0, 0, 0);
         creditsReportList.add(saleReport);
         

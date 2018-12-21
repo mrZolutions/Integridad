@@ -93,7 +93,7 @@
                   Excel
           </button>
         </div>
-        <div class="form-group col-md-12">
+        <div class="form-group col-md-6">
           <p><b>Cuentas por Cobrar</b></p>
           <button type="button" class="btn btn-primary"
                   ng-click="vm.getCreditsPendingReport()">
@@ -102,6 +102,13 @@
           <button type="button" class="btn btn-primary"
                   ng-click="vm.getCCResumenReport()">
                   Abonos y Otros
+          </button>
+        </div>
+        <div class="form-group col-md-6">
+          <p><b>Cuentas por Pagar</b></p>
+          <button type="button" class="btn btn-primary"
+                  ng-click="vm.getCreditsDebtsPendingReport()">
+                  Ctas Pendientes
           </button>
         </div>
       </div>
@@ -235,9 +242,9 @@
     <table class="table table-striped">
       <thead>
         <tr>
-          <th>Nombre del Cliente</th>
-          <th>N&uacute;mero de Factura</th>
-          <th>Fecha de Emision</th>
+          <th>Cliente</th>
+          <th>Factura</th>
+          <th>Fecha Emision</th>
           <th>Fecha Vence</th>
           <th>Dias Credito</th>
           <th>Dias Vencidos</th>
@@ -280,7 +287,7 @@
     <table class="table table-striped">
       <thead>
         <tr>
-          <th>Nombre del Cliente</th>
+          <th>Cliente</th>
           <th>Identificaci&oacute;n</th>
           <th>N&uacute;mero de Factura</th>
           <th>Valor de la Factura</th>
@@ -327,6 +334,39 @@
           <td>{{data.valorAbono.toFixed(2)}}</td>
           <td>{{data.valorReten.toFixed(2)}}</td>
           <td>{{data.valorNotac.toFixed(2)}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="table-responsive" ng-if="vm.isProductReportList === '7' && vm.reportList !== undefined">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Proveedor</th>
+          <th>Factura</th>
+          <th>Fecha Emision</th>
+          <th>Fecha Vence</th>
+          <th>Dias Credito</th>
+          <th>Dias Vencidos</th>
+          <th>Venta</th>
+          <th>Abonos</th>
+          <th>Retenciones</th>
+          <th>Saldo Pendiente</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="data in vm.reportList | orderBy:'providerName'" >
+          <td>{{data.providerName}}</td>
+          <td>{{data.billNumber}}</td>
+          <td>{{data.fechVenta}}</td>
+          <td>{{data.fechVence}}</td>
+          <td>{{data.diasCredit}}</td>
+          <td>{{data.diasVencim}}</td>
+          <td>{{data.total.toFixed(2)}}</td>
+          <td>{{data.valorAbono.toFixed(2)}}</td>
+          <td>{{data.valorReten.toFixed(2)}}</td>
+          <td>{{data.saldo.toFixed(2)}}</td>
         </tr>
       </tbody>
     </table>
