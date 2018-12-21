@@ -19,6 +19,12 @@ angular
       });
     };
 
+    this.update = function(cuenta) {
+      return securityService.put('/cuenta_contable', cuenta).then(function successCallback(response) {
+        return response.data;
+      });
+    };
+
     this.getLazyByUserClientId = function(id) {
       return securityService.get('/cuenta_contable/lazy/client/' + id).then(function successCallback(response) {
         return response.data;

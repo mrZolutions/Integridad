@@ -27,6 +27,16 @@ public class CuentaContableServices {
 	log.info("CuentaContableServices created id: {}", saved.getId());
 	return saved;
     }
+    
+    public void update(CuentaContable cuentaContable) throws BadRequestException {
+        if (cuentaContable.getId() == null) {
+            throw new BadRequestException("Cuenta Contable Inválida");
+        }
+        log.info("CuentaContableServices update: {}", cuentaContable.getDescription());
+        cuentaContable.setListsNull();
+        CuentaContable updated = cuentaContableRepository.save(cuentaContable);
+        log.info("CuentaContableServices updated DONE id: {}", updated.getId());
+    }
   
     public Iterable<CuentaContable> getAll() {
         Iterable<CuentaContable> result = cuentaContableRepository.findAll();

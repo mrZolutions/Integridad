@@ -282,12 +282,12 @@
 
       <div class="row" print-remove>
         <div class="form-group col-md-12">
-          <button type="button" class="btn btn-primary" ng-click="vm.saveQuotation()" ng-if="vm.newBill"
+          <button type="button" class="btn btn-success" ng-click="vm.saveQuotation()" ng-if="vm.newBill"
                   ng-disabled="vm.bill.total <= 0 || vm.billed"
                   ng-show="vm.bill.claveDeAcceso === undefined">
                   Guardar Cotizacion
           </button>
-          <button print-btn type="button" class="btn btn-success" ng-if="vm.newBill"
+          <button print-btn type="button" class="btn btn-primary" ng-if="vm.newBill"
                   ng-disabled="!vm.billed">
                   Imprimir
           </button>

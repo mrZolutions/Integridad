@@ -358,6 +358,30 @@ angular.module('integridadUiApp')
       vm.totalTotal = (parseFloat(vm.debtsToPay.total)).toFixed(2);
     };
 
+    vm.getRestaSubotal = function() {
+      var totalDebito = vm.subTotal;
+      if (vm.debtsToPay) {
+        _.each (vm.debtsToPay.items, function(detail) {
+          if (detail.tipo === 'DEBITO (D)') {
+            totalDebito = (parseFloat(totalDebito) - parseFloat(detail.base_imponible)).toFixed(2);
+          };
+        });
+      };
+      return totalDebito;
+    };
+
+    vm.getRestaTotalTotal = function() {
+      var totalDebito = vm.totalTotal;
+      if (vm.debtsToPay) {
+        _.each (vm.debtsToPay.items, function(detail) {
+          if (detail.tipo === 'DEBITO (D)') {
+            totalDebito = (parseFloat(totalDebito) - parseFloat(detail.base_imponible)).toFixed(2);
+          };
+        });
+      };
+      return totalDebito;
+    };
+
     vm.editItemTaxes = function(index) {
       vm.item = angular.copy(vm.debtsToPay.items[index]);
       vm.indexEdit = index;

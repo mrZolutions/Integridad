@@ -309,12 +309,12 @@
                     <div class = "col-md-3" ng-if = "vm.item.codigo === 1">
                         <label>Valor</label>
                         <input type = "text" onkeypress = "return ((event.which >= 46 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
-                               class = "form-control" maxlength = "9" ng-model = "vm.item.base_imponible" placeholder = "{{vm.subTotal}}"/>
+                               class = "form-control" maxlength = "9" ng-model = "vm.item.base_imponible" placeholder = "{{vm.getRestaSubotal()}}"/>
                     </div>
                     <div class = "col-md-3" ng-if="vm.item.codigo === 2">
                         <label>Valor</label>
                         <input type = "text" onkeypress = "return ((event.which >= 46 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
-                               class = "form-control" maxlength = "9" ng-model = "vm.item.base_imponible" placeholder = "{{vm.totalTotal}}"/>
+                               class = "form-control" maxlength = "9" ng-model = "vm.item.base_imponible" placeholder = "{{vm.getRestaTotalTotal()}}"/>
                     </div>
                 </div>
             </div>
@@ -490,7 +490,7 @@
                 </div>
             </div>
             <div class = "modal-footer">
-                <button type = "button" title = "Guardar Factura" class = "btn btn-primary"
+                <button type = "button" title = "Guardar Factura" class = "btn btn-success"
                         ng-click = "vm.saveDebtsToPay(vm.debtsToPay); vm.cancel()" ng-disabled = "vm.pagos.length === 0">
                         <span class = "glyphicon glyphicon-floppy-save" aria-hidden = "true"></span>
                 </button>

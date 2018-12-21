@@ -190,6 +190,7 @@ angular.module('integridadUiApp')
 
     function _activate() {
       vm.today = new Date();
+      vm.success = undefined;
       vm.provider = undefined;
       vm.providerToUse = undefined;
       vm.providerList = [];
@@ -215,12 +216,12 @@ angular.module('integridadUiApp')
 
     function update() {
       providerService.update(vm.provider).then(function(response) {
+        _activate();
         if (vm.provider.active) {
           vm.success = 'Registro actualizado con exito';
         } else {
           vm.success = 'Registro eliminado con exito';
         };
-        _activate();
         vm.error = undefined;
       }).catch(function(error) {
         vm.loading = false;

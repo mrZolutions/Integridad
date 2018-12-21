@@ -345,7 +345,7 @@
 
 <div class="row" print-remove>
   <div class="form-group col-md-12">
-    <button type="button" class="btn btn-primary" ng-disabled="vm.bill.total <= 0"
+    <button type="button" class="btn btn-success" ng-disabled="vm.bill.total <= 0"
             ng-show="vm.claveDeAcceso === undefined" ng-click="vm.saveCreditNote()">
       Guardar
     </button>
@@ -353,7 +353,7 @@
       ng-click="vm.cancelCreditNote()">
       Cancelar
     </button>
-    <button print-btn type="button" class="btn btn-success"
+    <button print-btn type="button" class="btn btn-primary"
             ng-disabled="vm.claveDeAcceso === undefined" ng-click="vm.cancelBill()">
       Imprimir
     </button>

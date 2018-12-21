@@ -31,6 +31,19 @@ public class CuentaContableController {
         }
 	return new ResponseEntity<CuentaContable>(response, HttpStatus.CREATED);
     }
+    
+    @RequestMapping(method = RequestMethod.PUT)
+    public ResponseEntity update(@RequestBody CuentaContable cuentaContable) {
+        log.info("CuentaContableController update: {}", cuentaContable);
+        CuentaContable response = null;
+        try {
+            service.update(cuentaContable);
+        } catch (BadRequestException e) {
+            log.error("CuentaContableController create Exception thrown: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+        return new ResponseEntity<Void>(HttpStatus.CREATED);
+    }
   
     @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity getAll() {

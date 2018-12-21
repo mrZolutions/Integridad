@@ -36,7 +36,16 @@
 </div>
 
 <div ng-show="vm.userIntegridad === undefined">
-  <input ng-model="searchText" class="form-control" placeholder="Buscar">
+  <div class="row">
+    <div class="form-group col-md-10">
+      <input ng-model="searchText" class="form-control" placeholder="Buscar">
+    </div>
+    <div class="form-group col-md-1">
+      <button type="button" title = "Agregar Nuevo Usuario" class="btn btn-primary" ng-click="vm.userCreate()">
+              <span class = "glyphicon glyphicon-user" aria-hidden = "true"></span>
+      </button>
+    </div>
+  </div>
   <table class="table table-striped">
     <thead>
       <tr>
@@ -45,11 +54,6 @@
         <th> Ruc </th>
         <th> C&eacute;dula </th>
         <th> Tipo </th>
-        <th>
-          <button type="button" class="btn btn-primary" ng-click="vm.userCreate()">
-            Crear
-          </button>
-        </th>
       </tr>
     </thead>
     <tbody>
@@ -65,15 +69,15 @@
         <td>{{ userEdit.cedula }}</td>
         <td>{{ userEdit.userType.name }}</td>
         <td>
-          <button type="button" class="btn btn-primary" ng-click="vm.userEdit(userEdit)">
-            Editar
+          <button type="button" title = "Editar Usuario" class="btn btn-primary" ng-click="vm.userEdit(userEdit)">
+                  <span class = "glyphicon glyphicon-pencil" aria-hidden = "true"></span>
           </button>
-          <button type="button" class="btn btn-primary" ng-click="vm.userIntegridad=userEdit"
-            data-toggle="modal" data-target="#modalEliminar">
-            Eliminar
+          <button type="button" title = "Eliminar Usuario" class="btn btn-primary" ng-click="vm.userIntegridad=userEdit"
+                  data-toggle="modal" data-target="#modalEliminar">
+                  <span class = "glyphicon glyphicon-trash" aria-hidden = "true"></span>
           </button>
-          <button type="button" class="btn btn-primary" ng-click="vm.userIntegridadResend(userEdit)">
-            Resetear Password
+          <button type="button" title = "Resetear Password" class="btn btn-primary" ng-click="vm.userIntegridadResend(userEdit)">
+                  <span class = "glyphicon glyphicon-wrench" aria-hidden = "true"></span>
           </button>
         </td>
       </tr>
@@ -84,21 +88,19 @@
 
 <div ng-show="vm.userIntegridad">
   <div class="panel panel-default">
-
     <div class="panel-body">
-
       <div class="row">
         <div class="form-group col-md-6">
           <label>Proyecto *: </label>
           <select ng-options="project as project.name for project in vm.projectList  | orderBy:'name'  track by project.id"
-            ng-change="vm.getSubsidiaries()" ng-model="vm.project" class="form-control">
+                  ng-change="vm.getSubsidiaries()" ng-model="vm.project" class="form-control">
           </select>
         </div>
 
         <div class="form-group col-md-6">
           <label>Surcursal *: </label>
           <select ng-options="sub as sub.name for sub in vm.subsidiaryList  | orderBy:'name' track by sub.id"
-            ng-model="vm.userIntegridad.subsidiary" class="form-control" ng-change="vm.getCashiers()">
+                  ng-model="vm.userIntegridad.subsidiary" class="form-control" ng-change="vm.getCashiers()">
           </select>
         </div>
       </div>
@@ -107,7 +109,7 @@
         <div class="form-group col-md-6">
           <label>Caja*: </label>
           <select ng-options="cas as cas.nameNumber for cas in vm.cashierList  | orderBy:'nameNumber' track by cas.id"
-            ng-model="vm.userIntegridad.cashier" class="form-control">
+                  ng-model="vm.userIntegridad.cashier" class="form-control">
           </select>
           <!-- <input type="text" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
           ng-model="vm.userIntegridad.cashier" class="form-control" maxlength="9"> -->
@@ -117,7 +119,7 @@
         <div class="form-group col-md-6">
           <label>Tipo de Usuario *: </label>
           <select ng-options="userType as userType.name for userType in vm.userTypes  | orderBy:'name' track by userType.id"
-            ng-model="vm.userIntegridad.userType" class="form-control" ng-change="vm.getBosses()">
+                  ng-model="vm.userIntegridad.userType" class="form-control" ng-change="vm.getBosses()">
           </select>
         </div>
       </div>
@@ -126,7 +128,7 @@
         <div class="form-group col-md-12">
           <label>Supervisor *: </label>
           <select ng-options="boss as (boss.firstName + ' ' + boss.lastName) for boss in vm.bosses  track by boss.id"
-            ng-model="vm.userIntegridad.user" class="form-control">
+                  ng-model="vm.userIntegridad.user" class="form-control">
           </select>
         </div>
       </div>
@@ -147,13 +149,13 @@
         <div class="form-group col-md-6">
           <label>Tel&eacute;fono: (incluir c&oacute;digo de provincia ej: 02) </label>
           <input type="text" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
-          ng-model="vm.userIntegridad.phone" class="form-control" maxlength="9">
+                 ng-model="vm.userIntegridad.phone" class="form-control" maxlength="9">
         </div>
 
         <div class="form-group col-md-6">
           <label>Tel&eacute;fono celular: </label>
           <input type="text" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
-          ng-model="vm.userIntegridad.celPhone" class="form-control" maxlength="10">
+                 ng-model="vm.userIntegridad.celPhone" class="form-control" maxlength="10">
         </div>
       </div>
 
@@ -178,19 +180,19 @@
         <div class="form-group col-md-6">
           <label>Tipo de Identificacion: </label>
           <select ng-options="item for item in ['Cedula', 'Ruc']"
-          ng-model="vm.typeId" class="form-control"></select>
+                  ng-model="vm.typeId" class="form-control"></select>
         </div>
 
         <div class="form-group col-md-6" ng-show="vm.typeId === 'Cedula'">
           <label>C&eacute;dula *: </label>
           <input type="text" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
-          ng-model="vm.userIntegridad.cedula" class="form-control" maxlength="10">
+                 ng-model="vm.userIntegridad.cedula" class="form-control" maxlength="10">
         </div>
 
         <div class="form-group col-md-6" ng-show="vm.typeId === 'Ruc'">
           <label>Ruc *: </label>
           <input type="text" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
-          ng-model="vm.userIntegridad.ruc" class="form-control" maxlength="13">
+                 ng-model="vm.userIntegridad.ruc" class="form-control" maxlength="13">
         </div>
       </div>
 
@@ -217,13 +219,13 @@
       </div>
     </div>
     <div class="panel-footer">
-      <button type="button" class="btn btn-primary" ng-click="vm.register()"
-        ng-disabled="vm.userIntegridad.email === undefined">
-        Guardar
+      <button type="button" title = "Guardar Usuario" class="btn btn-success" ng-click="vm.register()"
+              ng-disabled="vm.userIntegridad.email === undefined">
+              <span class = "glyphicon glyphicon-floppy-save" aria-hidden = "true"></span>
       </button>
-      <button type="button" class="btn btn-success"
-      ng-click="vm.cancel()">
-        Cancelar
+      <button type="button" title = "Salir" class="btn btn-primary"
+              ng-click="vm.cancel()">
+              <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
       </button>
     </div>
 
@@ -246,8 +248,8 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary" ng-click="vm.remove()" data-dismiss="modal">
-          Eliminar
+        <button type="button" title = "Eliminar Usuario" class="btn btn-primary" ng-click="vm.remove()" data-dismiss="modal">
+                <span class = "glyphicon glyphicon-trash" aria-hidden = "true"></span>
         </button>
       </div>
     </div>

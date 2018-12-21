@@ -17,6 +17,8 @@ angular.module('integridadUiApp')
 
     function _activate() {
       vm.loading = true;
+      vm.error = undefined;
+      vm.success = undefined;
       vm.cuentaSelected = undefined;
       vm.user = $localStorage.user;
       cuentaContableService.getLazyByUserClientId(vm.user.subsidiary.userClient.id).then(function(response) {
@@ -46,12 +48,42 @@ angular.module('integridadUiApp')
       });
     };
 
+    function update() {
+      cuentaContableService.update(vm.cuentaSelected).then(function(response) {
+        _activate();
+        if (vm.cuentaSelected.active) {
+          vm.success = 'Registro actualizado con exito';
+        } else {
+          vm.success = 'Registro eliminado con exito';
+        };
+        vm.error = undefined;
+      }).catch(function(error) {
+        vm.loading = false;
+        vm.error = error.data;
+      });
+    };
+
+    vm.cuentaEdit = function(cuenta) {
+      vm.error = undefined;
+      vm.success = undefined;
+      vm.cuentaSelected = cuenta;
+    };
+
+    vm.remove = function() {
+      vm.cuentaSelected.active = false;
+      update();
+    };
+
     vm.cuentaCreate = function() {
       _initializeCuenta();
     };
 
     vm.save = function() {
-      create();
+      if (vm.cuentaSelected.id) {
+        update();
+      } else {
+        create();
+      };
     };
 
     vm.cancel = function() {
