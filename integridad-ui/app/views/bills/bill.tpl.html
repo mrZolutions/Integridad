@@ -425,7 +425,13 @@
                   ng-if="vm.newBill && !vm.user.cashier.specialPrint"
                   ng-disabled="vm.bill.claveDeAcceso === undefined"
                   ng-click="vm.printToCartAndCancel('printMatrixSectionId')" print-remove>
-                  Imprimir Ticket
+                  Imprime Ticket
+          </button>
+          <button type="button" class="btn btn-success"
+                  ng-if="vm.newBill && !vm.user.cashier.specialPrint"
+                  ng-disabled="vm.bill.claveDeAcceso === undefined"
+                  ng-click="vm.downloadBillTxt('billToDownload')" print-remove>
+                  Descargar TXT
           </button>
         </div>
       </div>
@@ -561,21 +567,81 @@
         <div class="form-group col-md-12">
           <button type="button" class="btn btn-primary"
                   ng-click="vm.clientSelected = undefined">
-            Cancelar
+                  Cancelar
           </button>
           <button print-btn type="button" class="btn btn-primary"
                   ng-if="!vm.newBill && !vm.user.cashier.specialPrint" print-remove>
-            Imprimir
+                  Imprimir
           </button>
           <button type="button" class="btn btn-danger"
                   ng-if="!vm.newBill && !vm.user.cashier.specialPrint"
                   ng-click="vm.printToCart('printMatrixSectionId')" print-remove>
-            Imprimir Ticket
+                  Imprime Ticket
+          </button>
+          <button type="button" class="btn success"
+                  ng-if="!vm.newBill && !vm.user.cashier.specialPrint"
+                  ng-click="vm.downloadBillTxt('billToDownload')" print-remove>
+                  Descargar TXT
           </button>
         </div>
       </div>
     </div>
   </div>
+</div>
+
+<div id="printMatrixSectionEpson" ng-show='false'>
+  ------------------------------
+  {{vm.companyData.userClient.name}}
+  RUC: {{vm.companyData.userClient.ruc}}
+  DIRECCION MATRIZ: {{vm.companyData.userClient.address1}}
+   
+  FACTURA No. {{vm.seqNumber}}
+  CLAVE ACCESO: {{vm.bill.claveDeAcceso}}
+    
+  RAZON SOCIAL: {{vm.clientSelected.name}}
+  IDENTIFICACION: {{vm.clientSelected.identification}}
+  FECHA: {{vm.getDateToPrint() | date :  "dd/MM/yyyy"}}
+  <table width="100%">
+  <tr ng-repeat="detail in vm.bill.details">
+  <td>DESC: {{detail.product.name}}</td>
+  <td>CANT: {{detail.quantity}}&nbsp;</td>
+  <td>P.UNIT: {{detail.costEach}}&nbsp;</td>
+  <td>TOTAL: {{detail.total}}</td>
+  </tr>
+  </table>
+  SUBTOTAL: {{vm.bill.subTotal}}
+  BASE 0%: {{vm.bill.baseNoTaxes}}
+  BASE 12%: {{vm.bill.baseTaxes}}
+  IVA: {{vm.bill.iva}}
+  TOTAL: {{vm.bill.total}}
+  ------------------------------
+</div>
+
+<div id="billToDownload" ng-show='false'>
+  ------------------------------
+  {{vm.companyData.userClient.name}}
+  RUC: {{vm.companyData.userClient.ruc}}
+  DIRECCION MATRIZ: {{vm.companyData.userClient.address1}}
+  
+  FACTURA No. {{vm.seqNumber}}
+  CLAVE ACCESO: {{vm.bill.claveDeAcceso}}
+  
+  RAZON SOCIAL: {{vm.clientSelected.name}}
+  IDENTIFICACION: {{vm.clientSelected.identification}}
+  FECHA: {{vm.getDateToPrint() | date :  "dd/MM/yyyy"}}
+
+  DESCRIPCION | CANTIDAD | P.UNITARIO | TOTAL
+  <table>
+  <tr ng-repeat="detail in vm.bill.details">
+  <td>{{detail.product.name}} | {{detail.quantity}} | {{detail.costEach}} | {{detail.total}}</td>
+  </tr>
+  </table>
+  SUBTOTAL: {{vm.bill.subTotal}}
+  BASE 0%: {{vm.bill.baseNoTaxes}}
+  BASE 12%: {{vm.bill.baseTaxes}}
+  IVA: {{vm.bill.iva}}
+  TOTAL: {{vm.bill.total}}
+  ------------------------------
 </div>
 
 <div id="printMatrixSectionId" ng-show='false'>

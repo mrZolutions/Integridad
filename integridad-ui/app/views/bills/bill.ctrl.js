@@ -503,6 +503,13 @@ angular.module('integridadUiApp')
       popupWinindow.close();
     };
 
+    vm.downloadBillTxt = function(billToDownload) {
+      var a = document.body.appendChild(document.createElement("a"));
+      a.download = "billDownloaded.txt";
+      a.href = "data:text/text," + document.getElementById(billToDownload).innerText;
+      a.click();
+    };
+
     vm.billDeactivate = function() {
       vm.loading = true;
       var index = vm.billList.indexOf(vm.cancelBill);
