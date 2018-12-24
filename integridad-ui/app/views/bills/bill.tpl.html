@@ -630,9 +630,9 @@
   IDENTIFICACION: {{vm.clientSelected.identification}} <br/>
   FECHA: {{vm.getDateToPrint() | date :  "dd/MM/yyyy"}} <br/>
   <table>
-  DESCRIPCION | CANTIDAD | P.UNITARIO | TOTAL
+  DESCRIPCION | CANTIDAD | P.UNITARIO | TOTAL <br/>
   <tr ng-repeat="detail in vm.bill.details">
-  <td>{{detail.product.name}} | {{detail.quantity}} | {{detail.costEach}} | {{detail.total}}</td>
+  <td>{{detail.product.name}} | {{detail.quantity}} | {{detail.costEach}} | {{detail.total}}</td> <br/>
   </tr>
   </table>
   SUBTOTAL: {{vm.bill.subTotal}} <br/>
