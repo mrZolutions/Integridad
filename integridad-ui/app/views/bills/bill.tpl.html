@@ -578,7 +578,7 @@
                   ng-click="vm.printToCart('printMatrixSectionId')" print-remove>
                   Imprime Ticket
           </button>
-          <button type="button" class="btn success"
+          <button type="button" class="btn btn-success"
                   ng-if="!vm.newBill && !vm.user.cashier.specialPrint"
                   ng-click="vm.downloadBillTxt('billToDownload')" print-remove>
                   Descargar TXT
@@ -618,29 +618,28 @@
 </div>
 
 <div id="billToDownload" ng-show='false'>
-  ------------------------------
-  {{vm.companyData.userClient.name}}
-  RUC: {{vm.companyData.userClient.ruc}}
-  DIRECCION MATRIZ: {{vm.companyData.userClient.address1}}
+  ------------------------------ <br/>
+  {{vm.companyData.userClient.name}} <br/>
+  RUC: {{vm.companyData.userClient.ruc}} <br/>
+  DIRECCION MATRIZ: {{vm.companyData.userClient.address1}} <br/>
   
-  FACTURA No. {{vm.seqNumber}}
-  CLAVE ACCESO: {{vm.bill.claveDeAcceso}}
+  FACTURA No. {{vm.seqNumber}} <br/>
+  CLAVE ACCESO: {{vm.bill.claveDeAcceso}} <br/>
   
-  RAZON SOCIAL: {{vm.clientSelected.name}}
-  IDENTIFICACION: {{vm.clientSelected.identification}}
-  FECHA: {{vm.getDateToPrint() | date :  "dd/MM/yyyy"}}
-
-  DESCRIPCION | CANTIDAD | P.UNITARIO | TOTAL
+  RAZON SOCIAL: {{vm.clientSelected.name}} <br/>
+  IDENTIFICACION: {{vm.clientSelected.identification}} <br/>
+  FECHA: {{vm.getDateToPrint() | date :  "dd/MM/yyyy"}} <br/>
   <table>
+  DESCRIPCION | CANTIDAD | P.UNITARIO | TOTAL
   <tr ng-repeat="detail in vm.bill.details">
   <td>{{detail.product.name}} | {{detail.quantity}} | {{detail.costEach}} | {{detail.total}}</td>
   </tr>
   </table>
-  SUBTOTAL: {{vm.bill.subTotal}}
-  BASE 0%: {{vm.bill.baseNoTaxes}}
-  BASE 12%: {{vm.bill.baseTaxes}}
-  IVA: {{vm.bill.iva}}
-  TOTAL: {{vm.bill.total}}
+  SUBTOTAL: {{vm.bill.subTotal}} <br/>
+  BASE 0%: {{vm.bill.baseNoTaxes}} <br/>
+  BASE 12%: {{vm.bill.baseTaxes}} <br/>
+  IVA: {{vm.bill.iva}} <br/>
+  TOTAL: {{vm.bill.total}} <br/>
   ------------------------------
 </div>
 
