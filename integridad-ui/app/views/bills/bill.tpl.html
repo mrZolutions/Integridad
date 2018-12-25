@@ -621,20 +621,18 @@
   ------------------------------ <br/>
   {{vm.companyData.userClient.name}} <br/>
   RUC: {{vm.companyData.userClient.ruc}} <br/>
-  DIRECCION MATRIZ: {{vm.companyData.userClient.address1}} <br/>
-  
+  DIRECCION MATRIZ: {{vm.companyData.userClient.address1}} <br/> <br/>
   FACTURA No. {{vm.seqNumber}} <br/>
-  CLAVE ACCESO: {{vm.bill.claveDeAcceso}} <br/>
-  
+  CLAVE ACCESO: {{vm.bill.claveDeAcceso}} <br/> <br/>
   RAZON SOCIAL: {{vm.clientSelected.name}} <br/>
   IDENTIFICACION: {{vm.clientSelected.identification}} <br/>
   FECHA: {{vm.getDateToPrint() | date :  "dd/MM/yyyy"}} <br/>
-  <table>
   DESCRIPCION | CANTIDAD | P.UNITARIO | TOTAL <br/>
-  <tr ng-repeat="detail in vm.bill.details">
+  <table>
+  <tr ng-repeat="detail in vm.bill.details"> <br/>
   <td>{{detail.product.name}} | {{detail.quantity}} | {{detail.costEach}} | {{detail.total}}</td> <br/>
   </tr>
-  </table>
+  </table> <br/>
   SUBTOTAL: {{vm.bill.subTotal}} <br/>
   BASE 0%: {{vm.bill.baseNoTaxes}} <br/>
   BASE 12%: {{vm.bill.baseTaxes}} <br/>
