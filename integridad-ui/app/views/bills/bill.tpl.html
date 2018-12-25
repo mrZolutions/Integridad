@@ -621,12 +621,12 @@
   ------------------------------ <br/>
   {{vm.companyData.userClient.name}} <br/>
   RUC: {{vm.companyData.userClient.ruc}} <br/>
-  DIRECCION MATRIZ: {{vm.companyData.userClient.address1}} <br/> <br/>
+  DIRECCION MATRIZ: {{vm.companyData.userClient.address1}} <br/><br/>
   FACTURA No. {{vm.seqNumber}} <br/>
-  CLAVE ACCESO: {{vm.bill.claveDeAcceso}} <br/> <br/>
+  CLAVE ACCESO: {{vm.bill.claveDeAcceso}} <br/><br/>
   RAZON SOCIAL: {{vm.clientSelected.name}} <br/>
   IDENTIFICACION: {{vm.clientSelected.identification}} <br/>
-  FECHA: {{vm.getDateToPrint() | date :  "dd/MM/yyyy"}} <br/>
+  FECHA: {{vm.getDateToPrint() | date :  "dd/MM/yyyy"}} <br/><br/>
   DESCRIPCION | CANTIDAD | P.UNITARIO | TOTAL <br/>
   <table>
   <tr ng-repeat="detail in vm.bill.details"> <br/>
