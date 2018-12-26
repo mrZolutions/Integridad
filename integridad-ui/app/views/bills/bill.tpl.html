@@ -627,10 +627,10 @@
   RAZON SOCIAL: {{vm.clientSelected.name}} <br/>
   IDENTIFICACION: {{vm.clientSelected.identification}} <br/>
   FECHA: {{vm.getDateToPrint() | date :  "dd/MM/yyyy"}} <br/>
-  *| DESCRIPCION - CANTIDAD - P.UNITARIO - TOTAL *| <br/>
+  *| DESCRIPCION ++ CANTIDAD ++ P.UNITARIO ++ TOTAL *| <br/>
   <table>
   <tr ng-repeat="detail in vm.bill.details">
-  <td>*| {{detail.product.name}} - {{detail.quantity}} - {{detail.costEach}} - {{detail.total}} |*</td> <br/>
+  <td>*| {{detail.product.name}} ++ {{detail.quantity}} ++ {{detail.costEach}} ++ {{detail.total}} |*</td> <br/>
   </tr>
   </table> <br/>
   

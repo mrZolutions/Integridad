@@ -508,6 +508,7 @@ angular.module('integridadUiApp')
       a.download = "billDownloaded.txt";
       a.href = "data:text/text," + document.getElementById(billToDownloadEpsonTM20).innerText;
       a.click();
+      document.body.removeChild(a);
     };
 
     vm.billDeactivate = function() {
