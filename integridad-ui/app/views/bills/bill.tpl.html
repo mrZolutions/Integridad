@@ -630,7 +630,8 @@
   | DESCRP ++ CANT ++ P.UNIT ++ TOTAL |<br/>
   <table width="100%">
   <tr ng-repeat="detail in vm.bill.details"><br/>
-  <td>| {{detail.product.name}} ++ {{detail.quantity}} ++ {{detail.costEach}} ++ {{detail.total}} |</td><br/>
+  <td>| {{detail.product.name}}</td>
+  <td>{{detail.quantity}} ++ &#36;{{detail.costEach}} ++ &#36;{{detail.total}} |</td>
   </tr>
   </table><br/>
   
