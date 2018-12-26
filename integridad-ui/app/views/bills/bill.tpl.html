@@ -147,7 +147,7 @@
         </div>
       </div>
 
-      <div class="row" print-remove>
+      <div class="row table-responsive" print-remove>
         <div class="form-group col-md-12">
           <table width="100%">
             <tr>
@@ -589,58 +589,29 @@
   </div>
 </div>
 
-<div id="printMatrixSectionEpson" ng-show='false'>
-  ------------------------------
-  {{vm.companyData.userClient.name}}
-  RUC: {{vm.companyData.userClient.ruc}}
-  DIRECCION MATRIZ: {{vm.companyData.userClient.address1}}
-   
-  FACTURA No. {{vm.seqNumber}}
-  CLAVE ACCESO: {{vm.bill.claveDeAcceso}}
-    
-  RAZON SOCIAL: {{vm.clientSelected.name}}
-  IDENTIFICACION: {{vm.clientSelected.identification}}
-  FECHA: {{vm.getDateToPrint() | date :  "dd/MM/yyyy"}}
+<div id="billToDownloadEpsonTM20" ng-show='false'>
+  <p>------------------------------</p><br>
+  <p>{{vm.companyData.userClient.name}}</p><br>
+  <p>RUC: {{vm.companyData.userClient.ruc}}</p><br>
+  <p>DIRECCION MATRIZ: {{vm.companyData.userClient.address1}}</p><br>
+  <p>FACTURA No. {{vm.seqNumber}}</p><br>
+  <p>CLAVE ACCESO: {{vm.bill.claveDeAcceso}}</p><br><br>
+  <p>RAZON SOCIAL: {{vm.clientSelected.name}}</p><br>
+  <p>IDENTIFICACION: {{vm.clientSelected.identification}}</p><br>
+  <p>FECHA: {{vm.getDateToPrint() | date :  "dd/MM/yyyy"}}</p><br>
+  <p>| DESCRP ++ CANT ++ P.UNIT ++ TOTAL |</p><br>
   <table width="100%">
   <tr ng-repeat="detail in vm.bill.details">
-  <td>DESC: {{detail.product.name}}</td>
-  <td>CANT: {{detail.quantity}}&nbsp;</td>
-  <td>P.UNIT: {{detail.costEach}}&nbsp;</td>
-  <td>TOTAL: {{detail.total}}</td>
+  <td>| {{detail.product.name}} ++ {{detail.quantity}} ++ &#36;{{detail.costEach}} ++ &#36;{{detail.total}} |<br></br></td>
   </tr>
-  </table>
-  SUBTOTAL: {{vm.bill.subTotal}}
-  BASE 0%: {{vm.bill.baseNoTaxes}}
-  BASE 12%: {{vm.bill.baseTaxes}}
-  IVA: {{vm.bill.iva}}
-  TOTAL: {{vm.bill.total}}
-  ------------------------------
-</div>
-
-<div id="billToDownloadEpsonTM20" ng-show='false'>
-  ------------------------------<br/>
-  {{vm.companyData.userClient.name}}<br/>
-  RUC: {{vm.companyData.userClient.ruc}}<br/>
-  DIRECCION MATRIZ: {{vm.companyData.userClient.address1}}<br/>
-  FACTURA No. {{vm.seqNumber}}<br/>
-  CLAVE ACCESO: {{vm.bill.claveDeAcceso}}<br/><br/>
-  RAZON SOCIAL: {{vm.clientSelected.name}} <br/>
-  IDENTIFICACION: {{vm.clientSelected.identification}}<br/>
-  FECHA: {{vm.getDateToPrint() | date :  "dd/MM/yyyy"}}<br/>
-  | DESCRP ++ CANT ++ P.UNIT ++ TOTAL |<br/>
-  <table width="100%">
-  <tr ng-repeat="detail in vm.bill.details"><br/>
-  <td>| {{detail.product.name}}</td>
-  <td>{{detail.quantity}} ++ &#36;{{detail.costEach}} ++ &#36;{{detail.total}} |</td>
-  </tr>
-  </table><br/>
+  </table><br>
   
-  SUBTOTAL: {{vm.bill.subTotal}} <br/>
-  BASE 0%: {{vm.bill.baseNoTaxes}} <br/>
-  BASE 12%: {{vm.bill.baseTaxes}} <br/>
-  IVA: {{vm.bill.iva}} <br/>
-  TOTAL: {{vm.bill.total}} <br/>
-  ------------------------------
+  <p>SUBTOTAL: {{vm.bill.subTotal}}</p><br>
+  <p>BASE 0%: {{vm.bill.baseNoTaxes}}</p><br>
+  <p>BASE 12%: {{vm.bill.baseTaxes}}</p><br>
+  <p>IVA: {{vm.bill.iva}}</p><br>
+  <p>TOTAL: {{vm.bill.total}}</p><br>
+  <p>------------------------------</p>
 </div>
 
 <div id="printMatrixSectionId" ng-show='false'>
