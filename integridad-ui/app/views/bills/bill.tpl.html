@@ -599,10 +599,10 @@
   <p>RAZON SOCIAL: {{vm.clientSelected.name}}</p><br>
   <p>IDENTIFICACION: {{vm.clientSelected.identification}}</p><br>
   <p>FECHA: {{vm.getDateToPrint() | date:  "dd/MM/yyyy"}}</p><br><br>
-  <p>CANT.&#160;DESCRIP.&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;P.UNT.&#160;&#160;TOTAL</p><br>
+  <p>CANT... DESCRIP... P.UNT... TOTAL</p><br>
   <table width="100%">
   <tr ng-repeat="detail in vm.bill.details">
-  <td>{{detail.quantity}}&#160;&#160;&#160;&#160;&#160;{{(detail.product.name).substr(0,16)}}&#160;&#160;&#36;{{detail.costEach}}&#160;&#160;&#36;{{detail.total}}<br></br></td>
+  <td>{{detail.quantity}}... {{(detail.product.name).substr(0,16)}}... &#36;{{detail.costEach}}... &#36;{{detail.total}}<br></br></td>
   </tr>
   </table><br>
   
