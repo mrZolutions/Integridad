@@ -101,6 +101,12 @@ h1, h2, h3, h4, h5, p, a {
   margin: 30px 0;
 }
 
+/* Exclusivamente para dar forma al ticket de la Impresora TM-20*/
+.users {
+  table-layout: fixed;
+  width: 100%;
+}
+
 /* Main marketing message and sign up button */
 .jumbotron {
   text-align: center;

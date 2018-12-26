@@ -598,11 +598,12 @@
   <p>CLAVE ACCESO: {{vm.bill.claveDeAcceso}}</p><br><br>
   <p>RAZON SOCIAL: {{vm.clientSelected.name}}</p><br>
   <p>IDENTIFICACION: {{vm.clientSelected.identification}}</p><br>
-  <p>FECHA: {{vm.getDateToPrint() | date :  "dd/MM/yyyy"}}</p><br>
-  <p>| DESCRP ++ CANT ++ P.UNIT ++ TOTAL |</p><br>
-  <table width="100%">
+  <p>FECHA: {{vm.getDateToPrint() | date:  "dd/MM/yyyy"}}</p><br>
+  <p>DESCRP&nbsp;CANT&nbsp;P.UNIT&nbsp;TOTAL</p><br>
+  <p>------------------------------</p><br>
+  <table class="users">
   <tr ng-repeat="detail in vm.bill.details">
-  <td>| {{detail.product.name}} ++ {{detail.quantity}} ++ &#36;{{detail.costEach}} ++ &#36;{{detail.total}} |<br></br></td>
+  <td witdh="15px">{{detail.product.name}}</td><td>&nbsp;{{detail.quantity}}&nbsp;&#36;{{detail.costEach}}&nbsp;&#36;{{detail.total}}<br></br></td>
   </tr>
   </table><br>
   
