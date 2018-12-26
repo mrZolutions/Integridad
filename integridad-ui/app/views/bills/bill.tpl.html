@@ -284,7 +284,7 @@
     <div class="panel-heading">
       <b>Detalle</b>
     </div>
-    <div class="panel-body">
+    <div class="panel-body table-responsive">
       <div class="row">
         <div class="form-group col-md-12">
           <table class="table table-striped">
@@ -406,32 +406,32 @@
       <div class="row" print-remove>
         <div class="form-group col-md-12">
           <button type="button" class="btn btn-primary" ng-if="vm.newBill"
+                  ng-click="vm.cancelBill()">
+                  Cancelar
+          </button>
+          <button type="button" class="btn btn-primary" ng-if="vm.newBill"
                   data-toggle="modal" data-target="#modalAddPago"
                   ng-disabled="vm.bill.total <= 0 || vm.billed"
                   ng-show="vm.bill.claveDeAcceso === undefined">
                   Forma de Pago
           </button>
-          <button type="button" class="btn btn-primary" ng-if="vm.newBill"
-                  ng-click="vm.cancelBill()">
-                  Cancelar
-          </button>
-          <button print-btn type="button" class="btn btn-success"
+          <button print-btn type="button" class="btn btn-primary"
                   ng-if="vm.newBill && !vm.user.cashier.specialPrint"
                   ng-disabled="vm.bill.claveDeAcceso === undefined"
                   ng-click="vm.cancelBill()">
-            Imprimir
+                  Factura
           </button>
           <button type="button" class="btn btn-danger"
                   ng-if="vm.newBill && !vm.user.cashier.specialPrint"
                   ng-disabled="vm.bill.claveDeAcceso === undefined"
                   ng-click="vm.printToCartAndCancel('printMatrixSectionId')" print-remove>
-                  Imprime Ticket
+                  Ticket
           </button>
           <button type="button" class="btn btn-success"
                   ng-if="vm.newBill && !vm.user.cashier.specialPrint"
                   ng-disabled="vm.bill.claveDeAcceso === undefined"
                   ng-click="vm.downloadBillTxtTM20('billToDownloadEpsonTM20')" print-remove>
-                  Descargar TXT
+                  Archivo TXT
           </button>
         </div>
       </div>
@@ -571,17 +571,17 @@
           </button>
           <button print-btn type="button" class="btn btn-primary"
                   ng-if="!vm.newBill && !vm.user.cashier.specialPrint" print-remove>
-                  Imprimir
+                  Factura
           </button>
           <button type="button" class="btn btn-danger"
                   ng-if="!vm.newBill && !vm.user.cashier.specialPrint"
                   ng-click="vm.printToCart('printMatrixSectionId')" print-remove>
-                  Imprime Ticket
+                  Ticket
           </button>
           <button type="button" class="btn btn-success"
                   ng-if="!vm.newBill && !vm.user.cashier.specialPrint"
                   ng-click="vm.downloadBillTxtTM20('billToDownloadEpsonTM20')" print-remove>
-                  Descargar TXT
+                  Archivo TXT
           </button>
         </div>
       </div>
@@ -627,10 +627,10 @@
   RAZON SOCIAL: {{vm.clientSelected.name}} <br/>
   IDENTIFICACION: {{vm.clientSelected.identification}}<br/>
   FECHA: {{vm.getDateToPrint() | date :  "dd/MM/yyyy"}}<br/>
-  *| DESCRIPCION ++ CANTIDAD ++ P.UNITARIO ++ TOTAL *|<br/>
-  <table>
+  | DESCRP ++ CANT ++ P.UNIT ++ TOTAL |<br/>
+  <table width="100%">
   <tr ng-repeat="detail in vm.bill.details"><br/>
-  <td>*| {{detail.product.name}} ++ {{detail.quantity}} ++ {{detail.costEach}} ++ {{detail.total}} |*</td>
+  <td>| {{detail.product.name}} ++ {{detail.quantity}} ++ {{detail.costEach}} ++ {{detail.total}} |</td><br/>
   </tr>
   </table><br/>
   

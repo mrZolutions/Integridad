@@ -505,8 +505,8 @@ angular.module('integridadUiApp')
 
     vm.downloadBillTxtTM20 = function(billToDownloadEpsonTM20) {
       var a = document.body.appendChild(document.createElement("a"));
-      a.download = "billDownloaded.txt";
       a.href = "data:text/plain; charset=utf-8," + document.getElementById(billToDownloadEpsonTM20).innerText;
+      a.download = "billDownloaded.txt";
       a.click();
       document.body.removeChild(a);
     };
