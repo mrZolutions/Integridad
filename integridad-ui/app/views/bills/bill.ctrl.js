@@ -503,10 +503,10 @@ angular.module('integridadUiApp')
       popupWinindow.close();
     };
 
-    vm.downloadBillTxt = function(billToDownload) {
+    vm.downloadBillTxtTM20 = function(billToDownloadEpsonTM20) {
       var a = document.body.appendChild(document.createElement("a"));
       a.download = "billDownloaded.txt";
-      a.href = "data:text/text," + document.getElementById(billToDownload).innerText;
+      a.href = "data:text/text," + document.getElementById(billToDownloadEpsonTM20).innerText;
       a.click();
     };
 

@@ -430,7 +430,7 @@
           <button type="button" class="btn btn-success"
                   ng-if="vm.newBill && !vm.user.cashier.specialPrint"
                   ng-disabled="vm.bill.claveDeAcceso === undefined"
-                  ng-click="vm.downloadBillTxt('billToDownload')" print-remove>
+                  ng-click="vm.downloadBillTxtTM20('billToDownloadEpsonTM20')" print-remove>
                   Descargar TXT
           </button>
         </div>
@@ -580,7 +580,7 @@
           </button>
           <button type="button" class="btn btn-success"
                   ng-if="!vm.newBill && !vm.user.cashier.specialPrint"
-                  ng-click="vm.downloadBillTxt('billToDownload')" print-remove>
+                  ng-click="vm.downloadBillTxtTM20('billToDownloadEpsonTM20')" print-remove>
                   Descargar TXT
           </button>
         </div>
@@ -617,22 +617,23 @@
   ------------------------------
 </div>
 
-<div id="billToDownload" ng-show='false'>
+<div id="billToDownloadEpsonTM20" ng-show='false'>
   ------------------------------ <br/>
   {{vm.companyData.userClient.name}} <br/>
   RUC: {{vm.companyData.userClient.ruc}} <br/>
-  DIRECCION MATRIZ: {{vm.companyData.userClient.address1}} <br/><br/>
+  DIRECCION MATRIZ: {{vm.companyData.userClient.address1}} <br/>
   FACTURA No. {{vm.seqNumber}} <br/>
   CLAVE ACCESO: {{vm.bill.claveDeAcceso}} <br/><br/>
   RAZON SOCIAL: {{vm.clientSelected.name}} <br/>
   IDENTIFICACION: {{vm.clientSelected.identification}} <br/>
-  FECHA: {{vm.getDateToPrint() | date :  "dd/MM/yyyy"}} <br/><br/>
-  DESCRIPCION | CANTIDAD | P.UNITARIO | TOTAL <br/>
+  FECHA: {{vm.getDateToPrint() | date :  "dd/MM/yyyy"}} <br/>
+  *| DESCRIPCION - CANTIDAD - P.UNITARIO - TOTAL *| <br/>
   <table>
-  <tr ng-repeat="detail in vm.bill.details"> <br/>
-  <td>{{detail.product.name}} | {{detail.quantity}} | {{detail.costEach}} | {{detail.total}}</td> <br/>
+  <tr ng-repeat="detail in vm.bill.details">
+  <td>*| {{detail.product.name}} - {{detail.quantity}} - {{detail.costEach}} - {{detail.total}} |*</td> <br/>
   </tr>
   </table> <br/>
+  
   SUBTOTAL: {{vm.bill.subTotal}} <br/>
   BASE 0%: {{vm.bill.baseNoTaxes}} <br/>
   BASE 12%: {{vm.bill.baseTaxes}} <br/>
