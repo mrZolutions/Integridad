@@ -33,7 +33,7 @@
     </div>
 </div>
 
-<div ng-show = "vm.providerSelected === undefined && vm.debtsToPayList === undefined && vm.providerDebtsList === undefined && vm.debtsProviderSelected === undefinded">
+<div class="table-responsive" ng-show = "vm.providerSelected === undefined && vm.debtsToPayList === undefined && vm.providerDebtsList === undefined && vm.debtsProviderSelected === undefinded">
     <div class = "row">
         <div class = "form-group col-md-12">
             <input ng-model = "searchText" class = "form-control" placeholder = "Buscar Proveedores">
@@ -192,7 +192,7 @@
                     </button>
                 </div>
             </div>
-            <div class="row" ng-show="vm.cuentaContableList !== undefined">
+            <div class="table-responsive" class="row" ng-show="vm.cuentaContableList !== undefined">
                 <div class="form-group col-md-12">
                     <table class="table table-striped">
                         <thead>
@@ -228,7 +228,7 @@
                     <dir-pagination-controls pagination-id = "taxesPagination"></dir-pagination-controls>
                 </div>
             </div>
-            <div class = "row">
+            <div class = "row table-responsive">
                 <div class = "form-group col-md-12">
                     <table class = "table table-striped">
                         <thead>
@@ -505,7 +505,7 @@
 <!--FINAL SECCIÓN DE INGRESO DE DETALLES DE FACTURA PARA CTAS X PAGAR-->
 
 <!--SECCIÓN DE CARGA DE LOS DEBTS POR PROVEEDOR PARA EL PAGO DE ABONOS-->
-<div ng-show = "vm.debtsToPayList !== undefined">
+<div class="table-responsive" ng-show = "vm.debtsToPayList !== undefined">
     <div class = "panel panel-default">
         <div class = "panel-heading">
             <h4>Pagos y Abonos</h4>
@@ -737,7 +737,7 @@
 <!--FINAL SECCIÓN DE CARGA DE LOS DEBTS POR PROVEEDOR PARA EL PAGO DE ABONOS-->
 
 <!--SECCIÓN DE CONSULTA DE FACTURAS POR PROVEEDOR-->
-<div ng-show = "vm.providerDebtsList !== undefined">
+<div class="table-responsive" ng-show = "vm.providerDebtsList !== undefined">
     <div class = "panel panel-default">
         <div class = "panel-heading">
             <h4>Consulta de Facturas</h4>
@@ -785,7 +785,7 @@
 </div>
 <!--FINAL SECCIÓN DE CONSULTA DE FACTURAS POR PROVEEDOR-->
 
-<div ng-show = "vm.debtsProviderSelected !== undefined" id = "printArea" print-section>
+<div class="table-responsive" ng-show = "vm.debtsProviderSelected !== undefined" id = "printArea" print-section>
     <div class = "panel panel-default">
         <div class = "panel-heading">
             <h4>Factura Nro: {{vm.billNumber}}</h4>

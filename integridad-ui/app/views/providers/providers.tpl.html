@@ -35,7 +35,7 @@
   </div>
 </div>
 
-<div ng-show="vm.provider === undefined && vm.retention === undefined && vm.debtsToPay === undefined">
+<div class="table-responsive" ng-show="vm.provider === undefined && vm.retention === undefined && vm.debtsToPay === undefined">
   <div class="row">
     <div class="form-group col-md-10">
       <input ng-model="searchText" class="form-control" placeholder="Buscar">
@@ -81,7 +81,7 @@
   </table>
 </div>
 
-<div ng-show="vm.provider !== undefined">
+<div class="table-responsive" ng-show="vm.provider !== undefined">
   <div class="panel panel-default">
     <div class="panel-heading">
       <b>Datos del Proveedor</b>
@@ -195,7 +195,7 @@
 </div>
 
 <!--INICIO DEL MODULO DE RETENCIONES-->
-<div ng-show="vm.retention !== undefined && !vm.retentionCreated">
+<div class="table-responsive" ng-show="vm.retention !== undefined && !vm.retentionCreated">
   <div class="panel panel-default">
     <div class="panel-heading">
       <b>Datos para La Retenci&oacute;n</b>
@@ -401,7 +401,7 @@
   </div>
 </div>
 
-<div ng-show="vm.retentionCreated" id="printArea" print-section>
+<div class="table-responsive" ng-show="vm.retentionCreated" id="printArea" print-section>
   <div class="panel panel-default">
     <div class="panel-heading">
       <b>Datos del Cliente</b>

@@ -35,7 +35,7 @@
   </div>
 </div>
 
-<div ng-show="vm.clientSelected === undefined && vm.billList === undefined">
+<div class="table-responsive" ng-show="vm.clientSelected === undefined && vm.billList === undefined">
   <div class="row">
     <div class="form-group col-md-10">
       <input ng-model="searchText" class="form-control" placeholder="Buscar">
@@ -79,7 +79,7 @@
   </table>
 </div>
 
-<div ng-show="vm.billList !== undefined">
+<div class="table-responsive" ng-show="vm.billList !== undefined">
   <input ng-model="searchText" class="form-control" placeholder="Buscar">
   <table class="table table-striped">
     <thead>
@@ -125,7 +125,7 @@
   </div>
 </div>
 
-<div ng-show="vm.clientSelected !== undefined" id="printArea" print-section>
+<div class="table-responsive" ng-show="vm.clientSelected !== undefined" id="printArea" print-section>
   <div class="panel panel-default">
     <div class="panel-heading" print-remove>
       <b>Datos del Cliente</b>
@@ -618,21 +618,21 @@
 </div>
 
 <div id="billToDownloadEpsonTM20" ng-show='false'>
-  ------------------------------ <br/>
-  {{vm.companyData.userClient.name}} <br/>
-  RUC: {{vm.companyData.userClient.ruc}} <br/>
-  DIRECCION MATRIZ: {{vm.companyData.userClient.address1}} <br/>
-  FACTURA No. {{vm.seqNumber}} <br/>
-  CLAVE ACCESO: {{vm.bill.claveDeAcceso}} <br/><br/>
+  ------------------------------<br/>
+  {{vm.companyData.userClient.name}}<br/>
+  RUC: {{vm.companyData.userClient.ruc}}<br/>
+  DIRECCION MATRIZ: {{vm.companyData.userClient.address1}}<br/>
+  FACTURA No. {{vm.seqNumber}}<br/>
+  CLAVE ACCESO: {{vm.bill.claveDeAcceso}}<br/><br/>
   RAZON SOCIAL: {{vm.clientSelected.name}} <br/>
-  IDENTIFICACION: {{vm.clientSelected.identification}} <br/>
-  FECHA: {{vm.getDateToPrint() | date :  "dd/MM/yyyy"}} <br/>
-  *| DESCRIPCION ++ CANTIDAD ++ P.UNITARIO ++ TOTAL *| <br/>
+  IDENTIFICACION: {{vm.clientSelected.identification}}<br/>
+  FECHA: {{vm.getDateToPrint() | date :  "dd/MM/yyyy"}}<br/>
+  *| DESCRIPCION ++ CANTIDAD ++ P.UNITARIO ++ TOTAL *|<br/>
   <table>
-  <tr ng-repeat="detail in vm.bill.details">
-  <td>*| {{detail.product.name}} ++ {{detail.quantity}} ++ {{detail.costEach}} ++ {{detail.total}} |*</td> <br/>
+  <tr ng-repeat="detail in vm.bill.details"><br/>
+  <td>*| {{detail.product.name}} ++ {{detail.quantity}} ++ {{detail.costEach}} ++ {{detail.total}} |*</td>
   </tr>
-  </table> <br/>
+  </table><br/>
   
   SUBTOTAL: {{vm.bill.subTotal}} <br/>
   BASE 0%: {{vm.bill.baseNoTaxes}} <br/>

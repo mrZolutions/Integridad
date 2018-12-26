@@ -36,7 +36,7 @@
   </div>
   
   <!--SECCIÓN DE CARGA DE LOS LOS CLIENTES-->
-  <div ng-show="vm.billList === undefined && vm.clientSelected === undefined">
+  <div class="table-responsive" ng-show="vm.billList === undefined && vm.clientSelected === undefined">
     <div class="row">
       <div class="form-group col-md-12">
         <input ng-model="searchText" class="form-control" placeholder="Buscar Clientes">
@@ -73,7 +73,7 @@
   </div>
   
   <!--SECCIÓN DE CARGA DE LAS FACTURAS DE LOS CLIENTES-->
-  <div ng-show="vm.billList !== undefined && vm.retentionClient === undefined">
+  <div class="table-responsive" ng-show="vm.billList !== undefined && vm.retentionClient === undefined">
     <div class="panel panel-default">
       <div class="panel-heading">
         <b>Listado de Facturas Pertenecientes a: {{vm.clientName}}</b>
@@ -326,7 +326,7 @@
   </div>
   
   <!--RETENCIONES DE FACTURAS DE CLIENTES-->
-  <div ng-show="vm.retentionClient !== undefined && !vm.retentionClientCreated">
+  <div class="table-responsive" ng-show="vm.retentionClient !== undefined && !vm.retentionClientCreated">
     <div class="panel panel-default">
       <div class="panel-heading">
         <b>Retenci&oacute;n de Factura No. {{vm.billNumber}}</b>
@@ -481,7 +481,7 @@
     </div>   
   </div>
   
-  <div ng-show="vm.retentionClientCreated">
+  <div class="table-responsive" ng-show="vm.retentionClientCreated">
     <div class="panel panel-default">
       <div class="panel-heading">
         <h4>Comprobante</h4>
