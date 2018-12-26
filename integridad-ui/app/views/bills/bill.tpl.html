@@ -600,10 +600,9 @@
   <p>IDENTIFICACION: {{vm.clientSelected.identification}}</p><br>
   <p>FECHA: {{vm.getDateToPrint() | date:  "dd/MM/yyyy"}}</p><br>
   <p>DESCRP&nbsp;CANT&nbsp;P.UNIT&nbsp;TOTAL</p><br>
-  <p>------------------------------</p><br>
-  <table class="users">
+  <table class="table users">
   <tr ng-repeat="detail in vm.bill.details">
-  <td witdh="20px">{{detail.product.name}}</td><td>&nbsp;{{detail.quantity}}&nbsp;&#36;{{detail.costEach}}&nbsp;&#36;{{detail.total}}<br></br></td>
+  <td>{{(detail.product.name).substr(0,15)}}</td><td>&nbsp;{{detail.quantity}}&nbsp;&#36;{{detail.costEach}}&nbsp;&#36;{{detail.total}}<br></br></td>
   </tr>
   </table><br>
   
