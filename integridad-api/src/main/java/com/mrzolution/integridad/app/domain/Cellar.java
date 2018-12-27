@@ -30,6 +30,12 @@ public class Cellar {
     private String statusIngreso;
     private String whNumberSeq;
     private boolean active;
+    private double iva;
+    private double ice;
+    private double total;
+    private double subTotal;
+    private double baseNoTaxes;
+    private double baseTaxes;
     
     @ManyToOne
     @JoinColumn(name = "warehouse_id")
@@ -48,10 +54,10 @@ public class Cellar {
     private UserIntegridad userIntegridad;
     
     @OneToMany(mappedBy = "cellar", cascade = CascadeType.ALL)
-    private List<DetailCellar> detailCellar;
+    private List<DetailCellar> detailsCellar;
     
     public void setListsNull() {
-        detailCellar = null;
+        detailsCellar = null;
     }
     
     public void setFatherListToNull() {

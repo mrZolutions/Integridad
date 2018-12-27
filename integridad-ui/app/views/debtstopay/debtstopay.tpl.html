@@ -19,7 +19,7 @@
 
 <div class="form-group col-md-12">
 <div class = "header">
-    <h4>Cuentas por Pagar</h4>
+    <h4><b>Cuentas por Pagar</b></h4>
 </div>
 
 <div class = "row" ng-show = "vm.error !== undefined">
@@ -60,8 +60,6 @@
                 <td>{{provider.ruc_type}}</td>
                 <td>{{provider.ruc}}</td>
                 <td>
-                </td>
-                <td>
                     <button type = "button" title = "Ingreso de Facturas" class = "btn btn-primary btn-sm" ng-click = "vm.providerSelect(provider)">
                             <span class = "glyphicon glyphicon-list-alt" aria-hidden = "true"></span>
                     </button>
@@ -77,7 +75,7 @@
     </table>
 </div>
 
-<!--SECCIÓN DE INGRESO DE DETALLES DE FACTURA PARA CTAS X PAGAR -->
+<!--SECCIÓN DE INGRESO DE DETALLES DE FACTURA PARA CTAS X PAGAR-->
 <div ng-show="vm.providerSelected !== undefined">
     <div class="panel panel-default">
         <div class="panel-heading">
@@ -93,7 +91,7 @@
                     {{vm.debtsToPay.provider.codeIntegridad}}
                 </div>
                 <div class="form-group col-md-6">
-                    <label>RUC / CEDULA:</label>
+                    <label>RUC / CEDULA / PASAPORTE:</label>
                     {{vm.debtsToPay.provider.ruc}}
                 </div>
             </div>
@@ -438,7 +436,7 @@
                     <div class = "form-group col-md-6" ng-if = "vm.medio.medio === 'efectivo' || vm.medio.medio === 'dinero_electronico_ec'">
                         <b>VALOR: </b>
                         <input type = "text" onkeypress = "return ((event.which >= 46 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
-                                ng-model = "vm.medio.total" class = "form-control" maxlength = "9">
+                               ng-model = "vm.medio.total" class = "form-control" maxlength = "9">
                     </div>
                     <div class = "form-group col-md-6" ng-if = "vm.medio.medio !== 'efectivo' && vm.medio.medio !== 'dinero_electronico_ec'">
                         <b>VALOR: </b><br />
@@ -446,7 +444,7 @@
                     </div>
                     <div class = "form-group col-md-4">
                         <br/>
-                        <button type = "button" title = "Agregar" class = "btn btn-primary" ng-click = "vm.addPago()"
+                        <button type = "button" title = "Agregar Pago" class = "btn btn-primary" ng-click = "vm.addPago()"
                                 ng-disabled = "vm.medio.medio === undefinded || vm.medio.total === undefined">
                                 <span class = "glyphicon glyphicon-plus" aria-hidden = "true"></span>
                         </button>
@@ -472,7 +470,7 @@
                                     <td>{{ pago.medio }}</td>
                                     <td>{{ pago.total }}</td>
                                     <td>
-                                        <button type = "button" title = "Eliminar" class = "btn btn-primary" ng-click = "vm.removePago($index)">
+                                        <button type = "button" title = "Eliminar Pago" class = "btn btn-primary" ng-click = "vm.removePago($index)">
                                                 <span class = "glyphicon glyphicon-trash" aria-hidden = "true"></span>
                                         </button>
                                     </td>

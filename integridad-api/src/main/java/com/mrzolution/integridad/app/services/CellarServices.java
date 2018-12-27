@@ -69,7 +69,7 @@ public class CellarServices {
         return cellars;
     }
     
-    public Cellar getById(UUID id) {
+    public Cellar getCellarById(UUID id) {
         log.info("CellarServices getById: {}", id);
         Cellar retrieved = cellarRepository.findOne(id);
         if (retrieved != null) {
@@ -93,11 +93,11 @@ public class CellarServices {
     }
     
     public Cellar create(Cellar cellar) throws BadRequestException {
-        List<DetailCellar> detailCellar = cellar.getDetailCellar();
-        if (detailCellar == null) {
+        List<DetailCellar> detailsCellar = cellar.getDetailsCellar();
+        if (detailsCellar == null) {
             throw new BadRequestException("Debe tener un producto por lo menos");
         }
-        cellar.setDetailCellar(null);
+        cellar.setDetailsCellar(null);
         cellar.setFatherListToNull();
         cellar.setListsNull();
         Cellar saved = cellarRepository.save(cellar);
@@ -106,19 +106,19 @@ public class CellarServices {
         cashier.setWhNumberSeq(cashier.getWhNumberSeq() + 1);
         cashierRepository.save(cashier);
         
-        detailCellar.forEach (detail -> {
+        detailsCellar.forEach (detail -> {
             detail.setCellar(saved);
             detailCellarRepository.save(detail);
             detail.setCellar(null);
         });
-        saved.setDetailCellar(detailCellar);
+        saved.setDetailsCellar(detailsCellar);
         log.info("CellarServices Cellar created id: {}", saved.getId());
         return saved;
     }
     
     private void populateChildren(Cellar cellar) {
         List<DetailCellar> detailCellarList = getDetailsByCellar(cellar);
-        cellar.setDetailCellar(detailCellarList);
+        cellar.setDetailsCellar(detailCellarList);
         cellar.setFatherListToNull();
         log.info("CellarServices populateChildren cellarId: {}", cellar.getId());
     }

@@ -7,11 +7,14 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.UUID;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 @Repository
 @Qualifier(value="WarehouseRepository")
-public interface WarehouseRepository extends CrudRepository<Warehouse, UUID>{
-	
-	Iterable<Warehouse> findBySubsidiary(Subsidiary subsidiary);
+public interface WarehouseRepository extends CrudRepository<Warehouse, UUID> {	
+    Iterable<Warehouse> findWarehouseBySubsidiary(Subsidiary subsidiary);
 
+    @Query("SELECT w FROM Warehouse w WHERE w.subsidiary.userClient.id = (:id) AND w.active = true")
+    Iterable<Warehouse> findWarehouseByUserClientId(@Param("id") UUID id);
 }

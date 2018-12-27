@@ -73,7 +73,9 @@ function routes($routeProvider) {
       controller: 'CuentasCobrarCtrl',
       controllerAs: 'vm'
     }).when('/produc', {
-      templateUrl: 'views/notfound/404.tpl.html'
+      templateUrl: 'views/production/production.tpl.html',
+      controller: 'ProductionCtrl',
+      controllerAs: 'vm'
     }).when('/contab', {
       templateUrl: 'views/notfound/404.tpl.html'
     }).when('/pagar', {

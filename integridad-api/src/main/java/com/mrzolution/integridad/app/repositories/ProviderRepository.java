@@ -17,11 +17,9 @@ public interface ProviderRepository extends CrudRepository<Provider, UUID> {
     Iterable<Provider> findByProviderType(String type);
 
     @Query("SELECT p FROM Provider p WHERE p.userClient.id = (:id) AND p.active = true")
-    Iterable<Provider> findByUserClientId(@Param("id") UUID id);
+    Iterable<Provider> findProviderByUserClientId(@Param("id") UUID id);
        
     @Query("SELECT p FROM Provider p WHERE p. name = (:nameprov) AND p.ruc = (:rucp) AND p.userClient.id = (:id) AND p.active = true")
     Iterable<Provider> findProviderByRucAndId(@Param("nameprov") String nameprov, @Param("rucp") String rucp, @Param("id") UUID id);
 
-// 	@Query("SELECT c FROM Client c WHERE c.userClient.id = (:id) and c.active = true")
-//	Iterable<Client> findActivesByUserClientId(@Param("id") UUID id);
 }
