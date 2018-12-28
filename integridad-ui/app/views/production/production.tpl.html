@@ -231,12 +231,12 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr ng-show="vm.clientList == 0">
+                                <tr ng-show="vm.cellar.items == 0">
                                     <td colspan="4">
                                         No hay detalles ingresados
                                     </td>
                                 </tr>
-                                <tr ng-repeat="detail in vm.cellar.detailsCellar">
+                                <tr ng-repeat="detail in vm.cellar.items">
                                     <td>{{$index + 1}}</td>
                                     <td>{{detail.product.codeIntegridad}}</td>
                                     <td>{{detail.product.name}}</td>
@@ -317,7 +317,7 @@
                 <div class="row">
                     <div class="form-group col-md-12">
                         <button type="button" title="Guardar Ingreso a Bodega" class="btn btn-primary"
-                                ng-click="vm.saveToCellar()">
+                                ng-click="vm.saveToCellar(vm.cellar); vm.cancelCellar()">
                                 <span class="glyphicon glyphicon-floppy-saved" aria-hidden="true"></span>
                         </button>
                         <button type="button" title="Salir" class="btn btn-primary"
@@ -361,54 +361,53 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                <tr ng-show="vm.productList == 0">
-                                    <td colspan="4">
-                                        No hay productos ingresados
-                                    </td>
-                                </tr>
-                                <tr ng-repeat="productSelect in vm.productList | orderBy:'name' | filter:searchTextProd">
-                                    <td>{{ productSelect.codeIntegridad }}</td>
-                                    <td>{{ productSelect.name }}</td>
-                                    <td>{{ vm.getCost('1.'+ productSelect[vm.priceType.cod], productSelect.averageCost) }}</td>
-                                    <td>
-                                        <button type="button" title="Seleccionar" class="btn btn-primary" ng-click="vm.selectProductToAdd(productSelect)">
-                                                <span class = "glyphicon glyphicon-check" aria-hidden = "true"></span>
-                                        </button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <nav aria-label="Page navigation example">
-                            <ul class="pagination pagination-sm">
-                                <li class="page-item" ng-repeat="page in vm.range() track by $index" ng-class="vm.getActiveClass($index)">
-                                    <a class="page-link" ng-click="vm.paginate($index)">{{$index + 1}}</a>
-                                </li>
-                            </ul>
-                        </nav>
-                    </div>
-        
-                    <div class="col-md-12" ng-if="vm.productToAdd !== undefined">
-                      <div class="panel panel-default">
-                        <div class="panel-heading">
-                          <b>{{vm.productToAdd.name}}</b>
+                                    <tr ng-show="vm.productList == 0">
+                                        <td colspan="4">
+                                            No hay productos ingresados
+                                        </td>
+                                    </tr>
+                                    <tr ng-repeat="productSelect in vm.productList | orderBy:'name' | filter:searchTextProd">
+                                        <td>{{ productSelect.codeIntegridad }}</td>
+                                        <td>{{ productSelect.name }}</td>
+                                        <td>{{ vm.getCost('1.'+ productSelect[vm.priceType.cod], productSelect.averageCost) }}</td>
+                                        <td>
+                                            <button type="button" title="Seleccionar" class="btn btn-primary" ng-click="vm.selectProductToAdd(productSelect)">
+                                                    <span class = "glyphicon glyphicon-check" aria-hidden = "true"></span>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <nav aria-label="Page navigation example">
+                                <ul class="pagination pagination-sm">
+                                    <li class="page-item" ng-repeat="page in vm.range() track by $index" ng-class="vm.getActiveClass($index)">
+                                        <a class="page-link" ng-click="vm.paginate($index)">{{$index + 1}}</a>
+                                    </li>
+                                </ul>
+                            </nav>
                         </div>
-                        <div class="panel-body">
-                            <div class="row">
-                                <div class="form-group col-md-6">
-                                    <b>CANTIDAD A INGRESAR: </b>
-                                    <input type="text" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
-                                           ng-model="vm.quantity" class="form-control" maxlength="9">
+                        <div class="col-md-12" ng-if="vm.productToAdd !== undefined">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <b>{{vm.productToAdd.name}}</b>
                                 </div>
-                                <div class="form-group col-md-6">
-                                    <b>PRECIO UNITARIO: </b>
-                                    <input type="text"
-                                           ng-model="vm.productToAdd.costEachCalculated" class="form-control">
+                                <div class="panel-body">
+                                    <div class="row">
+                                        <div class="form-group col-md-6">
+                                            <b>CANTIDAD A INGRESAR: </b>
+                                            <input type="text" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+                                                   ng-model="vm.quantity" class="form-control" maxlength="9">
+                                        </div>
+                                        <div class="form-group col-md-6">
+                                            <b>PRECIO UNITARIO: </b>
+                                            <input type="text"
+                                                   ng-model="vm.productToAdd.costEachCalculated" class="form-control">
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                      </div>
                     </div>
-                  </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" title="Aceptar y Cerrar" class="btn btn-primary" ng-click="vm.acceptProduct(true)"
@@ -423,7 +422,11 @@
                             <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
                     </button>
                 </div>
-              </div>
             </div>
-          </div>
+        </div>
+    </div>
+
+    <div>
+        
+    </div>
 </div>

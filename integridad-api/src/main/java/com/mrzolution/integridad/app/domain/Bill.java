@@ -71,10 +71,14 @@ public class Bill {
     @OneToMany(mappedBy = "bill", cascade = CascadeType.ALL)
     private List<Pago> pagos;
     
+    @OneToMany(mappedBy = "bill", cascade = CascadeType.ALL)
+    private List<Kardex> detailsKardex;
+    
     
     public void setListsNull(){
     	details = null;
     	pagos = null;
+        detailsKardex = null;
     }
     
     public void setFatherListToNull(){

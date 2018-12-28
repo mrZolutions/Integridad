@@ -44,6 +44,8 @@ public class BillServices {
     CreditsRepository creditsRepository;
     @Autowired
     UserClientRepository userClientRepository;
+    @Autowired
+    KardexRepository kardexRepository;
             
     public String getDatil(Requirement requirement, UUID userClientId) throws Exception {
         UserClient userClient = userClientRepository.findOne(userClientId);
@@ -98,7 +100,8 @@ public class BillServices {
         });
         return bills;
     }
-        
+
+//Bucar Bills por ID        
     public Bill getById(UUID id) {
         log.info("BillServices getById: {}", id);
         Bill retrieved = billRepository.findOne(id);
@@ -110,57 +113,13 @@ public class BillServices {
         populateChildren(retrieved);
         return retrieved;
     }
-        
-    public void saveDetailsBill(Bill saved, List<Detail> details) {
-        details.forEach (detail-> {
-            detail.setBill(saved);
-            detailRepository.save(detail);
-            detail.setBill(null);
-        });
-        log.info("BillServices saveDetailsBill FINISHED");
-    }
-        
-    public void savePagosAndCreditsBill(Bill saved, List<Pago> pagos) {
-        pagos.forEach (pago -> {
-            List<Credits> creditsList = pago.getCredits();
-            pago.setCredits(null);
-            pago.setBill(saved);
-            Pago pagoSaved = pagoRepository.save(pago);		
-            if (creditsList != null) {
-                creditsList.forEach (credit -> {
-                    credit.setPago(pagoSaved);
-                    credit.setBillId(saved.getId().toString());
-                    creditsRepository.save(credit);
-                });
-            }    
-        });
-        log.info("BillServices savePagosAndCreditsBill FINISHED");
-    }
-        
-    public void updateProductBySubsidiary(Bill bill, int typeDocument, List<Detail> details) {
-        details.forEach (detail-> {
-            if (!detail.getProduct().getProductType().getCode().equals("SER") && typeDocument == 1) {
-                ProductBySubsidiary ps = productBySubsidiairyRepository.findBySubsidiaryIdAndProductId(bill.getSubsidiary().getId(), detail.getProduct().getId());
-                ps.setQuantity(ps.getQuantity() - detail.getQuantity());
-                productBySubsidiairyRepository.save(ps);
-            }
-        });
-        log.info("BillServices updateProductBySubsidiary FINISHED");
-    }
-        
-    public void saveDetailsQuotation(Bill saved, List<Detail> details) {
-        details.forEach (detail-> {
-            detail.setBill(saved);
-            detailRepository.save(detail);
-            detail.setBill(null);
-        });
-        log.info("BillServices saveDetailsQuotation FINISHED");
-    }
-	
+
+//Inicio de Creación de las Bills    
     @Async("asyncExecutor")
     public Bill create(Bill bill, int typeDocument) throws BadRequestException {
         List<Detail> details = bill.getDetails();
         List<Pago> pagos = bill.getPagos();
+        List<Kardex> detailsKardex = bill.getDetailsKardex();
         if (details == null) {
             throw new BadRequestException("Debe tener un detalle por lo menos");
         }
@@ -171,6 +130,7 @@ public class BillServices {
         bill.setTypeDocument(typeDocument);
         bill.setActive(true);
         bill.setDetails(null);
+        bill.setDetailsKardex(null);
         bill.setPagos(null);
         bill.setFatherListToNull();
         bill.setListsNull();
@@ -187,6 +147,7 @@ public class BillServices {
                 savePagosAndCreditsBill(saved, pagos);
             } else {
                 saveDetailsBill(saved, details);
+                saveKardex(saved, detailsKardex);
                 savePagosAndCreditsBill(saved, pagos);
                 updateProductBySubsidiary(bill, typeDocument, details);
             }
@@ -197,10 +158,74 @@ public class BillServices {
             saveDetailsQuotation(saved, details);
         }
         saved.setDetails(details);
+        saved.setDetailsKardex(detailsKardex);
         log.info("BillServices created id: {}", saved.getId());
         return saved;
     }
+    
+    //Almacena los Detalles de la Factura
+    public void saveDetailsBill(Bill saved, List<Detail> details) {
+        details.forEach (detail-> {
+            detail.setBill(saved);
+            detailRepository.save(detail);
+            detail.setBill(null);
+        });
+        log.info("BillServices saveDetailsBill DONE");
+    }
+    
+    //Almacena los Detalles en Kardex
+    public void saveKardex(Bill saved, List<Kardex> detailsKardex) {
+        detailsKardex.forEach (detail -> {
+            detail.setBill(saved);
+            kardexRepository.save(detail);
+            detail.setBill(null);
+        });
+        saved.setDetailsKardex(detailsKardex);
+        log.info("BillServices saveKardex DONE");
+    }
+    
+    //Guarda el tipo de Pago y Credits
+    public void savePagosAndCreditsBill(Bill saved, List<Pago> pagos) {
+        pagos.forEach (pago -> {
+            List<Credits> creditsList = pago.getCredits();
+            pago.setCredits(null);
+            pago.setBill(saved);
+            Pago pagoSaved = pagoRepository.save(pago);		
+            if (creditsList != null) {
+                creditsList.forEach (credit -> {
+                    credit.setPago(pagoSaved);
+                    credit.setBillId(saved.getId().toString());
+                    creditsRepository.save(credit);
+                });
+            }    
+        });
+        log.info("BillServices savePagosAndCreditsBill DONE");
+    }
+    
+    //Actualiza la cantidad de Productos (Existencia)
+    public void updateProductBySubsidiary(Bill bill, int typeDocument, List<Detail> details) {
+        details.forEach (detail-> {
+            if (!detail.getProduct().getProductType().getCode().equals("SER") && typeDocument == 1) {
+                ProductBySubsidiary ps = productBySubsidiairyRepository.findBySubsidiaryIdAndProductId(bill.getSubsidiary().getId(), detail.getProduct().getId());
+                ps.setQuantity(ps.getQuantity() - detail.getQuantity());
+                productBySubsidiairyRepository.save(ps);
+            }
+        });
+        log.info("BillServices updateProductBySubsidiary DONE");
+    }
+    
+    //Almacena los Detalles de la Cotización
+    public void saveDetailsQuotation(Bill saved, List<Detail> details) {
+        details.forEach (detail-> {
+            detail.setBill(saved);
+            detailRepository.save(detail);
+            detail.setBill(null);
+        });
+        log.info("BillServices saveDetailsQuotation DONE");
+    }
+//Fin de Creación de las Bills
 
+//Desactivación o Anulación de las Bills
     public Bill deactivate(Bill bill) throws BadRequestException {
         if (bill.getId() == null) {
             throw new BadRequestException("Invalid Bill");
@@ -213,6 +238,7 @@ public class BillServices {
         return billToDeactivate;
     }
 
+//Actualización de las Bills
     public Bill update(Bill bill) throws BadRequestException {
         if (bill.getId() == null) {
             throw new BadRequestException("Invalid Bill");
@@ -238,6 +264,7 @@ public class BillServices {
         return bills;
     }
 
+//Reporte de Productos
     public List<ItemReport> getBySubIdAndDatesActives(UUID userClientId, long dateOne, long dateTwo) {
         log.info("BillServices getByUserClientIdAndDates: {}, {}, {}", userClientId, dateOne, dateTwo);
         Iterable<Bill> bills = billRepository.findByUserClientIdAndDatesActives(userClientId, dateOne, dateTwo);
@@ -250,7 +277,43 @@ public class BillServices {
         });	
         return loadListItems(Lists.newArrayList(bills), productIds);
     }
+    
+    private List<ItemReport> loadListItems(List<Bill> bills, Set<UUID> productIds) {
+        List<ItemReport> reportList = new ArrayList<>();
+        for (UUID uuidCurrent: productIds) {
+            Double quantityTotal = new Double(0);
+            Double subTotalTotal = new Double(0);
+            Double discountTotal = new Double(0);
+            Double ivaTotal = new Double(0);
+            Double totalTotal = new Double(0);
+            String code = "";
+            String desc = "";
+            for (Bill bill: bills) {
+                for (Detail detail: bill.getDetails()) {
+                    if (uuidCurrent.equals(detail.getProduct().getId())) {
+                        Double discount = Double.valueOf(Double.valueOf(bill.getDiscountPercentage())/100) * detail.getTotal();
+                        ItemReport item = new ItemReport(detail.getProduct().getId(),"", bill.getStringSeq(), detail.getProduct().getCodeIntegridad(),
+					detail.getProduct().getName(),Double.valueOf(detail.getQuantity()), detail.getCostEach(), detail.getTotal(), discount, ((detail.getTotal()-discount) * 0.12), ((detail.getTotal()-discount) * 1.12));
+                        quantityTotal += item.getQuantity();
+                        subTotalTotal += item.getSubTotal();
+                        discountTotal += item.getDiscount();
+                        ivaTotal += item.getIva();
+                        totalTotal += item.getTotal();
+                        code = detail.getProduct().getCodeIntegridad();
+                        desc = detail.getProduct().getName();
+                        reportList.add(item);
+                    }
+                }
+            }
+            ItemReport itemTotal = new ItemReport(uuidCurrent, "R", "", code,
+			desc, quantityTotal, null, subTotalTotal, discountTotal, ivaTotal, totalTotal);
 
+            reportList.add(itemTotal);
+        }
+        return reportList;
+    }
+
+//Reporte de Ventas
     public List<SalesReport> getAllBySubIdAndDates(UUID userClientId, long dateOne, long dateTwo){
         log.info("BillServices getAllBySubIdAndDates: {}, {}, {}", userClientId, dateOne, dateTwo);
         Iterable<Bill> bills = billRepository.findAllByUserClientIdAndDates(userClientId, dateOne, dateTwo);
@@ -327,41 +390,6 @@ public class BillServices {
             pagoList.add(pago);
         });
         return pagoList;
-    }
-
-    private List<ItemReport> loadListItems(List<Bill> bills, Set<UUID> productIds) {
-        List<ItemReport> reportList = new ArrayList<>();
-        for (UUID uuidCurrent: productIds) {
-            Double quantityTotal = new Double(0);
-            Double subTotalTotal = new Double(0);
-            Double discountTotal = new Double(0);
-            Double ivaTotal = new Double(0);
-            Double totalTotal = new Double(0);
-            String code = "";
-            String desc = "";
-            for (Bill bill: bills) {
-                for (Detail detail: bill.getDetails()) {
-                    if (uuidCurrent.equals(detail.getProduct().getId())) {
-                        Double discount = Double.valueOf(Double.valueOf(bill.getDiscountPercentage())/100) * detail.getTotal();
-                        ItemReport item = new ItemReport(detail.getProduct().getId(),"", bill.getStringSeq(), detail.getProduct().getCodeIntegridad(),
-					detail.getProduct().getName(),Double.valueOf(detail.getQuantity()), detail.getCostEach(), detail.getTotal(), discount, ((detail.getTotal()-discount) * 0.12), ((detail.getTotal()-discount) * 1.12));
-                        quantityTotal += item.getQuantity();
-                        subTotalTotal += item.getSubTotal();
-                        discountTotal += item.getDiscount();
-                        ivaTotal += item.getIva();
-                        totalTotal += item.getTotal();
-                        code = detail.getProduct().getCodeIntegridad();
-                        desc = detail.getProduct().getName();
-                        reportList.add(item);
-                    }
-                }
-            }
-            ItemReport itemTotal = new ItemReport(uuidCurrent, "R", "", code,
-			desc, quantityTotal, null, subTotalTotal, discountTotal, ivaTotal, totalTotal);
-
-            reportList.add(itemTotal);
-        }
-        return reportList;
     }
 
 }

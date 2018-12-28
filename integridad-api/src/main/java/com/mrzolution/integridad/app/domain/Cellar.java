@@ -56,8 +56,12 @@ public class Cellar {
     @OneToMany(mappedBy = "cellar", cascade = CascadeType.ALL)
     private List<DetailCellar> detailsCellar;
     
+    @OneToMany(mappedBy = "cellar", cascade = CascadeType.ALL)
+    private List<Kardex> detailsKardex;
+    
     public void setListsNull() {
         detailsCellar = null;
+        detailsKardex = null;
     }
     
     public void setFatherListToNull() {

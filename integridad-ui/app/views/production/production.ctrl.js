@@ -10,7 +10,7 @@
 angular.module('integridadUiApp')
     .controller('ProductionCtrl', function( _, $rootScope, $location, utilStringService, $localStorage,
                                             providerService, productService, warehouseService, authService,
-                                            cashierService, requirementService, utilSeqService) {
+                                            cashierService, cellarService, utilSeqService) {
     var vm = this;
     vm.error = undefined;
     vm.success = undefined;
@@ -34,6 +34,7 @@ angular.module('integridadUiApp')
         vm.priceType = vm.prices[0];
         vm.success = undefined;
         vm.error = undefined;
+        vm.impuestosTotales = [];
         vm.impuestoICE = {
             "base_imponible":0.0,
             "valor":0.0,
@@ -81,7 +82,7 @@ angular.module('integridadUiApp')
             ice: 0,
             baseNoTaxes: 0,
             baseTaxes: 0,
-            detailsCellar: []
+            items: []
         };
     };
 
@@ -129,7 +130,7 @@ angular.module('integridadUiApp')
             vm.totalPages = response.totalPages;
             vm.productList = [];
             for (var i = 0; i < response.content.length; i++) {
-                var productFound = _.find(vm.cellar.detailsCellar, function(detail) {
+                var productFound = _.find(vm.cellar.items, function(detail) {
                     return detail.product.id === response.content[i].id;
                 });
                 if (productFound === undefined) {
@@ -182,7 +183,7 @@ angular.module('integridadUiApp')
         vm.cellar.baseNoTaxes = 0;
         var discountWithIva = 0;
         var discountWithNoIva = 0;
-        _.each(vm.cellar.detailsCellar, function(detail) {
+        _.each(vm.cellar.items, function(detail) {
             vm.cellar.subTotal = (parseFloat(vm.cellar.subTotal) + parseFloat(detail.total)).toFixed(4);
             var tot = detail.total;
             if (vm.cellar.discountPercentage) {
@@ -232,9 +233,9 @@ angular.module('integridadUiApp')
             total: (parseFloat(vm.quantity) * parseFloat(vm.productToAdd.costEachCalculated)).toFixed(4)
         };
         if (vm.indexDetail !== undefined) {
-            vm.cellar.detailsCellar[vm.indexDetail] = detail;
+            vm.cellar.items[vm.indexDetail] = detail;
         } else {
-            vm.cellar.detailsCellar.push(detail);
+            vm.cellar.items.push(detail);
         };
         vm.productToAdd = undefined;
         vm.quantity = undefined;
@@ -249,16 +250,18 @@ angular.module('integridadUiApp')
         };
     };
 
+    vm.editDetail = function(detail, index) {
+        vm.indexDetail = index;
+        vm.productToAdd= detail.product;
+        vm.quantity= detail.quantity
+    };
+  
+    vm.removeDetail = function(index) {
+        vm.cellar.items.splice(index,1);
+    };
+
     vm.range = function() {
         return new Array(vm.totalPages);
-    };
-
-    vm.saveToCellar = function() {
-        
-    };
-
-    vm.cancelCellar = function() {
-
     };
 
     vm.filter = function() {
@@ -274,6 +277,59 @@ angular.module('integridadUiApp')
     vm.getActiveClass = function(index) {
         var classActive = vm.page === index? 'active' : '';
         return classActive;
+    };
+
+    vm.saveToCellar = function(cellar) {
+        vm.loading = true;
+        vm.userValid = $localStorage.user.userType.code;
+        vm.cellar.dateBill = $('#pickerDateBill').data("DateTimePicker").date().toDate().getTime();
+        vm.cellar.dateCellar = $('#pickerDateEnterCellar').data("DateTimePicker").date().toDate().getTime();
+        vm.cellar.whNumberSeq = vm.seqNumber;
+        vm.cellar.detailsCellar = [];
+        vm.cellar.detailsKardex = [];
+        if (vm.userValid === 'EMP') {
+            vm.cellar.statusIngreso = 'PENDIENTE';
+        } else {
+            vm.cellar.statusIngreso = 'INGRESADO';
+        };
+        _.each(vm.cellar.items, function(item) {
+            var detail = {
+                product: item.product, 
+                quantity: item.quantity,
+                costEach: item.costEach,
+                total: item.total
+            };
+            var kardex = {
+                cellar: cellar.id,
+                product: item.product,
+                codeWarehouse: vm.warehouse.codeWarehouse,
+                dateRegister: $('#pickerDateEnterCellar').data("DateTimePicker").date().toDate().getTime(),
+                details: 'INGRESO A BODEGA',
+                observation: 'INGRESO',
+                prodCostEach: item.costEach,
+                prodName: item.product.name,
+                prodQuantity: item.quantity,
+                prodTotal: item.total
+            };
+            vm.cellar.detailsCellar.push(detail);
+            vm.cellar.detailsKardex.push(kardex);
+        });
+        cellarService.create(cellar).then(function(respCellar) {
+            vm.cellar = respCellar;
+            $localStorage.user.cashier.whNumberSeq = vm.cellar.whNumberSeq;
+            vm.cellarCreated = true;
+            vm.success = 'Productos Ingresados con Exito' + vm.cellar.statusIngreso;
+            vm.loading = false;
+        }).catch(function(error) {
+            vm.loading = false;
+            vm.error = error.data;
+        });
+        _activate();
+    };
+
+    vm.cancelCellar = function() {
+        vm.warehouseSelected = undefined;
+        vm.providerSelected = undefined;
     };
 
     (function initController() {
