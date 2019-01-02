@@ -50,13 +50,13 @@ public class DebtsToPayServices {
     }
 
     void savePagosAndCreditsOfDebts(DebtsToPay saved, List<PagoDebts> pagosDebts) {
-        pagosDebts.forEach (pagoDebt -> {
+        pagosDebts.forEach(pagoDebt -> {
             List<CreditsDebts> creditsDebtsList = pagoDebt.getCreditsDebts();
             pagoDebt.setCreditsDebts(null);
             pagoDebt.setDebtsToPay(saved);
             PagoDebts pagoDebtSaved = pagoDebtsRepository.save(pagoDebt);
             if (creditsDebtsList != null) {
-                creditsDebtsList.forEach (creditDebt -> {
+                creditsDebtsList.forEach(creditDebt -> {
                     creditDebt.setPagoDebts(pagoDebtSaved);
                     creditDebt.setDebtsToPayId(saved.getId().toString());
                     creditsDebtsRepository.save(creditDebt);
@@ -68,7 +68,7 @@ public class DebtsToPayServices {
     public Iterable<DebtsToPay> getDebtsToPayByProviderId(UUID id) {
         log.info("DebtsToPayServices getDebtsByProviderId: {}", id);
         Iterable<DebtsToPay> debts = debtsToPayRepository.findDebtsToPayByProviderId(id);
-        debts.forEach (debt -> {
+        debts.forEach(debt -> {
             debt.setListsNull();
             debt.setFatherListToNull();
         });
@@ -95,7 +95,7 @@ public class DebtsToPayServices {
         cashier.setDebtsNumberSeq(cashier.getDebtsNumberSeq() + 1);
         cashierRepository.save(cashier);
         
-        detailDebtsToPay.forEach (detail -> {
+        detailDebtsToPay.forEach(detail -> {
             detail.setDebtsToPay(saved);
             detailDebtsToPayRepository.save(detail);
             detail.setDebtsToPay(null);
@@ -110,7 +110,7 @@ public class DebtsToPayServices {
 	List<DetailDebtsToPay> detailDebtsToPayList = new ArrayList<>();
 	Iterable<DetailDebtsToPay> debts = detailDebtsToPayRepository.findByDebtsToPay(debtsToPay);
 	List<PagoDebts> pagoList = getPagosDebtsToPay(debtsToPay);
-        debts.forEach (detail -> {
+        debts.forEach(detail -> {
             detail.setListsNull();
             detail.setFatherListToNull();
             detail.setDebtsToPay(null);
@@ -124,11 +124,11 @@ public class DebtsToPayServices {
     private List<PagoDebts> getPagosDebtsToPay (DebtsToPay debtsToPay) {
         List<PagoDebts> pagoDebtsList = new ArrayList<>(); 
         Iterable<PagoDebts> pagosDebts = pagoDebtsRepository.findByDebtsToPay(debtsToPay);
-        pagosDebts.forEach (pagoDebt -> {
+        pagosDebts.forEach(pagoDebt -> {
             if ("credito".equals(pagoDebt.getMedio())) {
                 Iterable<CreditsDebts> credits = creditsDebtsRepository.findByPagoDebts(pagoDebt);
                 List<CreditsDebts> creditsList = new ArrayList<>();
-                credits.forEach (credit -> {
+                credits.forEach(credit -> {
                     credit.setListsNull();
                     credit.setFatherListToNull();
                     credit.setPagoDebts(null);

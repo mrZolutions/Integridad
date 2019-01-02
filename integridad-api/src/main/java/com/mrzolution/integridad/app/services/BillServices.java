@@ -54,7 +54,7 @@ public class BillServices {
         }
         log.info("BillServices getDatil Empresa valida: {}", userClient.getName());
         if (requirement.getPagos() != null) {
-            requirement.getPagos().forEach (pago -> {
+            requirement.getPagos().forEach(pago -> {
                 if ("credito".equals(pago.getMedio())) {
                     pago.setMedio("otros");
                 }
@@ -64,8 +64,8 @@ public class BillServices {
         String data = mapper.writeValueAsString(requirement);
         log.info("BillServices getDatil maper creado");
                 
-        //String response = httpCallerService.post(Constants.DATIL_LINK, data, userClient);
-        String response = "OK";
+        String response = httpCallerService.post(Constants.DATIL_LINK, data, userClient);
+        //String response = "OK";
         log.info("BillServices getDatil httpcall success");
         return response;
     }
@@ -73,7 +73,7 @@ public class BillServices {
     public Iterable<Bill> getByTypeDocument(int value) {
         log.info("BillServices getByTypeDocument: {}", value);
         Iterable<Bill> bills = billRepository.findBillsByTypeDocument(value);
-        bills.forEach (bill -> {
+        bills.forEach(bill -> {
             bill.setListsNull();
             bill.setFatherListToNull();
         });
@@ -83,7 +83,7 @@ public class BillServices {
     public Iterable<Bill> getByUserLazy(UserIntegridad user) {
         log.info("BillServices getByUserLazy: {}", user.getId());
         Iterable<Bill> bills = billRepository.findByUserIntegridad(user);
-        bills.forEach (bill-> {
+        bills.forEach(bill-> {
             bill.setListsNull();
             bill.setFatherListToNull();
         });
@@ -94,7 +94,7 @@ public class BillServices {
     public Iterable<Bill> getByClientIdAndTypeLazy(UUID id, int type) {
         log.info("BillServices getByClientIdAndTypeLazy: {}", id);
         Iterable<Bill> bills = billRepository.findByClientIdAndType(id, type);
-        bills.forEach (bill-> {
+        bills.forEach(bill-> {
             bill.setListsNull();
             bill.setFatherListToNull();
         });
@@ -157,25 +157,24 @@ public class BillServices {
             cashierRepository.save(cashier);
             saveDetailsQuotation(saved, details);
         }
-        saved.setDetails(details);
-        saved.setDetailsKardex(detailsKardex);
         log.info("BillServices created id: {}", saved.getId());
         return saved;
     }
     
     //Almacena los Detalles de la Factura
     public void saveDetailsBill(Bill saved, List<Detail> details) {
-        details.forEach (detail-> {
+        details.forEach(detail-> {
             detail.setBill(saved);
             detailRepository.save(detail);
             detail.setBill(null);
         });
+        saved.setDetails(details);
         log.info("BillServices saveDetailsBill DONE");
     }
     
     //Almacena los Detalles en Kardex
     public void saveKardex(Bill saved, List<Kardex> detailsKardex) {
-        detailsKardex.forEach (detail -> {
+        detailsKardex.forEach(detail -> {
             detail.setBill(saved);
             kardexRepository.save(detail);
             detail.setBill(null);
@@ -186,13 +185,13 @@ public class BillServices {
     
     //Guarda el tipo de Pago y Credits
     public void savePagosAndCreditsBill(Bill saved, List<Pago> pagos) {
-        pagos.forEach (pago -> {
+        pagos.forEach(pago -> {
             List<Credits> creditsList = pago.getCredits();
             pago.setCredits(null);
             pago.setBill(saved);
             Pago pagoSaved = pagoRepository.save(pago);		
             if (creditsList != null) {
-                creditsList.forEach (credit -> {
+                creditsList.forEach(credit -> {
                     credit.setPago(pagoSaved);
                     credit.setBillId(saved.getId().toString());
                     creditsRepository.save(credit);
@@ -204,7 +203,7 @@ public class BillServices {
     
     //Actualiza la cantidad de Productos (Existencia)
     public void updateProductBySubsidiary(Bill bill, int typeDocument, List<Detail> details) {
-        details.forEach (detail-> {
+        details.forEach(detail-> {
             if (!detail.getProduct().getProductType().getCode().equals("SER") && typeDocument == 1) {
                 ProductBySubsidiary ps = productBySubsidiairyRepository.findBySubsidiaryIdAndProductId(bill.getSubsidiary().getId(), detail.getProduct().getId());
                 ps.setQuantity(ps.getQuantity() - detail.getQuantity());
@@ -216,7 +215,7 @@ public class BillServices {
     
     //Almacena los Detalles de la Cotización
     public void saveDetailsQuotation(Bill saved, List<Detail> details) {
-        details.forEach (detail-> {
+        details.forEach(detail-> {
             detail.setBill(saved);
             detailRepository.save(detail);
             detail.setBill(null);
@@ -257,7 +256,7 @@ public class BillServices {
     public Iterable<Bill> getByStringSeqAndSubId(String stringSeq, UUID subId) {
         log.info("BillServices getByStringSeq : {}, {}", stringSeq, subId);
         Iterable<Bill> bills = billRepository.findByStringSeqAndSubsidiaryId(stringSeq, subId);
-        bills.forEach (bill -> {
+        bills.forEach(bill -> {
             bill.setFatherListToNull();
             bill.setListsNull();
         });
@@ -269,7 +268,7 @@ public class BillServices {
         log.info("BillServices getByUserClientIdAndDates: {}, {}, {}", userClientId, dateOne, dateTwo);
         Iterable<Bill> bills = billRepository.findByUserClientIdAndDatesActives(userClientId, dateOne, dateTwo);
         Set<UUID> productIds = new HashSet<>();
-        bills.forEach (bill-> {
+        bills.forEach(bill-> {
             populateChildren(bill);
             for (Detail detail: bill.getDetails()) {
                 productIds.add(detail.getProduct().getId());
@@ -318,7 +317,7 @@ public class BillServices {
         log.info("BillServices getAllBySubIdAndDates: {}, {}, {}", userClientId, dateOne, dateTwo);
         Iterable<Bill> bills = billRepository.findAllByUserClientIdAndDates(userClientId, dateOne, dateTwo);
         List<SalesReport> salesReportList = new ArrayList<>();
-        bills.forEach (bill-> {
+        bills.forEach(bill-> {
             bill.setListsNull();
             Long endDateLong = bill.getDateCreated();
             List<Pago> pagos = getPagosByBill(bill);
@@ -359,7 +358,7 @@ public class BillServices {
     private List<Detail> getDetailsByBill(Bill bill) {
         List<Detail> detailList = new ArrayList<>();
         Iterable<Detail> details = detailRepository.findByBill(bill);
-        details.forEach (detail -> {
+        details.forEach(detail -> {
             detail.setListsNull();
             detail.setFatherListToNull();
             detail.getProduct().setFatherListToNull();
@@ -373,7 +372,7 @@ public class BillServices {
     private List<Kardex> getDetailsKardexByBill (Bill bill) {
         List<Kardex> detailsKardexList = new ArrayList<>();
         Iterable<Kardex> detailsKardex = kardexRepository.findByBill(bill);
-        detailsKardex.forEach (detail -> {
+        detailsKardex.forEach(detail -> {
             detail.getBill().setListsNull();
             detail.getBill().setFatherListToNull();
             detail.getProduct().setFatherListToNull();
@@ -388,11 +387,11 @@ public class BillServices {
     private List<Pago> getPagosByBill(Bill bill) {
         List<Pago> pagoList = new ArrayList<>();
         Iterable<Pago> pagos = pagoRepository.findByBill(bill);
-        pagos.forEach (pago -> {
+        pagos.forEach(pago -> {
             if ("credito".equals(pago.getMedio())) {
                 Iterable<Credits> credits = creditsRepository.findByPago(pago);
                 List<Credits> creditsList = new ArrayList<>();
-                credits.forEach (credit -> {
+                credits.forEach(credit -> {
                     credit.setListsNull();
                     credit.setFatherListToNull();
                     credit.setPago(null);

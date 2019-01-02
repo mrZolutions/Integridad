@@ -89,6 +89,22 @@ angular.module('integridadUiApp')
         };
     };
 
+    function _initializeConsumption() {
+        vm.consumption = {
+            warehouse: vm.warehouse,
+            userIntegridad: $localStorage.user,
+            subsidiary: $localStorage.user.subsidiary,
+            dateConsumption: vm.dateConsumption.getTime(),
+            total: 0,
+            subTotal: 0,
+            iva: 0,
+            ice: 0,
+            baseNoTaxes: 0,
+            baseTaxes: 0,
+            items: []
+        };
+    };
+
     vm.findProviders = function(warehouse) {
         vm.loading = true;
         vm.success = undefined;
@@ -120,7 +136,8 @@ angular.module('integridadUiApp')
         vm.dateConsumption = new Date();
         vm.warehouseName = warehouse.nameNumber;
         vm.warehouseSubsidiaryName = warehouse.subsidiary.name;
-        vm.loading = false;
+        vm.consumptionList = undefined;
+
     };
 
     vm.providerSelect = function(provider) {
@@ -129,6 +146,7 @@ angular.module('integridadUiApp')
         vm.error = undefined;
         vm.dateCellar = new Date();
         vm.warehouseSelected = true;
+        vm.providerList = undefined;
         vm.providerSelected = provider;
         _getSeqNumber();
         _initializeCellar();

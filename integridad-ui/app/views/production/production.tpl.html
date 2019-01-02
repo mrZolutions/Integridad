@@ -33,8 +33,8 @@
         </div>
     </div>
     
-    <!--CARGA DE BODEGAS POR SUCURSAL Y POR USERCLIENT(EMPRESA)-->
-    <div class="table-responsive" ng-show="vm.warehouseSelected === undefined && vm.providerSelected === undefined && vm.providerList === undefined">
+    <!--CARGA DE BODEGAS POR SUCURSAL-->
+    <div class="table-responsive" ng-show="vm.warehouseSelected === undefined">
         <div class="row">
             <div class="form-group col-md-10">
                 <input ng-model="searchText" class="form-control" placeholder="Buscar">
@@ -62,10 +62,10 @@
                         <button type="button" title = "Seleccionar Bodega" class="btn btn-primary btn-sm" ng-click="vm.findProviders(warehouse)">
                                 <span class = "glyphicon glyphicon-check" aria-hidden = "true"></span>
                         </button>
-                        <button type="button" title="Consumos Internos" class="btn btn-primary btn-sm" ng-click="vm.consumptionFromWarehouse(warehouse)">
+                        <!--<button type="button" title="Consumos Internos" class="btn btn-primary btn-sm" ng-click="vm.consumptionFromWarehouse(warehouse)">
                                 <span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
                         </button>
-                        <!--<button type="button" title = "Transferencia entre Bodegas" class="btn btn-primary btn-sm" ng-click="">
+                        <button type="button" title = "Transferencia entre Bodegas" class="btn btn-primary btn-sm" ng-click="">
                                 <span class = "glyphicon glyphicon-transfer" aria-hidden = "true"></span>
                         </button>-->
                     </td>
@@ -75,7 +75,7 @@
     </div>
 
     <!--CARGA DE PROVEEDORES-->
-    <div class="table-responsive" ng-show="vm.providerList !== undefined">
+    <div class="table-responsive" ng-show="vm.warehouseSelected !== undefined && vm.providerList !== undefined">
         <div class="row">
             <div class="form-group col-md-12">
                 <h4>Sucursal: <b>{{vm.warehouseSubsidiaryName}}</b></h4>
@@ -125,7 +125,7 @@
     </div>
 
     <!--SECCIÓN DE INGRESO A BODEGA-->
-    <div class="table-responsive" ng-show="vm.providerSelected !== undefined">
+    <div class="table-responsive" ng-show="vm.warehouseSelected === true && vm.providerList === undefined && vm.providerSelected !== undefined">
         <div class="row">
             <div class="form-group col-md-12">
                 <h4>Sucursal: <b>{{vm.warehouseSubsidiaryName}}</b></h4>
@@ -423,15 +423,5 @@
                 </div>
             </div>
         </div>
-    </div>
-
-    <!--SECCIÓN DE CONSUMOS INTERNOS-->
-    <div class="table-responsive" ng-show="vm.consumption !== undefined">
-        <div class="row">
-            <div class="form-group col-md-12">
-                <h4>Sucursal: <b>{{vm.warehouseSubsidiaryName}}</b></h4>
-                <h5>Bodega: <b>{{vm.warehouseName}}</b></h5>
-            </div>
-         </div>
     </div>
 </div>

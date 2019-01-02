@@ -30,12 +30,13 @@ public class Consumption {
     private String observation;
     private String nameProvClient;
     private String nameSupervisor;
-    private double consIva;
-    private double consIce;
-    private double consTotal;
-    private double consSubTotal;
-    private double consBaseNoTaxes;
-    private double consBaseTaxes;
+    private boolean active;
+    private double iva;
+    private double ice;
+    private double total;
+    private double subTotal;
+    private double baseNoTaxes;
+    private double baseTaxes;
     
     @ManyToOne
     @JoinColumn(name = "warehouse_id")

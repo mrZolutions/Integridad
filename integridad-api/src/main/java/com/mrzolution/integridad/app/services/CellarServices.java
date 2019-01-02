@@ -48,7 +48,7 @@ public class CellarServices {
     public Iterable<Cellar> getByUserLazy(UserIntegridad user) {
         log.info("CellarServices getByUserLazy: {}", user.getId());
         Iterable<Cellar> cellars = cellarRepository.findCellarByUserIntegridad(user);
-        cellars.forEach (cellar-> {
+        cellars.forEach(cellar-> {
             cellar.setListsNull();
             cellar.setFatherListToNull();
         });
@@ -58,7 +58,7 @@ public class CellarServices {
     public Iterable<Cellar> getActivesCellarByWhNumberSeqAndSubsidiaryId(String whNumberSeq, UUID subId) {
         log.info("CellarServices getActivesCellarByWhNumberSeqAndSubsidiaryId: {}, {}", whNumberSeq, subId);
         Iterable<Cellar> cellars = cellarRepository.findCellarByWhNumberSeqAndSubsidiaryId(whNumberSeq, subId);
-        cellars.forEach (cellar -> {
+        cellars.forEach(cellar -> {
             cellar.setFatherListToNull();
             cellar.setListsNull();
         });
@@ -68,7 +68,7 @@ public class CellarServices {
     public Iterable<Cellar> getActivesCellarByWhNumberSeqAndUserClientId(String whNumberSeq, UUID userClientId) {
         log.info("CellarServices getActivesCellarByWhNumberSeqAndUserClientId: {}, {}", whNumberSeq, userClientId);
         Iterable<Cellar> cellars = cellarRepository.findCellarByWhNumberSeqAndUserClientId(whNumberSeq, userClientId);
-        cellars.forEach (cellar -> {
+        cellars.forEach(cellar -> {
             cellar.setFatherListToNull();
             cellar.setListsNull();
         });
@@ -128,7 +128,7 @@ public class CellarServices {
     }
     
     public void saveDetailsCellar(Cellar saved, List<DetailCellar> detailsCellar) {
-        detailsCellar.forEach (detail -> {
+        detailsCellar.forEach(detail -> {
             detail.setCellar(saved);
             detailCellarRepository.save(detail);
             detail.setCellar(null);
@@ -138,7 +138,7 @@ public class CellarServices {
     }
     
     public void saveKardex(Cellar saved, List<Kardex> detailsKardex) {
-        detailsKardex.forEach (detail -> {
+        detailsKardex.forEach(detail -> {
             detail.setCellar(saved);
             kardexRepository.save(detail);
             detail.setCellar(null);
@@ -148,7 +148,7 @@ public class CellarServices {
     }
     
     public void updateProductBySubsidiary(Cellar cellar, List<DetailCellar> detailsCellar) {
-        detailsCellar.forEach (detail-> {
+        detailsCellar.forEach(detail-> {
             if (!detail.getProduct().getProductType().getCode().equals("SER")) {
                 ProductBySubsidiary ps = productBySubsidiairyRepository.findBySubsidiaryIdAndProductId(cellar.getSubsidiary().getId(), detail.getProduct().getId());
                 ps.setQuantity(ps.getQuantity() + detail.getQuantity());
@@ -168,7 +168,7 @@ public class CellarServices {
     private List<DetailCellar> getDetailsByCellar(Cellar cellar) {
         List<DetailCellar> detailCellarList = new ArrayList<>();
         Iterable<DetailCellar> detailsCellar = detailCellarRepository.findByCellar(cellar);
-        detailsCellar.forEach (detail -> {
+        detailsCellar.forEach(detail -> {
             detail.setListsNull();
             detail.setFatherListToNull();
             detail.getProduct().setFatherListToNull();
