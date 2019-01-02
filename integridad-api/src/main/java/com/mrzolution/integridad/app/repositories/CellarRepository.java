@@ -23,14 +23,14 @@ public interface CellarRepository extends CrudRepository<Cellar, UUID> {
     Iterable<Cellar> findCellarByUserIntegridad(UserIntegridad user);
     
     @Query("SELECT c FROM Cellar c WHERE c.provider.id = (:id) AND c.active = 'true' ORDER BY c.whNumberSeq")
-    Iterable<Cellar> findActivesCellarByProviderId(@Param("id") UUID id);
+    Iterable<Cellar> findCellarByProviderId(@Param("id") UUID id);
     
     @Query("SELECT c FROM Cellar c WHERE c.whNumberSeq = (:seq) AND c.subsidiary.id = (:subId) AND c.active = 'true' ORDER BY c.whNumberSeq")
-    Iterable<Cellar> findActivesCellarByWhNumberSeqAndSubsidiaryId(@Param("seq") String whNumberSeq, @Param("subId") UUID id);
+    Iterable<Cellar> findCellarByWhNumberSeqAndSubsidiaryId(@Param("seq") String whNumberSeq, @Param("subId") UUID id);
     
     @Query("SELECT c FROM Cellar c WHERE c.whNumberSeq = (:seq) AND c.subsidiary.userClient.id = (:userClientId) AND c.active = 'true' ORDER BY c.whNumberSeq")
-    Iterable<Cellar> findActivesCellarByWhNumberSeqAndUserClientId(@Param("seq") String whNumberSeq, @Param("userClientId") UUID id);
+    Iterable<Cellar> findCellarByWhNumberSeqAndUserClientId(@Param("seq") String whNumberSeq, @Param("userClientId") UUID id);
     
     @Query("SELECT c FROM Cellar c WHERE c.subsidiary.userClient.id = (:userClientId) AND c.active = 'true' ORDER BY c.whNumberSeq")
-    Iterable<Cellar> findActivesCellarByUserClientId(@Param("userClientId") UUID id);
+    Iterable<Cellar> findCellarByUserClientId(@Param("userClientId") UUID id);
 }

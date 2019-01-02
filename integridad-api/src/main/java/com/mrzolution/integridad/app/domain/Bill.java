@@ -18,6 +18,7 @@ import lombok.Data;
 /**
  * Created by daniel.
  */
+
 @Entity
 @Data
 public class Bill {

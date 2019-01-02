@@ -16,32 +16,19 @@ import lombok.Data;
 
 @Entity
 @Data
-public class Kardex implements Child {
+public class DetailConsumption implements Child {
     @Id
     @GeneratedValue
     private UUID id;
     
-    private String codeWarehouse;
-    private String details;
-    private String observation;
-    private long dateRegister;
-    private String prodName;
-    private double prodCostEach;
-    private long prodQuantity;
-    private double prodTotal;
-    
-    @ManyToOne
-    @JoinColumn(name = "bill_id")
-    private Bill bill;
-    
-    @ManyToOne
-    @JoinColumn(name = "cellar_id")
-    private Cellar cellar;
+    private long quantity;
+    private Double costEach;
+    private Double total;
     
     @ManyToOne
     @JoinColumn(name = "consumption_id")
     private Consumption consumption;
-
+    
     @ManyToOne
     @JoinColumn(name = "product_id")
     private Product product;
@@ -50,13 +37,7 @@ public class Kardex implements Child {
     }
     
     public void setFatherListToNull() {
-        bill.setListsNull();
-        bill.setFatherListToNull();
-        cellar.setListsNull();
-        cellar.setFatherListToNull();
         consumption.setListsNull();
         consumption.setFatherListToNull();
-        product.setListsNull();
-        product.setFatherListToNull();
     }
 }

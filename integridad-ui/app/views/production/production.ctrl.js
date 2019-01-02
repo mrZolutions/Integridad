@@ -17,6 +17,7 @@ angular.module('integridadUiApp')
     vm.loading = false;
     vm.seqNumber = undefined;
     vm.warehouse = undefined;
+    vm.consumption = undefined;
     vm.providerSelected = undefined;
     vm.warehouseName = undefined;
     vm.warehouseSubsidiaryName = undefined;
@@ -29,6 +30,8 @@ angular.module('integridadUiApp')
     function _activate() {
         vm.warehouseList = undefined;
         vm.dateCellar = undefined;
+        vm.dateConsumption = undefined;
+        vm.consumption = undefined;
         vm.aux = undefined;
         vm.loading = true;
         vm.priceType = vm.prices[0];
@@ -106,6 +109,18 @@ angular.module('integridadUiApp')
 
     vm.cancelFindProviders = function() {
         vm.warehouseSelected = undefined;
+    };
+
+    vm.consumptionFromWarehouse = function(warehouse) {
+        vm.loading = true;
+        vm.success = undefined;
+        vm.error = undefined;
+        vm.warehouse = warehouse;
+        vm.warehouseSelected = true;
+        vm.dateConsumption = new Date();
+        vm.warehouseName = warehouse.nameNumber;
+        vm.warehouseSubsidiaryName = warehouse.subsidiary.name;
+        vm.loading = false;
     };
 
     vm.providerSelect = function(provider) {
@@ -281,13 +296,13 @@ angular.module('integridadUiApp')
 
     vm.saveToCellar = function(cellar) {
         vm.loading = true;
-        vm.userValid = $localStorage.user.userType.code;
+        vm.userCode = $localStorage.user.userType.code;
         vm.cellar.dateBill = $('#pickerDateBill').data("DateTimePicker").date().toDate().getTime();
         vm.cellar.dateCellar = $('#pickerDateEnterCellar').data("DateTimePicker").date().toDate().getTime();
         vm.cellar.whNumberSeq = vm.seqNumber;
         vm.cellar.detailsCellar = [];
         vm.cellar.detailsKardex = [];
-        if (vm.userValid === 'EMP') {
+        if (vm.userCode === 'EMP') {
             vm.cellar.statusIngreso = 'PENDIENTE';
         } else {
             vm.cellar.statusIngreso = 'INGRESADO';

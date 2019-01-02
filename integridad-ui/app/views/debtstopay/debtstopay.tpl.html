@@ -1,45 +1,45 @@
-<div style = "width: 100%;height: 100%;top: 0px;left: 0px;position: fixed;display: block; z-index: 99; background: rgba(255, 255, 255, 0.3)" ng-show="vm.loading">
-    <div style = "position: absolute;top: 15%;z-index: 100; width: 100%; text-align: center;">
-        <div class = "sk-circle">
-            <div class = "sk-circle1 sk-child"></div>
-            <div class = "sk-circle2 sk-child"></div>
-            <div class = "sk-circle3 sk-child"></div>
-            <div class = "sk-circle4 sk-child"></div>
-            <div class = "sk-circle5 sk-child"></div>
-            <div class = "sk-circle6 sk-child"></div>
-            <div class = "sk-circle7 sk-child"></div>
-            <div class = "sk-circle8 sk-child"></div>
-            <div class = "sk-circle9 sk-child"></div>
-            <div class = "sk-circle10 sk-child"></div>
-            <div class = "sk-circle11 sk-child"></div>
-            <div class = "sk-circle12 sk-child"></div>
+<div style="width: 100%;height: 100%;top: 0px;left: 0px;position: fixed;display: block; z-index: 99; background: rgba(255, 255, 255, 0.3)" ng-show="vm.loading">
+    <div style="position: absolute;top: 15%;z-index: 100; width: 100%; text-align: center;">
+        <div class="sk-circle">
+            <div class="sk-circle1 sk-child"></div>
+            <div class="sk-circle2 sk-child"></div>
+            <div class="sk-circle3 sk-child"></div>
+            <div class="sk-circle4 sk-child"></div>
+            <div class="sk-circle5 sk-child"></div>
+            <div class="sk-circle6 sk-child"></div>
+            <div class="sk-circle7 sk-child"></div>
+            <div class="sk-circle8 sk-child"></div>
+            <div class="sk-circle9 sk-child"></div>
+            <div class="sk-circle10 sk-child"></div>
+            <div class="sk-circle11 sk-child"></div>
+            <div class="sk-circle12 sk-child"></div>
         </div>
     </div>
 </div>
 
 <div class="form-group col-md-12">
-<div class = "header">
+<div class="header">
     <h4><b>Cuentas por Pagar</b></h4>
 </div>
 
-<div class = "row" ng-show = "vm.error !== undefined">
-    <div class = "form-group col-md-12">
-        <div class = "alert alert-danger">{{vm.error}}</div>
+<div class="row" ng-show="vm.error !== undefined">
+    <div class="form-group col-md-12">
+        <div class="alert alert-danger">{{vm.error}}</div>
     </div>
 </div>
-<div class = "row" ng-show = "vm.success !== undefined">
-    <div class = "form-group col-md-12">
-        <div class = "alert alert-success">{{vm.success}}</div>
+<div class="row" ng-show="vm.success !== undefined">
+    <div class="form-group col-md-12">
+        <div class="alert alert-success">{{vm.success}}</div>
     </div>
 </div>
 
-<div class="table-responsive" ng-show = "vm.providerSelected === undefined && vm.debtsToPayList === undefined && vm.providerDebtsList === undefined && vm.debtsProviderSelected === undefinded">
-    <div class = "row">
-        <div class = "form-group col-md-12">
-            <input ng-model = "searchText" class = "form-control" placeholder = "Buscar Proveedores">
+<div class="table-responsive" ng-show="vm.providerSelected === undefined && vm.debtsToPayList === undefined && vm.providerDebtsList === undefined && vm.debtsProviderSelected === undefinded">
+    <div class="row">
+        <div class="form-group col-md-12">
+            <input ng-model="searchText" class="form-control" placeholder="Buscar Proveedores">
         </div>
     </div>
-    <table class = "table table-striped">
+    <table class="table table-striped">
         <thead>
             <tr>
                 <th>C&oacute;digo</th>
@@ -49,12 +49,12 @@
             </tr>
         </thead>
         <tbody>
-            <tr ng-show = "vm.providerList == 0">
-                <td colspan = "4">
+            <tr ng-show="vm.providerList == 0">
+                <td colspan="4">
                     No hay proveedores ingresados
                 </td>
             </tr>
-            <tr ng-repeat = "provider in vm.providerList | orderBy:'name' | filter:searchText">
+            <tr ng-repeat="provider in vm.providerList | orderBy:'name' | filter:searchText">
                 <td>{{provider.codeIntegridad}}</td>
                 <td>{{provider.name}}</td>
                 <td>{{provider.ruc_type}}</td>
@@ -763,9 +763,9 @@
                         <td>{{debts.fecha | date : "dd/MM/yyyy"}}</td>
                         <td>{{debts.total}}</td>
                         <td>
-                            <button type = "button" title = "Consultar Factura" 
+                            <button type = "button" title = "Ver Factura" 
                                     class = "btn btn-primary btn-sm" ng-click = "vm.debtsToPaySelected(debts)">
-                                    <span class = "glyphicon glyphicon-search" aria-hidden = "true"></span>
+                                    <span class = "glyphicon glyphicon-eye-open" aria-hidden = "true"></span>
                             </button>
                         </td>
                     </tr>
@@ -783,6 +783,7 @@
 </div>
 <!--FINAL SECCIÓN DE CONSULTA DE FACTURAS POR PROVEEDOR-->
 
+<!--SECCIÓN DE CONSULTA DE FACTURA INDIVIDUAL-->
 <div class="table-responsive" ng-show = "vm.debtsProviderSelected !== undefined" id = "printArea" print-section>
     <div class = "panel panel-default">
         <div class = "panel-heading">
@@ -900,6 +901,55 @@
                         </tbody>
                     </table>
                 </div> 
+            </div>
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <b>Forma de Pago</b>
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-md-12">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th> Medio </th>
+                                <th> Valor</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="pago in vm.pagos">
+                                <td>
+                                    {{ pago.medio }}<br/>
+                                    <span ng-if="pago.medio === 'cheque'">
+                                        {{ pago.chequeBank }} - {{ pago.chequeAccount }} - {{pago.chequeNumber}}<br/>
+                                    </span>
+                                    <span ng-if="pago.medio === 'credito'">
+                                        NUMER DE PAGOS: {{ pago.creditoNumeroPagos }} - DIAS: {{ pago.creditoIntervalos }}<br/>
+                                    </span>
+                                    <span ng-if="pago.medio === 'cheque_posfechado'">
+                                        {{ pago.chequeBank }} - {{ pago.chequeAccount }} - {{pago.chequeNumber}} - {{pago.fechaCobro | date :  "dd/MM/yyyy"}}<br/>
+                                    </span>
+                                    <span ng-if="pago.medio === 'tarjeta_credito' || pago.medio === 'tarjeta_debito'">
+                                        {{ pago.cardBrand }}<br/>
+                                    </span>
+                                    {{ pago.payForm }}
+                                </td>
+                                <td>{{ pago.total }}</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td><b>TOTAL</b></td>
+                                <td>{{vm.getTotalPago()}}</td>
+                                <td>
+                                    Vuelto: {{vm.getCambio}}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
             <div class = "row" print-remove>
                 <div class="form-group col-md-12">

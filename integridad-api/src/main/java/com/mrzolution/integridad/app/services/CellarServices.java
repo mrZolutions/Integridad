@@ -57,7 +57,7 @@ public class CellarServices {
     
     public Iterable<Cellar> getActivesCellarByWhNumberSeqAndSubsidiaryId(String whNumberSeq, UUID subId) {
         log.info("CellarServices getActivesCellarByWhNumberSeqAndSubsidiaryId: {}, {}", whNumberSeq, subId);
-        Iterable<Cellar> cellars = cellarRepository.findActivesCellarByWhNumberSeqAndSubsidiaryId(whNumberSeq, subId);
+        Iterable<Cellar> cellars = cellarRepository.findCellarByWhNumberSeqAndSubsidiaryId(whNumberSeq, subId);
         cellars.forEach (cellar -> {
             cellar.setFatherListToNull();
             cellar.setListsNull();
@@ -67,7 +67,7 @@ public class CellarServices {
     
     public Iterable<Cellar> getActivesCellarByWhNumberSeqAndUserClientId(String whNumberSeq, UUID userClientId) {
         log.info("CellarServices getActivesCellarByWhNumberSeqAndUserClientId: {}, {}", whNumberSeq, userClientId);
-        Iterable<Cellar> cellars = cellarRepository.findActivesCellarByWhNumberSeqAndUserClientId(whNumberSeq, userClientId);
+        Iterable<Cellar> cellars = cellarRepository.findCellarByWhNumberSeqAndUserClientId(whNumberSeq, userClientId);
         cellars.forEach (cellar -> {
             cellar.setFatherListToNull();
             cellar.setListsNull();

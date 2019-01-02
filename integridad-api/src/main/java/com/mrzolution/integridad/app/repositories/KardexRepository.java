@@ -2,6 +2,7 @@ package com.mrzolution.integridad.app.repositories;
 
 import com.mrzolution.integridad.app.domain.Bill;
 import com.mrzolution.integridad.app.domain.Cellar;
+import com.mrzolution.integridad.app.domain.Consumption;
 import com.mrzolution.integridad.app.domain.Kardex;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -19,4 +20,6 @@ public interface KardexRepository extends CrudRepository<Kardex, UUID> {
     Iterable<Kardex> findByCellar(Cellar cellar);
     
     Iterable<Kardex> findByBill(Bill bill);
+    
+    Iterable<Kardex> findByConsumption(Consumption consumption);
 }
