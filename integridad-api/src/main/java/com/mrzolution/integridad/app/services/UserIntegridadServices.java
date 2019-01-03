@@ -36,14 +36,14 @@ public class UserIntegridadServices {
 	@Autowired
 	SubsidiaryServices subsidiaryServices;
 	
-	public UserIntegridad create(UserIntegridad userIntegridad) throws BadRequestException{
+	public UserIntegridad create(UserIntegridad userIntegridad) throws BadRequestException {
 		log.info("UserIntegridadServices create: {}", userIntegridad.getEmail());
 		
-		if(userIntegridadRepository.findByEmailIgnoreCaseAndActive(userIntegridad.getEmail(), true) != null){
+		if (userIntegridadRepository.findByEmailIgnoreCaseAndActive(userIntegridad.getEmail(), true) != null) {
 			throw new BadRequestException("Email already used");
 		}
 
-		if(userIntegridadRepository.findByCedulaAndActive(userIntegridad.getCedula(), true) != null){
+		if (userIntegridadRepository.findByCedulaAndActive(userIntegridad.getCedula(), true) != null) {
 			throw new BadRequestException("Cedula already used");
 		}
 		
@@ -57,7 +57,7 @@ public class UserIntegridadServices {
 		userIntegridad.setDateCreated(new Date().getTime());
 		log.info("UserIntegridadServices create: {} password Encoded", userIntegridad.getEmail());
 		
-		if(userIntegridad.getUserType() == null){
+		if (userIntegridad.getUserType() == null) {
 			UserType userType = userTypeServices.getByCode(Constants.USER_TYPE_EMP_CODE);
 			userIntegridad.setUserType(userType);
 		}
@@ -71,21 +71,21 @@ public class UserIntegridadServices {
 		return saved;
 	}
 	
-	public UserIntegridad update (UserIntegridad userIntegridad) throws BadRequestException{
+	public UserIntegridad update (UserIntegridad userIntegridad) throws BadRequestException {
 		log.info("UserIntegridadServices update: {}", userIntegridad.getEmail());
 		UserIntegridad retrieved = userIntegridadRepository.findByEmailIgnoreCaseAndActive(userIntegridad.getEmail(), true);
 
 		UserIntegridad retrievedCedula = userIntegridadRepository.findByCedulaAndActive(userIntegridad.getCedula(), true);
 		
-		if(!retrieved.getId().equals(userIntegridad.getId())){
+		if (!retrieved.getId().equals(userIntegridad.getId())) {
 			throw new BadRequestException("Email already used");
 		}
 
-		if(!retrievedCedula.getId().equals(userIntegridad.getId())){
+		if (!retrievedCedula.getId().equals(userIntegridad.getId())) {
 			throw new BadRequestException("Cedula already used");
 		}
 		
-		if(!"".equals(userIntegridad.getPassword())){
+		if (!"".equals(userIntegridad.getPassword())) {
 			String encoded = passwordEncoder.encode(userIntegridad.getPassword());
 			userIntegridad.setPassword(encoded);
 			log.info("UserIntegridadServices update: {} password Encoded", userIntegridad.getEmail());
@@ -93,7 +93,7 @@ public class UserIntegridadServices {
 			userIntegridad.setPassword(retrieved.getPassword());
 		}
 		
-		if(userIntegridad.getUserType() == null){
+		if (userIntegridad.getUserType() == null) {
 			UserType userType = userTypeServices.getByCode(Constants.USER_TYPE_EMP_CODE);
 			userIntegridad.setUserType(userType);
 		}
@@ -107,14 +107,14 @@ public class UserIntegridadServices {
 		return updated;
 	}
 
-	public UserIntegridad authenticate(UserIntegridad user) throws BadRequestException{
+	public UserIntegridad authenticate(UserIntegridad user) throws BadRequestException {
 		log.info("UserIntegridadServices authenticate: {}", user.getEmail());
 		UserIntegridad userResponse = userIntegridadRepository.findByEmailIgnoreCaseAndActive(user.getEmail(), true);
-		if(userResponse == null){
+		if (userResponse == null) {
 			throw new BadRequestException("Invalid Email");
 		}
 		
-		if(!passwordEncoder.matches(user.getPassword(), userResponse.getPassword())){
+		if (!passwordEncoder.matches(user.getPassword(), userResponse.getPassword())) {
 			userResponse = null;
 			throw new BadRequestException("Wrong Password");
 		}
@@ -125,10 +125,10 @@ public class UserIntegridadServices {
 		return userResponse;
 	}
 
-	public UserIntegridad activate(UUID userId, String validation) throws BadRequestException{
+	public UserIntegridad activate(UUID userId, String validation) throws BadRequestException {
 		log.info("UserIntegridadServices activate: {}", userId);
 		UserIntegridad userToValidate = userIntegridadRepository.findByIdAndValidation(userId, validation);
-		if(userToValidate != null && !userToValidate.isActive()){
+		if (userToValidate != null && !userToValidate.isActive()) {
 			log.info("UserIntegridadServices activating: {}", userToValidate.getId());
 			userToValidate.setActive(true);
 			UserIntegridad activeUser = userIntegridadRepository.save(userToValidate);
@@ -144,7 +144,7 @@ public class UserIntegridadServices {
 		log.info("UserIntegridadServices recoverPassword: {}", eMail);
 		UserIntegridad userResponse = userIntegridadRepository.findByEmailIgnoreCaseAndActive(eMail, true);
 		
-		if(userResponse == null){
+		if (userResponse == null) {
 			throw new BadRequestException("Invalid Email");
 		}
 		
@@ -170,7 +170,7 @@ public class UserIntegridadServices {
 
 	public Iterable<UserIntegridad> getAllActivesLazy() {
 		Iterable<UserIntegridad> userIntegridadList = userIntegridadRepository.findByActive(true);
-		userIntegridadList.forEach(user->{user.setFatherListToNull();});
+		userIntegridadList.forEach(user -> {user.setFatherListToNull();});
 		return userIntegridadList;
 	}
 
@@ -180,7 +180,7 @@ public class UserIntegridadServices {
 		UserType userType = userTypeServices.getByCode(code);
 		log.info("UserIntegridadServices getByCodeTypeAndSubsidiaryIdActivesLazy userType retreived");
 		Iterable<UserIntegridad> userIntegridadList = new ArrayList<>();
-		if(Constants.USER_TYPE_SAD_CODE.equals(code)){
+		if (Constants.USER_TYPE_SAD_CODE.equals(code)) {
 			userIntegridadList = userIntegridadRepository.
 					findByUserTypeAndActive(userType,true);
 			log.info("UserIntegridadServices getByCodeTypeAndSubsidiaryIdActivesLazy userIntegridad list retreived");
@@ -191,7 +191,7 @@ public class UserIntegridadServices {
 					findByUserTypeAndActiveAndSubsidiary(userType,true, subsidiary);
 			log.info("UserIntegridadServices getByCodeTypeAndSubsidiaryIdActivesLazy userIntegridad list retreived");
 		}
-		userIntegridadList.forEach(user-> user.setFatherListToNull());
+		userIntegridadList.forEach(user -> user.setFatherListToNull());
 		return userIntegridadList;
 	}
 

@@ -79,7 +79,7 @@ public class ProviderServices {
 
     public Iterable<Provider> getLazyByUserClient(UUID id) {
 	log.info("ProviderServices getLazyByUserClient");
-	Iterable<Provider> providers = providerRepository.findByUserClientId(id);
+	Iterable<Provider> providers = providerRepository.findProviderByUserClientId(id);
 	for (Provider provider : providers) {
             provider.setListsNull();
             provider.setFatherListToNull();

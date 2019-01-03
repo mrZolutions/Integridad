@@ -55,7 +55,6 @@ public class Detail implements Child {
         detail.setBill(Bill.newBillTest());
         detail.setCreditNote(CreditNote.newCreditNoteTest());
         detail.setProduct(Product.newProducTest());
-
         return detail;
     }
 

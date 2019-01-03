@@ -18,22 +18,23 @@
 </div>
 
 <div class="form-group col-md-12">
-    <div class = "header">
-        <h4>Módulo de Producción</h4>
+    <div class="header" ng-show="vm.warehouseSelected != true">
+        <h4><b>Producción</b></h4>
     </div>
 
-    <div class = "row" ng-show = "vm.error !== undefined">
-            <div class = "form-group col-md-12">
-                <div class = "alert alert-danger">{{vm.error}}</div>
-            </div>
+    <div class="row" ng-show="vm.error != undefined">
+        <div class = "form-group col-md-12">
+            <div class = "alert alert-danger">{{vm.error}}</div>
         </div>
-    <div class = "row" ng-show = "vm.success !== undefined">
+    </div>
+    <div class = "row" ng-show = "vm.success != undefined">
         <div class = "form-group col-md-12">
             <div class = "alert alert-success">{{vm.success}}</div>
         </div>
     </div>
     
-    <div ng-show="vm.warehouseSelected === undefined">
+    <!--CARGA DE BODEGAS POR SUCURSAL-->
+    <div class="table-responsive" ng-show="vm.warehouseSelected === undefined">
         <div class="row">
             <div class="form-group col-md-10">
                 <input ng-model="searchText" class="form-control" placeholder="Buscar">
@@ -42,11 +43,9 @@
         <table class="table table-striped">
             <thead>
                 <tr>
-                    <th>
-                        <th> C&oacute;digo </th>
-                        <th> Nombre </th>
-                        <th> Sucursal</th>
-                    </th>
+                    <th>C&oacute;digo</th>
+                    <th>Nombre</th>
+                    <th>Sucursal</th>
                 </tr>
             </thead>
             <tbody>
@@ -56,22 +55,373 @@
                     </td>
                 </tr>
                 <tr ng-repeat="warehouse in vm.warehouseList | orderBy:'name' | filter:searchText">
-                    <td></td>
-                    <td></td>
+                    <td>{{warehouse.codeWarehouse}}</td>
+                    <td>{{warehouse.nameNumber}}</td>
+                    <td>{{warehouse.subsidiary.name}}</td>
+                    <td>
+                        <button type="button" title = "Seleccionar Bodega" class="btn btn-primary btn-sm" ng-click="vm.findProviders(warehouse)">
+                                <span class = "glyphicon glyphicon-check" aria-hidden = "true"></span>
+                        </button>
+                        <!--<button type="button" title="Consumos Internos" class="btn btn-primary btn-sm" ng-click="vm.consumptionFromWarehouse(warehouse)">
+                                <span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
+                        </button>
+                        <button type="button" title = "Transferencia entre Bodegas" class="btn btn-primary btn-sm" ng-click="">
+                                <span class = "glyphicon glyphicon-transfer" aria-hidden = "true"></span>
+                        </button>-->
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!--CARGA DE PROVEEDORES-->
+    <div class="table-responsive" ng-show="vm.warehouseSelected !== undefined && vm.providerList !== undefined">
+        <div class="row">
+            <div class="form-group col-md-12">
+                <h4>Sucursal: <b>{{vm.warehouseSubsidiaryName}}</b></h4>
+                <h5>Bodega: <b>{{vm.warehouseName}}</b></h5>
+            </div>
+            <div class="form-group col-md-10">
+                <input ng-model = "searchText" class = "form-control" placeholder = "Buscar Proveedores">
+            </div>
+        </div>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>C&oacute;digo</th>
+                    <th>Nombre</th>
+                    <th>Tipo ID</th>
+                    <th>No. Identidad</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-show="vm.providerList == 0">
+                    <td colspan="4">
+                        No hay proveedores ingresados
+                    </td>
+                </tr>
+                <tr ng-repeat="provider in vm.providerList | orderBy:'name' | filter:searchText">
+                    <td>{{provider.codeIntegridad}}</td>
+                    <td>{{provider.name}}</td>
+                    <td>{{provider.ruc_type}}</td>
+                    <td>{{provider.ruc}}</td>
                     <td></td>
                     <td>
-                        <button type="button" class="btn btn-primary btn-sm" ng-click="">
-                                Ingreso a Bodega
-                        </button>
-                        <button type="button" class="btn btn-primary btn-sm" ng-click="">
-                                Consumo
-                        </button>
-                        <button type="button" class="btn btn-primary btn-sm" ng-click="">
-                                Transferencia de Bodegas
+                        <button type="button" title="Ingreso a Bodega" class="btn btn-primary btn-sm" ng-click="vm.providerSelect(provider)">
+                                <span class="glyphicon glyphicon-import" aria-hidden="true"></span>
                         </button>
                     </td>
                 </tr>
             </tbody>
         </table>
+        <div class="row">
+            <div class="form-group col-md-12">
+                <button type="button" title="Salir" class="btn btn-primary"
+                        ng-click="vm.cancelFindProviders()">
+                        <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!--SECCIÓN DE INGRESO A BODEGA-->
+    <div class="table-responsive" ng-show="vm.warehouseSelected === true && vm.providerList === undefined && vm.providerSelected !== undefined">
+        <div class="row">
+            <div class="form-group col-md-12">
+                <h4>Sucursal: <b>{{vm.warehouseSubsidiaryName}}</b></h4>
+                <h5>Bodega: <b>{{vm.warehouseName}}</b></h5>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4>Ingreso a Bodega</h4>
+                <div>
+                    <b>Ingreso Nro: </b>{{vm.seqNumber}}
+                </div>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="form-group col-md-6">
+                        <label>C&oacute;digo Proveedor:</label>
+                        {{vm.cellar.provider.codeIntegridad}}
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label>RUC / CEDULA / PASAPORTE:</label>
+                        {{vm.cellar.provider.ruc}}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-6">
+                        <label>Nombre Comercial:</label>
+                        {{vm.cellar.provider.name}}
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label>Raz&oacute;n Social:</label>
+                        {{vm.cellar.provider.razonSocial}}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-12">
+                        <label>Tipo de Proveedor:</label>
+                        {{vm.cellar.provider.providerType}}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-4">
+                        <label>Fecha de Ingreso a Bodega:</label>
+                        <div class="input-group date" id="pickerDateEnterCellar">
+                            <input type="text" class="form-control input-group-addon"/>
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"/></span>
+                        </div>
+                        <script>
+                            var defaultDate = new Date();
+                            $('#pickerDateEnterCellar').datetimepicker({format: "DD/MM/YY",});
+                        </script>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label>N&uacute;mero de Factura:</label><br/>
+                        <input type="text" ng-model="vm.cellar.billNumber"
+                               class="form-control" maxlength="17">
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label>Fecha de Factura: </label>
+                        <div class="input-group date" id="pickerDateBill">
+                            <input type="text" class="form-control input-group-addon"/>
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"/></span>
+                        </div>
+                        <script>
+                            var defaultDate = new Date();
+                            $('#pickerDateBill').datetimepicker({format: "DD/MM/YY",});
+                        </script>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-9">
+                        <label>N&uacute;mero de Autorizaci&oacute;n:</label><br/>
+                        <input type="text" ng-model="vm.cellar.authNumber" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+                               class="form-control" maxlength="90">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <b>Detalle</b>
+            </div>
+            <div class="panel-body table-responsive">
+                <div class="row">
+                    <div class="form-group col-md-12">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th> Item </th>
+                                    <th> C&oacute;digo </th>
+                                    <th> Descripci&oacute;n </th>
+                                    <th> Cant. </th>
+                                    <th> U. Med. </th>
+                                    <th> V. Unit. </th>
+                                    <th> V. Total. </th>
+                                    <th>
+                                        <button type="button" title="Agregar Productos" class="btn btn-primary" ng-click="vm.addProduct()"
+                                                data-toggle="modal" data-target="#modalAddProduct">
+                                                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                                        </button>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-show="vm.cellar.items == 0">
+                                    <td colspan="4">
+                                        No hay detalles ingresados
+                                    </td>
+                                </tr>
+                                <tr ng-repeat="detail in vm.cellar.items">
+                                    <td>{{$index + 1}}</td>
+                                    <td>{{detail.product.codeIntegridad}}</td>
+                                    <td>{{detail.product.name}}</td>
+                                    <td>{{detail.quantity}}</td>
+                                    <td>{{detail.product.unitOfMeasurementFull}}</td>
+                                    <td>{{detail.costEach}}</td>
+                                    <td>{{detail.total}}</td>
+                                    <td>
+                                        <button type="button" title="Editar Producto" class="btn btn-primary"
+                                                ng-click="vm.editDetail(detail, $index)"
+                                                data-toggle="modal" data-target="#modalAddProduct">
+                                                <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+                                        </button>
+                                        <button type="button" title="Eliminar Producto" class="btn btn-primary" ng-click="vm.removeDetail($index)">
+                                                <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td><b>SUBTOTAL: </b></td>
+                                    <td>{{vm.cellar.subTotal}}</td>
+                                    <td> </td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td><b>BASE 0%: </b></td>
+                                    <td>{{vm.cellar.baseNoTaxes}}</td>
+                                    <td> </td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td><b>BASE 12%: </b></td>
+                                    <td>{{vm.cellar.baseTaxes}}</td>
+                                    <td> </td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td><b>IVA: </b></td>
+                                    <td>{{vm.cellar.iva}}</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td><b>TOTAL: </b></td>
+                                    <td>{{vm.cellar.total}}</td>
+                                    <td></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-12">
+                        <button type="button" title="Guardar Ingreso a Bodega" class="btn btn-primary"
+                                ng-click="vm.saveToCellar(vm.cellar); vm.cancelCellar()">
+                                <span class="glyphicon glyphicon-floppy-saved" aria-hidden="true"></span>
+                        </button>
+                        <button type="button" title="Salir" class="btn btn-primary"
+                                ng-click="vm.cancelCellar()">
+                                <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--MODAL PARA AGREGAR PRODUCTOS-->
+    <div id="modalAddProduct" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" ng-click="vm.productToAdd=undefined">&times;</button>
+                    <h4 class="modal-title">Agregar Producto</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12" ng-if="vm.productToAdd === undefined">
+                            <div class="row">
+                                <div class="form-group col-md-8">
+                                    <input ng-model="vm.searchText" class="form-control" placeholder="Buscar" />
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <button type="button" title="Buscar" class="btn btn-primary" ng-click="vm.filter()">
+                                            <span class = "glyphicon glyphicon-search" aria-hidden = "true"></span>
+                                    </button>
+                                </div>
+                            </div>
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th> C&oacute;digo </th>
+                                        <th> Nombre </th>
+                                        <th> Precio Unitario $</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-show="vm.productList == 0">
+                                        <td colspan="4">
+                                            No hay productos ingresados
+                                        </td>
+                                    </tr>
+                                    <tr ng-repeat="productSelect in vm.productList | orderBy:'name' | filter:searchTextProd">
+                                        <td>{{ productSelect.codeIntegridad }}</td>
+                                        <td>{{ productSelect.name }}</td>
+                                        <td>{{ vm.getCost('1.'+ productSelect[vm.priceType.cod], productSelect.averageCost) }}</td>
+                                        <td>
+                                            <button type="button" title="Seleccionar" class="btn btn-primary" ng-click="vm.selectProductToAdd(productSelect)">
+                                                    <span class = "glyphicon glyphicon-check" aria-hidden = "true"></span>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <nav aria-label="Page navigation example">
+                                <ul class="pagination pagination-sm">
+                                    <li class="page-item" ng-repeat="page in vm.range() track by $index" ng-class="vm.getActiveClass($index)">
+                                        <a class="page-link" ng-click="vm.paginate($index)">{{$index + 1}}</a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                        <div class="col-md-12" ng-if="vm.productToAdd !== undefined">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <b>{{vm.productToAdd.name}}</b>
+                                </div>
+                                <div class="panel-body">
+                                    <div class="row">
+                                        <div class="form-group col-md-6">
+                                            <b>CANTIDAD A INGRESAR: </b>
+                                            <input type="text" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+                                                   ng-model="vm.quantity" class="form-control" maxlength="9">
+                                        </div>
+                                        <div class="form-group col-md-6">
+                                            <b>PRECIO UNITARIO: </b>
+                                            <input type="text"
+                                                   ng-model="vm.productToAdd.costEachCalculated" class="form-control">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" title="Aceptar y Cerrar" class="btn btn-primary" ng-click="vm.acceptProduct(true)"
+                            ng-disabled="vm.productToAdd === undefined">
+                            <span class = "glyphicon glyphicon-thumbs-up" aria-hidden = "true"></span>
+                    </button>
+                    <button type="button" title="Aceptar y Agregar Mas productos" class="btn btn-primary" ng-click="vm.acceptProduct(false)"
+                            ng-disabled="vm.productToAdd === undefined">
+                            <span class = "glyphicon glyphicon-ok-sign" aria-hidden = "true"></span>
+                    </button>
+                    <button type="button" title="Salir" class="btn btn-primary" data-dismiss = "modal">
+                            <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
 </div>

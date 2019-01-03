@@ -557,6 +557,7 @@ angular.module('integridadUiApp')
       $('#modalAddPago').modal('hide');
       // vm.impuestosTotales.push(vm.impuestoICE,vm.impuestoIVA);
       vm.impuestosTotales = [];
+      vm.bill.detailsKardex = [];
       if (vm.impuestoIVA.base_imponible > 0) {
         vm.impuestosTotales.push(vm.impuestoIVA);
       };
@@ -609,6 +610,18 @@ angular.module('integridadUiApp')
           item.impuestos = impuestos;
         };
         vm.items.push(item);
+        var kardex = {
+          bill: vm.bill.id,
+          product: det.product,
+          dateRegister: $('#pickerBillDate').data("DateTimePicker").date().toDate().getTime(),
+          details: 'VENTA FACTURA',
+          observation: 'EGRESO',
+          prodCostEach: det.costEach,
+          prodName: det.product.name,
+          prodQuantity: det.quantity,
+          prodTotal: det.total
+        };
+        vm.bill.detailsKardex.push(kardex);
       });
       vm.pagos.total = vm.aux;
       var req = requirementService.createRequirement(vm.clientSelected, vm.bill, $localStorage.user, vm.impuestosTotales, vm.items, vm.pagos);

@@ -27,11 +27,11 @@ public class CellarController {
     CellarServices service;
     
     @RequestMapping(method = RequestMethod.GET, value="/{id}")
-    public ResponseEntity getById(@PathVariable("id") UUID id) {
+    public ResponseEntity getAllCellarById(@PathVariable("id") UUID id) {
         log.info("CellarController getId: {}", id);
         Cellar response = null;
         try {
-            response = service.getById(id);
+            response = service.getCellarById(id);
 	} catch (BadRequestException e) {
             log.error("CellarController getId Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());

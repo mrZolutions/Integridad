@@ -31,17 +31,14 @@ public class Provider {
     private String ruc;
     private String contact;
     private String providerType;
+    private long dateCreated;
+    private boolean active;
     @Email
     private String email;
 
     @ManyToOne
     @JoinColumn(name = "user_client_id")
     private UserClient userClient;
-
-
-    private long dateCreated;
-    
-    private boolean active;
     
 //    @OneToMany(mappedBy = "userClient", cascade = CascadeType.ALL)
 //    private List<Subsidiary> subsidiaries;

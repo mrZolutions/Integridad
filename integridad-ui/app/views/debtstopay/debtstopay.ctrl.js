@@ -546,7 +546,7 @@ angular.module('integridadUiApp')
           vm.totalDebtsToPay = (parseFloat(vm.totalDebtsToPay) + parseFloat(detail.baseImponible)).toFixed(2);
         });
         vm.debtsToPayCreated = true;
-        vm.success = 'Factura Ingresada con Exito'
+        vm.success = 'Factura Ingresada con Exito';
         vm.loading = false;
       }).catch(function(error) {
         vm.loading = false;

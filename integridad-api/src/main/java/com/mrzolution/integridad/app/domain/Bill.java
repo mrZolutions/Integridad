@@ -18,6 +18,7 @@ import lombok.Data;
 /**
  * Created by daniel.
  */
+
 @Entity
 @Data
 public class Bill {
@@ -71,10 +72,14 @@ public class Bill {
     @OneToMany(mappedBy = "bill", cascade = CascadeType.ALL)
     private List<Pago> pagos;
     
+    @OneToMany(mappedBy = "bill", cascade = CascadeType.ALL)
+    private List<Kardex> detailsKardex;
+    
     
     public void setListsNull(){
     	details = null;
     	pagos = null;
+        detailsKardex = null;
     }
     
     public void setFatherListToNull(){
@@ -90,6 +95,7 @@ public class Bill {
     public static Bill newBillTest(){
         Bill bill = new Bill();
         bill.setDetails(new ArrayList<>());
+        bill.setDetailsKardex(new ArrayList<>());
         bill.setPagos(new ArrayList<>());
         bill.setClient(Client.newClientTest());
         bill.setUserIntegridad(UserIntegridad.newUserIntegridadTest());

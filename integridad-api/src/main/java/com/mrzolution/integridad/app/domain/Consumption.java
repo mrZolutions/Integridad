@@ -18,17 +18,18 @@ import lombok.Data;
 
 @Entity
 @Data
-public class Cellar {
+public class Consumption {
     @Id
     @GeneratedValue
     private UUID id;
     
-    private String billNumber;
-    private long dateBill;
-    private long dateEnterCellar;
-    private String authNumber;
-    private String statusIngreso;
-    private String whNumberSeq;
+    private String codeWarehouse;
+    private long dateConsumption;
+    private String csmNumberSeq;
+    private String details;
+    private String observation;
+    private String nameProvClient;
+    private String nameSupervisor;
     private boolean active;
     private double iva;
     private double ice;
@@ -42,10 +43,6 @@ public class Cellar {
     private Warehouse warehouse;
     
     @ManyToOne
-    @JoinColumn(name = "provider_id")
-    private Provider provider;
-    
-    @ManyToOne
     @JoinColumn(name = "subsidiary_id")
     private Subsidiary subsidiary;
     
@@ -53,22 +50,20 @@ public class Cellar {
     @JoinColumn(name = "user_id")
     private UserIntegridad userIntegridad;
     
-    @OneToMany(mappedBy = "cellar", cascade = CascadeType.ALL)
-    private List<DetailCellar> detailsCellar;
+    @OneToMany(mappedBy = "consumption", cascade = CascadeType.ALL)
+    private List<DetailConsumption> detailsConsumption;
     
-    @OneToMany(mappedBy = "cellar", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "consumption", cascade = CascadeType.ALL)
     private List<Kardex> detailsKardex;
     
     public void setListsNull() {
-        detailsCellar = null;
+        detailsConsumption = null;
         detailsKardex = null;
     }
     
     public void setFatherListToNull() {
         warehouse.setListsNull();
     	warehouse.setFatherListToNull();
-    	provider.setListsNull();
-    	provider.setFatherListToNull();
         subsidiary.setListsNull();
     	subsidiary.setFatherListToNull();
         userIntegridad.setListsNull();
