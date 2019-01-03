@@ -40,7 +40,7 @@ public class ProductServices {
             List<ProductBySubsidiary> productBySubsidiaryList = product.getProductBySubsidiaries();
             product.setListsNull();
             Product saved = productRepository.save(product);
-            productBySubsidiaryList.forEach (productBySubsidiary -> {
+            productBySubsidiaryList.forEach(productBySubsidiary -> {
 		productBySubsidiary.setProduct(saved);
 		productBySubsidiary.setFatherListToNull();
 		productBySubsidiairyRepository.save(productBySubsidiary);
@@ -82,14 +82,14 @@ public class ProductServices {
     public Iterable<Product> getAllActives() {
 	log.info("ProductServices getAllActives");
 	Iterable<Product> actives = productRepository.findByActive(true);
-	actives.forEach (this::populateChildren);
+	actives.forEach(this::populateChildren);
 	return actives;
     }
 	
     public Iterable<Product> getAllActivesByUserClientIdAndActive(UUID userClientId) {
 	log.info("ProductServices getAllActivesByUserClientIdAndActive");
 	Iterable<Product> actives = productRepository.findByUserClientIdAndActive(userClientId);
-	actives.forEach (product -> {
+	actives.forEach(product -> {
             product.setFatherListToNull();
             populateChildren(product);
 	});
@@ -107,7 +107,7 @@ public class ProductServices {
             productIdList = productBySubsidiairyRepository.findBySubsidiaryIAndVariabledAndProductActive(subsidiaryId, variable, new PageRequest(0, 150, Sort.Direction.ASC, "product"));
 	}
 	List<Product> listReturn = new ArrayList<>();
-	productIdList.forEach (page -> {
+	productIdList.forEach(page -> {
             listReturn.add(getById(page));
 	});
 	Page<Product> products = new PageImpl<>(listReturn, pageable, productIdList.getTotalElements());
@@ -117,7 +117,7 @@ public class ProductServices {
     private void populateChildren(Product product) {
     	List<ProductBySubsidiary> productBySubsidiaryList = new ArrayList<>();
 	Iterable<ProductBySubsidiary> productBySubsidiaries = productBySubsidiairyRepository.findByProductId(product.getId());
-	productBySubsidiaries.forEach (productBySubsidiaryConsumer -> {
+	productBySubsidiaries.forEach(productBySubsidiaryConsumer -> {
             productBySubsidiaryConsumer.setListsNull();
             productBySubsidiaryConsumer.setFatherListToNull();
             productBySubsidiaryConsumer.getSubsidiary().setFatherListToNull();

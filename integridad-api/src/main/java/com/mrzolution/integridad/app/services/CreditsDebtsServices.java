@@ -41,7 +41,7 @@ public class CreditsDebtsServices {
     public Iterable<CreditsDebts> getCreditsDebtsOfDebtsToPayByDebtsToPayId(UUID id) {
         log.info("CreditsDebtsServices getCreditsDebtsOfDebtsToPayByDebtsToPayId: {}", id);
         Iterable<CreditsDebts> creditsDebts = creditsDebtsRepository.findCreditsDebtsOfDebtsToPayByDebtsToPayId(id);
-        creditsDebts.forEach (creditDebt -> {
+        creditsDebts.forEach(creditDebt -> {
             creditDebt.setListsNull();
             creditDebt.setFatherListToNull();
         });
@@ -58,7 +58,7 @@ public class CreditsDebtsServices {
             providerId = firstCredit.getPagoDebts().getDebtsToPay().getProvider().getId();
         }
         
-        creditsDebts.forEach (creditD -> {
+        creditsDebts.forEach(creditD -> {
             populateChildren(creditD);
             
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd");
@@ -121,7 +121,7 @@ public class CreditsDebtsServices {
     private void populateChildren(CreditsDebts creditsDebts) {
         List<PaymentDebts> paymentDebtsList = new ArrayList<>();
         Iterable<PaymentDebts> paymentDebts = paymentDebtsRepository.findByCreditsDebts(creditsDebts);
-        paymentDebts.forEach (paymentDebt -> {
+        paymentDebts.forEach(paymentDebt -> {
             paymentDebt.setListsNull();
             paymentDebt.setFatherListToNull();
             paymentDebt.setCreditsDebts(null);          

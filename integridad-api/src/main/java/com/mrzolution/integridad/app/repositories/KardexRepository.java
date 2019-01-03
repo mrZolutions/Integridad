@@ -17,9 +17,9 @@ import org.springframework.stereotype.Repository;
 @Repository
 @Qualifier(value="KardexRepository")
 public interface KardexRepository extends CrudRepository<Kardex, UUID> {
-    Iterable<Kardex> findByCellar(Cellar cellar);
-    
     Iterable<Kardex> findByBill(Bill bill);
+    
+    Iterable<Kardex> findByCellar(Cellar cellar);
     
     Iterable<Kardex> findByConsumption(Consumption consumption);
 }

@@ -99,7 +99,7 @@ public class PaymentServices {
         Iterable<Payment> payments = paymentRepository.findAllPaymentsByUserClientId(id);
         List<CCResumenReport> ccResumenReportList = new ArrayList<>();
         
-        payments.forEach (payment -> {
+        payments.forEach(payment -> {
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd");
             String fechaPago = dateFormat.format(new Date(payment.getDatePayment()));
             

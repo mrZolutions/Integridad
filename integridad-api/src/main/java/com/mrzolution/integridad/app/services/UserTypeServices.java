@@ -32,8 +32,8 @@ public class UserTypeServices {
 		return saved;
 	}
 	
-	public UserType update(UserType userType) throws BadRequestException{
-		if(userType.getId() == null){
+	public UserType update(UserType userType) throws BadRequestException {
+		if (userType.getId() == null) {
 			throw new BadRequestException("Invalid User Type");
 		}
 		log.info("UserTypeServices update: {}", userType.getName());
@@ -43,10 +43,10 @@ public class UserTypeServices {
 		return updated;
 	}
 	
-	public UserType getById(UUID id){
+	public UserType getById(UUID id) {
 		log.info("UserTypeServices getById: {}", id);
 		UserType retrieved = userTypeRepository.findOne(id);
-		if(retrieved != null){
+		if (retrieved != null) {
 			log.info("UserTypeServices retrieved id: {}", retrieved.getId());
 		} else {
 			log.info("UserTypeServices retrieved id NULL: {}", id);
@@ -56,7 +56,7 @@ public class UserTypeServices {
 		return retrieved;
 	}
 	
-	public Iterable<UserType> getAll(){
+	public Iterable<UserType> getAll() {
 		log.info("UserTypeServices getAll");
 		Iterable<UserType> usersType = userTypeRepository.findAll();
 		for (UserType userType : usersType) {
@@ -66,7 +66,7 @@ public class UserTypeServices {
 		return usersType;
 	}
 	
-	public Iterable<UserType> getAllLazy(){
+	public Iterable<UserType> getAllLazy() {
 		log.info("UserTypeServices getAllLazy");
 		Iterable<UserType> usersType = userTypeRepository.findAll();
 		for (UserType userType : usersType) {
@@ -76,10 +76,10 @@ public class UserTypeServices {
 		return usersType;
 	}
 	
-	public UserType getByCode(String code){
+	public UserType getByCode(String code) {
 		log.info("UserTypeServices getByCode: {}", code);
 		UserType typeCode = userTypeRepository.findByCode(code);
-		if(typeCode != null){
+		if (typeCode != null) {
 			typeCode.setListsNull();
 		}
 		return typeCode;

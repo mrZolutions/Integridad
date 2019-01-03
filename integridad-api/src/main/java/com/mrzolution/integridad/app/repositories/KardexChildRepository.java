@@ -1,6 +1,6 @@
 package com.mrzolution.integridad.app.repositories;
 
-import com.mrzolution.integridad.app.domain.Cellar;
+import com.mrzolution.integridad.app.domain.Bill;
 import com.mrzolution.integridad.app.domain.Kardex;
 import com.mrzolution.integridad.app.interfaces.ChildRepository;
 import java.util.UUID;
@@ -17,7 +17,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 @Qualifier(value="KardexChildRepository")
-public interface KardexChildRepository extends ChildRepository<Cellar>, JpaRepository<Kardex, UUID> {
-    @Query("SELECT k.id FROM Kardex k WHERE k.cellar = (:id)")
-    Iterable<UUID> findByFather(@Param("id") Cellar cellar);
+public interface KardexChildRepository extends ChildRepository<Bill>, JpaRepository<Kardex, UUID> {
+    @Query("SELECT k.id FROM Kardex k WHERE k.bill = (:id)")
+    Iterable<UUID> findByFather(@Param("id") Bill bill);
 }

@@ -34,7 +34,7 @@ public class SubGroupServices {
 		return saved;
 	}
 	
-	public void update(SubGroup subgroup){
+	public void update(SubGroup subgroup) {
 		log.info("SubGroupervices update: {}", subgroup.getId());
 
 		subgroup.setListsNull();
@@ -51,7 +51,7 @@ public class SubGroupServices {
 		return findOne;
 	}
 
-	public Iterable<SubGroup> getAllActivesByGroupLineId(UUID groupLineId){
+	public Iterable<SubGroup> getAllActivesByGroupLineId(UUID groupLineId) {
 		log.info("SubGroupervices getAllActivesByGroupLineId");
 		Iterable<SubGroup> actives = subGroupRepository.findByGroupLineIdAndActive(groupLineId);
 		actives.forEach(this::populateChildren);
@@ -59,7 +59,7 @@ public class SubGroupServices {
 
 	}
 
-	public Iterable<SubGroup> getAllActivesByGroupLineIdLazy(UUID groupLineId){
+	public Iterable<SubGroup> getAllActivesByGroupLineIdLazy(UUID groupLineId) {
 		log.info("SubGroupervices getAllActivesByGroupLineIdLazy");
 		Iterable<SubGroup> actives = subGroupRepository.findByGroupLineIdAndActive(groupLineId);
 		actives.forEach(subGroup -> {
@@ -70,7 +70,7 @@ public class SubGroupServices {
 
 	}
 
-	public SubGroup getById(UUID id){
+	public SubGroup getById(UUID id) {
 		log.info("SubGroupervices getById: {}", id);
 		SubGroup findOne = subGroupRepository.findOne(id);
 		populateChildren(findOne);

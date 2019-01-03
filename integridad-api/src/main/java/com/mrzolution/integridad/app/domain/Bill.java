@@ -95,6 +95,7 @@ public class Bill {
     public static Bill newBillTest(){
         Bill bill = new Bill();
         bill.setDetails(new ArrayList<>());
+        bill.setDetailsKardex(new ArrayList<>());
         bill.setPagos(new ArrayList<>());
         bill.setClient(Client.newClientTest());
         bill.setUserIntegridad(UserIntegridad.newUserIntegridadTest());

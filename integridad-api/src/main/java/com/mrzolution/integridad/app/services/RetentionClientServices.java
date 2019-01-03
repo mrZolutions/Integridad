@@ -78,7 +78,7 @@ public class RetentionClientServices {
         retentionClient.setFatherListToNull();
         retentionClient.setListsNull();
         RetentionClient saved = retentionClientRepository.save(retentionClient);
-        details.forEach (detail -> {
+        details.forEach(detail -> {
             detail.setRetentionClient(saved);
             sum += detail.getTotal();
             detailRetentionClientRepository.save(detail);
@@ -138,7 +138,7 @@ public class RetentionClientServices {
     private void populateChildren(RetentionClient retentionClient) {
 	List<DetailRetentionClient> detailRetentionList = new ArrayList<>();
 	Iterable<DetailRetentionClient> retentions = detailRetentionClientRepository.findByRetentionClient(retentionClient);
-	retentions.forEach (detail -> {
+	retentions.forEach(detail -> {
             detail.setListsNull();
             detail.setFatherListToNull();
             detail.setRetentionClient(null);

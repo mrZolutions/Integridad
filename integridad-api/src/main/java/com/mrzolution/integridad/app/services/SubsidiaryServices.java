@@ -48,7 +48,7 @@ public class SubsidiaryServices {
 	}
 	
         Subsidiary saved = subsidiaryRepository.save(subsidiary);
-	cashierList.forEach (cashier -> {
+	cashierList.forEach(cashier -> {
             cashier.setSubsidiary(saved);
             cashierRepository.save(cashier);
             cashier.setSubsidiary(null);
@@ -66,7 +66,7 @@ public class SubsidiaryServices {
     public Iterable<Subsidiary> getAllActivesByUserClientId(UUID userClientId) {
 	log.info("SubsidiaryServices getAllActivesByUserClientId: {}", userClientId);
 	Iterable<Subsidiary> subsidiaries = subsidiaryRepository.findByUserClientIdAndActive(userClientId, true);
-	subsidiaries.forEach (subsidiary -> {
+	subsidiaries.forEach(subsidiary -> {
             populateChildren(subsidiary);
 	});
 	log.info("SubsidiaryServices getAllActivesByUserClientId size retrieved: {}", Iterables.size(subsidiaries));
@@ -112,21 +112,21 @@ public class SubsidiaryServices {
 	List<UserIntegridad> userIntegridadList = new ArrayList<>();
 	Iterable<UserIntegridad> userIntegridads = userIntegridadRepository.findBySubsidiary(subsidiary);
 
-	cashiers.forEach (cashierConsumer -> {
+	cashiers.forEach(cashierConsumer -> {
             cashierConsumer.setListsNull();
             cashierConsumer.setFatherListToNull();
             cashierConsumer.setSubsidiary(null);
             cashierList.add(cashierConsumer);
 	});
 
-	warehouses.forEach (warehouseConsumer -> {
+	warehouses.forEach(warehouseConsumer -> {
             warehouseConsumer.setListsNull();
             warehouseConsumer.setFatherListToNull();
             warehouseConsumer.setSubsidiary(null);
             warehouseList.add(warehouseConsumer);
 	});
 
-	userIntegridads.forEach (userConsumer -> {
+	userIntegridads.forEach(userConsumer -> {
             userConsumer.setListsNull();
             userConsumer.setFatherListToNull();
             userConsumer.setSubsidiary(null);

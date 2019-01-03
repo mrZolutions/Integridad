@@ -42,7 +42,7 @@ public class CreditsServices {
     public Iterable<Credits> getCreditsOfBillByBillId(UUID id) {
         log.info("CreditsServices getCreditsOfBillByBillId: {}", id);
         Iterable<Credits> credits = creditsRepository.findCreditsOfBillByBillId(id);
-        credits.forEach (credit -> {
+        credits.forEach(credit -> {
             credit.setListsNull();
             credit.setFatherListToNull();
         });
@@ -59,7 +59,7 @@ public class CreditsServices {
             clientId = firstCredit.getPago().getBill().getClient().getId();
         }
         
-        credits.forEach (credit -> {
+        credits.forEach(credit -> {
             populateChildren(credit);
             
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd");
@@ -150,7 +150,7 @@ public class CreditsServices {
     private void populateChildren(Credits credits) {
         List<Payment> paymentsList = new ArrayList<>();
         Iterable<Payment> payments = paymentRepository.findByCredits(credits);
-        payments.forEach (payment -> {
+        payments.forEach(payment -> {
             payment.setListsNull();
             payment.setFatherListToNull();
             payment.setCredits(null);          

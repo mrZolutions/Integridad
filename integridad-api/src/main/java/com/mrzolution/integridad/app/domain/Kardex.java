@@ -7,6 +7,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Transient;
 import lombok.Data;
 
 /**
@@ -58,5 +59,13 @@ public class Kardex implements Child {
         consumption.setFatherListToNull();
         product.setListsNull();
         product.setFatherListToNull();
+    }
+    
+    @Transient
+    public static Kardex newKardexTest() {
+        Kardex detailk = new Kardex();
+        detailk.setBill(Bill.newBillTest());
+        detailk.setProduct(Product.newProducTest());
+        return detailk;
     }
 }

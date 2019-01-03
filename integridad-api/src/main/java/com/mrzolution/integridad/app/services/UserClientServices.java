@@ -50,7 +50,7 @@ public class UserClientServices {
 		
 		UserClient saved = userClientRepository.save(userClient);
 		
-		subsidiariesList.forEach(subsidiary->{
+		subsidiariesList.forEach(subsidiary -> {
 			subsidiary.setUserClient(saved);
 			subsidiaryServices.create(subsidiary);
 			subsidiary.setUserClient(null);
@@ -86,7 +86,7 @@ public class UserClientServices {
 
 	public Iterable<UserClient> getAllActivesLazy() {
 		Iterable<UserClient> userClientList = userClientRepository.findByActive(true);
-		userClientList.forEach(user->{user.setFatherListToNull(); user.setListsNull();});
+		userClientList.forEach(user -> {user.setFatherListToNull(); user.setListsNull();});
 		return userClientList;
 	}
 

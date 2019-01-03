@@ -46,6 +46,8 @@ public class BillServices {
     UserClientRepository userClientRepository;
     @Autowired
     KardexRepository kardexRepository;
+    @Autowired
+    KardexChildRepository kardexChildRepository;
             
     public String getDatil(Requirement requirement, UUID userClientId) throws Exception {
         UserClient userClient = userClientRepository.findOne(userClientId);
@@ -64,8 +66,8 @@ public class BillServices {
         String data = mapper.writeValueAsString(requirement);
         log.info("BillServices getDatil maper creado");
                 
-        String response = httpCallerService.post(Constants.DATIL_LINK, data, userClient);
-        //String response = "OK";
+        //String response = httpCallerService.post(Constants.DATIL_LINK, data, userClient);
+        String response = "OK";
         log.info("BillServices getDatil httpcall success");
         return response;
     }
@@ -101,7 +103,7 @@ public class BillServices {
         return bills;
     }
 
-//Bucar Bills por ID        
+    //Bucar Bills por ID        
     public Bill getById(UUID id) {
         log.info("BillServices getById: {}", id);
         Bill retrieved = billRepository.findOne(id);
@@ -174,10 +176,10 @@ public class BillServices {
     
     //Almacena los Detalles en Kardex
     public void saveKardex(Bill saved, List<Kardex> detailsKardex) {
-        detailsKardex.forEach(detail -> {
-            detail.setBill(saved);
-            kardexRepository.save(detail);
-            detail.setBill(null);
+        detailsKardex.forEach(detailk -> {
+            detailk.setBill(saved);
+            kardexRepository.save(detailk);
+            detailk.setBill(null);
         });
         saved.setDetailsKardex(detailsKardex);
         log.info("BillServices saveKardex DONE");
@@ -224,7 +226,7 @@ public class BillServices {
     }
 //Fin de Creación de las Bills
 
-//Desactivación o Anulación de las Bills
+    //Desactivación o Anulación de las Bills
     public Bill deactivate(Bill bill) throws BadRequestException {
         if (bill.getId() == null) {
             throw new BadRequestException("Invalid Bill");
@@ -237,7 +239,7 @@ public class BillServices {
         return billToDeactivate;
     }
 
-//Actualización de las Bills
+    //Actualización de las Bills
     public Bill update(Bill bill) throws BadRequestException {
         if (bill.getId() == null) {
             throw new BadRequestException("Invalid Bill");
@@ -263,7 +265,7 @@ public class BillServices {
         return bills;
     }
 
-//Reporte de Productos
+    //Reporte de Productos
     public List<ItemReport> getBySubIdAndDatesActives(UUID userClientId, long dateOne, long dateTwo) {
         log.info("BillServices getByUserClientIdAndDates: {}, {}, {}", userClientId, dateOne, dateTwo);
         Iterable<Bill> bills = billRepository.findByUserClientIdAndDatesActives(userClientId, dateOne, dateTwo);
@@ -312,7 +314,7 @@ public class BillServices {
         return reportList;
     }
 
-//Reporte de Ventas
+    //Reporte de Ventas
     public List<SalesReport> getAllBySubIdAndDates(UUID userClientId, long dateOne, long dateTwo){
         log.info("BillServices getAllBySubIdAndDates: {}, {}, {}", userClientId, dateOne, dateTwo);
         Iterable<Bill> bills = billRepository.findAllByUserClientIdAndDates(userClientId, dateOne, dateTwo);
@@ -347,9 +349,9 @@ public class BillServices {
     private void populateChildren(Bill bill) {
         List<Detail> detailList = getDetailsByBill(bill);
         List<Pago> pagoList = getPagosByBill(bill);
-        List<Kardex> detailsKardexList = getDetailsKardexByBill(bill);
+        //List<Kardex> detailsKardexList = getDetailsKardexByBill(bill);
         bill.setDetails(detailList);
-        bill.setDetailsKardex(detailsKardexList);
+        //bill.setDetailsKardex(detailsKardexList);
         bill.setPagos(pagoList);
         bill.setFatherListToNull();
         log.info("BillServices populateChildren billId: {}", bill.getId());
@@ -369,20 +371,19 @@ public class BillServices {
         return detailList;
     }
     
-    private List<Kardex> getDetailsKardexByBill (Bill bill) {
-        List<Kardex> detailsKardexList = new ArrayList<>();
-        Iterable<Kardex> detailsKardex = kardexRepository.findByBill(bill);
-        detailsKardex.forEach(detail -> {
-            detail.getBill().setListsNull();
-            detail.getBill().setFatherListToNull();
-            detail.getProduct().setFatherListToNull();
-            detail.getProduct().setListsNull();
-            detail.setBill(null);
-            detail.setCellar(null);
-            detailsKardexList.add(detail);
-        });
-        return detailsKardexList;
-    }
+    //private List<Kardex> getDetailsKardexByBill(Bill bill) {
+    //    List<Kardex> detailsKardexList = new ArrayList<>();
+    //    Iterable<Kardex> detailsKardex = kardexRepository.findByBill(bill);
+    //    detailsKardex.forEach(detail -> {
+    //        detail.setListsNull();
+    //        detail.setFatherListToNull();
+    //        detail.getProduct().setFatherListToNull();
+    //        detail.getProduct().setListsNull();
+    //        detail.setBill(null);
+    //        detailsKardexList.add(detail);
+    //    });
+    //    return detailsKardexList;
+    //}
 
     private List<Pago> getPagosByBill(Bill bill) {
         List<Pago> pagoList = new ArrayList<>();

@@ -51,8 +51,8 @@ public class RetentionServices {
             String data = mapper.writeValueAsString(requirement);
             log.info("RetentionServices getDatil maper creado");
 	
-            String response = httpCallerService.post(Constants.DATIL_RETENTION_LINK, data, userClient);
-            //String response = "OK";
+            //String response = httpCallerService.post(Constants.DATIL_RETENTION_LINK, data, userClient);
+            String response = "OK";
             log.info("RetentionServices getDatil httpcall success");
             return response;
 	}
@@ -60,7 +60,7 @@ public class RetentionServices {
 	public Iterable<Retention> getByUserLazy(UserIntegridad user) {
             log.info("RetentionServices getByUserLazy: {}", user.getId());
             Iterable<Retention> retentions = retentionRepository.findByUserIntegridad(user);
-            retentions.forEach (retention -> {
+            retentions.forEach(retention -> {
                 retention.setListsNull();
                 retention.setFatherListToNull();
             });
@@ -95,7 +95,7 @@ public class RetentionServices {
             Cashier cashier = cashierRepository.findOne(retention.getUserIntegridad().getCashier().getId());
             cashier.setRetentionNumberSeq(cashier.getRetentionNumberSeq() + 1);
             cashierRepository.save(cashier);
-            details.forEach (detail -> {
+            details.forEach(detail -> {
 		detail.setRetention(saved);
 		detailRetentionRepository.save(detail);
 		detail.setRetention(null);
@@ -126,7 +126,7 @@ public class RetentionServices {
             log.info("RetentionServices getAllBySubIdAndDates: {}, {}, {}", userClientId, dateOne, dateTwo);
             Iterable<Retention> retentions = retentionRepository.findAllByUserClientIdAndDates(userClientId, dateOne, dateTwo);
             List<RetentionReport> retentionReportList = new ArrayList<>();
-            retentions.forEach (retention -> {
+            retentions.forEach(retention -> {
 		populateChildren(retention);
 		Double sum = Double.valueOf(0);
 		for (DetailRetention detail : retention.getDetailRetentions()) {
@@ -150,7 +150,7 @@ public class RetentionServices {
             log.info("RetentionServices populateChildren retentionId: {}", retention.getId());
             List<DetailRetention> detailRetentionList = new ArrayList<>();
             Iterable<DetailRetention> retentions = detailRetentionRepository.findByRetention(retention);
-            retentions.forEach (detail -> {
+            retentions.forEach(detail -> {
 		detail.setListsNull();
 		detail.setFatherListToNull();
 		detail.setRetention(null);

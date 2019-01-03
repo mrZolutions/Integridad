@@ -30,6 +30,10 @@ public class BillServicesTest {
 	DetailRepository detailRepository;
 	@Mock
 	DetailChildRepository detailChildRepository;
+        @Mock
+        KardexRepository kardexRepository;
+        @Mock
+        KardexChildRepository kardexChildRepository;
 	@Mock
 	SubsidiaryRepository subsidiaryRepository;
 	@Mock
@@ -77,9 +81,15 @@ public class BillServicesTest {
 		List<Detail> details = new ArrayList<>();
 		details.add(detail);
 		bill.setDetails(details);
-		
+                
+                Kardex detailk = Kardex.newKardexTest();
+                List<Kardex> detailsKardex = new ArrayList<>();
+                detailsKardex.add(detailk);
+                bill.setDetailsKardex(detailsKardex);
+                
 		Mockito.when(billRepository.findOne(id)).thenReturn(bill);
 		Mockito.when(detailRepository.findByBill(bill)).thenReturn(details);
+                Mockito.when(kardexRepository.findByBill(bill)).thenReturn(detailsKardex);
 		Mockito.when(pagoRepository.findByBill(bill)).thenReturn(new ArrayList<>());
 		
 		Bill retrieved = service.getById(id);
@@ -128,20 +138,30 @@ public class BillServicesTest {
 	@Test
 	public void createCallDetailRepository(){
 		UUID idCashier = UUID.randomUUID();
-		Detail detail = Detail.newDetailTest();
 		Pago pago = Pago.newPagoTest();
+                Detail detail = Detail.newDetailTest();
+                Kardex detailk = Kardex.newKardexTest();
 		List<Pago> pagoList = new ArrayList<>();
 		List<Detail> detailList = new ArrayList<>();
+                List<Kardex> detailsKardex = new ArrayList<>();
 		detail.getProduct().getProductType().setCode("SER");
-		detailList.add(detail);
+                detailk.getProduct().getProductType().setCode("SER");
 		pagoList.add(pago);
-		bill.getUserIntegridad().getCashier().setId(idCashier);
+                detailList.add(detail);
+                detailsKardex.add(detailk);
+		
+                
+                bill.getUserIntegridad().getCashier().setId(idCashier);
 		bill.getUserIntegridad().getCashier().setBillNumberSeq(1);
-		ProductBySubsidiary ps = ProductBySubsidiary.newProductBySubsidiaryTest();
+		
+                ProductBySubsidiary ps = ProductBySubsidiary.newProductBySubsidiaryTest();
 		ps.setQuantity(Long.valueOf(1));
-		Cashier cashier = bill.getUserIntegridad().getCashier();
-		bill.setDetails(detailList);
-		bill.setPagos(pagoList);
+		
+                Cashier cashier = bill.getUserIntegridad().getCashier();
+		
+                bill.setPagos(pagoList);
+                bill.setDetails(detailList);
+                bill.setDetailsKardex(detailsKardex);
 
 		Mockito.when(productBySubsidiairyRepository.
 				findBySubsidiaryIdAndProductId(Mockito.any(UUID.class), Mockito.any(UUID.class))).thenReturn(ps);
@@ -155,6 +175,7 @@ public class BillServicesTest {
 		Mockito.verify(detailRepository, Mockito.times(1)).save(detail);
 		Mockito.verify(pagoRepository, Mockito.times(1)).save(Mockito.any(Pago.class));
 		Mockito.verify(cashierRepository, Mockito.times(1)).save(cashier);
+                Mockito.verify(kardexRepository, Mockito.times(1)).save(detailk);
 		
 		Assert.assertTrue(!response.getDetails().isEmpty());
 		
@@ -163,19 +184,29 @@ public class BillServicesTest {
 	@Test
 	public void createQuotationShouldntCallPagoNorCashierNorProductBySub(){
 		UUID idCashier = UUID.randomUUID();
-		Detail detail = Detail.newDetailTest();
+		
+                Detail detail = Detail.newDetailTest();
 		List<Detail> detailList = new ArrayList<>();
 		detail.getProduct().getProductType().setCode("SER");
 		detailList.add(detail);
-		bill.getUserIntegridad().getCashier().setId(idCashier);
+                
+                Kardex detailk = Kardex.newKardexTest();
+                List<Kardex> detailsKardex = new ArrayList<>();
+                detailk.getProduct().getProductType().setCode("SER");
+                detailsKardex.add(detailk);
+		
+                bill.getUserIntegridad().getCashier().setId(idCashier);
 		bill.getUserIntegridad().getCashier().setQuotationNumberSeq(1);
-		ProductBySubsidiary ps = ProductBySubsidiary.newProductBySubsidiaryTest();
+		
+                ProductBySubsidiary ps = ProductBySubsidiary.newProductBySubsidiaryTest();
 		ps.setQuantity(Long.valueOf(1));
-		Cashier cashier = bill.getUserIntegridad().getCashier();
-		bill.setDetails(detailList);
+		
+                Cashier cashier = bill.getUserIntegridad().getCashier();
+		
+                bill.setDetails(detailList);
+                bill.setDetailsKardex(detailsKardex);
 
-		Mockito.when(productBySubsidiairyRepository.
-				findBySubsidiaryIdAndProductId(Mockito.any(UUID.class), Mockito.any(UUID.class))).thenReturn(ps);
+		Mockito.when(productBySubsidiairyRepository.findBySubsidiaryIdAndProductId(Mockito.any(UUID.class), Mockito.any(UUID.class))).thenReturn(ps);
 		Mockito.when(cashierRepository.findOne(idCashier)).thenReturn(cashier);
 		Mockito.when(billRepository.save(Mockito.any(Bill.class))).thenReturn(Bill.newBillTest());
 		Mockito.when(subsidiaryRepository.findOne(Mockito.any(UUID.class))).thenReturn(Subsidiary.newSubsidiaryTest());
@@ -184,6 +215,8 @@ public class BillServicesTest {
 
 		Mockito.verify(billRepository, Mockito.times(1)).save(Mockito.any(Bill.class));
 		Mockito.verify(cashierRepository, Mockito.times(1)).save(cashier);
+                Mockito.verify(detailRepository, Mockito.times(1)).save(detail);
+                Mockito.verify(kardexRepository, Mockito.times(1)).save(detailk);
 		Mockito.verify(pagoRepository, Mockito.times(0)).save(Mockito.any(Pago.class));
 
 		Assert.assertTrue(!response.getDetails().isEmpty());
@@ -198,15 +231,23 @@ public class BillServicesTest {
 		bill.getSubsidiary().setBillNumberSeq(1);
 		bill.getUserIntegridad().getCashier().setId(idCashier);
 		bill.getUserIntegridad().getCashier().setBillNumberSeq(1);
-		ProductBySubsidiary ps = ProductBySubsidiary.newProductBySubsidiaryTest();
+		
+                ProductBySubsidiary ps = ProductBySubsidiary.newProductBySubsidiaryTest();
 		ps.setQuantity(Long.valueOf(1));
 		Cashier cashier = bill.getUserIntegridad().getCashier();
 		Subsidiary subsidiary = bill.getSubsidiary(); 
-		Detail detail = Detail.newDetailTest();
+		
+                Detail detail = Detail.newDetailTest();
 		List<Detail> detailList = new ArrayList<>();
 		detail.getProduct().getProductType().setCode("SER");
 		detailList.add(detail);
 		bill.setDetails(detailList);
+                
+                Kardex detailk = Kardex.newKardexTest();
+                List<Kardex> detailsKardex = new ArrayList<>();
+                detailk.getProduct().getProductType().setCode("SER");
+                detailsKardex.add(detailk);
+                bill.setDetailsKardex(detailsKardex);
 
 		Mockito.when(productBySubsidiairyRepository.
 				findBySubsidiaryIdAndProductId(Mockito.any(UUID.class), Mockito.any(UUID.class))).thenReturn(ps);
