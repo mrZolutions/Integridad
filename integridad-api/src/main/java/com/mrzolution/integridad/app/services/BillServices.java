@@ -185,6 +185,17 @@ public class BillServices {
         log.info("BillServices saveKardex DONE");
     }
     
+    //Almacena los Detalles de la Cotización
+    public void saveDetailsQuotation(Bill saved, List<Detail> details) {
+        details.forEach(detail-> {
+            detail.setBill(saved);
+            detailRepository.save(detail);
+            detail.setBill(null);
+        });
+        saved.setDetails(details);
+        log.info("BillServices saveDetailsQuotation DONE");
+    }
+    
     //Guarda el tipo de Pago y Credits
     public void savePagosAndCreditsBill(Bill saved, List<Pago> pagos) {
         pagos.forEach(pago -> {
@@ -213,16 +224,6 @@ public class BillServices {
             }
         });
         log.info("BillServices updateProductBySubsidiary DONE");
-    }
-    
-    //Almacena los Detalles de la Cotización
-    public void saveDetailsQuotation(Bill saved, List<Detail> details) {
-        details.forEach(detail-> {
-            detail.setBill(saved);
-            detailRepository.save(detail);
-            detail.setBill(null);
-        });
-        log.info("BillServices saveDetailsQuotation DONE");
     }
 //Fin de Creación de las Bills
 
@@ -349,9 +350,7 @@ public class BillServices {
     private void populateChildren(Bill bill) {
         List<Detail> detailList = getDetailsByBill(bill);
         List<Pago> pagoList = getPagosByBill(bill);
-        //List<Kardex> detailsKardexList = getDetailsKardexByBill(bill);
         bill.setDetails(detailList);
-        //bill.setDetailsKardex(detailsKardexList);
         bill.setPagos(pagoList);
         bill.setFatherListToNull();
         log.info("BillServices populateChildren billId: {}", bill.getId());
@@ -371,20 +370,6 @@ public class BillServices {
         return detailList;
     }
     
-    //private List<Kardex> getDetailsKardexByBill(Bill bill) {
-    //    List<Kardex> detailsKardexList = new ArrayList<>();
-    //    Iterable<Kardex> detailsKardex = kardexRepository.findByBill(bill);
-    //    detailsKardex.forEach(detail -> {
-    //        detail.setListsNull();
-    //        detail.setFatherListToNull();
-    //        detail.getProduct().setFatherListToNull();
-    //        detail.getProduct().setListsNull();
-    //        detail.setBill(null);
-    //        detailsKardexList.add(detail);
-    //    });
-    //    return detailsKardexList;
-    //}
-
     private List<Pago> getPagosByBill(Bill bill) {
         List<Pago> pagoList = new ArrayList<>();
         Iterable<Pago> pagos = pagoRepository.findByBill(bill);

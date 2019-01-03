@@ -82,14 +82,8 @@ public class BillServicesTest {
 		details.add(detail);
 		bill.setDetails(details);
                 
-                Kardex detailk = Kardex.newKardexTest();
-                List<Kardex> detailsKardex = new ArrayList<>();
-                detailsKardex.add(detailk);
-                bill.setDetailsKardex(detailsKardex);
-                
 		Mockito.when(billRepository.findOne(id)).thenReturn(bill);
 		Mockito.when(detailRepository.findByBill(bill)).thenReturn(details);
-                Mockito.when(kardexRepository.findByBill(bill)).thenReturn(detailsKardex);
 		Mockito.when(pagoRepository.findByBill(bill)).thenReturn(new ArrayList<>());
 		
 		Bill retrieved = service.getById(id);
@@ -183,17 +177,12 @@ public class BillServicesTest {
 
 	@Test
 	public void createQuotationShouldntCallPagoNorCashierNorProductBySub(){
-		UUID idCashier = UUID.randomUUID();
+            UUID idCashier = UUID.randomUUID();
 		
                 Detail detail = Detail.newDetailTest();
 		List<Detail> detailList = new ArrayList<>();
 		detail.getProduct().getProductType().setCode("SER");
 		detailList.add(detail);
-                
-                Kardex detailk = Kardex.newKardexTest();
-                List<Kardex> detailsKardex = new ArrayList<>();
-                detailk.getProduct().getProductType().setCode("SER");
-                detailsKardex.add(detailk);
 		
                 bill.getUserIntegridad().getCashier().setId(idCashier);
 		bill.getUserIntegridad().getCashier().setQuotationNumberSeq(1);
@@ -204,7 +193,6 @@ public class BillServicesTest {
                 Cashier cashier = bill.getUserIntegridad().getCashier();
 		
                 bill.setDetails(detailList);
-                bill.setDetailsKardex(detailsKardex);
 
 		Mockito.when(productBySubsidiairyRepository.findBySubsidiaryIdAndProductId(Mockito.any(UUID.class), Mockito.any(UUID.class))).thenReturn(ps);
 		Mockito.when(cashierRepository.findOne(idCashier)).thenReturn(cashier);
@@ -215,8 +203,7 @@ public class BillServicesTest {
 
 		Mockito.verify(billRepository, Mockito.times(1)).save(Mockito.any(Bill.class));
 		Mockito.verify(cashierRepository, Mockito.times(1)).save(cashier);
-                Mockito.verify(detailRepository, Mockito.times(1)).save(detail);
-                Mockito.verify(kardexRepository, Mockito.times(1)).save(detailk);
+                Mockito.verify(detailRepository, Mockito.times(1)).save(Mockito.any(Detail.class));
 		Mockito.verify(pagoRepository, Mockito.times(0)).save(Mockito.any(Pago.class));
 
 		Assert.assertTrue(!response.getDetails().isEmpty());
