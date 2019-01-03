@@ -9,7 +9,7 @@
  */
 angular.module('integridadUiApp')
   .controller('DebtsToPayCtrl', function(_, $localStorage, providerService, cuentaContableService, debtsToPayService, 
-                                        utilSeqService, cashierService, creditsDebtsService, paymentDebtsService) {
+                                        utilSeqService, creditsDebtsService, paymentDebtsService) {
     var vm = this;
     vm.error = undefined;
     vm.success = undefined;
@@ -317,28 +317,40 @@ angular.module('integridadUiApp')
     };
 
     vm.addIvaAndProvider = function() {
+      var ivaTyp = 'GENE';
+      var ivaAtyp = 'DEBITO (D)';
+      var provTyp = 'GENE';
+      var provAtyp = 'CREDITO (C)';
+
       if (vm.indexEdit !== undefined) {
         vm.debtsToPay.items.splice(vm.indexEdit, 1);
         vm.indexEdit = undefined;
       };
-      vm.itemIva = {
-        codigo_contable: '1.01.05.01.01',
-        desc_contable: 'IVA EN COMPRAS',
-        tipo: 'DEBITO (D)',
-        base_imponible: vm.subIva,
-        nomb_contable: 'DEFINIDA PARA TODAS LAS COMPRAS'
-      };
-      vm.itemProvider = {
-        codigo_contable: '2.01.03.01.01',
-        desc_contable: 'PROVEEDORES LOCALES',
-        tipo: 'CREDITO (C)',
-        base_imponible: vm.debtsToPay.total,
-        nomb_contable: 'DEFINIDA PARA TODOS LOS PROVEEDORES'
-      };
+
       if (vm.typeTaxes === '1') {
+        cuentaContableService.getAllTypeAndAccountType(ivaTyp, ivaAtyp).then(function(response) {
+          vm.cuentaIva = response;
+        });
+        vm.itemIva = {
+          codigo_contable: vm.cuentaIva.code,
+          desc_contable: vm.cuentaIva.description,
+          tipo: vm.cuentaIva.type,
+          base_imponible: vm.subIva,
+          nomb_contable: vm.cuentaIva.name
+        };
         vm.debtsToPay.items.push(vm.itemIva);
         vm.debtsToPay.items.push(vm.itemProvider);
       } else if (vm.typeTaxes === '2') {
+        cuentaContableService.getAllTypeAndAccountType(provTyp, provAtyp).then(function(response) {
+          vm.cuentaProv = response;
+        });
+        vm.itemProvider = {
+          codigo_contable: vm.cuentaProv.code,
+          desc_contable: vm.cuentaProv.description,
+          tipo: cuentaProv.type,
+          base_imponible: vm.debtsToPay.total,
+          nomb_contable: cuentaProv.name
+        };
         vm.debtsToPay.items.push(vm.itemProvider);
       };
     };

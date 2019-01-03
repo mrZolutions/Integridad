@@ -13,6 +13,12 @@ angular
       });
     };
 
+    this.getAllTypeAndAccountType = function(typ, atyp) {
+      return securityService.get('/cuenta_contable/cuenta/typeacc/' + typ + '/' + atyp).then(function successCallback(response) {
+        return response.data;
+      });
+    };
+
     this.create = function(cuenta) {
       return securityService.post('/cuenta_contable', cuenta).then(function successCallback(response) {
         return response.data;

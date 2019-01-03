@@ -22,5 +22,7 @@ public interface CuentaContableRepository extends CrudRepository<CuentaContable,
         
     @Query("SELECT c FROM CuentaContable c WHERE c.type = (:typ) AND c.active = true")
     Iterable<CuentaContable> findByType(@Param("typ") String typ);
-        
+    
+    @Query("SELECT c FROM CuentaContable c WHERE c.type = (:typ) AND c.accountType = (:atyp) AND c.active = true")
+    Iterable<CuentaContable> findByTypeAndAccountType(@Param("typ") String typ, @Param("atyp") String atyp);
 }

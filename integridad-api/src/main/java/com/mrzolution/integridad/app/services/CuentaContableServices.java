@@ -55,6 +55,7 @@ public class CuentaContableServices {
 	return cuentas;
     }
     
+    // Selecciona Ctas Contables por Tipo
     public Iterable<CuentaContable> getByType(String typ) {
         Iterable<CuentaContable> cuentasType = cuentaContableRepository.findByType(typ);
         cuentasType.forEach(ctasType -> {
@@ -62,6 +63,16 @@ public class CuentaContableServices {
             ctasType.setFatherListToNull();
         });
         return cuentasType;
+    }
+    
+    // Selecciona Ctas Contables por Type y por AccountType
+    public Iterable<CuentaContable> getByTypeAndAccountType(String typ, String atyp) {
+        Iterable<CuentaContable> ctasTypeAccType = cuentaContableRepository.findByTypeAndAccountType(typ, atyp);
+        ctasTypeAccType.forEach(ctasTypAcc -> {
+            ctasTypAcc.setListsNull();
+            ctasTypAcc.setFatherListToNull();
+        });
+        return ctasTypeAccType;
     }
     
 }

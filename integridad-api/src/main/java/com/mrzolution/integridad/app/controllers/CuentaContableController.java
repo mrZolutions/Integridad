@@ -71,6 +71,7 @@ public class CuentaContableController {
     
     @RequestMapping(method = RequestMethod.GET, value="/cuenta/type/{typ}")
     public ResponseEntity getAllByType(@PathVariable("typ") String typ) {
+        log.info("CuentaContableController getAllByType");
         Iterable<CuentaContable> response = null;
         try {
             response = service.getByType(typ);
@@ -81,4 +82,17 @@ public class CuentaContableController {
         return new ResponseEntity<Iterable>(response, HttpStatus.CREATED);
     }
     
+    @RequestMapping(method = RequestMethod.GET, value="/cuenta/typeacc/{typ}/{atyp}")
+    public ResponseEntity getAllTypeAndAccountType(@PathVariable("typ") String typ, @PathVariable("atyp") String atyp) {
+        log.info("CuentaContableController getAllTypeAndAccountType");
+        Iterable<CuentaContable> response = null;
+        try {
+            response = service.getByTypeAndAccountType(typ, atyp);
+        } catch (BadRequestException e) {
+            log.error("CuentaContableController getAllTypeAndAccountType Exception thrown: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+	}
+        System.out.print(response);
+        return new ResponseEntity<Iterable>(response, HttpStatus.CREATED);
+    }
 }
