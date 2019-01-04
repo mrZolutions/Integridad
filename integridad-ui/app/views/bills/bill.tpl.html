@@ -66,9 +66,9 @@
         <td>{{ clientPreSelect.identification }}</td>
         <td>
           <button type="button" title="Nueva Factura" class="btn btn-primary" ng-click="vm.clientSelect(clientPreSelect)">
-                  <span class = "glyphicon glyphicon-usd" aria-hidden = "true"></span>
+                  <span class = "glyphicon glyphicon-file" aria-hidden = "true"></span>
           </button>
-          <button type="button" title="Consultar Factura" class="btn btn-primary" ng-click="vm.clientConsult(clientPreSelect)">
+          <button type="button" title="Consultar Facturas" class="btn btn-primary" ng-click="vm.clientConsult(clientPreSelect)">
                   <span class = "glyphicon glyphicon-search" aria-hidden = "true"></span>
           </button>
         </td>
@@ -408,7 +408,7 @@
                   data-toggle="modal" data-target="#modalAddPago"
                   ng-disabled="vm.bill.total <= 0 || vm.billed"
                   ng-show="vm.bill.claveDeAcceso === undefined">
-                  <span class = "glyphicon glyphicon-ruble" aria-hidden = "true"></span>
+                  <span class = "glyphicon glyphicon-usd" aria-hidden = "true"></span>
           </button>
           <button print-btn type="button" title = "Imprimir Factura" class="btn btn-primary"
                   ng-if="vm.newBill && !vm.user.cashier.specialPrint"
@@ -416,17 +416,17 @@
                   ng-click="vm.cancelBill()">
                   <span class = "glyphicon glyphicon-print" aria-hidden = "true"></span>
           </button>
-          <button type="button" title = "Imprimir Ticket-Factura" class="btn btn-danger"
-                  ng-if="vm.newBill && !vm.user.cashier.specialPrint"
-                  ng-disabled="vm.bill.claveDeAcceso === undefined"
-                  ng-click="vm.printToCartAndCancel('printMatrixSectionId')" print-remove>
-                  <span class = "glyphicon glyphicon-text-size" aria-hidden = "true"></span>
-          </button>
           <button type="button" title = "Descargar Factura EpsonTM20" class="btn btn-success"
                   ng-if="vm.newBill && !vm.user.cashier.specialPrint"
                   ng-disabled="vm.bill.claveDeAcceso === undefined"
                   ng-click="vm.downloadBillTxtTM20('billToDownloadEpsonTM20')" print-remove>
                   <span class = "glyphicon glyphicon-save-file" aria-hidden = "true"></span>
+          </button>
+          <button type="button" title = "Imprimir Ticket-Factura" class="btn btn-danger"
+                  ng-if="vm.newBill && !vm.user.cashier.specialPrint"
+                  ng-disabled="vm.bill.claveDeAcceso === undefined"
+                  ng-click="vm.printToCartAndCancel('printMatrixSectionId')" print-remove>
+                  <span class = "glyphicon glyphicon-print" aria-hidden = "true"></span>
           </button>
           <button type="button" title="Salir" class="btn btn-primary" ng-if="vm.newBill"
                   ng-click="vm.cancelBill()">
@@ -568,15 +568,15 @@
                   ng-if="!vm.newBill && !vm.user.cashier.specialPrint" print-remove>
                   <span class = "glyphicon glyphicon-print" aria-hidden = "true"></span>
           </button>
-          <button type="button" title = "Imprimir Ticket-Factura" class="btn btn-danger"
-                  ng-if="!vm.newBill && !vm.user.cashier.specialPrint"
-                  ng-click="vm.printToCart('printMatrixSectionId')" print-remove>
-                  <span class = "glyphicon glyphicon-text-size" aria-hidden = "true"></span>
-          </button>
           <button type="button" title = "Descargar Factura EpsonTM20" class="btn btn-success"
                   ng-if="!vm.newBill && !vm.user.cashier.specialPrint"
                   ng-click="vm.downloadBillTxtTM20('billToDownloadEpsonTM20')" print-remove>
                   <span class = "glyphicon glyphicon-save-file" aria-hidden = "true"></span>
+          </button>
+          <button type="button" title = "Imprimir Ticket-Factura" class="btn btn-danger"
+                  ng-if="!vm.newBill && !vm.user.cashier.specialPrint"
+                  ng-click="vm.printToCart('printMatrixSectionId')" print-remove>
+                  <span class = "glyphicon glyphicon-print" aria-hidden = "true"></span>
           </button>
           <button type="button" title="Salir" class="btn btn-primary"
                   ng-click="vm.clientSelected = undefined">
@@ -824,7 +824,7 @@
         <div class="modal-footer">
           <button type="button" title = "Facturar" class="btn btn-success" ng-click="vm.getClaveAcceso()"
                   ng-disabled="(vm.pagos.length === 0 || vm.getCambio < 0) || vm.billed" print-remove>
-                  <span class = "glyphicon glyphicon-usd" aria-hidden = "true"></span>
+                  <span class = "glyphicon glyphicon-credit-card" aria-hidden = "true"></span>
           </button>
           <button type="button" title = "Cancelar Facturación" class="btn btn-primary" data-dismiss="modal"
                   ng-disabled="vm.pagos.length === 0 || vm.getCambio < 0">
@@ -928,7 +928,7 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" title="Aceptar y Cerrar" class="btn btn-primary" ng-click="vm.acceptProduct(true)"
+          <button type="button" title="Aceptar y Cerrar" class="btn btn-success" ng-click="vm.acceptProduct(true)"
                   ng-disabled="vm.productToAdd === undefined">
                   <span class = "glyphicon glyphicon-thumbs-up" aria-hidden = "true"></span>
           </button>

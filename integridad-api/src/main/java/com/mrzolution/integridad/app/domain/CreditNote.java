@@ -60,9 +60,12 @@ public class CreditNote {
     @OneToMany(mappedBy = "creditNote", cascade = CascadeType.ALL)
     private List<Detail> details;
     
+    @OneToMany(mappedBy = "creditNote", cascade = CascadeType.ALL)
+    private List<Kardex> detailsKardex;
     
     public void setListsNull(){
     	details = null;
+        detailsKardex = null;
     };
     
     public void setFatherListToNull(){
@@ -78,6 +81,7 @@ public class CreditNote {
     public static CreditNote newCreditNoteTest(){
         CreditNote bill = new CreditNote();
         bill.setDetails(new ArrayList<>());
+        bill.setDetailsKardex(new ArrayList<>());
         bill.setClient(Client.newClientTest());
         bill.setUserIntegridad(UserIntegridad.newUserIntegridadTest());
         bill.setSubsidiary(Subsidiary.newSubsidiaryTest());

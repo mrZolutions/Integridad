@@ -79,11 +79,13 @@ public class BillServicesTest {
 		
 		Detail detail = Detail.newDetailTest();
 		List<Detail> details = new ArrayList<>();
+                List<Kardex> detailsk = new ArrayList<>();
 		details.add(detail);
 		bill.setDetails(details);
                 
 		Mockito.when(billRepository.findOne(id)).thenReturn(bill);
 		Mockito.when(detailRepository.findByBill(bill)).thenReturn(details);
+                Mockito.when(kardexRepository.findByBill(bill)).thenReturn(detailsk);
 		Mockito.when(pagoRepository.findByBill(bill)).thenReturn(new ArrayList<>());
 		
 		Bill retrieved = service.getById(id);

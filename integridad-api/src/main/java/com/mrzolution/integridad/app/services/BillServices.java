@@ -66,8 +66,8 @@ public class BillServices {
         String data = mapper.writeValueAsString(requirement);
         log.info("BillServices getDatil maper creado");
                 
-        //String response = httpCallerService.post(Constants.DATIL_LINK, data, userClient);
-        String response = "OK";
+        String response = httpCallerService.post(Constants.DATIL_LINK, data, userClient);
+        //String response = "OK";
         log.info("BillServices getDatil httpcall success");
         return response;
     }
@@ -350,7 +350,9 @@ public class BillServices {
     private void populateChildren(Bill bill) {
         List<Detail> detailList = getDetailsByBill(bill);
         List<Pago> pagoList = getPagosByBill(bill);
+        List<Kardex> detailsKardexList = getDetailsKardexByBill(bill);
         bill.setDetails(detailList);
+        bill.setDetailsKardex(detailsKardexList);
         bill.setPagos(pagoList);
         bill.setFatherListToNull();
         log.info("BillServices populateChildren billId: {}", bill.getId());
@@ -368,6 +370,21 @@ public class BillServices {
             detailList.add(detail);
         });
         return detailList;
+    }
+    
+    private List<Kardex> getDetailsKardexByBill (Bill bill) {
+        List<Kardex> detailsKardexList = new ArrayList<>();
+        Iterable<Kardex> detailsKardex = kardexRepository.findByBill(bill);
+        detailsKardex.forEach (detail -> {
+            detail.getBill().setListsNull();
+            detail.getBill().setFatherListToNull();
+            detail.getProduct().setFatherListToNull();
+            detail.getProduct().setListsNull();
+            detail.setBill(null);
+            detail.setCellar(null);
+            detailsKardexList.add(detail);
+        });
+        return detailsKardexList;
     }
     
     private List<Pago> getPagosByBill(Bill bill) {

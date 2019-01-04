@@ -61,7 +61,7 @@
                 <td>{{provider.ruc}}</td>
                 <td>
                     <button type = "button" title = "Ingreso de Facturas" class = "btn btn-primary btn-sm" ng-click = "vm.providerSelect(provider)">
-                            <span class = "glyphicon glyphicon-list-alt" aria-hidden = "true"></span>
+                            <span class = "glyphicon glyphicon-file" aria-hidden = "true"></span>
                     </button>
                     <button type = "button" title = "Pagos y Abonos" class = "btn btn-primary btn-sm" ng-click = "vm.providerDebts(provider)">
                             <span class = "glyphicon glyphicon-usd" aria-hidden = "true"></span>
@@ -208,15 +208,15 @@
                                     No hay Fuente Seleccionada
                                 </td>
                             </tr>
-                            <tr dir-paginate = "q in vm.cuentaContableList | orderBy:'type' | filter:searchTextTaxes | itemsPerPage: 5"  pagination-id = "taxesPagination">
-                                <td>{{q.type}}</td>
-                                <td>{{q.code}}</td>
-                                <td>{{q.description}}</td>
-                                <td>{{q.accountType}}</td>
-                                <td>{{q.name}}</td>
+                            <tr dir-paginate = "cc in vm.cuentaContableList | orderBy:'type' | filter:searchTextTaxes | itemsPerPage: 5"  pagination-id = "taxesPagination">
+                                <td>{{cc.type}}</td>
+                                <td>{{cc.code}}</td>
+                                <td>{{cc.description}}</td>
+                                <td>{{cc.accountType}}</td>
+                                <td>{{cc.name}}</td>
                                 <td>
                                     <button type = "button" title = "Seleccionar" class = "btn btn-primary"
-                                            ng-click = "vm.selectTaxes(q)" data-toggle = "modal" data-target = "#modalSelectedTaxes">
+                                            ng-click = "vm.selectTaxes(cc)" data-toggle = "modal" data-target = "#modalSelectedTaxes">
                                             <span class = "glyphicon glyphicon-check" aria-hidden = "true"></span>
                                     </button>
                                 </td>

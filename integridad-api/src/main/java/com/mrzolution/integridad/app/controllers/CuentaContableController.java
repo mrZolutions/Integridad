@@ -92,7 +92,6 @@ public class CuentaContableController {
             log.error("CuentaContableController getAllTypeAndAccountType Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
-        System.out.print(response);
         return new ResponseEntity<Iterable>(response, HttpStatus.CREATED);
     }
 }

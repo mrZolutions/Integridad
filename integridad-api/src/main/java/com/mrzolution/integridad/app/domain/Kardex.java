@@ -47,6 +47,10 @@ public class Kardex implements Child {
     @JoinColumn(name = "product_id")
     private Product product;
     
+    @ManyToOne
+    @JoinColumn(name = "credit_note_id")
+    private CreditNote creditNote;
+    
     public void setListsNull() {
     }
     
@@ -59,6 +63,10 @@ public class Kardex implements Child {
         consumption.setFatherListToNull();
         product.setListsNull();
         product.setFatherListToNull();
+        if (creditNote != null) {
+            creditNote.setListsNull();
+            creditNote.setFatherListToNull();
+        }
     }
     
     @Transient
