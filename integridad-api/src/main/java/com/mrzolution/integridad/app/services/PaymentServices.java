@@ -77,7 +77,6 @@ public class PaymentServices {
         log.info("PaymentServices updateCredits FINISHED");
     }
     
-    @Async("asyncExecutor")
     public void updateBill(Payment payment, String document) {
         Bill billed = billRepository.findOne(payment.getCredits().getPago().getBill().getId());
         String nbillId = billed.getId().toString();

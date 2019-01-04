@@ -63,8 +63,8 @@ public class CreditNoteServices {
         String data = mapper.writeValueAsString(requirement);
         log.info("CreditNoteServices getDatil maper creado");
         
-        String response = httpCallerService.post(Constants.DATIL_CREDIT_NOTE_LINK, data, userClient);
-        //String response = "OK";
+        //String response = httpCallerService.post(Constants.DATIL_CREDIT_NOTE_LINK, data, userClient);
+        String response = "OK";
         log.info("CreditNoteServices getDatil httpcall success");
         return response;
     }
@@ -74,44 +74,47 @@ public class CreditNoteServices {
         Iterable<CreditNote> credNot = creditNoteRepository.findByDocumentStringSeqAndBillId(creditNote.getDocumentStringSeq(), creditNote.getBillSeq());
         if (Iterables.size(credNot) > 0){
             throw new BadRequestException("Nota de Cretido de esta Factura Ya Existe");
-        }
-        List<Detail> details = creditNote.getDetails();
-        if(details == null){
-            throw new BadRequestException("Debe tener un detalle por lo menos");
-        }
-        List<Kardex> detailsKardex = creditNote.getDetailsKardex();
-        creditNote.setDateCreated(new Date().getTime());
-        creditNote.setActive(true);
-        creditNote.setDetails(null);
-        creditNote.setDetailsKardex(null);
-        creditNote.setFatherListToNull();
-        creditNote.setListsNull();
-        CreditNote saved = creditNoteRepository.save(creditNote);
-        document = saved.getBillSeq();
+        } else {
+            List<Detail> details = creditNote.getDetails();
+            if(details == null){
+                throw new BadRequestException("Debe tener un detalle por lo menos");
+            }
+            List<Kardex> detailsKardex = creditNote.getDetailsKardex();
+            creditNote.setDateCreated(new Date().getTime());
+            creditNote.setActive(true);
+            creditNote.setDetails(null);
+            creditNote.setDetailsKardex(null);
+            creditNote.setFatherListToNull();
+            creditNote.setListsNull();
+            CreditNote saved = creditNoteRepository.save(creditNote);
+            document = creditNote.getBillSeq();
         
-        Cashier cashier = cashierRepository.findOne(creditNote.getUserIntegridad().getCashier().getId());
-        cashier.setCreditNoteNumberSeq(cashier.getCreditNoteNumberSeq() + 1);
-        cashierRepository.save(cashier);
+            Cashier cashier = cashierRepository.findOne(creditNote.getUserIntegridad().getCashier().getId());
+            cashier.setCreditNoteNumberSeq(cashier.getCreditNoteNumberSeq() + 1);
+            cashierRepository.save(cashier);
 
-        details.forEach(detail -> {
-            detail.setCreditNote(saved);
-            detailRepository.save(detail);
-            detail.setCreditNote(null);
-        });
+            details.forEach(detail -> {
+                detail.setCreditNote(saved);
+                detailRepository.save(detail);
+                detail.setCreditNote(null);
+            });
             
-        detailsKardex.forEach(detail -> {
-            detail.setCreditNote(saved);
-            kardexRepository.save(detail);
-            detail.setCreditNote(null);
-        });
+            detailsKardex.forEach(detail -> {
+                detail.setCreditNote(saved);
+                kardexRepository.save(detail);
+                detail.setCreditNote(null);
+            });
 
-        log.info("CreditNoteServices created id: {}", saved.getId());
-        saved.setDetails(details);
-        saved.setDetailsKardex(detailsKardex);
-        saved.setFatherListToNull();
-        //updateBill(saved, document);
-        updateCreditsAndPayment(saved, document);
-        return saved;
+            log.info("CreditNoteServices created id: {}", saved.getId());
+            saved.setDetails(details);
+            saved.setDetailsKardex(detailsKardex);
+            saved.setFatherListToNull();
+            //updateBill(saved, document);
+            //if (document.equals(saved.getCredits().getBillId())) {
+                updateCreditsAndPayment(saved, document);
+            //}
+            return saved;
+        }
     }
         
     public void updateCreditsAndPayment(CreditNote saved, String document) throws BadRequestException {
