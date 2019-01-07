@@ -27,6 +27,8 @@ angular.module('integridadUiApp')
   vm.lineas = undefined;
   vm.groups = undefined;
   vm.subGroups = undefined;
+  vm.averageC = undefined;
+  vm.cashP = undefined;
   vm.productBySubsidiaries = [];
   vm.wizard = 0;
   
@@ -158,27 +160,27 @@ angular.module('integridadUiApp')
     });
   };
                                       
-  function _getSubsidiarie() {
-    if ($routeParams.subsidiaryId) {
-      subsidiaryService.getById($routeParams.subsidiaryId).then(function(response) {
-        vm.subsidiaries = [response];
-        vm.success = undefined;
-        vm.error = undefined
-      }).catch(function(error) {
-        vm.loading = false;
-        vm.error = error.data;
-      });
-    } else {
-      projectService.getById($localStorage.user.subsidiary.userClient.id).then(function(response) {
-        vm.subsidiaries = response.subsidiaries;
-        vm.success = undefined;
-        vm.error = undefined
-      }).catch(function(error) {
-        vm.loading = false;
-        vm.error = error.data;
-      });
-    };
-  };
+  //function _getSubsidiarie() {
+  //  if ($routeParams.subsidiaryId) {
+  //    subsidiaryService.getById($routeParams.subsidiaryId).then(function(response) {
+  //      vm.subsidiaries = [response];
+  //      vm.success = undefined;
+  //      vm.error = undefined
+  //    }).catch(function(error) {
+  //      vm.loading = false;
+  //      vm.error = error.data;
+  //    });
+  //  } else {
+  //    projectService.getById($localStorage.user.subsidiary.userClient.id).then(function(response) {
+  //     vm.subsidiaries = response.subsidiaries;
+  //      vm.success = undefined;
+  //      vm.error = undefined
+  //    }).catch(function(error) {
+  //      vm.loading = false;
+  //      vm.error = error.data;
+  //    });
+  //  };
+  //};
                                       
   vm.filter = function() {
     vm.page = 0;
@@ -202,8 +204,8 @@ angular.module('integridadUiApp')
   vm.costPreview = function() {
     var avrCost = 0.0;
     var gEfectivo = 0.0;
-    var avrCost = vm.product.averageCost;
-    var gEfectivo = 1 + ((vm.product.cashPercentage) / 100.00);
+    var avrCost = vm.averageC;
+    var gEfectivo = 1 + ((vm.cashP) / 100.00);
     var preview = avrCost * gEfectivo;
     return (preview).toFixed(2);
   };
@@ -212,8 +214,8 @@ angular.module('integridadUiApp')
     var avrCost = 0.0;
     var gEfectivo = 0.0;
     var iva = 1.12;
-    var avrCost = vm.product.averageCost;
-    var gEfectivo = 1 + ((vm.product.cashPercentage) / 100.00);
+    var avrCost = vm.averageC;
+    var gEfectivo = 1 + ((vm.cashP) / 100.00);
     var preview = avrCost * gEfectivo * iva;
     return (preview).toFixed(2);
   };
@@ -234,6 +236,8 @@ angular.module('integridadUiApp')
   vm.editProduct = function(productEdit) {
     vm.selectedGroup = productEdit.subgroup.groupLine;
     vm.selectedLine = productEdit.subgroup.groupLine.line;
+    vm.averageC = productEdit.averageCost;
+    vm.cashP = productEdit.cashPercentage;
     vm.messurements = messurementListService.getMessurementList();
     _.each(vm.messurements, function(mes) {
       if (productEdit.unitOfMeasurementAbbr === mes.shortName) {
