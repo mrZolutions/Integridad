@@ -33,4 +33,7 @@ public interface CellarRepository extends CrudRepository<Cellar, UUID> {
     
     @Query("SELECT c FROM Cellar c WHERE c.subsidiary.userClient.id = (:userClientId) AND c.active = 'true' ORDER BY c.whNumberSeq")
     Iterable<Cellar> findCellarByUserClientId(@Param("userClientId") UUID id);
+    
+    @Query("SELECT c FROM Cellar c WHERE c.provider.id = (:id) AND c.statusIngreso = 'PENDIENTE' AND c.active = 'true' ORDER BY c.whNumberSeq")
+    Iterable<Cellar> findCellarPendingByProvider(@Param("id") UUID id);
 }

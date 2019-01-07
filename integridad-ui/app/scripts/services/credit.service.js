@@ -68,7 +68,6 @@ angular
 
     this.getClaveDeAcceso = function(req, id) {
       return securityService.post('/credit/clave_acceso/' + id, req).then(function successCallback(response) {
-        // console.log(response)
         return response;
       });
     };

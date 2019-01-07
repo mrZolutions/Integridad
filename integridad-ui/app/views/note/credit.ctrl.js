@@ -158,7 +158,7 @@ angular.module('integridadUiApp')
         var costWithIva = (det.costEach * 1.12).toFixed(2);
         var costWithIce = (det.costEach * 1.10).toFixed(2);
         var impuestos = [];
-        var impuesto ={};
+        var impuesto = {};
 
         if (det.product.iva) {
           impuesto.base_imponible = (parseFloat(det.costEach) * parseFloat(det.quantity)).toFixed(2);
@@ -202,11 +202,9 @@ angular.module('integridadUiApp')
 
       var req = creditService.createRequirement(vm.clientSelected, vm.bill, $localStorage.user, vm.impuestosTotales, vm.items);
 
-      console.log(req);
-
       creditService.getClaveDeAcceso(req, vm.companyData.userClient.id).then(function(resp) {
-        //var obj = JSON.parse(resp.data);
-        var obj = {clave_acceso: '1234560', id:'id12345'};
+        var obj = JSON.parse(resp.data);
+        //var obj = {clave_acceso: '1234560', id:'id12345'};
         if (obj.errors === undefined) {
           vm.claveDeAcceso = obj.clave_acceso;
           vm.bill.claveDeAcceso = obj.clave_acceso;
@@ -216,7 +214,7 @@ angular.module('integridadUiApp')
           creditService.create(vm.bill).then(function(respBill) {
             vm.billed = true;
             $localStorage.user.cashier.creditNoteNumberSeq = vm.bill.creditSeq;
-            // _activate();
+            vm.success = 'Nota de Crédito creada';
             vm.loading = false;
           }).catch(function(error) {
             vm.loading = false;

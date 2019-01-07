@@ -55,6 +55,16 @@ public class CellarServices {
         return cellars;
     }
     
+    public Iterable<Cellar> getCellarsPendingByProviderId(UUID id) {
+        log.info("CellarServices getCellarsPendingByProviderId {}", id);
+        Iterable<Cellar> cellars = cellarRepository.findCellarPendingByProvider(id);
+        cellars.forEach(cellar -> {
+            cellar.setListsNull();
+            cellar.setFatherListToNull();
+        });
+        return cellars;
+    }
+    
     public Iterable<Cellar> getActivesCellarByWhNumberSeqAndSubsidiaryId(String whNumberSeq, UUID subId) {
         log.info("CellarServices getActivesCellarByWhNumberSeqAndSubsidiaryId: {}, {}", whNumberSeq, subId);
         Iterable<Cellar> cellars = cellarRepository.findCellarByWhNumberSeqAndSubsidiaryId(whNumberSeq, subId);

@@ -166,7 +166,9 @@ angular.module('integridadUiApp')
       {name:'Pago al exterior - Beneficios Empresariales' ,percentage:25, codigo: '501', codigoDatil:'501'},
       {name:'Pago al exterior - Servicios Empresariales' ,percentage:22, codigo: '502', codigoDatil:'502'},
       {name:'Pago al exterior - Navegación Marítima y/o aérea' ,percentage:22, codigo: '503', codigoDatil:'503'},
-      {name:'Pago al exterior- Dividendos distribuidos a personas naturales' ,percentage:0, codigo: '504', codigoDatil:'504'}
+      {name:'Pago al exterior - Dividendos distribuidos a personas naturales' ,percentage:0, codigo: '504', codigoDatil:'504'},
+      {name:'Pago a no residentes - Anticipo dividendos (No domiciliada en paraísos fiscales o regímenes de menor imposición)' ,percentage:25, codigo: '504E', codigoDatil:'504E'},
+      {name:'Pago a no residentes - Intereses de otros créditos externos' ,percentage:25, codigo: '505E', codigoDatil:'505E'}
     ];
    
     vm.ivaTipo = [
@@ -395,8 +397,8 @@ angular.module('integridadUiApp')
       vm.loading = true;
       var eRet = eretentionService.createERetention(vm.retention, $localStorage.user);
       eretentionService.getClaveDeAcceso(eRet, $localStorage.user.subsidiary.userClient.id).then(function(resp) {
-        //var obj = JSON.parse(resp.data);
-        var obj = {clave_acceso: '1234560', id:'id12345'};
+        var obj = JSON.parse(resp.data);
+        //var obj = {clave_acceso: '1234560', id:'id12345'};
         if (obj.errors === undefined) {
           vm.retention.claveDeAcceso = obj.clave_acceso;
           vm.retention.idSri = obj.id;

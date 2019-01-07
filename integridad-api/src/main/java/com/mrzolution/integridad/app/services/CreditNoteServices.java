@@ -72,11 +72,11 @@ public class CreditNoteServices {
     public CreditNote create(CreditNote creditNote) throws BadRequestException {
         log.info("CreditNoteServices create");            
         Iterable<CreditNote> credNot = creditNoteRepository.findByDocumentStringSeqAndBillId(creditNote.getDocumentStringSeq(), creditNote.getBillSeq());
-        if (Iterables.size(credNot) > 0){
+        if (Iterables.size(credNot) > 0) {
             throw new BadRequestException("Nota de Cretido de esta Factura Ya Existe");
         } else {
             List<Detail> details = creditNote.getDetails();
-            if(details == null){
+            if (details == null) {
                 throw new BadRequestException("Debe tener un detalle por lo menos");
             }
             List<Kardex> detailsKardex = creditNote.getDetailsKardex();
@@ -101,7 +101,6 @@ public class CreditNoteServices {
             
             detailsKardex.forEach(detail -> {
                 detail.setCreditNote(saved);
-                kardexRepository.save(detail);
                 detail.setCreditNote(null);
             });
 
@@ -109,19 +108,19 @@ public class CreditNoteServices {
             saved.setDetails(details);
             saved.setDetailsKardex(detailsKardex);
             saved.setFatherListToNull();
-            //updateBill(saved, document);
-            //if (document.equals(saved.getCredits().getBillId())) {
+            
+            Credits validate = creditsRepository.findByBillId(document);
+            if (validate != null) {
                 updateCreditsAndPayment(saved, document);
-            //}
+            } else {
+                log.info("CreditNoteServices DO NOT updateCreditsAndPayment");
+            }
             return saved;
         }
     }
         
     public void updateCreditsAndPayment(CreditNote saved, String document) throws BadRequestException {
         Credits docNumber = creditsRepository.findByBillId(document);
-        if (docNumber == null) {
-            throw new BadRequestException("Nota de Crédito Creada");
-        }
         doc = docNumber.getBillId();
         if (doc.equals(document) && docNumber.getPayNumber() == numC) {
             valor = docNumber.getValor();
@@ -146,28 +145,8 @@ public class CreditNoteServices {
             specialPayment.setValorNotac(saved.getTotal());
             paymentRepository.save(specialPayment);
         }
-        log.info("CreditNoteServices Credits and Payment updated");
+        log.info("CreditNoteServices updateCreditsAndPayment DONE");
         valor = 0.0;
     }
-    
-    //public void updateBill(CreditNote saved, String document) {
-    //    Bill bill = billRepository.findOne(saved.getCredits().getPago().getBill().getId());
-    //    String nbillId = bill.getBillSeq();
-    //    if (nbillId.equals(document)) {
-    //        saldo = bill.getSaldo();
-    //        sum = saved.getTotal();
-    //        valor = Double.parseDouble(saldo);
-    //        sumado = valor - sum;
-    //        BigDecimal vsumado = new BigDecimal(sumado);
-    //        vsumado = vsumado.setScale(2, BigDecimal.ROUND_HALF_UP);
-    //        saldo = String.valueOf(vsumado);
-    //        bill.setSaldo(saldo);
-    //        billRepository.save(bill);
-    //    }
-    //    log.info("CreditNoteServices Bill saldo updated");
-    //    sumado = 0.0;
-    //    valor = 0.0;
-    //    sum = 0.0;
-    //}
     
 }

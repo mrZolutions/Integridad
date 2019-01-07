@@ -49,7 +49,6 @@ public class PaymentServices {
     public Payment create(Payment payment) {
         Payment saved = paymentRepository.save(payment);
         document = saved.getCredits().getPago().getBill().getId().toString();
-        log.info("PaymentServices Payment created id: {}", saved.getId());
         if (saved.getCredits().getId() != null) {
             idCredit = saved.getCredits().getId();
             if ("PAC".equals(saved.getTypePayment())){
@@ -60,6 +59,7 @@ public class PaymentServices {
             updateCredits(idCredit);
             updateBill(payment, document);
         }
+        log.info("PaymentServices Payment created id: {}", saved.getId());
 	return saved;
     }
     
@@ -74,7 +74,7 @@ public class PaymentServices {
         }
         creditsRepository.save(cambio);
         resto = 0.0;
-        log.info("PaymentServices updateCredits FINISHED");
+        log.info("PaymentServices updateCredits DONE");
     }
     
     public void updateBill(Payment payment, String document) {
@@ -90,25 +90,22 @@ public class PaymentServices {
             billed.setSaldo(saldo);
             billRepository.save(billed);
         }
-        log.info("PaymentServices updateBill FINISHED");
+        log.info("PaymentServices updateBill DONE");
     }
     
     public List<CCResumenReport> getPaymentsByUserClientId(UUID id) {
         log.info("PaymentServices getPaymentsByUserClientId: {}", id);
         Iterable<Payment> payments = paymentRepository.findAllPaymentsByUserClientId(id);
         List<CCResumenReport> ccResumenReportList = new ArrayList<>();
-        
         payments.forEach(payment -> {
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd");
             String fechaPago = dateFormat.format(new Date(payment.getDatePayment()));
-            
             CCResumenReport resumenReport = new CCResumenReport(payment.getCredits().getPago().getBill().getClient().getIdentification(), payment.getCredits().getPago().getBill().getClient().getName(),
                                                                 payment.getCredits().getPago().getBill().getStringSeq(), payment.getCredits().getPago().getBill().getTotal(), payment.getTypePayment(), 
-                                                                payment.getModePayment(), fechaPago, payment.getValorAbono(), payment.getValorReten(), payment.getValorNotac());
-            
+                                                                payment.getModePayment(), fechaPago, payment.getValorAbono(), payment.getValorReten(), payment.getValorNotac());        
             ccResumenReportList.add(resumenReport);
         });
-        
         return ccResumenReportList;
     }
+    
 }

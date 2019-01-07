@@ -110,6 +110,10 @@
                         <button type="button" title="Ingreso a Bodega" class="btn btn-primary btn-sm" ng-click="vm.providerSelect(provider)">
                                 <span class="glyphicon glyphicon-import" aria-hidden="true"></span>
                         </button>
+                        <button type="button" title="Consulta de Ingresos Pendientes" class="btn btn-primary btn-sm"
+                                ng-disabled="vm.userCode !== 'SAD'" ng-click="vm.findCellarPending(provider)">
+                                <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                        </button>
                     </td>
                 </tr>
             </tbody>
@@ -123,6 +127,50 @@
             </div>
         </div>
     </div>
+    <!--FIN DE CARGA DE PROVEEDORES-->
+
+    <!--CARGA DE CELLAR PENDING POR PROVEEDOR-->
+    <div class="table-responsive" ng-show="vm.warehouseSelected === true  && vm.providerList !== undefined && vm.cellarList === undefined">
+        <div class="row">
+            <div class="form-group col-md-12">
+                <h4>Sucursal: <b>{{vm.warehouseSubsidiaryName}}</b></h4>
+                <h5>Bodega: <b>{{vm.warehouseName}}</b></h5>
+            </div>
+        </div>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Número de Secuencia</th>
+                    <th>Número de Factura</th>
+                    <th>Fecha de Ingreso a Bodega</th>
+                    <th>Nombre del Proveedor</th>
+                    <th>Total</th>
+                    <th>Estatus</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-show="vm.providerList == 0">
+                    <td colspan="4">
+                        No hay proveedores ingresados
+                    </td>
+                </tr>
+                <tr ng-repeat="cellar in vm.cellarList | orderBy:'name' | filter:searchText">
+                    <td>{{cellar.whNumberSeq}}</td>
+                    <td>{{cellar.billNumber}}</td>
+                    <td>{{cellar.dateEnterCellar | date : "dd/MM/yyyy"}}</td>
+                    <td>{{cellar.provider.name}}</td>
+                    <td>{{cellar.total}}</td>
+                    <td>{{cellar.statusIngreso}}</td>
+                    <td>
+                        <button type="button" title="Ver Factura de Ingreso" class="btn btn-primary btn-sm" ng-click="vm.providerSelect(provider)">
+                                <span class = "glyphicon glyphicon-eye-open" aria-hidden = "true"></span>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <!--FIN DE CARGA DE CELLAR PENDING-->
 
     <!--SECCIÓN DE INGRESO A BODEGA-->
     <div class="table-responsive" ng-show="vm.warehouseSelected === true && vm.providerList === undefined && vm.providerSelected !== undefined">
@@ -328,7 +376,7 @@
             </div>
         </div>
     </div>
-
+    <!--FIN DE DE INGRESO A BODEGA-->
     <!--MODAL PARA AGREGAR PRODUCTOS-->
     <div id="modalAddProduct" class="modal fade" role="dialog">
         <div class="modal-dialog">
@@ -424,4 +472,5 @@
             </div>
         </div>
     </div>
+    <!--FIN DEL MODAL PARA AGREGAR PRODUCTOS-->
 </div>

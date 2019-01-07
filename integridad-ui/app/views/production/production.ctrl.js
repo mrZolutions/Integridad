@@ -56,7 +56,8 @@ angular.module('integridadUiApp')
             "codigo":"0",
             "codigo_porcentaje":0
         };
-        vm.usrCliId = $localStorage.user.subsidiary.userClient.id
+        vm.usrCliId = $localStorage.user.subsidiary.userClient.id;
+        vm.userCode = $localStorage.user.userType.code;
         warehouseService.getAllWarehouseByUserClientId(vm.usrCliId).then(function(response) {
             vm.warehouseList = response;
             vm.loading = false;
@@ -125,6 +126,19 @@ angular.module('integridadUiApp')
 
     vm.cancelFindProviders = function() {
         vm.warehouseSelected = undefined;
+    };
+
+    vm.findCellarPending = function(provider) {
+        vm.loading = true;
+        vm.success = undefined;
+        vm.error = undefined;
+        cellarService.getAllCellarsPendingByProviderId(provider.id).then(function(response) {
+            vm.cellarList = response;
+            vm.loading = false;
+        }).catch(function(error) {
+            vm.loading = false;
+            vm.error = error.data;
+        });
     };
 
     vm.consumptionFromWarehouse = function(warehouse) {
@@ -314,13 +328,12 @@ angular.module('integridadUiApp')
 
     vm.saveToCellar = function(cellar) {
         vm.loading = true;
-        vm.userCode = $localStorage.user.userType.code;
         vm.cellar.dateBill = $('#pickerDateBill').data("DateTimePicker").date().toDate().getTime();
         vm.cellar.dateCellar = $('#pickerDateEnterCellar').data("DateTimePicker").date().toDate().getTime();
         vm.cellar.whNumberSeq = vm.seqNumber;
         vm.cellar.detailsCellar = [];
         vm.cellar.detailsKardex = [];
-        if (vm.userCode === 'EMP') {
+        if (vm.userCode === 'EMP' || vm.userCode === 'ADM') {
             vm.cellar.statusIngreso = 'PENDIENTE';
         } else {
             vm.cellar.statusIngreso = 'INGRESADO';
@@ -351,7 +364,7 @@ angular.module('integridadUiApp')
             vm.cellar = respCellar;
             $localStorage.user.cashier.whNumberSeq = vm.cellar.whNumberSeq;
             vm.cellarCreated = true;
-            vm.success = 'Productos Ingresados con Exito' + vm.cellar.statusIngreso;
+            vm.success = 'Productos Ingresados con Exito';
             vm.loading = false;
         }).catch(function(error) {
             vm.loading = false;
