@@ -159,39 +159,17 @@ angular.module('integridadUiApp')
       vm.error = error.data;
     });
   };
-                                      
-  //function _getSubsidiarie() {
-  //  if ($routeParams.subsidiaryId) {
-  //    subsidiaryService.getById($routeParams.subsidiaryId).then(function(response) {
-  //      vm.subsidiaries = [response];
-  //      vm.success = undefined;
-  //      vm.error = undefined
-  //    }).catch(function(error) {
-  //      vm.loading = false;
-  //      vm.error = error.data;
-  //    });
-  //  } else {
-  //    projectService.getById($localStorage.user.subsidiary.userClient.id).then(function(response) {
-  //     vm.subsidiaries = response.subsidiaries;
-  //      vm.success = undefined;
-  //      vm.error = undefined
-  //    }).catch(function(error) {
-  //      vm.loading = false;
-  //      vm.error = error.data;
-  //    });
-  //  };
-  //};
-                                      
+
   vm.filter = function() {
     vm.page = 0;
     _filter();
   };
-                                      
+  
   vm.paginate = function(page) {
     vm.page = page;
     _filter();
   };
-                                      
+  
   vm.getActiveClass = function(index) {
     var classActive = vm.page === index? 'active' : '';
     return classActive;
@@ -204,8 +182,8 @@ angular.module('integridadUiApp')
   vm.costPreview = function() {
     var avrCost = 0.0;
     var gEfectivo = 0.0;
-    var avrCost = vm.averageC;
-    var gEfectivo = 1 + ((vm.cashP) / 100.00);
+    var avrCost = vm.product.averageCost
+    var gEfectivo = 1 + ((vm.product.cashPercentage) / 100.00);
     var preview = avrCost * gEfectivo;
     return (preview).toFixed(2);
   };
@@ -214,8 +192,8 @@ angular.module('integridadUiApp')
     var avrCost = 0.0;
     var gEfectivo = 0.0;
     var iva = 1.12;
-    var avrCost = vm.averageC;
-    var gEfectivo = 1 + ((vm.cashP) / 100.00);
+    var avrCost = vm.product.averageCost;
+    var gEfectivo = 1 + ((vm.product.cashPercentage) / 100.00);
     var preview = avrCost * gEfectivo * iva;
     return (preview).toFixed(2);
   };
@@ -259,8 +237,7 @@ angular.module('integridadUiApp')
     vm.wizard = 1;
     vm.product = {
       userClient: $localStorage.user.subsidiary.userClient,
-      productBySubsidiaries: [],
-      codeIntegridad: vm.totalElements + 1,
+      productBySubsidiaries: []
     };
   };
                                       

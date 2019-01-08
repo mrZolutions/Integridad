@@ -14,7 +14,6 @@ import lombok.Data;
 @Entity
 @Data
 public class Product implements Child {
-
     @Id
     @GeneratedValue
     private UUID id;
@@ -59,7 +58,7 @@ public class Product implements Child {
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     private List<ProductBySubsidiary> productBySubsidiaries;
     
-    public void setListsNull(){
+    public void setListsNull() {
         if (productBySubsidiaries != null) {
             productBySubsidiaries = null;
         }
