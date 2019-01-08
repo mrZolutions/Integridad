@@ -56,6 +56,7 @@ angular.module('integridadUiApp')
             "codigo":"0",
             "codigo_porcentaje":0
         };
+        vm.cashier = $localStorage.user.cashier.whNumberSeq;
         vm.usrCliId = $localStorage.user.subsidiary.userClient.id;
         vm.userCode = $localStorage.user.userType.code;
         warehouseService.getAllWarehouseByUserClientId(vm.usrCliId).then(function(response) {
@@ -68,9 +69,8 @@ angular.module('integridadUiApp')
     };
 
     function _getSeqNumber() {
-        vm.numberAddedOne = parseInt($localStorage.user.cashier.whNumberSeq) + 1;
-        vm.seqNumberSecondPart = utilSeqService._pad_with_zeroes(vm.numberAddedOne, 6);
-        vm.seqNumber = vm.seqNumberSecondPart;
+        vm.numberAddedOne = parseInt(vm.cashier) + 1;
+        vm.cellarSeqNumber = utilSeqService._pad_with_zeroes(vm.numberAddedOne, 6);
     };
 
     function _initializeCellar() {
@@ -106,15 +106,13 @@ angular.module('integridadUiApp')
         };
     };
 
-    vm.findProviders = function(warehouse) {
+    vm.selectWarehouse = function(warehouse) {
         vm.loading = true;
         vm.success = undefined;
         vm.error = undefined;
-        vm.warehouse = warehouse;
-        vm.warehouseSelected = true;
+        vm.warehouseSelected = warehouse;
         vm.warehouseName = warehouse.nameNumber;
         vm.warehouseSubsidiaryName = warehouse.subsidiary.name;
-        vm.providerList = undefined;
         providerService.getLazyByUserClientId(vm.usrCliId).then(function(response) {
             vm.providerList = response;
             vm.loading = false;
@@ -125,20 +123,30 @@ angular.module('integridadUiApp')
     };
 
     vm.cancelFindProviders = function() {
+        vm.providerList = undefined;
         vm.warehouseSelected = undefined;
+        _activate();
     };
 
-    vm.findCellarPending = function(provider) {
+    vm.findCellarPending = function(warehouse) {
         vm.loading = true;
         vm.success = undefined;
         vm.error = undefined;
-        cellarService.getAllCellarsPendingByProviderId(provider.id).then(function(response) {
+        vm.warehouseSelected = warehouse;
+        vm.warehouseName = warehouse.nameNumber;
+        vm.warehouseSubsidiaryName = warehouse.subsidiary.name;
+        cellarService.getAllCellarsPendingOfWarehouse(warehouse.id).then(function(response) {
             vm.cellarList = response;
             vm.loading = false;
         }).catch(function(error) {
             vm.loading = false;
             vm.error = error.data;
         });
+    };
+
+    vm.cancelFindCellars = function() {
+        vm.warehouseSelected = undefined;
+        _activate();
     };
 
     vm.consumptionFromWarehouse = function(warehouse) {
@@ -154,7 +162,7 @@ angular.module('integridadUiApp')
 
     };
 
-    vm.providerSelect = function(provider) {
+    vm.enterToCellar = function(provider) {
         vm.loading = true;
         vm.success = undefined;
         vm.error = undefined;
@@ -376,6 +384,31 @@ angular.module('integridadUiApp')
     vm.cancelCellar = function() {
         vm.warehouseSelected = undefined;
         vm.providerSelected = undefined;
+        _activate();
+    };
+
+    vm.cellarSelected = function(cellar) {
+        vm.loading = true;
+        vm.cellarPendingSelected = cellar.id;
+        vm.cellarList = undefined;
+        cellarService.getAllCellarById(cellar.id).then(function(response) {
+            vm.cellar = response;
+            vm.cellarDetails = response.detailsCellar;
+            vm.cellarProviderSelected = response.provider;
+            vm.billNumber = response.billNumber;
+            vm.whNumberSeq = response.whNumberSeq;
+            vm.loading = false;
+        }).catch(function(error) {
+            vm.loading = false;
+            vm.error = error.data;
+        });
+    };
+
+    vm.cancelCellarSelected = function() {
+        vm.warehouseSelected = undefined;
+        vm.cellarPendingSelected = undefined;
+        vm.cellarList = undefined;
+        _activate();
     };
 
     (function initController() {

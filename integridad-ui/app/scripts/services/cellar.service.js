@@ -6,8 +6,14 @@ angular
                 return response.data;
             });
         };
-        this.getAllCellarsPendingByProviderId = function (id) {
-            return securityService.get('/cellar/pending/' + id).then(function successCallback(response) {
+        this.getAllCellarsPendingOfWarehouse = function (id) {
+            return securityService.get('/cellar/warehouse/pending/' + id).then(function successCallback(response) {
+                return response.data;
+            });
+        };
+
+        this.getAllCellarById = function(id) {
+            return securityService.get('/cellar/' + id).then(function successCallback(response) {
                 return response.data;
             });
         };

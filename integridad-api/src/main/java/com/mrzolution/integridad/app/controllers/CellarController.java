@@ -63,12 +63,12 @@ public class CellarController {
         return new ResponseEntity<Void>(HttpStatus.ACCEPTED);
     }
     
-    @RequestMapping(method = RequestMethod.GET, value="/pending/{id}")
-    public ResponseEntity getAllCellarsPendingByProviderId(@PathVariable("id") UUID id) {
+    @RequestMapping(method = RequestMethod.GET, value="/warehouse/pending/{id}")
+    public ResponseEntity getAllCellarsPendingOfWarehouse(@PathVariable("id") UUID id) {
         log.info("CellarController getAllCellarsPendingByProviderId: {}", id);
         Iterable<Cellar> response = null;
         try {
-            response = service.getCellarsPendingByProviderId(id);
+            response = service.getCellarPendingOfWarehouse(id);
         } catch (BadRequestException e) {
             log.error("CellarController getAllCellarsPendingByProviderId Exception thrown: {}", e.getMessage());
 	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());

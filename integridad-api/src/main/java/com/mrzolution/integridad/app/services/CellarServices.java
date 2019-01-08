@@ -55,9 +55,9 @@ public class CellarServices {
         return cellars;
     }
     
-    public Iterable<Cellar> getCellarsPendingByProviderId(UUID id) {
+    public Iterable<Cellar> getCellarPendingOfWarehouse(UUID id) {
         log.info("CellarServices getCellarsPendingByProviderId {}", id);
-        Iterable<Cellar> cellars = cellarRepository.findCellarPendingByProvider(id);
+        Iterable<Cellar> cellars = cellarRepository.findCellarPendingOfWarehouse(id);
         cellars.forEach(cellar -> {
             cellar.setListsNull();
             cellar.setFatherListToNull();
@@ -170,7 +170,9 @@ public class CellarServices {
     
     private void populateChildren(Cellar cellar) {
         List<DetailCellar> detailCellarList = getDetailsByCellar(cellar);
+        List<Kardex> detailsKardexList = getDetailsKardexByCellar(cellar);
         cellar.setDetailsCellar(detailCellarList);
+        cellar.setDetailsKardex(detailsKardexList);
         cellar.setFatherListToNull();
         log.info("CellarServices populateChildren cellarId: {}", cellar.getId());
     }
@@ -187,5 +189,19 @@ public class CellarServices {
             detailCellarList.add(detail);
         });
         return detailCellarList;
+    }
+    
+    private List<Kardex> getDetailsKardexByCellar(Cellar cellar) {
+        List<Kardex> detailsKardexList = new ArrayList<>();
+        Iterable<Kardex> detailsKardex = kardexRepository.findByCellar(cellar);
+        detailsKardex.forEach (detail -> {
+            detail.getCellar().setListsNull();
+            detail.getCellar().setFatherListToNull();
+            detail.getProduct().setFatherListToNull();
+            detail.getProduct().setListsNull();
+            detail.setCellar(null);
+            detailsKardexList.add(detail);
+        });
+        return detailsKardexList;
     }
 }

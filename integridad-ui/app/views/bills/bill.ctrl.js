@@ -87,7 +87,7 @@ angular.module('integridadUiApp')
       vm.medio = {};
       vm.pagos = [];
       vm.user = $localStorage.user;
-      clientService.getLazyByProjectId($localStorage.user.subsidiary.userClient.id).then(function(response) {
+      clientService.getLazyByProjectId(vm.user.subsidiary.userClient.id).then(function(response) {
         vm.clientList = response;
         vm.loading = false;
       }).catch(function(error) {
@@ -97,8 +97,8 @@ angular.module('integridadUiApp')
     };
 
     function _getSeqNumber() {
-      vm.numberAddedOne = parseInt($localStorage.user.cashier.billNumberSeq) + 1;
-      vm.seqNumberFirstPart = $localStorage.user.subsidiary.threeCode + '-' + $localStorage.user.cashier.threeCode;
+      vm.numberAddedOne = parseInt(vm.user.cashier.billNumberSeq) + 1;
+      vm.seqNumberFirstPart = vm.user.subsidiary.threeCode + '-' + vm.user.cashier.threeCode;
       vm.seqNumberSecondPart = utilSeqService._pad_with_zeroes(vm.numberAddedOne, 9);
       vm.seqNumber =  vm.seqNumberFirstPart + '-' + vm.seqNumberSecondPart;
     };
@@ -632,8 +632,8 @@ angular.module('integridadUiApp')
         if (vm.bill.discountPercentage === undefined) {
           vm.bill.discountPercentage = 0;
         };
-        var obj = JSON.parse(resp.data);
-        //var obj = {clave_acceso: '1234560', id:'id12345'};
+        //var obj = JSON.parse(resp.data);
+        var obj = {clave_acceso: '1234560', id:'id12345'};
         if (obj.errors === undefined) {
           vm.bill.claveDeAcceso = obj.clave_acceso;
           vm.bill.idSri = obj.id;

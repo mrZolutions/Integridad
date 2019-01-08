@@ -218,7 +218,8 @@ angular.module('integridadUiApp')
       vm.providerList = undefined;
       vm.medio = {};
       vm.pagos = [];
-      vm.usrCliId = $localStorage.user.subsidiary.userClient.id
+      vm.usrCliId = $localStorage.user.subsidiary.userClient.id;
+      vm.cashier = $localStorage.user.cashier.debtsNumberSeq;
       providerService.getLazyByUserClientId(vm.usrCliId).then(function(response) {
         vm.providerList = response;
         vm.loading = false;
@@ -229,9 +230,8 @@ angular.module('integridadUiApp')
     };
 
     function _getSeqNumber() {
-      vm.numberAddedOne = parseInt($localStorage.user.cashier.debtsNumberSeq) + 1;
-      vm.seqNumberSecondPart = utilSeqService._pad_with_zeroes(vm.numberAddedOne, 6);
-      vm.seqNumber = vm.seqNumberSecondPart;
+      vm.numberAddedOne = parseInt(vm.cashier) + 1;
+      vm.seqNumber = utilSeqService._pad_with_zeroes(vm.numberAddedOne, 6);
     };
 
     function _initializeDebts() {

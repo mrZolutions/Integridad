@@ -274,9 +274,9 @@
             </div>
             <div class = "row">
                 <div class = "form-group col-md-12">
-                    <button type = "button" title = "Forma de Pago" class = "btn btn-primary" ng-disabled = "vm.debtsToPay.items == 0"
+                    <button type = "button" title = "Forma de Pago" class = "btn btn-success" ng-disabled = "vm.debtsToPay.items == 0"
                             data-toggle = "modal" data-target = "#modalAddPago">
-                            <span class = "glyphicon glyphicon-ruble" aria-hidden = "true"></span>
+                            <span class = "glyphicon glyphicon-usd" aria-hidden = "true"></span>
                     </button>
                     <button type = "button" title = "Salir" class = "btn btn-primary"
                             ng-click = "vm.cancel()">
@@ -845,7 +845,7 @@
                             <td>
                                 <b ng-if = "vm.debtsProviderSelected.ruc_type === 'CED'">CEDULA: </b>
                                 <b ng-if = "vm.debtsProviderSelected.ruc_type === 'RUC'">RUC: </b>
-                                <b ng-if = "vm.debtsProviderSelected.ruc_type === 'PAS'">PASSPORT: </b>
+                                <b ng-if = "vm.debtsProviderSelected.ruc_type === 'PAS'">PASAPORTE: </b>
                                 {{vm.debtsProviderSelected.ruc}}
                             </td>
                             <td>

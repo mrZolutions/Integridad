@@ -372,7 +372,7 @@ public class BillServices {
         return detailList;
     }
     
-    private List<Kardex> getDetailsKardexByBill (Bill bill) {
+    private List<Kardex> getDetailsKardexByBill(Bill bill) {
         List<Kardex> detailsKardexList = new ArrayList<>();
         Iterable<Kardex> detailsKardex = kardexRepository.findByBill(bill);
         detailsKardex.forEach (detail -> {
