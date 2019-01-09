@@ -52,15 +52,16 @@ public class CellarController {
     }
     
     @RequestMapping(method = RequestMethod.PUT)
-    public ResponseEntity dactivateCellar(@RequestBody Cellar cellar) {
-        log.info("CellarController dactivate: {}", cellar.getId());
+    public ResponseEntity validateCellar(@RequestBody Cellar cellar) {
+        log.info("CellarController validateCellar: {}", cellar.getId());
+        Cellar response = null;
         try {
-            service.deactivateCellar(cellar);
+            response = service.validateCellar(cellar);
         } catch (BadRequestException e) {
-            log.error("CellarController dactivate Exception thrown: {}", e.getMessage());
+            log.error("CellarController validateCellar Exception thrown: {}", e.getMessage());
 	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
-        return new ResponseEntity<Void>(HttpStatus.ACCEPTED);
+        return new ResponseEntity<Cellar>(response, HttpStatus.ACCEPTED);
     }
     
     @RequestMapping(method = RequestMethod.GET, value="/warehouse/pending/{id}")

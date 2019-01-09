@@ -1,5 +1,6 @@
 package com.mrzolution.integridad.app.repositories;
 
+import com.mrzolution.integridad.app.domain.Client;
 import com.mrzolution.integridad.app.domain.Consumption;
 import com.mrzolution.integridad.app.domain.UserIntegridad;
 import java.util.UUID;
@@ -19,15 +20,20 @@ import org.springframework.stereotype.Repository;
 public interface ConsumptionRepository extends CrudRepository<Consumption, UUID> {
     Iterable<Consumption> findConsumptionByUserIntegridad(UserIntegridad user);
     
-    @Query("SELECT c FROM Consumption c WHERE c.subsidiary.id = (:id) AND c.active = 'true' ORDER BY c.csmNumberSeq")
+    Iterable<Consumption> findConsumptionByClient(Client client);
+    
+    @Query("SELECT cm FROM Consumption cm WHERE cm.client.id = (:id) AND cm.active = 'true' ORDER BY cm.csmSeq")
+    Iterable<Consumption> findConsumptionByClientId(@Param("id") UUID id);
+    
+    @Query("SELECT cm FROM Consumption cm WHERE cm.subsidiary.id = (:id) AND cm.active = 'true' ORDER BY cm.csmSeq")
     Iterable<Consumption> findConsumptionBySubsidiaryId(@Param("id") UUID id);
     
-    @Query("SELECT c FROM Consumption c WHERE c.csmNumberSeq = (:seq) AND c.subsidiary.id = (:subId) AND c.active = 'true' ORDER BY c.csmNumberSeq")
+    @Query("SELECT cm FROM Consumption cm WHERE cm.csmNumberSeq = (:seq) AND cm.subsidiary.id = (:subId) AND cm.active = 'true' ORDER BY cm.csmSeq")
     Iterable<Consumption> findConsumptionByCsmNumberSeqAndSubsidiaryId(@Param("seq") String csmNumberSeq, @Param("subId") UUID id);
     
-    @Query("SELECT c FROM Consumption c WHERE c.csmNumberSeq = (:seq) AND c.subsidiary.userClient.id = (:userClientId) AND c.active = 'true' ORDER BY c.csmNumberSeq")
-    Iterable<Consumption> findConsumptionByWhNumberSeqAndUserClientId(@Param("seq") String whNumberSeq, @Param("userClientId") UUID id);
+    @Query("SELECT cm FROM Consumption cm WHERE cm.csmNumberSeq = (:seq) AND cm.subsidiary.userClient.id = (:userClientId) AND cm.active = 'true' ORDER BY cm.csmSeq")
+    Iterable<Consumption> findConsumptionByCsmNumberSeqAndUserClientId(@Param("seq") String csmNumberSeq, @Param("userClientId") UUID id);
     
-    @Query("SELECT c FROM Consumption c WHERE c.subsidiary.userClient.id = (:userClientId) AND c.active = 'true' ORDER BY c.csmNumberSeq")
+    @Query("SELECT cm FROM Consumption cm WHERE cm.subsidiary.userClient.id = (:userClientId) AND cm.active = 'true' ORDER BY cm.csmSeq")
     Iterable<Consumption> findConsumptionByUserClientId(@Param("userClientId") UUID id);
 }

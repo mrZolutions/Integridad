@@ -28,6 +28,7 @@ public class Cellar {
     private long dateEnterCellar;
     private String authNumber;
     private String statusIngreso;
+    private String cellarSeq;
     private String whNumberSeq;
     private boolean active;
     private double iva;

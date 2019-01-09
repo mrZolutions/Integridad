@@ -97,17 +97,7 @@ public class CellarServices {
         return retrieved;
     }
     
-    public Cellar deactivateCellar(Cellar cellar) throws BadRequestException {
-        if (cellar.getId() == null) {
-            throw new BadRequestException("Invalid Cellar");
-        }
-        Cellar cellarToDeactivate = cellarRepository.findOne(cellar.getId());
-        cellarToDeactivate.setListsNull();
-        cellarToDeactivate.setActive(false);
-        cellarRepository.save(cellarToDeactivate);
-        return cellarToDeactivate;
-    }
-    
+    //Create Cellar
     @Async("asyncExecutor")
     public Cellar create(Cellar cellar) throws BadRequestException {
         List<DetailCellar> detailsCellar = cellar.getDetailsCellar();
@@ -120,7 +110,9 @@ public class CellarServices {
         cellar.setFatherListToNull();
         cellar.setListsNull();
         Cellar saved = cellarRepository.save(cellar);
-        updateCashier(cellar);
+        Cashier cashier = cashierRepository.findOne(cellar.getUserIntegridad().getCashier().getId());
+        cashier.setWhNumberSeq(cashier.getWhNumberSeq() + 1);
+        cashierRepository.save(cashier);
         saveDetailsCellar(saved, detailsCellar);
         saveKardex(saved, detailsKardex);
         if ("INGRESADO".equals(saved.getStatusIngreso())) {
@@ -130,11 +122,19 @@ public class CellarServices {
         return saved;
     }
     
-    public void updateCashier(Cellar cellar) {
-        Cashier cashier = cashierRepository.findOne(cellar.getUserIntegridad().getCashier().getId());
-        cashier.setWhNumberSeq(cashier.getWhNumberSeq() + 1);
-        cashierRepository.save(cashier);
-        log.info("CellarServices updateCashier DONE");
+    //Validate Cellar and updateProductBySubsidiary
+    @Async("asyncExecutor")
+    public Cellar validateCellar(Cellar cellar) throws BadRequestException {
+        if (cellar.getId() == null) {
+            throw new BadRequestException("Cellar NOT FOUND");
+        }
+        Cellar cellarToValidate = cellarRepository.findOne(cellar.getId());
+        populateChildren(cellarToValidate);
+        cellarToValidate.setStatusIngreso("INGRESADO");
+        cellarRepository.save(cellarToValidate);
+        updateProductBySubsidiary(cellar, cellarToValidate.getDetailsCellar());
+        log.info("Cellarservices validateCellar DONE");
+        return cellarToValidate;
     }
     
     public void saveDetailsCellar(Cellar saved, List<DetailCellar> detailsCellar) {

@@ -1,16 +1,14 @@
 package com.mrzolution.integridad.app.domain;
 
 import java.util.UUID;
-
 import javax.persistence.*;
-
 import org.hibernate.validator.constraints.Email;
-
 import lombok.Data;
 
 /**
  * Created by daniel.
  */
+
 @Entity
 @Data
 public class UserIntegridad {
@@ -30,13 +28,10 @@ public class UserIntegridad {
     private String ruc;
 //    private String cashier;
     private long birthDay;
-    
     private long dateCreated;
     private String userName;
     private String password;
-    
     private boolean tempPass;
-    
     private String validation;
     private boolean active;
 
@@ -59,27 +54,26 @@ public class UserIntegridad {
     @JoinColumn(name = "user_id")
     private UserIntegridad user;
     
-    public void setListsNull(){
-    	
+    public void setListsNull() {
     }
     
-    public void setFatherListToNull(){
+    public void setFatherListToNull() {
     	userType.setListsNull();
-    	if(user != null){
+    	if (user != null) {
     	    user.setFatherListToNull();
         }
-    	if(subsidiary != null) {
+    	if (subsidiary != null) {
     		subsidiary.setListsNull(); 
     		subsidiary.setFatherListToNull();
     	};
-    	if(cashier != null){
+    	if (cashier != null) {
     	    cashier.setFatherListToNull();
     	    cashier.setListsNull();
         }
     }
 
     @Transient
-    public static UserIntegridad newUserIntegridadTest(){
+    public static UserIntegridad newUserIntegridadTest() {
         UserIntegridad userIntegridad = new UserIntegridad();
         userIntegridad.setUserType(UserType.newUserTypeTest());
         userIntegridad.setSubsidiary(Subsidiary.newSubsidiaryTest());

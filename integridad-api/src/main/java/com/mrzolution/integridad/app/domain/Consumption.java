@@ -25,10 +25,11 @@ public class Consumption {
     
     private String codeWarehouse;
     private long dateConsumption;
+    private String csmSeq;
     private String csmNumberSeq;
     private String details;
     private String observation;
-    private String nameProvClient;
+    private String nameClient;
     private String nameSupervisor;
     private boolean active;
     private double iva;
@@ -37,6 +38,10 @@ public class Consumption {
     private double subTotal;
     private double baseNoTaxes;
     private double baseTaxes;
+    
+    @ManyToOne
+    @JoinColumn(name = "client_id")
+    private Client client;
     
     @ManyToOne
     @JoinColumn(name = "warehouse_id")
@@ -62,6 +67,8 @@ public class Consumption {
     }
     
     public void setFatherListToNull() {
+        client.setListsNull();
+    	client.setFatherListToNull();
         warehouse.setListsNull();
     	warehouse.setFatherListToNull();
         subsidiary.setListsNull();

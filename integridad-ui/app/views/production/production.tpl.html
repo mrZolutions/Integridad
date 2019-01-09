@@ -33,10 +33,10 @@
         </div>
     </div>
     
-    <!--CARGA DE BODEGAS POR EMPRESA-->
+    <!--CARGA DE WAREHOUSE POR USERCLIENT-->
     <div class="table-responsive" ng-show="vm.warehouseSelected === undefined">
         <div class="row">
-            <div class="form-group col-md-10">
+            <div class="form-group col-md-12">
                 <input ng-model="searchText" class="form-control" placeholder="Buscar">
             </div>
         </div>
@@ -64,13 +64,13 @@
                                 <span class = "glyphicon glyphicon-check" aria-hidden = "true"></span>
                         </button>
                         <button type="button" title="Consulta de Ingresos Pendientes" class="btn btn-primary btn-sm"
-                                ng-disabled="vm.userCode !== 'SAD'" ng-click="vm.findCellarPending(warehouse)">
+                                ng-disabled="vm.userCode === 'EMP'" ng-click="vm.findCellarPending(warehouse)">
                                 <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
                         </button>
-                        <!--<button type="button" title="Consumos Internos" class="btn btn-primary btn-sm" ng-click="vm.consumptionFromWarehouse(warehouse)">
+                        <button type="button" title="Consumos Internos" class="btn btn-primary btn-sm" ng-click="vm.consumptionFromWarehouse(warehouse)">
                                 <span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
                         </button>
-                        <button type="button" title = "Transferencia entre Bodegas" class="btn btn-primary btn-sm" ng-click="">
+                        <!--<button type="button" title = "Transferencia entre Bodegas" class="btn btn-primary btn-sm" ng-click="">
                                 <span class = "glyphicon glyphicon-transfer" aria-hidden = "true"></span>
                         </button>-->
                     </td>
@@ -79,14 +79,14 @@
         </table>
     </div>
 
-    <!--CARGA DE PROVEEDORES-->
+    <!--CARGA DE PROVEEDORES POR WAREHOUSE-->
     <div class="table-responsive" ng-show="vm.warehouseSelected !== undefined && vm.providerList !== undefined">
         <div class="row">
             <div class="form-group col-md-12">
                 <h4>Sucursal: {{vm.warehouseSubsidiaryName}}</h4>
                 <h5>Bodega: {{vm.warehouseName}}</h5>
             </div>
-            <div class="form-group col-md-10">
+            <div class="form-group col-md-12">
                 <input ng-model = "searchText" class = "form-control" placeholder = "Buscar Proveedores">
             </div>
         </div>
@@ -123,65 +123,13 @@
         <div class="row">
             <div class="form-group col-md-12">
                 <button type="button" title="Salir" class="btn btn-primary" 
-                        ng-click="vm.cancelFindProviders()">
+                        ng-click="vm.cancelselectWarehouse()">
                         <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
                 </button>
             </div>
         </div>
     </div>
-    <!--FIN DE CARGA DE PROVEEDORES-->
-
-    <!--CARGA DE CELLAR PENDING POR WAREHOUSE-->
-    <div class="table-responsive" ng-show="vm.warehouseSelected !== undefined && vm.cellarList !== undefined">
-        <div class="row">
-            <div class="form-group col-md-12">
-                <h4>Sucursal: {{vm.warehouseSubsidiaryName}}</h4>
-                <h5>Bodega: {{vm.warehouseName}}</h5>
-            </div>
-        </div>
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>Factura</th>
-                    <th>Fecha de Ingreso</th>
-                    <th>Proveedor</th>
-                    <th>Bodega</th>
-                    <th>Total</th>
-                    <th>Estatus</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr ng-show="vm.cellarList == 0">
-                    <td colspan="4">
-                        No hay Ingresos a Bodega Pendientes por Validar
-                    </td>
-                </tr>
-                <tr ng-repeat="cellar in vm.cellarList | orderBy:'name' | filter:searchText">
-                    <td>{{cellar.billNumber}}</td>
-                    <td>{{cellar.dateEnterCellar | date : "dd/MM/yyyy"}}</td>
-                    <td>{{cellar.provider.name}}</td>
-                    <td>{{cellar.warehouse.nameNumber}}</td>
-                    <td>{{cellar.total}}</td>
-                    <td>{{cellar.statusIngreso}}</td>
-                    <td>
-                        <button type="button" title="Ver Factura" 
-                                class="btn btn-primary btn-sm" ng-click="vm.cellarSelected(cellar)">
-                                <span class = "glyphicon glyphicon-eye-open" aria-hidden = "true"></span>
-                        </button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-        <div class="row">
-            <div class="form-group col-md-12">
-                <button type="button" title="Salir" class="btn btn-primary" 
-                        ng-click="vm.cancelFindCellars()">
-                        <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
-                </button>
-            </div>
-        </div>
-    </div>
-    <!--FIN DE CARGA DE CELLAR PENDING-->
+    <!--FIN DE CARGA DE PROVEEDORES POR WAREHOUSE-->
 
     <!--SECCIÓN DE INGRESO A BODEGA-->
     <div class="table-responsive" ng-show="vm.providerSelected !== undefined">
@@ -195,7 +143,7 @@
             <div class="panel-heading">
                 <h4>Ingreso a Bodega</h4>
                 <div>
-                    <b>Ingreso Nro: </b>{{vm.cellarSeqNumber}}
+                    <b>Ingreso Nro: </b>{{vm.seqNumber}}
                 </div>
             </div>
             <div class="panel-body">
@@ -205,7 +153,9 @@
                         {{vm.cellar.provider.codeIntegridad}}
                     </div>
                     <div class="form-group col-md-6">
-                        <label>RUC / CEDULA / PASAPORTE:</label>
+                        <label ng-if="vm.cellar.provider.ruc_type === 'RUC'">RUC:</label>
+                        <label ng-if="vm.cellar.provider.ruc_type === 'CED'">CEDULA:</label>
+                        <label ng-if="vm.cellar.provider.ruc_type === 'PAS'">PASAPORTE:</label>
                         {{vm.cellar.provider.ruc}}
                     </div>
                 </div>
@@ -388,7 +338,6 @@
             </div>
         </div>
     </div>
-    <!--FIN DE DE INGRESO A BODEGA-->
     <!--MODAL PARA AGREGAR PRODUCTOS-->
     <div id="modalAddProduct" class="modal fade" role="dialog">
         <div class="modal-dialog">
@@ -469,11 +418,11 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" title="Aceptar y Cerrar" class="btn btn-primary" ng-click="vm.acceptProduct(true)"
+                    <button type="button" title="Aceptar y Cerrar" class="btn btn-primary" ng-click="vm.acceptCellarProduct(true)"
                             ng-disabled="vm.productToAdd === undefined">
                             <span class = "glyphicon glyphicon-thumbs-up" aria-hidden = "true"></span>
                     </button>
-                    <button type="button" title="Aceptar y Agregar Mas productos" class="btn btn-primary" ng-click="vm.acceptProduct(false)"
+                    <button type="button" title="Aceptar y Agregar Mas productos" class="btn btn-primary" ng-click="vm.acceptCellarProduct(false)"
                             ng-disabled="vm.productToAdd === undefined">
                             <span class = "glyphicon glyphicon-ok-sign" aria-hidden = "true"></span>
                     </button>
@@ -485,6 +434,63 @@
         </div>
     </div>
     <!--FIN DEL MODAL PARA AGREGAR PRODUCTOS-->
+    <!--FIN DE DE INGRESO A BODEGA-->
+
+    <!--CARGA DE CELLAR PENDING POR WAREHOUSE-->
+    <div class="table-responsive" ng-show="vm.warehouseSelected !== undefined && vm.cellarList !== undefined && vm.cellarPendingSelected === undefined">
+        <div class="row">
+            <div class="form-group col-md-12">
+                <h4>Sucursal: {{vm.warehouseSubsidiaryName}}</h4>
+                <h5>Bodega: {{vm.warehouseName}}</h5>
+            </div>
+        </div>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Nro. Ingreso</th>
+                    <th>Factura</th>
+                    <th>Fecha de Ingreso</th>
+                    <th>Proveedor</th>
+                    <th>Total</th>
+                    <th>Estatus</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-show="vm.cellarList == 0">
+                    <td colspan="4">
+                        No hay Ingresos a Bodega Pendientes por Validar
+                    </td>
+                </tr>
+                <tr ng-repeat="cellar in vm.cellarList | orderBy:'name' | filter:searchText">
+                    <td>{{cellar.cellarSeq}}</td>
+                    <td>{{cellar.billNumber}}</td>
+                    <td>{{cellar.dateEnterCellar | date : "dd/MM/yyyy"}}</td>
+                    <td>{{cellar.provider.name}}</td>
+                    <td>{{cellar.total}}</td>
+                    <td>{{cellar.statusIngreso}}</td>
+                    <td>
+                        <button type="button" title="Ver Factura" 
+                                class="btn btn-primary btn-sm" ng-click="vm.cellarSelected(cellar)">
+                                <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
+                        </button>
+                        <button type="button" title="Autorizar Ingreso a Bodega" class="btn btn-warning btn-sm" 
+                                ng-click="vm.validateCellar=cellar"
+                                data-toggle="modal" data-target="#modalValidar">
+                                <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="row">
+            <div class="form-group col-md-12">
+                <button type="button" title="Salir" class="btn btn-primary" 
+                        ng-click="vm.cancelFindCellars()">
+                        <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
+                </button>
+            </div>
+        </div>
+    </div>
 
     <!--CARGA DE FACTURA INDIVIDUAL PARA VALIDACIÓN-->
     <div class="table-responsive" ng-show = "vm.cellarPendingSelected !== undefined">
@@ -496,7 +502,7 @@
         </div>
         <div class = "panel panel-default">
             <div class = "panel-heading">
-                <h4><b>Ingreso a Bodega Nro: </b>{{vm.whNumberSeq}}</h4>
+                <h4><b>Ingreso a Bodega Nro: </b>{{vm.seqNumber}}</h4>
                 <div>
                    <p>Factura Nro: {{vm.billNumber}}</p>
                 </div>
@@ -627,12 +633,7 @@
                 </div>
                 <div class="row">
                     <div class="form-group col-md-12">
-                        <button type="button" title="Autorizar Ingreso a Bodega" class="btn btn-success"
-                                ng-click=""
-                                ng-disabled="vm.cellar.total <= 0">
-                                <span class="glyphicon glyphicon-floppy-saved" aria-hidden="true"></span>
-                        </button>
-                        <button type="button" title="Salir" class="btn btn-primary"
+                        <button type="button" title="Volver" class="btn btn-primary"
                                 ng-click="vm.cancelCellarSelected()">
                                 <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
                         </button>
@@ -640,5 +641,77 @@
                 </div>
             </div>
         </div>
+    </div>
+
+    <!--MODAL PARA VALIDAR EL INGRESO A BODEGA-->
+    <div id="modalValidar" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" ng-click="vm.client=undefined">&times;</button>
+                    <h4 class="modal-title">Advertencia</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12" >
+                            Est&aacute; seguro que desea Autorizar el Ingreso a Bodega Nro. <b>{{vm.validateCellar.whNumberSeq}}</b>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" title="Autorizar Ingreso" class="btn btn-warning" 
+                            ng-click="vm.validateEnterCellar()" data-dismiss="modal">
+                            <span class = "glyphicon glyphicon-ok" aria-hidden = "true"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--FIN DEL MODAL PARA VALIDAR EL INGRESO A BODEGA-->
+    <!--FIN DE CARGA DE CELLAR PENDING POR WAREHOUSE-->
+
+    <!--INICIO DE CARGA DE CLIENTES POR USERCLIENT - MODULO CONSUMO-->
+    <div class="table-responsive" ng-show="vm.warehouseSelected !== undefined && vm.clientList !== undefined">
+        <div class="row">
+            <div class="form-group col-md-10">
+                <input ng-model="searchText" class="form-control" placeholder="Buscar">
+            </div>
+            <div class="form-group col-md-2">
+                <button type="button" title="Agregar Nuevo Cliente" class="btn btn-primary" ng-click="vm.clientCreate()">
+                        <span class = "glyphicon glyphicon-user" aria-hidden = "true"></span>
+                </button>
+            </div>
+        </div>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th> C&oacute;digo </th>
+                    <th> Nombre </th>
+                    <th> Tipo ID</th>
+                    <th> No. Identidad </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-show="vm.clientList == 0">
+                    <td colspan="4">
+                        No hay clientes ingresados
+                    </td>
+                </tr>
+                <tr ng-repeat="clientPreSelect in vm.clientList | orderBy:'name' | filter:searchText">
+                    <td>{{ clientPreSelect.codApp }}</td>
+                    <td>{{ clientPreSelect.name }}</td>
+                    <td>{{ clientPreSelect.typeId }}</td>
+                    <td>{{ clientPreSelect.identification }}</td>
+                    <td>
+                        <button type="button" title="Nuevo Consumo" class="btn btn-primary" ng-click="vm.clientSelect(clientPreSelect)">
+                                <span class = "glyphicon glyphicon-file" aria-hidden = "true"></span>
+                        </button>
+                        <button type="button" title="Consultar Consumos" class="btn btn-primary" ng-click="vm.clientConsult(clientPreSelect)">
+                                <span class = "glyphicon glyphicon-search" aria-hidden = "true"></span>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 </div>
