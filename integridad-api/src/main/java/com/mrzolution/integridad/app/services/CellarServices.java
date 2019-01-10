@@ -55,36 +55,6 @@ public class CellarServices {
         return cellars;
     }
     
-    public Iterable<Cellar> getCellarPendingOfWarehouse(UUID id) {
-        log.info("CellarServices getCellarsPendingByProviderId {}", id);
-        Iterable<Cellar> cellars = cellarRepository.findCellarPendingOfWarehouse(id);
-        cellars.forEach(cellar -> {
-            cellar.setListsNull();
-            cellar.setFatherListToNull();
-        });
-        return cellars;
-    }
-    
-    public Iterable<Cellar> getActivesCellarByWhNumberSeqAndSubsidiaryId(String whNumberSeq, UUID subId) {
-        log.info("CellarServices getActivesCellarByWhNumberSeqAndSubsidiaryId: {}, {}", whNumberSeq, subId);
-        Iterable<Cellar> cellars = cellarRepository.findCellarByWhNumberSeqAndSubsidiaryId(whNumberSeq, subId);
-        cellars.forEach(cellar -> {
-            cellar.setFatherListToNull();
-            cellar.setListsNull();
-        });
-        return cellars;
-    }
-    
-    public Iterable<Cellar> getActivesCellarByWhNumberSeqAndUserClientId(String whNumberSeq, UUID userClientId) {
-        log.info("CellarServices getActivesCellarByWhNumberSeqAndUserClientId: {}, {}", whNumberSeq, userClientId);
-        Iterable<Cellar> cellars = cellarRepository.findCellarByWhNumberSeqAndUserClientId(whNumberSeq, userClientId);
-        cellars.forEach(cellar -> {
-            cellar.setFatherListToNull();
-            cellar.setListsNull();
-        });
-        return cellars;
-    }
-    
     public Cellar getCellarById(UUID id) {
         log.info("CellarServices getById: {}", id);
         Cellar retrieved = cellarRepository.findOne(id);
@@ -95,31 +65,6 @@ public class CellarServices {
         }		
         populateChildren(retrieved);
         return retrieved;
-    }
-    
-    //Create Cellar
-    @Async("asyncExecutor")
-    public Cellar create(Cellar cellar) throws BadRequestException {
-        List<DetailCellar> detailsCellar = cellar.getDetailsCellar();
-        List<Kardex> detailsKardex = cellar.getDetailsKardex();
-        if (detailsCellar == null) {
-            throw new BadRequestException("Debe tener un producto por lo menos");
-        }
-        cellar.setDetailsCellar(null);
-        cellar.setActive(true);
-        cellar.setFatherListToNull();
-        cellar.setListsNull();
-        Cellar saved = cellarRepository.save(cellar);
-        Cashier cashier = cashierRepository.findOne(cellar.getUserIntegridad().getCashier().getId());
-        cashier.setWhNumberSeq(cashier.getWhNumberSeq() + 1);
-        cashierRepository.save(cashier);
-        saveDetailsCellar(saved, detailsCellar);
-        saveKardex(saved, detailsKardex);
-        if ("INGRESADO".equals(saved.getStatusIngreso())) {
-            updateProductBySubsidiary(cellar, detailsCellar);
-        }
-        log.info("CellarServices Cellar created id: {}", saved.getId());
-        return saved;
     }
     
     //Validate Cellar and updateProductBySubsidiary
@@ -135,37 +80,6 @@ public class CellarServices {
         updateProductBySubsidiary(cellar, cellarToValidate.getDetailsCellar());
         log.info("Cellarservices validateCellar DONE");
         return cellarToValidate;
-    }
-    
-    public void saveDetailsCellar(Cellar saved, List<DetailCellar> detailsCellar) {
-        detailsCellar.forEach(detail -> {
-            detail.setCellar(saved);
-            detailCellarRepository.save(detail);
-            detail.setCellar(null);
-        });
-        saved.setDetailsCellar(detailsCellar);
-        log.info("CellarServices saveDetailsCellar DONE");
-    }
-    
-    public void saveKardex(Cellar saved, List<Kardex> detailsKardex) {
-        detailsKardex.forEach(detail -> {
-            detail.setCellar(saved);
-            kardexRepository.save(detail);
-            detail.setCellar(null);
-        });
-        saved.setDetailsKardex(detailsKardex);
-        log.info("CellarServices saveKardex DONE");
-    }
-    
-    public void updateProductBySubsidiary(Cellar cellar, List<DetailCellar> detailsCellar) {
-        detailsCellar.forEach(detail-> {
-            if (!detail.getProduct().getProductType().getCode().equals("SER")) {
-                ProductBySubsidiary ps = productBySubsidiairyRepository.findBySubsidiaryIdAndProductId(cellar.getSubsidiary().getId(), detail.getProduct().getId());
-                ps.setQuantity(ps.getQuantity() + detail.getQuantity());
-                productBySubsidiairyRepository.save(ps);
-            }
-        });
-        log.info("CellarServices updateProductBySubsidiary DONE");
     }
     
     private void populateChildren(Cellar cellar) {
@@ -203,5 +117,91 @@ public class CellarServices {
             detailsKardexList.add(detail);
         });
         return detailsKardexList;
+    }
+    
+    //Create Cellar
+    @Async("asyncExecutor")
+    public Cellar create(Cellar cellar) throws BadRequestException {
+        List<DetailCellar> detailsCellar = cellar.getDetailsCellar();
+        List<Kardex> detailsKardex = cellar.getDetailsKardex();
+        if (detailsCellar == null) {
+            throw new BadRequestException("Debe tener un producto por lo menos");
+        }
+        cellar.setDetailsCellar(null);
+        cellar.setActive(true);
+        cellar.setFatherListToNull();
+        cellar.setListsNull();
+        Cellar saved = cellarRepository.save(cellar);
+        Cashier cashier = cashierRepository.findOne(cellar.getUserIntegridad().getCashier().getId());
+        cashier.setWhNumberSeq(cashier.getWhNumberSeq() + 1);
+        cashierRepository.save(cashier);
+        saveDetailsCellar(saved, detailsCellar);
+        saveKardex(saved, detailsKardex);
+        if ("INGRESADO".equals(saved.getStatusIngreso())) {
+            updateProductBySubsidiary(cellar, detailsCellar);
+        }
+        log.info("CellarServices Cellar created id: {}", saved.getId());
+        return saved;
+    }
+    
+    public void saveDetailsCellar(Cellar saved, List<DetailCellar> detailsCellar) {
+        detailsCellar.forEach(detail -> {
+            detail.setCellar(saved);
+            detailCellarRepository.save(detail);
+            detail.setCellar(null);
+        });
+        saved.setDetailsCellar(detailsCellar);
+        log.info("CellarServices saveDetailsCellar DONE");
+    }
+    
+    public void saveKardex(Cellar saved, List<Kardex> detailsKardex) {
+        detailsKardex.forEach(detail -> {
+            detail.setCellar(saved);
+            kardexRepository.save(detail);
+            detail.setCellar(null);
+        });
+        saved.setDetailsKardex(detailsKardex);
+        log.info("CellarServices saveKardex DONE");
+    }
+    
+    public void updateProductBySubsidiary(Cellar cellar, List<DetailCellar> detailsCellar) {
+        detailsCellar.forEach(detail-> {
+            if (!detail.getProduct().getProductType().getCode().equals("SER")) {
+                ProductBySubsidiary ps = productBySubsidiairyRepository.findBySubsidiaryIdAndProductId(cellar.getSubsidiary().getId(), detail.getProduct().getId());
+                ps.setQuantity(ps.getQuantity() + detail.getQuantity());
+                productBySubsidiairyRepository.save(ps);
+            }
+        });
+        log.info("CellarServices updateProductBySubsidiary DONE");
+    }
+    
+    public Iterable<Cellar> getCellarPendingOfWarehouse(UUID id) {
+        log.info("CellarServices getCellarsPendingByProviderId {}", id);
+        Iterable<Cellar> cellars = cellarRepository.findCellarPendingOfWarehouse(id);
+        cellars.forEach(cellar -> {
+            cellar.setListsNull();
+            cellar.setFatherListToNull();
+        });
+        return cellars;
+    }
+    
+    public Iterable<Cellar> getActivesCellarByWhNumberSeqAndSubsidiaryId(String whNumberSeq, UUID subId) {
+        log.info("CellarServices getActivesCellarByWhNumberSeqAndSubsidiaryId: {}, {}", whNumberSeq, subId);
+        Iterable<Cellar> cellars = cellarRepository.findCellarByWhNumberSeqAndSubsidiaryId(whNumberSeq, subId);
+        cellars.forEach(cellar -> {
+            cellar.setFatherListToNull();
+            cellar.setListsNull();
+        });
+        return cellars;
+    }
+    
+    public Iterable<Cellar> getActivesCellarByWhNumberSeqAndUserClientId(String whNumberSeq, UUID userClientId) {
+        log.info("CellarServices getActivesCellarByWhNumberSeqAndUserClientId: {}, {}", whNumberSeq, userClientId);
+        Iterable<Cellar> cellars = cellarRepository.findCellarByWhNumberSeqAndUserClientId(whNumberSeq, userClientId);
+        cellars.forEach(cellar -> {
+            cellar.setFatherListToNull();
+            cellar.setListsNull();
+        });
+        return cellars;
     }
 }

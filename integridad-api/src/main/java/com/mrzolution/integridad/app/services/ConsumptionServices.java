@@ -52,6 +52,16 @@ public class ConsumptionServices {
         return consumptions;
     }
     
+    public Iterable<Consumption> getConsumptionByClientId(UUID id) {
+        log.info("ConsumptionServices getConsumptionByClientId" );
+        Iterable<Consumption> consumptions = consumptionRepository.findConsumptionByClientId(id);
+        consumptions.forEach(consump -> {
+            consump.setListsNull();
+            consump.setFatherListToNull();
+        });
+        return consumptions;
+    }
+    
     public Consumption getConsumptionById(UUID id) {
         log.info("ConsumptionServices getById: {}", id);
         Consumption retrieved = consumptionRepository.findOne(id);
@@ -66,15 +76,17 @@ public class ConsumptionServices {
     
     private void populateChildren(Consumption consumption) {
         List<DetailConsumption> detailConsumptionList = getDetailsByConsumption(consumption);
+        List<Kardex> detailsKardexList = getDetailsKardexByConsumption(consumption);
         consumption.setDetailsConsumption(detailConsumptionList);
+        consumption.setDetailsKardex(detailsKardexList);
         consumption.setFatherListToNull();
         log.info("ConsumptionServices populateChildren consumptionId: {}", consumption.getId());
     }
     
     private List<DetailConsumption> getDetailsByConsumption(Consumption consumption) {
         List<DetailConsumption> detailConsumptionList = new ArrayList<>();
-        Iterable<DetailConsumption> detailsCellar = detailConsumptionRepository.findByConsumption(consumption);
-        detailsCellar.forEach(detail -> {
+        Iterable<DetailConsumption> detailsConsumption = detailConsumptionRepository.findByConsumption(consumption);
+        detailsConsumption.forEach(detail -> {
             detail.setListsNull();
             detail.setFatherListToNull();
             detail.getProduct().setFatherListToNull();
@@ -83,6 +95,20 @@ public class ConsumptionServices {
             detailConsumptionList.add(detail);
         });
         return detailConsumptionList;
+    }
+    
+    private List<Kardex> getDetailsKardexByConsumption(Consumption consumption) {
+        List<Kardex> detailsKardexList = new ArrayList<>();
+        Iterable<Kardex> detailsKardex = kardexRepository.findByConsumption(consumption);
+        detailsKardex.forEach (detail -> {
+            detail.getConsumption().setListsNull();
+            detail.getConsumption().setFatherListToNull();
+            detail.getProduct().setFatherListToNull();
+            detail.getProduct().setListsNull();
+            detail.setConsumption(null);
+            detailsKardexList.add(detail);
+        });
+        return detailsKardexList;
     }
     
     @Async("asyncExecutor")
@@ -97,18 +123,14 @@ public class ConsumptionServices {
         consumption.setFatherListToNull();
         consumption.setListsNull();
         Consumption saved = consumptionRepository.save(consumption);
-        updateCashier(consumption);
-        saveDetailsConsumption(saved, detailsConsumption);
-        saveKardex(saved, detailsKardex);
-        log.info("ConsumptionServices Consumption created id: {}", saved.getId());
-        return saved;
-    }
-    
-    public void updateCashier(Consumption consumption) {
         Cashier cashier = cashierRepository.findOne(consumption.getUserIntegridad().getCashier().getId());
         cashier.setCsmNumberSeq(cashier.getCsmNumberSeq() + 1);
         cashierRepository.save(cashier);
-        log.info("ConsumptionServices updateCashier DONE");
+        saveDetailsConsumption(saved, detailsConsumption);
+        saveKardex(saved, detailsKardex);
+        updateProductBySubsidiary(consumption, detailsConsumption);
+        log.info("ConsumptionServices Consumption created id: {}", saved.getId());
+        return saved;
     }
     
     public void saveDetailsConsumption(Consumption saved, List<DetailConsumption> detailsConsumption) {

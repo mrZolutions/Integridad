@@ -23,13 +23,11 @@ public class Consumption {
     @GeneratedValue
     private UUID id;
     
-    private String codeWarehouse;
     private long dateConsumption;
     private String csmSeq;
     private String csmNumberSeq;
-    private String details;
     private String observation;
-    private String nameClient;
+    private String clientName;
     private String nameSupervisor;
     private boolean active;
     private double iva;

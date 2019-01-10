@@ -15,6 +15,6 @@ import org.springframework.data.repository.query.Param;
 public interface WarehouseRepository extends CrudRepository<Warehouse, UUID> {	
     Iterable<Warehouse> findWarehouseBySubsidiary(Subsidiary subsidiary);
 
-    @Query("SELECT w FROM Warehouse w WHERE w.subsidiary.userClient.id = (:id) AND w.active = true")
+    @Query("SELECT w FROM Warehouse w WHERE w.subsidiary.userClient.id = (:id) AND w.active = true ORDER BY w.codeWarehouse")
     Iterable<Warehouse> findWarehouseByUserClientId(@Param("id") UUID id);
 }
