@@ -16,21 +16,21 @@ public interface ProductRepository extends CrudRepository<Product, UUID> {
 	
 	Iterable<Product> findByActive(boolean active);
 	
-	@Query("SELECT p FROM Product p WHERE p.userClient.id = (:id) and p.active = true")
+	@Query("SELECT p FROM Product p WHERE p.userClient.id = (:id) AND p.active = true")
 	Iterable<Product> findByUserClientIdAndActive(@Param("id") UUID userClientId);
    
-	@Query("SELECT p FROM Product p WHERE p.productType.id = (:id) and p.active = true")
+	@Query("SELECT p FROM Product p WHERE p.productType.id = (:id) AND p.active = true")
 	Iterable<Product> findByProductTypeIdAndActive(@Param("id") UUID productTypeId);
 
-	@Query("SELECT p FROM Product p WHERE p.brand.id = (:id) and p.active = true")
+	@Query("SELECT p FROM Product p WHERE p.brand.id = (:id) AND p.active = true")
 	Iterable<Product> findByBrandIdAndActive(@Param("id") UUID brandId);
 
-	@Query("SELECT p FROM Product p WHERE p.subgroup.id = (:id) and p.active = true")
+	@Query("SELECT p FROM Product p WHERE p.subgroup.id = (:id) AND p.active = true")
 	Iterable<Product> findBySubGroupIdAndActive(@Param("id") UUID brandId);
 
 	Iterable<Product> findByCodeIntegridadAndActive(String code, boolean active);
 
-	@Query("SELECT p FROM Product p WHERE p.codeIntegridad = (:code) and  p.userClient.id = (:clientId) and p.active = true")
+	@Query("SELECT p FROM Product p WHERE p.codeIntegridad = (:code) AND  p.userClient.id = (:clientId) AND p.active = true")
 	Iterable<Product> findByCodeIntegridadAndClientId(@Param("code")String code, @Param("clientId") UUID clientId);
 
 }

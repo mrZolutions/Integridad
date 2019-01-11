@@ -18,6 +18,6 @@ public interface CreditNoteRepository extends CrudRepository<CreditNote, UUID>{
 	
     Iterable<Bill> findByClient(Client client);
     
-    @Query("SELECT c FROM CreditNote c WHERE c.documentStringSeq = (:docNum) AND c.billSeq = (:billId) AND c.active = 'true'")
+    @Query("SELECT c FROM CreditNote c WHERE c.documentStringSeq = (:docNum) AND c.billSeq = (:billId) AND c.active = true")
     Iterable<CreditNote> findByDocumentStringSeqAndBillId(@Param("docNum") String docNum, @Param("billId") String billId);
 }

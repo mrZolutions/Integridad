@@ -33,11 +33,83 @@
     </div>
 
     <div class="row">
-        <div class="form-group col-md-6">
+        <div class="form-group col-md-4">
             <label>Seleccione tipo de Libro:</label><br/>
-            <select ng-options="deta.name as deta.name for deta in [{code: 'ABONO PARCIAL DE CUOTA' ,name:'ABONO PARCIAL DE CUOTA'}, {code: 'ABONO COMPLEMENTARIO DE CUOTA', name:'ABONO COMPLEMENTARIO DE CUOTA'}, {code: 'PAGO TOTAL DE CUOTA', name:'PAGO TOTAL DE CUOTA'}]"
-                    ng-model="vm.payment.detail" class="form-control">
+            <select ng-options="deta.code as deta.name for deta in [{code: '001' ,name:'LIBRO DIARIO'}, {code: '002', name:'PLAN DE CUENTAS'}, {code: '003', name:'CIERRE DE AÑO'}, {code: '004', name:'MAYORES Y BALANCES'}, {code: '005', name:'NIF'}]"
+                    ng-model="vm.contable.typeContab" class="form-control">
             </select>
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group col-md-12" ng-show="vm.contable.typeContab === '001'">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <b>SECCIÓN DE LIBRO DIARIO</b>
+                </div>
+                <div class="panel-body">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>N&uacute;mero</th>
+                                <th>Fecha</th>
+                                <th>Descripci&oacute;n</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-show=" vm.dairyBookList == 0">
+                                <td colspan="4">
+                                    No hay Libros Diarios ingresados...
+                                </td>
+                            </tr>
+                            <tr ng-repeat="diary in vm.dairyBookList | orderBy:'payNumber':true">
+                                <td>{{diary.dailyNumberSeq}}</td>
+                                <td>{{diary.fecha | date : "dd/MM/yyyy"}}</td>
+                                <td>{{diary.description}</td>
+                                <td>
+                                    <button type="button" title = "Editar Libro" class="btn btn-primary btn-sm" ng-click="vm.createAbono(credits)"
+                                            data-dismiss="modal" data-toggle="modal" data-target="#modalAbonar">
+                                            <span class = "glyphicon glyphicon-plus" aria-hidden = "true"></span>
+                                    </button>
+                                </td>
+                            </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="form-group col-md-12" ng-show="vm.contable.typeContab === '002'">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <b>SECCIÓN DE PLAN DE CUENTAS</b>
+                </div>
+                <div class="panel-body">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>N&uacute;mero</th>
+                                <th>Fecha</th>
+                                <th>Descripci&oacute;n</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-show=" vm.dairyBookList == 0">
+                                <td colspan="4">
+                                    No hay Planes de Cuentas ingresados...
+                                </td>
+                            </tr>
+                            <tr ng-repeat="diary in vm.dairyBookList | orderBy:'payNumber':true">
+                                <td>{{diary.dailyNumberSeq}}</td>
+                                <td>{{diary.fecha | date : "dd/MM/yyyy"}}</td>
+                                <td>{{diary.description}</td>
+                                <td>
+                                    <button type="button" title = "Editar Libro" class="btn btn-primary btn-sm" ng-click="vm.createAbono(credits)"
+                                            data-dismiss="modal" data-toggle="modal" data-target="#modalAbonar">
+                                            <span class = "glyphicon glyphicon-plus" aria-hidden = "true"></span>
+                                    </button>
+                                </td>
+                            </tr>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 </div>

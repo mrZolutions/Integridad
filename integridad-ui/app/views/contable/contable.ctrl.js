@@ -8,12 +8,27 @@
  * Controller of the template contable.tpl.html
  */
 angular.module('integridadUiApp')
-    .controller('contableCtrl', function(_, $localStorage, providerService, cuentaContableService, debtsToPayService, 
+    .controller('ContableCtrl', function(_, $localStorage, providerService, cuentaContableService, debtsToPayService, 
                                             utilSeqService, creditsDebtsService, paymentDebtsService) {
     var vm = this;
     vm.error = undefined;
     vm.success = undefined;
     vm.loading = false;
+
+    function _activate() {
+        vm.today = new Date();
+        vm.contable = undefined;
+        vm.dairyBookList = undefined;
+        vm.contableList = [];
+        cuentaContableService.getAll().then(function(response) {
+            vm.cuentaContableList = response;
+        });
+    };
+
+    function _getDailySeqNumber() {
+        vm.numberAddedOne = parseInt($localStorage.user.cashier.dailyNumberSeq) + 1;
+        vm.dailySeqNumber = utilSeqService._pad_with_zeroes(vm.numberAddedOne, 6);
+    };
 
     (function initController() {
         _activate();

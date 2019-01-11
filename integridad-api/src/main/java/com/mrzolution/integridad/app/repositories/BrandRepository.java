@@ -19,7 +19,7 @@ public interface BrandRepository extends CrudRepository<Brand, UUID>{
 
 	Iterable<Brand> findByActive(boolean active);
 
-	@Query("SELECT p FROM Brand p WHERE p.userClient.id = (:id) and p.active = true")
+	@Query("SELECT p FROM Brand p WHERE p.userClient.id = (:id) AND p.active = true")
 	Iterable<Brand> findByUserClienteIdAndActive(@Param("id") UUID userClientId);
 
 }
