@@ -41,12 +41,12 @@ public class PaymentController {
         return new ResponseEntity<Payment>(response, HttpStatus.CREATED);
     }
     
-    @RequestMapping(method = RequestMethod.GET, value="/rep/ccresreport/{userClientId}")
-    public ResponseEntity getAllPaymentsByUserClientId(@PathVariable("userClientId") UUID userClientId) {
+    @RequestMapping(method = RequestMethod.GET, value="/rep/ccresreport/{userClientId}/{dateOne}/{dateTwo}")
+    public ResponseEntity getAllPaymentsByUserClientIdAndDates(@PathVariable("userClientId") UUID userClientId, @PathVariable("dateOne") long dateOne, @PathVariable("dateTwo") long dateTwo) {
         log.info("PaymentController getAllPaymentsByUserClientId: {}", userClientId);
         List<CCResumenReport> response = null;
         try {
-            response = service.getPaymentsByUserClientId(userClientId);
+            response = service.getPaymentsByUserClientIdAndDates(userClientId, dateOne, dateTwo);
 	} catch (BadRequestException e) {
             log.error("PaymentController getAllPaymentsByUserClientId Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());

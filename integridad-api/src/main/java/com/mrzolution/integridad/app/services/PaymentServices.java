@@ -45,7 +45,6 @@ public class PaymentServices {
     private String saldo = "";
     private double sumado = 0.0;
     
-    @Async("asyncExecutor")
     public Payment create(Payment payment) {
         Payment saved = paymentRepository.save(payment);
         document = saved.getCredits().getPago().getBill().getId().toString();
@@ -93,9 +92,9 @@ public class PaymentServices {
         log.info("PaymentServices updateBill DONE");
     }
     
-    public List<CCResumenReport> getPaymentsByUserClientId(UUID id) {
+    public List<CCResumenReport> getPaymentsByUserClientIdAndDates(UUID id, long dateOne, long dateTwo) {
         log.info("PaymentServices getPaymentsByUserClientId: {}", id);
-        Iterable<Payment> payments = paymentRepository.findAllPaymentsByUserClientId(id);
+        Iterable<Payment> payments = paymentRepository.findAllPaymentsByUserClientIdAndDates(id, dateOne, dateTwo);
         List<CCResumenReport> ccResumenReportList = new ArrayList<>();
         payments.forEach(payment -> {
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd");

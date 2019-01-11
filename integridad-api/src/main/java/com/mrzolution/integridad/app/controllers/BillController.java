@@ -93,7 +93,7 @@ public class BillController {
         log.info("BillController getByUserClientIdAndDatesActives: {}, {}, {}", userClientId, dateOne, dateTwo);
         List<ItemReport> response = null;
         try {
-            response = service.getBySubIdAndDatesActives(userClientId,dateOne,dateTwo);
+            response = service.getBySubIdAndDatesActives(userClientId, dateOne, dateTwo);
         } catch (BadRequestException e) {
             log.error("BillController getByUserClientIdAndDates Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());

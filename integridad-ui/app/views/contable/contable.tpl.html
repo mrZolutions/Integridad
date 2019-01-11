@@ -31,4 +31,13 @@
             <div class = "alert alert-success">{{vm.success}}</div>
         </div>
     </div>
+
+    <div class="row">
+        <div class="form-group col-md-6">
+            <label>Seleccione tipo de Libro:</label><br/>
+            <select ng-options="deta.name as deta.name for deta in [{code: 'ABONO PARCIAL DE CUOTA' ,name:'ABONO PARCIAL DE CUOTA'}, {code: 'ABONO COMPLEMENTARIO DE CUOTA', name:'ABONO COMPLEMENTARIO DE CUOTA'}, {code: 'PAGO TOTAL DE CUOTA', name:'PAGO TOTAL DE CUOTA'}]"
+                    ng-model="vm.payment.detail" class="form-control">
+            </select>
+        </div>
+    </div>
 </div>

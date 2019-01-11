@@ -6,8 +6,8 @@ angular
                 return response.data;
             });
         };
-        this.getAllPaymentsByUserClientId = function(userClientId) {
-            return securityService.get('/payment/rep/ccresreport/' + userClientId).then(function successCallback(response) {
+        this.getAllPaymentsByUserClientIdAndDates = function(userClientId, dateOne, dateTwo) {
+            return securityService.get('/payment/rep/ccresreport/' + userClientId + '/' + dateOne + '/' + dateTwo).then(function successCallback(response) {
                 return response.data;
             });
         };

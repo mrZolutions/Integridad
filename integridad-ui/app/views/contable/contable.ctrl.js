@@ -4,11 +4,11 @@
  * @ngdoc function
  * @name integridadUiApp.controller:DebtsToPayCtrl
  * @description
- * # AccountancyCtrl
- * Controller of the template accountancy.tpl.html
+ * # ContableCtrl
+ * Controller of the template contable.tpl.html
  */
 angular.module('integridadUiApp')
-    .controller('accountancyCtrl', function(_, $localStorage, providerService, cuentaContableService, debtsToPayService, 
+    .controller('contableCtrl', function(_, $localStorage, providerService, cuentaContableService, debtsToPayService, 
                                             utilSeqService, creditsDebtsService, paymentDebtsService) {
     var vm = this;
     vm.error = undefined;

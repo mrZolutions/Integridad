@@ -107,9 +107,12 @@ angular.module('integridadUiApp')
       vm.isProductReportList = '6';
       vm.reportList = undefined;
       vm.loading = true;
+      var dateOne = $('#pickerBillDateOne').data("DateTimePicker").date().toDate().getTime();
+      var dateTwo = $('#pickerBillDateTwo').data("DateTimePicker").date().toDate().getTime();
+      dateTwo += 86340000;
       var subId = $localStorage.user.subsidiary.userClient.id;
 
-      paymentService.getAllPaymentsByUserClientId(subId).then(function(response) {
+      paymentService.getAllPaymentsByUserClientIdAndDates(subId, dateOne, dateTwo).then(function(response) {
         vm.reportList = response;
         vm.loading = false;
       }).catch(function(error) {
