@@ -143,16 +143,10 @@ public class BillServices {
             Cashier cashier = cashierRepository.findOne(bill.getUserIntegridad().getCashier().getId());
             cashier.setBillNumberSeq(cashier.getBillNumberSeq() + 1);
             cashierRepository.save(cashier);
-            // (2) Excepción Ferretería Lozada No actualiza ProductBySubsidiary
-            if ("2".equals(bill.getClient().getUserClient().getEspTemp())) {
-                saveDetailsBill(saved, details);
-                savePagosAndCreditsBill(saved, pagos);
-            } else {
-                saveDetailsBill(saved, details);
-                saveKardex(saved, detailsKardex);
-                savePagosAndCreditsBill(saved, pagos);
-                updateProductBySubsidiary(bill, typeDocument, details);
-            }
+            saveDetailsBill(saved, details);
+            saveKardex(saved, detailsKardex);
+            savePagosAndCreditsBill(saved, pagos);
+            updateProductBySubsidiary(bill, typeDocument, details);
         } else {
             Cashier cashier = cashierRepository.findOne(bill.getUserIntegridad().getCashier().getId());
             cashier.setQuotationNumberSeq(cashier.getQuotationNumberSeq() + 1);

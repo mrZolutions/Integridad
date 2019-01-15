@@ -38,17 +38,17 @@ public class RetentionClient {
     @OneToMany(mappedBy = "retentionClient", cascade = CascadeType.ALL)
     private List<DetailRetentionClient> detailRetentionClient;
     
-    public void setListsNull(){
+    public void setListsNull() {
         detailRetentionClient = null;
     };
     
-    public void setFatherListToNull(){
+    public void setFatherListToNull() {
         bill.setListsNull();
         bill.setFatherListToNull();
     };
     
     @Transient
-    public static RetentionClient newRetentionClientTest(){
+    public static RetentionClient newRetentionClientTest() {
         RetentionClient retentionClient = new RetentionClient();
         retentionClient.setDetailRetentionClient(new ArrayList<>());
         retentionClient.setBill(Bill.newBillTest());

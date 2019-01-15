@@ -274,18 +274,16 @@
                         </table>
                     </div> 
                 </div>
-                <div class = "row">
-                    <div class = "form-group col-md-12">
-                        <button type = "button" title = "Forma de Pago" class = "btn btn-success" ng-disabled = "vm.debtsToPay.items == 0"
-                                data-toggle = "modal" data-target = "#modalAddPago">
-                                <span class = "glyphicon glyphicon-usd" aria-hidden = "true"></span>
-                        </button>
-                        <button type = "button" title = "Salir" class = "btn btn-primary"
-                                ng-click = "vm.cancel()">
-                                <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
-                        </button>
-                    </div>
-                </div>
+            </div>
+            <div class="panel-footer">
+                <button type = "button" title = "Forma de Pago" class = "btn btn-success" ng-disabled = "vm.debtsToPay.items == 0"
+                        data-toggle = "modal" data-target = "#modalAddPago">
+                        <span class = "glyphicon glyphicon-usd" aria-hidden = "true"></span>
+                </button>
+                <button type = "button" title = "Salir" class = "btn btn-primary"
+                        ng-click = "vm.cancel()">
+                        <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
+                </button>
             </div>
         </div>
     </div>
@@ -543,13 +541,11 @@
                         </tr>
                     </tbody>
                 </table>
-                <div class = "row">
-                    <div class = "form-group col-md-12">
-                        <button type = "button" title = "Salir" class = "btn btn-primary" ng-click = "vm.cancel()">
-                                <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
-                        </button>
-                    </div>
-                </div>
+            </div>
+            <div class = "panel-footer">
+                <button type = "button" title = "Salir" class = "btn btn-primary" ng-click = "vm.cancel()">
+                        <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
+                </button>
             </div>
         </div>
     </div>
@@ -773,13 +769,11 @@
                         </tr>
                     </tbody>
                 </table>
-                <div class = "row">
-                    <div class = "form-group col-md-12">
-                        <button type = "button" title = "Salir" class = "btn btn-primary" ng-click = "vm.cancel()">
-                                <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
-                        </button>
-                    </div>
-                </div>
+            </div>
+            <div class = "panel-footer">
+                <button type = "button" title = "Salir" class = "btn btn-primary" ng-click = "vm.cancel()">
+                        <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
+                </button>
             </div>
         </div>
     </div>
@@ -953,17 +947,15 @@
                         </table>
                     </div>
                 </div>
-                <div class = "row" print-remove>
-                    <div class="form-group col-md-12">
-                        <button print-btn type = "button" title = "Imprimir Comprobante" class = "btn btn-primary" print-remove>
-                                <span class = "glyphicon glyphicon-print" aria-hidden = "true"></span>
-                        </button>
-                        <button type = "button" title = "Salir" class = "btn btn-primary"
-                                ng-click = "vm.debtsProviderSelected = undefined">
-                                <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
-                        </button>
-                    </div>
-                </div>
+            </div>
+            <div class = "panel-footer" print-remove>
+                <button print-btn type = "button" title = "Imprimir Comprobante" class = "btn btn-primary" print-remove>
+                        <span class = "glyphicon glyphicon-print" aria-hidden = "true"></span>
+                </button>
+                <button type = "button" title = "Salir" class = "btn btn-primary"
+                        ng-click = "vm.debtsProviderSelected = undefined">
+                        <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
+                </button>
             </div>
         </div>
     </div>

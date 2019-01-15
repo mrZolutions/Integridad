@@ -22,14 +22,11 @@ public class Retention {
     private boolean active;
     private String retSeq;
     private String stringSeq;
-
     private String ejercicioFiscal;
     private String documentNumber;
     private long documentDate;
-
     private String claveDeAcceso;
     private String idSri;
-
 
     @ManyToOne
     @JoinColumn(name = "provider_id")
@@ -46,11 +43,11 @@ public class Retention {
     @OneToMany(mappedBy = "retention", cascade = CascadeType.ALL)
     private List<DetailRetention> detailRetentions;
 
-    public void setListsNull(){
+    public void setListsNull() {
     	detailRetentions = null;
     }
     
-    public void setFatherListToNull(){
+    public void setFatherListToNull() {
         provider.setListsNull();
         provider.setFatherListToNull();
     	userIntegridad.setListsNull();
@@ -60,7 +57,7 @@ public class Retention {
     }
 
     @Transient
-    public static Retention newRetentionTest(){
+    public static Retention newRetentionTest() {
         Retention retention = new Retention();
         retention.setDetailRetentions(new ArrayList<>());
         retention.setProvider(Provider.newProviderTest());

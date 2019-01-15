@@ -1,7 +1,6 @@
 package com.mrzolution.integridad.app.services;
 
 import java.util.Properties;
-
 import javax.mail.Authenticator;
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -10,27 +9,22 @@ import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-
 import com.mrzolution.integridad.app.domain.UserIntegridad;
-
 import lombok.extern.slf4j.Slf4j;
 
 /**
  * Created by daniel.
  */
+
 @Slf4j
 @Component
 public class MailingService {
-
     @Value("${email.username}")
     String usermail;
-
     @Value("${email.pass}")
     String pass;
-
     @Value("${email.emailFrom}")
     String emailFrom;
 
@@ -38,25 +32,24 @@ public class MailingService {
         String to = userIntegridad.getEmail();
         String subject = "Cuenta para tu aplicacion Integridad";
         
-        String link ="https://mrzolutions.github.io/Integridad/integridad-ui/dist/#!/activate/" + userIntegridad.getId()+ "/" + userIntegridad.getValidation();
+        String link ="https://mrzolutions.github.io/Integridad/integridad-ui/dist/#!/activate/" + userIntegridad.getId() + "/" + userIntegridad.getValidation();
         
         String body = "Bienvenido al mundo de Mr. Zolutions Ecuador y su sistema Contable Integridad, el software contable inteligente hecho con tecnología de punta. Más que un programa se convertirá en el aliado perfecto para el crecimiento de su empresa o negocio. "
                 + "<br><br> A continuación verifique que sus datos sean correctos:"
                 + "<br> Correo electrónico: " + userIntegridad.getEmail()
                 + "<br> Contraseña provisional: " + passPreEncoded
         		+ "<br><br> Para terminar con la activación presione aquí: "
-        		+ "<br><br><a href=\""+link+"\">"
+        		+ "<br><br><a href=\"" + link + "\">"
         		+ "<button>ACTIVAR</button>"
         		+ "</a>"
                 + "<br><br> MR. ZOLUTIONS ECUADOR – SISTEMA CONTABLE INTEGRIDAD"
                 + "<br> IDEAS QUE CAMBIAN VIDAS";
-    
-        
+     
         sendEmail(subject, body, to);
         return true;
     }
     
-    public Boolean sendEmailRecoveryPass(UserIntegridad userIntegridad, String pass){
+    public Boolean sendEmailRecoveryPass(UserIntegridad userIntegridad, String pass) {
     	String to = userIntegridad.getEmail();
         String subject = "Clave Recuperada para Sistema Integridad";
         
@@ -66,10 +59,9 @@ public class MailingService {
         		+ "<br><br> Estimado usuario, hemos recibido su solicitud de recuperación de clave para el sistema INTEGRIDAD. "
         		+ "<br> Su clave de acceso temporal es: " + pass
         		+ "<br> Ingrese al sistema y personalice su clave dando clic en el siguiente botón"
-        		+ "<br><br><a href=\""+link+"\">"
+        		+ "<br><br><a href=\"" + link + "\">"
         		+ "<button>Integridad</button>"
         		+ "</a>";
-    
         
         sendEmail(subject, body, to);
         return true;
