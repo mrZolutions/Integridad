@@ -18,430 +18,417 @@
 </div>
 
 <div class="form-group col-md-12">
-<div class="header">
-  <h4><b>Nota de Cr&eacute;dito</b></h4>
-</div>
-
-<div class="row" ng-show="vm.error !== undefined">
-  <div class="form-group col-md-12">
-    <div class="alert alert-danger">{{vm.error}}</div>
-  </div>
-</div>
-<div class="row" ng-show="vm.success !== undefined">
-  <div class="form-group col-md-12">
-    <div class="alert alert-success">{{vm.success}}</div>
-  </div>
-</div>
-
-<div ng-show="vm.clientSelected === undefined && vm.bill === undefined">
-  <input ng-model="searchText" class="form-control" placeholder="Buscar">
-  <table class="table table-striped">
-    <thead>
-      <tr>
-        <th> C&oacute;digo </th>
-        <th> Nombre </th>
-        <th> Ruc / C&eacute;dula </th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr ng-show="vm.clientList == 0">
-        <td colspan="4">
-          No hay clientes ingresados
-        </td>
-      </tr>
-      <tr ng-repeat="clientPreSelect in vm.clientList | orderBy:'name' | filter:searchText">
-        <td>{{clientPreSelect.codApp}}</td>
-        <td>{{clientPreSelect.name}}</td>
-        <td>{{clientPreSelect.identification}}</td>
-        <td>
-          <button type="button" title="Buscar Facturas" class="btn btn-primary" ng-click="vm.clientSelect(clientPreSelect)"
-                  data-toggle="modal" data-target="#modalBills">
-                  <span class = "glyphicon glyphicon-search" aria-hidden = "true"></span>
-          </button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
-<div ng-show="vm.clientSelected !== undefined && vm.bill !== undefined"  print-section>
-  <div class="row">
-    <div class="form-group col-md-12 ">
-      <table width="100%">
-        <tr>
-          <td width="30%" align="center"><img src="images/{{vm.companyData.userClient.logo}}" ><br></td>
-          <td width="70%">
-            <b>{{vm.companyData.userClient.name}}</b><br/></br>
-            <b>Matriz: {{vm.companyData.userClient.address1}}</b><br/>
-            <b>Establecimiento: {{vm.companyData.address1}}</b><br/><br/>
-            <b>RUC: {{vm.companyData.userClient.ruc}}</b><br/>
-          </td>
-        </tr>
-      </table>
-    </div>
+  <div class="header">
+    <h4><b>Nota de Cr&eacute;dito</b></h4>
   </div>
 
-  <div class="row">
-    <div class="form-group col-md-12 ">
-      <table width="100%">
-        <tr>
-          <td width="30%">
-            <label>FECHA NOTA DE CREDITO: </label>
-            <div class="input-group date" id="pickerCreditNoteDate">
-              <input type="text" class="form-control input-group-addon"/>
-              <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"/></span>
-            </div>
-            <script>
-              var defaultDate = new Date();
-              $('#pickerCreditNoteDate').datetimepicker({format: "DD/MM/YY",});
-            </script>
-          </td>
-          <td width="70%">
-            <div style=" padding-left: 10px" >
-              <label>CLAVE DE ACCESO: </label><br/>
-              {{vm.claveDeAcceso}}
-            </div>
-          </td>
-        </tr>
-      </table>
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="form-group col-md-12 ">
-      <table width="100%">
-        <tr>
-          <td>
-            <b>NOMBRE: </b>{{vm.clientSelected.name}}<br/>
-          </td>
-          <td>
-            <b ng-if="vm.clientSelected.typeId === 'CED'">CEDULA: </b>
-            <b ng-if="vm.clientSelected.typeId === 'RUC'">RUC: </b>
-            {{vm.clientSelected.identification}}
-          </td>
-          <td>
-            <b>TELEFONO: </b>{{vm.clientSelected.phone}}
-          </td>
-        </tr>
-      </table>
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="form-group col-md-12 ">
-      <table width="100%">
-        <tr>
-          <td><b>DIRECCION: </b>{{vm.clientSelected.address}}</td>
-          <td><b>E-MAIL: </b>{{vm.clientSelected.email}}</td>
-        </tr>
-        <tr>
-          <td>
-            <b>No FACTURA: </b> {{vm.bill.documentStringSeq}}
-          </td>
-          <td print-remove>
-            <b>PRECIO CONVENIDO: </b>
-            <select ng-options="price as price.name for price in vm.prices" ng-if="vm.newBill"
-                    ng-model="vm.priceType" class="form-control" ng-change="vm.reCalculateTotal()" ng-disabled="vm.bill.details.length > 0">
-            </select>
-            <span ng-if="!vm.newBill">{{vm.bill.priceType}}</span>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <b>FECHA DE FACTURA: </b> {{vm.bill.dateCreated | date :  "dd/MM/yyyy"}}
-          </td>
-          <td>
-            <b>No NOTA DE CREDITO: </b> {{vm.seqNumber}}
-          </td>
-        </tr>
-      </table>
-    </div>
-  </div>
-
-  <div class="row" ng-if="vm.companyData.userClient.espTemp == '1'" print-if="vm.companyData.userClient.espTemp == '1'">
-    <div class="form-group col-md-12 ">
-      <table width="100%" style="border-collapse: separate; border-spacing: 6px;">
-        <tr>
-          <td width="50%">
-            <b>ORDEN DE COMPRA: </b>
-            <input type="text" ng-disabled="!vm.newBill"
-                   ng-model="vm.bill.ordenDecompra" class="form-control">
-          </td>
-          <td width="50%">
-            <b>SERVICES RECEIPTS REGISTER: </b>
-            <input type="text" ng-disabled="!vm.newBill"
-                   ng-model="vm.bill.srr" class="form-control">
-          </td>
-        </tr>
-        <tr>
-          <td width="50%">
-            <b>LUGAR: </b>
-            <input type="text" ng-disabled="!vm.newBill"
-                   ng-model="vm.bill.lugar" class="form-control">
-          </td>
-          <td width="50%">
-            <b>OTI/OTIR: </b>
-            <input type="text" ng-disabled="!vm.newBill"
-                   ng-model="vm.bill.otir" class="form-control">
-          </td>
-        </tr>
-      </table>
-    </div>
-  </div>
-
-  <div class="row" print-remove>
-    <div class="form-group col-md-6">
-      <b>DESCUENTO &#37;: </b>
-      <input type="text" ng-change="vm.reCalculateTotal()" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
-             ng-model="vm.bill.discountPercentage" class="form-control" maxlength="9" ng-change="vm.getFechaCobro()" ng-disabled="!vm.newBill">
-    </div>
-  </div>
-
-  <div class="row">
+  <div class="row" ng-show="vm.error !== undefined">
     <div class="form-group col-md-12">
-      <b>MOTIVO: </b>
-      <input type="text" ng-model="vm.bill.motivo" class="form-control">
+      <div class="alert alert-danger">{{vm.error}}</div>
+    </div>
+  </div>
+  <div class="row" ng-show="vm.success !== undefined">
+    <div class="form-group col-md-12">
+      <div class="alert alert-success">{{vm.success}}</div>
     </div>
   </div>
 
-  <div class="panel panel-default">
-    <div class="panel-heading">
-      <b>Detalle</b>
-    </div>
-    <div class="panel-body">
-    </div>
+  <div ng-show="vm.clientSelected === undefined && vm.bill === undefined">
+    <input ng-model="searchText" class="form-control" placeholder="Buscar">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>C&oacute;digo</th>
+          <th>Nombre</th>
+          <th>No. Identidad</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-show="vm.clientList == 0">
+          <td colspan="4">
+            No hay clientes ingresados
+          </td>
+        </tr>
+        <tr ng-repeat="clientPreSelect in vm.clientList | orderBy:'name' | filter:searchText">
+          <td>{{clientPreSelect.codApp}}</td>
+          <td>{{clientPreSelect.name}}</td>
+          <td>{{clientPreSelect.typeId}} - {{clientPreSelect.identification}}</td>
+          <td>
+            <button type="button" title="Buscar Facturas" class="btn btn-primary btn-sm" ng-click="vm.clientSelect(clientPreSelect)"
+                    data-toggle="modal" data-target="#modalBills">
+                    <span class = "glyphicon glyphicon-search" aria-hidden = "true"></span>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 
-    <div class="row">
-      <div class="form-group col-md-12">
-        <table class="table table-striped">
-          <thead>
+  <div class="panel-group" ng-show="vm.clientSelected !== undefined && vm.bill !== undefined"  print-section>
+    <div class="panel panel-primary">
+      <div class="panel-heading" print-remove>
+        <b>Datos del Cliente</b>
+      </div>
+      <div class="row">
+        <div class="form-group col-md-12 ">
+          <table width="100%">
             <tr>
-              <th> Item </th>
-              <th> C&oacute;digo </th>
-              <th> Descripci&oacute;n </th>
-              <th> Cant. </th>
-              <th> U. Med. </th>
-              <th> V. Unit. </th>
-              <th> Desc. </th>
-              <th> V. Total. </th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr ng-show="vm.clientList == 0">
-              <td colspan="4">
-                No hay detalles ingresados
+              <td width="30%" align="center"><img src="images/{{vm.companyData.userClient.logo}}" ><br></td>
+              <td width="70%">
+                <b>{{vm.companyData.userClient.name}}</b><br/></br>
+                <b>Matriz: {{vm.companyData.userClient.address1}}</b><br/>
+                <b>Establecimiento: {{vm.companyData.address1}}</b><br/><br/>
+                <b>RUC: {{vm.companyData.userClient.ruc}}</b><br/>
               </td>
             </tr>
-            <tr ng-repeat="detail in vm.bill.details">
-              <td>{{$index + 1}}</td>
-              <td>{{detail.product.codeIntegridad}}</td>
-              <td>{{detail.product.name}}</td>
-              <td>{{detail.quantity}}</td>
-              <td>{{detail.product.unitOfMeasurementFull}}</td>
-              <td>{{detail.costEach}}</td>
-              <td>{{detail.discount}}</td>
-              <td>{{detail.total}}</td>
+          </table>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="form-group col-md-12 ">
+          <table width="100%">
+            <tr>
+              <td width="30%">
+                <label>FECHA NOTA DE CREDITO: </label>
+                <div class="input-group date" id="pickerCreditNoteDate">
+                  <input type="text" class="form-control input-group-addon"/>
+                  <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"/></span>
+                </div>
+                <script>
+                  var defaultDate = new Date();
+                  $('#pickerCreditNoteDate').datetimepicker({format: "DD/MM/YY",});
+                </script>
+              </td>
+              <td width="70%">
+                <div style=" padding-left: 10px" >
+                  <label>CLAVE DE ACCESO: </label><br/>
+                  {{vm.claveDeAcceso}}
+                </div>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="form-group col-md-12 ">
+          <table width="100%">
+            <tr>
               <td>
-                <button type="button" title="Editar Producto" class="btn btn-primary" ng-click="vm.editDetail($index)" print-remove
-                        data-toggle="modal" data-target="#modalEditDetail">
-                        <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
-                </button>
-                <button type="button" title="Eliminar Producto" class="btn btn-primary" ng-click="vm.removeDetail($index)" print-remove>
-                        <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
-                </button>
+                <b>NOMBRE: </b>{{vm.clientSelected.name}}<br/>
+              </td>
+              <td>
+                <b ng-if="vm.clientSelected.typeId === 'CED'">CEDULA: </b>
+                <b ng-if="vm.clientSelected.typeId === 'RUC'">RUC: </b>
+                {{vm.clientSelected.identification}}
+              </td>
+              <td>
+                <b>TELEFONO: </b>{{vm.clientSelected.phone}}
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="form-group col-md-12 ">
+          <table width="100%">
+            <tr>
+              <td><b>DIRECCION: </b>{{vm.clientSelected.address}}</td>
+              <td><b>E-MAIL: </b>{{vm.clientSelected.email}}</td>
+            </tr>
+            <tr>
+              <td>
+                <b>No FACTURA: </b> {{vm.bill.documentStringSeq}}
+              </td>
+              <td print-remove>
+                <b>PRECIO CONVENIDO: </b>
+                <select ng-options="price as price.name for price in vm.prices" ng-if="vm.newBill"
+                        ng-model="vm.priceType" class="form-control" ng-change="vm.reCalculateTotal()" ng-disabled="vm.bill.details.length > 0">
+                </select>
+                <span ng-if="!vm.newBill">{{vm.bill.priceType}}</span>
               </td>
             </tr>
             <tr>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td><b>SUBTOTAL: </b></td>
-              <td>{{vm.bill.subTotal}}</td>
-              <td> </td>
+              <td>
+                <b>FECHA DE FACTURA: </b> {{vm.bill.dateCreated | date :  "dd/MM/yyyy"}}
+              </td>
+              <td>
+                <b>No NOTA DE CREDITO: </b> {{vm.seqNumber}}
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="row" ng-if="vm.companyData.userClient.espTemp == '1'" print-if="vm.companyData.userClient.espTemp == '1'">
+        <div class="form-group col-md-12 ">
+          <table width="100%" style="border-collapse: separate; border-spacing: 6px;">
+            <tr>
+              <td width="50%">
+                <b>ORDEN DE COMPRA: </b>
+                <input type="text" ng-disabled="!vm.newBill"
+                       ng-model="vm.bill.ordenDecompra" class="form-control">
+              </td>
+              <td width="50%">
+                <b>SERVICES RECEIPTS REGISTER: </b>
+                <input type="text" ng-disabled="!vm.newBill"
+                       ng-model="vm.bill.srr" class="form-control">
+              </td>
             </tr>
             <tr>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td><b>DESCUENTO: </b></td>
-              <td>{{vm.bill.discount}}</td>
-              <td> </td>
+              <td width="50%">
+                <b>LUGAR: </b>
+                <input type="text" ng-disabled="!vm.newBill"
+                       ng-model="vm.bill.lugar" class="form-control">
+              </td>
+              <td width="50%">
+                <b>OTI/OTIR: </b>
+                <input type="text" ng-disabled="!vm.newBill"
+                       ng-model="vm.bill.otir" class="form-control">
+              </td>
             </tr>
-            <tr>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td><b>BASE 0%: </b></td>
-              <td>{{vm.bill.baseNoTaxes}}</td>
-              <td> </td>
-            </tr>
-            <tr>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td><b>BASE 12%: </b></td>
-              <td>{{vm.bill.baseTaxes}}</td>
-              <td> </td>
-            </tr>
-            <!-- <tr ng-if="!vm.companyData.userClient.espTemp">
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td><b>ICE: </b></td>
-              <td>{{vm.bill.ice}}</td>
-              <td></td>
-            </tr> -->
-            <tr>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td><b>IVA: </b></td>
-              <td>{{vm.bill.iva}}</td>
-              <td></td>
-            </tr>
-            <tr>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td><b>TOTAL: </b></td>
-              <td>{{vm.bill.total}}</td>
-              <td></td>
-            </tr>
-          </tbody>
-        </table>
+          </table>
+        </div>
+      </div>
+
+      <div class="row" print-remove>
+        <div class="form-group col-md-6">
+          <b>DESCUENTO &#37;: </b>
+          <input type="text" ng-change="vm.reCalculateTotal()" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+                 ng-model="vm.bill.discountPercentage" class="form-control" maxlength="9" ng-change="vm.getFechaCobro()" ng-disabled="!vm.newBill">
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="form-group col-md-12">
+          <b>MOTIVO: </b>
+          <input type="text" ng-model="vm.bill.motivo" class="form-control">
+        </div>
       </div>
     </div>
-  </div>
-</div>
-
-<div class="row" print-remove>
-  <div class="form-group col-md-12">
-    <button type="button" title="Guardar Nota de Cŕedito" class="btn btn-success" ng-disabled="vm.bill.total <= 0"
-            ng-show="vm.claveDeAcceso === undefined" ng-click="vm.saveCreditNote()">
-            <span class = "glyphicon glyphicon-floppy-save" aria-hidden = "true"></span>
-    </button>
-    <button type="button" title="Salir" class="btn btn-primary"
-            ng-click="vm.cancelCreditNote()">
-            <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
-    </button>
-    <button print-btn type="button" title="Imprimir Nota de Crédito" class="btn btn-primary"
-            ng-disabled="vm.claveDeAcceso === undefined; vm.error !== undefined" ng-click="vm.cancelBill()">
-            <span class = "glyphicon glyphicon-print" aria-hidden = "true"></span>
-    </button>
-  </div>
-</div>
-
-<div id="modalEditDetail" class="modal fade" role="dialog">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" ng-click="vm.clientSelected=undefined; vm.billList = undefined">&times;</button>
-        <h4 class="modal-title">Detalle</h4>
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+        <b>Detalle</b>
       </div>
-      <div class="modal-body">
+      <div class="panel-body">
         <div class="row">
-          <div class="col-md-6" >
-            <b>PRODUCTO: </b>
-            {{vm.detail.product.name}}
-          </div>
-          <div class="col-md-6" >
-            <b>CANTIDAD: </b>
-            <input type="text" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
-                   ng-model="vm.detail.quantity" class="form-control" maxlength="9">
+          <div class="form-group col-md-12">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th> Item </th>
+                  <th> C&oacute;digo </th>
+                  <th> Descripci&oacute;n </th>
+                  <th> Cant. </th>
+                  <th> U. Med. </th>
+                  <th> V. Unit. </th>
+                  <th> Desc. </th>
+                  <th> V. Total. </th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-show="vm.clientList == 0">
+                  <td colspan="4">
+                    No hay detalles ingresados
+                  </td>
+                </tr>
+                <tr ng-repeat="detail in vm.bill.details">
+                  <td>{{$index + 1}}</td>
+                  <td>{{detail.product.codeIntegridad}}</td>
+                  <td>{{detail.product.name}}</td>
+                  <td>{{detail.quantity}}</td>
+                  <td>{{detail.product.unitOfMeasurementFull}}</td>
+                  <td>{{detail.costEach}}</td>
+                  <td>{{detail.discount}}</td>
+                  <td>{{detail.total}}</td>
+                  <td>
+                    <button type="button" title="Editar Producto" class="btn btn-primary btn-sm" ng-click="vm.editDetail($index)" print-remove
+                            data-toggle="modal" data-target="#modalEditDetail">
+                            <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+                    </button>
+                    <button type="button" title="Eliminar Producto" class="btn btn-primary btn-sm" ng-click="vm.removeDetail($index)" print-remove>
+                            <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                    </button>
+                  </td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td><b>SUBTOTAL: </b></td>
+                  <td>{{vm.bill.subTotal}}</td>
+                  <td> </td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td><b>DESCUENTO: </b></td>
+                  <td>{{vm.bill.discount}}</td>
+                  <td> </td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td><b>BASE 0%: </b></td>
+                  <td>{{vm.bill.baseNoTaxes}}</td>
+                  <td> </td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td><b>BASE 12%: </b></td>
+                  <td>{{vm.bill.baseTaxes}}</td>
+                  <td> </td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td><b>IVA: </b></td>
+                  <td>{{vm.bill.iva}}</td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td><b>TOTAL: </b></td>
+                  <td>{{vm.bill.total}}</td>
+                  <td></td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
-      <div class="modal-footer">
-        <button type="button" title="Editar" class="btn btn-primary" data-dismiss="modal"
-                ng-click="vm.editNewDetail()">
-                <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+      <div class="panel-footer" print-remove>
+        <button type="button" title="Guardar Nota de Cŕedito" class="btn btn-success btn-sm" ng-disabled="vm.bill.total <= 0"
+                ng-show="vm.claveDeAcceso === undefined" ng-click="vm.saveCreditNote()">
+                <span class = "glyphicon glyphicon-floppy-save" aria-hidden = "true"></span>
         </button>
-        <button type="button" title="Salir" class="btn btn-primary" data-dismiss="modal"
-                ng-click="vm.detail = undefined; vm.indexDetail=undefined">
+        <button type="button" title="Salir" class="btn btn-primary btn-sm"
+                ng-click="vm.cancelCreditNote()">
                 <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
+        </button>
+        <button print-btn type="button" title="Imprimir Nota de Crédito" class="btn btn-primary btn-sm"
+                ng-disabled="vm.claveDeAcceso === undefined; vm.error !== undefined" ng-click="vm.cancelBill()">
+                <span class = "glyphicon glyphicon-print" aria-hidden = "true"></span>
         </button>
       </div>
     </div>
   </div>
-</div>
-
-<div id="modalBills" class="modal fade" role="dialog">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" ng-click="vm.clientSelected=undefined; vm.billList = undefined">&times;</button>
-        <h4 class="modal-title">Facturas</h4>
-      </div>
-      <div class="modal-body">
-        <div class="row">
-          <div class="col-md-12" >
-            <div ng-show="vm.billList !== undefined">
-              <input ng-model="searchTextBills" class="form-control" placeholder="Buscar">
-              <table class="table table-striped">
-                <thead>
-                  <tr>
-                    <th> N&uacute;mero </th>
-                    <th> Fecha </th>
-                    <th> Cliente </th>
-                    <th> Total </th>
-                    <th>
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr ng-show="vm.billList == 0">
-                    <td colspan="4">
-                      No hay facturas ingresados
-                    </td>
-                  </tr>
-                  <tr ng-repeat="bill in vm.billList | orderBy:'dateCreated':true | filter:searchTextBills">
-                    <td>{{ bill.stringSeq }}</td>
-                    <td>{{ bill.dateCreated | date :  "dd/MM/yyyy"}}</td>
-                    <td>{{ bill.client.name }}</td>
-                    <td>{{ bill.total }}</td>
-                    <td>
-                      <button type="button" title="Crear Nota de Crédito" class="btn btn-primary" ng-click="vm.billSelect(bill)"
-                              data-dismiss="modal">
-                              <span class = "glyphicon glyphicon-file" aria-hidden = "true"></span>
-                      </button>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+  <div id="modalEditDetail" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" ng-click="vm.clientSelected=undefined; vm.billList = undefined">&times;</button>
+          <h4 class="modal-title">Detalle</h4>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-md-6" >
+              <b>PRODUCTO: </b>
+              {{vm.detail.product.name}}
+            </div>
+            <div class="col-md-6" >
+              <b>CANTIDAD: </b>
+              <input type="text" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+                     ng-model="vm.detail.quantity" class="form-control" maxlength="9">
             </div>
           </div>
         </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" title="Salir" class="btn btn-primary" data-dismiss="modal"
-                ng-click="vm.billList = undefined; vm.clientSelected=undefined">
-                <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
-        </button>
+        <div class="modal-footer">
+          <button type="button" title="Editar" class="btn btn-primary btn-sm" data-dismiss="modal"
+                  ng-click="vm.editNewDetail()">
+                  <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+          </button>
+          <button type="button" title="Salir" class="btn btn-primary btn-sm" data-dismiss="modal"
+                  ng-click="vm.detail = undefined; vm.indexDetail=undefined">
+                  <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
+          </button>
+        </div>
       </div>
     </div>
   </div>
-</div>
+  <div id="modalBills" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" ng-click="vm.clientSelected=undefined; vm.billList = undefined">&times;</button>
+          <h4 class="modal-title">Facturas</h4>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-md-12" >
+              <div ng-show="vm.billList !== undefined">
+                <input ng-model="searchTextBills" class="form-control" placeholder="Buscar">
+                <table class="table table-striped">
+                  <thead>
+                    <tr>
+                      <th> N&uacute;mero </th>
+                      <th> Fecha </th>
+                      <th> Cliente </th>
+                      <th> Total </th>
+                      <th>
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr ng-show="vm.billList == 0">
+                      <td colspan="4">
+                        No hay facturas ingresados
+                      </td>
+                    </tr>
+                    <tr ng-repeat="bill in vm.billList | orderBy:'dateCreated':true | filter:searchTextBills">
+                      <td>{{ bill.stringSeq }}</td>
+                      <td>{{ bill.dateCreated | date :  "dd/MM/yyyy"}}</td>
+                      <td>{{ bill.client.name }}</td>
+                      <td>{{ bill.total }}</td>
+                      <td>
+                        <button type="button" title="Crear Nota de Crédito" class="btn btn-primary btn-sm" ng-click="vm.billSelect(bill)"
+                                data-dismiss="modal">
+                                <span class = "glyphicon glyphicon-file" aria-hidden = "true"></span>
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" title="Salir" class="btn btn-primary btn-sm" data-dismiss="modal"
+                  ng-click="vm.billList = undefined; vm.clientSelected=undefined">
+                  <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

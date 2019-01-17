@@ -44,8 +44,8 @@
                 <tr>
                     <th>C&oacute;digo</th>
                     <th>Nombre</th>
-                    <th>Tipo ID</th>
                     <th>No. Identidad</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
@@ -57,8 +57,7 @@
                 <tr ng-repeat="provider in vm.providerList | orderBy:'name' | filter:searchText">
                     <td>{{provider.codeIntegridad}}</td>
                     <td>{{provider.name}}</td>
-                    <td>{{provider.ruc_type}}</td>
-                    <td>{{provider.ruc}}</td>
+                    <td>{{provider.ruc_type}} - {{provider.ruc}}</td>
                     <td>
                         <button type = "button" title = "Ingreso de Facturas" class = "btn btn-primary btn-sm" ng-click = "vm.providerSelect(provider)">
                                 <span class = "glyphicon glyphicon-file" aria-hidden = "true"></span>
@@ -77,7 +76,7 @@
     <!--FIN DE SECCIÓN DE CARGA DE PROVEEDORES POR USERCLIENT-->
     <!--SECCIÓN DE INGRESO DE DETALLES DE FACTURA PARA CTAS X PAGAR-->
     <div ng-show="vm.providerSelected !== undefined">
-        <div class="panel panel-default">
+        <div class="panel panel-primary">
             <div class="panel-heading">
                 <h4>Ingreso de Facturas</h4>
                 <div>
@@ -217,7 +216,7 @@
                                     <td>{{cc.accountType}}</td>
                                     <td>{{cc.name}}</td>
                                     <td>
-                                        <button type = "button" title = "Seleccionar" class = "btn btn-primary"
+                                        <button type = "button" title = "Seleccionar" class = "btn btn-primary btn-sm"
                                                 ng-click = "vm.selectTaxes(cc)" data-toggle = "modal" data-target = "#modalSelectedTaxes">
                                                 <span class = "glyphicon glyphicon-check" aria-hidden = "true"></span>
                                         </button>
@@ -253,11 +252,11 @@
                                     <td>{{i.tipo}}</td>
                                     <td>{{i.base_imponible}}</td>
                                     <td>
-                                        <button type = "button" title = "Editar" class = "btn btn-primary"
+                                        <button type = "button" title = "Editar" class = "btn btn-primary btn-sm"
                                                 ng-click = "vm.editItemTaxes($index)" data-toggle = "modal" data-target = "#modalSelectedTaxes">
                                                 <span class = "glyphicon glyphicon-pencil" aria-hidden = "true"></span>
                                         </button>
-                                        <button type = "button" title = "Eliminar" class = "btn btn-primary"
+                                        <button type = "button" title = "Eliminar" class = "btn btn-primary btn-sm"
                                                 ng-click = "vm.deleteItemTaxes($index)">
                                                 <span class = "glyphicon glyphicon-trash" aria-hidden = "true"></span>
                                         </button>
@@ -276,11 +275,11 @@
                 </div>
             </div>
             <div class="panel-footer">
-                <button type = "button" title = "Forma de Pago" class = "btn btn-success" ng-disabled = "vm.debtsToPay.items == 0"
+                <button type = "button" title = "Forma de Pago" class = "btn btn-success btn-sm" ng-disabled = "vm.debtsToPay.items == 0"
                         data-toggle = "modal" data-target = "#modalAddPago">
                         <span class = "glyphicon glyphicon-usd" aria-hidden = "true"></span>
                 </button>
-                <button type = "button" title = "Salir" class = "btn btn-primary"
+                <button type = "button" title = "Salir" class = "btn btn-primary btn-sm"
                         ng-click = "vm.cancel()">
                         <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
                 </button>
@@ -317,10 +316,10 @@
                     </div>
                 </div>
                 <div class = "modal-footer">
-                    <button type = "button" title = "Aceptar" class = "btn btn-success" data-dismiss = "modal" ng-click = "vm.addItem()">
+                    <button type = "button" title = "Aceptar" class = "btn btn-success btn-sm" data-dismiss = "modal" ng-click = "vm.addItem()">
                             <span class = "glyphicon glyphicon-thumbs-up" aria-hidden = "true"></span>
                     </button>
-                    <button type = "button" title = "Salir" class = "btn btn-primary" data-dismiss = "modal"
+                    <button type = "button" title = "Salir" class = "btn btn-primary btn-sm" data-dismiss = "modal"
                             ng-click = "vm.item = undefined; vm.indexEdit = undefined;">
                             <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
                     </button>
@@ -396,7 +395,7 @@
                         </div>
                         <div class = "form-group col-md-4">
                             <br/>
-                            <button type = "button" title = "Calcular" class = "btn btn-primary" ng-click = "vm.loadCredit()"
+                            <button type = "button" title = "Calcular" class = "btn btn-primary btn-sm" ng-click = "vm.loadCredit()"
                                     ng-disabled = "vm.medio.creditoIntervalos === undefinded || vm.medio.creditoNumeroPagos === undefined">
                                     <span class = "glyphicon glyphicon-th" aria-hidden = "true"></span>
                             </button>
@@ -444,7 +443,7 @@
                         </div>
                         <div class = "form-group col-md-4">
                             <br/>
-                            <button type = "button" title = "Agregar Pago" class = "btn btn-primary" ng-click = "vm.addPago()"
+                            <button type = "button" title = "Agregar Pago" class = "btn btn-primary btn-sm" ng-click = "vm.addPago()"
                                     ng-disabled = "vm.medio.medio === undefinded || vm.medio.total === undefined">
                                     <span class = "glyphicon glyphicon-plus" aria-hidden = "true"></span>
                             </button>
@@ -470,7 +469,7 @@
                                         <td>{{ pago.medio }}</td>
                                         <td>{{ pago.total }}</td>
                                         <td>
-                                            <button type = "button" title = "Eliminar Pago" class = "btn btn-primary" ng-click = "vm.removePago($index)">
+                                            <button type = "button" title = "Eliminar Pago" class = "btn btn-primary btn-sm" ng-click = "vm.removePago($index)">
                                                     <span class = "glyphicon glyphicon-trash" aria-hidden = "true"></span>
                                             </button>
                                         </td>
@@ -488,11 +487,11 @@
                     </div>
                 </div>
                 <div class = "modal-footer">
-                    <button type = "button" title = "Guardar Factura" class = "btn btn-success"
+                    <button type = "button" title = "Guardar Factura" class = "btn btn-success btn-sm"
                             ng-click = "vm.saveDebtsToPay(vm.debtsToPay); vm.cancel()" ng-disabled = "vm.pagos.length === 0">
                             <span class = "glyphicon glyphicon-floppy-save" aria-hidden = "true"></span>
                     </button>
-                    <button type="button" title = "Salir" class="btn btn-primary" data-dismiss="modal">
+                    <button type="button" title = "Salir" class="btn btn-primary btn-sm" data-dismiss="modal">
                             <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
                     </button>
                 </div>
@@ -504,7 +503,7 @@
 
     <!--SECCIÓN DE CARGA DE LOS DEBTS POR PROVEEDOR PARA EL PAGO DE ABONOS-->
     <div class="table-responsive" ng-show = "vm.debtsToPayList !== undefined">
-        <div class = "panel panel-default">
+        <div class = "panel panel-primary">
             <div class = "panel-heading">
                 <h4>Pagos y Abonos</h4>
                 <div>
@@ -543,7 +542,7 @@
                 </table>
             </div>
             <div class = "panel-footer">
-                <button type = "button" title = "Salir" class = "btn btn-primary" ng-click = "vm.cancel()">
+                <button type = "button" title = "Salir" class = "btn btn-primary btn-sm" ng-click = "vm.cancel()">
                         <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
                 </button>
             </div>
@@ -588,7 +587,7 @@
                     </table>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" title = "Salir" class="btn btn-primary" data-dismiss="modal">
+                    <button type="button" title = "Salir" class="btn btn-primary btn-sm" data-dismiss="modal">
                             <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
                     </button>
                 </div>
@@ -719,10 +718,10 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type = "button" title = "Aceptar" class = "btn btn-success" ng-click = "vm.pAbonoDebts(vm.paymentDebts)" data-dismiss = "modal">
+                    <button type = "button" title = "Aceptar" class = "btn btn-success btn-sm" ng-click = "vm.pAbonoDebts(vm.paymentDebts)" data-dismiss = "modal">
                             <span class = "glyphicon glyphicon-thumbs-up" aria-hidden = "true"></span>
                     </button>
-                    <button type = "button" title = "Salir" class = "btn btn-primary" ng-click = "vm.cancel()" data-dismiss = "modal">
+                    <button type = "button" title = "Salir" class = "btn btn-primary btn-sm" ng-click = "vm.cancel()" data-dismiss = "modal">
                             <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
                     </button>
                 </div>
@@ -734,7 +733,7 @@
 
     <!--SECCIÓN DE CONSULTA DE FACTURAS POR PROVEEDOR-->
     <div class="table-responsive" ng-show = "vm.providerDebtsList !== undefined">
-        <div class = "panel panel-default">
+        <div class = "panel panel-primary">
             <div class = "panel-heading">
                 <h4>Consulta de Facturas</h4>
                 <div>
@@ -771,7 +770,7 @@
                 </table>
             </div>
             <div class = "panel-footer">
-                <button type = "button" title = "Salir" class = "btn btn-primary" ng-click = "vm.cancel()">
+                <button type = "button" title = "Salir" class = "btn btn-primary btn-sm" ng-click = "vm.cancel()">
                         <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
                 </button>
             </div>
@@ -780,8 +779,8 @@
     <!--FINAL SECCIÓN DE CONSULTA DE FACTURAS POR PROVEEDOR-->
 
     <!--SECCIÓN DE CONSULTA DE FACTURA INDIVIDUAL-->
-    <div class="table-responsive" ng-show = "vm.debtsProviderSelected !== undefined" id = "printArea" print-section>
-        <div class = "panel panel-default">
+    <div class="panel-group table-responsive" ng-show = "vm.debtsProviderSelected !== undefined" id = "printArea" print-section>
+        <div class = "panel panel-primary">
             <div class = "panel-heading">
                 <h4>Cuenta por Pagar Nro: {{vm.seqNumber}}</h4>
                 <div>
@@ -862,7 +861,7 @@
                 </div>
             </div>
         </div>
-        <div class = "panel panel-default">
+        <div class = "panel panel-primary">
             <div class = "panel-heading">
                 <b>Detalle</b>
             </div>
@@ -900,7 +899,7 @@
                 </div>
             </div>
         </div>
-        <div class="panel panel-default">
+        <div class="panel panel-primary">
             <div class="panel-heading">
                 <b>Forma de Pago</b>
             </div>
@@ -949,10 +948,10 @@
                 </div>
             </div>
             <div class = "panel-footer" print-remove>
-                <button print-btn type = "button" title = "Imprimir Comprobante" class = "btn btn-primary" print-remove>
+                <button print-btn type = "button" title = "Imprimir Comprobante" class = "btn btn-primary btn-sm" print-remove>
                         <span class = "glyphicon glyphicon-print" aria-hidden = "true"></span>
                 </button>
-                <button type = "button" title = "Salir" class = "btn btn-primary"
+                <button type = "button" title = "Salir" class = "btn btn-primary btn-sm"
                         ng-click = "vm.debtsProviderSelected = undefined">
                         <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
                 </button>

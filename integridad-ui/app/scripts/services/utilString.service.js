@@ -1,8 +1,8 @@
 angular
   .module('app.services')
   .service('utilStringService', function() {
-    this.isStringEmpty = function(value){
-      if( value ) {
+    this.isStringEmpty = function(value) {
+      if(value) {
         return false;
       } else {
         return true;
@@ -12,7 +12,7 @@ angular
     this.isAnyInArrayStringEmpty = function(arrayString) {
       var isEmpty;
       for (var i = 0; i<arrayString.length; i++) {
-        if ( arrayString[i]) {
+        if (arrayString[i]) {
           isEmpty = false;
         } else {
           isEmpty = true;

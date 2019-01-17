@@ -33,7 +33,7 @@
   </div>
 </div>
 
-<div class="table-responsive" ng-show="vm.clientSelected !== undefined" id="printArea" print-section>
+<div class="panel-group table-responsive" ng-show="vm.clientSelected !== undefined" id="printArea" print-section>
   <div print-only>
     <table width="100%">
       <tr>
@@ -43,7 +43,7 @@
       </tr>
     </table>
   </div>
-  <div class="panel panel-default">
+  <div class="panel panel-primary">
     <div class="panel-heading">
       <b>Datos del Cliente</b>
     </div>
@@ -143,7 +143,7 @@
     </div>
   </div>
 
-  <div class="panel panel-default">
+  <div class="panel panel-primary">
     <div class="panel-heading">
       <b>Detalle</b>
     </div>
@@ -185,13 +185,14 @@
                 <td>{{detail.discount}}</td>
                 <td>{{detail.total}}</td>
                 <td ng-if="vm.newBill">
-                  <button type="button" title="Editar Productos" class="btn btn-primary"
+                  <button type="button" title="Editar Productos" class="btn btn-primary btn-sm"
                           ng-click="vm.editDetail(detail, $index)"
                           data-toggle="modal" data-target="#modalAddProduct" print-remove>
-                    <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+                          <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
                   </button>
-                  <button type="button" title="Eliminar Productos" class="btn btn-primary" ng-click="vm.removeDetail($index)" print-remove>
-                    <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                  <button type="button" title="Eliminar Productos" class="btn btn-primary btn-sm"
+                          ng-click="vm.removeDetail($index)" print-remove>
+                          <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
                   </button>
                 </td>
               </tr>
@@ -265,24 +266,21 @@
           </table>
         </div>
       </div>
-
-      <div class="row" print-remove>
-        <div class="form-group col-md-12">
-          <button type="button" title="Guardar Cotizacion" class="btn btn-success" ng-click="vm.saveQuotation()" ng-if="vm.newBill"
-                  ng-disabled="vm.bill.total <= 0 || vm.billed"
-                  ng-show="vm.bill.claveDeAcceso === undefined">
-                  <span class="glyphicon glyphicon-floppy-saved" aria-hidden="true"></span>
-          </button>
-          <button print-btn type="button" title="Imprimir Cotizacion" class="btn btn-primary" ng-if="vm.newBill"
-                  ng-disabled="!vm.billed">
-                  <span class = "glyphicon glyphicon-print" aria-hidden = "true"></span>
-          </button>
-          <button type="button" title="Cancelar" class="btn btn-primary" ng-if="vm.newBill"
-                  ng-click="vm.cancelBill()">
-                  <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
-          </button>
-        </div>
-      </div>
+    </div>
+    <div class="panel-footer" print-remove>
+      <button type="button" title="Guardar Cotizacion" class="btn btn-success btn-sm" ng-click="vm.saveQuotation()" ng-if="vm.newBill"
+              ng-disabled="vm.bill.total <= 0 || vm.billed"
+              ng-show="vm.bill.claveDeAcceso === undefined">
+              <span class="glyphicon glyphicon-floppy-saved" aria-hidden="true"></span>
+      </button>
+      <button print-btn type="button" title="Imprimir Cotizacion" class="btn btn-primary btn-sm" ng-if="vm.newBill"
+              ng-disabled="!vm.billed">
+              <span class = "glyphicon glyphicon-print" aria-hidden = "true"></span>
+      </button>
+      <button type="button" title="Salir" class="btn btn-primary btn-sm" ng-if="vm.newBill"
+              ng-click="vm.cancelBill()">
+              <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
+      </button>
     </div>
   </div>
   <div print-only>
@@ -337,7 +335,7 @@
                     <td>{{ productSelect.quantity }}</td>
                     <td>{{ vm.getCost('1.'+ productSelect[vm.priceType.cod], productSelect.averageCost) }}</td>
                     <td>
-                      <button type="button" title="Seleccionar" class="btn btn-primary" ng-click="vm.selectProductToAdd(productSelect)">
+                      <button type="button" title="Seleccionar" class="btn btn-primary btn-sm" ng-click="vm.selectProductToAdd(productSelect)">
                               <span class = "glyphicon glyphicon-check" aria-hidden = "true"></span>
                       </button>
                     </td>
@@ -354,7 +352,7 @@
             </div>
 
             <div class="col-md-12" ng-if="vm.productToAdd !== undefined">
-              <div class="panel panel-default">
+              <div class="panel panel-primary">
                 <div class="panel-heading">
                   <b>{{vm.productToAdd.name}}</b>
                 </div>
@@ -383,7 +381,7 @@
                   </div>
                 </div>
                 <div class="panel-footer">
-                  <button type="button" title="Salir" class="btn btn-primary"
+                  <button type="button" title="Salir" class="btn btn-primary btn-sm"
                           ng-click="vm.productToAdd = undefined; vm.quantity = undefined">
                           <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
                   </button>
@@ -394,12 +392,12 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" title="Aceptar y Cerrar" class="btn btn-primary" ng-click="vm.acceptProduct(true)"
+          <button type="button" title="Aceptar y Cerrar" class="btn btn-success btn-sm" ng-click="vm.acceptProduct(true)"
                   ng-disabled="vm.productToAdd === undefined">
                   <span class = "glyphicon glyphicon-thumbs-up" aria-hidden = "true"></span>
           </button>
 
-          <button type="button" title="Aceptar y Agregar Mas productos" class="btn btn-primary" ng-click="vm.acceptProduct(false)"
+          <button type="button" title="Aceptar y Agregar Mas productos" class="btn btn-primary btn-sm" ng-click="vm.acceptProduct(false)"
                   ng-disabled="vm.productToAdd === undefined">
                   <span class = "glyphicon glyphicon-ok-sign" aria-hidden = "true"></span>
           </button>

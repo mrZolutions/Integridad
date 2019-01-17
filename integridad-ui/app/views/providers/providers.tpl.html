@@ -80,7 +80,7 @@
 </div>
 
 <div class="table-responsive" ng-show="vm.provider !== undefined">
-  <div class="panel panel-default">
+  <div class="panel panel-primary">
     <div class="panel-heading">
       <b>Datos del Proveedor</b>
     </div>
@@ -180,11 +180,11 @@
       </div>
     </div>
     <div class="panel-footer">
-      <button type="button" title = "Guardar Proveedor" class="btn btn-success" ng-click="vm.register()"
+      <button type="button" title = "Guardar Proveedor" class="btn btn-success btn-sm" ng-click="vm.register()"
               ng-disabled="vm.disableSave()">
               <span class = "glyphicon glyphicon-floppy-save" aria-hidden = "true"></span>
       </button>
-      <button type="button" title = "Salir" class="btn btn-primary"
+      <button type="button" title = "Salir" class="btn btn-primary btn-sm"
               ng-click="vm.cancel()">
               <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
       </button>
@@ -194,7 +194,7 @@
 
 <!--INICIO DEL MODULO DE RETENCIONES-->
 <div class="table-responsive" ng-show="vm.retention !== undefined && !vm.retentionCreated">
-  <div class="panel panel-default">
+  <div class="panel panel-primary">
     <div class="panel-heading">
       <b>Datos para La Retenci&oacute;n</b>
     </div>
@@ -314,7 +314,7 @@
                 <td>{{ p.name }}</td>
                 <td>{{ p.percentage }}</td>
                 <td>
-                  <button type="button" title = "Seleccionar" class="btn btn-primary"
+                  <button type="button" title = "Seleccionar" class="btn btn-primary btn-sm"
                           ng-click="vm.selecPercentage(p)" data-toggle="modal" data-target="#modalBaseImponible">
                           <span class = "glyphicon glyphicon-check" aria-hidden = "true"></span>
                   </button>
@@ -355,11 +355,11 @@
                 <td>{{ i.porcentaje }}</td>
                 <td>{{ i.valor_retenido }}</td>
                 <td>
-                  <button type="button" title = "Editar" class="btn btn-primary"
+                  <button type="button" title = "Editar" class="btn btn-primary btn-sm"
                           ng-click="vm.editItem($index)" data-toggle="modal" data-target="#modalBaseImponible">
                           <span class = "glyphicon glyphicon-pencil" aria-hidden = "true"></span>
                   </button>
-                  <button type="button" title = "Eliminar" class="btn btn-primary"
+                  <button type="button" title = "Eliminar" class="btn btn-primary btn-sm"
                           ng-click="vm.deleteItem($index)">
                           <span class = "glyphicon glyphicon-trash" aria-hidden = "true"></span>
                   </button>
@@ -380,16 +380,16 @@
 
       <div class="row">
         <div class="form-group col-md-12">
-          <button type="button" title = "Previsualizar Retención" class="btn btn-primary" ng-click="vm.previsualisation()"
+          <button type="button" title = "Previsualizar Retención" class="btn btn-primary btn-sm" ng-click="vm.previsualisation()"
                   data-toggle="modal" data-target="#modalPrevisualizacion"
                   ng-disabled="vm.retention.items == 0">
                   <span class = "glyphicon glyphicon-blackboard" aria-hidden = "true"></span>
           </button>
-          <button type="button" title = "Guardar Retención" class="btn btn-success"
+          <button type="button" title = "Guardar Retención" class="btn btn-success btn-sm"
                   ng-click="vm.getClaveAcceso()" ng-disabled="vm.retention.items == 0">
                   <span class = "glyphicon glyphicon-saved" aria-hidden = "true"></span>
           </button>
-          <button type="button" title = "Salir" class="btn btn-primary"
+          <button type="button" title = "Salir" class="btn btn-primary btn-sm"
                   ng-click="vm.retention = undefined">
                   <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
           </button>
@@ -400,7 +400,7 @@
 </div>
 
 <div class="table-responsive" ng-show="vm.retentionCreated" id="printArea" print-section>
-  <div class="panel panel-default">
+  <div class="panel panel-primary">
     <div class="panel-heading">
       <b>Datos del Cliente</b>
     </div>
@@ -508,11 +508,11 @@
 
       <div class="row" print-remove>
         <div class="form-group col-md-12">
-          <button print-btn type="button" title = "Imprimir Comprobante" class="btn btn-success"
+          <button print-btn type="button" title = "Imprimir Comprobante" class="btn btn-success btn-sm"
                   ng-click="vm.cancelRetentionCreated()">
                   <span class = "glyphicon glyphicon-print" aria-hidden = "true"></span>
           </button>
-          <button type="button" title = "Salir" class="btn btn-primary"
+          <button type="button" title = "Salir" class="btn btn-primary btn-sm"
                   ng-click="vm.cancelRetentionCreated()">
                   <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
           </button>
@@ -530,7 +530,7 @@
         <button type="button" class="close" data-dismiss="modal" ng-click="vm.impuesto=undefined">&times;</button>
         <h4 class="modal-title">Retenci&oacute;n</h4>
       </div>
-      <div class="panel panel-default">
+      <div class="panel panel-primary">
         <div class="panel-body">
           <div class="row">
             <div class="form-group col-md-12">
@@ -666,10 +666,10 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" title = "Aceptar" class="btn btn-success" data-dismiss="modal" ng-click="vm.addItem()">
+          <button type="button" title = "Aceptar" class="btn btn-success btn-sm" data-dismiss="modal" ng-click="vm.addItem()">
                   <span class = "glyphicon glyphicon-thumbs-up" aria-hidden = "true"></span>
           </button>
-          <button type="button" title = "Salir" class="btn btn-primary"  data-dismiss="modal"
+          <button type="button" title = "Salir" class="btn btn-primary btn-sm"  data-dismiss="modal"
                   ng-click="vm.item = undefined; vm.indexEdit = undefined;">
                   <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
           </button>
@@ -693,7 +693,7 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" title = "Eliminar Proveedor" class="btn btn-primary" ng-click="vm.remove()" data-dismiss="modal">
+          <button type="button" title = "Eliminar Proveedor" class="btn btn-primary btn-sm" ng-click="vm.remove()" data-dismiss="modal">
                   <span class = "glyphicon glyphicon-trash" aria-hidden = "true"></span>
           </button>
         </div>

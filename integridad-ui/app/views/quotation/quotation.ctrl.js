@@ -276,6 +276,7 @@ angular.module('integridadUiApp')
 
     vm.removeDetail = function(index) {
       vm.bill.details.splice(index,1);
+      _getTotalSubtotal();
     };
 
     vm.getFechaCobro = function() {

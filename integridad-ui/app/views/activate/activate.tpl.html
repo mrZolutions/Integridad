@@ -1,4 +1,4 @@
-<div class="panel panel-default">
+<div class="panel panel-primary">
   <div class="panel-body">
     <div class="row" ng-show="vm.errorActive">
       <div class="form-group col-md-12">
@@ -10,7 +10,6 @@
 
 <div id="modalChangePassword" class="modal fade" role="dialog">
   <div class="modal-dialog">
-
     <div class="modal-content">
       <div class="modal-header">
           <h4 class="modal-title">Cambie su clave Temporal</h4>
@@ -36,8 +35,8 @@
       </div>
       <div class="modal-footer">
         <div ng-if="vm.passConfirmation">
-          <button class="btn btn-primary" ng-click="vm.update()" data-dismiss="modal"
-          ng-disabled="vm.passwordNotMatch">Cambiar e Ingresar</button>
+          <button class="btn btn-primary btn-sm" ng-click="vm.update()" data-dismiss="modal"
+                  ng-disabled="vm.passwordNotMatch">Cambiar e Ingresar</button>
         </div>
       </div>
     </div>

@@ -121,7 +121,7 @@
         </table>
         <div class="row">
             <div class="form-group col-md-12">
-                <button type="button" title="Salir" class="btn btn-primary" 
+                <button type="button" title="Salir" class="btn btn-primary btn-sm" 
                         ng-click="vm.cancelselectWarehouse()">
                         <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
                 </button>
@@ -130,14 +130,14 @@
     </div>
     <!--FIN DE CARGA DE PROVEEDORES POR WAREHOUSE-->
     <!--SECCIÓN DE INGRESO A BODEGA-->
-    <div class="table-responsive" ng-show="vm.providerSelected !== undefined">
+    <div class="panel-group table-responsive" ng-show="vm.providerSelected !== undefined">
         <div class="row">
             <div class="form-group col-md-12">
                 <h4>Sucursal: {{vm.warehouseSubsidiaryName}}</h4>
                 <h5>Bodega: {{vm.warehouseName}}</h5>
             </div>
         </div>
-        <div class="panel panel-default">
+        <div class="panel panel-primary">
             <div class="panel-heading">
                 <h4>Ingreso a Bodega</h4>
                 <div>
@@ -211,7 +211,7 @@
                 </div>
             </div>
         </div>
-        <div class="panel panel-default">
+        <div class="panel panel-primary">
             <div class="panel-heading">
                 <b>Detalle</b>
             </div>
@@ -251,12 +251,12 @@
                                     <td>{{detail.costEach}}</td>
                                     <td>{{detail.total}}</td>
                                     <td>
-                                        <button type="button" title="Editar Producto" class="btn btn-primary"
+                                        <button type="button" title="Editar Producto" class="btn btn-primary btn-sm"
                                                 ng-click="vm.editDetail(detail, $index)"
                                                 data-toggle="modal" data-target="#modalAddProduct">
                                                 <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
                                         </button>
-                                        <button type="button" title="Eliminar Producto" class="btn btn-primary" ng-click="vm.removeDetail($index)">
+                                        <button type="button" title="Eliminar Producto" class="btn btn-primary btn-sm" ng-click="vm.removeDetail($index)">
                                                 <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
                                         </button>
                                     </td>
@@ -320,19 +320,17 @@
                         </table>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="form-group col-md-12">
-                        <button type="button" title="Guardar Ingreso a Bodega" class="btn btn-primary"
-                                ng-click="vm.saveToCellar(vm.cellar); vm.cancelCellar()"
-                                ng-disabled="vm.cellar.total <= 0">
-                                <span class="glyphicon glyphicon-floppy-saved" aria-hidden="true"></span>
-                        </button>
-                        <button type="button" title="Salir" class="btn btn-primary"
-                                ng-click="vm.cancelCellar()">
-                                <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
-                        </button>
-                    </div>
-                </div>
+            </div>
+            <div class="panel-footer">
+                <button type="button" title="Guardar Ingreso a Bodega" class="btn btn-primary btn-sm"
+                        ng-click="vm.saveToCellar(vm.cellar); vm.cancelCellar()"
+                        ng-disabled="vm.cellar.total <= 0">
+                        <span class="glyphicon glyphicon-floppy-saved" aria-hidden="true"></span>
+                </button>
+                <button type="button" title="Salir" class="btn btn-primary btn-sm"
+                        ng-click="vm.cancelCellar()">
+                        <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
+                </button>
             </div>
         </div>
     </div>
@@ -352,7 +350,7 @@
                                     <input ng-model="vm.searchText" class="form-control" placeholder="Buscar" />
                                 </div>
                                 <div class="form-group col-md-4">
-                                    <button type="button" title="Buscar" class="btn btn-primary" ng-click="vm.filter()">
+                                    <button type="button" title="Buscar" class="btn btn-primary btn-sm" ng-click="vm.filter()">
                                             <span class = "glyphicon glyphicon-search" aria-hidden = "true"></span>
                                     </button>
                                 </div>
@@ -377,7 +375,7 @@
                                         <td>{{ productSelect.name }}</td>
                                         <td>{{ vm.getCost('1.'+ productSelect[vm.priceType.cod], productSelect.averageCost) }}</td>
                                         <td>
-                                            <button type="button" title="Seleccionar" class="btn btn-primary" ng-click="vm.selectProductToAdd(productSelect)">
+                                            <button type="button" title="Seleccionar" class="btn btn-primary btn-sm" ng-click="vm.selectProductToAdd(productSelect)">
                                                     <span class = "glyphicon glyphicon-check" aria-hidden = "true"></span>
                                             </button>
                                         </td>
@@ -393,7 +391,7 @@
                             </nav>
                         </div>
                         <div class="col-md-12" ng-if="vm.productToAdd !== undefined">
-                            <div class="panel panel-default">
+                            <div class="panel panel-primary">
                                 <div class="panel-heading">
                                     <b>{{vm.productToAdd.name}}</b>
                                 </div>
@@ -416,15 +414,15 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" title="Aceptar y Cerrar" class="btn btn-primary" ng-click="vm.acceptCellarProduct(true)"
+                    <button type="button" title="Aceptar y Cerrar" class="btn btn-success btn-sm" ng-click="vm.acceptCellarProduct(true)"
                             ng-disabled="vm.productToAdd === undefined">
                             <span class = "glyphicon glyphicon-thumbs-up" aria-hidden = "true"></span>
                     </button>
-                    <button type="button" title="Aceptar y Agregar Mas productos" class="btn btn-primary" ng-click="vm.acceptCellarProduct(false)"
+                    <button type="button" title="Aceptar y Agregar Mas productos" class="btn btn-primary btn-sm" ng-click="vm.acceptCellarProduct(false)"
                             ng-disabled="vm.productToAdd === undefined">
                             <span class = "glyphicon glyphicon-ok-sign" aria-hidden = "true"></span>
                     </button>
-                    <button type="button" title="Salir" class="btn btn-primary" data-dismiss = "modal">
+                    <button type="button" title="Salir" class="btn btn-primary btn-sm" data-dismiss = "modal">
                             <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
                     </button>
                 </div>
@@ -482,7 +480,7 @@
         </table>
         <div class="row">
             <div class="form-group col-md-12">
-                <button type="button" title="Salir" class="btn btn-primary" 
+                <button type="button" title="Salir" class="btn btn-primary btn-sm" 
                         ng-click="vm.cancelFindCellars()">
                         <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
                 </button>
@@ -491,21 +489,21 @@
     </div>
 
     <!--CARGA DE FACTURA INDIVIDUAL PARA VALIDACIÓN-->
-    <div class="table-responsive" ng-show = "vm.cellarPendingSelected !== undefined">
+    <div class="panel-group table-responsive" ng-show = "vm.cellarPendingSelected !== undefined">
         <div class="row">
             <div class="form-group col-md-12">
                 <h4>Sucursal: {{vm.warehouseSubsidiaryName}}</h4>
                 <h5>Bodega: {{vm.warehouseName}}</h5>
             </div>
         </div>
-        <div class = "panel panel-default">
-            <div class = "panel-heading">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
                 <h4><b>Ingreso a Bodega Nro: </b>{{vm.seqNumber}}</h4>
                 <div>
                    <p>Factura Nro: {{vm.billNumber}}</p>
                 </div>
             </div>
-            <div class = "panel-body">
+            <div class="panel-body">
                 <div class="row">
                     <div class="form-group col-md-6">
                         <label>C&oacute;digo Proveedor:</label>
@@ -536,7 +534,7 @@
                 </div>
             </div>
         </div>
-        <div class="panel panel-default">
+        <div class="panel panel-primary">
             <div class="panel-heading">
                 <b>Detalle</b>
             </div>
@@ -629,14 +627,12 @@
                         </table>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="form-group col-md-12">
-                        <button type="button" title="Volver" class="btn btn-primary"
-                                ng-click="vm.cancelCellarSelected()">
-                                <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
-                        </button>
-                    </div>
-                </div>
+            </div>
+            <div class="panel-footer">
+                <button type="button" title="Volver" class="btn btn-primary btn-sm"
+                        ng-click="vm.cancelCellarSelected()">
+                        <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
+                </button>
             </div>
         </div>
     </div>
@@ -657,7 +653,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" title="Autorizar Ingreso" class="btn btn-warning" 
+                    <button type="button" title="Autorizar Ingreso" class="btn btn-warning btn-sm" 
                             ng-click="vm.validateEnterCellar()" data-dismiss="modal">
                             <span class = "glyphicon glyphicon-ok" aria-hidden = "true"></span>
                     </button>
@@ -702,10 +698,10 @@
                     <td>{{ clientPreSelect.typeId }}</td>
                     <td>{{ clientPreSelect.identification }}</td>
                     <td>
-                        <button type="button" title="Nuevo Consumo" class="btn btn-primary" ng-click="vm.clientSelect(clientPreSelect)">
+                        <button type="button" title="Nuevo Consumo" class="btn btn-primary btn-sm" ng-click="vm.clientSelect(clientPreSelect)">
                                 <span class = "glyphicon glyphicon-file" aria-hidden = "true"></span>
                         </button>
-                        <button type="button" title="Consultar Consumos" class="btn btn-primary" ng-click="vm.clientConsult(clientPreSelect)">
+                        <button type="button" title="Consultar Consumos" class="btn btn-primary btn-sm" ng-click="vm.clientConsult(clientPreSelect)">
                                 <span class = "glyphicon glyphicon-search" aria-hidden = "true"></span>
                         </button>
                     </td>
@@ -714,7 +710,7 @@
         </table>
         <div class="row">
             <div class="form-group col-md-12">
-                <button type="button" title="Volver" class="btn btn-primary"
+                <button type="button" title="Volver" class="btn btn-primary btn-sm"
                         ng-click="vm.cancelConsumption()">
                         <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
                 </button>
@@ -752,10 +748,10 @@
                     <td>{{consumption.client.name}}</td>
                     <td>{{consumption.total}}</td>
                     <td>
-                        <button type="button" title="Ver Consumo" class="btn btn-primary" ng-click="vm.findConsumptionByClient(consumption)">
+                        <button type="button" title="Ver Consumo" class="btn btn-primary btn-sm" ng-click="vm.findConsumptionByClient(consumption)">
                                 <span class = "glyphicon glyphicon-eye-open" aria-hidden = "true"></span>
                         </button>
-                        <!--<button type="button" title="Anular Consumo" class="btn btn-warning" ng-click=""
+                        <!--<button type="button" title="Anular Consumo" class="btn btn-warning btn-sm" ng-click=""
                                 data-toggle="modal" data-target="#modalAnularCsm">
                                 <span class = "glyphicon glyphicon-warning-sign" aria-hidden = "true"></span>
                         </button>-->
@@ -765,21 +761,21 @@
         </table>
         <div class="row">
             <div class="form-group col-md-12">
-                <button type="button" title="Salir"  class="btn btn-primary" ng-click="vm.cancelClientConsult()">
+                <button type="button" title="Salir"  class="btn btn-primary btn-sm" ng-click="vm.cancelClientConsult()">
                         <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
                 </button>
             </div>
         </div>
     </div>
     <!--SECCIÓN DE CONSULTA DE CONSUMO INDIVIDUAL PARA IMPRIMIR-->
-    <div class="table-responsive" ng-show="vm.consumptionSelected !== undefined" id="printArea" print-section>
+    <div class="panel-group table-responsive" ng-show="vm.consumptionSelected !== undefined" id="printArea" print-section>
         <div class="row">
             <div class="form-group col-md-12">
                 <h4>Sucursal: {{vm.warehouseSubsidiaryName}}</h4>
                 <h5>Bodega: {{vm.warehouseName}}</h5>
             </div>
         </div>
-        <div class="panel panel-default">
+        <div class="panel panel-primary">
             <div class="panel-heading" print-remove>
                 <h4>M&oacute;dulo Consumo</h4>
                 <div>
@@ -825,7 +821,7 @@
                 </div>
             </div>
         </div>
-        <div class="panel panel-default">
+        <div class="panel panel-primary">
             <div class="panel-heading">
                 <b>Detalle</b>
             </div>
@@ -918,30 +914,28 @@
                         </table>
                     </div>
                 </div>
-                <div class="row" print-remove>
-                    <div class="form-group col-md-12">
-                        <button print-btn type="button" title = "Imprimir Consumo" class="btn btn-primary" print-remove>
-                                <span class = "glyphicon glyphicon-print" aria-hidden = "true"></span>
-                        </button>
-                        <button type="button" title="Salir" class="btn btn-primary"
-                                ng-click="vm.cancelFindConsumption()">
-                                <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
-                        </button>
-                    </div>
-                </div>
+            </div>
+            <div class="panel-footer" print-remove>
+                <button print-btn type="button" title = "Imprimir Consumo" class="btn btn-primary btn-sm" print-remove>
+                        <span class = "glyphicon glyphicon-print" aria-hidden = "true"></span>
+                </button>
+                <button type="button" title="Salir" class="btn btn-primary btn-sm"
+                        ng-click="vm.cancelFindConsumption()">
+                        <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
+                </button>
             </div>
         </div>
     </div>
     <!--FIN DE CONSULTA DE CONSUMO INDIVIDUAL PARA IMPRIMIR-->
     <!--SECCIÓN DE CONSUMO DESDE BODEGA-->
-    <div class="table-responsive" ng-show="vm.clientSelected !== undefined">
+    <div class="panel-group table-responsive" ng-show="vm.clientSelected !== undefined">
         <div class="row">
             <div class="form-group col-md-12">
                 <h4>Sucursal: {{vm.warehouseSubsidiaryName}}</h4>
                 <h5>Bodega: {{vm.warehouseName}}</h5>
             </div>
         </div>
-        <div class="panel panel-default">
+        <div class="panel panel-primary">
             <div class="panel-heading">
                 <h4>M&oacute;dulo Consumo</h4>
                 <div>
@@ -998,7 +992,7 @@
                 </div>
             </div>
         </div>
-        <div class="panel panel-default">
+        <div class="panel panel-primary">
             <div class="panel-heading">
                 <b>Detalle</b>
             </div>
@@ -1038,12 +1032,12 @@
                                     <td>{{detail.costEach}}</td>
                                     <td>{{detail.total}}</td>
                                     <td>
-                                        <button type="button" title="Editar Producto" class="btn btn-primary"
+                                        <button type="button" title="Editar Producto" class="btn btn-primary btn-sm"
                                                 ng-click="vm.editDetailCsm(detail, $index)"
                                                 data-toggle="modal" data-target="#modalAddProductConsump">
                                                 <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
                                         </button>
-                                        <button type="button" title="Eliminar Producto" class="btn btn-primary"
+                                        <button type="button" title="Eliminar Producto" class="btn btn-primary btn-sm"
                                                 ng-click="vm.removeDetailCsm($index)">
                                                 <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
                                         </button>
@@ -1108,19 +1102,17 @@
                         </table>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="form-group col-md-12">
-                        <button type="button" title="Guardar Consumo" class="btn btn-primary"
-                                ng-click="vm.saveConsumption(vm.consumption); vm.cancelConsumption()"
-                                ng-disabled="vm.consumption.total <= 0">
-                                <span class="glyphicon glyphicon-floppy-saved" aria-hidden="true"></span>
-                        </button>
-                        <button type="button" title="Salir" class="btn btn-primary"
-                                ng-click="vm.cancelConsumption()">
-                                <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
-                        </button>
-                    </div>
-                </div>
+            </div>
+            <div class="panel-footer">
+                <button type="button" title="Guardar Consumo" class="btn btn-primary btn-sm"
+                        ng-click="vm.saveConsumption(vm.consumption); vm.cancelConsumption()"
+                        ng-disabled="vm.consumption.total <= 0">
+                        <span class="glyphicon glyphicon-floppy-saved" aria-hidden="true"></span>
+                </button>
+                <button type="button" title="Salir" class="btn btn-primary btn-sm"
+                        ng-click="vm.cancelConsumption()">
+                        <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
+                </button>
             </div>
         </div>
     </div>
@@ -1140,7 +1132,7 @@
                                     <input ng-model="vm.searchText" class="form-control" placeholder="Buscar" />
                                 </div>
                                 <div class="form-group col-md-4">
-                                    <button type="button" title="Buscar" class="btn btn-primary" ng-click="vm.filter()">
+                                    <button type="button" title="Buscar" class="btn btn-primary btn-sm" ng-click="vm.filter()">
                                             <span class = "glyphicon glyphicon-search" aria-hidden = "true"></span>
                                     </button>
                                 </div>
@@ -1167,7 +1159,7 @@
                                         <td>{{ productSelect.quantity }}</td>
                                         <td>{{ vm.getCostCsm('1.'+ productSelect[vm.priceType.cod], productSelect.averageCost) }}</td>
                                         <td>
-                                            <button type="button" title="Seleccionar" class="btn btn-primary" ng-click="vm.selectProductToAddCsm(productSelect)">
+                                            <button type="button" title="Seleccionar" class="btn btn-primary btn-sm" ng-click="vm.selectProductToAddCsm(productSelect)">
                                                     <span class = "glyphicon glyphicon-check" aria-hidden = "true"></span>
                                             </button>
                                         </td>
@@ -1183,7 +1175,7 @@
                             </nav>
                         </div>
                         <div class="col-md-12" ng-if="vm.productToAdd !== undefined">
-                            <div class="panel panel-default">
+                            <div class="panel panel-primary">
                                 <div class="panel-heading">
                                     <b>{{vm.productToAdd.name}}</b>
                                 </div>
@@ -1206,15 +1198,15 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" title="Aceptar y Cerrar" class="btn btn-primary" ng-click="vm.acceptConsupmtionProduct(true)"
+                    <button type="button" title="Aceptar y Cerrar" class="btn btn-success btn-sm" ng-click="vm.acceptConsupmtionProduct(true)"
                             ng-disabled="vm.productToAdd === undefined">
                             <span class = "glyphicon glyphicon-thumbs-up" aria-hidden = "true"></span>
                     </button>
-                    <button type="button" title="Aceptar y Agregar Mas productos" class="btn btn-primary" ng-click="vm.acceptConsupmtionProduct(false)"
+                    <button type="button" title="Aceptar y Agregar Mas productos" class="btn btn-primary btn-sm" ng-click="vm.acceptConsupmtionProduct(false)"
                             ng-disabled="vm.productToAdd === undefined">
                             <span class = "glyphicon glyphicon-ok-sign" aria-hidden = "true"></span>
                     </button>
-                    <button type="button" title="Salir" class="btn btn-primary" data-dismiss = "modal">
+                    <button type="button" title="Salir" class="btn btn-primary btn-sm" data-dismiss = "modal">
                             <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
                     </button>
                 </div>

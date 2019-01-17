@@ -21,7 +21,10 @@
 <div class="header">
   <h4><b>Perfil</b></h4>
 </div>
-<div class="panel panel-default">
+<div class="panel panel-primary">
+  <div class="panel-heading" print-remove>
+    <b>Datos del Perfil</b>
+  </div>
   <div class="panel-body">
     <div class="row" ng-show="vm.error !== undefined">
       <div class="form-group col-md-12">
@@ -139,7 +142,7 @@
   </div>
   
   <div class="panel-footer">
-    <button type="button" title = "Guardar Perfil" class="btn btn-success" ng-click="vm.editUser()"
+    <button type="button" title = "Guardar Perfil" class="btn btn-success btn-sm" ng-click="vm.editUser()"
             ng-disabled="vm.userIntegridad.email === undefined || vm.passwordNotMatch">
             <span class = "glyphicon glyphicon-floppy-save" aria-hidden = "true"></span>
     </button>

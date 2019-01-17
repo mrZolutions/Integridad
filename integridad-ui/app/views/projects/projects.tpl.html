@@ -62,10 +62,10 @@
         <td>{{ projectEdit.name }}</td>
         <td>{{ projectEdit.ruc }}</td>
         <td>
-          <button type="button" title = "Editar" class="btn btn-primary" ng-click="vm.editProject(projectEdit)">
+          <button type="button" title = "Editar" class="btn btn-primary btn-sm" ng-click="vm.editProject(projectEdit)">
                   <span class = "glyphicon glyphicon-pencil" aria-hidden = "true"></span>
           </button>
-          <button type="button" title = "Eliminar" class="btn btn-primary" ng-click="vm.project=projectEdit"
+          <button type="button" title = "Eliminar" class="btn btn-primary btn-sm" ng-click="vm.project=projectEdit"
                   data-toggle="modal" data-target="#modalEliminar">
                   <span class = "glyphicon glyphicon-trash" aria-hidden = "true"></span>
           </button>
@@ -75,7 +75,10 @@
   </table>
 </div>
 
-<div class="panel panel-default" ng-show="!vm.updSubsi && vm.project">
+<div class="panel panel-primary" ng-show="!vm.updSubsi && vm.project">
+  <div class="panel-heading" print-remove>
+    <b>Datos del Proyecto</b>
+  </div>
   <div class="panel-body">
     <div class="row">
       <div class="form-group col-md-12">
@@ -156,7 +159,7 @@
 
     <div class="row">
       <div class="form-group col-md-12">
-        <div class="panel panel-default">
+        <div class="panel panel-primary">
           <div class="panel-heading">
             Sucursales
           </div>
@@ -169,7 +172,7 @@
                   <th> Ciudad </th>
                   <th> Direcci&oacute;n </th>
                   <th>
-                    <button type="button" title="Agregar Sucursal" class="btn btn-primary" ng-click="vm.addSubsidiary(); vm.updSubsi = true"
+                    <button type="button" title="Agregar Sucursal" class="btn btn-primary btn-sm" ng-click="vm.addSubsidiary(); vm.updSubsi = true"
                             data-toggle="modal" data-target="#modalSubsidiary">
                             <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                     </button>
@@ -188,15 +191,15 @@
                   <td>{{ subsi.city }}</td>
                   <td>{{ subsi.address1 }}</td>
                   <td>
-                    <button type="button" title = "Editar Sucursal" class="btn btn-primary" ng-click="vm.subsidiary=subsi; vm.updSubsi = true"
+                    <button type="button" title = "Editar Sucursal" class="btn btn-primary btn-sm" ng-click="vm.subsidiary=subsi; vm.updSubsi = true"
                             data-toggle="modal" data-target="#modalSubsidiary">
                             <span class = "glyphicon glyphicon-pencil" aria-hidden = "true"></span>
                     </button>
-                    <button type="button" title = "Eliminar Sucursal" class="btn btn-primary" ng-click="vm.subsidiary=subsi; vm.updSubsi = false"
+                    <button type="button" title = "Eliminar Sucursal" class="btn btn-primary btn-sm" ng-click="vm.subsidiary=subsi; vm.updSubsi = false"
                             data-toggle="modal" data-target="#modalEliminarSubsidiary">
                             <span class = "glyphicon glyphicon-trash" aria-hidden = "true"></span>
                     </button>
-                    <button type="button" title = "Productos" class="btn btn-primary" ng-click="vm.products(subsi)">
+                    <button type="button" title = "Productos" class="btn btn-primary btn-sm" ng-click="vm.products(subsi)">
                             <span class = "glyphicon glyphicon-phone" aria-hidden = "true"></span>
                     </button>
                   </td>
@@ -210,11 +213,11 @@
 
   </div>
   <div class="panel-footer">
-    <button type="button" title = "Guardar Proyecto" class="btn btn-success" ng-click="vm.save()"
+    <button type="button" title = "Guardar Proyecto" class="btn btn-success btn-sm" ng-click="vm.save()"
             ng-disabled="vm.project.name === undefined">
             <span class = "glyphicon glyphicon-floppy-save" aria-hidden = "true"></span>
     </button>
-    <button type="button" title = "Salir" class="btn btn-primary"
+    <button type="button" title = "Salir" class="btn btn-primary btn-sm"
             ng-click="vm.cancel()">
             <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
     </button>
@@ -222,7 +225,7 @@
 </div>
 
 <div ng-show="vm.subsidiary !== undefined && vm.updSubsi">
-  <div class="panel panel-default">
+  <div class="panel panel-primary">
     <div class="panel-heading">
       Sucursal
     </div>
@@ -269,7 +272,7 @@
           <input type="text" ng-model="vm.subsidiary.threeCode" class="form-control">
         </div>
         <div class="form-group col-md-6">
-          <div class="panel panel-default">
+          <div class="panel panel-primary">
             <div class="panel-heading">
               Bodegas
             </div>
@@ -283,7 +286,7 @@
                       <input type="text" ng-model="vm.warehouseName" class="form-control" placeholder="Ingrese un Nombre">
                     </th>
                     <th>
-                      <button type="button" title="Agregar Nueva Bodega" class="btn btn-primary" ng-click="vm.addWarehouse()">
+                      <button type="button" title="Agregar Nueva Bodega" class="btn btn-primary btn-sm" ng-click="vm.addWarehouse()">
                               <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                       </button>
                     </th>
@@ -298,7 +301,7 @@
                   <tr ng-repeat="warehouse in vm.subsidiary.warehouses | filter:{active: true}">
                     <td>{{ warehouse.nameNumber }}</td>
                     <td>
-                      <button type="button" title = "Eliminar Bodega" class="btn btn-primary" ng-click="vm.warehouse=warehouse"
+                      <button type="button" title = "Eliminar Bodega" class="btn btn-primary btn-sm" ng-click="vm.warehouse=warehouse"
                               data-toggle="modal" data-target="#modalEliminarWarehouse">
                               <span class = "glyphicon glyphicon-trash" aria-hidden = "true"></span>
                       </button>
@@ -317,7 +320,7 @@
 
       <div class="row">
         <div class="form-group col-md-12">
-          <div class="panel panel-default">
+          <div class="panel panel-primary">
             <div class="panel-heading">
               Cajas
             </div>
@@ -327,7 +330,7 @@
                   <tr>
                     <th> N&uacute;mero / Nombre de caja </th>
                     <th>
-                      <button type="button" title = "Agregar" class="btn btn-primary" ng-click="vm.cashier={}"
+                      <button type="button" title = "Agregar" class="btn btn-primary btn-sm" ng-click="vm.cashier={}"
                               data-toggle="modal" data-target="#modalCashier">
                               <span class = "glyphicon glyphicon-plus" aria-hidden = "true"></span>
                       </button>
@@ -343,7 +346,7 @@
                   <tr ng-repeat="cashier in vm.subsidiary.cashiers | filter:{active: true}">
                     <td>{{ cashier.nameNumber }}</td>
                     <td>
-                      <button type="button" title = "Eliminar" class="btn btn-primary" ng-click="vm.cashier=cashier"
+                      <button type="button" title = "Eliminar" class="btn btn-primary btn-sm" ng-click="vm.cashier=cashier"
                               data-toggle="modal" data-target="#modalEliminarCashier">
                               <span class = "glyphicon glyphicon-trash" aria-hidden = "true"></span>
                       </button>
@@ -359,11 +362,11 @@
     </div>
 
     <div class="panel-footer">
-      <button type="button" title = "Guardar Sucursal" class="btn btn-success" ng-click="vm.saveSubsidiary()"
+      <button type="button" title = "Guardar Sucursal" class="btn btn-success btn-sm" ng-click="vm.saveSubsidiary()"
               data-dismiss="modal" >
               <span class = "glyphicon glyphicon-floppy-save" aria-hidden = "true"></span>
       </button>
-      <button type="button" title = "Salir" class="btn btn-primary"
+      <button type="button" title = "Salir" class="btn btn-primary btn-sm"
               ng-click="vm.cancelSubisdiary()">
               <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
       </button>
@@ -404,11 +407,11 @@
 
       </div>
       <div class="modal-footer">
-        <button type="button" title = "Guardar Caja" class="btn btn-success" ng-click="vm.saveCashier()"
+        <button type="button" title = "Guardar Caja" class="btn btn-success btn-sm" ng-click="vm.saveCashier()"
                 data-dismiss="modal" >
                 <span class = "glyphicon glyphicon-floppy-save" aria-hidden = "true"></span>
         </button>
-        <button type="button" title = "Salir" class="btn btn-primary"
+        <button type="button" title = "Salir" class="btn btn-primary btn-sm"
                 ng-click="vm.cancelCashier()" data-dismiss="modal">
                 <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
         </button>
@@ -433,7 +436,7 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" title = "Eliminar Proyecto" class="btn btn-primary" ng-click="vm.remove()" data-dismiss="modal">
+        <button type="button" title = "Eliminar Proyecto" class="btn btn-primary btn-sm" ng-click="vm.remove()" data-dismiss="modal">
                 <span class = "glyphicon glyphicon-trash" aria-hidden = "true"></span>
         </button>
       </div>
@@ -457,7 +460,7 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" title = "Eliminar Sucursal" class="btn btn-primary" ng-click="vm.removeSubsidiary()" data-dismiss="modal">
+        <button type="button" title = "Eliminar Sucursal" class="btn btn-primary btn-sm" ng-click="vm.removeSubsidiary()" data-dismiss="modal">
                 <span class = "glyphicon glyphicon-trash" aria-hidden = "true"></span>
         </button>
       </div>
@@ -480,7 +483,7 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" title = "Eliminar Caja" class="btn btn-primary" ng-click="vm.removeCashier()" data-dismiss="modal">
+        <button type="button" title = "Eliminar Caja" class="btn btn-primary btn-sm" ng-click="vm.removeCashier()" data-dismiss="modal">
                 <span class = "glyphicon glyphicon-trash" aria-hidden = "true"></span>
         </button>
       </div>
@@ -503,7 +506,7 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" title = "Eliminar Bodega" class="btn btn-primary" ng-click="vm.removeWarehouse()" data-dismiss="modal">
+        <button type="button" title = "Eliminar Bodega" class="btn btn-primary btn-sm" ng-click="vm.removeWarehouse()" data-dismiss="modal">
                 <span class = "glyphicon glyphicon-trash" aria-hidden = "true"></span>
         </button>
       </div>

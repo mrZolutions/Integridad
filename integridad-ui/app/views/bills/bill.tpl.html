@@ -49,7 +49,6 @@
         <tr>
           <th> C&oacute;digo </th>
           <th> Nombre </th>
-          <th> Tipo ID</th>
           <th> No. Identidad </th>
         </tr>
       </thead>
@@ -60,15 +59,14 @@
           </td>
         </tr>
         <tr ng-repeat="clientPreSelect in vm.clientList | orderBy:'name' | filter:searchText">
-          <td>{{ clientPreSelect.codApp }}</td>
-          <td>{{ clientPreSelect.name }}</td>
-          <td>{{ clientPreSelect.typeId }}</td>
-          <td>{{ clientPreSelect.identification }}</td>
+          <td>{{clientPreSelect.codApp}}</td>
+          <td>{{clientPreSelect.name}}</td>
+          <td>{{clientPreSelect.typeId}} - {{clientPreSelect.identification}}</td>
           <td>
-            <button type="button" title="Nueva Factura" class="btn btn-primary" ng-click="vm.clientSelect(clientPreSelect)">
+            <button type="button" title="Nueva Factura" class="btn btn-primary btn-sm" ng-click="vm.clientSelect(clientPreSelect)">
                     <span class = "glyphicon glyphicon-file" aria-hidden = "true"></span>
             </button>
-            <button type="button" title="Consultar Facturas" class="btn btn-primary" ng-click="vm.clientConsult(clientPreSelect)">
+            <button type="button" title="Consultar Facturas" class="btn btn-primary btn-sm" ng-click="vm.clientConsult(clientPreSelect)">
                     <span class = "glyphicon glyphicon-search" aria-hidden = "true"></span>
             </button>
           </td>
@@ -102,10 +100,10 @@
           <td>{{ bill.client.name }}</td>
           <td>{{ bill.total }}</td>
           <td>
-            <button type="button" title="Ver Factura" class="btn btn-primary" ng-click="vm.billSelect(bill)">
+            <button type="button" title="Ver Factura" class="btn btn-primary btn-sm" ng-click="vm.billSelect(bill)">
                     <span class = "glyphicon glyphicon-eye-open" aria-hidden = "true"></span>
             </button>
-            <button type="button" title="Anular Factura" class="btn btn-warning" ng-click="vm.cancelBill = bill"
+            <button type="button" title="Anular Factura" class="btn btn-warning btn-sm" ng-click="vm.cancelBill = bill"
                     data-toggle="modal" data-target="#modalAnular">
                     <span class = "glyphicon glyphicon-warning-sign" aria-hidden = "true"></span>
             </button>
@@ -115,15 +113,15 @@
     </table>
     <div class="row">
       <div class="form-group col-md-12">
-        <button type="button" title="Salir"  class="btn btn-primary" ng-click="vm.billList = undefined">
+        <button type="button" title="Salir"  class="btn btn-primary btn-sm" ng-click="vm.billList = undefined">
                 <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
         </button>
       </div>
     </div>
   </div>
 
-  <div class="table-responsive" ng-show="vm.clientSelected !== undefined" id="printArea" print-section>
-    <div class="panel panel-default">
+  <div class="panel-group table-responsive" ng-show="vm.clientSelected !== undefined" id="printArea" print-section>
+    <div class="panel panel-primary">
       <div class="panel-heading" print-remove>
         <b>Datos del Cliente</b>
       </div>
@@ -148,7 +146,7 @@
             <table width="100%">
               <tr>
                 <td>
-                  <button type="button" title="Buscar Cotizaci&oacute;n" class="btn btn-primary" ng-click="vm.getQuotations()"
+                  <button type="button" title="Buscar Cotizaci&oacute;n" class="btn btn-primary btn-sm" ng-click="vm.getQuotations()"
                           data-toggle="modal" data-target="#modalCotizacion">
                           <span class = "glyphicon glyphicon-search" aria-hidden = "true"></span>
                   </button>
@@ -269,7 +267,7 @@
         </div>
       </div>
     </div>
-    <div class="panel panel-default">
+    <div class="panel panel-primary">
       <div class="panel-heading">
         <b>Detalle</b>
       </div>
@@ -289,7 +287,8 @@
                   <th> V. Total. </th>
                   <th ng-if="vm.newBill">
                     <button type="button" title="Agregar Productos" class="btn btn-primary" ng-click="vm.addProduct()"
-                            data-toggle="modal" data-target="#modalAddProduct" print-remove>
+                            ng-show="vm.bill.claveDeAcceso === undefined" data-toggle="modal"
+                            data-target="#modalAddProduct" print-remove>
                             <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                     </button>
                   </th>
@@ -311,12 +310,14 @@
                   <td>{{detail.discount}}</td>
                   <td>{{detail.total}}</td>
                   <td ng-if="vm.newBill">
-                    <button type="button" title="Editar Producto" class="btn btn-primary"
+                    <button type="button" title="Editar Producto" class="btn btn-primary btn-sm"
                             ng-click="vm.editDetail(detail, $index)"
+                            ng-show="vm.bill.claveDeAcceso === undefined"
                             data-toggle="modal" data-target="#modalAddProduct" print-remove>
                             <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
                     </button>
-                    <button type="button" title="Eliminar Producto" class="btn btn-primary" 
+                    <button type="button" title="Eliminar Producto" class="btn btn-primary btn-sm" 
+                            ng-show="vm.bill.claveDeAcceso === undefined" 
                             ng-click="vm.removeDetail($index)" print-remove>
                             <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
                     </button>
@@ -392,41 +393,39 @@
             </table>
           </div>
         </div>
-        <div class="row" print-remove>
-          <div class="form-group col-md-12">
-            <button type="button" title = "Forma de Pago" class="btn btn-primary" ng-if="vm.newBill"
-                    data-toggle="modal" data-target="#modalAddPago"
-                    ng-disabled="vm.bill.total <= 0 || vm.billed"
-                    ng-show="vm.bill.claveDeAcceso === undefined">
-                    <span class = "glyphicon glyphicon-usd" aria-hidden = "true"></span>
-            </button>
-            <button print-btn type="button" title = "Imprimir Factura" class="btn btn-primary"
-                    ng-if="vm.newBill && !vm.user.cashier.specialPrint"
-                    ng-disabled="vm.bill.claveDeAcceso === undefined"
-                    ng-click="vm.cancelBill()">
-                    <span class = "glyphicon glyphicon-print" aria-hidden = "true"></span>
-            </button>
-            <button type="button" title = "Descargar Factura EpsonTM20" class="btn btn-success"
-                    ng-if="vm.newBill && !vm.user.cashier.specialPrint"
-                    ng-disabled="vm.bill.claveDeAcceso === undefined"
-                    ng-click="vm.downloadBillTxtTM20('billToDownloadEpsonTM20')" print-remove>
-                    <span class = "glyphicon glyphicon-save-file" aria-hidden = "true"></span>
-            </button>
-            <button type="button" title = "Imprimir Ticket-Factura" class="btn btn-danger"
-                    ng-if="vm.newBill && !vm.user.cashier.specialPrint"
-                    ng-disabled="vm.bill.claveDeAcceso === undefined"
-                    ng-click="vm.printToCartAndCancel('printMatrixSectionId')" print-remove>
-                    <span class = "glyphicon glyphicon-print" aria-hidden = "true"></span>
-            </button>
-            <button type="button" title="Salir" class="btn btn-primary" ng-if="vm.newBill"
-                    ng-click="vm.cancelBill()">
-                    <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
-            </button>
-          </div>
-        </div>
+      </div>
+      <div class="panel-footer" print-remove>
+        <button type="button" title = "Forma de Pago" class="btn btn-primary btn-sm" ng-if="vm.newBill"
+                data-toggle="modal" data-target="#modalAddPago"
+                ng-disabled="vm.bill.total <= 0 || vm.billed"
+                ng-show="vm.bill.claveDeAcceso === undefined">
+                <span class = "glyphicon glyphicon-usd" aria-hidden = "true"></span>
+        </button>
+        <button print-btn type="button" title = "Imprimir Factura" class="btn btn-primary btn-sm"
+                ng-if="vm.newBill && !vm.user.cashier.specialPrint"
+                ng-disabled="vm.bill.claveDeAcceso === undefined"
+                ng-click="vm.cancelBill()">
+                <span class = "glyphicon glyphicon-print" aria-hidden = "true"></span>
+        </button>
+        <button type="button" title = "Descargar Factura EpsonTM20" class="btn btn-success btn-sm"
+                ng-if="vm.newBill && !vm.user.cashier.specialPrint"
+                ng-disabled="vm.bill.claveDeAcceso === undefined"
+                ng-click="vm.downloadBillTxtTM20('billToDownloadEpsonTM20')" print-remove>
+                <span class = "glyphicon glyphicon-save-file" aria-hidden = "true"></span>
+        </button>
+        <button type="button" title = "Imprimir Ticket-Factura" class="btn btn-danger btn-sm"
+                ng-if="vm.newBill && !vm.user.cashier.specialPrint"
+                ng-disabled="vm.bill.claveDeAcceso === undefined"
+                ng-click="vm.printToCartAndCancel('printMatrixSectionId')" print-remove>
+                <span class = "glyphicon glyphicon-print" aria-hidden = "true"></span>
+        </button>
+        <button type="button" title="Salir" class="btn btn-primary btn-sm" ng-if="vm.newBill"
+                ng-click="vm.cancelBill()">
+                <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
+        </button>
       </div>
     </div>
-    <div class="panel panel-default" print-only print-avoid-break>
+    <div class="panel panel-primary" print-only print-avoid-break>
       <div class="panel-heading">
         <b>Forma de Pago</b>
       </div>
@@ -499,7 +498,7 @@
         </div>
       </div>
     </div>
-    <div class="panel panel-default" ng-if="!vm.newBill" print-remove>
+    <div class="panel panel-primary" ng-if="!vm.newBill" print-remove>
       <div class="panel-heading">
         <b>Forma de Pago</b>
       </div>
@@ -546,28 +545,26 @@
             </table>
           </div>
         </div>
-        <div class="row" print-remove>
-          <div class="form-group col-md-12">
-            <button print-btn type="button" title = "Imprimir Factura" class="btn btn-primary"
-                    ng-if="!vm.newBill && !vm.user.cashier.specialPrint" print-remove>
-                    <span class = "glyphicon glyphicon-print" aria-hidden = "true"></span>
-            </button>
-            <button type="button" title = "Descargar Factura EpsonTM20" class="btn btn-success"
-                    ng-if="!vm.newBill && !vm.user.cashier.specialPrint"
-                    ng-click="vm.downloadBillTxtTM20('billToDownloadEpsonTM20')" print-remove>
-                    <span class = "glyphicon glyphicon-save-file" aria-hidden = "true"></span>
-            </button>
-            <button type="button" title = "Imprimir Ticket-Factura" class="btn btn-danger"
-                    ng-if="!vm.newBill && !vm.user.cashier.specialPrint"
-                    ng-click="vm.printToCart('printMatrixSectionId')" print-remove>
-                    <span class = "glyphicon glyphicon-print" aria-hidden = "true"></span>
-            </button>
-            <button type="button" title="Salir" class="btn btn-primary"
-                    ng-click="vm.clientSelected = undefined">
-                    <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
-            </button>
-          </div>
-        </div>
+      </div>
+      <div class="panel-footer" print-remove>
+        <button print-btn type="button" title = "Imprimir Factura" class="btn btn-primary btn-sm"
+                ng-if="!vm.newBill && !vm.user.cashier.specialPrint" print-remove>
+                <span class = "glyphicon glyphicon-print" aria-hidden = "true"></span>
+        </button>
+        <button type="button" title = "Descargar Factura EpsonTM20" class="btn btn-success btn-sm"
+                ng-if="!vm.newBill && !vm.user.cashier.specialPrint"
+                ng-click="vm.downloadBillTxtTM20('billToDownloadEpsonTM20')" print-remove>
+                <span class = "glyphicon glyphicon-save-file" aria-hidden = "true"></span>
+        </button>
+        <button type="button" title = "Imprimir Ticket-Factura" class="btn btn-danger btn-sm"
+                ng-if="!vm.newBill && !vm.user.cashier.specialPrint"
+                ng-click="vm.printToCart('printMatrixSectionId')" print-remove>
+                <span class = "glyphicon glyphicon-print" aria-hidden = "true"></span>
+        </button>
+        <button type="button" title="Salir" class="btn btn-primary btn-sm"
+                ng-click="vm.clientSelected = undefined">
+                <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
+        </button>
       </div>
     </div>
   </div>
@@ -712,7 +709,7 @@
             </div>
             <div class="form-group col-md-4">
               <br/>
-              <button type="button" title = "Calcular" class="btn btn-primary" ng-click="vm.loadCredit()"
+              <button type="button" title = "Calcular" class="btn btn-primary btn-sm" ng-click="vm.loadCredit()"
                       ng-disabled="vm.medio.creditoIntervalos === undefinded || vm.medio.creditoNumeroPagos === undefined">
                       <span class = "glyphicon glyphicon-th" aria-hidden = "true"></span>
               </button>
@@ -760,7 +757,7 @@
             </div>
             <div class="form-group col-md-4">
               <br />
-              <button type="button" title = "Agregar Pago" class="btn btn-primary" ng-click="vm.addPago()"
+              <button type="button" title = "Agregar Pago" class="btn btn-primary btn-sm" ng-click="vm.addPago()"
                       ng-disabled="vm.medio.medio === undefinded || vm.medio.total === undefined">
                       <span class = "glyphicon glyphicon-plus" aria-hidden = "true"></span>
               </button>
@@ -788,7 +785,7 @@
                     <td>{{ pago.medio }}</td>
                     <td>{{ pago.total }}</td>
                     <td>
-                      <button type="button" title = "Eliminar Pago" class="btn btn-primary" ng-click="vm.removePago($index)">
+                      <button type="button" title = "Eliminar Pago" class="btn btn-primary btn-sm" ng-click="vm.removePago($index)">
                               <span class = "glyphicon glyphicon-trash" aria-hidden = "true"></span>
                       </button>
                     </td>
@@ -806,11 +803,11 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" title = "Facturar" class="btn btn-success" ng-click="vm.getClaveAcceso()"
+          <button type="button" title = "Facturar" class="btn btn-success btn-sm" ng-click="vm.getClaveAcceso()"
                   ng-disabled="(vm.pagos.length === 0 || vm.getCambio < 0) || vm.billed" print-remove>
                   <span class = "glyphicon glyphicon-credit-card" aria-hidden = "true"></span>
           </button>
-          <button type="button" title = "Cancelar Facturación" class="btn btn-primary" data-dismiss="modal"
+          <button type="button" title = "Cancelar Facturación" class="btn btn-primary btn-sm" data-dismiss="modal"
                   ng-disabled="vm.pagos.length === 0 || vm.getCambio < 0">
                   <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
           </button>
@@ -834,7 +831,7 @@
                   <input ng-model="vm.searchText" class="form-control" placeholder="Buscar" />
                 </div>
                 <div class="form-group col-md-4">
-                  <button type="button" title="Buscar" class="btn btn-primary" ng-click="vm.filter()">
+                  <button type="button" title="Buscar" class="btn btn-primary btn-sm" ng-click="vm.filter()">
                           <span class = "glyphicon glyphicon-search" aria-hidden = "true"></span>
                   </button>
                 </div>
@@ -862,7 +859,7 @@
                     <td>{{ productSelect.quantity }}</td>
                     <td>{{ vm.getCost('1.'+ productSelect[vm.priceType.cod], productSelect.averageCost) }}</td>
                     <td>
-                      <button type="button" title="Seleccionar" class="btn btn-primary" ng-click="vm.selectProductToAdd(productSelect)">
+                      <button type="button" title="Seleccionar" class="btn btn-primary btn-sm" ng-click="vm.selectProductToAdd(productSelect)">
                               <span class = "glyphicon glyphicon-check" aria-hidden = "true"></span>
                       </button>
                     </td>
@@ -879,7 +876,7 @@
             </div>
 
             <div class="col-md-12" ng-if="vm.productToAdd !== undefined">
-              <div class="panel panel-default">
+              <div class="panel panel-primary">
                 <div class="panel-heading">
                   <b>{{vm.productToAdd.name}}</b>
                 </div>
@@ -912,15 +909,15 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" title="Aceptar y Cerrar" class="btn btn-success" ng-click="vm.acceptProduct(true)"
+          <button type="button" title="Aceptar y Cerrar" class="btn btn-success btn-sm" ng-click="vm.acceptProduct(true)"
                   ng-disabled="vm.productToAdd === undefined">
                   <span class = "glyphicon glyphicon-thumbs-up" aria-hidden = "true"></span>
           </button>
-          <button type="button" title="Aceptar y Agregar Mas productos" class="btn btn-primary" ng-click="vm.acceptProduct(false)"
+          <button type="button" title="Aceptar y Agregar Mas productos" class="btn btn-primary btn-sm" ng-click="vm.acceptProduct(false)"
                   ng-disabled="vm.productToAdd === undefined">
                   <span class = "glyphicon glyphicon-ok-sign" aria-hidden = "true"></span>
           </button>
-          <button type="button" title="Salir" class="btn btn-primary" data-dismiss = "modal">
+          <button type="button" title="Salir" class="btn btn-primary btn-sm" data-dismiss = "modal">
                   <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
           </button>
         </div>
@@ -949,7 +946,7 @@
           </div>
           <div class="row">
             <div class="form-group col-md-12">
-              <button type="button" title="Validar" class="btn btn-primary" ng-click="vm.validateAdm()" ng-disabled="vm.passwordAdm === undefined">
+              <button type="button" title="Validar" class="btn btn-primary btn-sm" ng-click="vm.validateAdm()" ng-disabled="vm.passwordAdm === undefined">
                       <span class = "glyphicon glyphicon-tags" aria-hidden = "true"></span>
               </button>
             </div>
@@ -984,10 +981,10 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" title="Aceptar" class="btn btn-success" ng-click="vm.acceptNewSeq()">
+          <button type="button" title="Aceptar" class="btn btn-success btn-sm" ng-click="vm.acceptNewSeq()">
                   <span class = "glyphicon glyphicon-thumbs-up" aria-hidden = "true"></span>
           </button>
-          <button type="button" title = "Salir" class="btn btn-primary" data-dismiss="modal">
+          <button type="button" title = "Salir" class="btn btn-primary btn-sm" data-dismiss="modal">
                   <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
           </button>
         </div>
@@ -1010,7 +1007,7 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" title="Anular Factura" class="btn btn-warning" ng-click="vm.billDeactivate()" data-dismiss="modal">
+          <button type="button" title="Anular Factura" class="btn btn-warning btn-sm" ng-click="vm.billDeactivate()" data-dismiss="modal">
                   <span class = "glyphicon glyphicon-screenshot" aria-hidden = "true"></span>
           </button>
         </div>
@@ -1054,7 +1051,7 @@
                     <td>{{ quotation.dateCreated | date :  "dd/MM/yyyy"}}</td>
                     <td>{{ quotation.total }}</td>
                     <td>
-                      <button type="button" title="Seleccionar" class="btn btn-primary" ng-click="vm.selectQuotation(quotation)" data-dismiss="modal">
+                      <button type="button" title="Seleccionar" class="btn btn-primary btn-sm" ng-click="vm.selectQuotation(quotation)" data-dismiss="modal">
                               <span class = "glyphicon glyphicon-check" aria-hidden = "true"></span>
                       </button>
                     </td>
