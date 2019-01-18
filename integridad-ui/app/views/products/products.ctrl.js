@@ -455,6 +455,10 @@ angular.module('integridadUiApp')
     vm.success = undefined;
     vm.error = undefined;
   };
+
+  vm.exit = function() {
+    $location.path('/home');
+  };
                                       
   (function initController() {
     _activate();

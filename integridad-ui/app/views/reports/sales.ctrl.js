@@ -8,7 +8,8 @@
  * Controller of the menu
  */
 angular.module('integridadUiApp')
-  .controller('ReportSalesCtrl', function(_, $localStorage, creditsbillService, billService, eretentionService, paymentService, creditsDebtsService, productService) {
+  .controller('ReportSalesCtrl', function(_, $localStorage, creditsbillService, billService, eretentionService, 
+                                          paymentService, creditsDebtsService, $location) {
     var vm = this;
     var today = new Date();
     $('#pickerBillDateOne').data("DateTimePicker").date(today);
@@ -141,7 +142,7 @@ angular.module('integridadUiApp')
     vm.getTotal = function(total, subTotal) {
       var total = total - subTotal;
       return (total).toFixed(2);
-    }
+    };
 
     vm.exportExcel = function() {
       var dataReport = [];
@@ -284,5 +285,9 @@ angular.module('integridadUiApp')
 
       /* write workbook and force a download */
       XLSX.writeFile(wb, "Reporte.xlsx");
+    };
+
+    vm.exit = function() {
+      $location.path('/home');
     };
 });

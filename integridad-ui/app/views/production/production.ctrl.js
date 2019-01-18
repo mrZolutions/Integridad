@@ -9,7 +9,7 @@
  */
 angular.module('integridadUiApp')
     .controller('ProductionCtrl', function( _, $localStorage, providerService, productService, warehouseService,
-                                            clientService, cellarService, consumptionService, utilSeqService) {
+                                            clientService, cellarService, consumptionService, utilSeqService, $location) {
     var vm = this;
     vm.error = undefined;
     vm.success = undefined;
@@ -718,6 +718,10 @@ angular.module('integridadUiApp')
     vm.getActiveClass = function(index) {
         var classActive = vm.page === index? 'active' : '';
         return classActive;
+    };
+
+    vm.exit = function() {
+        $location.path('/home');
     };
 
     //Init Controler Code

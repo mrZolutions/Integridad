@@ -8,8 +8,8 @@
  * Controller of the integridadUiApp
  */
 angular.module('integridadUiApp')
-  .controller('CuentasCobrarCtrl', function ( _, $localStorage, clientService, cuentaContableService, paymentService, dateService, 
-                                            creditsbillService, authService, billService, eretentionClientService){
+  .controller('CuentasCobrarCtrl', function(_, $localStorage, clientService, cuentaContableService, paymentService, dateService, 
+                                            creditsbillService, $location, billService, eretentionClientService) {
     var vm = this;
     vm.error = undefined;
     vm.success = undefined;
@@ -109,7 +109,9 @@ angular.module('integridadUiApp')
       {name:'Pagos en el país por transporte de pasajeros o transporte internacional de carga, a compañías nacionales o extranjeras de aviación o marítimas' ,percentage:0, codigo: '332D', codigoDatil:'332D'},
       {name:'Valores entregados por las cooperativas de transporte a sus socios' ,percentage:0, codigo: '332E', codigoDatil:'332E'},
       {name:'Compraventa de divisas distintas al dólar de los Estados Unidos de América' ,percentage:0, codigo: '332F', codigoDatil:'332F'},
+      {name:'Pagos con Tarjeta de Crédito' ,percentage:0, codigo: '332G', codigoDatil:'332G'},
       {name:'Pago al exterior tarjeta de crédito reportada por la Emisora de tarjeta de crédito, solo RECAP' ,percentage:0, codigo: '332H', codigoDatil:'332H'},
+      {name:'Pago a través de Convenio de Débito (Clientes IFIs)' ,percentage:0, codigo: '332I', codigoDatil:'332I'},
       {name:'Enajenación de derechos representativos de capital y otros derechos cotizados en bolsa ecuatoriana' ,percentage:0.002, codigo: '333', codigoDatil:'333'},
       {name:'Enajenación de derechos representativos de capital y otros derechos no cotizados en bolsa ecuatoriana' ,percentage:1, codigo: '334', codigoDatil:'334'},
       {name:'Por loterías, rifas, apuestas y similares' ,percentage:15, codigo: '335', codigoDatil:'335'},
@@ -360,6 +362,10 @@ angular.module('integridadUiApp')
       vm.success = undefined;
       vm.error = undefined;
       vm.billList = undefined;
+    };
+
+    vm.exit = function() {
+      $location.path('/home');
     };
 
     (function initController() {

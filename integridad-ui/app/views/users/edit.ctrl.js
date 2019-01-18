@@ -8,7 +8,7 @@
  * Controller of the integridadUiApp
  */
 angular.module('integridadUiApp')
-  .controller('UserEditCtrl', function($rootScope, utilStringService, userTypeService, authService, $localStorage) {
+  .controller('UserEditCtrl', function($rootScope, utilStringService, $location, authService, $localStorage) {
     var vm = this;
     vm.error = undefined;
     vm.success = undefined;
@@ -70,6 +70,10 @@ angular.module('integridadUiApp')
       vm.error = undefined
       vm.changePassword = false;
       vm.passwordNotMatch = false;
+    };
+
+    vm.exit = function() {
+      $location.path('/home');
     };
 
     (function initController() {

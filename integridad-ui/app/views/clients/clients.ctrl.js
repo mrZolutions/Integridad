@@ -141,6 +141,10 @@ angular.module('integridadUiApp')
       };
     };
 
+    vm.exit = function() {
+      $location.path('/home');
+    };
+
     (function initController() {
       _activate();
     })();

@@ -2,9 +2,8 @@
 
 
 angular.module('integridadUiApp')
-.controller('QuotationCtrl', function( _, $rootScope, $location, utilStringService, $localStorage,
-                                     clientService, productService, authService, billService, $window,
-                                     cashierService, requirementService, utilSeqService) {
+.controller('QuotationCtrl', function( _,$location, $localStorage, clientService, productService, billService,
+                                      utilSeqService) {
 
 	var vm = this;
     vm.error = undefined;

@@ -9,7 +9,7 @@
  */
 angular.module('integridadUiApp')
   .controller('DebtsToPayCtrl', function(_, $localStorage, providerService, cuentaContableService, debtsToPayService, 
-                                        utilSeqService, creditsDebtsService, paymentDebtsService) {
+                                        utilSeqService, creditsDebtsService, paymentDebtsService, $location) {
     var vm = this;
     vm.error = undefined;
     vm.success = undefined;
@@ -653,6 +653,10 @@ angular.module('integridadUiApp')
 
     vm.cancel = function() {
       _activate();
+    };
+
+    vm.exit = function() {
+      $location.path('/home');
     };
 
     (function initController() {

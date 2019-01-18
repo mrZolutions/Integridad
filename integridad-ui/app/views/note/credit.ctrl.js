@@ -232,6 +232,10 @@ angular.module('integridadUiApp')
       _getTotales();
     };
 
+    vm.exit = function() {
+      $location.path('/home');
+    };
+
     (function initController() {
       _activate();
     })();

@@ -9,7 +9,7 @@
  */
 angular.module('integridadUiApp')
     .controller('ContableCtrl', function(_, $localStorage, providerService, cuentaContableService, debtsToPayService, 
-                                            utilSeqService, creditsDebtsService, paymentDebtsService) {
+                                            utilSeqService, creditsDebtsService, $location) {
     var vm = this;
     vm.error = undefined;
     vm.success = undefined;
@@ -28,6 +28,10 @@ angular.module('integridadUiApp')
     function _getDailySeqNumber() {
         vm.numberAddedOne = parseInt($localStorage.user.cashier.dailyNumberSeq) + 1;
         vm.dailySeqNumber = utilSeqService._pad_with_zeroes(vm.numberAddedOne, 6);
+    };
+
+    vm.exit = function() {
+        $location.path('/home');
     };
 
     (function initController() {
