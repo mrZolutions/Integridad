@@ -50,8 +50,8 @@ public class RetentionServices {
         String data = mapper.writeValueAsString(requirement);
         log.info("RetentionServices getDatil maper creado");
 	
-        //String response = httpCallerService.post(Constants.DATIL_RETENTION_LINK, data, userClient);
-        String response = "OK";
+        String response = httpCallerService.post(Constants.DATIL_RETENTION_LINK, data, userClient);
+        //String response = "OK";
         log.info("RetentionServices getDatil httpcall success");
         return response;
     }
@@ -84,7 +84,7 @@ public class RetentionServices {
         if (details == null) {
             throw new BadRequestException("Debe tener Debe tener el codigo de contabilidaduna retencion por lo menos");
         }
-        retention.setDateCreated(new Date().getTime());
+        //retention.setDateCreated(new Date().getTime());
         retention.setActive(true);
         retention.setDetailRetentions(null);
         retention.setFatherListToNull();

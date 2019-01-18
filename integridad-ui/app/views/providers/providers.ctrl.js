@@ -369,7 +369,7 @@ angular.module('integridadUiApp')
       var totalRetorno = 0;
       if (vm.retention) {
         _.each(vm.retention.items, function(detail) {
-          totalRetorno = (parseFloat(totalRetorno) +parseFloat(detail.valor_retenido)).toFixed(2);
+          totalRetorno = (parseFloat(totalRetorno) + parseFloat(detail.valor_retenido)).toFixed(2);
         });
       };
       return totalRetorno;
@@ -408,7 +408,8 @@ angular.module('integridadUiApp')
           vm.retention.retSeq = eRet.secuencial;
           vm.retention.ejercicioFiscal = vm.retention.ejercicio;
           vm.retention.documentNumber = vm.retention.numero;
-          vm.retention.documentDate = $('#pickerBillDateDocumentRetention').data("DateTimePicker").date().toDate().getTime()
+          vm.retention.dateCreated = $('#pickerBillDateRetention').data("DateTimePicker").date().toDate().getTime();
+          vm.retention.documentDate = $('#pickerBillDateDocumentRetention').data("DateTimePicker").date().toDate().getTime();
           vm.retention.userIntegridad = $localStorage.user;
           vm.retention.subsidiary = $localStorage.user.subsidiary;
           vm.retention.detailRetentions = [];
