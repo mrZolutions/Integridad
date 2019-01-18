@@ -84,7 +84,7 @@ public class RetentionServices {
         if (details == null) {
             throw new BadRequestException("Debe tener Debe tener el codigo de contabilidaduna retencion por lo menos");
         }
-        //retention.setDateCreated(new Date().getTime());
+        retention.setDateCreated(new Date().getTime());
         retention.setActive(true);
         retention.setDetailRetentions(null);
         retention.setFatherListToNull();
