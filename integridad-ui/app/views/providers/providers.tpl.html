@@ -424,7 +424,7 @@
                   <b>COMPROBANTE DE RETENCION</b><br/><br/>
                   <b>No: {{vm.retention.stringSeq}}</b><br/>
                   <b>AUTORIZACION: {{vm.retention.claveDeAcceso}}</b><br/>
-                  <b>FECHA: {{ vm.retention.dateCreated | date : "dd-MM-yyyy" }}</b><br/>
+                  <b>FECHA: {{vm.retention.dateCreated | date : "dd-MM-yyyy"}}</b><br/>
                   <b>FACTURA: {{vm.retention.documentNumber}}</b><br/>
                   <b>AMBIENTE: {{vm.retention.userIntegridadcashier.subsidiary.userClient.testMode ? 'PRUEBAS' : 'PRODUCCION'}}</b><br/><br/>
                 </div>
@@ -463,7 +463,7 @@
               <td>
                 <div >
                   <label>Fecha de emisi&oacute;n: </label>
-                  {{ vm.retention.dateCreated | date : "dd-MM-yyyy" }}
+                  {{vm.retention.documentDate | date : "dd-MM-yyyy"}}
                 </div>
               </td>
             </tr>
@@ -551,7 +551,7 @@
                       <b>COMPROBANTE DE RETENCION</b><br/><br/>
                       <b>No: {{vm.retention.stringSeq}}</b><br/>
                       <b>AUTORIZACION: {{vm.retention.claveDeAcceso}}</b><br/>
-                      <b>FECHA: {{ vm.today | date : "dd-MM-yyyy" }}</b><br/>
+                      <b>FECHA: {{vm.today | date : "dd-MM-yyyy"}}</b><br/>
                       <b>FACTURA No: {{vm.retention.numero}}</b>
                       <b>AMBIENTE: {{vm.retention.userIntegridadcashier.subsidiary.userClient.testMode ? 'PRUEBAS' : 'PRODUCCION'}}</b><br/><br/>
                     </div>
@@ -589,7 +589,7 @@
                   <td>
                     <div>
                       <label>Fecha de emisi&oacute;n: </label>
-                      {{ vm.today | date : "dd-MM-yyyy" }}
+                      {{vm.today | date : "dd-MM-yyyy"}}
                     </div>
                   </td>
                 </tr>
