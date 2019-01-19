@@ -318,9 +318,9 @@
                 </td>
               </tr>
               <tr dir-paginate="p in vm.tablePercentage | filter:searchTextPercentage | itemsPerPage: 5" pagination-id="clientPagination">
-                <td>{{ p.codigo }}</td>
-                <td>{{ p.name }}</td>
-                <td>{{ p.percentage }}</td>
+                <td>{{p.codigo}}</td>
+                <td>{{p.name}}</td>
+                <td>{{p.percentage}}</td>
                 <td>
                   <button type="button" title = "Seleccionar" class="btn btn-primary btn-sm"
                           ng-click="vm.selecPercentage(p)" data-toggle="modal" data-target="#modalBaseImponible">
@@ -424,7 +424,7 @@
                   <b>COMPROBANTE DE RETENCION</b><br/><br/>
                   <b>No: {{vm.retention.stringSeq}}</b><br/>
                   <b>AUTORIZACION: {{vm.retention.claveDeAcceso}}</b><br/>
-                  <b>FECHA: {{vm.retention.dateCreated | date : "dd-MM-yyyy"}}</b><br/>
+                  <b>FECHA DE EMISIÓN: {{vm.retention.dateCreated | date : "dd-MM-yyyy"}}</b><br/>
                   <b>FACTURA: {{vm.retention.documentNumber}}</b><br/>
                   <b>AMBIENTE: {{vm.retention.userIntegridadcashier.subsidiary.userClient.testMode ? 'PRUEBAS' : 'PRODUCCION'}}</b><br/><br/>
                 </div>
@@ -462,7 +462,7 @@
             <tr>
               <td>
                 <div >
-                  <label>Fecha de emisi&oacute;n: </label>
+                  <label>Fecha del Documento: </label>
                   {{vm.retention.documentDate | date : "dd-MM-yyyy"}}
                 </div>
               </td>
@@ -551,7 +551,7 @@
                       <b>COMPROBANTE DE RETENCION</b><br/><br/>
                       <b>No: {{vm.retention.stringSeq}}</b><br/>
                       <b>AUTORIZACION: {{vm.retention.claveDeAcceso}}</b><br/>
-                      <b>FECHA: {{vm.today | date : "dd-MM-yyyy"}}</b><br/>
+                      <b>FECHA DE EMISIÓN: {{vm.today | date : "dd-MM-yyyy"}}</b><br/>
                       <b>FACTURA No: {{vm.retention.numero}}</b>
                       <b>AMBIENTE: {{vm.retention.userIntegridadcashier.subsidiary.userClient.testMode ? 'PRUEBAS' : 'PRODUCCION'}}</b><br/><br/>
                     </div>
