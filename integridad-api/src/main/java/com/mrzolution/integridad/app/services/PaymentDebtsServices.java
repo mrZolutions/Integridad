@@ -57,10 +57,10 @@ public class PaymentDebtsServices {
         nume = cambio.getValor();
         resto = nume - abono;
         cambio.setValor(resto);
-        if (cambio.getValor() <= 0.01) {
-            estadoCambio =  "PAGADO";
-            cambio.setEstadoCredits(estadoCambio);
-        }
+        //if (cambio.getValor() <= 0.01) {
+        //    estadoCambio =  "PAGADO";
+        //    cambio.setEstadoCredits(estadoCambio);
+        //}
         creditsDebtsRepository.save(cambio);
         resto = 0.0;
         log.info("PaymentDebtsServices updateCreditsDebts FINISHED");

@@ -408,7 +408,6 @@ angular.module('integridadUiApp')
           vm.retention.retSeq = eRet.secuencial;
           vm.retention.ejercicioFiscal = vm.retention.ejercicio;
           vm.retention.documentNumber = vm.retention.numero;
-          //vm.retention.dateCreated = $('#pickerBillDateRetention').data("DateTimePicker").date().toDate().getTime();
           vm.retention.documentDate = $('#pickerBillDateDocumentRetention').data("DateTimePicker").date().toDate().getTime();
           vm.retention.userIntegridad = $localStorage.user;
           vm.retention.subsidiary = $localStorage.user.subsidiary;

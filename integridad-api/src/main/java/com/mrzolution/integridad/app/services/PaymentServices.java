@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 /**
@@ -67,10 +66,10 @@ public class PaymentServices {
         nume = cambio.getValor();
         resto = nume - abono;
         cambio.setValor(resto);
-        if (cambio.getValor() <= 0.01) {
-            statusCambio = "PAGADO";
-            cambio.setStatusCredits(statusCambio);
-        }
+        //if (cambio.getValor() <= 0.01) {
+        //    statusCambio = "PAGADO";
+        //    cambio.setStatusCredits(statusCambio);
+        //}
         creditsRepository.save(cambio);
         resto = 0.0;
         log.info("PaymentServices updateCredits DONE");

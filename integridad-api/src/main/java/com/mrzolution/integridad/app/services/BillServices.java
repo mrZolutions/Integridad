@@ -93,9 +93,20 @@ public class BillServices {
     }
 
     //Selecciona todas las Facturas del Cliente
-    public Iterable<Bill> getByClientIdAndTypeLazy(UUID id, int type) {
+    public Iterable<Bill> getBillByClientId(UUID id, int type) {
         log.info("BillServices getByClientIdAndTypeLazy: {}", id);
-        Iterable<Bill> bills = billRepository.findByClientIdAndType(id, type);
+        Iterable<Bill> bills = billRepository.findBillByClientId(id, type);
+        bills.forEach(bill-> {
+            bill.setListsNull();
+            bill.setFatherListToNull();
+        });
+        return bills;
+    }
+    
+    //Selecciona todas las Facturas del Cliente con Saldo != '0.00'
+    public Iterable<Bill> getBillByClientIdWithSaldo(UUID id, int type) {
+        log.info("BillServices getByClientIdAndTypeLazy: {}", id);
+        Iterable<Bill> bills = billRepository.findBillByClientIdWithSaldo(id, type);
         bills.forEach(bill-> {
             bill.setListsNull();
             bill.setFatherListToNull();

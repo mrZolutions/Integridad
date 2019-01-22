@@ -160,7 +160,7 @@ angular.module('integridadUiApp')
       vm.clientAddress = client.address;
       vm.clientPhone = client.cel_phone;
       vm.clientEmail = client.email;
-      billService.getBillsByClientId(client.id).then(function(response) {
+      billService.getAllBillsByClientIdWithSaldo(client.id).then(function(response) {
         vm.billList = response;
         vm.loading = false;
       }).catch(function(error) {

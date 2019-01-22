@@ -93,7 +93,7 @@ angular.module('integridadUiApp')
       vm.success = undefined;
       vm.companyData = $localStorage.user.subsidiary;
       vm.clientSelected = client;
-      billService.getBillsByClientId(vm.clientSelected.id).then(function(response) {
+      billService.getAllBillsByClientId(vm.clientSelected.id).then(function(response) {
         vm.billList = response;
       }).catch(function (error) {
         vm.loading = false;

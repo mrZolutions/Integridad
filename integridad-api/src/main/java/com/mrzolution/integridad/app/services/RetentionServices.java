@@ -79,7 +79,6 @@ public class RetentionServices {
     }
 
     public Retention create(Retention retention) throws BadRequestException {
-        log.info("RetentionServices create");
         List<DetailRetention> details = retention.getDetailRetentions();
         if (details == null) {
             throw new BadRequestException("Debe tener Debe tener el codigo de contabilidaduna retencion por lo menos");
@@ -155,7 +154,7 @@ public class RetentionServices {
         });
         retention.setDetailRetentions(detailRetentionList);
         retention.setFatherListToNull();
-        log.info("RetentionServices populateChildren FINISHED retentionId: {}", retention.getId());
+        log.info("RetentionServices populateChildren DONE retentionId: {}", retention.getId());
     }
 
 }

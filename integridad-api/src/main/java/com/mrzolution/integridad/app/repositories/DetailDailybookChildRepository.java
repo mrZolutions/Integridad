@@ -1,7 +1,7 @@
 package com.mrzolution.integridad.app.repositories;
 
-import com.mrzolution.integridad.app.domain.DebtsToPay;
-import com.mrzolution.integridad.app.domain.DetailDebtsToPay;
+import com.mrzolution.integridad.app.domain.Dailybook;
+import com.mrzolution.integridad.app.domain.DetailDailybook;
 import com.mrzolution.integridad.app.interfaces.ChildRepository;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -16,8 +16,8 @@ import org.springframework.stereotype.Repository;
  */
 
 @Repository
-@Qualifier(value = "DetailDebtsToPayChildRepository")
-public interface DetailDebtsToPayChildRepository extends ChildRepository<DebtsToPay>, JpaRepository<DetailDebtsToPay, UUID> {
-    @Query("SELECT d.id FROM DetailDebtsToPay d WHERE d.debtsToPay = (:id)")
-    Iterable<UUID> findByFather(@Param("id") DebtsToPay debtsToPay);
+@Qualifier(value = "DetailDailybookChildRepository")
+public interface DetailDailybookChildRepository extends ChildRepository<Dailybook>, JpaRepository<DetailDailybook, UUID> {
+    @Query("SELECT dd.id FROM DetailDailybook dd WHERE dd.dailybook = (:id)")
+    Iterable<UUID> findByFather(@Param("id") Dailybook dailybook);
 }

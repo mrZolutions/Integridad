@@ -134,7 +134,7 @@ angular.module('integridadUiApp')
 
     vm.clientConsult = function(client) {
       vm.loading = true;
-      billService.getBillsByClientId(client.id).then(function(response) {
+      billService.getAllBillsByClientId(client.id).then(function(response) {
         vm.billList = response;
         vm.loading = false;
       }).catch(function(error) {

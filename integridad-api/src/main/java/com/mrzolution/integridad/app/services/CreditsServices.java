@@ -32,12 +32,12 @@ public class CreditsServices {
     PaymentRepository paymentRepository;
     
     private UUID clientId;
-    private double saldo = 0;
-    private double sumTotal = 0;
-    private double sumTotalAbono = 0;
-    private double sumTotalReten = 0;
-    private double sumTotalNotac = 0;
-    private double sumTotalValor = 0;
+    private double saldo = 0.0;
+    private double sumTotal = 0.0;
+    private double sumTotalAbono = 0.0;
+    private double sumTotalReten = 0.0;
+    private double sumTotalNotac = 0.0;
+    private double sumTotalValor = 0.0;
     
     public Iterable<Credits> getCreditsOfBillByBillId(UUID id) {
         log.info("CreditsServices getCreditsOfBillByBillId: {}", id);
@@ -136,14 +136,6 @@ public class CreditsServices {
         });
         CreditsReport saleReport = new CreditsReport("SUB-TOTAL ", null, null, null, 0, 0, sumTotal, sumTotalAbono, sumTotalReten, sumTotalNotac, sumTotalValor, 0, 0, 0, 0, 0);
         creditsReportList.add(saleReport);
-        
-        sumTotal = 0;
-        sumTotalAbono = 0;
-        sumTotalReten = 0;
-        sumTotalNotac = 0;
-        sumTotalValor = 0;
-        saldo = 0;
-        
         return creditsReportList;
     }
     
