@@ -32,6 +32,7 @@ public class UserClient {
     private String city;
     private String address1;
     private String address2;
+    private String email;
     private String cedula;
     private String ruc;
     private long initialActivityDate;

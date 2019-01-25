@@ -51,12 +51,12 @@ public class BillController {
     //Selecciona todas las Facturas del Cliente
     @RequestMapping(method = RequestMethod.GET, value="/bill/client/{id}")
     public ResponseEntity getAllBillByClientId(@PathVariable("id") UUID id) {
-        log.info("BillController getByClientId: {}", id);
+        log.info("BillController getAllBillByClientId: {}", id);
         Iterable<Bill> response = null;
         try {
             response = service.getBillByClientId(id, 1);
         } catch (BadRequestException e) {
-            log.error("BillController getByClientId Exception thrown: {}", e.getMessage());
+            log.error("BillController getAllBillByClientId Exception thrown: {}", e.getMessage());
 	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
         return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
@@ -65,12 +65,12 @@ public class BillController {
     //Selecciona todas las Facturas del Cliente con Saldo != '0.00'
     @RequestMapping(method = RequestMethod.GET, value="/bill/client/saldo/{id}")
     public ResponseEntity getAllBillByClientIdWithSaldo(@PathVariable("id") UUID id) {
-        log.info("BillController getByClientId: {}", id);
+        log.info("BillController getAllBillByClientIdWithSaldo: {}", id);
         Iterable<Bill> response = null;
         try {
             response = service.getBillByClientIdWithSaldo(id, 1);
         } catch (BadRequestException e) {
-            log.error("BillController getByClientId Exception thrown: {}", e.getMessage());
+            log.error("BillController getAllBillByClientIdWithSaldo Exception thrown: {}", e.getMessage());
 	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
         return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
