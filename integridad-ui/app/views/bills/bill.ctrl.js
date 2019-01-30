@@ -61,7 +61,6 @@ angular.module('integridadUiApp')
       vm.quantity = undefined;
       vm.adicional = undefined;
       vm.loading = true;
-      vm.bill.discountPercentage = 0;
       vm.indexDetail = undefined;
       vm.priceType = vm.prices[0];
       vm.seqChanged = false;
@@ -228,6 +227,9 @@ angular.module('integridadUiApp')
     };
 
     vm.reCalculateTotal = function() {
+      if (vm.bill.discountPercentage == null || vm.bill.discountPercentage == undefined) {
+        vm.bill.discountPercentage = 0;
+      };
       _.map(vm.bill.details, function(detail) {
         if (vm.bill.discountPercentage) {
           detail.discount = vm.bill.discountPercentage;
@@ -312,6 +314,9 @@ angular.module('integridadUiApp')
 
     vm.acceptProduct = function(closeModal) {
       vm.errorQuantity = undefined;
+      if (vm.bill.discountPercentage == null || vm.bill.discountPercentage == undefined) {
+        vm.bill.discountPercentage = 0;
+      };
       var detail = {
         discount: vm.bill.discountPercentage? vm.bill.discountPercentage : 0,
         product: angular.copy(vm.productToAdd),
@@ -353,6 +358,9 @@ angular.module('integridadUiApp')
 
     vm.removeDetail = function(index) {
       vm.bill.details.splice(index,1);
+      if (vm.bill.discountPercentage == null || vm.bill.discountPercentage == undefined) {
+        vm.bill.discountPercentage = 0;
+      };
       _getTotalSubtotal();
     };
 
