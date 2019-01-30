@@ -92,8 +92,7 @@
           <th> Fecha </th>
           <th> Cliente </th>
           <th> Total </th>
-          <th>
-          </th>
+          <th></th>
         </tr>
       </thead>
       <tbody>
@@ -103,10 +102,10 @@
           </td>
         </tr>
         <tr ng-repeat="bill in vm.billList | orderBy:'dateCreated':true | filter:searchText">
-          <td>{{ bill.stringSeq }}</td>
-          <td>{{ bill.dateCreated | date :  "dd/MM/yyyy"}}</td>
-          <td>{{ bill.client.name }}</td>
-          <td>{{ bill.total }}</td>
+          <td>{{bill.stringSeq}}</td>
+          <td>{{bill.dateCreated | date : "dd/MM/yyyy"}}</td>
+          <td>{{bill.client.name}}</td>
+          <td>{{bill.total}}</td>
           <td>
             <button type="button" title="Ver Factura" class="btn btn-primary btn-sm" ng-click="vm.billSelect(bill)">
                     <span class = "glyphicon glyphicon-eye-open" aria-hidden = "true"></span>
@@ -219,7 +218,7 @@
               </tr>
               <tr>
                 <td>
-                  <b>NUMERO DE FACTURA: </b> {{vm.seqNumber}}
+                  <b>NUMERO DE FACTURA: </b>{{vm.seqNumber}}
                   &nbsp;&nbsp;&nbsp;
                   <a data-toggle="modal" data-target="#modalEditBillNumber" ng-click="vm.verifyUser()" ng-if="vm.newBill" print-remove>
                     <b>Editar</b>
@@ -287,14 +286,15 @@
                 <tr>
                   <th> Item </th>
                   <th> C&oacute;digo </th>
-                  <th> Descripci&oacute;n </th>
+                  <th> Nombre Producto </th>
+                  <th> Descripci&oacute;n</th>
                   <th> Cant. </th>
                   <th> U. Med. </th>
                   <th> V. Unit. </th>
-                  <th> Desc. </th>
+                  <th> % Desc. </th>
                   <th> V. Total. </th>
                   <th ng-if="vm.newBill">
-                    <button type="button" title="Agregar Productos" class="btn btn-primary" ng-click="vm.addProduct()"
+                    <button type="button" title="Agregar Productos" class="btn btn-primary btn-sm" ng-click="vm.addProduct()"
                             ng-show="vm.bill.claveDeAcceso === undefined" data-toggle="modal"
                             data-target="#modalAddProduct" print-remove>
                             <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
@@ -312,11 +312,12 @@
                   <td>{{$index + 1}}</td>
                   <td>{{detail.product.codeIntegridad}}</td>
                   <td>{{detail.product.name}}</td>
+                  <td>{{detail.adicional}}</td>
                   <td>{{detail.quantity}}</td>
                   <td>{{detail.product.unitOfMeasurementFull}}</td>
-                  <td>{{detail.costEach}}</td>
-                  <td>{{detail.discount}}</td>
-                  <td>{{detail.total}}</td>
+                  <td>{{(detail.costEach).toFixed(4)}}</td>
+                  <td>{{detail.discount}} %</td>
+                  <td>{{(detail.total).toFixed(4)}}</td>
                   <td ng-if="vm.newBill">
                     <button type="button" title="Editar Producto" class="btn btn-primary btn-sm"
                             ng-click="vm.editDetail(detail, $index)"
@@ -339,7 +340,7 @@
                   <td></td>
                   <td></td>
                   <td><b>SUBTOTAL: </b></td>
-                  <td>{{vm.bill.subTotal}}</td>
+                  <td>{{(vm.bill.subTotal).toFixed(4)}}</td>
                   <td></td>
                 </tr>
                 <tr>
@@ -350,7 +351,7 @@
                   <td></td>
                   <td></td>
                   <td><b>DESCUENTO: </b></td>
-                  <td>{{vm.bill.discount}}</td>
+                  <td>{{(vm.bill.discount).toFixed(4)}}</td>
                   <td></td>
                 </tr>
                 <tr>
@@ -361,7 +362,7 @@
                   <td></td>
                   <td></td>
                   <td><b>BASE 0%: </b></td>
-                  <td>{{vm.bill.baseNoTaxes}}</td>
+                  <td>{{(vm.bill.baseNoTaxes).toFixed(4)}}</td>
                   <td></td>
                 </tr>
                 <tr>
@@ -372,7 +373,7 @@
                   <td></td>
                   <td></td>
                   <td><b>BASE 12%: </b></td>
-                  <td>{{vm.bill.baseTaxes}}</td>
+                  <td>{{(vm.bill.baseTaxes).toFixed(4)}}</td>
                   <td></td>
                 </tr>
                 <tr>
@@ -383,7 +384,7 @@
                   <td></td>
                   <td></td>
                   <td><b>IVA: </b></td>
-                  <td>{{vm.bill.iva}}</td>
+                  <td>{{(vm.bill.iva).toFixed(4)}}</td>
                   <td></td>
                 </tr>
                 <tr>
@@ -394,7 +395,7 @@
                   <td></td>
                   <td></td>
                   <td><b>TOTAL: </b></td>
-                  <td>{{vm.bill.total}}</td>
+                  <td>{{(vm.bill.total).toFixed(2)}}</td>
                   <td></td>
                 </tr>
               </tbody>
@@ -452,22 +453,22 @@
               <tbody>
                 <tr ng-repeat="pago in vm.pagos">
                   <td>
-                    {{ pago.medio }}<br/>
+                    {{pago.medio}}<br/>
                     <span ng-if="pago.medio === 'cheque'">
-                        {{ pago.chequeBank }} - {{ pago.chequeAccount }} - {{pago.chequeNumber}}<br/>
+                        {{pago.chequeBank}} - {{pago.chequeAccount}} - {{pago.chequeNumber}}<br/>
                     </span>
                     <span ng-if="pago.medio === 'credito'">
-                        NUMER DE PAGOS: {{ pago.creditoNumeroPagos }} - DIAS: {{ pago.creditoIntervalos }}<br/>
+                        NUMER DE PAGOS: {{pago.creditoNumeroPagos}} - DIAS: {{pago.creditoIntervalos}}<br/>
                     </span>
                     <span ng-if="pago.medio === 'cheque_posfechado'">
-                        {{ pago.chequeBank }} - {{ pago.chequeAccount }} - {{pago.chequeNumber}} - {{pago.fechaCobro | date :  "dd/MM/yyyy"}}<br/>
+                        {{pago.chequeBank}} - {{pago.chequeAccount}} - {{pago.chequeNumber}} - {{pago.fechaCobro | date : "dd/MM/yyyy"}}<br/>
                     </span>
                     <span ng-if="pago.medio === 'tarjeta_credito' || pago.medio === 'tarjeta_debito'">
-                        {{ pago.cardBrand }}<br/>
+                        {{pago.cardBrand}}<br/>
                     </span>
-                    {{ pago.payForm }}
+                    {{pago.payForm}}
                   </td>
-                  <td>{{ pago.total }}</td>
+                  <td>{{pago.total}}</td>
                   <td></td>
                 </tr>
                 <tr>
@@ -524,22 +525,22 @@
               <tbody>
                 <tr ng-repeat="pago in vm.pagos">
                   <td>
-                    {{ pago.medio }}<br/>
+                    {{pago.medio}}<br/>
                     <span ng-if="pago.medio === 'cheque'">
-                        {{ pago.chequeBank }} - {{ pago.chequeAccount }} - {{pago.chequeNumber}}<br/>
+                        {{pago.chequeBank}} - {{pago.chequeAccount}} - {{pago.chequeNumber}}<br/>
                     </span>
                     <span ng-if="pago.medio === 'credito'">
-                        NUMER DE PAGOS: {{ pago.creditoNumeroPagos }} - DIAS: {{ pago.creditoIntervalos }}<br/>
+                        NUMER DE PAGOS: {{pago.creditoNumeroPagos}} - DIAS: {{pago.creditoIntervalos}}<br/>
                     </span>
                     <span ng-if="pago.medio === 'cheque_posfechado'">
-                        {{ pago.chequeBank }} - {{ pago.chequeAccount }} - {{pago.chequeNumber}} - {{pago.fechaCobro | date :  "dd/MM/yyyy"}}<br/>
+                        {{pago.chequeBank}} - {{pago.chequeAccount}} - {{pago.chequeNumber}} - {{pago.fechaCobro | date : "dd/MM/yyyy"}}<br/>
                     </span>
                     <span ng-if="pago.medio === 'tarjeta_credito' || pago.medio === 'tarjeta_debito'">
-                        {{ pago.cardBrand }}<br/>
+                        {{pago.cardBrand}}<br/>
                     </span>
-                    {{ pago.payForm }}
+                    {{pago.payForm}}
                   </td>
-                  <td>{{ pago.total }}</td>
+                  <td>{{pago.total}}</td>
                   <td></td>
                 </tr>
                 <tr>
@@ -907,6 +908,11 @@
                     </div>
                   </div>
                   <div class="row">
+                    <div class="form-group col-md-6">
+                      <b>DESCRIPCIÓN: </b>
+                      <input type="text"
+                             ng-model="vm.adicional" class="form-control">
+                    </div>
                     <div class="form-group col-md-6">
                       <b>PRECIO UNITARIO: </b>
                       <input type="text"

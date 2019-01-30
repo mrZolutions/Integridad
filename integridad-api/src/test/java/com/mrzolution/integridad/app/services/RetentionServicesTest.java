@@ -50,7 +50,7 @@ public class RetentionServicesTest {
 		
 		UserIntegridad user = new UserIntegridad();
 		
-		Mockito.when(retentionRepository.findByUserIntegridad(user)).thenReturn(retentions);
+		Mockito.when(retentionRepository.findRetentionByUserIntegridad(user)).thenReturn(retentions);
 		
 		Iterable<Retention> retentionList = service.getByUserLazy(user);
 		Assert.assertEquals(1, Iterables.size(retentionList));
@@ -78,7 +78,7 @@ public class RetentionServicesTest {
 		Assert.assertNotNull(retrieved);
 	}
 
-	@Test
+    @Test
     public void onUpdateShouldCallRightChildrenRepository(){
     	UUID id = UUID.randomUUID();
         retention.setId(id);

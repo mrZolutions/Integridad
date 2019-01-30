@@ -5,7 +5,8 @@ angular
     function getTipyCode(code) {
       tipyIdCode = {
         RUC : '04',
-        CED : '05'
+        CED : '05',
+        PAS : '06'
       };
       return tipyIdCode[code];
     };
@@ -63,6 +64,12 @@ angular
 
     this.create = function(retention) {
       return securityService.post('/retention', retention).then(function successCallback(response) {
+        return response.data;
+      });
+    };
+
+    this.getAllRetentionsByProviderId = function(id) {
+      return securityService.get('/retention/retention/provider/' + id).then(function successCallback(response) {
         return response.data;
       });
     };

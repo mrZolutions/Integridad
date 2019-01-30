@@ -11,20 +11,19 @@ import java.util.UUID;
 
 @Repository
 @Qualifier(value="RetentionRepository")
-public interface RetentionRepository extends CrudRepository<Retention, UUID>{
+public interface RetentionRepository extends CrudRepository<Retention, UUID> {
+    Iterable<Retention> findRetentionByProvider(Provider provider);
 	
-	Iterable<Retention> findByProvider(Provider provider);
-	
-	Iterable<Retention> findByUserIntegridad(UserIntegridad user);
+    Iterable<Retention> findRetentionByUserIntegridad(UserIntegridad user);
 
-	@Query("SELECT p FROM Retention p WHERE p.provider.id = (:id)")
-	Iterable<Retention> findByProviderId(@Param("id") UUID id);
+    @Query("SELECT r FROM Retention r WHERE r.provider.id = (:id) AND r.active = true ORDER BY r.stringSeq")
+    Iterable<Retention> findRetentionByProviderId(@Param("id") UUID id);
 
-	Iterable<Retention> findByStringSeq(String stringSeq);
+    Iterable<Retention> findRetentionByStringSeq(String stringSeq);
 
-	@Query("SELECT p FROM Retention p WHERE p.subsidiary.id = (:subId) AND p.stringSeq = (:seq)")
-	Iterable<Retention> findByStringSeqAndSubsidiaryId(@Param("seq") String stringSeq, @Param("subId") UUID id);
+    @Query("SELECT r FROM Retention r WHERE r.subsidiary.id = (:subId) AND r.stringSeq = (:seq)")
+    Iterable<Retention> findRetentionByStringSeqAndSubsidiaryId(@Param("seq") String stringSeq, @Param("subId") UUID id);
 
-	@Query("SELECT p FROM Retention p WHERE p.subsidiary.userClient.id = (:userClientId) AND p.dateCreated >= (:dateOne) AND p.dateCreated <= (:dateTwo)")
-	Iterable<Retention> findAllByUserClientIdAndDates(@Param("userClientId") UUID id, @Param("dateOne") long dateOne, @Param("dateTwo") long dateTwo);
+    @Query("SELECT r FROM Retention r WHERE r.subsidiary.userClient.id = (:userClientId) AND r.dateCreated >= (:dateOne) AND r.dateCreated <= (:dateTwo)")
+    Iterable<Retention> findAllRetentionByUserClientIdAndDates(@Param("userClientId") UUID id, @Param("dateOne") long dateOne, @Param("dateTwo") long dateTwo);
 }

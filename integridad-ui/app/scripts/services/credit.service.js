@@ -4,7 +4,8 @@ angular
     function getTipyCode(code) {
       tipyIdCode = {
         RUC : '04',
-        CED : '05'
+        CED : '05',
+        PAS : '06'
       };
       return tipyIdCode[code];
     };
@@ -34,9 +35,9 @@ angular
         },
         "moneda":"USD",
         "totales":{
-          "total_sin_impuestos":bill.subTotal,
-          "impuestos":impuestosTotales,
-          "importe_total":bill.total
+          "total_sin_impuestos": parseFloat((bill.subTotal).toFixed(4)),
+          "impuestos": impuestosTotales,
+          "importe_total": parseFloat((bill.total).toFixed(4))
         },
         "comprador":{
           "email":clientSelected.email,

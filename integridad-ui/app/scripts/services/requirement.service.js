@@ -4,7 +4,8 @@ angular
     function getTipyCode(code) {
       tipyIdCode = {
         RUC : '04',
-        CED : '05'
+        CED : '05',
+        PAS : '06'
       };
       return tipyIdCode[code];
     };
@@ -27,7 +28,7 @@ angular
           var dd  = dateToFormat.getDate().toString();
           var mmChars = mm.split('');
           var ddChars = dd.split('');
-          credito.fecha_vencimiento = yyyy + '-' + (mmChars[1]?mm:"0"+mmChars[0]) + '-' + (ddChars[1]?dd:"0"+ddChars[0]);
+          credito.fecha_vencimiento = yyyy + '-' + (mmChars[1]?mm: "0" + mmChars[0]) + '-' + (ddChars[1]?dd: "0" + ddChars[0]);
         };
       });
       var req = {
@@ -35,36 +36,36 @@ angular
         "tipo_emision": 1,
         "secuencial": bill.billSeq,
         "fecha_emision": dateService.getIsoDate($('#pickerBillDate').data("DateTimePicker").date().toDate()),
-        "emisor":{
-          "ruc":user.cashier.subsidiary.userClient.ruc,
-          "obligado_contabilidad":true,
-          "contribuyente_especial":"",
-          "nombre_comercial":user.cashier.subsidiary.userClient.name,
-          "razon_social":user.cashier.subsidiary.userClient.name,
-          "direccion":user.cashier.subsidiary.userClient.address1,
-          "establecimiento":{
-            "punto_emision":user.cashier.threeCode,
-            "codigo":user.cashier.subsidiary.threeCode,
-            "direccion":user.cashier.subsidiary.address1
+        "emisor": {
+          "ruc": user.cashier.subsidiary.userClient.ruc,
+          "obligado_contabilidad": true,
+          "contribuyente_especial": "",
+          "nombre_comercial": user.cashier.subsidiary.userClient.name,
+          "razon_social": user.cashier.subsidiary.userClient.name,
+          "direccion": user.cashier.subsidiary.userClient.address1,
+          "establecimiento": {
+            "punto_emision": user.cashier.threeCode,
+            "codigo": user.cashier.subsidiary.threeCode,
+            "direccion": user.cashier.subsidiary.address1
           }
         },
         "moneda":"USD",
-        "totales":{
-          "total_sin_impuestos":bill.subTotal,
-          "impuestos":impuestosTotales,
-          "importe_total":bill.total,
-          "propina":0.0,
-          "descuento":bill.discount
+        "totales": {
+          "total_sin_impuestos": parseFloat((bill.subTotal).toFixed(4)),
+          "impuestos": impuestosTotales,
+          "importe_total": parseFloat((bill.total).toFixed(4)),
+          "propina": 0.0,
+          "descuento": parseFloat((bill.discount).toFixed(4))
         },
         "comprador":{
-          "email":clientSelected.email,
-          "identificacion":clientSelected.identification,
-          "tipo_identificacion":getTipyCode(clientSelected.typeId),
-          "razon_social":clientSelected.name,
-          "direccion":clientSelected.address,
-          "telefono":clientSelected.phone
+          "email": clientSelected.email,
+          "identificacion": clientSelected.identification,
+          "tipo_identificacion": getTipyCode(clientSelected.typeId),
+          "razon_social": clientSelected.name,
+          "direccion": clientSelected.address,
+          "telefono": clientSelected.phone
         },
-        "items":items,
+        "items": items,
         "valor_retenido_iva": 0,
         "valor_retenido_renta": 0,
       };

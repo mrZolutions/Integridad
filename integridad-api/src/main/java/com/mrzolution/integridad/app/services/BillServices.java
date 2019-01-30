@@ -85,7 +85,7 @@ public class BillServices {
     public Iterable<Bill> getByUserLazy(UserIntegridad user) {
         log.info("BillServices getByUserLazy: {}", user.getId());
         Iterable<Bill> bills = billRepository.findByUserIntegridad(user);
-        bills.forEach(bill-> {
+        bills.forEach(bill -> {
             bill.setListsNull();
             bill.setFatherListToNull();
         });
@@ -96,7 +96,7 @@ public class BillServices {
     public Iterable<Bill> getBillByClientId(UUID id, int type) {
         log.info("BillServices getBillByClientId: {}", id);
         Iterable<Bill> bills = billRepository.findBillByClientId(id, type);
-        bills.forEach(bill-> {
+        bills.forEach(bill -> {
             bill.setListsNull();
             bill.setFatherListToNull();
         });
@@ -107,7 +107,7 @@ public class BillServices {
     public Iterable<Bill> getBillByClientIdWithSaldo(UUID id, int type) {
         log.info("BillServices getBillByClientIdWithSaldo: {}", id);
         Iterable<Bill> bills = billRepository.findBillByClientIdWithSaldo(id, type);
-        bills.forEach(bill-> {
+        bills.forEach(bill -> {
             bill.setListsNull();
             bill.setFatherListToNull();
         });
@@ -154,10 +154,17 @@ public class BillServices {
             Cashier cashier = cashierRepository.findOne(bill.getUserIntegridad().getCashier().getId());
             cashier.setBillNumberSeq(cashier.getBillNumberSeq() + 1);
             cashierRepository.save(cashier);
-            saveDetailsBill(saved, details);
-            saveKardex(saved, detailsKardex);
-            savePagosAndCreditsBill(saved, pagos);
-            updateProductBySubsidiary(bill, typeDocument, details);
+            // (2) Excepción Ferretería Lozada No actualiza Kardex
+            if ("2".equals(bill.getClient().getUserClient().getEspTemp())) {
+                saveDetailsBill(saved, details);
+                savePagosAndCreditsBill(saved, pagos);
+                updateProductBySubsidiary(bill, typeDocument, details);
+            } else {
+                saveDetailsBill(saved, details);
+                saveKardex(saved, detailsKardex);
+                savePagosAndCreditsBill(saved, pagos);
+                updateProductBySubsidiary(bill, typeDocument, details);
+            }
         } else {
             Cashier cashier = cashierRepository.findOne(bill.getUserIntegridad().getCashier().getId());
             cashier.setQuotationNumberSeq(cashier.getQuotationNumberSeq() + 1);

@@ -24,6 +24,7 @@ public class Detail implements Child {
     private long quantity;
     private Double costEach;
     private Double total;
+    private String adicional;
 
     @ManyToOne
     @JoinColumn(name = "bill_id")

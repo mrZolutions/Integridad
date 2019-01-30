@@ -59,6 +59,7 @@ angular.module('integridadUiApp')
       vm.productList = undefined;
       vm.productToAdd = undefined;
       vm.quantity = undefined;
+      vm.adicional = undefined;
       vm.loading = true;
       vm.indexDetail = undefined;
       vm.priceType = vm.prices[0];
@@ -70,19 +71,19 @@ angular.module('integridadUiApp')
         "base_imponible":0.0,
         "valor":0.0,
         "codigo":"3",
-        "codigo_porcentaje":2
+        "codigo_porcentaje":"2"
       };
       vm.impuestoIVA = {
         "base_imponible":0.0,
         "valor":0.0,
         "codigo":"2",
-        "codigo_porcentaje":2
+        "codigo_porcentaje":"2"
       };
       vm.impuestoIVAZero = {
         "base_imponible":0.0,
         "valor":0.0,
-        "codigo":"0",
-        "codigo_porcentaje":0
+        "codigo":"2",
+        "codigo_porcentaje":"0"
       };
       vm.medio = {};
       vm.pagos = [];
@@ -110,10 +111,10 @@ angular.module('integridadUiApp')
         subsidiary: $localStorage.user.subsidiary,
         dateCreated: vm.dateBill.getTime(),
         discount: 0,
-        total: 0,
-        subTotal: 0,
-        iva: 0,
-        ice: 0,
+        total: 0.0,
+        subTotal: 0.0,
+        iva: 0.0,
+        ice: 0.0,
         details: [],
         pagos: []
       };
@@ -144,54 +145,58 @@ angular.module('integridadUiApp')
     };
 
     function _getTotalSubtotal() {
-      vm.bill.subTotal = 0;
-      vm.bill.iva = 0;
-      vm.bill.ivaZero = 0;
-      vm.bill.ice = 0;
-      vm.bill.baseTaxes = 0;
-      vm.bill.baseNoTaxes = 0;
-      var discountWithIva = 0;
-      var discountWithNoIva = 0;
+      vm.bill.subTotal = 0.0;
+      vm.bill.iva = 0.0;
+      vm.bill.ivaZero = 0.0;
+      vm.bill.ice = 0.0;
+      vm.bill.baseTaxes = 0.0;
+      vm.bill.baseNoTaxes = 0.0;
+      var discountWithIva = 0.0;
+      var discountWithNoIva = 0.0;
       _.each(vm.bill.details, function(detail) {
-        vm.bill.subTotal = (parseFloat(vm.bill.subTotal) + parseFloat(detail.total)).toFixed(4);
-        var tot = detail.total;
+        vm.bill.subTotal = parseFloat((parseFloat(vm.bill.subTotal) + parseFloat(detail.total)).toFixed(4));
+        var tot = parseFloat((detail.total).toFixed(4));
         if (vm.bill.discountPercentage) {
-          tot = (parseFloat(detail.total) - (parseInt(vm.bill.discountPercentage)/100)*(parseFloat(detail.total))).toFixed(4);
+          tot = parseFloat((parseFloat(detail.total)).toFixed(4));
         };
         if (detail.product.iva) {
-          vm.bill.baseTaxes += parseFloat(detail.total);
-          vm.bill.iva = (parseFloat(vm.bill.iva) + (parseFloat(tot) * 0.12)).toFixed(4);
+          vm.bill.baseTaxes += parseFloat((detail.total).toFixed(4));
+          vm.bill.iva = parseFloat((parseFloat(vm.bill.iva) + (parseFloat(tot) * 0.12)).toFixed(4));
           if (vm.bill.discountPercentage) {
-            discountWithIva = (parseFloat(discountWithIva) + ((parseInt(vm.bill.discountPercentage)/100)*detail.total)).toFixed(4);
+            discountWithIva = parseFloat((parseFloat(discountWithIva) + ((parseFloat(vm.bill.discountPercentage) / 100) * parseFloat(detail.total))).toFixed(4));
           };
         } else {
-          vm.bill.baseNoTaxes += parseFloat(detail.total);
-          vm.bill.ivaZero = (parseFloat(vm.bill.ivaZero) + parseFloat(tot)).toFixed(4);
+          vm.bill.baseNoTaxes += parseFloat((detail.total).toFixed(4));
+          vm.bill.ivaZero = parseFloat((parseFloat(vm.bill.ivaZero) + parseFloat(tot)).toFixed(4));
           if (vm.bill.discountPercentage) {
-            discountWithNoIva = (parseFloat(discountWithNoIva) + ((parseInt(vm.bill.discountPercentage)/100)*detail.total)).toFixed(4);
+            discountWithNoIva = parseFloat((parseFloat(discountWithNoIva) + ((parseFloat(vm.bill.discountPercentage) / 100) * parseFloat(detail.total))).toFixed(4));
           };
         };
         if (detail.product.ice) {
-          vm.bill.ice = (parseFloat(vm.bill.ice) + (parseFloat(tot) * 0.10)).toFixed(4);
+          vm.bill.ice = parseFloat((parseFloat(vm.bill.ice) + (parseFloat(tot) * 0.10)).toFixed(4));
         };
       });
       if (vm.bill.discountPercentage) {
-        vm.bill.discount = ((parseInt(vm.bill.discountPercentage)/100)*vm.bill.subTotal).toFixed(4);
+        var w = 0.0;
+        var x = 0.0;
+        w = parseFloat((100 - vm.bill.discountPercentage).toFixed(4));
+        x = parseFloat(((vm.bill.subTotal * 100) / w).toFixed(4));
+        vm.bill.discount = parseFloat((x * (vm.bill.discountPercentage / 100)).toFixed(4));
       } else {
         vm.bill.discount = 0;
       };
-      vm.impuestoICE.base_imponible = vm.bill.subTotal;
-      vm.impuestoIVA.base_imponible = vm.bill.baseTaxes;
-      vm.impuestoIVAZero.base_imponible = vm.bill.baseNoTaxes;
+      vm.impuestoICE.base_imponible = parseFloat((vm.bill.subTotal).toFixed(4));
+      vm.impuestoIVA.base_imponible = parseFloat((vm.bill.baseTaxes).toFixed(4));
+      vm.impuestoIVAZero.base_imponible = parseFloat((vm.bill.baseNoTaxes).toFixed(4));
       vm.impuestoICE.valor = vm.bill.ice;
       vm.impuestoIVA.valor = vm.bill.iva;
-      vm.impuestoIVAZero.valor = 0;
-      vm.bill.baseTaxes = (vm.bill.baseTaxes - discountWithIva).toFixed(4);
-      vm.bill.baseNoTaxes = (vm.bill.baseNoTaxes - discountWithNoIva).toFixed(4);
-      vm.bill.total = (parseFloat(vm.bill.baseTaxes)
+      vm.impuestoIVAZero.valor = 0.0;
+      vm.bill.baseTaxes = parseFloat((vm.bill.baseTaxes).toFixed(4));
+      vm.bill.baseNoTaxes = parseFloat((vm.bill.baseNoTaxes).toFixed(4));
+      vm.bill.total = parseFloat((parseFloat(vm.bill.baseTaxes)
         +  parseFloat(vm.bill.baseNoTaxes)
         +  parseFloat(vm.bill.iva)
-        +  parseFloat(vm.bill.ice)).toFixed(2);
+        +  parseFloat(vm.bill.ice)).toFixed(2));
       vm.bill.saldo = (vm.bill.total).toString();
     };
 
@@ -228,9 +233,9 @@ angular.module('integridadUiApp')
         } else {
           detail.discount = 0;
         };
-        var costEachCalculated = vm.getCost('1.'+ detail.product[vm.priceType.cod], detail.product.averageCost);
+        var costEachCalculated = vm.getCost('1.' + detail.product[vm.priceType.cod], detail.product.averageCost);
         detail.costEach = costEachCalculated;
-        detail.total = (parseFloat(detail.quantity) * parseFloat(detail.costEach)).toFixed(4);
+        detail.total = parseFloat((parseFloat(detail.quantity) * parseFloat(detail.costEach)).toFixed(4));
       });
       _getTotalSubtotal();
     };
@@ -299,7 +304,7 @@ angular.module('integridadUiApp')
         productSelect.quantity = 1;
       };
       vm.productToAdd = angular.copy(productSelect);
-      var costEachCalculated = vm.getCost('1.'+ productSelect[vm.priceType.cod], productSelect.averageCost);
+      var costEachCalculated = vm.getCost('1.' + productSelect[vm.priceType.cod], productSelect.averageCost);
       vm.productToAdd.costEachCalculated = costEachCalculated;
       vm.quantity = 1;
     };
@@ -311,7 +316,8 @@ angular.module('integridadUiApp')
         product: angular.copy(vm.productToAdd),
         quantity: vm.quantity,
         costEach: vm.productToAdd.costEachCalculated,
-        total: (parseFloat(vm.quantity) * parseFloat(vm.productToAdd.costEachCalculated)).toFixed(4)
+        total: parseFloat(((parseFloat(vm.quantity) * parseFloat(vm.productToAdd.costEachCalculated)) - (parseFloat(vm.productToAdd.costEachCalculated) * parseFloat(vm.bill.discountPercentage / 100))).toFixed(4)),
+        adicional: vm.adicional
       };
       if (vm.indexDetail !== undefined) {
         vm.bill.details[vm.indexDetail] = detail;
@@ -320,6 +326,7 @@ angular.module('integridadUiApp')
       };
       vm.productToAdd = undefined;
       vm.quantity = undefined;
+      vm.adicional = undefined;
       _getTotalSubtotal();
       if (closeModal) {
         $('#modalAddProduct').modal('hide');
@@ -334,7 +341,7 @@ angular.module('integridadUiApp')
     vm.getCost = function(textCost, averageCost) {
       var aC = parseFloat(textCost)
       var cost = aC * averageCost;
-      return (cost).toFixed(4);
+      return parseFloat((cost).toFixed(4));
     };
 
     vm.editDetail = function(detail, index) {
@@ -369,7 +376,7 @@ angular.module('integridadUiApp')
     vm.loadMedio = function() {
       var payed = 0;
       _.each(vm.pagos, function(pago){
-        payed += parseFloat(pago.total);
+        payed += parseFloat((pago.total).toFixed(4));
       });
       vm.pagos;
       if (vm.medio.medio === 'efectivo' || vm.medio.medio === 'dinero_electronico_ec') {
@@ -383,7 +390,7 @@ angular.module('integridadUiApp')
         vm.medio.payForm = '20 - OTROS CON UTILIZACION DEL SISTEMA FINANCIERO';
         // CAMBIO SRI POR CONFIRMAR
         // vm.medio.payForm = '01 - SIN UTILIZACION DEL SISTEMA FINANCIERO';
-        vm.medio.total = (vm.bill.total - payed).toFixed(4);
+        vm.medio.total = parseFloat((vm.bill.total - payed).toFixed(4));
         if (vm.priceType.name === 'CREDITO') {
           vm.medio.statusPago = 'PENDIENTE';
         } else {
@@ -393,11 +400,11 @@ angular.module('integridadUiApp')
       if (vm.medio.medio === 'cheque' || vm.medio.medio === 'cheque_posfechado') {
         vm.medio.payForm = '20 - OTROS CON UTILIZACION DEL SISTEMA FINANCIERO';
         vm.medio.statusPago = 'PAGADO';
-        vm.medio.total = (vm.bill.total - payed).toFixed(4);
+        vm.medio.total = parseFloat((vm.bill.total - payed).toFixed(4));
       };
       if (vm.medio.medio === 'tarjeta_credito' || vm.medio.medio === 'tarjeta_debito') {
         vm.medio.payForm = '19 - TARJETA DE CREDITO';
-        vm.medio.total = (vm.bill.total - payed).toFixed(4);
+        vm.medio.total = parseFloat((vm.bill.total - payed).toFixed(4));
         vm.medio.statusPago = 'PAGADO';
       };
     };
@@ -407,7 +414,7 @@ angular.module('integridadUiApp')
       var diasPlazo = parseInt(vm.medio.creditoIntervalos);
       var d = new Date();
       var statusCredits = 'PENDIENTE';
-      var total = parseFloat(parseFloat(vm.bill.total) / parseFloat(vm.medio.creditoNumeroPagos)).toFixed(4);
+      var total = parseFloat((parseFloat(vm.bill.total) / parseFloat(vm.medio.creditoNumeroPagos)).toFixed(4));
       vm.seqNumberCredits = vm.seqNumber;
       for (var i = 1; i <= parseInt(vm.medio.creditoNumeroPagos); i++) {
         var credito = {
@@ -444,10 +451,10 @@ angular.module('integridadUiApp')
       if (vm.bill) {
         vm.getCambio = 0;
         _.each(vm.pagos, function(med) {
-          vm.varPago = parseFloat(parseFloat(vm.varPago) + parseFloat(med.total)).toFixed(2);
+          vm.varPago = parseFloat((parseFloat(vm.varPago) + parseFloat(med.total)).toFixed(2));
         });
-        vm.getCambio = (vm.varPago - vm.bill.total).toFixed(2);
-        vm.aux = (vm.varPago - vm.getCambio).toFixed(2);
+        vm.getCambio = parseFloat((vm.varPago - vm.bill.total).toFixed(2));
+        vm.aux = parseFloat((vm.varPago - vm.getCambio).toFixed(2));
       };
       return vm.varPago;
     };
@@ -569,27 +576,27 @@ angular.module('integridadUiApp')
         vm.bill.discountPercentage = 0;
       };
       _.each(vm.bill.details, function(det) {
-        var costWithIva = (det.costEach*1.12).toFixed(4);
-        var costWithIce = (det.costEach*1.10).toFixed(4);
+        var costWithIva = parseFloat((det.total * 1.12).toFixed(4));
+        var costWithIce = parseFloat((det.total * 1.10).toFixed(4));
         var impuestos = [];
         var impuesto = {};
-        if(det.product.iva) {
-          impuesto.base_imponible = (parseFloat(det.costEach)*parseFloat(det.quantity)).toFixed(4);
-          impuesto.valor = (parseFloat(costWithIva)*parseFloat(det.quantity)).toFixed(4);
+        if (det.product.iva) {
+          impuesto.base_imponible = parseFloat(((parseFloat(det.costEach) - (parseFloat(det.costEach) * parseFloat((vm.bill.discountPercentage / 100)))) * parseFloat(det.quantity)).toFixed(4));
+          impuesto.valor = parseFloat((parseFloat(costWithIva) * parseFloat(det.quantity)).toFixed(4));
           impuesto.tarifa = 12.0;
           impuesto.codigo = '2';
           impuesto.codigo_porcentaje = '2';
           impuestos.push(impuesto);
         } else {
-          impuesto.base_imponible = (parseFloat(det.costEach)*parseFloat(det.quantity)).toFixed(4);
-          impuesto.valor = (parseFloat(det.costEach)*parseFloat(det.quantity)).toFixed(4);
+          impuesto.base_imponible = parseFloat(((parseFloat(det.costEach) - (parseFloat(det.costEach) * parseFloat((vm.bill.discountPercentage / 100)))) * parseFloat(det.quantity)).toFixed(4));
+          impuesto.valor = parseFloat((parseFloat(det.total) * parseFloat(det.quantity)).toFixed(4));
           impuesto.tarifa = 0.0;
-          impuesto.codigo = '0';
+          impuesto.codigo = '2';
           impuesto.codigo_porcentaje = '0';
           impuestos.push(impuesto);
         };
         if (det.product.ice) {
-          impuesto.base_imponible = det.costEach;
+          impuesto.base_imponible = parseFloat((det.costEach).toFixed(4));
           impuesto.valor = costWithIce;
           impuesto.tarifa = 10.0;
           impuesto.codigo = '3';
@@ -600,11 +607,14 @@ angular.module('integridadUiApp')
           "cantidad": det.quantity,
           "codigo_principal": det.product.codeIntegridad,
           "codigo_auxiliar": det.product.barCode,
-          "precio_unitario": det.costEach,
+          "precio_unitario": parseFloat((det.costEach).toFixed(4)),
           "descripcion": det.product.name,
-          "precio_total_sin_impuestos": ((parseFloat(det.costEach) - (parseFloat(det.costEach)*(parseInt(vm.bill.discountPercentage)/100)))*parseFloat(det.quantity)).toFixed(4),
-          "descuento": (parseFloat(det.costEach)*(parseInt(vm.bill.discountPercentage)/100)).toFixed(4),
-          "unidad_medida": det.product.unitOfMeasurementFull
+          "precio_total_sin_impuestos": parseFloat((parseFloat(det.costEach) - (parseFloat(det.costEach) * parseFloat((vm.bill.discountPercentage / 100)) * parseFloat(det.quantity))).toFixed(4)),
+          "descuento": parseFloat((parseFloat(det.costEach) * parseFloat((vm.bill.discountPercentage) / 100)).toFixed(4)),
+          "unidad_medida": det.product.unitOfMeasurementFull,
+          "detalles_adicionales": {
+            "descripcion": det.adicional
+          }
         };
         if (!_.isEmpty(impuestos)) {
           item.impuestos = impuestos;
@@ -626,7 +636,7 @@ angular.module('integridadUiApp')
       vm.pagos.total = vm.aux;
       
       var req = requirementService.createRequirement(vm.clientSelected, vm.bill, $localStorage.user, vm.impuestosTotales, vm.items, vm.pagos);
-
+      
       billService.getClaveDeAcceso(req, vm.companyData.userClient.id).then(function(resp) {
         vm.bill.pagos = vm.pagos;
         if (vm.bill.discountPercentage === undefined) {

@@ -33,7 +33,7 @@
   </div>
 </div>
 
-<div class="table-responsive" ng-show="vm.provider === undefined && vm.retention === undefined && vm.debtsToPay === undefined">
+<div class="table-responsive" ng-show="vm.provider === undefined && vm.retention === undefined && vm.debtsToPay === undefined && vm.retentionList === undefined">
   <div class="row">
     <div class="form-group col-md-10">
       <input ng-model="searchText" class="form-control" placeholder="Buscar">
@@ -73,6 +73,9 @@
           <button type="button" title = "Nueva Retención" class="btn btn-success btn-sm" ng-click="vm.createRetention(providerEdit)">
                   <span class = "glyphicon glyphicon-tasks" aria-hidden = "true"></span>
           </button>
+          <button type="button" title = "Consultar Retenciones" class="btn btn-primary btn-sm" ng-click="vm.providerConsultRetention(providerEdit)">
+                  <span class = "glyphicon glyphicon-search" aria-hidden = "true"></span>
+          </button>
         </td>
       </tr>
     </tbody>
@@ -82,6 +85,53 @@
       <button type="button" title="Salir" class="btn btn-danger btn-sm"
               ng-click="vm.exit()">
               <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="table-responsive" ng-show="vm.retentionList !== undefined">
+  <div class="panel panel-primary">
+    <div class="panel-heading">
+      <b>Listado de Retenciones Pertenecientes a: {{vm.providerName}}</b>
+    </div>
+    <div class="panel-body">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th> Nro. Retenci&oacute;n </th>
+            <th> Fecha </th>
+            <th> Nro. Factura </th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-show="vm.retentionList == 0">
+            <td colspan="4">
+              No hay Retenciones ingresadas para este Proveedor
+            </td>
+          </tr>
+          <tr ng-repeat="retention in vm.retentionList | orderBy:'dateCreated':true | filter:searchText">
+            <td>{{retention.stringSeq}}</td>
+            <td>{{retention.dateCreated | date : "dd/MM/yyyy"}}</td>
+            <td>{{retention.documentNumber}}</td>
+            <td>
+              <button type="button" title="Ver Retención" class="btn btn-primary btn-sm" ng-click="">
+                      <span class = "glyphicon glyphicon-eye-open" aria-hidden = "true"></span>
+              </button>
+              <button type="button" title="Anular Retención" class="btn btn-warning btn-sm" ng-click=""
+                      data-toggle="modal" data-target="">
+                      <span class = "glyphicon glyphicon-warning-sign" aria-hidden = "true"></span>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="panel-footer">
+      <button type="button" title = "Salir" class="btn btn-primary btn-sm"
+              ng-click="vm.cancel()">
+              <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
       </button>
     </div>
   </div>
@@ -111,47 +161,40 @@
                   ng-model="vm.provider.ruc_type" class="form-control">
           </select>
         </div>
-        
         <div class="form-group col-md-6" ng-show="vm.provider.ruc_type === 'CED'">
           <label>C&eacute;dula: </label>
           <input type="text" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
                  ng-model="vm.provider.ruc" class="form-control" maxlength="10">
         </div>
-        
         <div class="form-group col-md-6" ng-show="vm.provider.ruc_type === 'RUC'">
             <label>RUC: </label>
             <input type="text" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
                    ng-model="vm.provider.ruc" class="form-control" maxlength="13">
         </div>
-
         <div class="form-group col-md-6" ng-show="vm.provider.ruc_type === 'PAS'">
             <label>Pasaporte: </label>
             <input type="text" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
                    ng-model="vm.provider.ruc" class="form-control" maxlength="10">
         </div>
       </div>
-
       <div class="row">
         <div class="form-group col-md-12">
           <label>Nombre Comercial: </label>
           <input type="text" ng-model="vm.provider.name" class="form-control">
         </div>
       </div>
-
       <div class="row">
         <div class="form-group col-md-12">
           <label>Raz&oacute;n Social: </label>
           <input type="text" ng-model="vm.provider.razonSocial" class="form-control">
         </div>
       </div>
-
       <div class="row">
         <div class="form-group col-md-12">
           <label>Direcci&oacute;n: </label>
           <input type="text" ng-model="vm.provider.address1" class="form-control">
         </div>
       </div>
-
       <div class="row">
         <div class="form-group col-md-6">
           <label>Pa&iacute;s: </label>
@@ -162,7 +205,6 @@
           <input type="text" ng-model="vm.provider.city" class="form-control">
         </div>
       </div>
-
       <div class="row">
         <div class="form-group col-md-6">
           <label>Tel&eacute;fono: (incluir c&oacute;digo de provincia ej: 02) </label>
@@ -175,7 +217,6 @@
                  ng-model="vm.provider.celPhone" class="form-control" maxlength="10">
         </div>
       </div>
-
       <div class="row">
         <div class="form-group col-md-6">
           <label>Email: </label>
@@ -212,13 +253,11 @@
           <label>C&oacute;digo Proveedor: </label>
           {{vm.retention.provider.codeIntegridad}}
         </div>
-
         <div class="form-group col-md-6">
           <label>RUC / CEDULA: </label>
           {{vm.retention.provider.ruc}}
         </div>
       </div>
-
       <div class="row">
         <div class="form-group col-md-6">
           <label>Nombre Comercial: </label>
@@ -229,14 +268,12 @@
           {{vm.retention.provider.razonSocial}}
         </div>
       </div>
-
       <div class="row">
         <div class="form-group col-md-12">
           <label>Direcci&oacute;n: </label>
           {{vm.retention.provider.address1}}
         </div>
       </div>
-
       <div class="row">
         <div class="form-group col-md-6">
           <label>N&uacute;mero de Retenci&oacute;n: </label>
@@ -249,7 +286,6 @@
           class="form-control"></select>
         </div>
       </div>
-
       <div class="row">
         <div class="form-group col-md-6">
           <label>Fecha: </label>
@@ -262,14 +298,12 @@
             $('#pickerBillDateRetention').datetimepicker({format: "DD/MM/YY",});
           </script>
         </div>
-
         <div class="form-group col-md-6">
           <label>N&uacute;mero de Documento: </label>
           <input type="text" ng-model="vm.retention.numero"
           class="form-control" maxlength="17">
         </div>
       </div>
-
       <div class="row">
         <div class="form-group col-md-4">
           <label>Fecha Documento: </label>
@@ -283,7 +317,6 @@
             });
           </script>
         </div>
-
         <div class="form-group col-md-4">
           <label>Tipo de Impuesto: </label><br/>
           <label class="radio-inline"><input type="radio" ng-model="vm.retention.typeRetention" value="1" name="tipo"
@@ -291,7 +324,6 @@
           <label class="radio-inline"><input type="radio" ng-model="vm.retention.typeRetention" value="2" name="tipo"
                  ng-change="vm.getPercentageTable()" ng-disabled="vm.retention.numero === undefined">IVA</label>
         </div>
-
         <div class="form-group col-md-4">
           <label>Ejercicio Fiscal: </label><br/>
           <label>{{vm.retention.ejercicio}} </label>
@@ -333,7 +365,6 @@
           <dir-pagination-controls pagination-id="clientPagination"></dir-pagination-controls>
         </div>
       </div>
-
       <div class="row">
         <div class="form-group col-md-12">
           <table class="table table-striped">
@@ -385,7 +416,6 @@
           </table>
         </div>
       </div>
-
       <div class="row">
         <div class="form-group col-md-12">
           <button type="button" title = "Previsualizar Retención" class="btn btn-primary btn-sm" ng-click="vm.previsualisation()"
@@ -443,7 +473,6 @@
           </table>
         </div>
       </div>
-
       <div class="row">
         <div class="form-group col-md-12 ">
           <table width="100%">
@@ -482,7 +511,6 @@
           </table>
         </div>
       </div>
-
       <div class="row">
         <div class="form-group col-md-12 ">
           <table width="100%" border="1">
@@ -513,7 +541,6 @@
           </table>
         </div>
       </div>
-
       <div class="row" print-remove>
         <div class="form-group col-md-12">
           <button print-btn type="button" title = "Imprimir Comprobante" class="btn btn-success btn-sm"
@@ -526,7 +553,6 @@
           </button>
         </div>
       </div>
-
     </div>
   </div>
 </div>

@@ -1,6 +1,7 @@
 package com.mrzolution.integridad.app.services;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.Iterables;
 import com.mrzolution.integridad.app.cons.Constants;
 import com.mrzolution.integridad.app.domain.*;
 import com.mrzolution.integridad.app.domain.report.RetentionReport;
@@ -58,7 +59,7 @@ public class RetentionServices {
 
     public Iterable<Retention> getByUserLazy(UserIntegridad user) {
         log.info("RetentionServices getByUserLazy: {}", user.getId());
-        Iterable<Retention> retentions = retentionRepository.findByUserIntegridad(user);
+        Iterable<Retention> retentions = retentionRepository.findRetentionByUserIntegridad(user);
         retentions.forEach(retention -> {
             retention.setListsNull();
             retention.setFatherListToNull();
@@ -76,6 +77,17 @@ public class RetentionServices {
         }
         populateChildren(retrieved);
         return retrieved;
+    }
+    
+    //Selecciona todas las Retenciones del Proveedor
+    public Iterable<Retention> getRetentionByProviderId(UUID id) {
+        Iterable<Retention> retentions = retentionRepository.findRetentionByProviderId(id);
+        retentions.forEach(retention -> {
+            retention.setListsNull();
+            retention.setFatherListToNull();
+        });
+        log.info("RetentionServices getRetentionByProviderId size retrieved: {}", Iterables.size(retentions));
+        return retentions;
     }
 
     public Retention create(Retention retention) throws BadRequestException {
@@ -122,7 +134,7 @@ public class RetentionServices {
 
     public List<RetentionReport> getAllBySubIdAndDates(UUID userClientId, long dateOne, long dateTwo) {
         log.info("RetentionServices getAllBySubIdAndDates: {}, {}, {}", userClientId, dateOne, dateTwo);
-        Iterable<Retention> retentions = retentionRepository.findAllByUserClientIdAndDates(userClientId, dateOne, dateTwo);
+        Iterable<Retention> retentions = retentionRepository.findAllRetentionByUserClientIdAndDates(userClientId, dateOne, dateTwo);
         List<RetentionReport> retentionReportList = new ArrayList<>();
         retentions.forEach(retention -> {
             populateChildren(retention);

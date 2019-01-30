@@ -18,6 +18,7 @@ angular.module('integridadUiApp')
     vm.provider = undefined;
     vm.providerToUse = undefined;
     vm.providerList = undefined;
+    vm.retentionList = undefined;
     vm.providerType = [
       'PROVEEDORES LOCALES O NACIONALES 01',
       'PROVEEDORES DEL EXTERIOR 02',
@@ -276,14 +277,17 @@ angular.module('integridadUiApp')
 
     vm.cancel = function() {
       vm.provider = undefined;
+      vm.retentionList = undefined;
     };
 
     vm.register = function() {
       var idValid = true;
-      if (vm.provider.ruc.length > 10) {
+      if (vm.provider.ruc.length > 12) {
         idValid = validatorService.isRucValid(vm.provider.ruc);
-      } else {
+      } else if (vm.provider.ruc.length == 10) {
         idValid = validatorService.isCedulaValid(vm.provider.ruc);
+      } else {
+        idValid = true;
       };
       if (vm.provider.id) {
         update();
@@ -312,6 +316,18 @@ angular.module('integridadUiApp')
         vm.retention.ejercicio = ('0' + ($('#pickerBillDateDocumentRetention').data("DateTimePicker").date().toDate().getMonth() + 1)).slice(-2) + '/' +$('#pickerBillDateDocumentRetention').data("DateTimePicker").date().toDate().getFullYear();
       });
       _getSeqNumber();
+    };
+
+    vm.providerConsultRetention = function(prov) {
+      vm.loading = true;
+      vm.providerName = prov.name;
+      eretentionService.getAllRetentionsByProviderId(prov.id).then(function(response) {
+        vm.retentionList = response;
+        vm.loading = false;
+      }).catch(function(error) {
+        vm.loading = false;
+        vm.error = error.data;
+      });
     };
 
     vm.getPercentageTable = function() {
