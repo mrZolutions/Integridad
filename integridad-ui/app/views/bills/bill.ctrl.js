@@ -61,6 +61,7 @@ angular.module('integridadUiApp')
       vm.quantity = undefined;
       vm.adicional = undefined;
       vm.loading = true;
+      vm.bill.discountPercentage = 0;
       vm.indexDetail = undefined;
       vm.priceType = vm.prices[0];
       vm.seqChanged = false;
