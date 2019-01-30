@@ -352,15 +352,13 @@ angular.module('integridadUiApp')
 
     vm.editDetail = function(detail, index) {
       vm.indexDetail = index;
-      vm.productToAdd= detail.product;
-      vm.quantity= detail.quantity
+      vm.productToAdd = detail.product;
+      vm.quantity = detail.quantity
+      _getTotalSubtotal();
     };
 
     vm.removeDetail = function(index) {
       vm.bill.details.splice(index,1);
-      if (vm.bill.discountPercentage == null || vm.bill.discountPercentage == undefined) {
-        vm.bill.discountPercentage = 0;
-      };
       _getTotalSubtotal();
     };
 
@@ -616,7 +614,7 @@ angular.module('integridadUiApp')
           "cantidad": det.quantity,
           "codigo_principal": det.product.codeIntegridad,
           "codigo_auxiliar": det.product.barCode,
-          "precio_unitario": parseFloat((det.costEach).toFixed(4)),
+          "precio_unitario": det.costEach,
           "descripcion": det.product.name,
           "precio_total_sin_impuestos": parseFloat((parseFloat(det.costEach) - (parseFloat(det.costEach) * parseFloat((vm.bill.discountPercentage / 100)) * parseFloat(det.quantity))).toFixed(4)),
           "descuento": parseFloat((parseFloat(det.costEach) * parseFloat((vm.bill.discountPercentage) / 100)).toFixed(4)),
