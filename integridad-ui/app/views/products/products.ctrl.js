@@ -143,7 +143,7 @@ angular.module('integridadUiApp')
     _.each(vm.product.productBySubsidiaries, function(ps){ps.active=false;});
     _.each(vm.productBySubsidiaries, function(psNew){vm.product.productBySubsidiaries.push(psNew)});
     productService.update(vm.product).then(function(response) {
-      vm.product=undefined;
+      vm.product = undefined;
       vm.selectedGroup = undefined;
       vm.selectedLine = undefined;
       vm.wizard = 0;

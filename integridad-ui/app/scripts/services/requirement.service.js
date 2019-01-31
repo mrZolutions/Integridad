@@ -72,15 +72,24 @@ angular
       if (user.cashier.subsidiary.userClient.testMode) {
         req.ambiente = 1;
       };
-      if (user.cashier.subsidiary.userClient.espTemp === '1') {
+      if (user.cashier.subsidiary.userClient.espTemp === 'A-1') {
         req.comprador.email = req.comprador.email + ', facturacionelecppe2018@gmail.com, facturacionppecoca@gmail.com';
         var infoAdicional = {
           info1: 'ORDEN DE COMPRA: ' + bill.ordenDecompra,
           info2: 'OTI/OTIR: ' + bill.otir
         };
         req.informacion_adicional = infoAdicional;
-      } else if (user.cashier.subsidiary.userClient.espTemp === '2') {
+      } else if (user.cashier.subsidiary.userClient.espTemp === 'A-2') {
         req.comprador.email = req.comprador.email + ', ferrelozada@yahoo.com';
+        var inforAdicional = {
+          info1: 'OBSERVACIONES: ' + bill.observation
+        };
+        req.informacion_adicional = inforAdicional;
+      } else if (user.cashier.subsidiary.userClient.espTemp === 'A-3') {
+        var informAdicional = {
+          info1: 'OBSERVACIONES: ' + bill.observation
+        };
+        req.informacion_adicional = informAdicional;
       };
       if (credito !== undefined) {
         req.credito = credito;

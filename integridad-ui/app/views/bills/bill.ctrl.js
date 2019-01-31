@@ -17,6 +17,7 @@ angular.module('integridadUiApp')
     vm.loading = false;
     vm.clientList = undefined;
     vm.isEmp = true;
+    vm.pagoTot = undefined;
     vm.prices = [
       { name: 'EFECTIVO', cod: 'cashPercentage'}, { name: 'MAYORISTA', cod: 'majorPercentage'},
       { name: 'CREDITO', cod: 'creditPercentage'}, { name: 'TARJETA', cod: 'cardPercentage'}
@@ -58,6 +59,7 @@ angular.module('integridadUiApp')
       vm.seqNumber = undefined;
       vm.productList = undefined;
       vm.productToAdd = undefined;
+      vm.pagoTot = undefined;
       vm.quantity = undefined;
       vm.adicional = undefined;
       vm.loading = true;
@@ -385,11 +387,10 @@ angular.module('integridadUiApp')
       _.each(vm.pagos, function(pago){
         payed += parseFloat((pago.total).toFixed(4));
       });
-      vm.pagos;
       if (vm.medio.medio === 'efectivo' || vm.medio.medio === 'dinero_electronico_ec') {
         vm.medio.payForm = '20 - OTROS CON UTILIZACION DEL SISTEMA FINANCIERO';
         vm.medio.statusPago = 'PAGADO';
-        vm.medio.total = vm.aux;
+        vm.medio.total = parseFloat((vm.bill.total - payed).toFixed(4));
         // CAMBIO SRI POR CONFIRMAR
         // vm.medio.payForm = '01 - SIN UTILIZACION DEL SISTEMA FINANCIERO';
       };
@@ -458,9 +459,23 @@ angular.module('integridadUiApp')
       if (vm.bill) {
         vm.getCambio = 0;
         _.each(vm.pagos, function(med) {
-          vm.varPago = parseFloat((parseFloat(vm.varPago) + parseFloat(med.total)).toFixed(2));
+          vm.varPago = parseFloat((parseFloat(vm.varPago) + parseFloat(vm.pagoTot)).toFixed(2));
         });
         vm.getCambio = parseFloat((vm.varPago - vm.bill.total).toFixed(2));
+        vm.aux = parseFloat((vm.varPago - vm.getCambio).toFixed(2));
+      };
+      return vm.varPago;
+    };
+
+    vm.getTotalPagoB = function() {
+      vm.aux = 0;
+      vm.varPago = 0;
+      if (vm.bill) {
+        vm.getCambio = 0;
+        _.each(vm.pagos, function(med) {
+          vm.varPago = parseFloat((parseFloat(vm.varPago) + parseFloat(med.total)).toFixed(2));
+        });
+        vm.getCambioB = parseFloat((vm.varPago - vm.bill.total).toFixed(2));
         vm.aux = parseFloat((vm.varPago - vm.getCambio).toFixed(2));
       };
       return vm.varPago;
@@ -616,12 +631,10 @@ angular.module('integridadUiApp')
           "codigo_auxiliar": det.product.barCode,
           "precio_unitario": det.costEach,
           "descripcion": det.product.name,
+          "detalles_adicionales": {"detalle": det.adicional},
           "precio_total_sin_impuestos": parseFloat((parseFloat(det.costEach) - (parseFloat(det.costEach) * parseFloat((vm.bill.discountPercentage / 100)) * parseFloat(det.quantity))).toFixed(4)),
           "descuento": parseFloat((parseFloat(det.costEach) * parseFloat((vm.bill.discountPercentage) / 100)).toFixed(4)),
-          "unidad_medida": det.product.unitOfMeasurementFull,
-          "detalles_adicionales": {
-            "descripcion": det.adicional
-          }
+          "unidad_medida": det.product.unitOfMeasurementFull
         };
         if (!_.isEmpty(impuestos)) {
           item.impuestos = impuestos;
@@ -640,10 +653,10 @@ angular.module('integridadUiApp')
         };
         vm.bill.detailsKardex.push(kardex);
       });
-      vm.pagos.total = vm.aux;
-      
+      vm.medio.total;
+
       var req = requirementService.createRequirement(vm.clientSelected, vm.bill, $localStorage.user, vm.impuestosTotales, vm.items, vm.pagos);
-      console.log(req);
+
       billService.getClaveDeAcceso(req, vm.companyData.userClient.id).then(function(resp) {
         vm.bill.pagos = vm.pagos;
         if (vm.bill.discountPercentage === undefined) {
