@@ -79,4 +79,10 @@ angular
         return response.data;
       });
     };
+
+    this.getRetentionById = function(id) {
+      return securityService.get('/retention/' + id).then(function successCallback(response) {
+        return response.data;
+      });
+    };
 });

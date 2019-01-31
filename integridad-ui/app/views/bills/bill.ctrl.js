@@ -643,7 +643,7 @@ angular.module('integridadUiApp')
       vm.pagos.total = vm.aux;
       
       var req = requirementService.createRequirement(vm.clientSelected, vm.bill, $localStorage.user, vm.impuestosTotales, vm.items, vm.pagos);
-      
+      console.log(req);
       billService.getClaveDeAcceso(req, vm.companyData.userClient.id).then(function(resp) {
         vm.bill.pagos = vm.pagos;
         if (vm.bill.discountPercentage === undefined) {

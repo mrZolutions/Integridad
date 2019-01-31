@@ -129,7 +129,7 @@
 
   <div class="panel-group table-responsive" ng-show="vm.clientSelected !== undefined" id="printArea" print-section>
     <div class="panel panel-primary">
-      <div class="panel-heading" print-remove>
+      <div class="panel-heading">
         <b>Datos del Cliente</b>
       </div>
       <div class="panel-body">
@@ -270,6 +270,12 @@
             <b>DESCUENTO &#37;: </b>
             <input type="text" ng-change="vm.reCalculateTotal()" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
                    ng-model="vm.bill.discountPercentage" class="form-control" maxlength="9" ng-change="vm.getFechaCobro()" ng-disabled="!vm.newBill">
+          </div>
+        </div>
+        <div class="row">
+          <div class="form-group col-md-12">
+            <b>OBSERVACIONES:</b>
+            <input type="text" ng-model="vm.bill.observation" class="form-control">
           </div>
         </div>
       </div>

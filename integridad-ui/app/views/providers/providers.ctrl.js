@@ -406,9 +406,37 @@ angular.module('integridadUiApp')
           percentage: item.porcentaje,
           total: item.valor_retenido
         };
-        vm.totalRetention = (parseFloat(vm.totalRetention) +parseFloat(detail.total)).toFixed(2);
+        vm.totalRetention = (parseFloat(vm.totalRetention) + parseFloat(detail.total)).toFixed(2);
         vm.retention.detailRetentions.push(detail);
       });
+    };
+
+    vm.retentionSelected = function(retention) {
+      vm.loading = true;
+      vm.retentionList = undefined;
+      eretentionService.getRetentionById(retention.id).then(function(response) {
+        vm.retentionCreated = true;
+        vm.retention = response;
+        vm.totalRetention = 0;
+        _.each(vm.retention.detailRetentions, function(detail) {
+          vm.totalRetention = vm.totalRetention + detail.total;
+        });
+        vm.loading = false;
+      }).catch(function(error) {
+        vm.loading = false;
+        vm.error = error.data;
+      });
+    };
+
+    vm.printToCart = function(printRetentionId) {
+      var innerContents = document.getElementById(printRetentionId).innerHTML;
+      var popupWinindow = window.open('', 'printMatrixSectionId', 'width=400,height=500');
+      popupWinindow.document.write('<html><head><title>printMatrixRetentionId</title>');
+      popupWinindow.document.write('</head><body>');
+      popupWinindow.document.write(innerContents);
+      popupWinindow.document.write('</body></html>');
+      popupWinindow.print();
+      popupWinindow.close();
     };
 
     vm.getClaveAcceso = function() {
@@ -442,7 +470,7 @@ angular.module('integridadUiApp')
             vm.retention = respRetention;
             vm.totalRetention = 0;
             _.each(vm.retention.detailRetentions, function(detail) {
-              vm.totalRetention = (parseFloat(vm.totalRetention) +parseFloat(detail.total)).toFixed(2);
+              vm.totalRetention = parseFloat((vm.totalRetention + detail.total).toFixed(2));
             });
             vm.retentionCreated = true;
             $localStorage.user.cashier.retentionNumberSeq = parseInt($localStorage.user.cashier.retentionNumberSeq) + 1;

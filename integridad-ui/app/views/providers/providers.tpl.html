@@ -116,7 +116,7 @@
             <td>{{retention.dateCreated | date : "dd/MM/yyyy"}}</td>
             <td>{{retention.documentNumber}}</td>
             <td>
-              <button type="button" title="Ver Retención" class="btn btn-primary btn-sm" ng-click="">
+              <button type="button" title="Ver Retención" class="btn btn-primary btn-sm" ng-click="vm.retentionSelected(retention)">
                       <span class = "glyphicon glyphicon-eye-open" aria-hidden = "true"></span>
               </button>
               <button type="button" title="Anular Retención" class="btn btn-warning btn-sm" ng-click=""
@@ -451,7 +451,7 @@
               <td width="50%" rowspan="2">
                 <div style="padding:0px 20px;">
                   <b>RUC: {{vm.userData.subsidiary.userClient.ruc}}</b><br/>
-                  <b>COMPROBANTE DE RETENCION</b><br/><br/>
+                  <b>COMPROBANTE DE RETENCION</b><br/>
                   <b>No: {{vm.retention.stringSeq}}</b><br/>
                   <b>AUTORIZACION: {{vm.retention.claveDeAcceso}}</b><br/>
                   <b>FECHA DE EMISIÓN: {{vm.retention.dateCreated | date : "dd-MM-yyyy"}}</b><br/>
@@ -536,15 +536,19 @@
               <td></td>
               <td></td>
               <td><b>TOTAL</b></td>
-              <td>{{vm.totalRetention}}</td>
+              <td>{{(vm.totalRetention).toFixed(2)}}</td>
             </tr>
           </table>
         </div>
       </div>
       <div class="row" print-remove>
         <div class="form-group col-md-12">
-          <button print-btn type="button" title = "Imprimir Comprobante" class="btn btn-success btn-sm"
+          <button print-btn type="button" title = "Imprimir Comprobante" class="btn btn-primary btn-sm"
                   ng-click="vm.cancelRetentionCreated()">
+                  <span class = "glyphicon glyphicon-print" aria-hidden = "true"></span>
+          </button>
+          <button type="button" title = "Imprimir Ticket-Retención" class="btn btn-danger btn-sm"
+                  ng-click="vm.printToCart('printMatrixRetentionId')" print-remove>
                   <span class = "glyphicon glyphicon-print" aria-hidden = "true"></span>
           </button>
           <button type="button" title = "Salir" class="btn btn-primary btn-sm"
@@ -555,6 +559,45 @@
       </div>
     </div>
   </div>
+</div>
+
+<div id="printMatrixRetentionId" ng-show='false'>
+  ------------------------------<br/>
+  <b>COMPROBANTE DE RETENCION</b><br/>
+  <b>No: {{vm.retention.stringSeq}}</b><br/>
+  <b>AUTORIZACION: {{vm.retention.claveDeAcceso}}</b><br/>
+  <b>FECHA DE EMISIÓN: {{vm.retention.dateCreated | date : "dd-MM-yyyy"}}</b><br/>
+  <b>FACTURA: {{vm.retention.documentNumber}}</b><br/>
+  <b>FECHA DOCUMENTO: {{vm.retention.documentDate | date : "dd-MM-yyyy"}}</b><br/>
+
+  <b>RAZON SOCIAL: {{vm.retention.provider.razonSocial}}</b><br/>
+  <b>IDENTIFICACION: {{vm.retention.provider.ruc}}</b><br/>
+  
+  <table width="100%">
+    <thead>
+      <tr>
+        <th>E. FISCAL</th>
+        <th>T. IMP.</th>
+        <th>COD</th>
+        <th>B. IMPON.</th>
+        <th>RET %</th>
+        <th>VALOR</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="detail in vm.retention.detailRetentions">
+        <td>{{vm.retention.ejercicioFiscal}}</td>
+        <td>{{(detail.taxType).substr(0,19)}}</td>
+        <td>{{detail.code}}</td>
+        <td>{{detail.baseImponible}}</td>
+        <td>{{detail.percentage}}</td>
+        <td>{{detail.total}}</td>
+      </tr>
+    </tbody>
+  </table>
+  <b>TOTAL: {{(vm.totalRetention).toFixed(2)}}</b><br/>
+
+  ------------------------------------
 </div>
 
 <div id="modalPrevisualizacion"  class="modal fade" role="dialog">

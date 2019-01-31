@@ -82,9 +82,10 @@ h1, h2, h3, h4, h5, p, a {
 }
 
 .div-princip {
-  border-radius: 5px;
+  border-radius: 3px;
   background: white;
   margin-bottom: 25px;
+  max-width: 790px !important;
 }
 
 .trasluz {

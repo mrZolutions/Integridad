@@ -37,7 +37,7 @@ public class RetentionController {
     }
 
     @RequestMapping(method = RequestMethod.GET, value="/{id}")
-    public ResponseEntity getById(@PathVariable("id") UUID id) {
+    public ResponseEntity getRetentionById(@PathVariable("id") UUID id) {
 	log.info("RetentionController getId: {}", id);
 	Retention response = null;
 	try {

@@ -53,6 +53,7 @@ public class Bill {
     private int typeDocument;
     private String quotationSeq;
     private String stringQuotationSeq;
+    private String observation;
 
     @ManyToOne
     @JoinColumn(name = "client_id")
