@@ -547,8 +547,12 @@
                   ng-click="vm.cancelRetentionCreated()">
                   <span class = "glyphicon glyphicon-print" aria-hidden = "true"></span>
           </button>
+          <button type="button" title = "Descargar Retención EpsonTM20" class="btn btn-success btn-sm"
+                  ng-click="vm.downloadRetentionTxtTM20('retentionToDownloadEpsonTM20')">
+                  <span class = "glyphicon glyphicon-save-file" aria-hidden = "true"></span>
+          </button>
           <button type="button" title = "Imprimir Ticket-Retención" class="btn btn-danger btn-sm"
-                  ng-click="vm.printToCart('printMatrixRetentionId')" print-remove>
+                  ng-click="vm.printToCart('printMatrixRetentionId')">
                   <span class = "glyphicon glyphicon-print" aria-hidden = "true"></span>
           </button>
           <button type="button" title = "Salir" class="btn btn-primary btn-sm"
@@ -561,11 +565,33 @@
   </div>
 </div>
 
+<div id="retentionToDownloadEpsonTM20" ng-show='false'>
+  <p>------------------------------</p><br>
+  <p>COMPROBANTE DE RETENCION</p><br>
+  <p>No: {{vm.retention.stringSeq}}</p><br>
+  <p>AUTORIZACION:</p><br>
+  <p>{{vm.retention.claveDeAcceso}}</p><br>
+  <p>FECHA DE EMISIÓN: {{vm.retention.dateCreated | date : "dd-MM-yyyy"}}</p><br>
+  <p>FACTURA: {{vm.retention.documentNumber}}</p><br>
+  <p>FECHA DOCUMENTO: {{vm.retention.documentDate | date : "dd-MM-yyyy"}}</p><br>
+  <p>RAZON SOCIAL: {{vm.retention.provider.razonSocial}}</p><br>
+  <p>IDENTIFICACION: {{vm.retention.provider.ruc}}</p><br>
+  <p>E. FISC... T. IMP.... COD... B. IMPO... % RET... VALOR</p><br>
+  <table width="100%">
+    <tr ng-repeat="detail in vm.retention.detailRetentions">
+      <td>{{vm.retention.ejercicioFiscal}} {{(detail.taxType).substr(0,19)}} {{detail.code}} &#36;{{detail.baseImponible}} {{detail.percentage}} &#36;{{detail.total}}</td>
+    </tr>
+  </table><br>
+  <b>TOTAL: {{(vm.totalRetention).toFixed(2)}}</b><br/>
+  <p>------------------------------</p>
+</div>
+
 <div id="printMatrixRetentionId" ng-show='false'>
   ------------------------------<br/>
   <b>COMPROBANTE DE RETENCION</b><br/>
   <b>No: {{vm.retention.stringSeq}}</b><br/>
-  <b>AUTORIZACION: {{vm.retention.claveDeAcceso}}</b><br/>
+  <b>AUTORIZACION:</b><br/>
+  <b>{{vm.retention.claveDeAcceso}}</b><br/>
   <b>FECHA DE EMISIÓN: {{vm.retention.dateCreated | date : "dd-MM-yyyy"}}</b><br/>
   <b>FACTURA: {{vm.retention.documentNumber}}</b><br/>
   <b>FECHA DOCUMENTO: {{vm.retention.documentDate | date : "dd-MM-yyyy"}}</b><br/>
@@ -580,7 +606,7 @@
         <th>T. IMP.</th>
         <th>COD</th>
         <th>B. IMPON.</th>
-        <th>RET %</th>
+        <th>% RET</th>
         <th>VALOR</th>
       </tr>
     </thead>

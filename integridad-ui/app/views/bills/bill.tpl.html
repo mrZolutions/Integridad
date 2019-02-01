@@ -563,17 +563,17 @@
       </div>
       <div class="panel-footer" print-remove>
         <button print-btn type="button" title = "Imprimir Factura" class="btn btn-primary btn-sm"
-                ng-if="!vm.newBill && !vm.user.cashier.specialPrint" print-remove>
+                ng-if="!vm.newBill && !vm.user.cashier.specialPrint">
                 <span class = "glyphicon glyphicon-print" aria-hidden = "true"></span>
         </button>
         <button type="button" title = "Descargar Factura EpsonTM20" class="btn btn-success btn-sm"
                 ng-if="!vm.newBill && !vm.user.cashier.specialPrint"
-                ng-click="vm.downloadBillTxtTM20('billToDownloadEpsonTM20')" print-remove>
+                ng-click="vm.downloadBillTxtTM20('billToDownloadEpsonTM20')">
                 <span class = "glyphicon glyphicon-save-file" aria-hidden = "true"></span>
         </button>
         <button type="button" title = "Imprimir Ticket-Factura" class="btn btn-danger btn-sm"
                 ng-if="!vm.newBill && !vm.user.cashier.specialPrint"
-                ng-click="vm.printToCart('printMatrixSectionId')" print-remove>
+                ng-click="vm.printToCart('printMatrixSectionId')">
                 <span class = "glyphicon glyphicon-print" aria-hidden = "true"></span>
         </button>
         <button type="button" title="Salir" class="btn btn-primary btn-sm"
@@ -600,7 +600,6 @@
         <td>{{detail.quantity}} {{(detail.product.name).substr(0,16)}} &#36;{{detail.costEach}} &#36;{{detail.total}}<br></br></td>
       </tr>
     </table><br>
-  
     <p>SUBTOTAL: {{vm.bill.subTotal}}</p><br>
     <p>BASE 0%: {{vm.bill.baseNoTaxes}}</p><br>
     <p>BASE 12%: {{vm.bill.baseTaxes}}</p><br>
@@ -609,7 +608,7 @@
     <p>------------------------------</p>
   </div>
 
-  <div id="printMatrixSectionId" ng-show='false'>
+  <div id="printMatrixBillId" ng-show='false'>
     ------------------------------<br/>
     <b>{{vm.companyData.userClient.name}}</b><br/>
     <b>RUC: {{vm.companyData.userClient.ruc}}</b><br/>

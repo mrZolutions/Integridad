@@ -422,7 +422,7 @@ angular.module('integridadUiApp')
       var diasPlazo = parseInt(vm.medio.creditoIntervalos);
       var d = new Date();
       var statusCredits = 'PENDIENTE';
-      var total = parseFloat((parseFloat(vm.bill.total) / parseFloat(vm.medio.creditoNumeroPagos)).toFixed(4));
+      var total = parseFloat((vm.bill.total / vm.medio.creditoNumeroPagos).toFixed(4));
       vm.seqNumberCredits = vm.seqNumber;
       for (var i = 1; i <= parseInt(vm.medio.creditoNumeroPagos); i++) {
         var credito = {
@@ -522,10 +522,10 @@ angular.module('integridadUiApp')
       _activate();
     };
 
-    vm.printToCart = function(printSectionId) {
-      var innerContents = document.getElementById(printSectionId).innerHTML;
-      var popupWinindow = window.open('', 'printMatrixSectionId', 'width=400,height=500');
-      popupWinindow.document.write('<html><head><title>printMatrixSectionId</title>');
+    vm.printToCart = function(printBillId) {
+      var innerContents = document.getElementById(printBillId).innerHTML;
+      var popupWinindow = window.open('', 'printMatrixBillId', 'width=400,height=500');
+      popupWinindow.document.write('<html><head><title>printMatrixBillId</title>');
       popupWinindow.document.write('</head><body>');
       popupWinindow.document.write(innerContents);
       popupWinindow.document.write('</body></html>');

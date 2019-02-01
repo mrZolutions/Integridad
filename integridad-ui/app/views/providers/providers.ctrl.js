@@ -430,13 +430,21 @@ angular.module('integridadUiApp')
 
     vm.printToCart = function(printRetentionId) {
       var innerContents = document.getElementById(printRetentionId).innerHTML;
-      var popupWinindow = window.open('', 'printMatrixSectionId', 'width=400,height=500');
+      var popupWinindow = window.open('', 'printMatrixRetentionId', 'width=400,height=500');
       popupWinindow.document.write('<html><head><title>printMatrixRetentionId</title>');
       popupWinindow.document.write('</head><body>');
       popupWinindow.document.write(innerContents);
       popupWinindow.document.write('</body></html>');
       popupWinindow.print();
       popupWinindow.close();
+    };
+
+    vm.downloadRetentionTxtTM20 = function(retentionToDownloadEpsonTM20) {
+      var a = document.body.appendChild(document.createElement("a"));
+      a.href = "data:text/plain; charset=utf-8," + document.getElementById(retentionToDownloadEpsonTM20).innerText;
+      a.download = "retentionDownloaded.txt";
+      a.click();
+      document.body.removeChild(a);
     };
 
     vm.getClaveAcceso = function() {
