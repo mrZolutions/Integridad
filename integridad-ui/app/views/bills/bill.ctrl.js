@@ -437,6 +437,7 @@ angular.module('integridadUiApp')
         creditArray.push(credito);
       };
       vm.medio.credits = creditArray;
+      vm.pagoTot = credito.total;
     };
 
     vm.getFechaCobro = function() {
@@ -459,7 +460,11 @@ angular.module('integridadUiApp')
       if (vm.bill) {
         vm.getCambio = 0;
         _.each(vm.pagos, function(med) {
-          vm.varPago = parseFloat((parseFloat(vm.varPago) + parseFloat(vm.pagoTot)).toFixed(2));
+          if (vm.pagoTot != null) {
+            vm.varPago = parseFloat((parseFloat(vm.varPago) + parseFloat(vm.pagoTot)).toFixed(2));
+          } else {
+            vm.varPago = parseFloat((parseFloat(vm.varPago) + parseFloat(med.total)).toFixed(2));
+          };
         });
         vm.getCambio = parseFloat((vm.varPago - vm.bill.total).toFixed(2));
         vm.aux = parseFloat((vm.varPago - vm.getCambio).toFixed(2));
@@ -656,7 +661,7 @@ angular.module('integridadUiApp')
       vm.medio.total;
 
       var req = requirementService.createRequirement(vm.clientSelected, vm.bill, $localStorage.user, vm.impuestosTotales, vm.items, vm.pagos);
-
+      
       billService.getClaveDeAcceso(req, vm.companyData.userClient.id).then(function(resp) {
         vm.bill.pagos = vm.pagos;
         if (vm.bill.discountPercentage === undefined) {
