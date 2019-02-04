@@ -636,10 +636,12 @@ angular.module('integridadUiApp')
           "codigo_auxiliar": det.product.barCode,
           "precio_unitario": det.costEach,
           "descripcion": det.product.name,
-          "detalles_adicionales": {"detalle": det.adicional},
           "precio_total_sin_impuestos": parseFloat((parseFloat(det.costEach) - (parseFloat(det.costEach) * parseFloat((vm.bill.discountPercentage / 100)) * parseFloat(det.quantity))).toFixed(4)),
           "descuento": parseFloat((parseFloat(det.costEach) * parseFloat((vm.bill.discountPercentage) / 100)).toFixed(4)),
           "unidad_medida": det.product.unitOfMeasurementFull
+        };
+        item.detalles_adicionales = {
+          "Descripcion": det.adicional
         };
         if (!_.isEmpty(impuestos)) {
           item.impuestos = impuestos;

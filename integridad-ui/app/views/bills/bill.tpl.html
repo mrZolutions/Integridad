@@ -236,7 +236,7 @@
             </table>
           </div>
         </div>
-        <div class="row" ng-if="vm.companyData.userClient.espTemp == '1'" print-if="vm.companyData.userClient.espTemp == '1'">
+        <div class="row" ng-if="vm.companyData.userClient.espTemp == 'A-1'" print-if="vm.companyData.userClient.espTemp == 'A-1'">
           <div class="form-group col-md-12">
             <table width="100%" style="border-collapse: separate; border-spacing: 6px;">
               <tr>
@@ -273,7 +273,7 @@
                    ng-model="vm.bill.discountPercentage" class="form-control" maxlength="9" ng-change="vm.getFechaCobro()" ng-disabled="!vm.newBill">
           </div>
         </div>
-        <div class="row">
+        <div class="row" ng-if="vm.companyData.userClient.espTemp == 'A-3'" print-if="vm.companyData.userClient.espTemp == 'A-3'">
           <div class="form-group col-md-12">
             <b>OBSERVACIONES:</b>
             <input type="text" ng-model="vm.bill.observation" class="form-control">
@@ -489,7 +489,7 @@
             </table>
           </div>
         </div>
-        <div print-only print-if="vm.companyData.userClient.espTemp == '1'" print-avoid-break>
+        <div print-only print-if="vm.companyData.userClient.espTemp == 'A-1'" print-avoid-break>
           <div class="col-md-12">
             <table width="100%">
               <tr>
