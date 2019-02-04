@@ -127,6 +127,7 @@
     </div>
   </div>
 
+  <!--FACTURA HOJA COMPLETA-->
   <div class="panel-group table-responsive" ng-show="vm.clientSelected !== undefined" id="printArea" print-section>
     <div class="panel panel-primary">
       <div class="panel-heading">
@@ -584,6 +585,7 @@
     </div>
   </div>
 
+  <!--CREA Y DESCARGA TICKET FACTURA PARA EPSON TM20-->
   <div id="billToDownloadEpsonTM20" ng-show='false'>
     <p>------------------------------</p><br>
     <p>{{vm.companyData.userClient.name}}</p><br>
@@ -608,6 +610,7 @@
     <p>------------------------------</p>
   </div>
 
+  <!--IMPRIME TICKET FACTURA-->
   <div id="printMatrixBillId" ng-show='false'>
     ------------------------------<br/>
     <b>{{vm.companyData.userClient.name}}</b><br/>
@@ -665,6 +668,7 @@
     ------------------------------------
   </div>
 
+  <!--AGREGAR TIPO DE PAGO A LA FACTURA Y FACTURAR-->
   <div id="modalAddPago" class="modal fade" role="dialog">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -832,6 +836,7 @@
     </div>
   </div>
 
+  <!--AGREGAR PRODUCTOS A LA FACTURA-->
   <div id="modalAddProduct" class="modal fade" role="dialog">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -946,6 +951,7 @@
     </div>
   </div>
 
+  <!--EDITAR NUMERO DE FACTURA-->
   <div id="modalEditBillNumber" class="modal fade" role="dialog">
     <div class="modal-dialog">
       <div class="modal-content" ng-show="vm.isEmp">
@@ -1013,22 +1019,27 @@
     </div>
   </div>
 
+  <!--ANULAR FACTURA-->
   <div id="modalAnular" class="modal fade" role="dialog">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" ng-click="vm.client=undefined">&times;</button>
-          <h4 class="modal-title">Advertencia</h4>
+          <h3 class="modal-title">¡¡¡Advertencia!!!</h3>
         </div>
         <div class="modal-body">
           <div class="row">
             <div class="col-md-12" >
-                Est&aacute; seguro que desea Anular la factura {{vm.cancelBill.stringSeq}}
+              <p>¿Est&aacute; seguro que desea Anular la Factura <b>No. {{vm.cancelBill.stringSeq}}</b>?</p>
+              <p>Recuerde que la Factura Anulada <b>NO puede ser Recuperada</b></p>
             </div>
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" title="Anular Factura" class="btn btn-warning btn-sm" ng-click="vm.billDeactivate()" data-dismiss="modal">
+          <button type="button" title = "Salir" class="btn btn-primary btn-sm" data-dismiss="modal">
+                  <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
+          </button>
+          <button type="button" title="Anular Factura" class="btn btn-danger btn-sm" ng-click="vm.billDeactivate()" data-dismiss="modal">
                   <span class = "glyphicon glyphicon-screenshot" aria-hidden = "true"></span>
           </button>
         </div>
@@ -1036,6 +1047,7 @@
     </div>
   </div>
 
+  <!--SELECCIONAR COTIZACIONES-->
   <div id="modalCotizacion" class="modal fade" role="dialog">
     <div class="modal-dialog">
       <div class="modal-content">

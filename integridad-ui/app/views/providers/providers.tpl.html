@@ -119,8 +119,8 @@
               <button type="button" title="Ver Retención" class="btn btn-primary btn-sm" ng-click="vm.retentionSelected(retention)">
                       <span class = "glyphicon glyphicon-eye-open" aria-hidden = "true"></span>
               </button>
-              <button type="button" title="Anular Retención" class="btn btn-warning btn-sm" ng-click=""
-                      data-toggle="modal" data-target="">
+              <button type="button" title="Anular Retención" class="btn btn-warning btn-sm" ng-click="vm.deactivateRetention = retention"
+                      data-toggle="modal" data-target="#modalAnularRetention">
                       <span class = "glyphicon glyphicon-warning-sign" aria-hidden = "true"></span>
               </button>
             </td>
@@ -781,6 +781,7 @@
     </div>
   </div>
   
+  <!--ELIMINAR PROVEEDOR-->
   <div id="modalEliminar" class="modal fade" role="dialog">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -798,6 +799,34 @@
         <div class="modal-footer">
           <button type="button" title = "Eliminar Proveedor" class="btn btn-primary btn-sm" ng-click="vm.remove()" data-dismiss="modal">
                   <span class = "glyphicon glyphicon-trash" aria-hidden = "true"></span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!--ANULAR RETENCIÓN-->
+  <div id="modalAnularRetention" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" ng-click="vm.client=undefined">&times;</button>
+          <h3 class="modal-title">¡¡¡Advertencia!!!</h3>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-md-10" >
+              <p>¿Est&aacute; seguro que desea Anular la Retenci&oacute;n <b>No. {{vm.deactivateRetention.stringSeq}}</b>?</p>
+              <p>Recuerde que la Retenci&oacute;n Anulada <b>NO puede ser Recuperada</b></p>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" title = "Salir" class="btn btn-primary btn-sm" data-dismiss="modal">
+                  <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
+          </button>
+          <button type="button" title="Anular Retención" class="btn btn-danger btn-sm" ng-click="vm.retentionDeactivate()" data-dismiss="modal">
+                  <span class = "glyphicon glyphicon-screenshot" aria-hidden = "true"></span>
           </button>
         </div>
       </div>

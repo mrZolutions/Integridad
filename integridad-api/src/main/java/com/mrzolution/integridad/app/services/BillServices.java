@@ -64,11 +64,11 @@ public class BillServices {
         }
         ObjectMapper mapper = new ObjectMapper();
         String data = mapper.writeValueAsString(requirement);
-        log.info("BillServices getDatil maper creado");
+        log.info("BillServices getDatil MAPPER creado");
                 
         String response = httpCallerService.post(Constants.DATIL_LINK, data, userClient);
         //String response = "OK";
-        log.info("BillServices getDatil httpcall success");
+        log.info("BillServices getDatil httpcall SUCCESS");
         return response;
     }
 
@@ -129,7 +129,7 @@ public class BillServices {
 
 //Inicio de Creación de las Bills    
     @Async("asyncExecutor")
-    public Bill create(Bill bill, int typeDocument) throws BadRequestException {
+    public Bill createBill(Bill bill, int typeDocument) throws BadRequestException {
         List<Detail> details = bill.getDetails();
         List<Pago> pagos = bill.getPagos();
         List<Kardex> detailsKardex = bill.getDetailsKardex();
@@ -171,7 +171,7 @@ public class BillServices {
             cashierRepository.save(cashier);
             saveDetailsQuotation(saved, details);
         }
-        log.info("BillServices created id: {}", saved.getId());
+        log.info("BillServices created Bill id: {}", saved.getId());
         return saved;
     }
     
@@ -240,7 +240,7 @@ public class BillServices {
 //Fin de Creación de las Bills
 
     //Desactivación o Anulación de las Bills
-    public Bill deactivate(Bill bill) throws BadRequestException {
+    public Bill deactivateBill(Bill bill) throws BadRequestException {
         if (bill.getId() == null) {
             throw new BadRequestException("Invalid Bill");
         }
@@ -249,11 +249,12 @@ public class BillServices {
         billToDeactivate.setListsNull();
         billToDeactivate.setActive(false);
         billRepository.save(billToDeactivate);
+        log.info("BillServices deactivate Bill DONE id: {}", bill.getId());
         return billToDeactivate;
     }
 
     //Actualización de las Bills
-    public Bill update(Bill bill) throws BadRequestException {
+    public Bill updateBill(Bill bill) throws BadRequestException {
         if (bill.getId() == null) {
             throw new BadRequestException("Invalid Bill");
         }
@@ -264,7 +265,7 @@ public class BillServices {
         log.info("BillServices CHILDREN updated: {}", bill.getId());
         bill.setListsNull();
         Bill updated = billRepository.save(bill);
-        log.info("BillServices update id: {}", updated.getId());
+        log.info("BillServices updateBill id: {}", updated.getId());
         return updated;
     }
 

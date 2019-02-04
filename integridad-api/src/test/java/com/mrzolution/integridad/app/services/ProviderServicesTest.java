@@ -37,7 +37,7 @@ public class ProviderServicesTest {
 
 		Mockito.when(providerRepository.findOne(id)).thenReturn(provider);
 
-		Provider retrieved = service.getById(id);
+		Provider retrieved = service.getProviderById(id);
 		ListValidation.childsLisAndFathertValidation(Provider.class, retrieved);
 
 		Assert.assertNotNull(retrieved);

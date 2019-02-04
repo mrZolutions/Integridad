@@ -68,6 +68,12 @@ angular
       });
     };
 
+    this.cancelRetention = function(retention) {
+      return securityService.put('/retention', retention).then(function successCallback(response) {
+        return response.data;
+      });
+    };
+
     this.getAllRetentionsByProviderId = function(id) {
       return securityService.get('/retention/retention/provider/' + id).then(function successCallback(response) {
         return response.data;

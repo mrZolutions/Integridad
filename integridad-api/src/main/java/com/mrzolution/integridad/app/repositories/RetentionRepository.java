@@ -21,9 +21,9 @@ public interface RetentionRepository extends CrudRepository<Retention, UUID> {
 
     Iterable<Retention> findRetentionByStringSeq(String stringSeq);
 
-    @Query("SELECT r FROM Retention r WHERE r.subsidiary.id = (:subId) AND r.stringSeq = (:seq)")
+    @Query("SELECT r FROM Retention r WHERE r.subsidiary.id = (:subId) AND r.stringSeq = (:seq) AND r.active = true")
     Iterable<Retention> findRetentionByStringSeqAndSubsidiaryId(@Param("seq") String stringSeq, @Param("subId") UUID id);
 
-    @Query("SELECT r FROM Retention r WHERE r.subsidiary.userClient.id = (:userClientId) AND r.dateCreated >= (:dateOne) AND r.dateCreated <= (:dateTwo)")
+    @Query("SELECT r FROM Retention r WHERE r.subsidiary.userClient.id = (:userClientId) AND r.dateCreated >= (:dateOne) AND r.dateCreated <= (:dateTwo) AND r.active = true")
     Iterable<Retention> findAllRetentionByUserClientIdAndDates(@Param("userClientId") UUID id, @Param("dateOne") long dateOne, @Param("dateTwo") long dateTwo);
 }

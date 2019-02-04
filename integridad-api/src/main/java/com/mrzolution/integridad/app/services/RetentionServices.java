@@ -49,21 +49,21 @@ public class RetentionServices {
         log.info("RetentionServices getDatil Empresa valida: {}", userClient.getName());
         ObjectMapper mapper = new ObjectMapper();
         String data = mapper.writeValueAsString(requirement);
-        log.info("RetentionServices getDatil maper creado");
+        log.info("RetentionServices getDatil MAPPER creado");
 	
         String response = httpCallerService.post(Constants.DATIL_RETENTION_LINK, data, userClient);
         //String response = "OK";
-        log.info("RetentionServices getDatil httpcall success");
+        log.info("RetentionServices getDatil httpcall SUCCESS");
         return response;
     }
 
     public Iterable<Retention> getByUserLazy(UserIntegridad user) {
-        log.info("RetentionServices getByUserLazy: {}", user.getId());
         Iterable<Retention> retentions = retentionRepository.findRetentionByUserIntegridad(user);
         retentions.forEach(retention -> {
             retention.setListsNull();
             retention.setFatherListToNull();
         });
+        log.info("RetentionServices getByUserLazy DONE: {}", user.getId());
         return retentions;
     }
 
@@ -90,7 +90,7 @@ public class RetentionServices {
         return retentions;
     }
 
-    public Retention create(Retention retention) throws BadRequestException {
+    public Retention createRetention(Retention retention) throws BadRequestException {
         List<DetailRetention> details = retention.getDetailRetentions();
         if (details == null) {
             throw new BadRequestException("Debe tener Debe tener el codigo de contabilidaduna retencion por lo menos");
@@ -112,24 +112,38 @@ public class RetentionServices {
             detail.setRetention(null);
         });
             
-        log.info("RetentionServices created id: {}", saved.getId());
+        log.info("RetentionServices createRetention DONE id: {}", saved.getId());
         saved.setDetailRetentions(details);
         return saved;
     }
 
-    public Retention update(Retention retention) throws BadRequestException {
+    public Retention updateRetention(Retention retention) throws BadRequestException {
         if (retention.getId() == null) {
             throw new BadRequestException("Invalid Retention");
         }
-        log.info("RetentionServices update: {}", retention.getId());
+        log.info("RetentionServices updateRetention: {}", retention.getId());
         Father<Retention, DetailRetention> father = new Father<>(retention, retention.getDetailRetentions());
         FatherManageChildren fatherUpdateChildren = new FatherManageChildren(father, detailRetentionChildRepository, detailRetentionRepository);
         fatherUpdateChildren.updateChildren();
         log.info("RetentionServices CHILDREN updated: {}", retention.getId());
         retention.setListsNull();
         Retention updated = retentionRepository.save(retention);
-        log.info("RetentionServices update id: {}", updated.getId());
+        log.info("RetentionServices updateRetention DONE id: {}", updated.getId());
         return updated;
+    }
+    
+    //Desactivación o Anulación de Retenciones
+    public Retention deactivateRetention(Retention retention) throws BadRequestException {
+        if (retention.getId() == null) {
+            throw new BadRequestException("Invalid Retention");
+        }
+
+        Retention retentionToDeactivate = retentionRepository.findOne(retention.getId());
+        retentionToDeactivate.setListsNull();
+        retentionToDeactivate.setActive(false);
+        retentionRepository.save(retentionToDeactivate);
+        log.info("RetentionServices deactivateRetention DONE id: {}", retention.getId());
+        return retentionToDeactivate;
     }
 
     public List<RetentionReport> getAllBySubIdAndDates(UUID userClientId, long dateOne, long dateTwo) {

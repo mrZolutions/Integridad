@@ -17,7 +17,7 @@ public class ProviderServices {
     @Autowired
     ProviderRepository providerRepository;
 
-    public Provider create(Provider provider) {
+    public Provider createProvider(Provider provider) {
 	if (provider.getCodeIntegridad() == null) {
             throw new BadRequestException("Debe tener el codigo de contabilidad");
 	}
@@ -35,7 +35,7 @@ public class ProviderServices {
 	return saved;
     }
 
-    public void update(Provider provider) throws BadRequestException {
+    public void updateProvider(Provider provider) throws BadRequestException {
 	if (provider.getId() == null) {
 		throw new BadRequestException("Invalid Provider");
 	}
@@ -45,8 +45,8 @@ public class ProviderServices {
 	log.info("ProviderServices updated id: {}", updated.getId());
     }
 
-    public Provider getById(UUID id) {
-	log.info("ProviderServices getById: {}", id);
+    public Provider getProviderById(UUID id) {
+	log.info("ProviderServices getProviderById: {}", id);
 	Provider retrieved = providerRepository.findOne(id);
 	if (retrieved != null) {
             log.info("ProviderServices retrieved id: {}", retrieved.getId());

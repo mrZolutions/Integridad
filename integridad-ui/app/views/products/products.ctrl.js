@@ -182,7 +182,7 @@ angular.module('integridadUiApp')
   vm.costPreview = function() {
     var avrCost = 0.0;
     var gEfectivo = 0.0;
-    var avrCost = vm.product.averageCost
+    var avrCost = vm.product.averageCost;
     var gEfectivo = 1 + ((vm.product.cashPercentage) / 100.00);
     var preview = avrCost * gEfectivo;
     return (preview).toFixed(2);

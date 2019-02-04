@@ -20,23 +20,23 @@ public interface BillRepository extends CrudRepository<Bill, UUID> {
 	
 	Iterable<Bill> findByUserIntegridad(UserIntegridad user);
 
-	@Query("SELECT p FROM Bill p WHERE p.typeDocument = (:value)")
+	@Query("SELECT b FROM Bill b WHERE b.typeDocument = (:value) AND b.active = true")
 	Iterable<Bill> findBillsByTypeDocument(@Param("value") int value);
 
-	@Query("SELECT p FROM Bill p WHERE p.client.id = (:id) AND typeDocument = (:type) AND p.saldo != '0.00' AND p.active = true ORDER BY p.stringSeq")
+	@Query("SELECT b FROM Bill b WHERE b.client.id = (:id) AND b.typeDocument = (:type) AND b.saldo != '0.00' AND b.active = true ORDER BY b.stringSeq")
 	Iterable<Bill> findBillByClientIdWithSaldo(@Param("id") UUID id, @Param("type") int type);
         
-        @Query("SELECT p FROM Bill p WHERE p.client.id = (:id) AND typeDocument = (:type) AND p.active = true ORDER BY p.stringSeq")
+        @Query("SELECT b FROM Bill b WHERE b.client.id = (:id) AND b.typeDocument = (:type) AND b.active = true ORDER BY b.stringSeq")
 	Iterable<Bill> findBillByClientId(@Param("id") UUID id, @Param("type") int type);
         
 	Iterable<Bill> findByStringSeq(String stringSeq);
 
-	@Query("SELECT p FROM Bill p WHERE p.subsidiary.id = (:subId) AND p.stringSeq = (:seq) AND typeDocument = 1")
+	@Query("SELECT b FROM Bill b WHERE b.subsidiary.id = (:subId) AND b.stringSeq = (:seq) AND b.typeDocument = 1 AND b.active = true")
 	Iterable<Bill> findByStringSeqAndSubsidiaryId(@Param("seq") String stringSeq, @Param("subId") UUID id);
 
-	@Query("SELECT p FROM Bill p WHERE p.subsidiary.userClient.id = (:userClientId) AND p.dateCreated >= (:dateOne)  AND p.dateCreated <= (:dateTwo) AND p.active = true AND typeDocument = 1")
+	@Query("SELECT b FROM Bill b WHERE b.subsidiary.userClient.id = (:userClientId) AND b.dateCreated >= (:dateOne) AND b.dateCreated <= (:dateTwo) AND b.active = true AND b.typeDocument = 1")
 	Iterable<Bill> findByUserClientIdAndDatesActives(@Param("userClientId") UUID id, @Param("dateOne") long dateOne, @Param("dateTwo") long dateTwo);
 
-	@Query("SELECT p FROM Bill p WHERE p.subsidiary.userClient.id = (:userClientId) AND p.dateCreated >= (:dateOne) AND p.dateCreated <= (:dateTwo) AND typeDocument = 1")
+	@Query("SELECT b FROM Bill b WHERE b.subsidiary.userClient.id = (:userClientId) AND b.dateCreated >= (:dateOne) AND b.dateCreated <= (:dateTwo) AND b.typeDocument = 1")
 	Iterable<Bill> findAllByUserClientIdAndDates(@Param("userClientId") UUID id, @Param("dateOne") long dateOne, @Param("dateTwo") long dateTwo);
 }

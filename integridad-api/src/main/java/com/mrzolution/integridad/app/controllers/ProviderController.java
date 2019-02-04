@@ -20,26 +20,26 @@ public class ProviderController {
 
 
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity create(@RequestBody Provider provider) {
-	log.info("ProviderController create");
+    public ResponseEntity createProvider(@RequestBody Provider provider) {
+	log.info("ProviderController createProvider");
 	Provider response = null;
 	try {
-            response = service.create(provider);
+            response = service.createProvider(provider);
 	} catch (BadRequestException e) {
-            log.error("ProviderController create Exception thrown: {}", e.getMessage());
+            log.error("ProviderController createProvider Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
 	return new ResponseEntity<Provider>(response, HttpStatus.CREATED);
     }
 
     @RequestMapping(method = RequestMethod.PUT)
-    public ResponseEntity update(@RequestBody Provider provider) {
-	log.info("ProviderController update: {}", provider);
+    public ResponseEntity updateProvider(@RequestBody Provider provider) {
+	log.info("ProviderController updateProvider: {}", provider);
 	Provider response = null;
 	try {
-            service.update(provider);
+            service.updateProvider(provider);
 	}catch (BadRequestException e) {
-            log.error("ProviderController update Exception thrown: {}", e.getMessage());
+            log.error("ProviderController updateProvider Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
         return new ResponseEntity<Void>(HttpStatus.CREATED);
@@ -72,13 +72,13 @@ public class ProviderController {
     }
 
     @RequestMapping(method = RequestMethod.GET, value="/{id}")
-    public ResponseEntity getById(@PathVariable("id") UUID id) {
-        log.info("ProviderController geById:{}", id);
+    public ResponseEntity getProviderById(@PathVariable("id") UUID id) {
+        log.info("ProviderController getProviderById:{}", id);
 	Provider response = null;
 	try {
-            response = service.getById(id);
+            response = service.getProviderById(id);
 	} catch (BadRequestException e) {
-            log.error("ProviderController getById Exception thrown: {}", e.getMessage());
+            log.error("ProviderController getProviderById Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
 	return new ResponseEntity<Provider>(response, HttpStatus.CREATED);

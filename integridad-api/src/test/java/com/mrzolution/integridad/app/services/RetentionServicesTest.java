@@ -107,7 +107,7 @@ public class RetentionServicesTest {
         Mockito.when(detailRetentionChildRepository.findByFather(retention)).thenReturn(detailListOld);
         Mockito.when(retentionRepository.save(retention)).thenReturn(retention);
 
-        service.update(retention);
+        service.updateRetention(retention);
 
         Mockito.verify(detailRetentionRepository, Mockito.times(1)).save(Mockito.any(Iterable.class));
 //        Mockito.verify(detailRetentionRepository, Mockito.times(1)).save(detailU);
@@ -130,7 +130,7 @@ public class RetentionServicesTest {
 		Mockito.when(retentionRepository.save(Mockito.any(Retention.class))).thenReturn(Retention.newRetentionTest());
 		Mockito.when(subsidiaryRepository.findOne(Mockito.any(UUID.class))).thenReturn(Subsidiary.newSubsidiaryTest());
 
-		Retention response = service.create(retention);
+		Retention response = service.createRetention(retention);
 
 		Mockito.verify(retentionRepository, Mockito.times(1)).save(Mockito.any(Retention.class));
 		Mockito.verify(detailRetentionRepository, Mockito.times(1)).save(detail);
@@ -158,7 +158,7 @@ public class RetentionServicesTest {
 		Mockito.when(cashierRepository.findOne(idCashier)).thenReturn(cashier);
 		Mockito.when(subsidiaryRepository.findOne(idSubsidiary)).thenReturn(subsidiary);
 
-		service.create(retention);
+		service.createRetention(retention);
 
 
 		Mockito.verify(cashierRepository, Mockito.times(1)).findOne(idCashier);
@@ -169,6 +169,6 @@ public class RetentionServicesTest {
 	@Test(expected=BadRequestException.class)
 	public void validatAtLeastOneDetail(){
 		retention.setDetailRetentions(null);
-		service.create(retention);
+		service.createRetention(retention);
 	}
 }

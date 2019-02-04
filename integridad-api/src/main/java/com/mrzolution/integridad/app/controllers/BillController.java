@@ -24,7 +24,6 @@ public class BillController {
 
     @RequestMapping(method = RequestMethod.POST, value="/clave_acceso/{id}")
     public ResponseEntity getDatil(@RequestBody Requirement requirement, @PathVariable("id") UUID userClientId) {
-        log.info("BillController getAllDatil");
         String response = null;
         try {
             response = service.getDatil(requirement, userClientId);
@@ -32,12 +31,12 @@ public class BillController {
             log.error("BillController getDatil Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
+        log.info("BillController getDatil DONE");
         return new ResponseEntity<String>(response, HttpStatus.ACCEPTED);
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/type_document/{value}")
     public ResponseEntity getByTypeDocument(@PathVariable("value") int value) {
-        log.info("BillController getByTypeDocument");
         Iterable<Bill> response =null;
         try {
             response = service.getByTypeDocument(value);
@@ -45,13 +44,13 @@ public class BillController {
             log.error("BillController getByTypeDocument Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
+        log.info("BillController getByTypeDocument DONE");
         return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
     }
         
     //Selecciona todas las Facturas del Cliente
     @RequestMapping(method = RequestMethod.GET, value="/bill/client/{id}")
     public ResponseEntity getAllBillByClientId(@PathVariable("id") UUID id) {
-        log.info("BillController getAllBillByClientId: {}", id);
         Iterable<Bill> response = null;
         try {
             response = service.getBillByClientId(id, 1);
@@ -59,13 +58,13 @@ public class BillController {
             log.error("BillController getAllBillByClientId Exception thrown: {}", e.getMessage());
 	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
+        log.info("BillController getAllBillByClientId DONE: {}", id);
         return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
     }
     
     //Selecciona todas las Facturas del Cliente con Saldo != '0.00'
     @RequestMapping(method = RequestMethod.GET, value="/bill/client/saldo/{id}")
     public ResponseEntity getAllBillByClientIdWithSaldo(@PathVariable("id") UUID id) {
-        log.info("BillController getAllBillByClientIdWithSaldo: {}", id);
         Iterable<Bill> response = null;
         try {
             response = service.getBillByClientIdWithSaldo(id, 1);
@@ -73,12 +72,12 @@ public class BillController {
             log.error("BillController getAllBillByClientIdWithSaldo Exception thrown: {}", e.getMessage());
 	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
+        log.info("BillController getAllBillByClientIdWithSaldo DONE: {}", id);
         return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
     }
         
     @RequestMapping(method = RequestMethod.GET, value="/quotation/client/{id}")
     public ResponseEntity getQuotationByClientId(@PathVariable("id") UUID id) {
-        log.info("BillController getQuotationByClientId: {}", id);
         Iterable<Bill> response = null;
         try {
             response = service.getBillByClientId(id, 0);
@@ -86,19 +85,20 @@ public class BillController {
             log.error("BillController getQuotationByClientId Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
+        log.info("BillController getQuotationByClientId DONE: {}", id);
         return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
     }
 
     @RequestMapping(method = RequestMethod.GET, value="/seq/{seq}/{subId}")
-    public ResponseEntity getByStringSeq(@PathVariable("seq") String stringSeq, @PathVariable("subId") UUID subId) {
-        log.info("BillController getByStringSeq: {}, {}", stringSeq, subId);
+    public ResponseEntity getBillByStringSeq(@PathVariable("seq") String stringSeq, @PathVariable("subId") UUID subId) {
         Iterable<Bill> response = null;
         try {
             response = service.getByStringSeqAndSubId(stringSeq, subId);
         } catch (BadRequestException e) {
-            log.error("BillController getByStringSeq Exception thrown: {}", e.getMessage());
+            log.error("BillController getBillByStringSeq Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
+        log.info("BillController getBillByStringSeq DONE: {}, {}", stringSeq, subId);
         return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
     }
 
@@ -109,7 +109,7 @@ public class BillController {
         try {
             response = service.getBySubIdAndDatesActives(userClientId, dateOne, dateTwo);
         } catch (BadRequestException e) {
-            log.error("BillController getByUserClientIdAndDates Exception thrown: {}", e.getMessage());
+            log.error("BillController getByUserClientIdAndDatesActives Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
         return new ResponseEntity<List>(response, HttpStatus.ACCEPTED);
@@ -117,52 +117,52 @@ public class BillController {
 
     @RequestMapping(method = RequestMethod.GET, value="/rep/sales/{userClientId}/{dateOne}/{dateTwo}")
     public ResponseEntity getAllByUserClientIdAndDatesActives(@PathVariable("userClientId") UUID userClientId, @PathVariable("dateOne") long dateOne, @PathVariable("dateTwo") long dateTwo) {
-        log.info("BillController getByUserClientIdAndDatesActives: {}, {}, {}", userClientId, dateOne, dateTwo);
+        log.info("BillController getAllByUserClientIdAndDatesActives: {}, {}, {}", userClientId, dateOne, dateTwo);
         List<SalesReport> response = null;
         try {
             response = service.getAllBySubIdAndDates(userClientId, dateOne, dateTwo);
         } catch (BadRequestException e) {
-            log.error("BillController getByUserClientIdAndDatesActives Exception thrown: {}", e.getMessage());
+            log.error("BillController getAllByUserClientIdAndDatesActives Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
         return new ResponseEntity<List>(response, HttpStatus.ACCEPTED);
     }
 
     @RequestMapping(method = RequestMethod.GET, value="/{id}")
-    public ResponseEntity getById(@PathVariable("id") UUID id) {
-        log.info("BillController getId: {}", id);
+    public ResponseEntity getBillById(@PathVariable("id") UUID id) {
         Bill response = null;
         try {
             response = service.getById(id);
         } catch (BadRequestException e) {
-            log.error("BillController getId Exception thrown: {}", e.getMessage());
+            log.error("BillController getBillById Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
+        log.info("BillController getBillById DONE: {}", id);
         return new ResponseEntity<Bill>(response, HttpStatus.ACCEPTED);
     }
 
     @RequestMapping(method = RequestMethod.POST, value="/{typeDocument}" )
-    public ResponseEntity create(@RequestBody Bill bill, @PathVariable("typeDocument") int typeDocument) {
-        log.info("BillController create  bill: {} , quotation: {}", bill.getBillSeq(), bill.getQuotationSeq());
+    public ResponseEntity createBill(@RequestBody Bill bill, @PathVariable("typeDocument") int typeDocument) {
         Bill response = null;
         try {
-            response = service.create(bill, typeDocument);
+            response = service.createBill(bill, typeDocument);
         } catch (BadRequestException e) {
-            log.error("BillController create Exception thrown: {}", e.getMessage());
+            log.error("BillController createBill Exception thrown: {}", e.getMessage());
 	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
+        log.info("BillController createBill DONE: {} , quotation: {}", bill.getBillSeq(), bill.getQuotationSeq());
         return new ResponseEntity<Bill>(response, HttpStatus.CREATED);
     }
 
     @RequestMapping(method = RequestMethod.PUT)
-    public ResponseEntity dactivate(@RequestBody Bill bill) {
-        log.info("BillController dactivate: {}", bill.getId());
+    public ResponseEntity deactivateBill(@RequestBody Bill bill) {
         try {
-            service.deactivate(bill);
+            service.deactivateBill(bill);
         } catch (BadRequestException e) {
-            log.error("BillController dactivate Exception thrown: {}", e.getMessage());
+            log.error("BillController deactivateBill Exception thrown: {}", e.getMessage());
 	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
+        log.info("BillController deactivateBill DONE: {}", bill.getId());
         return new ResponseEntity<Void>(HttpStatus.ACCEPTED);
     }
 }
