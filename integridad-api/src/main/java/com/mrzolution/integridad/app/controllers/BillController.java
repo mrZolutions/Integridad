@@ -132,7 +132,7 @@ public class BillController {
     public ResponseEntity getBillById(@PathVariable("id") UUID id) {
         Bill response = null;
         try {
-            response = service.getById(id);
+            response = service.getBillById(id);
         } catch (BadRequestException e) {
             log.error("BillController getBillById Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());

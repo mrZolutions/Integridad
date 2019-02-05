@@ -57,7 +57,7 @@ public class ProductServicesTest {
 		Mockito.when(productRepository.findOne(id)).thenReturn(product);
 		Mockito.when(productBySubsidiaryRepository.findByProductId(id)).thenReturn(productBySubsidiaryList);
 
-		Product retrieved = service.getById(id);
+		Product retrieved = service.getProductById(id);
 		ListValidation.childsLisAndFathertValidation(Product.class, retrieved);
 		
 		Assert.assertNotNull(retrieved);
@@ -92,7 +92,7 @@ public class ProductServicesTest {
 		Mockito.when(productBySubsidiaryChildRepository.findByFather(product)).thenReturn(detailListOld);
 		Mockito.when(productRepository.save(product)).thenReturn(product);
 
-		service.update(product);
+		service.updateProduct(product);
 
 		Mockito.verify(productBySubsidiaryRepository, Mockito.times(1)).save(Mockito.any(Iterable.class));
 //		Mockito.verify(productBySubsidiaryRepository, Mockito.times(1)).save(prodBySubU);
@@ -107,7 +107,7 @@ public class ProductServicesTest {
 				.thenReturn(new ArrayList<>());
 		Mockito.when(productRepository.save(Mockito.any(Product.class))).thenReturn(product);
 
-		Product response = service.create(product);
+		Product response = service.createProduct(product);
 
 		Mockito.verify(productRepository, Mockito.times(1))
 				.save(Mockito.any(Product.class));

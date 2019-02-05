@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
 import com.mrzolution.integridad.app.domain.Product;
 import com.mrzolution.integridad.app.repositories.ProductRepository;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.scheduling.annotation.Async;
+//import org.springframework.scheduling.annotation.Async;
 
 @Slf4j
 @Component
@@ -29,7 +29,7 @@ public class ProductServices {
     @Autowired
     ProductBySubsidiaryChildRepository productBySubsidiaryChildRepository;
         
-    public Product create(Product product) throws BadRequestException {
+    public Product createProduct(Product product) throws BadRequestException {
     	Iterable<Product> products = productRepository.findByCodeIntegridadAndClientId(product.getCodeIntegridad(), product.getUserClient().getId());
             if (Iterables.size(products) > 0) {
 		throw new BadRequestException("CODIGO DUPLICADO");
@@ -48,8 +48,8 @@ public class ProductServices {
             return saved;
     }
 	
-    @Async("asyncExecutor")
-    public void update(Product product) {
+    //@Async("asyncExecutor")
+    public void updateProduct(Product product) {
 	product.setLastDateUpdated(new Date().getTime());
 	Father<Product, ProductBySubsidiary> father =
 			new Father<>(product, product.getProductBySubsidiaries());
@@ -60,22 +60,22 @@ public class ProductServices {
 	product.setListsNull();
 	product.setFatherListToNull();
 	Product updated = productRepository.save(product);
-	log.info("ProductServices updated DONE id: {}", updated.getId());
+	log.info("ProductServices updateProduct DONE id: {}", updated.getId());
     }
 	
-    public Product getById(UUID id) {
-	log.info("ProductServices getById: {}", id);
+    public Product getProductById(UUID id) {
+	log.info("ProductServices getProductById: {}", id);
 	Product findOne = productRepository.findOne(id);
 	populateChildren(findOne);
 	return findOne;
     }
 	
-    public Product delete(UUID productId) {
-	log.info("ProductServices delete: {}", productId);
+    public Product deleteProduct(UUID productId) {
+	log.info("ProductServices deleteProduct: {}", productId);
 	Product findOne = productRepository.findOne(productId);
 	findOne.setListsNull();
 	findOne.setActive(false);
-	update(findOne);
+	updateProduct(findOne);
 	return findOne;
     }
 	
@@ -108,7 +108,7 @@ public class ProductServices {
 	}
 	List<Product> listReturn = new ArrayList<>();
 	productIdList.forEach(page -> {
-            listReturn.add(getById(page));
+            listReturn.add(getProductById(page));
 	});
 	Page<Product> products = new PageImpl<>(listReturn, pageable, productIdList.getTotalElements());
 	return products;

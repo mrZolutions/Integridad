@@ -88,7 +88,7 @@ public class BillServicesTest {
                 Mockito.when(kardexRepository.findByBill(bill)).thenReturn(detailsk);
 		Mockito.when(pagoRepository.findByBill(bill)).thenReturn(new ArrayList<>());
 		
-		Bill retrieved = service.getById(id);
+		Bill retrieved = service.getBillById(id);
 		ListValidation.childsLisAndFathertValidation(Bill.class, retrieved);
 		
 		Assert.assertNotNull(retrieved);

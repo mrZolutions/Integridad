@@ -24,51 +24,51 @@ public class ProductController {
     ProductServices service;
 
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity create(@RequestBody Product product) {
-	log.info("ProductController create: {}", product.getName());
+    public ResponseEntity createProduct(@RequestBody Product product) {
+	log.info("ProductController createProduct: {}", product.getName());
 	Product response = null;
 	try {
-            response = service.create(product);
+            response = service.createProduct(product);
 	} catch (BadRequestException e) {
-            log.error("ProductController create Exception thrown: {}", e.getMessage());	    
+            log.error("ProductController createProduct Exception thrown: {}", e.getMessage());	    
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
 	return new ResponseEntity<Product>(response, HttpStatus.CREATED);
     }
 	
     @RequestMapping(method = RequestMethod.PUT)
-    public ResponseEntity update(@RequestBody Product product) {
-	log.info("ProductController Update");
+    public ResponseEntity updateProduct(@RequestBody Product product) {
+	log.info("ProductController updateProduct");
 	try {
-            service.update(product);
+            service.updateProduct(product);
 	} catch (BadRequestException e) {
-            log.error("ProductController update Exception thrown: {}", e.getMessage());	    
+            log.error("ProductController updateProduct Exception thrown: {}", e.getMessage());	    
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
 	return new ResponseEntity<Void>(HttpStatus.ACCEPTED);
     }
 	
     @RequestMapping(method = RequestMethod.DELETE, value = "/{productId}")
-    public ResponseEntity delete(@PathVariable("productId") UUID productId) {
-	log.info("ProductController delete: {}", productId);
+    public ResponseEntity deleteProduct(@PathVariable("productId") UUID productId) {
+	log.info("ProductController deleteProduct: {}", productId);
 	Product response = null;
 	try {
-            response = service.delete(productId);
+            response = service.deleteProduct(productId);
 	} catch (BadRequestException e) {
-            log.error("ProductController delete Exception thrown: {}", e.getMessage());	    
+            log.error("ProductController deleteProduct Exception thrown: {}", e.getMessage());	    
 	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
 	return new ResponseEntity<Product>(response, HttpStatus.CREATED);
     }
 	
     @RequestMapping(method = RequestMethod.GET, value="/{productId}")
-    public ResponseEntity getById(@PathVariable(value = "productId") UUID productId) {
-	log.info("ProductController getById");
+    public ResponseEntity getAllProductById(@PathVariable(value = "productId") UUID productId) {
+	log.info("ProductController getAllProductById");
 	Product response = null;
 	try {
-            response = service.getById(productId);
+            response = service.getProductById(productId);
 	} catch (BadRequestException e) {
-            log.error("ProductController getgetById Exception thrown: {}", e.getMessage());	    
+            log.error("ProductController getAllProductById Exception thrown: {}", e.getMessage());	    
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
 	return new ResponseEntity<Product>(response, HttpStatus.CREATED);
@@ -81,7 +81,7 @@ public class ProductController {
 	try {
             response = service.getAllActives();
 	} catch (BadRequestException e) {
-            log.error("ProductController getLazy Exception thrown: {}", e.getMessage());	    
+            log.error("ProductController getAllActives Exception thrown: {}", e.getMessage());	    
 	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
 	return new ResponseEntity<Iterable>(response, HttpStatus.CREATED);

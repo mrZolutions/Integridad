@@ -597,8 +597,8 @@ angular.module('integridadUiApp')
         _filterProductCsm();
     };
 
-    vm.getCostCsm = function(textCost, averageCost) {
-        var aC = parseFloat(textCost)
+    vm.getCostCsm = function(cashPercen, averageCost) {
+        var aC = 1 + ((cashPercen) / 100);
         var cost = aC * averageCost;
         return (cost).toFixed(4);
     };
@@ -608,7 +608,7 @@ angular.module('integridadUiApp')
             productSelect.quantity = 1;
         };
         vm.productToAdd = angular.copy(productSelect);
-        var costEachCalculated = vm.getCostCsm('1.'+ productSelect[vm.priceType.cod], productSelect.averageCost);
+        var costEachCalculated = vm.getCostCsm(productSelect.cashPercentage, productSelect.averageCost);
         vm.productToAdd.costEachCalculated = costEachCalculated;
         vm.quantity = 1;
     };
@@ -679,8 +679,8 @@ angular.module('integridadUiApp')
         _filterProduct();
     };
 
-    vm.getCost = function(textCost, averageCost) {
-        var aC = parseFloat(textCost)
+    vm.getCost = function(cashPercen, averageCost) {
+        var aC = 1 + ((cashPercen) / 100);
         var cost = aC * averageCost;
         return (cost).toFixed(4);
     };
@@ -690,7 +690,7 @@ angular.module('integridadUiApp')
             productSelect.quantity = 1;
         };
         vm.productToAdd = angular.copy(productSelect);
-        var costEachCalculated = vm.getCost('1.'+ productSelect[vm.priceType.cod], productSelect.averageCost);
+        var costEachCalculated = vm.getCost(productSelect.cashPercentage, productSelect.averageCost);
         vm.productToAdd.costEachCalculated = costEachCalculated;
         vm.quantity = 1;
     };

@@ -126,7 +126,7 @@ angular.module('integridadUiApp')
   function create() {
     vm.product.productBySubsidiaries = vm.productBySubsidiaries;
     productService.create(vm.product).then(function(response) {
-      vm.product=undefined;
+      vm.product = undefined;
       vm.selectedGroup = undefined;
       vm.selectedLine = undefined;
       vm.wizard = 0;
@@ -185,7 +185,7 @@ angular.module('integridadUiApp')
     var avrCost = vm.product.averageCost;
     var gEfectivo = 1 + ((vm.product.cashPercentage) / 100.00);
     var preview = avrCost * gEfectivo;
-    return (preview).toFixed(2);
+    return (preview).toFixed(4);
   };
                                       
   vm.costIvaPreview = function() {
@@ -195,23 +195,25 @@ angular.module('integridadUiApp')
     var avrCost = vm.product.averageCost;
     var gEfectivo = 1 + ((vm.product.cashPercentage) / 100.00);
     var preview = avrCost * gEfectivo * iva;
-    return (preview).toFixed(2);
+    return (preview).toFixed(4);
   };
                                       
-  vm.getIva = function(textCost, averageCost) {
+  vm.getIva = function(cashPercen, averageCost) {
     const IVA = 1.1200;
-    var aC = parseFloat(textCost);
+    var aC = 1 + ((cashPercen) / 100);
     var cost = aC * averageCost * IVA;
-    return (cost).toFixed(2);
+    return (cost).toFixed(4);
   };
                                       
-  vm.getCost = function(textCost, averageCost) {
-    var aC = parseFloat(textCost);
+  vm.getCost = function(cashPercen, averageCost) {
+    var aC = 1 + ((cashPercen) / 100);
     var cost = aC * averageCost;
-    return (cost).toFixed(2);
+    return (cost).toFixed(4);
   };
                                       
   vm.editProduct = function(productEdit) {
+    vm.success = undefined;
+    vm.error = undefined;
     vm.selectedGroup = productEdit.subgroup.groupLine;
     vm.selectedLine = productEdit.subgroup.groupLine.line;
     vm.averageC = productEdit.averageCost;

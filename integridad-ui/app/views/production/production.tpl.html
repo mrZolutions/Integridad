@@ -379,9 +379,9 @@
                                         </td>
                                     </tr>
                                     <tr ng-repeat="productSelect in vm.productList | orderBy:'name' | filter:searchTextProd">
-                                        <td>{{ productSelect.codeIntegridad }}</td>
-                                        <td>{{ productSelect.name }}</td>
-                                        <td>{{ vm.getCost('1.'+ productSelect[vm.priceType.cod], productSelect.averageCost) }}</td>
+                                        <td>{{productSelect.codeIntegridad}}</td>
+                                        <td>{{productSelect.name}}</td>
+                                        <td>{{vm.getCost(productSelect.cashPercentage, productSelect.averageCost)}}</td>
                                         <td>
                                             <button type="button" title="Seleccionar" class="btn btn-primary btn-sm" ng-click="vm.selectProductToAdd(productSelect)">
                                                     <span class = "glyphicon glyphicon-check" aria-hidden = "true"></span>
@@ -1162,10 +1162,10 @@
                                         </td>
                                     </tr>
                                     <tr ng-repeat="productSelect in vm.productList | orderBy:'name' | filter:searchTextProd">
-                                        <td>{{ productSelect.codeIntegridad }}</td>
-                                        <td>{{ productSelect.name }}</td>
-                                        <td>{{ productSelect.quantity }}</td>
-                                        <td>{{ vm.getCostCsm('1.'+ productSelect[vm.priceType.cod], productSelect.averageCost) }}</td>
+                                        <td>{{productSelect.codeIntegridad}}</td>
+                                        <td>{{productSelect.name}}</td>
+                                        <td>{{productSelect.quantity}}</td>
+                                        <td>{{vm.getCostCsm(productSelect.cashPercentage, productSelect.averageCost)}}</td>
                                         <td>
                                             <button type="button" title="Seleccionar" class="btn btn-primary btn-sm" ng-click="vm.selectProductToAddCsm(productSelect)">
                                                     <span class = "glyphicon glyphicon-check" aria-hidden = "true"></span>

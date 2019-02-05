@@ -115,8 +115,8 @@ public class BillServices {
     }
 
     //Bucar Bills por ID        
-    public Bill getById(UUID id) {
-        log.info("BillServices getById: {}", id);
+    public Bill getBillById(UUID id) {
+        log.info("BillServices getBillById: {}", id);
         Bill retrieved = billRepository.findOne(id);
         if (retrieved != null) {
             log.info("BillServices retrieved id: {}", retrieved.getId());
@@ -155,7 +155,7 @@ public class BillServices {
             cashier.setBillNumberSeq(cashier.getBillNumberSeq() + 1);
             cashierRepository.save(cashier);
             // (2) Excepción Ferretería Lozada No actualiza Kardex
-            if ("2".equals(bill.getClient().getUserClient().getEspTemp())) {
+            if ("A-2".equals(bill.getClient().getUserClient().getEspTemp())) {
                 saveDetailsBill(saved, details);
                 savePagosAndCreditsBill(saved, pagos);
                 updateProductBySubsidiary(bill, typeDocument, details);
@@ -171,7 +171,7 @@ public class BillServices {
             cashierRepository.save(cashier);
             saveDetailsQuotation(saved, details);
         }
-        log.info("BillServices created Bill id: {}", saved.getId());
+        log.info("BillServices createBill id: {}", saved.getId());
         return saved;
     }
     
