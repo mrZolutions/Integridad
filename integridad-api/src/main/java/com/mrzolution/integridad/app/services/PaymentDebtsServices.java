@@ -39,16 +39,16 @@ public class PaymentDebtsServices {
     private double saldo = 0.0;
     private double sumado = 0.0;
     
-    public PaymentDebts create(PaymentDebts paymentDebts) {
+    public PaymentDebts createPaymentDebts(PaymentDebts paymentDebts) {
         PaymentDebts saved = paymentDebtsRepository.save(paymentDebts);
         document = saved.getCreditsDebts().getPagoDebts().getDebtsToPay().getId().toString();
-        log.info("PaymentDebtsServices PaymentDebts created id: {}", saved.getId());
         if (saved.getCreditsDebts().getId() != null) {
             idCreditsDebts = saved.getCreditsDebts().getId();
             abono = saved.getValorAbono();
             updateCreditsDebts(idCreditsDebts);
             updateDebtsToPay(paymentDebts, document);
         }
+        log.info("PaymentDebtsServices createPaymentDebts DONE id: {}", saved.getId());
         return saved;
     }
     
@@ -57,13 +57,9 @@ public class PaymentDebtsServices {
         nume = cambio.getValor();
         resto = nume - abono;
         cambio.setValor(resto);
-        //if (cambio.getValor() <= 0.01) {
-        //    estadoCambio =  "PAGADO";
-        //    cambio.setEstadoCredits(estadoCambio);
-        //}
         creditsDebtsRepository.save(cambio);
         resto = 0.0;
-        log.info("PaymentDebtsServices updateCreditsDebts FINISHED");
+        log.info("PaymentDebtsServices updateCreditsDebts DONE");
     }
     
     public void updateDebtsToPay(PaymentDebts paymentDebts, String document) {
@@ -78,7 +74,7 @@ public class PaymentDebtsServices {
             debts.setSaldo(saldo);
             debtsToPayRepository.save(debts);
         }
-        log.info("PaymentDebtsServices updateDebtsToPay FINISHED");
+        log.info("PaymentDebtsServices updateDebtsToPay DONE");
     }
 
 }

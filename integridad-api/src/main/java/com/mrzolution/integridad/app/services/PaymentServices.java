@@ -44,7 +44,7 @@ public class PaymentServices {
     private String saldo = "";
     private double sumado = 0.0;
     
-    public Payment create(Payment payment) {
+    public Payment createPayment(Payment payment) {
         Payment saved = paymentRepository.save(payment);
         document = saved.getCredits().getPago().getBill().getId().toString();
         if (saved.getCredits().getId() != null) {
@@ -57,7 +57,7 @@ public class PaymentServices {
             updateCredits(idCredit);
             updateBill(payment, document);
         }
-        log.info("PaymentServices Payment created id: {}", saved.getId());
+        log.info("PaymentServices createPayment DONE id: {}", saved.getId());
 	return saved;
     }
     

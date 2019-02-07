@@ -27,38 +27,38 @@ public class DebtsToPayController {
     DebtsToPayServices service;
     
     @RequestMapping(method = RequestMethod.GET, value="/{id}")
-    public ResponseEntity getById(@PathVariable("id") UUID id) {
-        log.info("DebtsToPayController getId: {}", id);
+    public ResponseEntity getDebtsToPayById(@PathVariable("id") UUID id) {
+        log.info("DebtsToPayController getDebtsToPayById: {}", id);
 	DebtsToPay response = null;
 	try {
-            response = service.getById(id);
+            response = service.getDebtsToPayById(id);
 	} catch (BadRequestException e) {
-            log.error("DebtsToPayController getId Exception thrown: {}", e.getMessage());
+            log.error("DebtsToPayController getDebtsToPayById Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
         return new ResponseEntity<DebtsToPay>(response, HttpStatus.ACCEPTED);
     }
     
     @RequestMapping(method = RequestMethod.GET, value="/debts/provider/{id}")
-    public ResponseEntity getAllDebtsToPayByProviderId(@PathVariable("id") UUID id) {
-        log.info("DebtsToPayController getAllDebtsByProviderId: {}", id);
+    public ResponseEntity getDebtsToPayByProviderId(@PathVariable("id") UUID id) {
+        log.info("DebtsToPayController getDebtsByProviderId: {}", id);
         Iterable<DebtsToPay> response = null;
         try {
             response = service.getDebtsToPayByProviderId(id);
         } catch (BadRequestException e) {
-            log.error("DebtsToPayController getAllDebtsByProviderId Exception thrown: {}", e.getMessage());
+            log.error("DebtsToPayController getDebtsByProviderId Exception thrown: {}", e.getMessage());
 	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
         return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
     }
     
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity create(@RequestBody DebtsToPay debtsToPay) {
+    public ResponseEntity createDebtsToPay(@RequestBody DebtsToPay debtsToPay) {
 	DebtsToPay response = null;
 	try {
-            response = service.create(debtsToPay);
+            response = service.createDebtsToPay(debtsToPay);
 	} catch (BadRequestException e) {
-            log.error("DebtsToPayController create Exception thrown: {}", e.getMessage());
+            log.error("DebtsToPayController createDebtsToPay Exception thrown: {}", e.getMessage());
 	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
         return new ResponseEntity<DebtsToPay>(response, HttpStatus.CREATED);

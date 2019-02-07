@@ -15,74 +15,72 @@ import java.util.UUID;
 @RestController
 @RequestMapping(value = "/integridad/v1/group_line")
 public class GroupLineController {
+    @Autowired
+    GroupLineServices service;
 
-	@Autowired
-	GroupLineServices service;
-
-
-	@RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity create(@RequestBody GroupLine groupLine){
-		log.info("GroupLineController create: {}", groupLine);
-		GroupLine response = null;
-		try {
-			response = service.create(groupLine);
-		}catch(BadRequestException e) {
-			log.error("GroupLineController create Exception thrown: {}", e.getMessage());
-	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-	    }
-		return new ResponseEntity<GroupLine>(response, HttpStatus.CREATED);
-	}
+    @RequestMapping(method = RequestMethod.POST)
+    public ResponseEntity createGroupLine(@RequestBody GroupLine groupLine) {
+	log.info("GroupLineController create: {}", groupLine);
+	GroupLine response = null;
+	try {
+            response = service.createGroupLine(groupLine);
+	} catch (BadRequestException e) {
+            log.error("GroupLineController createGroupLine Exception thrown: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+	return new ResponseEntity<GroupLine>(response, HttpStatus.CREATED);
+    }
 	
-	@RequestMapping(method = RequestMethod.PUT)
-    public ResponseEntity update(@RequestBody GroupLine groupLine){
-		log.info("GroupLineController update: {}", groupLine);
-		try {
-			service.update(groupLine);
-		}catch(BadRequestException e) {
-			log.error("GroupLineController update Exception thrown: {}", e.getMessage());
-	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-	    }
-		return new ResponseEntity<Void>(HttpStatus.ACCEPTED);
-	}
+    @RequestMapping(method = RequestMethod.PUT)
+    public ResponseEntity updateGroupLine(@RequestBody GroupLine groupLine) {
+	log.info("GroupLineController update: {}", groupLine);
+	try {
+            service.updateGroupLine(groupLine);
+	} catch (BadRequestException e) {
+            log.error("GroupLineController update Exception thrown: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+	return new ResponseEntity<Void>(HttpStatus.ACCEPTED);
+    }
 	
-	@RequestMapping(method = RequestMethod.DELETE, value = "/{grouplineId}")
-    public ResponseEntity delete(@PathVariable("groupLineId") UUID groupLineId){
-		log.info("GroupLineController delete: {}", groupLineId);
-		GroupLine response = null;
-		try {
-			response = service.delete(groupLineId);
-		}catch(BadRequestException e) {
-			log.error("GroupLineController delete Exception thrown: {}", e.getMessage());
-	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-	    }
-		return new ResponseEntity<GroupLine>(response, HttpStatus.ACCEPTED);
-	}
+    @RequestMapping(method = RequestMethod.DELETE, value = "/{grouplineId}")
+    public ResponseEntity deleteGroupLine(@PathVariable("groupLineId") UUID groupLineId) {
+	log.info("GroupLineController deleteGroupLine: {}", groupLineId);
+	GroupLine response = null;
+	try {
+            response = service.deleteGroupLine(groupLineId);
+	} catch (BadRequestException e) {
+            log.error("GroupLineController deleteGroupLine Exception thrown: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+	return new ResponseEntity<GroupLine>(response, HttpStatus.ACCEPTED);
+    }
 
 	
-	@RequestMapping(method = RequestMethod.GET, value="/actives/{lineId}")
-    public ResponseEntity getAllActivesByLineId(@PathVariable("lineId") UUID lineId){
-		log.info("GroupLineController getAllActivesByLineId: {}", lineId);
-		Iterable<GroupLine> response = null;
-		try {
-			response = service.getAllActivesByLineId(lineId);
-		}catch(BadRequestException e) {
-			log.error("GroupLineController getAllActivesByLineId Exception thrown: {}", e.getMessage());
-	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-	    }
-		return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
-	}
+    @RequestMapping(method = RequestMethod.GET, value="/actives/{lineId}")
+    public ResponseEntity getAllActivesByLineId(@PathVariable("lineId") UUID lineId) {
+	log.info("GroupLineController getAllActivesByLineId: {}", lineId);
+	Iterable<GroupLine> response = null;
+	try {
+            response = service.getAllActivesByLineId(lineId);
+	} catch (BadRequestException e) {
+            log.error("GroupLineController getAllActivesByLineId Exception thrown: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+	return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
+    }
 
-	@RequestMapping(method = RequestMethod.GET, value="/actives_lazy/{lineId}")
-	public ResponseEntity getAllActivesByProjectIdLazy(@PathVariable("lineId") UUID lineId){
-		log.info("GroupLineController getAllActivesByLineIdLazy: {}", lineId);
-		Iterable<GroupLine> response = null;
-		try {
-			response = service.getAllActivesByLineIdLazy(lineId);
-		}catch(BadRequestException e) {
-			log.error("GroupLineController getAllActivesByLineIdLazy Exception thrown: {}", e.getMessage());
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-		}
-		return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
-	}
+    @RequestMapping(method = RequestMethod.GET, value="/actives_lazy/{lineId}")
+    public ResponseEntity getAllActivesByProjectIdLazy(@PathVariable("lineId") UUID lineId) {
+	log.info("GroupLineController getAllActivesByLineIdLazy: {}", lineId);
+	Iterable<GroupLine> response = null;
+	try {
+            response = service.getAllActivesByLineIdLazy(lineId);
+	} catch (BadRequestException e) {
+            log.error("GroupLineController getAllActivesByLineIdLazy Exception thrown: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+	return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
+    }
 
 }

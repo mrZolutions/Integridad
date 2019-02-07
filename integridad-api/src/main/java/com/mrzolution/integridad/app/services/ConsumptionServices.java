@@ -63,7 +63,7 @@ public class ConsumptionServices {
     }
     
     public Consumption getConsumptionById(UUID id) {
-        log.info("ConsumptionServices getById: {}", id);
+        log.info("ConsumptionServices getConsumptionById: {}", id);
         Consumption retrieved = consumptionRepository.findOne(id);
         if (retrieved != null) {
             log.info("ConsumptionServices retrieved id: {}", retrieved.getId());
@@ -80,7 +80,6 @@ public class ConsumptionServices {
         consumption.setDetailsConsumption(detailConsumptionList);
         consumption.setDetailsKardex(detailsKardexList);
         consumption.setFatherListToNull();
-        log.info("ConsumptionServices populateChildren consumptionId: {}", consumption.getId());
     }
     
     private List<DetailConsumption> getDetailsByConsumption(Consumption consumption) {
@@ -112,7 +111,7 @@ public class ConsumptionServices {
     }
     
     @Async("asyncExecutor")
-    public Consumption create(Consumption consumption) throws BadRequestException {
+    public Consumption createConsumption(Consumption consumption) throws BadRequestException {
         List<DetailConsumption> detailsConsumption = consumption.getDetailsConsumption();
         List<Kardex> detailsKardex = consumption.getDetailsKardex();
         if (detailsConsumption == null) {
@@ -129,7 +128,7 @@ public class ConsumptionServices {
         saveDetailsConsumption(saved, detailsConsumption);
         saveKardex(saved, detailsKardex);
         updateProductBySubsidiary(consumption, detailsConsumption);
-        log.info("ConsumptionServices Consumption created id: {}", saved.getId());
+        log.info("ConsumptionServices createConsumption DONE id: {}", saved.getId());
         return saved;
     }
     

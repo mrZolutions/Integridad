@@ -12,8 +12,6 @@ import com.google.common.collect.Iterables;
 import com.mrzolution.integridad.app.domain.Subsidiary;
 import com.mrzolution.integridad.app.domain.UserClient;
 import com.mrzolution.integridad.app.exceptions.BadRequestException;
-import com.mrzolution.integridad.app.father.Father;
-import com.mrzolution.integridad.app.father.FatherManageChildren;
 import com.mrzolution.integridad.app.repositories.ClientChildRepository;
 import com.mrzolution.integridad.app.repositories.SubsidiaryChildRepository;
 import com.mrzolution.integridad.app.repositories.SubsidiaryRepository;
@@ -52,7 +50,7 @@ public class UserClientServices {
 		
 		subsidiariesList.forEach(subsidiary -> {
 			subsidiary.setUserClient(saved);
-			subsidiaryServices.create(subsidiary);
+			subsidiaryServices.createSubsidiary(subsidiary);
 			subsidiary.setUserClient(null);
 		});
 		
@@ -70,9 +68,9 @@ public class UserClientServices {
 		userClient.getSubsidiaries().forEach(subsidiary -> {
 			subsidiary.setUserClient(userClient);
 			if(subsidiary.getId() == null){
-				subsidiaryServices.create(subsidiary);
+				subsidiaryServices.createSubsidiary(subsidiary);
 			} else {
-				subsidiaryServices.update(subsidiary);
+				subsidiaryServices.updateSubsidiary(subsidiary);
 			}
 		});
 
@@ -111,7 +109,6 @@ public class UserClientServices {
 	}
 
 	private void populateChildren(UserClient userClient) {
-		log.info("UserClientServices populateChildren userClientId: {}", userClient.getId());
 		List<Subsidiary> subsidiaryList = new ArrayList<>();
 		Iterable<Subsidiary> subsidairies = subsidiaryServices.getAllActivesByUserClientId(userClient.getId());
 
@@ -128,8 +125,6 @@ public class UserClientServices {
 		userClient.setCuentaContables(null);
 		userClient.setProviders(null);
 		userClient.setFatherListToNull();
-		log.info("UserClientServices populateChildren FINISHED userClientId: {}", userClient.getId());
-		
 	}
 
 }

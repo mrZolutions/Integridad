@@ -1,11 +1,8 @@
 package com.mrzolution.integridad.app.services;
 
-import com.google.common.collect.Iterables;
 import com.mrzolution.integridad.app.domain.Cashier;
 import com.mrzolution.integridad.app.domain.Subsidiary;
-import com.mrzolution.integridad.app.domain.UserClient;
 import com.mrzolution.integridad.app.domain.Warehouse;
-import com.mrzolution.integridad.app.exceptions.BadRequestException;
 import com.mrzolution.integridad.app.repositories.*;
 import org.junit.Assert;
 import org.junit.Before;
@@ -63,7 +60,7 @@ public class SubsidiaryServicesTest {
 
 		Mockito.when(subsidiaryRepository.save(Mockito.any(Subsidiary.class))).thenReturn(Subsidiary.newSubsidiaryTest());
 		
-		Subsidiary response = service.create(subsidiary);
+		Subsidiary response = service.createSubsidiary(subsidiary);
 		
 		Mockito.verify(subsidiaryRepository, Mockito.times(1)).save(Mockito.any(Subsidiary.class));
 		Mockito.verify(cashierRepository, Mockito.times(1)).save(cashier);
@@ -122,7 +119,7 @@ public class SubsidiaryServicesTest {
 		Mockito.when(warehouseChildRepository.findByFather(subsidiary)).thenReturn(warehouseListOld);
         Mockito.when(subsidiaryRepository.save(subsidiary)).thenReturn(subsidiary);
 
-        service.update(subsidiary);
+        service.updateSubsidiary(subsidiary);
 
         Mockito.verify(cashierRepository, Mockito.times(1)).save(Mockito.any(Iterable.class));
 //        Mockito.verify(cashierRepository, Mockito.times(1)).save(cashierU);

@@ -21,38 +21,38 @@ public class BrandController {
     BrandServices service;
 
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity create(@RequestBody Brand brand) {
-	log.info("BrandController create: {}", brand);
+    public ResponseEntity createBrand(@RequestBody Brand brand) {
+	log.info("BrandController createBrand: {}", brand);
 	Brand response = null;
 	try {
-            response = service.create(brand);
+            response = service.createBrand(brand);
 	} catch (BadRequestException e) {
-            log.error("BrandController create Exception thrown: {}", e.getMessage());
+            log.error("BrandController createBrand Exception thrown: {}", e.getMessage());
 	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
 	return new ResponseEntity<Brand>(response, HttpStatus.CREATED);
     }
 	
     @RequestMapping(method = RequestMethod.PUT)
-    public ResponseEntity update(@RequestBody Brand brand) {
-	log.info("BrandController update: {}", brand);
+    public ResponseEntity updateBrand(@RequestBody Brand brand) {
+	log.info("BrandController updateBrand: {}", brand);
 	try {
-            service.update(brand);
+            service.updateBrand(brand);
 	} catch (BadRequestException e) {
-            log.error("BrandController update Exception thrown: {}", e.getMessage());
+            log.error("BrandController updateBrand Exception thrown: {}", e.getMessage());
 	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
         return new ResponseEntity<Void>(HttpStatus.ACCEPTED);
     }
 	
     @RequestMapping(method = RequestMethod.DELETE, value = "/{brandId}")
-    public ResponseEntity delete(@PathVariable("brandId") UUID brandId) {
-	log.info("BrandController delete: {}", brandId);
+    public ResponseEntity deleteBrand(@PathVariable("brandId") UUID brandId) {
+	log.info("BrandController deleteBrand: {}", brandId);
 	Brand response = null;
 	try {
-            response = service.delete(brandId);
+            response = service.deleteBrand(brandId);
 	} catch (BadRequestException e) {
-            log.error("BrandController delete Exception thrown: {}", e.getMessage());
+            log.error("BrandController deleteBrand Exception thrown: {}", e.getMessage());
 	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
 	return new ResponseEntity<Brand>(response, HttpStatus.ACCEPTED);

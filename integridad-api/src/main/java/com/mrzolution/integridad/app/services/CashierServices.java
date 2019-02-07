@@ -12,29 +12,27 @@ import java.util.UUID;
 @Slf4j
 @Component
 public class CashierServices {
+    @Autowired
+    CashierRepository cashierRepository;
 
-	@Autowired
-	CashierRepository cashierRepository;
+    public Iterable<Cashier> getAllBySubsiduaryActivesLazy(UUID subId) {
+	log.info("CashierServices getAllBySubsiduaryActivesLazy");
+	Iterable<Cashier> actives = cashierRepository.findBySubsidiaryId(subId);
+	actives.forEach(cashier -> {
+            cashier.setFatherListToNull();
+            cashier.setListsNull();
+	});
+	return actives;
+    }
 
-
-	public Iterable<Cashier> getAllBySubsiduaryActivesLazy(UUID subId){
-		log.info("CashierServices getAllBySubsiduaryActivesLazy");
-		Iterable<Cashier> actives = cashierRepository.findBySubsidiaryId(subId);
-		actives.forEach(cashier -> {
-			cashier.setFatherListToNull();
-			cashier.setListsNull();
-		});
-		return actives;
+    public Cashier updateCashier(Cashier cashier) throws BadRequestException {
+    	if (cashier.getId() == null) {
+            throw new BadRequestException("Invalid Cashier");
 	}
-
-	public Cashier update(Cashier cashier) throws BadRequestException{
-		if(cashier.getId() == null){
-			throw new BadRequestException("Invalid Cashier");
-		}
-		log.info("CashierServices update: {}", cashier.getId());
-		cashier.setListsNull();
-		Cashier updated = cashierRepository.save(cashier);
-		log.info("CashierServices update id: {}", updated.getId());
-		return updated;
-	}
+	log.info("CashierServices updateCashier: {}", cashier.getId());
+	cashier.setListsNull();
+	Cashier updated = cashierRepository.save(cashier);
+	log.info("CashierServices updateCashier id: {}", updated.getId());
+	return updated;
+    }
 }

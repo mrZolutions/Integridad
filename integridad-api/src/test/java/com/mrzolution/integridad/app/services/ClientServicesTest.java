@@ -46,7 +46,7 @@ public class ClientServicesTest {
 		
 		Mockito.when(clientRepository.findByActive(true)).thenReturn(clients);
 		
-		Iterable<Client> clientList = service.getAllLazy();
+		Iterable<Client> clientList = service.getAllClientActives();
 		Assert.assertEquals(1, Iterables.size(clientList));
 		for(Client client: clientList){
 			ListValidation.checkListsAndFatherNull(Client.class, client);
@@ -80,7 +80,7 @@ public class ClientServicesTest {
 		
 		Mockito.when(billRepository.findByClient(client)).thenReturn(billList);
 		Mockito.when(clientRepository.findOne(id)).thenReturn(client);
-		Client retrieved = service.getById(id);
+		Client retrieved = service.getClientById(id);
 		
 //		ListValidation.childsLisAndFathertValidation(Client.class, retrieved);
 		
@@ -89,7 +89,7 @@ public class ClientServicesTest {
 	
 	@Test(expected=BadRequestException.class)
 	public void validateExistCodeAppOnCreate(){
-		service.create(client);
+		service.createClient(client);
 	}
 
 }

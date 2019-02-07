@@ -37,8 +37,8 @@ public class DebtsToPayServices {
     @Autowired
     CashierRepository cashierRepository;
     
-    public DebtsToPay getById(UUID id) {
-        log.info("DebtsToPayServices getById: {}", id);
+    public DebtsToPay getDebtsToPayById(UUID id) {
+        log.info("DebtsToPayServices getDebtsToPayById: {}", id);
         DebtsToPay retrieved = debtsToPayRepository.findOne(id);
         if (retrieved != null) {
             log.info("DebtsToPayServices retrieved id: {}", retrieved.getId());
@@ -75,8 +75,7 @@ public class DebtsToPayServices {
         return debts;
     }
     
-    public DebtsToPay create(DebtsToPay debtsToPay) throws BadRequestException{
-        log.info("DebtsToPayServices preparing for create new Debts");
+    public DebtsToPay createDebtsToPay(DebtsToPay debtsToPay) throws BadRequestException{
         List<DetailDebtsToPay> detailDebtsToPay = debtsToPay.getDetailDebtsToPay();
         List<PagoDebts> pagos = debtsToPay.getPagos();
         
@@ -100,9 +99,10 @@ public class DebtsToPayServices {
             detailDebtsToPayRepository.save(detail);
             detail.setDebtsToPay(null);
         });
+        
         savePagosAndCreditsOfDebts(saved, pagos);
         saved.setDetailDebtsToPay(detailDebtsToPay);
-        log.info("DebtsToPayServices Debts created id: {}", saved.getId());
+        log.info("DebtsToPayServices createDebtsToPay DONE id: {}", saved.getId());
         return saved;
     }
     

@@ -27,26 +27,26 @@ public class CreditsBillControler {
     CreditsServices service;
     
     @RequestMapping(method = RequestMethod.GET, value="/credits/bill/{id}")
-    public ResponseEntity getAllCreditsOfBillById(@PathVariable("id") UUID id) {
-        log.info("CreditsBillControler getAllCreditsByBillById: {}", id);
+    public ResponseEntity getCreditsOfBillById(@PathVariable("id") UUID id) {
+        log.info("CreditsBillControler getCreditsByBillById: {}", id);
         Iterable<Credits> response = null;
         try {
             response = service.getCreditsOfBillByBillId(id);
         } catch (BadRequestException e) {
-            log.error("CreditsBillControler getAllCreditsByBillById Exception thrown: {}", e.getMessage());
+            log.error("CreditsBillControler getCreditsByBillById Exception thrown: {}", e.getMessage());
 	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
         return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
     }
     
     @RequestMapping(method = RequestMethod.GET, value="/rep/pendingreport/{userClientId}/{dateTwo}")
-    public ResponseEntity getAllCreditsPendingOfBillByUserClientId(@PathVariable("userClientId") UUID userClientId, @PathVariable("dateTwo") long dateTwo) {
-        log.info("CreditsBillControler getAllCreditsPendingOfBillByUserClientId: {}", userClientId);
+    public ResponseEntity getCreditsPendingOfBillByUserClientId(@PathVariable("userClientId") UUID userClientId, @PathVariable("dateTwo") long dateTwo) {
+        log.info("CreditsBillControler getCreditsPendingOfBillByUserClientId: {}", userClientId);
         List<CreditsReport> response = null;
         try {
             response = service.getCreditsPendingOfBillByUserClientId(userClientId, dateTwo);
 	} catch (BadRequestException e) {
-            log.error("CreditsBillControler getAllCreditsOfBillByUserClientId Exception thrown: {}", e.getMessage());
+            log.error("CreditsBillControler getCreditsOfBillByUserClientId Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
 	return new ResponseEntity<List>(response, HttpStatus.ACCEPTED);

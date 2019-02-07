@@ -17,25 +17,24 @@ public class CuentaContableServices {
     @Autowired
     CuentaContableRepository cuentaContableRepository;
 
-    public CuentaContable create(CuentaContable cuentaContable) {
+    public CuentaContable createCuentaContable(CuentaContable cuentaContable) {
 	if(cuentaContable.getCode() == null){
             throw new BadRequestException("Debe tener el codigo de contabilidad");
 	}
-	log.info("CuentaContableServices create: {}", cuentaContable.getCode());
 	cuentaContable.setActive(true);
 	CuentaContable saved = cuentaContableRepository.save(cuentaContable);
-	log.info("CuentaContableServices created id: {}", saved.getId());
+	log.info("CuentaContableServices createCuentaContable DONE id: {}", saved.getId());
 	return saved;
     }
     
-    public void update(CuentaContable cuentaContable) throws BadRequestException {
+    public void updateCuentaContable(CuentaContable cuentaContable) throws BadRequestException {
         if (cuentaContable.getId() == null) {
             throw new BadRequestException("Cuenta Contable Inválida");
         }
-        log.info("CuentaContableServices update: {}", cuentaContable.getDescription());
+        log.info("CuentaContableServices updateCuentaContable: {}", cuentaContable.getDescription());
         cuentaContable.setListsNull();
         CuentaContable updated = cuentaContableRepository.save(cuentaContable);
-        log.info("CuentaContableServices updated DONE id: {}", updated.getId());
+        log.info("CuentaContableServices updateCuentaContable DONE id: {}", updated.getId());
     }
   
     public Iterable<CuentaContable> getAll() {
@@ -44,19 +43,19 @@ public class CuentaContableServices {
         return result;
     }
 
-    public Iterable<CuentaContable> getLazyByUserClient(UUID id) {
-	log.info("CuentaContableServices getLazyByUserClient");
+    public Iterable<CuentaContable> getCuentaContableByUserClient(UUID id) {
+	log.info("CuentaContableServices getCuentaContableByUserClient");
 	Iterable<CuentaContable> cuentas = cuentaContableRepository.findByUserClientId(id);
 	for (CuentaContable cuenta : cuentas) {
             cuenta.setListsNull();
             cuenta.setFatherListToNull();
 	}
-	log.info("CuentaContable getLazyByUserClient size retrieved: {}", Iterables.size(cuentas));
+	log.info("CuentaContable getCuentaContableByUserClient size retrieved: {}", Iterables.size(cuentas));
 	return cuentas;
     }
     
     // Selecciona Ctas Contables por Tipo
-    public Iterable<CuentaContable> getByType(String typ) {
+    public Iterable<CuentaContable> getCuentaContableByType(String typ) {
         Iterable<CuentaContable> cuentasType = cuentaContableRepository.findByType(typ);
         cuentasType.forEach(ctasType -> {
             ctasType.setListsNull();
@@ -66,7 +65,7 @@ public class CuentaContableServices {
     }
     
     // Selecciona Ctas Contables por Type y por AccountType
-    public Iterable<CuentaContable> getByTypeAndAccountType(String typ, String atyp) {
+    public Iterable<CuentaContable> getCuentaContableByTypeAndAccountType(String typ, String atyp) {
         Iterable<CuentaContable> ctasTypeAccType = cuentaContableRepository.findByTypeAndAccountType(typ, atyp);
         ctasTypeAccType.forEach(ctasTypAcc -> {
             ctasTypAcc.setListsNull();

@@ -25,7 +25,7 @@ public class ClientServices {
     @Autowired
     BillRepository billRepository;
 	
-    public Client create(Client client) {
+    public Client createClient(Client client) {
         if (client.getCodApp() == null) {
             throw new BadRequestException("Debe tener el codigo de contabilidad");
         }
@@ -35,26 +35,25 @@ public class ClientServices {
             throw new BadRequestException("El Cliente Ya Existe");
         }
             
-        log.info("ClientServices create: {}", client.getName());
         client.setDateCreated(new Date().getTime());
         client.setActive(true);
         Client saved = clientRepository.save(client);
-        log.info("ClientServices created id: {}", saved.getId());
+        log.info("ClientServices createClient DONE id: {}", saved.getId());
         return saved;
     }
 	
-    public void update(Client client) throws BadRequestException {
+    public void updateClient(Client client) throws BadRequestException {
         if (client.getId() == null) {
             throw new BadRequestException("Invalid Client");
         }
-        log.info("ClientServices update: {}", client.getName());
+        log.info("ClientServices updateClient: {}", client.getName());
         client.setListsNull();
         Client updated = clientRepository.save(client);
-        log.info("ClientServices updated id: {}", updated.getId());
+        log.info("ClientServices updateClient DONE id: {}", updated.getId());
     }
 	
-    public Client getById(UUID id) {
-        log.info("ClientServices getById: {}", id);
+    public Client getClientById(UUID id) {
+        log.info("ClientServices getClientById: {}", id);
         Client retrieved = clientRepository.findOne(id);
         if (retrieved != null) {
             log.info("ClientServices retrieved id: {}", retrieved.getId());
@@ -65,24 +64,24 @@ public class ClientServices {
         return retrieved;
     }
 	
-    public Iterable<Client> getAll() {
-        log.info("ClientServices getAll");
+    public Iterable<Client> getAllClient() {
+        log.info("ClientServices getAllClient");
         Iterable<Client> clients = clientRepository.findAll();
         for (Client client : clients) {
             populateChildren(client);
         }
-        log.info("ClientServices getAll size retrieved: {}", Iterables.size(clients));
+        log.info("ClientServices getAllClient size retrieved: {}", Iterables.size(clients));
         return clients;
     }
 	
-    public Iterable<Client> getAllLazy() {
-        log.info("ClientServices getAllLazy");
+    public Iterable<Client> getAllClientActives() {
+        log.info("ClientServices getAllClientActives");
         Iterable<Client> clients = clientRepository.findByActive(true);
         for (Client client : clients) {
             client.setListsNull();
             client.setFatherListToNull();
         }
-        log.info("ClientServices getAllLazy size retrieved: {}", Iterables.size(clients));
+        log.info("ClientServices getAllClientActives size retrieved: {}", Iterables.size(clients));
         return clients;
     }
 
@@ -98,7 +97,6 @@ public class ClientServices {
     }
 	
     private void populateChildren(Client client) {
-        log.info("ClientServices populateChildren clientId: {}", client.getId());
         List<Bill> billList = new ArrayList<>();
         Iterable<Bill> bills= billRepository.findByClient(client);	
         for (Bill bill : bills) {
@@ -108,7 +106,6 @@ public class ClientServices {
             billList.add(bill);
         }
         client.setBills(billList);
-        log.info("ClientServices populateChildren FINISHED clientId: {}", client.getId());
     }
 
 }

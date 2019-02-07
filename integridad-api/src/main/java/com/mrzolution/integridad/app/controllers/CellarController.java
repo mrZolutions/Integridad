@@ -40,12 +40,12 @@ public class CellarController {
     }
     
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity create(@RequestBody Cellar cellar) {
+    public ResponseEntity createCellar(@RequestBody Cellar cellar) {
         Cellar response = null;
         try {
-            response = service.create(cellar);
+            response = service.createCellar(cellar);
 	} catch (BadRequestException e) {
-            log.error("CellarController create Exception thrown: {}", e.getMessage());
+            log.error("CellarController createCellar Exception thrown: {}", e.getMessage());
 	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
         return new ResponseEntity<Cellar>(response, HttpStatus.ACCEPTED);

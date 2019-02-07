@@ -185,7 +185,7 @@ public class UserIntegridadServices {
 					findByUserTypeAndActive(userType,true);
 			log.info("UserIntegridadServices getByCodeTypeAndSubsidiaryIdActivesLazy userIntegridad list retreived");
 		} else {
-			Subsidiary subsidiary = subsidiaryServices.getById(subsidiaryId);
+			Subsidiary subsidiary = subsidiaryServices.getSubsidiaryById(subsidiaryId);
 			log.info("UserIntegridadServices getByCodeTypeAndSubsidiaryIdActivesLazy subsidiary retreived");
 			userIntegridadList = userIntegridadRepository.
 					findByUserTypeAndActiveAndSubsidiary(userType,true, subsidiary);

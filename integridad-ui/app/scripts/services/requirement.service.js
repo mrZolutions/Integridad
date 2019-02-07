@@ -81,13 +81,9 @@ angular
         req.informacion_adicional = infoAdicional;
       } else if (user.cashier.subsidiary.userClient.espTemp === 'A-2') {
         req.comprador.email = req.comprador.email + ', ferrelozada@yahoo.com';
-        var inforAdicional = {
-          observ: 'OBSERVACIÓN: ' + bill.observation
-        };
-        req.informacion_adicional = inforAdicional;
       } else if (user.cashier.subsidiary.userClient.espTemp === 'A-3') {
         var informAdicional = {
-          observ: 'OBSERVACIÓN: ' + bill.observation
+          info1: 'OBSERVACIÓN: ' + bill.observation
         };
         req.informacion_adicional = informAdicional;
       };

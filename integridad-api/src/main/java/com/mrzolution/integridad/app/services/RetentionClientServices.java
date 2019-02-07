@@ -51,8 +51,8 @@ public class RetentionClientServices {
     private int numC = 1;
     private String saldo = "";
  
-    public RetentionClient getById(UUID id) {
-	log.info("RetentionClientServices getById: {}", id);
+    public RetentionClient getRetentionClientById(UUID id) {
+	log.info("RetentionClientServices getRetentionClientById: {}", id);
 	RetentionClient retrieved = retentionClientRepository.findOne(id);
 	if (retrieved != null) {
             log.info("RetentionClientServices retrieved id: {}", retrieved.getId());
@@ -63,8 +63,7 @@ public class RetentionClientServices {
         return retrieved;
     }
     
-    public RetentionClient create(RetentionClient retentionClient) throws BadRequestException {   
-        log.info("RetentionClientServices preparing for create new Retention");
+    public RetentionClient createRetentionClient(RetentionClient retentionClient) throws BadRequestException {   
         Iterable<RetentionClient> retenCli = retentionClientRepository.findByDocumentNumberAndBillId(retentionClient.getDocumentNumber(), retentionClient.getBill().getId());
         
         if (Iterables.size(retenCli) > 0) {
@@ -85,7 +84,7 @@ public class RetentionClientServices {
             detail.setRetentionClient(null);
         });
                                   
-        log.info("RetentionClientServices Retention created id: {}", saved.getId());
+        log.info("RetentionClientServices createRetentionClient DONE id: {}", saved.getId());
         saved.setDetailRetentionClient(details);
         updateBill(retentionClient, document);
         updateCreditsAndPayment(retentionClient, document);

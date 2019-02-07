@@ -2,7 +2,6 @@ package com.mrzolution.integridad.app.repositories;
 
 import com.mrzolution.integridad.app.domain.CuentaContable;
 
-import com.mrzolution.integridad.app.domain.Provider;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;

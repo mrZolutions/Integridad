@@ -20,34 +20,32 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @RequestMapping(value = "/integridad/v1/subsidiary")
 public class SubsidiaryController {
+    @Autowired
+    SubsidiaryServices service;
 
-	@Autowired
-	SubsidiaryServices service;
-
-	
-	@RequestMapping(method = RequestMethod.GET, value="/user_client/{id}")
-    public ResponseEntity getByUserClientId(@PathVariable("id") UUID userClientId){
-		log.info("SubsidiaryController getByUserClientId: {}", userClientId);
-		Iterable<Subsidiary> response = null;
-		try {
-			response = service.getAllActivesByUserClientId(userClientId);
-		}catch(BadRequestException e) {
-			log.info("SubsidiaryController getByUserClientId Exception thrown: {}", e.getMessage());	    
-	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-	    }
-		return new ResponseEntity<Iterable>(response, HttpStatus.OK);
+    @RequestMapping(method = RequestMethod.GET, value="/user_client/{id}")
+    public ResponseEntity getByUserClientId(@PathVariable("id") UUID userClientId) {
+	log.info("SubsidiaryController getByUserClientId: {}", userClientId);
+	Iterable<Subsidiary> response = null;
+	try {
+            response = service.getAllActivesByUserClientId(userClientId);
+	} catch (BadRequestException e) {
+            log.info("SubsidiaryController getByUserClientId Exception thrown: {}", e.getMessage());	    
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
+	return new ResponseEntity<Iterable>(response, HttpStatus.OK);
+    }
 
-	@RequestMapping(method = RequestMethod.GET, value="/{id}")
-	public ResponseEntity getById(@PathVariable("id") UUID id){
-		log.info("SubsidiaryController getById: {}", id);
-		Subsidiary response = null;
-		try {
-			response = service.getById(id);
-		}catch(BadRequestException e) {
-			log.info("SubsidiaryController getById Exception thrown: {}", e.getMessage());
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-		}
-		return new ResponseEntity<Subsidiary>(response, HttpStatus.OK);
+    @RequestMapping(method = RequestMethod.GET, value="/{id}")
+    public ResponseEntity getSubsidiaryById(@PathVariable("id") UUID id) {
+	log.info("SubsidiaryController getSubsidiaryById: {}", id);
+	Subsidiary response = null;
+	try {
+            response = service.getSubsidiaryById(id);
+	} catch (BadRequestException e) {
+            log.info("SubsidiaryController getSubsidiaryById Exception thrown: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
+	return new ResponseEntity<Subsidiary>(response, HttpStatus.OK);
+    }
 }

@@ -171,7 +171,7 @@ public class BillServices {
             cashierRepository.save(cashier);
             saveDetailsQuotation(saved, details);
         }
-        log.info("BillServices createBill id: {}", saved.getId());
+        log.info("BillServices createBill DONE id: {}", saved.getId());
         return saved;
     }
     
@@ -249,7 +249,7 @@ public class BillServices {
         billToDeactivate.setListsNull();
         billToDeactivate.setActive(false);
         billRepository.save(billToDeactivate);
-        log.info("BillServices deactivate Bill DONE id: {}", bill.getId());
+        log.info("BillServices deactivateBill DONE id: {}", bill.getId());
         return billToDeactivate;
     }
 
@@ -258,14 +258,14 @@ public class BillServices {
         if (bill.getId() == null) {
             throw new BadRequestException("Invalid Bill");
         }
-        log.info("BillServices update: {}", bill.getId());
+        log.info("BillServices updateBill: {}", bill.getId());
         Father<Bill, Detail> father = new Father<>(bill, bill.getDetails());
         FatherManageChildren fatherUpdateChildren = new FatherManageChildren(father, detailChildRepository, detailRepository);
         fatherUpdateChildren.updateChildren();
         log.info("BillServices CHILDREN updated: {}", bill.getId());
         bill.setListsNull();
         Bill updated = billRepository.save(bill);
-        log.info("BillServices updateBill id: {}", updated.getId());
+        log.info("BillServices updateBill DONE id: {}", updated.getId());
         return updated;
     }
 
@@ -368,7 +368,6 @@ public class BillServices {
         bill.setDetailsKardex(detailsKardexList);
         bill.setPagos(pagoList);
         bill.setFatherListToNull();
-        log.info("BillServices populateChildren billId: {}", bill.getId());
     }
 
     private List<Detail> getDetailsByBill(Bill bill) {

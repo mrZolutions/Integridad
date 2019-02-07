@@ -31,7 +31,7 @@ public class RetentionClientController {
         log.info("RetentionClientController getId: {}", id);
 	RetentionClient response = null;
 	try {
-            response = service.getById(id);
+            response = service.getRetentionClientById(id);
 	} catch (BadRequestException e) {
             log.error("RetentionClientController getId Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
@@ -40,13 +40,13 @@ public class RetentionClientController {
     }
     
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity create(@RequestBody RetentionClient retentionClient) {
-	log.info("RetentionClientController create: {}", retentionClient.getDocumentNumber());
+    public ResponseEntity createRetentionClient(@RequestBody RetentionClient retentionClient) {
+	log.info("RetentionClientController createRetentionClient: {}", retentionClient.getDocumentNumber());
 	RetentionClient response = null;
 	try {
-            response = service.create(retentionClient);
+            response = service.createRetentionClient(retentionClient);
 	} catch (BadRequestException e) {
-            log.error("RetentionClientController create Exception thrown: {}", e.getMessage());
+            log.error("RetentionClientController createRetentionClient Exception thrown: {}", e.getMessage());
 	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
         return new ResponseEntity<RetentionClient>(response, HttpStatus.CREATED);

@@ -50,6 +50,12 @@ public class CreditsServices {
     }
     
     public List<CreditsReport> getCreditsPendingOfBillByUserClientId(UUID id, long dateTwo) {
+        sumTotal = 0;
+        sumTotalAbono = 0;
+        sumTotalReten = 0;
+        sumTotalNotac = 0;
+        sumTotalValor = 0;
+        saldo = 0;
         log.info("CreditsServices getCreditsPendingOfBillByUserClientId: {}", id);
         Iterable<Credits> credits = creditsRepository.findCreditsPendingOfBillByUserClientId(id, dateTwo);
         List<CreditsReport> creditsReportList = new ArrayList<>();
@@ -136,6 +142,12 @@ public class CreditsServices {
         });
         CreditsReport saleReport = new CreditsReport("SUB-TOTAL ", null, null, null, 0, 0, sumTotal, sumTotalAbono, sumTotalReten, sumTotalNotac, sumTotalValor, 0, 0, 0, 0, 0);
         creditsReportList.add(saleReport);
+        sumTotal = 0;
+        sumTotalAbono = 0;
+        sumTotalReten = 0;
+        sumTotalNotac = 0;
+        sumTotalValor = 0;
+        saldo = 0;
         return creditsReportList;
     }
     

@@ -18,39 +18,39 @@ public class ClientController {
     ClientServices service;
 	
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity create(@RequestBody Client client) {
-	log.info("ClientController create: {}", client);
+    public ResponseEntity createClient(@RequestBody Client client) {
+	log.info("ClientController createClient: {}", client);
 	Client response = null;
 	try {
-            response = service.create(client);
+            response = service.createClient(client);
 	} catch (BadRequestException e) {
-            log.error("ClientController create Exception thrown: {}", e.getMessage());	    
+            log.error("ClientController createClient Exception thrown: {}", e.getMessage());	    
 	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
 	return new ResponseEntity<Client>(response, HttpStatus.CREATED);
     }
 	
     @RequestMapping(method = RequestMethod.PUT)
-    public ResponseEntity update(@RequestBody Client client) {
-	log.info("ClientController update: {}", client);
+    public ResponseEntity updateClient(@RequestBody Client client) {
+	log.info("ClientController updateClient: {}", client);
 	Client response = null;
 	try {
-            service.update(client);
+            service.updateClient(client);
 	} catch (BadRequestException e) {
-            log.error("ClientController create Exception thrown: {}", e.getMessage());	    
+            log.error("ClientController updateClient Exception thrown: {}", e.getMessage());	    
 	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
 	return new ResponseEntity<Void>(HttpStatus.CREATED);
     }
 	
     @RequestMapping(method = RequestMethod.GET, value="/lazy")
-    public ResponseEntity getLazy() {
-	log.info("ClientController getLazy");
+    public ResponseEntity getAllClientActives() {
+	log.info("ClientController getAllClientActives");
 	Iterable<Client> response = null;
 	try {
-            response = service.getAllLazy();
+            response = service.getAllClientActives();
 	} catch (BadRequestException e) {
-            log.error("ClientController getLazy Exception thrown: {}", e.getMessage());	    
+            log.error("ClientController getAllClientActives Exception thrown: {}", e.getMessage());	    
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
 	return new ResponseEntity<Iterable>(response, HttpStatus.CREATED);

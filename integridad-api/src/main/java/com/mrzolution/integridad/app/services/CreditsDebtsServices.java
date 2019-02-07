@@ -49,6 +49,11 @@ public class CreditsDebtsServices {
     }
     
     public List<CreditsDebtsReport> getCreditsDebtsPendingOfDebtsToPayByUserClientId(UUID id, long dateTwo) {
+        sumTotal = 0;
+        sumTotalAbono = 0;
+        sumTotalReten = 0;
+        sumTotalValor = 0;
+        saldo = 0;
         log.info("CreditsDebtsServices getCreditsDebtsPendingOfDebtsToPayByUserClientId: {}", id);
         Iterable<CreditsDebts> creditsDebts = creditsDebtsRepository.findCreditsDebtsPendingOfDebtsToPayByUserClientId(id, dateTwo);
         List<CreditsDebtsReport> creditsDebtsReportList = new ArrayList<>();

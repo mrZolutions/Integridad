@@ -1,12 +1,7 @@
 package com.mrzolution.integridad.app.services;
 
 import com.mrzolution.integridad.app.domain.Product;
-import com.mrzolution.integridad.app.domain.ProductBySubsidiary;
 import com.mrzolution.integridad.app.domain.ProductType;
-import com.mrzolution.integridad.app.father.Father;
-import com.mrzolution.integridad.app.father.FatherManageChildren;
-import com.mrzolution.integridad.app.repositories.ProductBySubsidiairyRepository;
-import com.mrzolution.integridad.app.repositories.ProductBySubsidiaryChildRepository;
 import com.mrzolution.integridad.app.repositories.ProductRepository;
 import com.mrzolution.integridad.app.repositories.ProductTypeRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -14,44 +9,38 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
 @Slf4j
 @Component
 public class ProductTypeServices {
-
-	@Autowired
-	ProductTypeRepository productTypeRepository;
-	@Autowired
-	ProductRepository productRepository;
+    @Autowired
+    ProductTypeRepository productTypeRepository;
+    @Autowired
+    ProductRepository productRepository;
 	
-	public ProductType create(ProductType productType){
-		log.info("ProductTypeServices create");
-		productType.setActive(true);
-
-		ProductType saved = productTypeRepository.save(productType);
-
-		saved.setListsNull();
-
-		return saved;
-	}
+    public ProductType createProductType(ProductType productType) {
+        log.info("ProductTypeServices createProductType");
+	productType.setActive(true);
+	ProductType saved = productTypeRepository.save(productType);
+	saved.setListsNull();
+	return saved;
+    }
 	
-	public void update(ProductType productType){
-		log.info("ProductTypeServices update: {}", productType.getId());
+    public void updateProductType(ProductType productType) {
+    	log.info("ProductTypeServices updateProductType: {}", productType.getId());
+	productType.setListsNull();
+	ProductType updated = productTypeRepository.save(productType);
+	log.info("ProductTypeServices updateProductType DONE id: {}", updated.getId());
+    }
 
-		productType.setListsNull();
-		ProductType updated = productTypeRepository.save(productType);
-		log.info("ProductTypeServices update id: {}", updated.getId());
-	}
-
-	public ProductType delete(UUID productTypeId) {
-		log.info("ProductServices delete: {}", productTypeId);
+	public ProductType deleteProductType(UUID productTypeId) {
+		log.info("ProductServices deleteProductType: {}", productTypeId);
 		ProductType findOne = productTypeRepository.findOne(productTypeId);
 		findOne.setListsNull();
 		findOne.setActive(false);
-		update(findOne);
+		updateProductType(findOne);
 		return findOne;
 	}
 
@@ -107,7 +96,6 @@ public class ProductTypeServices {
 //	}
 //
 	private void populateChildren(ProductType productType) {
-		log.info("ProductTypeServices populateChildren producTypetId: {}", productType.getId());
 		List<Product> productList = new ArrayList<>();
 		Iterable<Product> products = productRepository.findByProductTypeIdAndActive(productType.getId());
 
@@ -120,7 +108,5 @@ public class ProductTypeServices {
 		});
 
 		productType.setProducts(productList);
-		log.info("ProductTypeServices populateChildren FINISHED producTypetId: {}", productType.getId());
-
 	}
 }

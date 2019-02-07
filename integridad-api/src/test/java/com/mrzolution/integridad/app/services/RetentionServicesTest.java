@@ -72,7 +72,7 @@ public class RetentionServicesTest {
 		Mockito.when(retentionRepository.findOne(id)).thenReturn(retention);
 		Mockito.when(detailRetentionRepository.findByRetention(retention)).thenReturn(details);
 
-		Retention retrieved = service.getById(id);
+		Retention retrieved = service.getRetentionById(id);
 		ListValidation.childsLisAndFathertValidation(Retention.class, retrieved);
 
 		Assert.assertNotNull(retrieved);

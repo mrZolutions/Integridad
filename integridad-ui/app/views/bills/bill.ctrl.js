@@ -641,7 +641,7 @@ angular.module('integridadUiApp')
           "unidad_medida": det.product.unitOfMeasurementFull
         };
         item.detalles_adicionales = {
-          "Descripcion": det.adicional
+          "observ": det.adicional
         };
         if (!_.isEmpty(impuestos)) {
           item.impuestos = impuestos;
@@ -663,7 +663,7 @@ angular.module('integridadUiApp')
       vm.medio.total;
 
       var req = requirementService.createRequirement(vm.clientSelected, vm.bill, $localStorage.user, vm.impuestosTotales, vm.items, vm.pagos);
-      
+      //console.log(JSON.stringify(req));
       billService.getClaveDeAcceso(req, vm.companyData.userClient.id).then(function(resp) {
         vm.bill.pagos = vm.pagos;
         if (vm.bill.discountPercentage === undefined) {

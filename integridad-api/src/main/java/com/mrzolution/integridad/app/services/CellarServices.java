@@ -88,7 +88,6 @@ public class CellarServices {
         cellar.setDetailsCellar(detailCellarList);
         cellar.setDetailsKardex(detailsKardexList);
         cellar.setFatherListToNull();
-        log.info("CellarServices populateChildren cellarId: {}", cellar.getId());
     }
     
     private List<DetailCellar> getDetailsByCellar(Cellar cellar) {
@@ -121,7 +120,7 @@ public class CellarServices {
     
     //Create Cellar
     @Async("asyncExecutor")
-    public Cellar create(Cellar cellar) throws BadRequestException {
+    public Cellar createCellar(Cellar cellar) throws BadRequestException {
         List<DetailCellar> detailsCellar = cellar.getDetailsCellar();
         List<Kardex> detailsKardex = cellar.getDetailsKardex();
         if (detailsCellar == null) {
@@ -140,7 +139,7 @@ public class CellarServices {
         if ("INGRESADO".equals(saved.getStatusIngreso())) {
             updateProductBySubsidiary(cellar, detailsCellar);
         }
-        log.info("CellarServices Cellar created id: {}", saved.getId());
+        log.info("CellarServices createCellar DONE id: {}", saved.getId());
         return saved;
     }
     

@@ -72,7 +72,7 @@ public class UserClientServicesTest {
 		UserClient response = service.create(client);
 		
 		Mockito.verify(userClientRepository, Mockito.times(1)).save(Mockito.any(UserClient.class));
-		Mockito.verify(subsidiaryServices, Mockito.times(1)).create(subsidiary);
+		Mockito.verify(subsidiaryServices, Mockito.times(1)).createSubsidiary(subsidiary);
 		
 		Assert.assertTrue(!response.getSubsidiaries().isEmpty());
 		
@@ -131,8 +131,8 @@ public class UserClientServicesTest {
         
         service.update(client);
         
-        Mockito.verify(subsidiaryServices, Mockito.times(1)).update(subsidiaryN);
-        Mockito.verify(subsidiaryServices, Mockito.times(1)).update(subsidiaryU);
+        Mockito.verify(subsidiaryServices, Mockito.times(1)).updateSubsidiary(subsidiaryN);
+        Mockito.verify(subsidiaryServices, Mockito.times(1)).updateSubsidiary(subsidiaryU);
 
     }
 	

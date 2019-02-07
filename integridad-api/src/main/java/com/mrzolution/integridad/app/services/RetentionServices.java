@@ -67,8 +67,8 @@ public class RetentionServices {
         return retentions;
     }
 
-    public Retention getById(UUID id) {
-        log.info("RetentionServices getById: {}", id);
+    public Retention getRetentionById(UUID id) {
+        log.info("RetentionServices getRetentionById: {}", id);
         Retention retrieved = retentionRepository.findOne(id);
         if (retrieved != null) {
             log.info("RetentionServices retrieved id: {}", retrieved.getId());
@@ -169,7 +169,6 @@ public class RetentionServices {
     }
 
     private void populateChildren(Retention retention) {
-        log.info("RetentionServices populateChildren retentionId: {}", retention.getId());
         List<DetailRetention> detailRetentionList = new ArrayList<>();
         Iterable<DetailRetention> retentions = detailRetentionRepository.findByRetention(retention);
         retentions.forEach(detail -> {
@@ -180,7 +179,6 @@ public class RetentionServices {
         });
         retention.setDetailRetentions(detailRetentionList);
         retention.setFatherListToNull();
-        log.info("RetentionServices populateChildren DONE retentionId: {}", retention.getId());
     }
 
 }

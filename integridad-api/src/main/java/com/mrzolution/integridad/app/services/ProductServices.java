@@ -130,7 +130,6 @@ public class ProductServices {
             product.getBrand().setFatherListToNull();
             product.getBrand().setListsNull();
 	}
-	product.setFatherListToNull();
-	log.info("ProductServices populateChildren DONE productId: {}", product.getId());	
+	product.setFatherListToNull();	
     }
 }

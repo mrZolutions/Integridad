@@ -37,7 +37,7 @@ public class RetentionController {
     public ResponseEntity getRetentionById(@PathVariable("id") UUID id) {
 	Retention response = null;
 	try {
-            response = service.getById(id);
+            response = service.getRetentionById(id);
 	} catch(BadRequestException e) {
             log.error("RetentionController getRetentionById Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());

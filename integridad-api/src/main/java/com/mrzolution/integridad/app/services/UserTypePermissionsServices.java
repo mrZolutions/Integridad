@@ -12,30 +12,23 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Component
 public class UserTypePermissionsServices {
+    @Autowired
+    UserTypePermissionsRepository userTypePermissionsRepository;
 	
-	@Autowired
-	UserTypePermissionsRepository userTypePermissionsRepository;
+    public UserTypePermissions createUserTypePermissions(UserTypePermissions userTypePermissions) {
+	return userTypePermissionsRepository.save(userTypePermissions);
+    }
 	
-	public UserTypePermissions create(UserTypePermissions userTypePermissions) {
-		return userTypePermissionsRepository.save(userTypePermissions);
+    public Iterable<UserTypePermissions> getByUserType(UserType userType) {
+	Iterable<UserTypePermissions> userTypePermissions = userTypePermissionsRepository.findByUserType(userType);
+	for (UserTypePermissions userTypePermission : userTypePermissions) {
+            userTypePermission.setUserType(null);
 	}
+	return userTypePermissions;
+    }
 	
-	public Iterable<UserTypePermissions> findByUserType(UserType userType) {
-		Iterable<UserTypePermissions> userTypePermissions = userTypePermissionsRepository.findByUserType(userType);
-		for (UserTypePermissions userTypePermission : userTypePermissions) {
-//			userTypePermission.setFatherListToNull();
-			userTypePermission.setUserType(null);
-		}
-		return userTypePermissions;
-	}
-	
-	
-	
-	private void populateChildren(UserTypePermissions userTypePermisions) {
-		log.info("UserTypePermissionsServices populateChildren userTypePermisionsId: {}", userTypePermisions.getId());
-		
-		userTypePermisions.setFatherListToNull();
-		log.info("UserTypeServices populateChildren FINISHED userTypeId: {}", userTypePermisions.getId());
-	}
+    private void populateChildren(UserTypePermissions userTypePermisions) {
+	userTypePermisions.setFatherListToNull();
+    }
 
 }

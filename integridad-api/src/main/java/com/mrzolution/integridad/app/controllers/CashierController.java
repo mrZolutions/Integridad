@@ -15,34 +15,32 @@ import java.util.UUID;
 @RestController
 @RequestMapping(value = "/integridad/v1/cashier")
 public class CashierController {
+    @Autowired
+    CashierServices service;
 
-	@Autowired
-	CashierServices service;
+    @RequestMapping(method = RequestMethod.GET, value="/subsidiary/{id}")
+    public ResponseEntity getAllBySubsiduaryActivesLazy(@PathVariable("id") UUID subsidiaryId) {
+	log.info("CashierController getAllBySubsiduaryActivesLazy id: {}", subsidiaryId);
+	Iterable<Cashier> response = null;
+	try {
+            response = service.getAllBySubsiduaryActivesLazy(subsidiaryId);
+	} catch (BadRequestException e) {
+            log.info("SubsidiaryController getByUserClientId Exception thrown: {}", e.getMessage());	    
+	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+	return new ResponseEntity<Iterable>(response, HttpStatus.OK);
+    }
 
-	
-	@RequestMapping(method = RequestMethod.GET, value="/subsidiary/{id}")
-    public ResponseEntity getAllBySubsiduaryActivesLazy(@PathVariable("id") UUID subsidiaryId){
-		log.info("CashierController getAllBySubsiduaryActivesLazy id: {}", subsidiaryId);
-		Iterable<Cashier> response = null;
-		try {
-			response = service.getAllBySubsiduaryActivesLazy(subsidiaryId);
-		}catch(BadRequestException e) {
-			log.info("SubsidiaryController getByUserClientId Exception thrown: {}", e.getMessage());	    
-	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-	    }
-		return new ResponseEntity<Iterable>(response, HttpStatus.OK);
-	}
-
-	@RequestMapping(method = RequestMethod.PUT)
-    public ResponseEntity update(@RequestBody Cashier cashier){
-		log.info("CashierController update");
-		try {
-			service.update(cashier);
-		}catch(BadRequestException e) {
-			log.error("CashierController update Exception thrown: {}", e.getMessage());
-	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-	    }
-		return new ResponseEntity<Void>(HttpStatus.ACCEPTED);
-	}
+    @RequestMapping(method = RequestMethod.PUT)
+    public ResponseEntity updateCashier(@RequestBody Cashier cashier) {
+	log.info("CashierController update");
+	try {
+            service.updateCashier(cashier);
+	} catch (BadRequestException e) {
+            log.error("CashierController update Exception thrown: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+	return new ResponseEntity<Void>(HttpStatus.ACCEPTED);
+    }
 
 }

@@ -29,13 +29,13 @@ public class PaymentController {
     PaymentServices service;
     
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity create(@RequestBody Payment payment) {
+    public ResponseEntity createPayment(@RequestBody Payment payment) {
         log.info("PaymentController create");
         Payment response = null;
         try {
-            response = service.create(payment);
+            response = service.createPayment(payment);
 	} catch (BadRequestException e) {
-            log.error("PaymentController create Exception thrown: {}", e.getMessage());
+            log.error("PaymentController createPayment Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
         return new ResponseEntity<Payment>(response, HttpStatus.CREATED);

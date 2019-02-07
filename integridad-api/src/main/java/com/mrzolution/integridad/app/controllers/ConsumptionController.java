@@ -28,24 +28,24 @@ public class ConsumptionController {
     
     @RequestMapping(method = RequestMethod.GET, value="/{id}")
     public ResponseEntity getAllConsumptionById(@PathVariable("id") UUID id) {
-        log.info("ConsumptionController getId: {}", id);
+        log.info("ConsumptionController getAllConsumptionById: {}", id);
         Consumption response = null;
         try {
             response = service.getConsumptionById(id);
 	} catch (BadRequestException e) {
-            log.error("ConsumptionController getId Exception thrown: {}", e.getMessage());
+            log.error("ConsumptionController getAllConsumptionById Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
         return new ResponseEntity<Consumption>(response, HttpStatus.ACCEPTED);
     }
     
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity create(@RequestBody Consumption consumption) {
+    public ResponseEntity createConsumption(@RequestBody Consumption consumption) {
         Consumption response = null;
         try {
-            response = service.create(consumption);
+            response = service.createConsumption(consumption);
 	} catch (BadRequestException e) {
-            log.error("ConsumptionController create Exception thrown: {}", e.getMessage());
+            log.error("ConsumptionController createConsumption Exception thrown: {}", e.getMessage());
 	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
         return new ResponseEntity<Consumption>(response, HttpStatus.ACCEPTED);
@@ -57,7 +57,7 @@ public class ConsumptionController {
         try {
             response = service.getConsumptionByClientId(id);
 	} catch (BadRequestException e) {
-            log.error("ConsumptionController getId Exception thrown: {}", e.getMessage());
+            log.error("ConsumptionController getAllConsumptionByClientId Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
         return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);

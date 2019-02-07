@@ -33,8 +33,8 @@ public class SubsidiaryServices {
     @Autowired
     UserIntegridadRepository userIntegridadRepository;
 
-    public Subsidiary create(Subsidiary subsidiary) {
-	log.info("SubsidiaryServices create: {}", subsidiary.getName());
+    public Subsidiary createSubsidiary(Subsidiary subsidiary) {
+	log.info("SubsidiaryServices createSubsidiary: {}", subsidiary.getName());
 	subsidiary.setDateCreated(new Date().getTime());
 	subsidiary.setActive(true);
 
@@ -73,8 +73,8 @@ public class SubsidiaryServices {
 	return subsidiaries;
     }
 
-    public Subsidiary getById(UUID id) {
-	log.info("SubsidiaryServices getById: {}", id);
+    public Subsidiary getSubsidiaryById(UUID id) {
+	log.info("SubsidiaryServices getSubsidiaryById: {}", id);
 	Subsidiary subsidiary = subsidiaryRepository.findOne(id);
 	subsidiary.setFatherListToNull();
 	subsidiary.setListsNull();
@@ -82,11 +82,11 @@ public class SubsidiaryServices {
 	return subsidiary;
     }
 
-    public Subsidiary update (Subsidiary subsidiary) throws BadRequestException {
+    public Subsidiary updateSubsidiary(Subsidiary subsidiary) throws BadRequestException {
 	if (subsidiary.getId() == null) {
             throw new BadRequestException("Invalid subsidiary");
 	}
-	log.info("SubsidiaryServices update: {}", subsidiary.getName());
+	log.info("SubsidiaryServices updateSubsidiary: {}", subsidiary.getName());
 	Father<Subsidiary, Cashier> father = new Father<>(subsidiary, subsidiary.getCashiers());
 	FatherManageChildren fatherUpdateChildren = new FatherManageChildren(father, cashierChildRepository, cashierRepository);
 	fatherUpdateChildren.updateChildren();
@@ -104,7 +104,6 @@ public class SubsidiaryServices {
     }
 
     private void populateChildren(Subsidiary subsidiary) {
-	log.info("SubsidiaryServices populateChildren subsidiaryId: {}", subsidiary.getId());
 	List<Cashier> cashierList = new ArrayList<>();
 	Iterable<Cashier> cashiers = cashierRepository.findBySubsidiary(subsidiary);
 	List<Warehouse> warehouseList = new ArrayList<>();
@@ -137,7 +136,6 @@ public class SubsidiaryServices {
 	subsidiary.setWarehouses(warehouseList);
 	subsidiary.setUsers(userIntegridadList);
 	subsidiary.setFatherListToNull();
-	log.info("SubsidiaryServices populateChildren FINISHED subsidiaryId: {}", subsidiary.getId());
     }
     
 }

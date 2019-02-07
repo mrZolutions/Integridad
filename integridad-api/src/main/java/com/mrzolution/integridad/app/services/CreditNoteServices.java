@@ -60,16 +60,16 @@ public class CreditNoteServices {
         log.info("CreditNoteServices getDatil Empresa valida: {}", userClient.getName());
         ObjectMapper mapper = new ObjectMapper();
         String data = mapper.writeValueAsString(requirement);
-        log.info("CreditNoteServices getDatil maper creado");
+        log.info("CreditNoteServices getDatil MAPPER creado");
         
         String response = httpCallerService.post(Constants.DATIL_CREDIT_NOTE_LINK, data, userClient);
         //String response = "OK";
-        log.info("CreditNoteServices getDatil httpcall success");
+        log.info("CreditNoteServices getDatil httpcall SUCCESS");
         return response;
     }
 	
-    public CreditNote create(CreditNote creditNote) throws BadRequestException {
-        log.info("CreditNoteServices create");            
+    public CreditNote createCreditNote(CreditNote creditNote) throws BadRequestException {
+        log.info("CreditNoteServices createCreditNote");            
         Iterable<CreditNote> credNot = creditNoteRepository.findByDocumentStringSeqAndBillId(creditNote.getDocumentStringSeq(), creditNote.getBillSeq());
         if (Iterables.size(credNot) > 0) {
             throw new BadRequestException("Nota de Cretido de esta Factura Ya Existe");
@@ -103,7 +103,7 @@ public class CreditNoteServices {
                 detail.setCreditNote(null);
             });
 
-            log.info("CreditNoteServices created id: {}", saved.getId());
+            log.info("CreditNoteServices createCreditNote DONE id: {}", saved.getId());
             saved.setDetails(details);
             saved.setDetailsKardex(detailsKardex);
             saved.setFatherListToNull();

@@ -32,13 +32,13 @@ public class CreditController {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity create(@RequestBody CreditNote creditNote) {
-	log.info("CreditController create: {}", creditNote.getCreditSeq());
+    public ResponseEntity createCreditNote(@RequestBody CreditNote creditNote) {
+	log.info("CreditController createCreditNote: {}", creditNote.getCreditSeq());
 	CreditNote response = null;
 	try {
-            response = service.create(creditNote);
+            response = service.createCreditNote(creditNote);
 	} catch (BadRequestException e) {
-            log.error("CreditController create Exception thrown: {}", e.getMessage());
+            log.error("CreditController createCreditNote Exception thrown: {}", e.getMessage());
 	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
 	return new ResponseEntity<CreditNote>(response, HttpStatus.CREATED);
