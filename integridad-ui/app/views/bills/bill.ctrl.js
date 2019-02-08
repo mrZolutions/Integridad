@@ -607,6 +607,10 @@ angular.module('integridadUiApp')
         var costWithIce = parseFloat((det.total * 1.10).toFixed(4));
         var impuestos = [];
         var impuesto = {};
+        var detaAdic = {
+          "observacion": det.adicional
+        };
+        
         if (det.product.iva) {
           impuesto.base_imponible = parseFloat(((parseFloat(det.costEach) - (parseFloat(det.costEach) * parseFloat((vm.bill.discountPercentage / 100)))) * parseFloat(det.quantity)).toFixed(4));
           impuesto.valor = parseFloat((parseFloat(costWithIva) * parseFloat(det.quantity)).toFixed(4));
@@ -638,10 +642,8 @@ angular.module('integridadUiApp')
           "descripcion": det.product.name,
           "precio_total_sin_impuestos": parseFloat((parseFloat(det.costEach) - (parseFloat(det.costEach) * parseFloat((vm.bill.discountPercentage / 100)) * parseFloat(det.quantity))).toFixed(4)),
           "descuento": parseFloat((parseFloat(det.costEach) * parseFloat((vm.bill.discountPercentage) / 100)).toFixed(4)),
-          "unidad_medida": det.product.unitOfMeasurementFull
-        };
-        item.detalles_adicionales = {
-          "observ": det.adicional
+          "unidad_medida": det.product.unitOfMeasurementFull,
+          "detalles_adicionales": detaAdic
         };
         if (!_.isEmpty(impuestos)) {
           item.impuestos = impuestos;
@@ -663,7 +665,7 @@ angular.module('integridadUiApp')
       vm.medio.total;
 
       var req = requirementService.createRequirement(vm.clientSelected, vm.bill, $localStorage.user, vm.impuestosTotales, vm.items, vm.pagos);
-      //console.log(JSON.stringify(req));
+
       billService.getClaveDeAcceso(req, vm.companyData.userClient.id).then(function(resp) {
         vm.bill.pagos = vm.pagos;
         if (vm.bill.discountPercentage === undefined) {
