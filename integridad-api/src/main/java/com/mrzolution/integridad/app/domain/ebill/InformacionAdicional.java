@@ -8,4 +8,5 @@ import lombok.Data;
 public class InformacionAdicional {
     private String info1;
     private String info2;
+    private String observ;
 }

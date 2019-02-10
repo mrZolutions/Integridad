@@ -273,7 +273,7 @@
                    ng-model="vm.bill.discountPercentage" class="form-control" maxlength="9" ng-change="vm.getFechaCobro()" ng-disabled="!vm.newBill">
           </div>
         </div>
-        <div class="row" ng-if="vm.companyData.userClient.espTemp == 'A-3'" print-if="vm.companyData.userClient.espTemp == 'A-3'">
+        <div class="row" ng-if="vm.companyData.userClient.espTemp != 'A-1'" print-if="vm.companyData.userClient.espTemp != 'A-1'">
           <div class="form-group col-md-12">
             <b>OBSERVACIONES:</b>
             <input type="text" ng-model="vm.bill.observation" class="form-control">
