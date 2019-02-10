@@ -50,13 +50,12 @@ public class CuentaContableServices {
             cuenta.setListsNull();
             cuenta.setFatherListToNull();
 	}
-	log.info("CuentaContable getCuentaContableByUserClient size retrieved: {}", Iterables.size(cuentas));
 	return cuentas;
     }
     
     // Selecciona Ctas Contables por Tipo
-    public Iterable<CuentaContable> getCuentaContableByType(String typ) {
-        Iterable<CuentaContable> cuentasType = cuentaContableRepository.findByType(typ);
+    public Iterable<CuentaContable> getCuentaContableByType(UUID id, String typ) {
+        Iterable<CuentaContable> cuentasType = cuentaContableRepository.findByType(id, typ);
         cuentasType.forEach(ctasType -> {
             ctasType.setListsNull();
             ctasType.setFatherListToNull();

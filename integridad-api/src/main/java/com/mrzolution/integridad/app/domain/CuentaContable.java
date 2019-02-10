@@ -19,11 +19,6 @@ public class CuentaContable {
     private String accountType;
     private String description;
     private String name;
-    private boolean ivaVenta;
-    private boolean ivaCompra;
-    private boolean ctaProvider;
-    private boolean ctaClient;
-
 
     @ManyToOne
     @JoinColumn(name = "user_client_id")

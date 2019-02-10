@@ -32,7 +32,6 @@ angular.module('integridadUiApp')
     vm.subIva = undefined;
     vm.typeTaxes = undefined;
     vm.cuentaCtableId = undefined;
-    vm.cuentaContableList = undefined;
     vm.creditsDebtsValue = undefined;
     vm.debtsToPayList = undefined;
     vm.debtsToPayCreated = undefined;
@@ -291,13 +290,21 @@ angular.module('integridadUiApp')
 
     vm.getPercentageTableAll = function() {
       if (vm.debtsToPay.typeTaxes === '1') {
-        cuentaContableService.getAll().then(function(response) {
+        cuentaContableService.getCuentaContableByUserClient(vm.usrCliId).then(function(response) {
           vm.cuentaContableList = response;
+          vm.loading = false;
+        }).catch(function(error) {
+          vm.loading = false;
+          vm.error = error.data;
         });
         vm.typeTaxes = vm.debtsToPay.typeTaxes;
       } else if (vm.debtsToPay.typeTaxes === '2') {
-        cuentaContableService.getAll().then(function(response) {
+        cuentaContableService.getCuentaContableByUserClient(vm.usrCliId).then(function(response) {
           vm.cuentaContableList = response;
+          vm.loading = false;
+        }).catch(function(error) {
+          vm.loading = false;
+          vm.error = error.data;
         });
         vm.typeTaxes = vm.debtsToPay.typeTaxes;
       };
@@ -305,12 +312,20 @@ angular.module('integridadUiApp')
 
     vm.selectPurchaseTable = function(purchaseType) {
       if (vm.debtsToPay.typeTaxes === '1') {
-        cuentaContableService.getByType(purchaseType).then(function(response) {
+        cuentaContableService.getCuentaContableByType(vm.usrCliId, purchaseType).then(function(response) {
           vm.cuentaContableList = response;
+          vm.loading = false;
+        }).catch(function(error) {
+          vm.loading = false;
+          vm.error = error.data;
         });
       } else if (vm.debtsToPay.typeTaxes === '2') {
-        cuentaContableService.getByType(purchaseType).then(function(response) {
+        cuentaContableService.getCuentaContableByType(vm.usrCliId, purchaseType).then(function(response) {
           vm.cuentaContableList = response;
+          vm.loading = false;
+        }).catch(function(error) {
+          vm.loading = false;
+          vm.error = error.data;
         });
       };
     };
@@ -320,24 +335,32 @@ angular.module('integridadUiApp')
         vm.debtsToPay.items.splice(vm.indexEdit, 1);
         vm.indexEdit = undefined;
       };
-      vm.itemIva = {
-        codigo_contable: '1.01.05.01.01',
-        desc_contable: 'IVA EN COMPRAS',
-        tipo: 'DEBITO (D)',
-        base_imponible: vm.subIva,
-        nomb_contable: 'DEFINIDA PARA TODAS LAS COMPRAS'
-      };
-      vm.itemProvider = {
-        codigo_contable: '2.01.03.01.01',
-        desc_contable: 'PROVEEDORES LOCALES',
-        tipo: 'CREDITO (C)',
-        base_imponible: vm.debtsToPay.total,
-        nomb_contable: 'DEFINIDA PARA TODOS LOS PROVEEDORES'
-      };
       if (vm.typeTaxes === '1') {
+        vm.subIva = parseFloat((vm.item.base_imponible * 0.1200).toFixed(2));
+        vm.itemIva = {
+          codigo_contable: '1.01.01.01',
+          desc_contable: 'IVA EN COMPRAS',
+          tipo: 'DEBITO (D)',
+          base_imponible: vm.subIva,
+          nomb_contable: 'DEFINIDA PARA TODAS LAS COMPRAS'
+        };
+        vm.itemProvider = {
+          codigo_contable: '2.01.01.01',
+          desc_contable: 'PROVEEDORES LOCALES',
+          tipo: 'CREDITO (C)',
+          base_imponible: vm.debtsToPay.total,
+          nomb_contable: 'DEFINIDA PARA TODOS LOS PROVEEDORES'
+        };
         vm.debtsToPay.items.push(vm.itemIva);
         vm.debtsToPay.items.push(vm.itemProvider);
       } else if (vm.typeTaxes === '2') {
+        vm.itemProvider = {
+          codigo_contable: '2.01.01.01',
+          desc_contable: 'PROVEEDORES LOCALES',
+          tipo: 'CREDITO (C)',
+          base_imponible: vm.debtsToPay.total,
+          nomb_contable: 'DEFINIDA PARA TODOS LOS PROVEEDORES'
+        };
         vm.debtsToPay.items.push(vm.itemProvider);
       };
     };
@@ -352,9 +375,9 @@ angular.module('integridadUiApp')
         tipo: tax.accountType,
         nomb_contable: tax.name
       };
-      vm.subIva = (parseFloat(vm.debtsToPay.total) * 0.12).toFixed(2);
-      vm.subTotal = (parseFloat(vm.debtsToPay.total) - vm.subIva).toFixed(2);
-      vm.totalTotal = (parseFloat(vm.debtsToPay.total)).toFixed(2);
+      vm.subTotal = parseFloat((vm.debtsToPay.total / 1.1200).toFixed(2));
+      //vm.subIva = parseFloat((vm.debtsToPay.total - vm.subTotal).toFixed(2));
+      vm.totalTotal = parseFloat(vm.debtsToPay.total);
     };
 
     vm.getRestaSubotal = function() {

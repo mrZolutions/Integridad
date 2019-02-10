@@ -192,21 +192,12 @@
                                 ng-change="vm.selectPurchaseTable(vm.debtsToPay.tipoDeCompra)" class="form-control">
                         </select>
                     </div>
-                    <div class="form-group col-md-4">
-                        <label>Cuentas Contables:</label><br>
-                        <button type="button" class="btn btn-primary" ng-click="vm.addIvaAndProvider()">
-                                IVA y Proveedor
-                        </button>
-                    </div>
                 </div>
                 <div class="table-responsive" class="row" ng-show="vm.cuentaContableList !== undefined">
                     <div class="form-group col-md-12">
                         <table class="table table-striped">
                             <thead>
                                 <tr>
-                                    <th>Tipo Compra</th>
-                                    <th>C&oacute;digo</th>
-                                    <th>Descripci&oacute;n</th>
                                     <th>Tipo de Cuenta</th>
                                     <th>Nombre G&eacute;nerico</th>
                                 </tr>
@@ -218,9 +209,6 @@
                                     </td>
                                 </tr>
                                 <tr dir-paginate = "cc in vm.cuentaContableList | orderBy:'type' | filter:searchTextTaxes | itemsPerPage: 5"  pagination-id = "taxesPagination">
-                                    <td>{{cc.type}}</td>
-                                    <td>{{cc.code}}</td>
-                                    <td>{{cc.description}}</td>
                                     <td>{{cc.accountType}}</td>
                                     <td>{{cc.name}}</td>
                                     <td>
@@ -261,7 +249,7 @@
                                     <td>{{i.base_imponible}}</td>
                                     <td>
                                         <button type = "button" title = "Editar" class = "btn btn-primary btn-sm"
-                                                ng-click = "vm.editItemTaxes($index)" data-toggle = "modal" data-target = "#modalSelectedTaxes">
+                                                ng-click = "vm.editItemTaxes($index)" data-toggle = "modal" data-target = "#modalEditTaxes">
                                                 <span class = "glyphicon glyphicon-pencil" aria-hidden = "true"></span>
                                         </button>
                                         <button type = "button" title = "Eliminar" class = "btn btn-primary btn-sm"
@@ -283,6 +271,10 @@
                 </div>
             </div>
             <div class="panel-footer">
+                <button type="button" title = "Agregar Cuentas IVA y Proveedor" class="btn btn-primary btn-sm"
+                        data-toggle = "modal" data-target = "#modalBaseImponibleIVA" ng-disabled = "vm.getTotalSaldo() == 0.00">
+                        IVA y Proveedor
+                </button>
                 <button type = "button" title = "Forma de Pago" class = "btn btn-success btn-sm" ng-disabled = "vm.debtsToPay.items == 0"
                         data-toggle = "modal" data-target = "#modalAddPago">
                         <span class = "glyphicon glyphicon-usd" aria-hidden = "true"></span>
@@ -291,6 +283,35 @@
                         ng-click = "vm.cancel()">
                         <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
                 </button>
+            </div>
+        </div>
+    </div>
+    <div id = "modalBaseImponibleIVA" class = "modal fade" role = "dialog">
+        <div class = "modal-dialog">
+            <div class = "modal-content">
+                <div class = "modal-header">
+                    <button type = "button" class = "close" data-dismiss = "modal" ng-click = "vm.impuesto=undefined">&times;</button>
+                </div>
+                <div class = "modal-body">
+                    <div class = "row">
+                        <div class = "form-group col-md-9">
+                            <label>Ingreso de Base Imponible para calculo del IVA</label>
+                        </div>
+                        <div class = "form-group col-md-3">
+                            <input type = "text" onkeypress = "return ((event.which >= 46 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+                                   class = "form-control" maxlength = "9" ng-model = "vm.item.base_imponible"/>
+                        </div>
+                    </div>
+                </div>
+                <div class = "modal-footer">
+                    <button type = "button" title = "Aceptar" class = "btn btn-success btn-sm" data-dismiss = "modal" ng-click="vm.addIvaAndProvider()">
+                            <span class = "glyphicon glyphicon-thumbs-up" aria-hidden = "true"></span>
+                    </button>
+                    <button type = "button" title = "Salir" class = "btn btn-primary btn-sm" data-dismiss = "modal"
+                            ng-click = "vm.item = undefined; vm.indexEdit = undefined;">
+                            <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -303,23 +324,58 @@
                 </div>
                 <div class = "modal-body">
                     <div class = "row">
-                        <div class = "col-md-3">
+                        <div class = "form-group col-md-3">
                             <label>C&oacute;digo:</label>  
                             <b>{{vm.item.codigo_contable}}</b>
                         </div>
-                        <div class = "col-md-3">
+                        <div class = "form-group col-md-3">
                             <label>Nombre:</label>
                             <b>{{vm.item.desc_contable}}</b>
                         </div>
-                        <div class = "col-md-3" ng-if = "vm.item.codigo === 1">
+                        <div class = "form-group col-md-3" ng-if = "vm.item.codigo === 1">
                             <label>Valor</label>
                             <input type = "text" onkeypress = "return ((event.which >= 46 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
                                    class = "form-control" maxlength = "9" ng-model = "vm.item.base_imponible" placeholder = "{{vm.getRestaSubotal()}}"/>
                         </div>
-                        <div class = "col-md-3" ng-if="vm.item.codigo === 2">
+                        <div class = "form-group col-md-3" ng-if="vm.item.codigo === 2">
                             <label>Valor</label>
                             <input type = "text" onkeypress = "return ((event.which >= 46 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
                                    class = "form-control" maxlength = "9" ng-model = "vm.item.base_imponible" placeholder = "{{vm.getRestaTotalTotal()}}"/>
+                        </div>
+                    </div>
+                </div>
+                <div class = "modal-footer">
+                    <button type = "button" title = "Aceptar" class = "btn btn-success btn-sm" data-dismiss = "modal" ng-click = "vm.addItem()">
+                            <span class = "glyphicon glyphicon-thumbs-up" aria-hidden = "true"></span>
+                    </button>
+                    <button type = "button" title = "Salir" class = "btn btn-primary btn-sm" data-dismiss = "modal"
+                            ng-click = "vm.item = undefined; vm.indexEdit = undefined;">
+                            <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id = "modalEditTaxes" class = "modal fade" role = "dialog">
+        <div class = "modal-dialog">
+            <div class = "modal-content">
+                <div class = "modal-header">
+                    <button type = "button" class = "close" data-dismiss = "modal" ng-click = "vm.impuesto=undefined">&times;</button>
+                </div>
+                <div class = "modal-body">
+                    <div class = "row">
+                        <div class = "form-group col-md-3">
+                            <label>C&oacute;digo:</label>  
+                            <b>{{vm.item.codigo_contable}}</b>
+                        </div>
+                        <div class = "form-group col-md-3">
+                            <label>Nombre:</label>
+                            <b>{{vm.item.desc_contable}}</b>
+                        </div>
+                        <div class = "form-group col-md-3">
+                            <label>Valor</label>
+                            <input type = "text" onkeypress = "return ((event.which >= 46 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+                                   class = "form-control" maxlength = "9" ng-model = "vm.item.base_imponible"/>
                         </div>
                     </div>
                 </div>

@@ -16,12 +16,12 @@ public interface CuentaContableRepository extends CrudRepository<CuentaContable,
 
     Iterable<CuentaContable> findByActive(boolean active);
 
-    @Query("SELECT p FROM CuentaContable p WHERE p.userClient.id = (:id) AND p.active = true")
+    @Query("SELECT cc FROM CuentaContable cc WHERE cc.userClient.id = (:id) AND cc.active = true")
     Iterable<CuentaContable> findByUserClientId(@Param("id") UUID id);
         
-    @Query("SELECT c FROM CuentaContable c WHERE c.type = (:typ) AND c.active = true")
-    Iterable<CuentaContable> findByType(@Param("typ") String typ);
+    @Query("SELECT cc FROM CuentaContable cc WHERE cc.userClient.id = (:id) AND cc.type = (:typ) AND cc.active = true")
+    Iterable<CuentaContable> findByType(@Param("id") UUID id, @Param("typ") String typ);
     
-    @Query("SELECT c FROM CuentaContable c WHERE c.type = (:typ) AND c.accountType = (:atyp) AND c.active = true")
+    @Query("SELECT cc FROM CuentaContable cc WHERE cc.type = (:typ) AND cc.accountType = (:atyp) AND cc.active = true")
     Iterable<CuentaContable> findByTypeAndAccountType(@Param("typ") String typ, @Param("atyp") String atyp);
 }

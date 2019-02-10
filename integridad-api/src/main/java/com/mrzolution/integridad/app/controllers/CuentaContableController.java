@@ -1,7 +1,6 @@
 package com.mrzolution.integridad.app.controllers;
 
 import com.mrzolution.integridad.app.domain.CuentaContable;
-
 import com.mrzolution.integridad.app.exceptions.BadRequestException;
 import com.mrzolution.integridad.app.services.CuentaContableServices;
 import lombok.extern.slf4j.Slf4j;
@@ -44,19 +43,8 @@ public class CuentaContableController {
         }
         return new ResponseEntity<Void>(HttpStatus.CREATED);
     }
-  
-    @RequestMapping(method = RequestMethod.GET)
-    public ResponseEntity getAll() {
-        Iterable<CuentaContable> result = null;
-        try {
-            result = service.getAll();
-        } catch (BadRequestException e) {
-
-        }
-        return new ResponseEntity<Iterable>(result, HttpStatus.ACCEPTED);
-    }
-
-    @RequestMapping(method = RequestMethod.GET, value="/lazy/client/{id}")
+    
+    @RequestMapping(method = RequestMethod.GET, value="/userclient/{id}")
     public ResponseEntity getCuentaContableByUserClient(@PathVariable("id") UUID id) {
 	log.info("CuentaContableController getCuentaContableByUserClient");
 	Iterable<CuentaContable> response = null;
@@ -69,12 +57,12 @@ public class CuentaContableController {
 	return new ResponseEntity<Iterable>(response, HttpStatus.CREATED);
     }
     
-    @RequestMapping(method = RequestMethod.GET, value="/cuenta/type/{typ}")
-    public ResponseEntity getCuentaContableByType(@PathVariable("typ") String typ) {
+    @RequestMapping(method = RequestMethod.GET, value="/type/{id}/{typ}")
+    public ResponseEntity getCuentaContableByType(@PathVariable("id") UUID id, @PathVariable("typ") String typ) {
         log.info("CuentaContableController getCuentaContableByType");
         Iterable<CuentaContable> response = null;
         try {
-            response = service.getCuentaContableByType(typ);
+            response = service.getCuentaContableByType(id, typ);
         } catch (BadRequestException e) {
             log.error("CuentaContableController getCuentaContableByType Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());

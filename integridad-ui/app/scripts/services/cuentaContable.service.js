@@ -1,14 +1,8 @@
 angular
   .module('app.services')
   .service('cuentaContableService', function(securityService) {
-    this.getAll = function() {
-      return securityService.get('/cuenta_contable').then(function successCallback(response) {
-        return response.data;
-      });
-    };
-
-    this.getByType = function(typ) {
-      return securityService.get('/cuenta_contable/cuenta/type/' + typ).then(function successCallback(response) {
+    this.getCuentaContableByType = function(id, typ) {
+      return securityService.get('/cuenta_contable/type/' + id + '/' + typ).then(function successCallback(response) {
         return response.data;
       });
     };
@@ -31,8 +25,8 @@ angular
       });
     };
 
-    this.getLazyByUserClientId = function(id) {
-      return securityService.get('/cuenta_contable/lazy/client/' + id).then(function successCallback(response) {
+    this.getCuentaContableByUserClient = function(id) {
+      return securityService.get('/cuenta_contable/userclient/' + id).then(function successCallback(response) {
         return response.data;
       });
     };
