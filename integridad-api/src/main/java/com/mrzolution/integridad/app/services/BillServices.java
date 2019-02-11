@@ -244,7 +244,6 @@ public class BillServices {
         if (bill.getId() == null) {
             throw new BadRequestException("Invalid Bill");
         }
-
         Bill billToDeactivate = billRepository.findOne(bill.getId());
         billToDeactivate.setListsNull();
         billToDeactivate.setActive(false);

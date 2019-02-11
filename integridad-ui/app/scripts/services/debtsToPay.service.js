@@ -18,4 +18,10 @@ angular
         return response.data;
       });
     };
+
+    this.cancelDebtsToPay = function(debtsToPay) {
+      return securityService.put('/debts', debtsToPay).then(function successCallback(response) {
+        return response.data;
+      });
+    };
 });

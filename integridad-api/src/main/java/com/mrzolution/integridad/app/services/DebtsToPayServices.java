@@ -63,6 +63,7 @@ public class DebtsToPayServices {
                 });
             }
         });
+        log.info("DebtsToPayServices savePagosAndCreditsOfDebts DONE");
     }
     
     public Iterable<DebtsToPay> getDebtsToPayByProviderId(UUID id) {
@@ -75,7 +76,7 @@ public class DebtsToPayServices {
         return debts;
     }
     
-    public DebtsToPay createDebtsToPay(DebtsToPay debtsToPay) throws BadRequestException{
+    public DebtsToPay createDebtsToPay(DebtsToPay debtsToPay) throws BadRequestException {
         List<DetailDebtsToPay> detailDebtsToPay = debtsToPay.getDetailDebtsToPay();
         List<PagoDebts> pagos = debtsToPay.getPagos();
         
@@ -106,7 +107,20 @@ public class DebtsToPayServices {
         return saved;
     }
     
-    private void populateChildren(DebtsToPay debtsToPay){
+    //Desactivación o Anulación de los Debts
+    public DebtsToPay deactivateDebtsToPay(DebtsToPay debtsToPay) throws BadRequestException {
+        if (debtsToPay.getId() == null) {
+            throw new BadRequestException("Invalid DebtsToPay");
+        }
+        DebtsToPay debtsToPayToDeactivate = debtsToPayRepository.findOne(debtsToPay.getId());
+        debtsToPayToDeactivate.setListsNull();
+        debtsToPayToDeactivate.setActive(false);
+        debtsToPayRepository.save(debtsToPayToDeactivate);
+        log.info("DebtsToPayServices deactivateDebtsToPay DONE id: {}", debtsToPayToDeactivate.getId());
+        return debtsToPayToDeactivate;
+    }
+    
+    private void populateChildren(DebtsToPay debtsToPay) {
 	List<DetailDebtsToPay> detailDebtsToPayList = new ArrayList<>();
 	Iterable<DetailDebtsToPay> debts = detailDebtsToPayRepository.findByDebtsToPay(debtsToPay);
 	List<PagoDebts> pagoList = getPagosDebtsToPay(debtsToPay);

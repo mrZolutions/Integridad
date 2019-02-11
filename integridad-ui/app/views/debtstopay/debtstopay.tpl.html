@@ -82,11 +82,11 @@
         </div>
     </div>
     <!--FIN DE SECCIÓN DE CARGA DE PROVEEDORES POR USERCLIENT-->
-    <!--SECCIÓN DE INGRESO DE DETALLES DE FACTURA PARA CTAS X PAGAR-->
+    <!--SECCIÓN DE INGRESO DE DETALLES DE FACTURA PARA CUENTAS POR PAGAR-->
     <div ng-show="vm.providerSelected !== undefined">
         <div class="panel panel-primary">
             <div class="panel-heading">
-                <h4>Ingreso de Facturas</h4>
+                <h4>Ingreso de Cuenta por Pagar</h4>
                 <div>
                     <b>Cuenta por Pagar Nro: </b>{{vm.seqNumber}}
                 </div>
@@ -563,15 +563,15 @@
         </div>
     </div>
     <!--FINAL MODALIDAD DE PAGO-->
-    <!--FINAL SECCIÓN DE INGRESO DE DETALLES DE FACTURA PARA CTAS X PAGAR-->
+    <!--FINAL SECCIÓN DE INGRESO DE DETALLES DE FACTURA PARA CUENTAS POR PAGAR-->
 
-    <!--SECCIÓN DE CARGA DE LOS DEBTS POR PROVEEDOR PARA EL PAGO DE ABONOS-->
+    <!--SECCIÓN DE CARGA DE LAS CUENTAS POR PAGAR POR PROVEEDOR PARA EL PAGO DE ABONOS-->
     <div class="table-responsive" ng-show = "vm.debtsToPayList !== undefined">
         <div class = "panel panel-primary">
             <div class = "panel-heading">
                 <h4>Pagos y Abonos</h4>
                 <div>
-                    <b>Facturas Pertenecientes a: {{vm.providerName}}</b>
+                    <b>Cuentas por Pagar Pertenecientes a: {{vm.providerName}}</b>
                 </div>
             </div>
             <div class = "panel-body">
@@ -587,7 +587,7 @@
                     <tbody>
                         <tr ng-show = "vm.debtsToPayList == 0">
                             <td colspan = "4">
-                                El Proveedor <b>No Presenta</b> Facturas Ingresadas...
+                                El Proveedor <b>No Presenta</b> Cuentas por Pagar Ingresadas...
                             </td>
                         </tr>
                         <tr ng-repeat = "debts in vm.debtsToPayList">
@@ -612,13 +612,13 @@
             </div>
         </div>
     </div>
-    <!--SECCIÓN DE CARGA DE LOS CRÉDITOS POR DEBTS-->
+    <!--SECCIÓN DE CARGA DE LOS CRÉDITOS POR CUENTAS POR PAGAR-->
     <div id = "modalCuotasDebts" class = "modal fade" role = "dialog">
         <div class = "modal-dialog">
             <div class = "modal-content">
                 <div class = "modal-header">
                     <button type = "button" class = "close" data-dismiss = "modal">&times;</button>
-                    <h4 class = "modal-title">Listado de Cuotas por Factura</h4>
+                    <h4 class = "modal-title">Listado de Cuotas por Cuenta por Pagar</h4>
                 </div>
                 <div class = "modal-body">
                     <table class = "table table-striped">
@@ -633,7 +633,7 @@
                         <tbody>
                             <tr ng-show = "vm.creditsDebtsList == 0">
                                 <td colspan = "4">
-                                    La Factura <b>No Presenta</b> Cobros Pendientes por Cancelar...
+                                    La Cuenta por Pagar <b>No Presenta</b> Cobros Pendientes por Cancelar...
                                 </td>
                             </tr>
                             <tr ng-repeat = "creditsDebts in vm.creditsDebtsList | orderBy : 'payNumber' : true">
@@ -658,8 +658,8 @@
             </div>
         </div>
     </div>
-    <!--FINAL SECCIÓN DE CARGA DE LOS CRÉDITOS POR DEBTS-->
-    <!--SECCIÓN DE PAGO DE LAS CUOTAS POR FACTURA-->
+    <!--FINAL SECCIÓN DE CARGA DE LOS CRÉDITOS POR CUENTAS POR PAGAR-->
+    <!--SECCIÓN DE PAGO DE LAS CUOTAS POR CUENTA POR PAGAR-->
     <div id = "modalAbonarDebts" class = "modal fade" role = "dialog">
         <div class = "modal-dialog">
             <div class = "modal-content">
@@ -792,16 +792,16 @@
             </div>
         </div>
     </div>
-    <!--FINAL SECCIÓN DE PAGO DE LAS CUOTAS POR FACTURA-->
-    <!--FINAL SECCIÓN DE CARGA DE LOS DEBTS POR PROVEEDOR PARA EL PAGO DE ABONOS-->
+    <!--FINAL SECCIÓN DE PAGO DE LAS CUOTAS POR CUENTAS POR PAGAR-->
+    <!--FINAL SECCIÓN DE CARGA DE LAS CUENTAS POR PAGAR POR PROVEEDOR PARA EL PAGO DE ABONOS-->
 
-    <!--SECCIÓN DE CONSULTA DE FACTURAS POR PROVEEDOR-->
+    <!--SECCIÓN DE CONSULTA DE CUENTAS POR PAGAR POR PROVEEDOR-->
     <div class="table-responsive" ng-show = "vm.providerDebtsList !== undefined">
         <div class = "panel panel-primary">
             <div class = "panel-heading">
-                <h4>Consulta de Facturas</h4>
+                <h4>Consulta de Cuentas por Pagar</h4>
                 <div>
-                    <b>Facturas Pertenecientes a: {{vm.providerName}}</b>
+                    <b>Cuentas por Pagar Pertenecientes a: {{vm.providerName}}</b>
                 </div>
             </div>
             <div class = "panel-body">
@@ -816,7 +816,7 @@
                     <tbody>
                         <tr ng-show = "vm.providerDebtsList == 0">
                             <td colspan = "4">
-                                El Proveedor <b>No Presenta</b> Facturas Ingresadas...
+                                El Proveedor <b>No Presenta</b> Cuentas por Pagar Ingresadas...
                             </td>
                         </tr>
                         <tr ng-repeat = "debts in vm.providerDebtsList">
@@ -824,9 +824,14 @@
                             <td>{{debts.fecha | date : "dd/MM/yyyy"}}</td>
                             <td>{{debts.total}}</td>
                             <td>
-                                <button type = "button" title = "Ver Factura" 
+                                <button type = "button" title = "Ver Cuenta por Pagar" 
                                         class = "btn btn-primary btn-sm" ng-click = "vm.debtsToPaySelected(debts)">
                                         <span class = "glyphicon glyphicon-eye-open" aria-hidden = "true"></span>
+                                </button>
+                                <button type = "button" title = "Anular Cuenta por Pagar" 
+                                        class = "btn btn-warning btn-sm" ng-click = "vm.deactivateDebtsToPay = debts"
+                                        data-toggle = "modal" data-target = "#modalAnularDebtsToPay">
+                                        <span class = "glyphicon glyphicon-warning-sign" aria-hidden = "true"></span>
                                 </button>
                             </td>
                         </tr>
@@ -837,6 +842,33 @@
                 <button type = "button" title = "Salir" class = "btn btn-primary btn-sm" ng-click = "vm.cancel()">
                         <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
                 </button>
+            </div>
+        </div>
+    </div>
+    <!--ANULAR DEBTSTOPAY-->
+    <div id="modalAnularDebtsToPay" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" ng-click="vm.client=undefined">&times;</button>
+                    <h3 class="modal-title">¡¡¡Advertencia!!!</h3>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-10" >
+                            <p>¿Est&aacute; seguro que desea Anular la Cuenta por Pagar <b>No. {{vm.deactivateDebtsToPay.debtsSeq}}</b>?</p>
+                            <p>Recuerde que la Cuenta por Pagar Anulada <b>NO puede ser Recuperada</b></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" title="Anular Cuenta por Pagar" class="btn btn-danger btn-sm" ng-click="vm.debtsToPayDeactivate()" data-dismiss="modal">
+                            <span class = "glyphicon glyphicon-screenshot" aria-hidden = "true"></span>
+                    </button>
+                    <button type="button" title = "Salir" class="btn btn-primary btn-sm" data-dismiss="modal">
+                            <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
+                    </button>
+                </div>
             </div>
         </div>
     </div>

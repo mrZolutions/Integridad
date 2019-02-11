@@ -63,4 +63,16 @@ public class DebtsToPayController {
 	}
         return new ResponseEntity<DebtsToPay>(response, HttpStatus.CREATED);
     }
+    
+    @RequestMapping(method = RequestMethod.PUT)
+    public ResponseEntity deactivateDebtsToPay(@RequestBody DebtsToPay debtsToPay) {
+        try {
+            service.deactivateDebtsToPay(debtsToPay);
+        } catch (BadRequestException e) {
+            log.error("DebtsToPayController deactivateDebtsToPay Exception thrown: {}", e.getMessage());
+	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+        log.info("DebtsToPayController deactivateDebtsToPay DONE: {}", debtsToPay.getId());
+        return new ResponseEntity<Void>(HttpStatus.ACCEPTED);
+    }
 }
