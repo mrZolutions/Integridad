@@ -159,13 +159,13 @@ angular.module('integridadUiApp')
         vm.bill.subTotal = parseFloat((parseFloat(vm.bill.subTotal) + parseFloat(detail.total)).toFixed(4));
         var tot = parseFloat((detail.total).toFixed(4));
         if (vm.bill.discountPercentage) {
-          tot = parseFloat((parseFloat(detail.total)).toFixed(4));
+          tot = parseFloat((detail.total).toFixed(4));
         };
         if (detail.product.iva) {
           vm.bill.baseTaxes += parseFloat((detail.total).toFixed(4));
           vm.bill.iva = parseFloat((parseFloat(vm.bill.iva) + (parseFloat(tot) * 0.12)).toFixed(4));
           if (vm.bill.discountPercentage) {
-            discountWithIva = parseFloat((parseFloat(discountWithIva) + ((parseFloat(vm.bill.discountPercentage) / 100) * parseFloat(detail.total))).toFixed(4));
+            discountWithIva = parseFloat((parseFloat(discountWithIva) + (parseFloat(detail.total) * parseFloat((vm.bill.discountPercentage) / 100))).toFixed(4));
           };
         } else {
           vm.bill.baseNoTaxes += parseFloat((detail.total).toFixed(4));
@@ -324,7 +324,7 @@ angular.module('integridadUiApp')
         product: angular.copy(vm.productToAdd),
         quantity: vm.quantity,
         costEach: vm.productToAdd.costEachCalculated,
-        total: parseFloat(((parseFloat(vm.quantity) * parseFloat(vm.productToAdd.costEachCalculated)) - (parseFloat(vm.productToAdd.costEachCalculated) * parseFloat(vm.bill.discountPercentage / 100))).toFixed(4)),
+        total: parseFloat(((vm.quantity * vm.productToAdd.costEachCalculated) - (vm.quantity * (vm.productToAdd.costEachCalculated) * (vm.bill.discountPercentage / 100))).toFixed(4)),
         adicional: vm.adicional
       };
       if (vm.indexDetail !== undefined) {
@@ -539,11 +539,11 @@ angular.module('integridadUiApp')
     };
 
     vm.downloadBillTxtTM20 = function(billToDownloadEpsonTM20) {
-      var a = document.body.appendChild(document.createElement("a"));
-      a.href = "data:text/plain; charset=utf-8," + document.getElementById(billToDownloadEpsonTM20).innerText;
-      a.download = "billDownloaded.txt";
-      a.click();
-      document.body.removeChild(a);
+      var b = document.body.appendChild(document.createElement("b"));
+      b.href = "data:text/plain; charset=utf-8," + document.getElementById(billToDownloadEpsonTM20).innerText;
+      b.download = "billDownloaded.txt";
+      b.click();
+      document.body.removeChild(b);
     };
 
     vm.billDeactivate = function() {
@@ -613,14 +613,14 @@ angular.module('integridadUiApp')
         
         if (det.product.iva) {
           impuesto.base_imponible = parseFloat(((parseFloat(det.costEach) - (parseFloat(det.costEach) * parseFloat((vm.bill.discountPercentage / 100)))) * parseFloat(det.quantity)).toFixed(4));
-          impuesto.valor = parseFloat((parseFloat(costWithIva) * parseFloat(det.quantity)).toFixed(4));
+          impuesto.valor = parseFloat((parseFloat(impuesto.base_imponible) * 0.1200).toFixed(4));
           impuesto.tarifa = 12.0;
           impuesto.codigo = '2';
           impuesto.codigo_porcentaje = '2';
           impuestos.push(impuesto);
         } else {
           impuesto.base_imponible = parseFloat(((parseFloat(det.costEach) - (parseFloat(det.costEach) * parseFloat((vm.bill.discountPercentage / 100)))) * parseFloat(det.quantity)).toFixed(4));
-          impuesto.valor = parseFloat((parseFloat(det.total) * parseFloat(det.quantity)).toFixed(4));
+          impuesto.valor = parseFloat((parseFloat(impuesto.base_imponible) * 0.0000).toFixed(4));
           impuesto.tarifa = 0.0;
           impuesto.codigo = '2';
           impuesto.codigo_porcentaje = '0';
@@ -638,10 +638,10 @@ angular.module('integridadUiApp')
           "cantidad": det.quantity,
           "codigo_principal": det.product.codeIntegridad,
           "codigo_auxiliar": det.product.barCode,
-          "precio_unitario": det.costEach,
+          "precio_unitario": parseFloat(det.costEach),
           "descripcion": det.product.name,
-          "precio_total_sin_impuestos": parseFloat((parseFloat(det.costEach) - (parseFloat(det.costEach) * parseFloat((vm.bill.discountPercentage / 100)) * parseFloat(det.quantity))).toFixed(4)),
-          "descuento": parseFloat((parseFloat(det.costEach) * parseFloat((vm.bill.discountPercentage) / 100)).toFixed(4)),
+          "precio_total_sin_impuestos": parseFloat(((parseFloat(det.costEach) - (parseFloat(det.costEach) * parseFloat((vm.bill.discountPercentage / 100)))) * parseFloat(det.quantity)).toFixed(4)),
+          "descuento": parseFloat(((det.quantity * det.costEach) * parseFloat((vm.bill.discountPercentage) / 100)).toFixed(4)),
           "unidad_medida": det.product.unitOfMeasurementFull,
           "detalles_adicionales": detaAdic
         };
@@ -665,7 +665,7 @@ angular.module('integridadUiApp')
       vm.medio.total;
 
       var req = requirementService.createRequirement(vm.clientSelected, vm.bill, $localStorage.user, vm.impuestosTotales, vm.items, vm.pagos);
-
+      
       billService.getClaveDeAcceso(req, vm.companyData.userClient.id).then(function(resp) {
         vm.bill.pagos = vm.pagos;
         if (vm.bill.discountPercentage === undefined) {
