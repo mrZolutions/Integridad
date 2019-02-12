@@ -335,64 +335,42 @@ angular.module('integridadUiApp')
         vm.debtsToPay.items.splice(vm.indexEdit, 1);
         vm.indexEdit = undefined;
       };
+      //Selecciona las Cuentas Contables por defecto dependiendo del Cliente
       if (vm.usrCliId === '758dea84-74f5-4209-b218-9b84c10621fc') {
-        if (vm.typeTaxes === '1') {
-          vm.subIva = parseFloat((vm.item.base_imponible * 0.1200).toFixed(2));
-          vm.itemIva = {
-            codigo_contable: '1.01.05.01.001',
-            desc_contable: 'IVA EN COMPRAS',
-            tipo: 'DEBITO (D)',
-            base_imponible: vm.subIva,
-            nomb_contable: 'DEFINIDA PARA TODAS LAS COMPRAS'
-          };
-          vm.itemProvider = {
-            codigo_contable: '2.01.03.01.001',
-            desc_contable: 'PROVEEDORES LOCALES',
-            tipo: 'CREDITO (C)',
-            base_imponible: vm.debtsToPay.total,
-            nomb_contable: 'DEFINIDA PARA TODOS LOS PROVEEDORES'
-          };
-          vm.debtsToPay.items.push(vm.itemIva);
-          vm.debtsToPay.items.push(vm.itemProvider);
-        } else if (vm.typeTaxes === '2') {
-          vm.itemProvider = {
-            codigo_contable: '2.01.01.01',
-            desc_contable: 'PROVEEDORES LOCALES',
-            tipo: 'CREDITO (C)',
-            base_imponible: vm.debtsToPay.total,
-            nomb_contable: 'DEFINIDA PARA TODOS LOS PROVEEDORES'
-          };
-          vm.debtsToPay.items.push(vm.itemProvider);
-        };
+        vm.ivaContable = '1.01.05.01.001';
+        vm.provContable = '2.01.03.01.001';
       } else {
-        if (vm.typeTaxes === '1') {
-          vm.subIva = parseFloat((vm.item.base_imponible * 0.1200).toFixed(2));
-          vm.itemIva = {
-            codigo_contable: '1.01.01.01',
-            desc_contable: 'IVA EN COMPRAS',
-            tipo: 'DEBITO (D)',
-            base_imponible: vm.subIva,
-            nomb_contable: 'DEFINIDA PARA TODAS LAS COMPRAS'
-          };
-          vm.itemProvider = {
-            codigo_contable: '2.01.01.01',
-            desc_contable: 'PROVEEDORES LOCALES',
-            tipo: 'CREDITO (C)',
-            base_imponible: vm.debtsToPay.total,
-            nomb_contable: 'DEFINIDA PARA TODOS LOS PROVEEDORES'
-          };
-          vm.debtsToPay.items.push(vm.itemIva);
-          vm.debtsToPay.items.push(vm.itemProvider);
-        } else if (vm.typeTaxes === '2') {
-          vm.itemProvider = {
-            codigo_contable: '2.01.01.01',
-            desc_contable: 'PROVEEDORES LOCALES',
-            tipo: 'CREDITO (C)',
-            base_imponible: vm.debtsToPay.total,
-            nomb_contable: 'DEFINIDA PARA TODOS LOS PROVEEDORES'
-          };
-          vm.debtsToPay.items.push(vm.itemProvider);
+        vm.ivaContable = '1.01.01.01';
+        vm.provContable = '2.01.01.01';
+      };
+    
+      if (vm.typeTaxes === '1') {
+        vm.subIva = parseFloat((vm.item.base_imponible * 0.1200).toFixed(2));
+        vm.itemIva = {
+          codigo_contable: vm.ivaContable,
+          desc_contable: 'IVA EN COMPRAS',
+          tipo: 'DEBITO (D)',
+          base_imponible: vm.subIva,
+          nomb_contable: 'DEFINIDA PARA TODAS LAS COMPRAS'
         };
+        vm.itemProvider = {
+          codigo_contable: vm.provContable,
+          desc_contable: 'PROVEEDORES LOCALES',
+          tipo: 'CREDITO (C)',
+          base_imponible: vm.debtsToPay.total,
+          nomb_contable: 'DEFINIDA PARA TODOS LOS PROVEEDORES'
+        };
+        vm.debtsToPay.items.push(vm.itemIva);
+        vm.debtsToPay.items.push(vm.itemProvider);
+      } else if (vm.typeTaxes === '2') {
+        vm.itemProvider = {
+          codigo_contable: vm.provContable,
+          desc_contable: 'PROVEEDORES LOCALES',
+          tipo: 'CREDITO (C)',
+          base_imponible: vm.debtsToPay.total,
+          nomb_contable: 'DEFINIDA PARA TODOS LOS PROVEEDORES'
+        };
+        vm.debtsToPay.items.push(vm.itemProvider);
       };
     };
 
