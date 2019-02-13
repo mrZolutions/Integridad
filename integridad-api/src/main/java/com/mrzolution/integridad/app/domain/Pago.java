@@ -21,6 +21,7 @@ public class Pago implements Child {
     private String chequeBank;
     private String chequeNumber;
     private String chequeDiasPlazo;
+    private String numeroLote;
     private long fechaCobro;
     private int creditoIntervalos;
     private int creditoNumeroPagos;

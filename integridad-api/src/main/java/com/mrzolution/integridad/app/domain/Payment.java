@@ -24,6 +24,9 @@ public class Payment implements Child {
     private String noAccount;
     private String noDocument;
     private String documentNumber;
+    private String banco;
+    private String cardBrand;
+    private String numeroLote;
     private double valorAbono;
     private double valorReten;
     private double valorNotac;

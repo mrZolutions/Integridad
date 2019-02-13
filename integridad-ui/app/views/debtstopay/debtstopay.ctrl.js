@@ -138,11 +138,12 @@ angular.module('integridadUiApp')
     vm.medLista = [
       {code: 'efectivo', name: 'Efectivo' },
       {code: 'cheque', name: 'Cheque' },
-      {code: 'cheque_posfechado', name: 'Cheque posfechado' },
-      {code: 'tarjeta_credito', name: 'Tarjeta de crédito' },
-      {code: 'tarjeta_debito', name: 'Tarjeta de débito' },
-      {code: 'dinero_electronico_ec', name: 'Dinero electrónico' },
-      {code: 'credito', name: 'Crédito' },
+      {code: 'cheque_posfechado', name: 'Cheque posfechado'},
+      {code: 'tarjeta_credito', name: 'Tarjeta de crédito'},
+      {code: 'tarjeta_debito', name: 'Tarjeta de débito'},
+      {code: 'dinero_electronico_ec', name: 'Dinero electrónico'},
+      {code: 'credito', name: 'Crédito'},
+      {code: 'transferencia', name: 'Transferencia'}
     ];
 
     vm.creditCardList = [
@@ -339,6 +340,9 @@ angular.module('integridadUiApp')
       if (vm.usrCliId === '758dea84-74f5-4209-b218-9b84c10621fc') {
         vm.ivaContable = '1.01.05.01.001';
         vm.provContable = '2.01.03.01.001';
+      } else if (vm.usrCliId === '4907601b-6e54-4675-80a8-ab6503e1dfeb') {
+        vm.ivaContable = '1.01.05.02.001';
+        vm.provContable = '2.01.03.01.001';
       } else {
         vm.ivaContable = '1.01.01.01';
         vm.provContable = '2.01.01.01';
@@ -471,7 +475,7 @@ angular.module('integridadUiApp')
         payed += parseFloat(pago.total);
       });
       vm.pagos;
-      if (vm.medio.medio === 'efectivo' || vm.medio.medio === 'dinero_electronico_ec') {
+      if (vm.medio.medio === 'efectivo' || vm.medio.medio === 'dinero_electronico_ec' || vm.medio.medio === 'transferencia') {
         vm.medio.payForm = '20 - OTROS CON UTILIZACION DEL SISTEMA FINANCIERO';
         vm.medio.total = vm.aux;
       };

@@ -20,9 +20,6 @@ angular.module('integridadUiApp')
         vm.contable = undefined;
         vm.dairyBookList = undefined;
         vm.contableList = [];
-        cuentaContableService.getAll().then(function(response) {
-            vm.cuentaContableList = response;
-        });
     };
 
     function _getDailySeqNumber() {

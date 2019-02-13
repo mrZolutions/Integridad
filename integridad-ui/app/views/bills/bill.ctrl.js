@@ -23,13 +23,14 @@ angular.module('integridadUiApp')
       { name: 'CREDITO', cod: 'creditPercentage'}, { name: 'TARJETA', cod: 'cardPercentage'}
     ];
     vm.medList = [
-      {code: 'efectivo', name: 'Efectivo' },
-      {code: 'cheque', name: 'Cheque' },
-      {code: 'cheque_posfechado', name: 'Cheque posfechado' },
-      {code: 'tarjeta_credito', name: 'Tarjeta de crédito' },
-      {code: 'tarjeta_debito', name: 'Tarjeta de débito' },
-      {code: 'dinero_electronico_ec', name: 'Dinero electrónico' },
-      {code: 'credito', name: 'Crédito' },
+      {code: 'efectivo', name: 'Efectivo'},
+      {code: 'cheque', name: 'Cheque'},
+      {code: 'cheque_posfechado', name: 'Cheque posfechado'},
+      {code: 'tarjeta_credito', name: 'Tarjeta de crédito'},
+      {code: 'tarjeta_debito', name: 'Tarjeta de débito'},
+      {code: 'dinero_electronico_ec', name: 'Dinero electrónico'},
+      {code: 'credito', name: 'Crédito'},
+      {code: 'transferencia', name: 'Transferencia'}
     ];
     vm.formList = [
       '01 - SIN UTILIZACION DEL SISTEMA FINANCIERO',
@@ -387,7 +388,7 @@ angular.module('integridadUiApp')
       _.each(vm.pagos, function(pago) {
         payed += parseFloat(pago.total);
       });
-      if (vm.medio.medio === 'efectivo' || vm.medio.medio === 'dinero_electronico_ec') {
+      if (vm.medio.medio === 'efectivo' || vm.medio.medio === 'dinero_electronico_ec' || vm.medio.medio === 'transferencia') {
         vm.medio.payForm = '20 - OTROS CON UTILIZACION DEL SISTEMA FINANCIERO';
         vm.medio.statusPago = 'PAGADO';
         vm.medio.total = parseFloat((vm.bill.total - payed).toFixed(4));

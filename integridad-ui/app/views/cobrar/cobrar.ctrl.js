@@ -130,6 +130,12 @@ angular.module('integridadUiApp')
       {name:'Pago a no residentes - Intereses de otros créditos externos' ,percentage:25, codigo: '505E', codigoDatil:'505E'}
     ];
 
+    vm.creditCardList = [
+      'DINNERS CLUB',
+      'VISA',
+      'MASTERCARD',
+      'AMERICAN'
+    ];
 
     function _activate() {
       vm.today = new Date();
@@ -146,9 +152,6 @@ angular.module('integridadUiApp')
       }).catch(function(error) {
         vm.loading = false;
         vm.error = error.data;
-      });
-      cuentaContableService.getAll().then(function(response) {
-        vm.cuentaContableList = response;
       });
     };
 

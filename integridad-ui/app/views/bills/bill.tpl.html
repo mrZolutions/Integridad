@@ -740,18 +740,18 @@
               <table class="table table-striped">
                 <thead>
                   <tr>
-                    <th> PAGO </th>
-                    <th> DIAS PLAZO </th>
-                    <th> FECHAS </th>
-                    <th> VALOR </th>
+                    <th>PAGO</th>
+                    <th>DIAS PLAZO</th>
+                    <th>FECHAS</th>
+                    <th>VALOR</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr ng-repeat="cred in vm.medio.credits">
-                    <td>{{ cred.payNumber }}</td>
-                    <td>{{ cred.diasPlazo }}</td>
-                    <td>{{ cred.fecha | date:'dd/MM/yyyy'}}</td>
-                    <td>{{ cred.valor }}</td>
+                    <td>{{cred.payNumber}}</td>
+                    <td>{{cred.diasPlazo}}</td>
+                    <td>{{cred.fecha | date:'dd/MM/yyyy'}}</td>
+                    <td>{{cred.valor}}</td>
                   </tr>
                 </tbody>
               </table>
@@ -764,19 +764,24 @@
                       ng-model="vm.medio.cardBrand" class="form-control">
               </select>
             </div>
+            <div class="form-group col-md-6">
+              <b>No. LOTE: </b>
+              <input type="text" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+                     ng-model="vm.medio.numeroLote" class="form-control" maxlength="5">
+            </div>
           </div>
           <div class="row">
-            <div class="form-group col-md-6" ng-if="vm.medio.medio === 'efectivo' || vm.medio.medio === 'dinero_electronico_ec'">
+            <div class="form-group col-md-4" ng-if="vm.medio.medio !== 'credito'">
               <b>VALOR: </b>
               <input type="text" onkeypress="return ((event.which >= 46 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
                      ng-model="vm.pagoTot" class="form-control" maxlength="9">
             </div>
-            <div class="form-group col-md-6" ng-if="vm.medio.medio !== 'efectivo' && vm.medio.medio !== 'dinero_electronico_ec'">
+            <div class="form-group col-md-4" ng-if="vm.medio.medio !== 'credito'">
               <b>VALOR: </b><br />
               $ {{vm.pagoTot}}
             </div>
             <div class="form-group col-md-4">
-              <br />
+              <br/>
               <button type="button" title = "Agregar Pago" class="btn btn-primary btn-sm" ng-click="vm.addPago()"
                       ng-disabled="vm.medio.medio === undefinded || vm.medio.total === undefined">
                       <span class = "glyphicon glyphicon-plus" aria-hidden = "true"></span>
@@ -789,8 +794,8 @@
               <table class="table table-striped">
                 <thead>
                   <tr>
-                    <th> Medio </th>
-                    <th> Valor</th>
+                    <th>Medio</th>
+                    <th>Valor</th>
                     <th>
                     </th>
                   </tr>
@@ -827,8 +832,7 @@
                   ng-disabled="(vm.pagos.length === 0 || vm.getCambio < 0) || vm.billed" print-remove>
                   <span class = "glyphicon glyphicon-credit-card" aria-hidden = "true"></span>
           </button>
-          <button type="button" title = "Cancelar Facturación" class="btn btn-primary btn-sm" data-dismiss="modal"
-                  ng-disabled="vm.pagos.length === 0 || vm.getCambio < 0">
+          <button type="button" title = "Cancelar Facturación" class="btn btn-primary btn-sm" data-dismiss="modal">
                   <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
           </button>
         </div>
