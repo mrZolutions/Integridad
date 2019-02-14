@@ -275,7 +275,7 @@
                         data-toggle = "modal" data-target = "#modalBaseImponibleIVA" ng-disabled = "vm.getTotalSaldo() == 0.00">
                         IVA y Proveedor
                 </button>
-                <button type = "button" title = "Forma de Pago" class = "btn btn-success btn-sm" ng-disabled = "vm.debtsToPay.items == 0"
+                <button type = "button" title = "Forma de Pago" class = "btn btn-success btn-sm" ng-disabled = "vm.getTotalSaldo() != 0.00"
                         data-toggle = "modal" data-target = "#modalAddPago">
                         <span class = "glyphicon glyphicon-usd" aria-hidden = "true"></span>
                 </button>
@@ -583,7 +583,8 @@
                 <table class = "table table-striped">
                     <thead>
                         <tr>
-                            <th>N&uacute;mero</th>
+                            <th>No. Cuenta</th>
+                            <th>No. Factura</th>
                             <th>Fecha</th>
                             <th>Total</th>
                             <th>Saldo</th>
@@ -596,6 +597,7 @@
                             </td>
                         </tr>
                         <tr ng-repeat = "debts in vm.debtsToPayList">
+                            <td>{{debts.debtsSeq}}</td>
                             <td>{{debts.billNumber}}</td>
                             <td>{{debts.fecha | date : "dd/MM/yyyy"}}</td>
                             <td>{{debts.total}}</td>

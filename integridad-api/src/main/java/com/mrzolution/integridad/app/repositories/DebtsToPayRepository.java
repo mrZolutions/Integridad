@@ -19,6 +19,6 @@ import org.springframework.stereotype.Repository;
 public interface DebtsToPayRepository extends CrudRepository<DebtsToPay, UUID> {
     Iterable<DebtsToPay> findByProvider(Provider provider);
     
-    @Query("SELECT dp FROM DebtsToPay dp WHERE dp.provider.id = (:id) ORDER BY dp.billNumber")
+    @Query("SELECT dp FROM DebtsToPay dp WHERE dp.provider.id = (:id) AND dp.active = true ORDER BY dp.billNumber")
     Iterable<DebtsToPay> findDebtsToPayByProviderId(@Param("id") UUID id);
 }
