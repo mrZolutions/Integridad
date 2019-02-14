@@ -114,15 +114,16 @@ public class BillController {
         }
         return new ResponseEntity<List>(response, HttpStatus.ACCEPTED);
     }
-
+    
+    //Reporte de Ventas
     @RequestMapping(method = RequestMethod.GET, value="/rep/sales/{userClientId}/{dateOne}/{dateTwo}")
-    public ResponseEntity getAllByUserClientIdAndDatesActives(@PathVariable("userClientId") UUID userClientId, @PathVariable("dateOne") long dateOne, @PathVariable("dateTwo") long dateTwo) {
-        log.info("BillController getAllByUserClientIdAndDatesActives: {}, {}, {}", userClientId, dateOne, dateTwo);
+    public ResponseEntity getAllByUserClientIdAndDates(@PathVariable("userClientId") UUID userClientId, @PathVariable("dateOne") long dateOne, @PathVariable("dateTwo") long dateTwo) {
+        log.info("BillController getAllByUserClientIdAndDates: {}, {}, {}", userClientId, dateOne, dateTwo);
         List<SalesReport> response = null;
         try {
             response = service.getAllBySubIdAndDates(userClientId, dateOne, dateTwo);
         } catch (BadRequestException e) {
-            log.error("BillController getAllByUserClientIdAndDatesActives Exception thrown: {}", e.getMessage());
+            log.error("BillController getAllByUserClientIdAndDates Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
         return new ResponseEntity<List>(response, HttpStatus.ACCEPTED);

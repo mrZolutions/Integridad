@@ -34,9 +34,9 @@ public interface BillRepository extends CrudRepository<Bill, UUID> {
 	@Query("SELECT b FROM Bill b WHERE b.subsidiary.id = (:subId) AND b.stringSeq = (:seq) AND b.typeDocument = 1 AND b.active = true")
 	Iterable<Bill> findByStringSeqAndSubsidiaryId(@Param("seq") String stringSeq, @Param("subId") UUID id);
 
-	@Query("SELECT b FROM Bill b WHERE b.subsidiary.userClient.id = (:userClientId) AND b.dateCreated >= (:dateOne) AND b.dateCreated <= (:dateTwo) AND b.active = true AND b.typeDocument = 1")
+	@Query("SELECT b FROM Bill b WHERE b.subsidiary.userClient.id = (:userClientId) AND b.dateCreated >= (:dateOne) AND b.dateCreated <= (:dateTwo) AND b.active = true AND b.typeDocument = 1 ORDER BY b.stringSeq")
 	Iterable<Bill> findByUserClientIdAndDatesActives(@Param("userClientId") UUID id, @Param("dateOne") long dateOne, @Param("dateTwo") long dateTwo);
 
-	@Query("SELECT b FROM Bill b WHERE b.subsidiary.userClient.id = (:userClientId) AND b.dateCreated >= (:dateOne) AND b.dateCreated <= (:dateTwo) AND b.typeDocument = 1")
+	@Query("SELECT b FROM Bill b WHERE b.subsidiary.userClient.id = (:userClientId) AND b.dateCreated >= (:dateOne) AND b.dateCreated <= (:dateTwo) AND b.typeDocument = 1 ORDER BY b.stringSeq")
 	Iterable<Bill> findAllByUserClientIdAndDates(@Param("userClientId") UUID id, @Param("dateOne") long dateOne, @Param("dateTwo") long dateTwo);
 }

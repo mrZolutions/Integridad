@@ -9,7 +9,7 @@
  */
 angular.module('integridadUiApp')
   .controller('ReportSalesCtrl', function(_, $localStorage, creditsbillService, billService, eretentionService, 
-                                          paymentService, creditsDebtsService, $location) {
+                                          paymentService, creditsDebtsService, $location, debtsToPayService) {
     var vm = this;
     var today = new Date();
     $('#pickerBillDateOne').data("DateTimePicker").date(today);
@@ -131,6 +131,24 @@ angular.module('integridadUiApp')
       var subId = $localStorage.user.subsidiary.userClient.id;
 
       creditsDebtsService.getAllCreditsDebtsPendingOfDebtsToPayByUserClientId(subId, dateTwo).then(function(response) {
+        vm.reportList = response;
+        vm.loading = false;
+      }).catch(function(error) {
+        vm.loading = false;
+        vm.error = error.data;
+      });
+    };
+
+    vm.getReportDebts = function() {
+      vm.isProductReportList = '8';
+      vm.reportList = undefined;
+      vm.loading = true;
+      var dateOne = $('#pickerBillDateOne').data("DateTimePicker").date().toDate().getTime();
+      var dateTwo = $('#pickerBillDateTwo').data("DateTimePicker").date().toDate().getTime();
+      dateTwo += 86340000;
+      var subId = $localStorage.user.subsidiary.userClient.id;
+
+      debtsToPayService.getDebtsToPayByUserClientIdAndDates(subId, dateOne, dateTwo).then(function(response) {
         vm.reportList = response;
         vm.loading = false;
       }).catch(function(error) {
@@ -273,6 +291,25 @@ angular.module('integridadUiApp')
             RETEN: parseFloat(creditsdebtsreport.valorReten.toFixed(2)),
             SALDO: parseFloat(creditsdebtsreport.saldo.toFixed(2))
           };      
+
+          dataReport.push(data);
+        });
+      } else if (vm.isProductReportList === '8') {
+        _.each(vm.reportList, function(debt) {
+          var data = {
+            FECHA: debt.date,
+            CODIGO_PROVEEDOR: debt.providerCode,
+            PROVEEDOR: debt.providerName,
+            RUC_CI: debt.ruc,
+            NUMERO_CUENTA: debt.debtNumber,
+            ESTADO: debt.status,
+            TOTAL: debt.status === 'ACTIVA' ? parseFloat(debt.total.toFixed(2)) : parseFloat(0),
+            FECHA_VENCIMIENTO: debt.endDate,
+            CAJA: debt.cashier,
+            BODEGA: debt.warehouse,
+            SUCURSAL: debt.subsidiary,
+            USUARIO: debt.userName
+          };
 
           dataReport.push(data);
         });

@@ -328,7 +328,7 @@ public class BillServices {
     }
 
     //Reporte de Ventas
-    public List<SalesReport> getAllBySubIdAndDates(UUID userClientId, long dateOne, long dateTwo){
+    public List<SalesReport> getAllBySubIdAndDates(UUID userClientId, long dateOne, long dateTwo) {
         log.info("BillServices getAllBySubIdAndDates: {}, {}, {}", userClientId, dateOne, dateTwo);
         Iterable<Bill> bills = billRepository.findAllByUserClientIdAndDates(userClientId, dateOne, dateTwo);
         List<SalesReport> salesReportList = new ArrayList<>();
@@ -421,5 +421,4 @@ public class BillServices {
         });
         return pagoList;
     }
-
 }

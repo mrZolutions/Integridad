@@ -5,13 +5,16 @@ import com.mrzolution.integridad.app.domain.CreditsDebts;
 import com.mrzolution.integridad.app.domain.DebtsToPay;
 import com.mrzolution.integridad.app.domain.DetailDebtsToPay;
 import com.mrzolution.integridad.app.domain.PagoDebts;
+import com.mrzolution.integridad.app.domain.report.DebtsReport;
 import com.mrzolution.integridad.app.exceptions.BadRequestException;
 import com.mrzolution.integridad.app.repositories.CashierRepository;
 import com.mrzolution.integridad.app.repositories.CreditsDebtsRepository;
 import com.mrzolution.integridad.app.repositories.DebtsToPayRepository;
 import com.mrzolution.integridad.app.repositories.DetailDebtsToPayRepository;
 import com.mrzolution.integridad.app.repositories.PagoDebtsRepository;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
@@ -120,6 +123,38 @@ public class DebtsToPayServices {
         return debtsToPayToDeactivate;
     }
     
+    //Reporte de Compras
+    public List<DebtsReport> getDebtsToPayByUserClientIdAndDates(UUID userClientId, long dateOne, long dateTwo) {
+        log.info("DebtsToPayServices getDebtsToPayByUserClientIdAndDates: {}, {}, {}", userClientId, dateOne, dateTwo);
+        Iterable<DebtsToPay> debts = debtsToPayRepository.findDebtsToPayByUserClientIdAndDates(userClientId, dateOne, dateTwo);
+        List<DebtsReport> debtsReportList = new ArrayList<>();
+        debts.forEach(debt -> {
+            debt.setListsNull();
+            Long endDateLong = debt.getFecha();
+            List<PagoDebts> pagosDebts = getPagosDebtsToPay(debt);
+            for (PagoDebts pagoDebts: pagosDebts) {
+                if (pagoDebts.getCreditsDebts() != null) {
+                    for (CreditsDebts creditDebts: pagoDebts.getCreditsDebts()) {
+                        if (endDateLong < creditDebts.getFecha()) {
+                            endDateLong = creditDebts.getFecha();
+                        }
+                    }
+                }
+            }
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd");
+            String date = dateFormat.format(new Date(debt.getFecha()));
+            String status = debt.isActive() ? "ACTIVA" : "ANULADA";
+            String endDate = dateFormat.format(new Date(endDateLong));
+            
+            DebtsReport debtsReport = new DebtsReport(date, debt.getProvider().getCodeIntegridad(), debt.getProvider().getRazonSocial(), debt.getProvider().getRuc(), debt.getDebtsSeq(),
+                                           status, debt.getTotal(), endDate, debt.getUserIntegridad().getCashier().getNameNumber(), null, debt.getSubsidiary().getName(),
+                                           debt.getUserIntegridad().getFirstName() + " " + debt.getUserIntegridad().getLastName());
+            
+            debtsReportList.add(debtsReport);
+        });
+        return debtsReportList;
+    }
+    
     private void populateChildren(DebtsToPay debtsToPay) {
 	List<DetailDebtsToPay> detailDebtsToPayList = new ArrayList<>();
 	Iterable<DetailDebtsToPay> debts = detailDebtsToPayRepository.findByDebtsToPay(debtsToPay);
@@ -158,5 +193,4 @@ public class DebtsToPayServices {
         });
         return pagoDebtsList;
     }
-    
 }

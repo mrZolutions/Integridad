@@ -1,8 +1,10 @@
 package com.mrzolution.integridad.app.controllers;
 
 import com.mrzolution.integridad.app.domain.DebtsToPay;
+import com.mrzolution.integridad.app.domain.report.DebtsReport;
 import com.mrzolution.integridad.app.exceptions.BadRequestException;
 import com.mrzolution.integridad.app.services.DebtsToPayServices;
+import java.util.List;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,5 +76,19 @@ public class DebtsToPayController {
         }
         log.info("DebtsToPayController deactivateDebtsToPay DONE: {}", debtsToPay.getId());
         return new ResponseEntity<Void>(HttpStatus.ACCEPTED);
+    }
+    
+    //Reporte de Compras
+    @RequestMapping(method = RequestMethod.GET, value="/rep/purchases/{userClientId}/{dateOne}/{dateTwo}")
+    public ResponseEntity getDebtsToPayByUserClientIdAndDates(@PathVariable("userClientId") UUID userClientId, @PathVariable("dateOne") long dateOne, @PathVariable("dateTwo") long dateTwo) {
+        log.info("DebtsToPayController getDebtsToPayByUserClientIdAndDatesActives: {}, {}, {}", userClientId, dateOne, dateTwo);
+        List<DebtsReport> response = null;
+        try {
+            response = service.getDebtsToPayByUserClientIdAndDates(userClientId, dateOne, dateTwo);
+        } catch (BadRequestException e) {
+            log.error("DebtsToPayController getDebtsToPayByUserClientIdAndDatesActives Exception thrown: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+        return new ResponseEntity<List>(response, HttpStatus.ACCEPTED);
     }
 }

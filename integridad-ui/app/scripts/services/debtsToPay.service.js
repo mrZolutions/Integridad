@@ -24,4 +24,10 @@ angular
         return response.data;
       });
     };
+
+    this.getDebtsToPayByUserClientIdAndDates = function(userClientId, dateOne, dateTwo) {
+      return securityService.get('/debts/rep/purchases/' + userClientId + '/' + dateOne + '/' + dateTwo).then(function successCallback(response) {
+        return response.data;
+      });
+    };
 });

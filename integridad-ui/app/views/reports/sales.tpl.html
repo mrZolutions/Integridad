@@ -105,6 +105,10 @@
         <div class="form-group col-md-6">
           <p><b>Cuentas por Pagar</b></p>
           <button type="button" class="btn btn-primary"
+                  ng-click="vm.getReportDebts()">
+                  De Compras
+          </button>
+          <button type="button" class="btn btn-primary"
                   ng-click="vm.getCreditsDebtsPendingReport()">
                   Ctas Pendientes
           </button>
@@ -365,6 +369,43 @@
           <td>{{data.valorAbono.toFixed(2)}}</td>
           <td>{{data.valorReten.toFixed(2)}}</td>
           <td>{{data.saldo.toFixed(2)}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="table-responsive" ng-if="vm.isProductReportList === '8'">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th> Fecha </th>
+          <th> C&oacute;digo-Cliente </th>
+          <th> Cliente </th>
+          <th> RUC/CI </th>
+          <th> No. Factura </th>
+          <th> Estado </th>
+          <th> Total </th>
+          <th> Fecha-Vencimiento </th>
+          <th> Caja </th>
+          <th> Bodega </th>
+          <th> Sucursal </th>
+          <th> Usuario </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="data in vm.reportList | orderBy:'date'" >
+          <td>{{data.date}}</td>
+          <td>{{data.providerCode}}</td>
+          <td>{{data.providerName}}</td>
+          <td>{{data.ruc}}</td>
+          <td>{{data.debtNumber}}</td>
+          <td>{{data.status}}</td>
+          <td>{{data.status === 'ACTIVA' ? data.total.toFixed(2) : ''}}</td>
+          <td>{{data.endDate}}</td>
+          <td>{{data.cashier}}</td>
+          <td>{{data.warehouse}}</td>
+          <td>{{data.subsidiary}}</td>
+          <td>{{data.userName}}</td>
         </tr>
       </tbody>
     </table>
