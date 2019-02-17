@@ -11,15 +11,15 @@ public class CCResumenReport {
     private String idClient;
     private String nameClient;
     private String billNumber;
-    private double billTotal;
+    private Double billTotal;
     private String tipTransac;
     private String formPago;
     private String fechPago;
-    private double valorAbono;
-    private double valorNotac;
-    private double valorReten;
+    private Double valorAbono;
+    private Double valorNotac;
+    private Double valorReten;
     
-    public CCResumenReport(String idClient, String nameClient, String billNumber, double billTotal, String tipTransac, String formPago, String fechPago, double valorAbono, double valorReten, double valorNotac){
+    public CCResumenReport(String idClient, String nameClient, String billNumber, Double billTotal, String tipTransac, String formPago, String fechPago, Double valorAbono, Double valorReten, Double valorNotac) {
         this.idClient = idClient;
         this.nameClient = nameClient;
         this.billNumber = billNumber;

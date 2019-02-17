@@ -33,8 +33,10 @@ public class DebtsToPay {
     private String seccondPartNumber;
     private String billNumber;
     private String authorizationNumber;
+    private double subTotalDoce;
+    private double subTotalCero;
+    private double iva;
     private double total;
-    private double subTotal;
     private double saldo;
     private String tipoDeCompra;
     private String debtsSeq;

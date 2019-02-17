@@ -11,13 +11,13 @@ public class PaymentReport {
     private long datePayment;
     private String typePayment;
     private String modePayment;
-    private double valor;
+    private Double valor;
     private String noAccount;
     private String noDocument;
     private String clientName;
     private String billstringSeq;
     
-    public PaymentReport(long datePayment, String typePayment, String modePayment, double valor, String noAccount, String noDocument, String clientName, String billstringSeq) {
+    public PaymentReport(long datePayment, String typePayment, String modePayment, Double valor, String noAccount, String noDocument, String clientName, String billstringSeq) {
         this.datePayment = datePayment;
         this.typePayment = typePayment;
         this.modePayment = modePayment;

@@ -15,12 +15,12 @@ public class CreditsDebtsReport {
     private String fechVence;
     private int diasCredit;
     private int diasVencim;
-    private double total;
-    private double valorAbono;
-    private double valorReten;
-    private double saldo;
+    private Double total;
+    private Double valorAbono;
+    private Double valorReten;
+    private Double saldo;
     
-    public CreditsDebtsReport(String providerName, String billNumber, String fechVenta, String fechVence, int diasCredit, int diasVencim, double total, double valorAbono, double valorReten, double saldo) {
+    public CreditsDebtsReport(String providerName, String billNumber, String fechVenta, String fechVence, int diasCredit, int diasVencim, Double total, Double valorAbono, Double valorReten, Double saldo) {
         this.providerName = providerName;
         this.billNumber =  billNumber;
         this.fechVenta =  fechVenta;

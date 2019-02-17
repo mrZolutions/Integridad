@@ -141,25 +141,25 @@ public class DebtsToPayServices {
                     }
                 }
             }
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd");
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
             String date = dateFormat.format(new Date(debt.getFecha()));
             String status = debt.isActive() ? "ACTIVA" : "ANULADA";
             String endDate = dateFormat.format(new Date(endDateLong));
             
-            DebtsReport debtsReport = new DebtsReport(date, debt.getProvider().getCodeIntegridad(), debt.getProvider().getRazonSocial(), debt.getProvider().getRuc(), debt.getDebtsSeq(),
-                                           status, debt.getTotal(), endDate, debt.getUserIntegridad().getCashier().getNameNumber(), null, debt.getSubsidiary().getName(),
-                                           debt.getUserIntegridad().getFirstName() + " " + debt.getUserIntegridad().getLastName());
+            DebtsReport debtsReport = new DebtsReport(date, debt.getProvider().getCodeIntegridad(), debt.getProvider().getRazonSocial(), debt.getProvider().getRuc(), debt.getDebtsSeq(), debt.getBillNumber(),
+                                          status, debt.getSubTotalDoce(), debt.getIva(), debt.getSubTotalCero(), debt.getTotal(), endDate, debt.getUserIntegridad().getCashier().getNameNumber(), null, debt.getSubsidiary().getName(),
+                                          debt.getUserIntegridad().getFirstName() + " " + debt.getUserIntegridad().getLastName());
             
             debtsReportList.add(debtsReport);
         });
         return debtsReportList;
     }
     
-    private void populateChildren(DebtsToPay debtsToPay) {
+   private void populateChildren(DebtsToPay debtsToPay) {
 	List<DetailDebtsToPay> detailDebtsToPayList = new ArrayList<>();
-	Iterable<DetailDebtsToPay> debts = detailDebtsToPayRepository.findByDebtsToPay(debtsToPay);
+	Iterable<DetailDebtsToPay> debtsDetail = detailDebtsToPayRepository.findByDebtsToPay(debtsToPay);
 	List<PagoDebts> pagoList = getPagosDebtsToPay(debtsToPay);
-        debts.forEach(detail -> {
+        debtsDetail.forEach(detail -> {
             detail.setListsNull();
             detail.setFatherListToNull();
             detail.setDebtsToPay(null);

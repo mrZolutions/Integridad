@@ -11,11 +11,11 @@ public class CreditsPayedReport {
     private String clientName;
     private String ruc;
     private String billNumber;
-    private double costo;
-    private double saldo;
+    private Double costo;
+    private Double saldo;
     private String statusCredits;
     
-    public CreditsPayedReport(String clientName, String ruc, String billNumber, double costo, double saldo, String statusCredits){
+    public CreditsPayedReport(String clientName, String ruc, String billNumber, Double costo, Double saldo, String statusCredits) {
         this.clientName = clientName;
         this.ruc = ruc;
         this.billNumber = billNumber;

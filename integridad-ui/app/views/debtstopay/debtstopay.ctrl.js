@@ -30,6 +30,8 @@ angular.module('integridadUiApp')
     vm.seqNumber = undefined;
     vm.aux = undefined;
     vm.subIva = undefined;
+    vm.subTotalDoce = undefined;
+    vm.subTotalCero = undefined;
     vm.typeTaxes = undefined;
     vm.cuentaCtableId = undefined;
     vm.creditsDebtsValue = undefined;
@@ -350,6 +352,8 @@ angular.module('integridadUiApp')
     
       if (vm.typeTaxes === '1') {
         vm.subIva = parseFloat((vm.item.base_imponible * 0.1200).toFixed(2));
+        vm.subTotalDoce = vm.item.base_imponible;
+        vm.subTotalCero = vm.debtsToPay.total - vm.subTotalDoce - vm.subIva;
         vm.itemIva = {
           codigo_contable: vm.ivaContable,
           desc_contable: 'IVA EN COMPRAS',
@@ -367,6 +371,9 @@ angular.module('integridadUiApp')
         vm.debtsToPay.items.push(vm.itemIva);
         vm.debtsToPay.items.push(vm.itemProvider);
       } else if (vm.typeTaxes === '2') {
+        vm.subIva = 0.0;
+        vm.subTotalDoce = 0.0;
+        vm.subTotalCero = vm.debtsToPay.total;
         vm.itemProvider = {
           codigo_contable: vm.provContable,
           desc_contable: 'PROVEEDORES LOCALES',
@@ -389,7 +396,6 @@ angular.module('integridadUiApp')
         nomb_contable: tax.name
       };
       vm.subTotal = parseFloat((vm.debtsToPay.total / 1.1200).toFixed(2));
-      //vm.subIva = parseFloat((vm.debtsToPay.total - vm.subTotal).toFixed(2));
       vm.totalTotal = parseFloat(vm.debtsToPay.total);
     };
 
@@ -541,10 +547,10 @@ angular.module('integridadUiApp')
       if (vm.debtsToPay) {
         vm.getCambio = 0;
         _.each(vm.pagos, function(med) {
-          vm.varPago = parseFloat(parseFloat(vm.varPago) + parseFloat(med.total)).toFixed(2);
+          vm.varPago = parseFloat((vm.varPago + med.total).toFixed(2));
         });
-        vm.getCambio = (vm.varPago - vm.debtsToPay.total).toFixed(2);
-        vm.aux = (vm.varPago - vm.getCambio).toFixed(2);
+        vm.getCambio = parseFloat((vm.varPago - vm.debtsToPay.total).toFixed(2));
+        vm.aux = parseFloat((vm.varPago - vm.getCambio).toFixed(2));
       };
       return vm.varPago;
     };
@@ -572,7 +578,9 @@ angular.module('integridadUiApp')
       vm.debtsToPay.fecha = $('#pickerDateDebtsToPay').data("DateTimePicker").date().toDate().getTime();
       vm.debtsToPay.billNumber = vm.debtsToPay.threeNumberOne + '-' + vm.debtsToPay.threeNumberTwo + '-' + vm.debtsToPay.seccondPartNumber;
       vm.debtsToPay.providerId = vm.providerId;
-      vm.debtsToPay.subTotal = vm.subTotal;
+      vm.debtsToPay.iva = vm.subIva;
+      vm.debtsToPay.subTotalDoce = vm.subTotalDoce;
+      vm.debtsToPay.subTotalCero = vm.subTotalCero;
       vm.debtsToPay.debtsSeq = vm.seqNumber;
       vm.debtsToPay.ejercicio = vm.ejercicio;
       vm.debtsToPay.saldo = vm.debtsToPay.total;
