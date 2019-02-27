@@ -18,34 +18,46 @@ import lombok.Data;
 
 @Entity
 @Data
-public class Dailybook {
+public class DailybookCg {
     @Id
     @GeneratedValue
     private UUID id;
     
     private boolean active;
     private long dateRecordBook;
+    private String codeTypeContab;
+    private String typeContab;
     private String generalDetail;
-    private double valor;
+    private String dailyCgSeq;
+    private String dailyCgStringSeq; //Generado automáticamente por el Sistema
+    private String dailyCgStringUserSeq; //Introducido por el Usuario
+    private double subTotalDoce;
+    private double iva;
+    private double subTotalCero;
+    private double total;
     
     @ManyToOne
-    @JoinColumn(name = "debtsToPay_id")
-    private DebtsToPay debtsToPay;
+    @JoinColumn(name = "user_id")
+    private UserIntegridad userIntegridad;
     
     @ManyToOne
     @JoinColumn(name = "subsidiary_id")
     private Subsidiary subsidiary;
     
-    @OneToMany(mappedBy = "dailybook", cascade = CascadeType.ALL)
-    private List<DetailDailybook> detailDailybook;
+    @ManyToOne
+    @JoinColumn(name = "user_client_id")
+    private UserClient userClient;
+    
+    @OneToMany(mappedBy = "dailybookCg", cascade = CascadeType.ALL)
+    private List<DetailDailybookCg> detailDailybookCg;
     
     public void setListsNull(){
-        detailDailybook = null;
+        detailDailybookCg = null;
     }
     
     public void setFatherListToNull(){
-        debtsToPay.setListsNull();
-        debtsToPay.setFatherListToNull();
+        userClient.setListsNull();
+        userClient.setFatherListToNull();
     	subsidiary.setListsNull();
     	subsidiary.setFatherListToNull();
     }

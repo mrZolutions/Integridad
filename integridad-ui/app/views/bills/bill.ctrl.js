@@ -461,14 +461,10 @@ angular.module('integridadUiApp')
       if (vm.bill) {
         vm.getCambio = 0;
         _.each(vm.pagos, function(med) {
-          if (vm.pagoTot != null) {
-            vm.varPago = parseFloat((parseFloat(vm.varPago) + parseFloat(vm.pagoTot)).toFixed(2));
-          } else {
-            vm.varPago = parseFloat((parseFloat(vm.varPago) + parseFloat(med.total)).toFixed(2));
-          };
+          vm.varPago = parseFloat(parseFloat(vm.varPago) + parseFloat(med.total)).toFixed(2);
         });
-        vm.getCambio = parseFloat((vm.varPago - vm.bill.total).toFixed(2));
-        vm.aux = parseFloat((vm.varPago - vm.getCambio).toFixed(2));
+        vm.getCambio = (vm.varPago - vm.bill.total).toFixed(2);
+        vm.aux = (vm.varPago - vm.getCambio).toFixed(2);
       };
       return vm.varPago;
     };

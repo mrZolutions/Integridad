@@ -7,6 +7,12 @@ angular
       });
     };
 
+    this.update = function(debtsToPay) {
+      return securityService.put('/debts', debtsToPay).then(function successCallback(response) {
+        return response.data;
+      });
+    };
+
     this.getAllDebtsToPayByProviderId = function(id) {
       return securityService.get('/debts/debts/provider/' + id).then(function successCallback(response) {
         return response.data;

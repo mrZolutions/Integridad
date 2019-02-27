@@ -9,15 +9,17 @@
  */
 angular.module('integridadUiApp')
   .controller('DebtsToPayCtrl', function(_, $localStorage, providerService, cuentaContableService, debtsToPayService, 
-                                        utilSeqService, creditsDebtsService, paymentDebtsService, $location) {
+                                        utilSeqService, creditsDebtsService, paymentDebtsService, $location, eretentionService) {
     var vm = this;
     vm.error = undefined;
     vm.success = undefined;
     vm.loading = false;
+    vm.userData = $localStorage.user;
     
     vm.billNumber = undefined;
     vm.ejercicio = undefined;
     vm.usrCliId = undefined;
+    vm.update = undefined;
     vm.provider = undefined;
     vm.providerId = undefined;
     vm.providerRuc = undefined;
@@ -27,6 +29,13 @@ angular.module('integridadUiApp')
     vm.providerDebtsList = undefined;
     vm.subTotal = undefined;
     vm.totalTotal = undefined;
+    vm.retentionId = undefined;
+    vm.retentionNumber = undefined;
+    vm.retentionDateCreated = undefined;
+    vm.retentionTotal = undefined;
+    vm.retenSelected = undefined;
+    vm.retenTaxTypeFuente = undefined;
+    vm.retenTaxTypeIva = undefined;
     vm.seqNumber = undefined;
     vm.aux = undefined;
     vm.subIva = undefined;
@@ -40,6 +49,12 @@ angular.module('integridadUiApp')
     vm.saldoCredito = undefined;
     vm.saldoDebito = undefined;
     vm.saldo = undefined;
+    vm.retenCodeFuente = undefined;
+    vm.retenTaxTypeFuene = undefined;
+    vm.retenTotalFuente = undefined;
+    vm.retenCodeIva = undefined;
+    vm.retenTaxTypeIva = undefined;
+    vm.retenTotalIva = undefined;
 
     vm.countries = [
       {code:'16',name:'16 - AMERICAN SAMOA'},{code:'74',name:'74 - BOUVET ISLAND'},{code:'101',name:'101 - ARGENTINA'},{code:'102',name:'102 - BOLIVIA'},
@@ -206,14 +221,24 @@ angular.module('integridadUiApp')
       {code: 'TKAE', name: 'TIKETS AEREOS'}
     ];
 
+    //Función de activación del módulo de Cuentas por Pagar
     function _activate() {
       vm.provider = undefined;
       vm.aux = undefined;
+      vm.update = undefined;
       vm.ejercicio = undefined;
       vm.debtsToPayList = undefined;
       vm.providerSelected = undefined;
       vm.providerDebtsList = undefined;
       vm.debtsToPayCreated = undefined;
+      vm.retentionId = undefined;
+      vm.retentionNumber = undefined;
+      vm.retentionDateCreated = undefined;
+      vm.retentionTotal = undefined;
+      vm.retenSelected = undefined;
+      vm.retenTaxTypeFuente = undefined;
+      vm.retenTaxTypeIva = undefined;
+      vm.debtsToPaySelectedToUpdate = undefined;
       vm.loading = true;
       vm.success = undefined;
       vm.error = undefined;
@@ -230,11 +255,13 @@ angular.module('integridadUiApp')
       });
     };
 
+    //Secuencia numérica de los Debts
     function _getSeqNumber() {
       vm.numberAddedOne = parseInt($localStorage.user.cashier.debtsNumberSeq) + 1;
       vm.seqNumber = utilSeqService._pad_with_zeroes(vm.numberAddedOne, 6);
     };
 
+    //Inicialización de los Debts
     function _initializeDebts() {
       vm.debtsToPay = {
         provider: vm.providerSelected,
@@ -246,10 +273,13 @@ angular.module('integridadUiApp')
       };
     };
 
+    //Selección del Prooveedor
     vm.providerSelect = function(provider) {
       vm.success = undefined;
+      vm.update = false;
       vm.loading = true;
       vm.providerSelected = provider;
+      vm.providerId = provider.id;
       vm.companyData = $localStorage.user.subsidiary;
       _getSeqNumber();
       _initializeDebts();
@@ -261,6 +291,7 @@ angular.module('integridadUiApp')
       });
     };
 
+    //Busqueda de las Cuentas por Pagar por Proveedor
     vm.providerDebts = function(provider) {
       vm.loading = true;
       vm.success = undefined;
@@ -276,6 +307,7 @@ angular.module('integridadUiApp')
       });
     };
 
+    //Busqueda de las Cuentas por Pagar por Proveedor
     vm.consultProviderDebts = function(provider) {
       vm.loading = true;
       vm.success = undefined;
@@ -291,6 +323,7 @@ angular.module('integridadUiApp')
       });
     };
 
+    //Selección de las Cuentas Contables
     vm.getPercentageTableAll = function() {
       if (vm.debtsToPay.typeTaxes === '1') {
         cuentaContableService.getCuentaContableByUserClient(vm.usrCliId).then(function(response) {
@@ -313,6 +346,7 @@ angular.module('integridadUiApp')
       };
     };
 
+    //Selección de las Cuentas Contables por tipo de Cuenta
     vm.selectPurchaseTable = function(purchaseType) {
       if (vm.debtsToPay.typeTaxes === '1') {
         cuentaContableService.getCuentaContableByType(vm.usrCliId, purchaseType).then(function(response) {
@@ -333,12 +367,13 @@ angular.module('integridadUiApp')
       };
     };
 
+    //Funión que permite agregar las Cuentas Contables por defecto, Iva y Proveedor
     vm.addIvaAndProvider = function() {
       if (vm.indexEdit !== undefined) {
         vm.debtsToPay.items.splice(vm.indexEdit, 1);
         vm.indexEdit = undefined;
       };
-      //Selecciona las Cuentas Contables por defecto dependiendo del Cliente
+      //Selección de las Cuentas Contables por defecto dependiendo del Cliente
       if (vm.usrCliId === '758dea84-74f5-4209-b218-9b84c10621fc') {
         vm.ivaContable = '1.01.05.01.001';
         vm.provContable = '2.01.03.01.001';
@@ -399,7 +434,8 @@ angular.module('integridadUiApp')
       vm.totalTotal = parseFloat(vm.debtsToPay.total);
     };
 
-    vm.getRestaSubotal = function() {
+    //Obtiene la Base Imponible para el tipo de IVA 12
+    vm.getBaseImponibleCodigo_1 = function() {
       var totalDebito = vm.subTotal;
       if (vm.debtsToPay) {
         _.each (vm.debtsToPay.items, function(detail) {
@@ -411,7 +447,8 @@ angular.module('integridadUiApp')
       return totalDebito;
     };
 
-    vm.getRestaTotalTotal = function() {
+    //Obtiene la Base Imponible para el tipo de IVA 0
+    vm.getBaseImponibleCodigo_2 = function() {
       var totalDebito = vm.totalTotal;
       if (vm.debtsToPay) {
         _.each (vm.debtsToPay.items, function(detail) {
@@ -423,6 +460,18 @@ angular.module('integridadUiApp')
       return totalDebito;
     };
 
+    //Funciones que Agregan, Editan y Eliminan detalles a la Cuenta por Pagar
+    vm.addItem = function() {
+      if (vm.indexEdit !== undefined) {
+        vm.debtsToPay.items.splice(vm.indexEdit, 1);
+        vm.indexEdit = undefined;
+      };
+      vm.debtsToPay.items.push(vm.item);
+      vm.item = undefined;
+      vm.debtsToPay.typeTaxes = undefined;
+      vm.cuentaContableList = undefined;
+    };
+
     vm.editItemTaxes = function(index) {
       vm.item = angular.copy(vm.debtsToPay.items[index]);
       vm.indexEdit = index;
@@ -432,6 +481,7 @@ angular.module('integridadUiApp')
       vm.debtsToPay.items.splice(index, 1);
     };
 
+    //Funciones que obtienen los totales de los detalles por tipo
     vm.getTotalDebito = function() {
       var totalDebito = 0;
       if (vm.debtsToPay) {
@@ -464,17 +514,7 @@ angular.module('integridadUiApp')
       return totalSaldo;
     };
 
-    vm.addItem = function() {
-      if (vm.indexEdit !== undefined) {
-        vm.debtsToPay.items.splice(vm.indexEdit, 1);
-        vm.indexEdit = undefined;
-      };
-      vm.debtsToPay.items.push(vm.item);
-      vm.item = undefined;
-      vm.debtsToPay.typeTaxes = undefined;
-      vm.cuentaContableList = undefined;
-    };
-
+    //Función que carga el medio de pago
     vm.loadMedio = function() {
       var payed = 0;
       _.each(vm.pagos, function(pago){
@@ -499,11 +539,19 @@ angular.module('integridadUiApp')
       };
     };
 
+    //Funciones que calculas la fecha de Cobro
     vm.getFechaCobro = function() {
       var d = new Date();
       vm.medio.fechaCobro = _addDays(d, parseInt(vm.medio.chequeDiasPlazo));
     };
 
+    function _addDays(date, days) {
+      var result = new Date(date);
+      result.setDate(result.getDate() + days);
+      return result.getTime();
+    };
+
+    //Función que carga el crédito, cuando el medio de pago es cŕedito
     vm.loadCredit = function() {
       var creditArray = [];
       var diasPlazo = parseInt(vm.medio.creditoIntervalos);
@@ -526,12 +574,7 @@ angular.module('integridadUiApp')
       vm.medio.creditsDebts = creditArray;
     };
 
-    function _addDays(date, days) {
-      var result = new Date(date);
-      result.setDate(result.getDate() + days);
-      return result.getTime();
-    };
-
+    //Funciones que se implementan para agregar y eliminar el pago de la Cuenta por Pagar
     vm.addPago = function() {
       vm.pagos.push(angular.copy(vm.medio));
       vm.medio = {};
@@ -555,6 +598,7 @@ angular.module('integridadUiApp')
       return vm.varPago;
     };
 
+    //Función que anula una Cuenta por Pagar
     vm.debtsToPayDeactivate = function() {
       vm.loading = true;
       var index = vm.providerDebtsList.indexOf(vm.deactivateDebtsToPay);
@@ -571,6 +615,433 @@ angular.module('integridadUiApp')
       });
     };
 
+    //Función que obtiene las Retenciones por Proveedor
+    vm.getRetentionByProvider = function() {
+      vm.loading = true;
+      eretentionService.getAllRetentionsByProviderId(vm.providerId).then(function(response) {
+        vm.retentionList = response;
+        vm.loading = false;
+      }).catch(function(error) {
+        vm.loading = false;
+        vm.error = error.data;
+      });
+    };
+
+    //Función que obtiene los Datos de una Retención
+    vm.retentionSelected = function(retention) {
+      vm.loading = true;
+      $('#modalFindRetention').modal('hide');
+      vm.retentionList = undefined;
+      vm.retentionId = retention.id;
+      vm.retentionNumber = retention.stringSeq;
+      vm.retentionDateCreated = retention.dateCreated;
+      eretentionService.getRetentionById(retention.id).then(function(response) {
+        vm.retention = response;
+        vm.totalRetention = 0;
+        _.each(vm.retention.detailRetentions, function(det) {
+          vm.totalRetention = vm.totalRetention + det.total;
+        });
+        _.map(vm.retention.detailRetentions, function(detail) {
+          if (detail.taxType == 'RETENCION EN LA FUENTE') {
+            vm.retenCodeFuente = detail.code;
+            vm.retenTaxTypeFuente = detail.taxType;
+            vm.retenTotalFuente = detail.total;
+          } else if (detail.taxType == 'RETENCION EN EL IVA') {
+            vm.retenCodeIva = detail.code;
+            vm.retenTaxTypeIva = detail.taxType;
+            vm.retenTotalIva = detail.total;
+          };
+        });
+        vm.retentionTotal = parseFloat(vm.totalRetention);
+        vm.loading = false;
+      }).catch(function(error) {
+        vm.loading = false;
+        vm.error = error.data;
+      });
+    };
+
+    vm.addRetentionToDebtsDetail = function() {
+      vm.retenSelected = true;
+      if (vm.usrCliId === '758dea84-74f5-4209-b218-9b84c10621fc') {
+        if (vm.retenTaxTypeFuente == 'RETENCION EN LA FUENTE') {
+          switch(vm.retenCodeFuente) {
+            case '302':
+              vm.retenFteCodeContable = '2.01.07.01.001';
+              vm.retenFteDescContable = 'RETENCIÓN EN COMPRAS';
+              vm.retenFteNombContable = 'En Relación de Dependencia';
+              vm.retenFteValor = parseFloat(vm.retenTotalFuente);
+              break;
+            case '303':
+              vm.retenFteCodeContable = '2.01.07.01.002';
+              vm.retenFteDescContable = 'RETENCIÓN EN COMPRAS';
+              vm.retenFteNombContable = 'Honorarios Profesionales';
+              vm.retenFteValor = parseFloat(vm.retenTotalFuente);
+              break;
+            case '304':
+              vm.retenFteCodeContable = '2.01.07.01.003';
+              vm.retenFteDescContable = 'RETENCIÓN EN COMPRAS';
+              vm.retenFteNombContable = 'Servicios Profesionales predomina intelecto';
+              vm.retenFteValor = parseFloat(vm.retenTotalFuente);
+              break;
+            case '307':
+              vm.retenFteCodeContable = '2.01.07.01.004';
+              vm.retenFteDescContable = 'RETENCIÓN EN COMPRAS';
+              vm.retenFteNombContable = 'Servicios Mano de Obra';
+              vm.retenFteValor = parseFloat(vm.retenTotalFuente);
+              break;
+            case '308':
+              vm.retenFteCodeContable = '2.01.07.01.005';
+              vm.retenFteDescContable = 'RETENCIÓN EN COMPRAS';
+              vm.retenFteNombContable = 'Servicios entre sociedades';
+              vm.retenFteValor = parseFloat(vm.retenTotalFuente);
+              break;
+            case '309':
+              vm.retenFteCodeContable = '2.01.07.01.006';
+              vm.retenFteDescContable = 'RETENCIÓN EN COMPRAS';
+              vm.retenFteNombContable = 'Servicios Publicidad y Comunicación';
+              vm.retenFteValor = parseFloat(vm.retenTotalFuente);
+              break;
+            case '310':
+              vm.retenFteCodeContable = '2.01.07.01.007';
+              vm.retenFteDescContable = 'RETENCIÓN EN COMPRAS';
+              vm.retenFteNombContable = 'Transporte Privado de Pasajeros o de Carga';
+              vm.retenFteValor = parseFloat(vm.retenTotalFuente);
+              break;
+            case '312':
+              vm.retenFteCodeContable = '2.01.07.01.008';
+              vm.retenFteDescContable = 'RETENCIÓN EN COMPRAS';
+              vm.retenFteNombContable = 'Transporte Bienes Muebles naturales';
+              vm.retenFteValor = parseFloat(vm.retenTotalFuente);
+              break;
+            case '319':
+              vm.retenFteCodeContable = '2.01.07.01.009';
+              vm.retenFteDescContable = 'RETENCIÓN EN COMPRAS';
+              vm.retenFteNombContable = 'Arrendamiento Mercantil';
+              vm.retenFteValor = parseFloat(vm.retenTotalFuente);
+              break;
+            case '320':
+              vm.retenFteCodeContable = '2.01.07.01.010';
+              vm.retenFteDescContable = 'RETENCIÓN EN COMPRAS';
+              vm.retenFteNombContable = 'Arrendamiento Bienes Inmuebles';
+              vm.retenFteValor = parseFloat(vm.retenTotalFuente);
+              break;
+            case '322':
+              vm.retenFteCodeContable = '2.01.07.01.011';
+              vm.retenFteDescContable = 'RETENCIÓN EN COMPRAS';
+              vm.retenFteNombContable = 'Seguros y Reaseguros';
+              vm.retenFteValor = parseFloat(vm.retenTotalFuente);
+              break;
+            case '323':
+              vm.retenFteCodeContable = '2.01.07.01.012';
+              vm.retenFteDescContable = 'RETENCIÓN EN COMPRAS';
+              vm.retenFteNombContable = 'Rendimientos Financieros';
+              vm.retenFteValor = parseFloat(vm.retenTotalFuente);
+              break;
+            case '327':
+              vm.retenFteCodeContable = '2.01.07.01.013';
+              vm.retenFteDescContable = 'RETENCIÓN EN COMPRAS';
+              vm.retenFteNombContable = 'Venta de Combustibles';
+              vm.retenFteValor = parseFloat(vm.retenTotalFuente);
+              break;
+            case '328':
+              vm.retenFteCodeContable = '2.01.07.01.014';
+              vm.retenFteDescContable = 'RETENCIÓN EN COMPRAS';
+              vm.retenFteNombContable = 'Venta de Combustibles a distribuidores';
+              vm.retenFteValor = parseFloat(vm.retenTotalFuente);
+              break;
+            case '340':
+              vm.retenFteCodeContable = '2.01.07.01.015';
+              vm.retenFteDescContable = 'RETENCIÓN EN COMPRAS';
+              vm.retenFteNombContable = 'Otras Retenciones aplicables al 1%';
+              vm.retenFteValor = parseFloat(vm.retenTotalFuente);
+              break;
+            case '341':
+              vm.retenFteCodeContable = '2.01.07.01.016';
+              vm.retenFteDescContable = 'RETENCIÓN EN COMPRAS';
+              vm.retenFteNombContable = 'Otras Retenciones aplicables al 2%';
+              vm.retenFteValor = parseFloat(vm.retenTotalFuente);
+              break;
+            case '342':
+              vm.retenFteCodeContable = '2.01.07.01.017';
+              vm.retenFteDescContable = 'RETENCIÓN EN COMPRAS';
+              vm.retenFteNombContable = 'Otras Retenciones aplicables al 8%';
+              vm.retenFteValor = parseFloat(vm.retenTotalFuente);
+              break;
+            case '343':
+              vm.retenFteCodeContable = '2.01.07.01.018';
+              vm.retenFteDescContable = 'RETENCIÓN EN COMPRAS';
+              vm.retenFteNombContable = 'Otras Retenciones aplicables al 25%';
+              vm.retenFteValor = parseFloat(vm.retenTotalFuente);
+              break;
+            case '344':
+              vm.retenFteCodeContable = '2.01.07.01.019';
+              vm.retenFteDescContable = 'RETENCIÓN EN COMPRAS';
+              vm.retenFteNombContable = 'Otras Retenciones aplicables a otros porcentajes';
+              vm.retenFteValor = parseFloat(vm.retenTotalFuente);
+              break;
+          };
+        };
+        if (vm.retenTaxTypeIva == 'RETENCION EN EL IVA') {
+          switch(vm.retenCodeIva) {
+            case '721':
+              vm.retenIvaCodeContable = '2.01.07.02.001';
+              vm.retenIvaDescContable = 'RETENCIÓN EN COMPRAS';
+              vm.retenIvaNombContable = 'RETENCION IVA DEL 10% (Bienes)';
+              vm.retenIvaValor = parseFloat(vm.retenTotalIva);
+              break;
+            case '723':
+              vm.retenIvaCodeContable = '2.01.07.02.002';
+              vm.retenIvaDescContable = 'RETENCIÓN EN COMPRAS';
+              vm.retenIvaNombContable = 'RETENCION IVA DEL 20% (Servicios)';
+              vm.retenIvaValor = parseFloat(vm.retenTotalIva);
+              break;
+            case '725':
+              vm.retenIvaCodeContable = '2.01.07.02.003';
+              vm.retenIvaDescContable = 'RETENCIÓN EN COMPRAS';
+              vm.retenIvaNombContable = 'RETENCION IVA DEL 30%';
+              vm.retenIvaValor = parseFloat(vm.retenTotalIva);
+              break;
+            case '727':
+              vm.retenIvaCodeContable = '2.01.07.02.004';
+              vm.retenIvaDescContable = 'RETENCIÓN EN COMPRAS';
+              vm.retenIvaNombContable = 'RETENCION IVA DEL 50%';
+              vm.retenIvaValor = parseFloat(vm.retenTotalIva);
+              break;
+            case '729':
+              vm.retenIvaCodeContable = '2.01.07.02.005';
+              vm.retenIvaDescContable = 'RETENCIÓN EN COMPRAS';
+              vm.retenIvaNombContable = 'RETENCION IVA DEL 70%';
+              vm.retenIvaValor = parseFloat(vm.retenTotalIva);
+              break;
+            case '731':
+              vm.retenIvaCodeContable = '2.01.07.02.006';
+              vm.retenIvaDescContable = 'RETENCIÓN EN COMPRAS';
+              vm.retenIvaNombContable = 'RETENCION IVA DEL 100%';
+              vm.retenIvaValor = parseFloat(vm.retenTotalIva);
+              break;
+          };
+        };
+      } else if (vm.usrCliId === '4907601b-6e54-4675-80a8-ab6503e1dfeb') {
+        if (vm.retenTaxTypeFuente == 'RETENCION EN LA FUENTE') {
+          switch(vm.retenCodeFuente) {
+            case '302':
+              vm.retenFteCodeContable = '2.01.07.01.001';
+              vm.retenFteDescContable = 'RETENCIÓN EN COMPRAS';
+              vm.retenFteNombContable = 'En Relación de Dependencia';
+              vm.retenFteValor = parseFloat(vm.retenTotalFuente);
+              break;
+            case '303':
+              vm.retenFteCodeContable = '2.01.07.01.002';
+              vm.retenFteDescContable = 'RETENCIÓN EN COMPRAS';
+              vm.retenFteNombContable = 'Honorarios Profesionales';
+              vm.retenFteValor = parseFloat(vm.retenTotalFuente);
+              break;
+            case '304':
+              vm.retenFteCodeContable = '2.01.07.01.003';
+              vm.retenFteDescContable = 'RETENCIÓN EN COMPRAS';
+              vm.retenFteNombContable = 'Servicios Profesionales predomina intelecto';
+              vm.retenFteValor = parseFloat(vm.retenTotalFuente);
+              break;
+            case '307':
+              vm.retenFteCodeContable = '2.01.07.01.004';
+              vm.retenFteDescContable = 'RETENCIÓN EN COMPRAS';
+              vm.retenFteNombContable = 'Servicios Mano de Obra';
+              vm.retenFteValor = parseFloat(vm.retenTotalFuente);
+              break;
+            case '308':
+              vm.retenFteCodeContable = '2.01.07.01.005';
+              vm.retenFteDescContable = 'RETENCIÓN EN COMPRAS';
+              vm.retenFteNombContable = 'Servicios entre sociedades';
+              vm.retenFteValor = parseFloat(vm.retenTotalFuente);
+              break;
+            case '309':
+              vm.retenFteCodeContable = '2.01.07.01.006';
+              vm.retenFteDescContable = 'RETENCIÓN EN COMPRAS';
+              vm.retenFteNombContable = 'Servicios Publicidad y Comunicación';
+              vm.retenFteValor = parseFloat(vm.retenTotalFuente);
+              break;
+            case '310':
+              vm.retenFteCodeContable = '2.01.07.01.007';
+              vm.retenFteDescContable = 'RETENCIÓN EN COMPRAS';
+              vm.retenFteNombContable = 'Transporte Privado de Pasajeros o de Carga';
+              vm.retenFteValor = parseFloat(vm.retenTotalFuente);
+              break;
+            case '312':
+              vm.retenFteCodeContable = '2.01.07.01.008';
+              vm.retenFteDescContable = 'RETENCIÓN EN COMPRAS';
+              vm.retenFteNombContable = 'Transporte Bienes Muebles naturales';
+              vm.retenFteValor = parseFloat(vm.retenTotalFuente);
+              break;
+            case '319':
+              vm.retenFteCodeContable = '2.01.07.01.009';
+              vm.retenFteDescContable = 'RETENCIÓN EN COMPRAS';
+              vm.retenFteNombContable = 'Arrendamiento Mercantil';
+              vm.retenFteValor = parseFloat(vm.retenTotalFuente);
+              break;
+            case '320':
+              vm.retenFteCodeContable = '2.01.07.01.010';
+              vm.retenFteDescContable = 'RETENCIÓN EN COMPRAS';
+              vm.retenFteNombContable = 'Arrendamiento Bienes Inmuebles';
+              vm.retenFteValor = parseFloat(vm.retenTotalFuente);
+              break;
+            case '322':
+              vm.retenFteCodeContable = '2.01.07.01.011';
+              vm.retenFteDescContable = 'RETENCIÓN EN COMPRAS';
+              vm.retenFteNombContable = 'Seguros y Reaseguros';
+              vm.retenFteValor = parseFloat(vm.retenTotalFuente);
+              break;
+            case '323':
+              vm.retenFteCodeContable = '2.01.07.01.012';
+              vm.retenFteDescContable = 'RETENCIÓN EN COMPRAS';
+              vm.retenFteNombContable = 'Rendimientos Financieros';
+              vm.retenFteValor = parseFloat(vm.retenTotalFuente);
+              break;
+            case '327':
+              vm.retenFteCodeContable = '2.01.07.01.013';
+              vm.retenFteDescContable = 'RETENCIÓN EN COMPRAS';
+              vm.retenFteNombContable = 'Venta de Combustibles';
+              vm.retenFteValor = parseFloat(vm.retenTotalFuente);
+              break;
+            case '328':
+              vm.retenFteCodeContable = '2.01.07.01.014';
+              vm.retenFteDescContable = 'RETENCIÓN EN COMPRAS';
+              vm.retenFteNombContable = 'Venta de Combustibles a distribuidores';
+              vm.retenFteValor = parseFloat(vm.retenTotalFuente);
+              break;
+            case '340':
+              vm.retenFteCodeContable = '2.01.07.01.015';
+              vm.retenFteDescContable = 'RETENCIÓN EN COMPRAS';
+              vm.retenFteNombContable = 'Otras Retenciones aplicables al 1%';
+              vm.retenFteValor = parseFloat(vm.retenTotalFuente);
+              break;
+            case '341':
+              vm.retenFteCodeContable = '2.01.07.01.016';
+              vm.retenFteDescContable = 'RETENCIÓN EN COMPRAS';
+              vm.retenFteNombContable = 'Otras Retenciones aplicables al 2%';
+              vm.retenFteValor = parseFloat(vm.retenTotalFuente);
+              break;
+            case '342':
+              vm.retenFteCodeContable = '2.01.07.01.017';
+              vm.retenFteDescContable = 'RETENCIÓN EN COMPRAS';
+              vm.retenFteNombContable = 'Otras Retenciones aplicables al 8%';
+              vm.retenFteValor = parseFloat(vm.retenTotalFuente);
+              break;
+            case '343':
+              vm.retenFteCodeContable = '2.01.07.01.018';
+              vm.retenFteDescContable = 'RETENCIÓN EN COMPRAS';
+              vm.retenFteNombContable = 'Otras Retenciones aplicables al 25%';
+              vm.retenFteValor = parseFloat(vm.retenTotalFuente);
+              break;
+            case '344':
+              vm.retenFteCodeContable = '2.01.07.01.019';
+              vm.retenFteDescContable = 'RETENCIÓN EN COMPRAS';
+              vm.retenFteNombContable = 'Otras Retenciones aplicables a otros porcentajes';
+              vm.retenFteValor = parseFloat(vm.retenTotalFuente);
+              break;
+          };
+        };
+        if (vm.retenTaxTypeIva == 'RETENCION EN EL IVA') {
+          switch(vm.retenCodeIva) {
+            case '721':
+              vm.retenIvaCodeContable = '2.01.07.02.001';
+              vm.retenIvaDescContable = 'RETENCIÓN EN COMPRAS';
+              vm.retenIvaNombContable = 'RETENCION IVA DEL 10% (Bienes)';
+              vm.retenIvaValor = parseFloat(vm.retenTotalIva);
+              break;
+            case '723':
+              vm.retenIvaCodeContable = '2.01.07.02.002';
+              vm.retenIvaDescContable = 'RETENCIÓN EN COMPRAS';
+              vm.retenIvaNombContable = 'RETENCION IVA DEL 20% (Servicios)';
+              vm.retenIvaValor = parseFloat(vm.retenTotalIva);
+              break;
+            case '725':
+              vm.retenIvaCodeContable = '2.01.07.02.003';
+              vm.retenIvaDescContable = 'RETENCIÓN EN COMPRAS';
+              vm.retenIvaNombContable = 'RETENCION IVA DEL 30%';
+              vm.retenIvaValor = parseFloat(vm.retenTotalIva);
+              break;
+            case '727':
+              vm.retenIvaCodeContable = '2.01.07.02.004';
+              vm.retenIvaDescContable = 'RETENCIÓN EN COMPRAS';
+              vm.retenIvaNombContable = 'RETENCION IVA DEL 50%';
+              vm.retenIvaValor = parseFloat(vm.retenTotalIva);
+              break;
+            case '729':
+              vm.retenIvaCodeContable = '2.01.07.02.005';
+              vm.retenIvaDescContable = 'RETENCIÓN EN COMPRAS';
+              vm.retenIvaNombContable = 'RETENCION IVA DEL 70%';
+              vm.retenIvaValor = parseFloat(vm.retenTotalIva);
+              break;
+            case '731':
+              vm.retenIvaCodeContable = '2.01.07.02.006';
+              vm.retenIvaDescContable = 'RETENCIÓN EN COMPRAS';
+              vm.retenIvaNombContable = 'RETENCION IVA DEL 100%';
+              vm.retenIvaValor = parseFloat(vm.retenTotalIva);
+              break;
+          };
+        };
+      };
+
+      if (vm.update === false) {
+        vm.itemRetentionFuente = undefined;
+        vm.itemRetentionFuente = {
+          codigo_contable: vm.retenFteCodeContable,
+          desc_contable: vm.retenFteDescContable,
+          tipo: 'DEBITO (D)',
+          base_imponible: vm.retenFteValor,
+          nomb_contable: vm.retenFteNombContable
+        };
+        //console.log(vm.itemRetentionFuente);
+        vm.itemRetentionIVA = undefined;
+        vm.itemRetentionIVA = {
+          codigo_contable: vm.retenIvaCodeContable,
+          desc_contable: vm.retenIvaDescContable,
+          tipo: 'DEBITO (D)',
+          base_imponible: vm.retenIvaValor,
+          nomb_contable: vm.retenIvaNombContable
+        };
+        //console.log(vm.itemRetentionIVA);
+        if (vm.itemRetentionFuente.codigo_contable != 0) {
+          vm.debtsToPay.items.push(vm.itemRetentionFuente);
+          vm.itemRetentionFuente = undefined;
+        };
+        if (vm.itemRetentionIVA.codigo_contable != 0) {
+          vm.debtsToPay.items.push(vm.itemRetentionIVA);
+          vm.itemRetentionIVA = undefined;
+        };
+      } else {
+        vm.itemRetentionFuenteToUpdate = undefined;
+        vm.itemRetentionFuenteToUpdate = {
+          codigo: parseInt(vm.debtsToPay.typeTaxes),
+          codeConta: vm.retenFteCodeContable,
+          descrip: vm.retenFteDescContable,
+          tipo: 'DEBITO (D)',
+          baseImponible: vm.retenFteValor,
+          name: vm.retenFteNombContable
+        };
+        //console.log(vm.itemRetentionFuenteToUpdate);
+        vm.itemRetentionIVAToUpdate = undefined;
+        vm.itemRetentionIVAToUpdate = {
+          codigo: parseInt(vm.debtsToPay.typeTaxes),
+          codeConta: vm.retenIvaCodeContable,
+          descrip: vm.retenIvaDescContable,
+          tipo: 'DEBITO (D)',
+          baseImponible: vm.retenIvaValor,
+          name: vm.retenIvaNombContable
+        };
+        //console.log(vm.itemRetentionIVAToUpdate);
+        if (vm.itemRetentionFuenteToUpdate.codeConta !== 0) {
+          vm.debtsToPay.detailDebtsToPay.push(vm.itemRetentionFuenteToUpdate);
+          vm.itemRetentionFuenteToUpdate = undefined;
+        };
+        if (vm.itemRetentionIVAToUpdate.codeConta != 0) {
+          vm.debtsToPay.detailDebtsToPay.push(vm.itemRetentionIVAToUpdate);
+          vm.itemRetentionIVAToUpdate = undefined;
+        };
+      };
+    };
+
+    //Función que Guarda la Cuenta por Pagar con sus Detalles y Pagos
     vm.saveDebtsToPay = function(debtsToPay) {
       vm.loading = true;
       vm.pagos.total = vm.aux;
@@ -584,6 +1055,10 @@ angular.module('integridadUiApp')
       vm.debtsToPay.debtsSeq = vm.seqNumber;
       vm.debtsToPay.ejercicio = vm.ejercicio;
       vm.debtsToPay.saldo = vm.debtsToPay.total;
+      vm.debtsToPay.retentionId = vm.retentionId;
+      vm.debtsToPay.retentionNumber = vm.retentionNumber;
+      vm.debtsToPay.retentionDateCreated = vm.retentionDateCreated;
+      vm.debtsToPay.retentionTotal = vm.retentionTotal;
       vm.debtsToPay.detailDebtsToPay = [];
       vm.debtsToPay.pagos = vm.pagos;
       _.each(vm.debtsToPay.items, function(item) {
@@ -614,6 +1089,7 @@ angular.module('integridadUiApp')
       _activate();
     };
 
+    //Función que obtiene los créditos pendientes de las Cuentas por Pagar
     vm.creditsByDebts = function(debtsToPay) {
       vm.loading = true;
       vm.success = undefined;
@@ -629,6 +1105,7 @@ angular.module('integridadUiApp')
       });
     };
 
+    //Funciones que permiten hacer los Abonos y/o Pagos de los Creditos pendientes por pagar de las Cuentas por Pagar
     vm.createAbonoDebts = function(creditsDebts) {
       vm.loading = true;
       vm.creditsDebtsValue = (creditsDebts.valor).toFixed(2);
@@ -659,7 +1136,8 @@ angular.module('integridadUiApp')
       _activate();
     };
 
-    vm.debtsToPaySelected = function(debts) {
+    //Funciones que permiten obtener los datos de una Cuenta por Pagar para su impresión
+    vm.debtsToPayToPrint = function(debts) {
       vm.loading = true;
       debtsToPayService.getById(debts.id).then(function(response) {
         vm.providerDebtsList = undefined;
@@ -714,6 +1192,173 @@ angular.module('integridadUiApp')
     vm.cancel = function() {
       _activate();
     };
+
+    //Sección de Funciones utilizadas para la edición y actualización de los Debts
+    vm.debtsToPayToUpdate = function(debts) {
+      vm.loading = true;
+      vm.update = true;
+      vm.providerDebtsList = undefined;
+      debtsToPayService.getById(debts.id).then(function(response) {
+        vm.debtsToPay = response;
+        vm.debtsDetails = response.detailDebtsToPay;
+        vm.debtsToPaySelectedToUpdate = debts.id;
+        vm.pagos = response.pagos;
+        var dateToShow = new Date(response.fecha);
+        vm.billNumber = response.billNumber;
+        vm.seqNumber = response.debtsSeq;
+        $('#pickerDateDebtsToPayToUpdate').data("DateTimePicker").date(dateToShow);
+        vm.loading = false;
+      }).catch(function(error) {
+        vm.loading = false;
+        vm.error = error.data;
+      });
+    };
+
+    //Funciones que Agregan, Editan y Eliminan detalles a la Cuenta por Pagar para su Actualización
+    vm.selectTaxesToUpdate = function(tax) {
+      vm.item = undefined;
+      vm.item = {
+        codigo: parseInt(vm.debtsToPay.typeTaxes),
+        codeConta: tax.code,
+        descrip: tax.description,
+        tipo: tax.accountType,
+        name: tax.name,
+        valor: vm.debtsDetails.baseImponible
+      };
+      vm.subTotal = parseFloat((vm.debtsToPay.total / 1.1200).toFixed(2));
+      vm.totalTotal = parseFloat(vm.debtsToPay.total);
+    };
+
+    vm.addItemToUpdate = function() {
+      if (vm.indexEdit !== undefined) {
+        vm.debtsToPay.detailDebtsToPay.splice(vm.indexEdit, 1);
+        vm.indexEdit = undefined;
+      };
+      vm.debtsToPay.detailDebtsToPay.push(vm.item);
+      vm.item = undefined;
+      vm.debtsToPay.typeTaxes = undefined;
+      vm.cuentaContableList = undefined;
+    };
+
+    vm.editItemToUpdate = function(index) {
+      vm.item = angular.copy(vm.debtsToPay.detailDebtsToPay[index]);
+      vm.indexEdit = index;
+    };
+
+    vm.deleteItemToUpdate = function(index) {
+      vm.debtsToPay.detailDebtsToPay.splice(index, 1);
+    };
+
+    vm.addIvaAndProviderToUpdate = function() {
+      if (vm.indexEdit !== undefined) {
+        vm.debtsToPay.detailDebtsToPay.splice(vm.indexEdit, 1);
+        vm.indexEdit = undefined;
+      };
+      //Selección de las Cuentas Contables por defecto dependiendo del Cliente
+      if (vm.usrCliId === '758dea84-74f5-4209-b218-9b84c10621fc') {
+        vm.ivaContable = '1.01.05.01.001';
+        vm.provContable = '2.01.03.01.001';
+      } else if (vm.usrCliId === '4907601b-6e54-4675-80a8-ab6503e1dfeb') {
+        vm.ivaContable = '1.01.05.02.001';
+        vm.provContable = '2.01.03.01.001';
+      } else {
+        vm.ivaContable = '1.01.01.01';
+        vm.provContable = '2.01.01.01';
+      };
+    
+      if (vm.typeTaxes === '1') {
+        vm.subIva = parseFloat((vm.item.baseImponible * 0.1200).toFixed(2));
+        vm.subTotalDoce = vm.item.baseImponible;
+        vm.subTotalCero = vm.debtsToPay.total - vm.subTotalDoce - vm.subIva;
+        vm.itemIva = {
+          codeConta: vm.ivaContable,
+          descrip: 'IVA EN COMPRAS',
+          tipo: 'DEBITO (D)',
+          baseImponible: vm.subIva,
+          name: 'DEFINIDA PARA TODAS LAS COMPRAS'
+        };
+        vm.itemProvider = {
+          codeConta: vm.provContable,
+          descrip: 'PROVEEDORES LOCALES',
+          tipo: 'CREDITO (C)',
+          baseImponible: vm.debtsToPay.total,
+          name: 'DEFINIDA PARA TODOS LOS PROVEEDORES'
+        };
+        vm.debtsToPay.detailDebtsToPay.push(vm.itemIva);
+        vm.debtsToPay.detailDebtsToPay.push(vm.itemProvider);
+      } else if (vm.typeTaxes === '2') {
+        vm.subIva = 0.0;
+        vm.subTotalDoce = 0.0;
+        vm.subTotalCero = vm.debtsToPay.total;
+        vm.itemProvider = {
+          codeConta: vm.provContable,
+          descrip: 'PROVEEDORES LOCALES',
+          tipo: 'CREDITO (C)',
+          baseImponible: vm.debtsToPay.total,
+          name: 'DEFINIDA PARA TODOS LOS PROVEEDORES'
+        };
+        vm.debtsToPay.detailDebtsToPay.push(vm.itemProvider);
+      };
+    };
+
+    //Obtiene la Base Imponible para el tipo de IVA 12
+    vm.getBaseImponibleToUpdateCodigo_1 = function() {
+      var totalDebito = vm.subTotal;
+      if (vm.debtsToPay) {
+        _.each (vm.debtsToPay.detailDebtsToPay, function(detail) {
+          if (detail.tipo === 'DEBITO (D)') {
+            totalDebito = (parseFloat(totalDebito) - parseFloat(detail.baseImponible)).toFixed(2);
+          };
+        });
+      };
+      return totalDebito;
+    };
+
+    //Obtiene la Base Imponible para el tipo de IVA 0
+    vm.getBaseImponibleToUpdateCodigo_2 = function() {
+      var totalDebito = vm.totalTotal;
+      if (vm.debtsToPay) {
+        _.each (vm.debtsToPay.detailDebtsToPay, function(detail) {
+          if (detail.tipo === 'DEBITO (D)') {
+            totalDebito = (parseFloat(totalDebito) - parseFloat(detail.baseImponible)).toFixed(2);
+          };
+        });
+      };
+      return totalDebito;
+    };
+
+    vm.updateDebtsToPay = function(debtsToPay) {
+      vm.loading = true;
+      vm.pagos.total = vm.aux;
+      $('#modalAddPago').modal('hide');
+      vm.debtsToPay.fecha = $('#pickerDateDebtsToPayToUpdate').data("DateTimePicker").date().toDate().getTime();
+      vm.debtsToPay.billNumber = vm.debtsToPay.threeNumberOne + '-' + vm.debtsToPay.threeNumberTwo + '-' + vm.debtsToPay.seccondPartNumber;
+      vm.debtsToPay.providerId = vm.providerId;
+      vm.debtsToPay.iva = vm.subIva;
+      vm.debtsToPay.subTotalDoce = vm.subTotalDoce;
+      vm.debtsToPay.subTotalCero = vm.subTotalCero;
+      vm.debtsToPay.debtsSeq = vm.seqNumber;
+      vm.debtsToPay.retentionNumber = vm.retentionNumber;
+      vm.debtsToPay.retentionDateCreated = vm.retentionDateCreated;
+      vm.debtsToPay.retentionTotal = vm.retentionTotal;
+      vm.debtsToPay.saldo = vm.debtsToPay.total;
+      vm.debtsToPay.pagos = vm.pagos;
+      debtsToPayService.update(debtsToPay).then(function(respDebtsToPay) {
+        vm.totalDebtsToPay = 0;
+        vm.debtsToPay = respDebtsToPay;
+        _.each(vm.debtsToPay.detailDebtsToPay, function(detail) {
+          vm.totalDebtsToPay = (parseFloat(vm.totalDebtsToPay) + parseFloat(detail.baseImponible)).toFixed(2);
+        });
+        vm.success = 'Factura Actualizada con Exito';
+        vm.loading = false;
+      }).catch(function(error) {
+        vm.loading = false;
+        vm.error = error.data;
+      });
+      _activate();
+    };
+
+    //Fin de sección
 
     vm.exit = function() {
       $location.path('/home');

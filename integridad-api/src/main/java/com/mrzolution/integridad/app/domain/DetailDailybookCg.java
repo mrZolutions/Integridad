@@ -16,25 +16,26 @@ import lombok.Data;
 
 @Entity
 @Data
-public class DetailDailybook implements Child {
+public class DetailDailybookCg implements Child {
     @Id
     @GeneratedValue
     private UUID id;
     
     private String codeConta;
     private String name;
+    private String descrip;
     private String tipo;
-    private double valorConta;
+    private double valor;
     
     @ManyToOne
-    @JoinColumn(name = "dailybook_id")
-    private Dailybook dailybook;
+    @JoinColumn(name = "dailybookCg_id")
+    private DailybookCg dailybookCg;
     
     public void setListsNull() {
     }
     
     public void setFatherListToNull() {
-        dailybook.setListsNull();
-        dailybook.setFatherListToNull();
+        dailybookCg.setListsNull();
+        dailybookCg.setFatherListToNull();
     }
 }

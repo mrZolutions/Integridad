@@ -7,10 +7,14 @@ import com.mrzolution.integridad.app.domain.DetailDebtsToPay;
 import com.mrzolution.integridad.app.domain.PagoDebts;
 import com.mrzolution.integridad.app.domain.report.DebtsReport;
 import com.mrzolution.integridad.app.exceptions.BadRequestException;
+import com.mrzolution.integridad.app.father.Father;
+import com.mrzolution.integridad.app.father.FatherManageChildren;
 import com.mrzolution.integridad.app.repositories.CashierRepository;
 import com.mrzolution.integridad.app.repositories.CreditsDebtsRepository;
 import com.mrzolution.integridad.app.repositories.DebtsToPayRepository;
+import com.mrzolution.integridad.app.repositories.DetailDebtsToPayChildRepository;
 import com.mrzolution.integridad.app.repositories.DetailDebtsToPayRepository;
+import com.mrzolution.integridad.app.repositories.PagoDebtsChildRepository;
 import com.mrzolution.integridad.app.repositories.PagoDebtsRepository;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -34,12 +38,17 @@ public class DebtsToPayServices {
     @Autowired
     DetailDebtsToPayRepository detailDebtsToPayRepository;
     @Autowired
+    DetailDebtsToPayChildRepository detailDebtsToPayChildRepository;
+    @Autowired
     PagoDebtsRepository pagoDebtsRepository;
+    @Autowired
+    PagoDebtsChildRepository pagoDebtsChildRepository;
     @Autowired
     CreditsDebtsRepository creditsDebtsRepository;
     @Autowired
     CashierRepository cashierRepository;
     
+    //Selecciona Debts por Id
     public DebtsToPay getDebtsToPayById(UUID id) {
         log.info("DebtsToPayServices getDebtsToPayById: {}", id);
         DebtsToPay retrieved = debtsToPayRepository.findOne(id);
@@ -52,6 +61,7 @@ public class DebtsToPayServices {
         return retrieved;
     }
 
+    //Guarda Pagos y Credits de Debts
     void savePagosAndCreditsOfDebts(DebtsToPay saved, List<PagoDebts> pagosDebts) {
         pagosDebts.forEach(pagoDebt -> {
             List<CreditsDebts> creditsDebtsList = pagoDebt.getCreditsDebts();
@@ -69,6 +79,7 @@ public class DebtsToPayServices {
         log.info("DebtsToPayServices savePagosAndCreditsOfDebts DONE");
     }
     
+    //Selección de Debts por Id de Proveedor
     public Iterable<DebtsToPay> getDebtsToPayByProviderId(UUID id) {
         log.info("DebtsToPayServices getDebtsByProviderId: {}", id);
         Iterable<DebtsToPay> debts = debtsToPayRepository.findDebtsToPayByProviderId(id);
@@ -79,6 +90,7 @@ public class DebtsToPayServices {
         return debts;
     }
     
+    //Creación de los Debts
     public DebtsToPay createDebtsToPay(DebtsToPay debtsToPay) throws BadRequestException {
         List<DetailDebtsToPay> detailDebtsToPay = debtsToPay.getDetailDebtsToPay();
         List<PagoDebts> pagos = debtsToPay.getPagos();
@@ -123,6 +135,25 @@ public class DebtsToPayServices {
         return debtsToPayToDeactivate;
     }
     
+    //Actualización de los Debts
+    public DebtsToPay updateDebtsToPay(DebtsToPay debtsToPay) throws BadRequestException {
+        if (debtsToPay.getId() == null) {
+            throw new BadRequestException("Invalid DebtsToPay");
+        }
+        log.info("DebtsToPayServices updateDebtsToPay: {}", debtsToPay.getId());
+        Father<DebtsToPay, DetailDebtsToPay> fatherDebts = new Father<>(debtsToPay, debtsToPay.getDetailDebtsToPay());
+        FatherManageChildren fatherUpdateChildren = new FatherManageChildren(fatherDebts, detailDebtsToPayChildRepository, detailDebtsToPayRepository);
+        fatherUpdateChildren.updateChildren();
+        Father<DebtsToPay, PagoDebts> fatherPagoDebts = new Father<>(debtsToPay, debtsToPay.getPagos());
+        FatherManageChildren fatherUpdateChildrenPagoDebts = new FatherManageChildren(fatherPagoDebts, pagoDebtsChildRepository, pagoDebtsRepository);
+        fatherUpdateChildrenPagoDebts.updateChildren();
+        log.info("DebtsToPayServices CHILDREN updated: {}", debtsToPay.getId());
+        debtsToPay.setListsNull();
+        DebtsToPay updated = debtsToPayRepository.save(debtsToPay);
+        log.info("DebtsToPayServices updateDebtsToPay DONE id: {}", updated.getId());
+        return updated;
+    }
+    
     //Reporte de Compras
     public List<DebtsReport> getDebtsToPayByUserClientIdAndDates(UUID userClientId, long dateOne, long dateTwo) {
         log.info("DebtsToPayServices getDebtsToPayByUserClientIdAndDates: {}, {}, {}", userClientId, dateOne, dateTwo);
@@ -155,10 +186,11 @@ public class DebtsToPayServices {
         return debtsReportList;
     }
     
-   private void populateChildren(DebtsToPay debtsToPay) {
+    //Carga los Detalles y Pagos hacia un Debt
+    private void populateChildren(DebtsToPay debtsToPay) {
+        List<PagoDebts> pagoList = getPagosDebtsToPay(debtsToPay);
 	List<DetailDebtsToPay> detailDebtsToPayList = new ArrayList<>();
 	Iterable<DetailDebtsToPay> debtsDetail = detailDebtsToPayRepository.findByDebtsToPay(debtsToPay);
-	List<PagoDebts> pagoList = getPagosDebtsToPay(debtsToPay);
         debtsDetail.forEach(detail -> {
             detail.setListsNull();
             detail.setFatherListToNull();
@@ -170,6 +202,7 @@ public class DebtsToPayServices {
 	debtsToPay.setFatherListToNull();
     }
     
+    //Carga los Pagos de un Debt
     private List<PagoDebts> getPagosDebtsToPay (DebtsToPay debtsToPay) {
         List<PagoDebts> pagoDebtsList = new ArrayList<>(); 
         Iterable<PagoDebts> pagosDebts = pagoDebtsRepository.findByDebtsToPay(debtsToPay);

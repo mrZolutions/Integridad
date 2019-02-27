@@ -32,8 +32,9 @@
             <div class="alert alert-success">{{vm.success}}</div>
         </div>
     </div>
+
     <!--SECCIÓN DE CARGA DE PROVEEDORES POR USERCLIENT-->
-    <div class="table-responsive" ng-show="vm.providerSelected === undefined && vm.debtsToPayList === undefined && vm.providerDebtsList === undefined && vm.debtsProviderSelected === undefinded">
+    <div class="table-responsive" ng-show="vm.providerSelected === undefined && vm.debtsToPayList === undefined && vm.providerDebtsList === undefined && vm.debtsProviderSelected === undefinded && vm.debtsToPaySelectedToUpdate === undefinded">
         <div class="row">
             <div class="form-group col-md-12">
                 <input ng-model="searchText" class="form-control" placeholder="Buscar Proveedores">
@@ -59,13 +60,13 @@
                     <td>{{provider.name}}</td>
                     <td>{{provider.ruc_type}} - {{provider.ruc}}</td>
                     <td>
-                        <button type = "button" title = "Ingreso de Facturas" class = "btn btn-primary btn-sm" ng-click = "vm.providerSelect(provider)">
+                        <button type = "button" title = "Ingreso de Cuentas por Pagar" class = "btn btn-primary btn-sm" ng-click = "vm.providerSelect(provider)">
                                 <span class = "glyphicon glyphicon-file" aria-hidden = "true"></span>
                         </button>
                         <button type = "button" title = "Pagos y Abonos" class = "btn btn-primary btn-sm" ng-click = "vm.providerDebts(provider)">
                                 <span class = "glyphicon glyphicon-usd" aria-hidden = "true"></span>
                         </button>
-                        <button type = "button" title = "Consultar Facturas" class = "btn btn-primary btn-sm" ng-click = "vm.consultProviderDebts(provider)">
+                        <button type = "button" title = "Consultar Cuentas por Pagar" class = "btn btn-primary btn-sm" ng-click = "vm.consultProviderDebts(provider)">
                                 <span class = "glyphicon glyphicon-search" aria-hidden = "true"></span>
                         </button>
                     </td>
@@ -81,7 +82,7 @@
             </div>
         </div>
     </div>
-    <!--FIN DE SECCIÓN DE CARGA DE PROVEEDORES POR USERCLIENT-->
+
     <!--SECCIÓN DE INGRESO DE DETALLES DE FACTURA PARA CUENTAS POR PAGAR-->
     <div ng-show="vm.providerSelected !== undefined">
         <div class="panel panel-primary">
@@ -180,20 +181,41 @@
                 </div>
                 <div class="row">
                     <div class="form-group col-md-4">
-                        <label>Impuesto:</label><br>
+                        <label>Impuesto:</label><br/>
                         <label class="radio-inline"><input type="radio" ng-model="vm.debtsToPay.typeTaxes" value="1" name="tipo"
                                ng-change="vm.getPercentageTableAll()">IVA</label>
                         <label class="radio-inline"><input type="radio" ng-model="vm.debtsToPay.typeTaxes" value="2" name="tipo"
                                ng-change="vm.getPercentageTableAll()">IVA "0"</label>
                     </div>
-                    <div class="form-group col-md-4">
+                    <div class="form-group col-md-5">
                         <label>Tipo de Compra</label>
                         <select ng-options="purType.code as purType.name for purType in vm.purchaseType | orderBy:'name' track by purType.code" ng-model="vm.debtsToPay.tipoDeCompra"
                                 ng-change="vm.selectPurchaseTable(vm.debtsToPay.tipoDeCompra)" class="form-control">
                         </select>
                     </div>
+                    <div class="form-group col-md-3">
+                        <br/>
+                        <button type = "button" title = "Buscar y Agregar Retención" class = "btn btn-primary btn-block"
+                                ng-click = "vm.getRetentionByProvider()" data-toggle = "modal" data-target = "#modalFindRetention">
+                                <span class = "glyphicon glyphicon-search" aria-hidden = "true"></span>
+                        </button>
+                    </div>
                 </div>
-                <div class="table-responsive" class="row" ng-show="vm.cuentaContableList !== undefined">
+                <div class="row" ng-if="vm.retenSelected === true">
+                    <div class="form-group col-md-4">
+                        <label>Nro. Retención</label><br/>
+                        {{vm.retentionNumber}}
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label>Fecha de Retención</label><br/>
+                        {{vm.retentionDateCreated | date : "dd/MM/yyyy"}}
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label>Valor Retención</label><br/>
+                        {{(vm.retentionTotal).toFixed(2)}}
+                    </div>
+                </div>
+                <div class="row table-responsive" ng-show="vm.cuentaContableList !== undefined">
                     <div class="form-group col-md-12">
                         <table class="table table-striped">
                             <thead>
@@ -286,11 +308,167 @@
             </div>
         </div>
     </div>
+
+    <!--SECCIÓN DE BUSQUEDA DE RETENCIONES POR PROVEEDOR-->
+    <div id="modalFindRetention" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class = "modal-title">Retenciones por Proveedor</h4>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th> Nro. Retenci&oacute;n </th>
+                                <th> Fecha </th>
+                                <th> Nro. Factura </th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-show="vm.retentionList == 0">
+                                <td colspan="4">
+                                    No hay Retenciones ingresadas para este Proveedor
+                                </td>
+                            </tr>
+                            <tr ng-repeat="retention in vm.retentionList | orderBy:'dateCreated':true | filter:searchText">
+                                <td>{{retention.stringSeq}}</td>
+                                <td>{{retention.dateCreated | date : "dd/MM/yyyy"}}</td>
+                                <td>{{retention.documentNumber}}</td>
+                                <td>
+                                    <button type="button" title="Ver Retención" class="btn btn-primary btn-sm" ng-click="vm.retentionSelected(retention)"
+                                            data-dismiss="modal" data-toggle="modal" data-target="#modalViewAndSelectRetention">
+                                            <span class = "glyphicon glyphicon-eye-open" aria-hidden = "true"></span>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" title = "Salir" class="btn btn-primary btn-sm" data-dismiss="modal">
+                            <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--MODAL DE VISUALIZACIÓN Y SELECCIÓN DE LA RETENCIÓN PARA LA CUENTA POR PAGAR-->
+    <div id="modalViewAndSelectRetention" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type = "button" class = "close" data-dismiss = "modal">&times;</button>
+                    <h4 class = "modal-title">Datos de la Retenci&oacute;n</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="form-group col-md-12 ">
+                            <table width="100%">
+                                <tr>
+                                    <td>
+                                        <div>
+                                            <b>COMPROBANTE DE RETENCION</b><br/>
+                                            <b>No: {{vm.retention.stringSeq}}</b><br/>
+                                            <b>AUTORIZACION: {{vm.retention.claveDeAcceso}}</b><br/>
+                                            <b>FECHA DE EMISIÓN: {{vm.retention.dateCreated | date : "dd-MM-yyyy"}}</b><br/>
+                                            <b>FACTURA: {{vm.retention.documentNumber}}</b><br/>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-md-12 ">
+                            <table width="100%">
+                                <tr>
+                                    <td width="50%">
+                                        <div >
+                                            <label>Raz&oacute;n social / Nombres y Apellidos: </label>
+                                            {{vm.retention.provider.razonSocial}}
+                                        </div>
+                                    </td>
+                                    <td width="50%" style=" padding-left: 10px">
+                                        <label>identificaci&oacute;n: </label>
+                                        {{vm.retention.provider.ruc}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div >
+                                            <label>Fecha del Documento: </label>
+                                            {{vm.retention.documentDate | date : "dd-MM-yyyy"}}
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div >
+                                        <label>Direcci&oacute;n: </label>
+                                        {{vm.retention.provider.address1}}
+                                        </div>
+                                    </td>
+                                    <td style=" padding-left: 10px">
+                                        <label>E-mail: </label>
+                                        {{vm.retention.provider.email}}
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-md-12 ">
+                            <table width="100%" border="1">
+                                <tr>
+                                    <td><b>EJERCICIO FISCAL </b></td>
+                                    <td><b>TIPO IMPUESTO </b></td>
+                                    <td><b>CODIGO </b></td>
+                                    <td><b>BASE IMPONIBLE </b></td>
+                                    <td><b>RETENCIONES % </b></td>
+                                    <td><b>VALOR </b></td>
+                                </tr>
+                                <tr ng-repeat="detail in vm.retention.detailRetentions">
+                                    <td>{{vm.retention.ejercicioFiscal}}</td>
+                                    <td>{{detail.taxType}}</td>
+                                    <td>{{detail.code}}</td>
+                                    <td>{{detail.baseImponible}}</td>
+                                    <td>{{detail.percentage}}</td>
+                                    <td>{{detail.total}}</td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td><b>TOTAL</b></td>
+                                    <td>{{(vm.totalRetention).toFixed(2)}}</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" title = "Aceptar y Agregar Retención" class="btn btn-success btn-sm" ng-click="vm.addRetentionToDebtsDetail()" 
+                            data-dismiss="modal">
+                            <span class = "glyphicon glyphicon-thumbs-up" aria-hidden = "true"></span>
+                    </button>
+                    <button type="button" title = "Salir" class="btn btn-primary btn-sm" data-dismiss="modal">
+                            <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--SECCIÓN DE INGRESO DE LAS CUENTAS IVA Y PROVEEDOR-->
     <div id = "modalBaseImponibleIVA" class = "modal fade" role = "dialog">
         <div class = "modal-dialog">
             <div class = "modal-content">
                 <div class = "modal-header">
-                    <button type = "button" class = "close" data-dismiss = "modal" ng-click = "vm.impuesto=undefined">&times;</button>
+                    <button type = "button" class = "close" data-dismiss = "modal">&times;</button>
                 </div>
                 <div class = "modal-body">
                     <div class = "row">
@@ -315,12 +493,13 @@
             </div>
         </div>
     </div>
+
     <!--SECCIÓN DE SELECCION DE LOS TAXES-->
     <div id = "modalSelectedTaxes" class = "modal fade" role = "dialog">
         <div class = "modal-dialog">
             <div class = "modal-content">
                 <div class = "modal-header">
-                    <button type = "button" class = "close" data-dismiss = "modal" ng-click = "vm.impuesto=undefined">&times;</button>
+                    <button type = "button" class = "close" data-dismiss = "modal">&times;</button>
                 </div>
                 <div class = "modal-body">
                     <div class = "row">
@@ -335,12 +514,12 @@
                         <div class = "form-group col-md-3" ng-if = "vm.item.codigo === 1">
                             <label>Valor</label>
                             <input type = "text" onkeypress = "return ((event.which >= 46 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
-                                   class = "form-control" maxlength = "9" ng-model = "vm.item.base_imponible" placeholder = "{{vm.getRestaSubotal()}}"/>
+                                   class = "form-control" maxlength = "9" ng-model = "vm.item.base_imponible" placeholder = "{{vm.getBaseImponibleCodigo_1()}}"/>
                         </div>
                         <div class = "form-group col-md-3" ng-if="vm.item.codigo === 2">
                             <label>Valor</label>
                             <input type = "text" onkeypress = "return ((event.which >= 46 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
-                                   class = "form-control" maxlength = "9" ng-model = "vm.item.base_imponible" placeholder = "{{vm.getRestaTotalTotal()}}"/>
+                                   class = "form-control" maxlength = "9" ng-model = "vm.item.base_imponible" placeholder = "{{vm.getBaseImponibleCodigo_2()}}"/>
                         </div>
                     </div>
                 </div>
@@ -360,7 +539,7 @@
         <div class = "modal-dialog">
             <div class = "modal-content">
                 <div class = "modal-header">
-                    <button type = "button" class = "close" data-dismiss = "modal" ng-click = "vm.impuesto=undefined">&times;</button>
+                    <button type = "button" class = "close" data-dismiss = "modal">&times;</button>
                 </div>
                 <div class = "modal-body">
                     <div class = "row">
@@ -391,7 +570,7 @@
             </div>
         </div>
     </div>
-    <!--FINAL SELECCION DE LOS TAXES-->
+
     <!--MODALIDAD DE PAGO-->
     <div id = "modalAddPago" class = "modal fade" role = "dialog">
         <div class = "modal-dialog">
@@ -556,8 +735,12 @@
                     </div>
                 </div>
                 <div class = "modal-footer">
-                    <button type = "button" title = "Guardar Factura" class = "btn btn-success btn-sm"
+                    <button type = "button" title = "Guardar Cuenta" class = "btn btn-success btn-sm" ng-if="vm.update === undefinded"
                             ng-click = "vm.saveDebtsToPay(vm.debtsToPay); vm.cancel()" ng-disabled = "vm.pagos.length === 0">
+                            <span class = "glyphicon glyphicon-floppy-save" aria-hidden = "true"></span>
+                    </button>
+                    <button type = "button" title = "Actualizar Cuenta" class = "btn btn-success btn-sm" ng-if="vm.update === true"
+                            ng-click = "vm.updateDebtsToPay(vm.debtsToPay); vm.cancel()" ng-disabled = "vm.pagos.length === 0">
                             <span class = "glyphicon glyphicon-floppy-save" aria-hidden = "true"></span>
                     </button>
                     <button type="button" title = "Salir" class="btn btn-primary btn-sm" data-dismiss="modal">
@@ -567,8 +750,6 @@
             </div>
         </div>
     </div>
-    <!--FINAL MODALIDAD DE PAGO-->
-    <!--FINAL SECCIÓN DE INGRESO DE DETALLES DE FACTURA PARA CUENTAS POR PAGAR-->
 
     <!--SECCIÓN DE CARGA DE LAS CUENTAS POR PAGAR POR PROVEEDOR PARA EL PAGO DE ABONOS-->
     <div class="table-responsive" ng-show = "vm.debtsToPayList !== undefined">
@@ -619,6 +800,7 @@
             </div>
         </div>
     </div>
+
     <!--SECCIÓN DE CARGA DE LOS CRÉDITOS POR CUENTAS POR PAGAR-->
     <div id = "modalCuotasDebts" class = "modal fade" role = "dialog">
         <div class = "modal-dialog">
@@ -665,7 +847,7 @@
             </div>
         </div>
     </div>
-    <!--FINAL SECCIÓN DE CARGA DE LOS CRÉDITOS POR CUENTAS POR PAGAR-->
+
     <!--SECCIÓN DE PAGO DE LAS CUOTAS POR CUENTA POR PAGAR-->
     <div id = "modalAbonarDebts" class = "modal fade" role = "dialog">
         <div class = "modal-dialog">
@@ -799,8 +981,6 @@
             </div>
         </div>
     </div>
-    <!--FINAL SECCIÓN DE PAGO DE LAS CUOTAS POR CUENTAS POR PAGAR-->
-    <!--FINAL SECCIÓN DE CARGA DE LAS CUENTAS POR PAGAR POR PROVEEDOR PARA EL PAGO DE ABONOS-->
 
     <!--SECCIÓN DE CONSULTA DE CUENTAS POR PAGAR POR PROVEEDOR-->
     <div class="table-responsive" ng-show = "vm.providerDebtsList !== undefined">
@@ -815,7 +995,8 @@
                 <table class = "table table-striped">
                     <thead>
                         <tr>
-                            <th>N&uacute;mero</th>
+                            <th>No. Cuenta</th>
+                            <th>No. Factura</th>
                             <th>Fecha</th>
                             <th>Total</th>
                         </tr>
@@ -827,18 +1008,18 @@
                             </td>
                         </tr>
                         <tr ng-repeat = "debts in vm.providerDebtsList">
+                            <td>{{debts.debtsSeq}}</td>
                             <td>{{debts.billNumber}}</td>
                             <td>{{debts.fecha | date : "dd/MM/yyyy"}}</td>
                             <td>{{debts.total}}</td>
                             <td>
                                 <button type = "button" title = "Ver Cuenta por Pagar" 
-                                        class = "btn btn-primary btn-sm" ng-click = "vm.debtsToPaySelected(debts)">
+                                        class = "btn btn-primary btn-sm" ng-click = "vm.debtsToPayToPrint(debts)">
                                         <span class = "glyphicon glyphicon-eye-open" aria-hidden = "true"></span>
                                 </button>
-                                <button type = "button" title = "Anular Cuenta por Pagar" 
-                                        class = "btn btn-warning btn-sm" ng-click = "vm.deactivateDebtsToPay = debts"
-                                        data-toggle = "modal" data-target = "#modalAnularDebtsToPay">
-                                        <span class = "glyphicon glyphicon-warning-sign" aria-hidden = "true"></span>
+                                <button type = "button" title = "Editar Cuenta por Pagar" 
+                                        class = "btn btn-primary btn-sm" ng-click = "vm.debtsToPayToUpdate(debts)">
+                                        <span class = "glyphicon glyphicon-pencil" aria-hidden = "true"></span>
                                 </button>
                             </td>
                         </tr>
@@ -852,36 +1033,8 @@
             </div>
         </div>
     </div>
-    <!--ANULAR DEBTSTOPAY-->
-    <div id="modalAnularDebtsToPay" class="modal fade" role="dialog">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" ng-click="vm.client=undefined">&times;</button>
-                    <h3 class="modal-title">¡¡¡Advertencia!!!</h3>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-md-10" >
-                            <p>¿Est&aacute; seguro que desea Anular la Cuenta por Pagar <b>No. {{vm.deactivateDebtsToPay.debtsSeq}}</b>?</p>
-                            <p>Recuerde que la Cuenta por Pagar Anulada <b>NO puede ser Recuperada</b></p>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" title="Anular Cuenta por Pagar" class="btn btn-danger btn-sm" ng-click="vm.debtsToPayDeactivate()" data-dismiss="modal">
-                            <span class = "glyphicon glyphicon-screenshot" aria-hidden = "true"></span>
-                    </button>
-                    <button type="button" title = "Salir" class="btn btn-primary btn-sm" data-dismiss="modal">
-                            <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!--FINAL SECCIÓN DE CONSULTA DE FACTURAS POR PROVEEDOR-->
 
-    <!--SECCIÓN DE CONSULTA DE FACTURA INDIVIDUAL-->
+    <!--SECCIÓN DE CONSULTA DE UNA CUENTA POR PAGAR INDIVIDUAL-->
     <div class="panel-group table-responsive" ng-show = "vm.debtsProviderSelected !== undefined" id = "printArea" print-section>
         <div class = "panel panel-primary">
             <div class = "panel-heading">
@@ -1058,6 +1211,338 @@
                         ng-click = "vm.debtsProviderSelected = undefined">
                         <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
                 </button>
+            </div>
+        </div>
+    </div>
+    
+    <!--SECCIÓN DE EDICIÓN DE UNA CUENTA POR PAGAR PARA SU ACTUALIZACIÓN-->
+    <div ng-show="vm.debtsToPaySelectedToUpdate !== undefined">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h4>Actualización de Cuenta por Pagar</h4>
+                <div>
+                    <b>Cuenta por Pagar Nro: </b>{{vm.seqNumber}}
+                </div>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="form-group col-md-6">
+                        <label>C&oacute;digo Proveedor:</label>
+                        {{vm.debtsToPay.provider.codeIntegridad}}
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label ng-if="vm.debtsToPay.provider.ruc_type === 'RUC'">RUC:</label>
+                        <label ng-if="vm.debtsToPay.provider.ruc_type === 'CED'">CEDULA:</label>
+                        <label ng-if="vm.debtsToPay.provider.ruc_type === 'PAS'">PASAPORTE:</label>
+                        {{vm.debtsToPay.provider.ruc}}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-6">
+                        <label>Nombre Comercial:</label>
+                        {{vm.debtsToPay.provider.name}}
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label>Raz&oacute;n Social:</label>
+                        {{vm.debtsToPay.provider.razonSocial}}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-12">
+                        <label>Tipo de Proveedor:</label>
+                        {{vm.debtsToPay.provider.providerType}}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-6">
+                        <label>Tipo de Comprobante de Compra:</label>
+                        <select ng-options="typeDoc.code as typeDoc.name for typeDoc in vm.voucherType | orderBy:'name' track by typeDoc.code" ng-model="vm.debtsToPay.buyTypeVoucher"
+                                class="form-control">
+                        </select>
+                    </div> 
+                    <div class="form-group col-md-6">
+                        <label>Tipo de C&oacute;digo Sustento:</label>
+                        <select ng-options="typeDocs.code as typeDocs.name for typeDocs in vm.supportType | orderBy:'name' track by typeDocs.code" ng-model="vm.debtsToPay.purchaseType"
+                                class="form-control">
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-3">
+                        <label>Fecha del Documento: </label>
+                        <div class="input-group date" id="pickerDateDebtsToPayToUpdate">
+                            <input type="text" class="form-control input-group-addon"/>
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"/></span>
+                        </div>
+                        <script>
+                            var defaultDate = new Date();
+                            $('#pickerDateDebtsToPayToUpdate').datetimepicker({format: "DD/MM/YY",});
+                        </script>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label>Ejercicio Fiscal:</label><br/>
+                        <label>{{vm.debtsToPay.ejercicio}}</label>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label>N&uacute;mero de Factura:</label><br/>
+                        <div class="form-group col-md-3">
+                            <input type="text" ng-model="vm.debtsToPay.threeNumberOne" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+                                   class="form-control" maxlength="3">
+                        </div>
+                        <div class="form-group col-md-3">
+                            <input type="text" ng-model="vm.debtsToPay.threeNumberTwo" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+                                   class="form-control" maxlength="3">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <input type="text" ng-model="vm.debtsToPay.seccondPartNumber" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+                                   class="form-control" maxlength="9">
+                        </div>
+                    </div>          
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-9">
+                        <label>N&uacute;mero de Autorizaci&oacute;n:</label><br/>
+                        <input type="text" ng-model="vm.debtsToPay.authorizationNumber" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+                               class="form-control" maxlength="90">
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label>Valor Total:</label>
+                        <input type="text" ng-model="vm.debtsToPay.total"
+                               class="form-control" maxlength="20">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-4">
+                        <label>Impuesto:</label><br>
+                        <label class="radio-inline"><input type="radio" ng-model="vm.debtsToPay.typeTaxes" value="1" name="tipo"
+                               ng-change="vm.getPercentageTableAll()">IVA</label>
+                        <label class="radio-inline"><input type="radio" ng-model="vm.debtsToPay.typeTaxes" value="2" name="tipo"
+                               ng-change="vm.getPercentageTableAll()">IVA "0"</label>
+                    </div>
+                    <div class="form-group col-md-5">
+                        <label>Tipo de Compra</label>
+                        <select ng-options="purType.code as purType.name for purType in vm.purchaseType | orderBy:'name' track by purType.code" ng-model="vm.debtsToPay.tipoDeCompra"
+                                ng-change="vm.selectPurchaseTable(vm.debtsToPay.tipoDeCompra)" class="form-control">
+                        </select>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <br/>
+                        <button type = "button" title = "Buscar y Agregar Retención" class = "btn btn-primary btn-block"
+                                ng-click = "vm.getRetentionByProvider()" data-toggle = "modal" data-target = "#modalFindRetention">
+                                <span class = "glyphicon glyphicon-search" aria-hidden = "true"></span>
+                        </button>
+                    </div>
+                </div>
+                <div class="row">
+                        <div class="form-group col-md-4">
+                            <label>Nro. Retención</label><br/>
+                            {{vm.retentionNumber}}
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label>Fecha de Retención</label><br/>
+                            {{vm.retentionDateCreated | date : "dd/MM/yyyy"}}
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label>Valor Retención</label><br/>
+                            {{(vm.retentionTotal).toFixed(2)}}
+                        </div>
+                    </div>
+                <div class="row table-responsive" ng-show="vm.cuentaContableList !== undefined">
+                    <div class="form-group col-md-12">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Tipo de Cuenta</th>
+                                    <th>Nombre G&eacute;nerico</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-show="vm.cuentaContableList == 0">
+                                    <td colspan="2">
+                                        No hay Fuente Seleccionada
+                                    </td>
+                                </tr>
+                                <tr dir-paginate = "cc in vm.cuentaContableList | orderBy:'type' | filter:searchTextTaxes | itemsPerPage: 5"  pagination-id = "taxesPagination">
+                                    <td>{{cc.accountType}}</td>
+                                    <td>{{cc.name}}</td>
+                                    <td>
+                                        <button type = "button" title = "Seleccionar" class = "btn btn-primary btn-sm"
+                                                ng-click = "vm.selectTaxesToUpdate(cc)" data-toggle = "modal" data-target = "#modalSelectedTaxesToUpdate">
+                                                <span class = "glyphicon glyphicon-check" aria-hidden = "true"></span>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <dir-pagination-controls pagination-id = "taxesPagination"></dir-pagination-controls>
+                    </div>
+                </div>
+                <div class = "row table-responsive">
+                    <div class = "form-group col-md-12">
+                        <table class = "table table-striped">
+                            <thead>
+                                <tr>
+                                    <th> CODIGO </th>
+                                    <th> CUENTA ASOCIADA </th>
+                                    <th> DESCRIPCION </th>
+                                    <th> TIPO </th>
+                                    <th> VALOR </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-show = "vm.debtsDetails == 0">
+                                    <td colspan = "5">
+                                        No hay Fuente Seleccionada
+                                    </td>
+                                </tr>
+                                <tr ng-repeat = "det in vm.debtsDetails" >
+                                    <td>{{det.codeConta}}</td>
+                                    <td>{{det.descrip}}</td>
+                                    <td>{{det.name}}</td>
+                                    <td>{{det.tipo}}</td>
+                                    <td>{{det.baseImponible}}</td>
+                                    <td>
+                                        <button type = "button" title = "Editar" class = "btn btn-primary btn-sm"
+                                                ng-click = "vm.editItemToUpdate($index)" data-toggle = "modal" data-target = "#modalEditTaxesToUpdate">
+                                                <span class = "glyphicon glyphicon-pencil" aria-hidden = "true"></span>
+                                        </button>
+                                        <button type = "button" title = "Eliminar" class = "btn btn-primary btn-sm"
+                                                ng-click = "vm.deleteItemToUpdate($index)">
+                                                <span class = "glyphicon glyphicon-trash" aria-hidden = "true"></span>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td>DEBITO: {{vm.getTotalDebitoRep()}}</td>
+                                    <td>CREDITO: {{vm.getTotalCreditoRep()}}</td>
+                                    <td><b>SALDO: {{vm.getTotalSaldoRep()}}</b></td>
+                                    <td></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div> 
+                </div>
+            </div>
+            <div class="panel-footer">
+                <button type="button" title = "Agregar Cuentas IVA y Proveedor" class="btn btn-primary btn-sm"
+                        data-toggle = "modal" data-target = "#modalBaseImponibleIVAToUpdate" ng-disabled = "vm.getTotalSaldoRep() == 0.00">
+                        IVA y Proveedor
+                </button>
+                <button type = "button" title = "Forma de Pago" class = "btn btn-success btn-sm" ng-disabled = "vm.getTotalSaldoRep() != 0.00"
+                        data-toggle = "modal" data-target = "#modalAddPago">
+                        <span class = "glyphicon glyphicon-usd" aria-hidden = "true"></span>
+                </button>
+                <button type = "button" title = "Salir" class = "btn btn-primary btn-sm"
+                        ng-click = "vm.cancel()">
+                        <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id = "modalSelectedTaxesToUpdate" class = "modal fade" role = "dialog">
+        <div class = "modal-dialog">
+            <div class = "modal-content">
+                <div class = "modal-header">
+                    <button type = "button" class = "close" data-dismiss = "modal">&times;</button>
+                </div>
+                <div class = "modal-body">
+                    <div class = "row">
+                        <div class = "form-group col-md-3">
+                            <label>C&oacute;digo:</label>  
+                            <b>{{vm.item.codeConta}}</b>
+                        </div>
+                        <div class = "form-group col-md-3">
+                            <label>Nombre:</label>
+                            <b>{{vm.item.name}}</b>
+                        </div>
+                        <div class = "form-group col-md-3" ng-if = "vm.item.codigo === 1">
+                            <label>Valor</label>
+                            <input type = "text" onkeypress = "return ((event.which >= 46 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+                                   class = "form-control" maxlength = "9" ng-model = "vm.item.baseImponible" placeholder = "{{vm.getBaseImponibleToUpdateCodigo_1()}}"/>
+                        </div>
+                        <div class = "form-group col-md-3" ng-if="vm.item.codigo === 2">
+                            <label>Valor</label>
+                            <input type = "text" onkeypress = "return ((event.which >= 46 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+                                   class = "form-control" maxlength = "9" ng-model = "vm.item.baseImponible" placeholder = "{{vm.getBaseImponibleToUpdateCodigo_2()}}"/>
+                        </div>
+                    </div>
+                </div>
+                <div class = "modal-footer">
+                    <button type = "button" title = "Aceptar" class = "btn btn-success btn-sm" data-dismiss = "modal" ng-click = "vm.addItemToUpdate()">
+                            <span class = "glyphicon glyphicon-thumbs-up" aria-hidden = "true"></span>
+                    </button>
+                    <button type = "button" title = "Salir" class = "btn btn-primary btn-sm" data-dismiss = "modal"
+                            ng-click = "vm.item = undefined; vm.indexEdit = undefined;">
+                            <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id = "modalEditTaxesToUpdate" class = "modal fade" role = "dialog">
+        <div class = "modal-dialog">
+            <div class = "modal-content">
+                <div class = "modal-header">
+                    <button type = "button" class = "close" data-dismiss = "modal">&times;</button>
+                </div>
+                <div class = "modal-body">
+                    <div class = "row">
+                        <div class = "form-group col-md-3">
+                            <label>C&oacute;digo:</label>  
+                            <b>{{vm.item.codeConta}}</b>
+                        </div>
+                        <div class = "form-group col-md-3">
+                            <label>Nombre:</label>
+                            <b>{{vm.item.name}}</b>
+                        </div>
+                        <div class = "form-group col-md-3">
+                            <label>Valor</label>
+                            <input type = "text" onkeypress = "return ((event.which >= 46 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+                                   class = "form-control" maxlength = "9" ng-model = "vm.item.baseImponible"/>
+                        </div>
+                    </div>
+                </div>
+                <div class = "modal-footer">
+                    <button type = "button" title = "Aceptar" class = "btn btn-success btn-sm" data-dismiss = "modal" ng-click = "vm.addItemToUpdate()">
+                            <span class = "glyphicon glyphicon-thumbs-up" aria-hidden = "true"></span>
+                    </button>
+                    <button type = "button" title = "Salir" class = "btn btn-primary btn-sm" data-dismiss = "modal"
+                            ng-click = "vm.item = undefined; vm.indexEdit = undefined;">
+                            <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id = "modalBaseImponibleIVAToUpdate" class = "modal fade" role = "dialog">
+        <div class = "modal-dialog">
+            <div class = "modal-content">
+                <div class = "modal-header">
+                    <button type = "button" class = "close" data-dismiss = "modal">&times;</button>
+                </div>
+                <div class = "modal-body">
+                    <div class = "row">
+                        <div class = "form-group col-md-9">
+                            <label>Ingreso de Base Imponible para calculo del IVA</label>
+                        </div>
+                        <div class = "form-group col-md-3">
+                            <input type = "text" onkeypress = "return ((event.which >= 46 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+                                   class = "form-control" maxlength = "9" ng-model = "vm.item.baseImponible"/>
+                        </div>
+                    </div>
+                </div>
+                <div class = "modal-footer">
+                    <button type = "button" title = "Aceptar" class = "btn btn-success btn-sm" data-dismiss = "modal" ng-click="vm.addIvaAndProviderToUpdate()">
+                            <span class = "glyphicon glyphicon-thumbs-up" aria-hidden = "true"></span>
+                    </button>
+                    <button type = "button" title = "Salir" class = "btn btn-primary btn-sm" data-dismiss = "modal"
+                            ng-click = "vm.item = undefined; vm.indexEdit = undefined;">
+                            <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
+                    </button>
+                </div>
             </div>
         </div>
     </div>

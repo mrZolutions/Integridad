@@ -2,9 +2,9 @@
 
 /**
  * @ngdoc function
- * @name integridadUiApp.controller:ProjectsCtrl
+ * @name integridadUiApp.controller:ReportSalesCtrl
  * @description
- * # ProjectsCtrl
+ * # ReportSalesCtrl
  * Controller of the menu
  */
 angular.module('integridadUiApp')

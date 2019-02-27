@@ -774,11 +774,11 @@
             <div class="form-group col-md-4" ng-if="vm.medio.medio !== 'credito'">
               <b>VALOR: </b>
               <input type="text" onkeypress="return ((event.which >= 46 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
-                     ng-model="vm.pagoTot" class="form-control" maxlength="9">
+                     ng-model="vm.medio.total" class="form-control" maxlength="9">
             </div>
             <div class="form-group col-md-4" ng-if="vm.medio.medio !== 'credito'">
               <b>VALOR: </b><br />
-              $ {{vm.pagoTot}}
+              $ {{vm.medio.total}}
             </div>
             <div class="form-group col-md-4">
               <br/>

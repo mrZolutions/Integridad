@@ -40,6 +40,10 @@ public class DebtsToPay {
     private double saldo;
     private String tipoDeCompra;
     private String debtsSeq;
+    private String retentionId;
+    private String retentionNumber;
+    private long retentionDateCreated;
+    private double retentionTotal;
 
     @ManyToOne
     @JoinColumn(name = "provider_id")
