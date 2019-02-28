@@ -180,6 +180,13 @@
                     </div>
                 </div>
                 <div class="row">
+                    <div class="form-group col-md-3">
+                        <br/>
+                        <button type = "button" title = "Buscar y Agregar Retención" class = "btn btn-primary btn-block"
+                                ng-click = "vm.getRetentionByProvider()" data-toggle = "modal" data-target = "#modalFindRetention">
+                                Buscar Retenci&oacute;n
+                        </button>
+                    </div>
                     <div class="form-group col-md-4">
                         <label>Impuesto:</label><br/>
                         <label class="radio-inline"><input type="radio" ng-model="vm.debtsToPay.typeTaxes" value="1" name="tipo"
@@ -193,15 +200,8 @@
                                 ng-change="vm.selectPurchaseTable(vm.debtsToPay.tipoDeCompra)" class="form-control">
                         </select>
                     </div>
-                    <div class="form-group col-md-3">
-                        <br/>
-                        <button type = "button" title = "Buscar y Agregar Retención" class = "btn btn-primary btn-block"
-                                ng-click = "vm.getRetentionByProvider()" data-toggle = "modal" data-target = "#modalFindRetention">
-                                <span class = "glyphicon glyphicon-search" aria-hidden = "true"></span>
-                        </button>
-                    </div>
                 </div>
-                <div class="row" ng-if="vm.retenSelected === true">
+                <div class="row" ng-show="vm.retenSelected === true">
                     <div class="form-group col-md-4">
                         <label>Nro. Retención</label><br/>
                         {{vm.retentionNumber}}
@@ -348,7 +348,8 @@
                     </table>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" title = "Salir" class="btn btn-primary btn-sm" data-dismiss="modal">
+                    <button type="button" title = "Salir" class="btn btn-primary btn-sm" data-dismiss="modal"
+                            ng-click="vm.retenCodeFuente=undefinded; vm.retenCodeIva=undefinded">
                             <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
                     </button>
                 </div>
@@ -735,7 +736,7 @@
                     </div>
                 </div>
                 <div class = "modal-footer">
-                    <button type = "button" title = "Guardar Cuenta" class = "btn btn-success btn-sm" ng-if="vm.update === undefinded"
+                    <button type = "button" title = "Guardar Cuenta" class = "btn btn-success btn-sm" ng-if="vm.update === false"
                             ng-click = "vm.saveDebtsToPay(vm.debtsToPay); vm.cancel()" ng-disabled = "vm.pagos.length === 0">
                             <span class = "glyphicon glyphicon-floppy-save" aria-hidden = "true"></span>
                     </button>
@@ -1312,6 +1313,13 @@
                     </div>
                 </div>
                 <div class="row">
+                    <div class="form-group col-md-3">
+                        <br/>
+                        <button type = "button" title = "Buscar y Agregar Retención" class = "btn btn-primary btn-block"
+                                ng-click = "vm.getRetentionByProvider()" data-toggle = "modal" data-target = "#modalFindRetention">
+                                Buscar Retenci&oacute;n
+                        </button>
+                    </div>
                     <div class="form-group col-md-4">
                         <label>Impuesto:</label><br>
                         <label class="radio-inline"><input type="radio" ng-model="vm.debtsToPay.typeTaxes" value="1" name="tipo"
@@ -1324,13 +1332,6 @@
                         <select ng-options="purType.code as purType.name for purType in vm.purchaseType | orderBy:'name' track by purType.code" ng-model="vm.debtsToPay.tipoDeCompra"
                                 ng-change="vm.selectPurchaseTable(vm.debtsToPay.tipoDeCompra)" class="form-control">
                         </select>
-                    </div>
-                    <div class="form-group col-md-3">
-                        <br/>
-                        <button type = "button" title = "Buscar y Agregar Retención" class = "btn btn-primary btn-block"
-                                ng-click = "vm.getRetentionByProvider()" data-toggle = "modal" data-target = "#modalFindRetention">
-                                <span class = "glyphicon glyphicon-search" aria-hidden = "true"></span>
-                        </button>
                     </div>
                 </div>
                 <div class="row">
