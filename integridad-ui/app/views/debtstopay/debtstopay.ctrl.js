@@ -666,7 +666,7 @@ angular.module('integridadUiApp')
           codigo_contable: vm.provContable,
           desc_contable: 'PROVEEDORES LOCALES',
           tipo: 'CREDITO (C)',
-          base_imponible: parseFloat((vm.debtsToPay.total - vm.retentionTotal).toFixed(2)),
+          base_imponible: vm.debtsToPay.total - vm.retentionTotal,
           nomb_contable: 'DEFINIDA PARA TODOS LOS PROVEEDORES'
         };
         vm.debtsToPay.items.push(vm.itemIva);
@@ -679,7 +679,7 @@ angular.module('integridadUiApp')
           codigo_contable: vm.provContable,
           desc_contable: 'PROVEEDORES LOCALES',
           tipo: 'CREDITO (C)',
-          base_imponible: parseFloat((vm.debtsToPay.total - vm.retentionTotal).toFixed(2)),
+          base_imponible: vm.debtsToPay.total - vm.retentionTotal,
           nomb_contable: 'DEFINIDA PARA TODOS LOS PROVEEDORES'
         };
         vm.debtsToPay.items.push(vm.itemProvider);
@@ -1152,18 +1152,33 @@ angular.module('integridadUiApp')
         vm.subIva = parseFloat((vm.item.baseImponible * 0.1200).toFixed(2));
         vm.subTotalDoce = vm.item.baseImponible;
         vm.subTotalCero = vm.debtsToPay.total - vm.subTotalDoce - vm.subIva;
-        vm.itemIva = { codeConta: vm.ivaContable, descrip: 'IVA EN COMPRAS', tipo: 'DEBITO (D)',
-          baseImponible: vm.subIva, name: 'DEFINIDA PARA TODAS LAS COMPRAS' };
-        vm.itemProvider = { codeConta: vm.provContable, descrip: 'PROVEEDORES LOCALES', tipo: 'CREDITO (C)',
-          baseImponible: vm.debtsToPay.total, name: 'DEFINIDA PARA TODOS LOS PROVEEDORES' };
+        vm.itemIva = {
+          codeConta: vm.ivaContable,
+          descrip: 'IVA EN COMPRAS',
+          tipo: 'DEBITO (D)',
+          baseImponible: vm.subIva,
+          name: 'DEFINIDA PARA TODAS LAS COMPRAS'
+        };
+        vm.itemProvider = {
+          codeConta: vm.provContable,
+          descrip: 'PROVEEDORES LOCALES',
+          tipo: 'CREDITO (C)',
+          baseImponible: vm.debtsToPay.total - vm.retentionTotal,
+          name: 'DEFINIDA PARA TODOS LOS PROVEEDORES'
+        };
         vm.debtsToPay.detailDebtsToPay.push(vm.itemIva);
         vm.debtsToPay.detailDebtsToPay.push(vm.itemProvider);
       } else if (vm.typeTaxes === '2') {
         vm.subIva = 0.0;
         vm.subTotalDoce = 0.0;
         vm.subTotalCero = vm.debtsToPay.total;
-        vm.itemProvider = { codeConta: vm.provContable, descrip: 'PROVEEDORES LOCALES', tipo: 'CREDITO (C)',
-          baseImponible: vm.debtsToPay.total, name: 'DEFINIDA PARA TODOS LOS PROVEEDORES' };
+        vm.itemProvider = {
+          codeConta: vm.provContable,
+          descrip: 'PROVEEDORES LOCALES',
+          tipo: 'CREDITO (C)',
+          baseImponible: vm.debtsToPay.total - vm.retentionTotal,
+          name: 'DEFINIDA PARA TODOS LOS PROVEEDORES'
+        };
         vm.debtsToPay.detailDebtsToPay.push(vm.itemProvider);
       };
     };
