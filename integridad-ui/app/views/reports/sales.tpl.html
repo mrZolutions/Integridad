@@ -396,6 +396,7 @@
           <th> RUC </th>
           <th> No. Cuenta </th>
           <th> No. Factura</th>
+          <th> No. Autorizaci&oacute;n</th>
           <th> Estado </th>
           <th> Sub Total 12% </th>
           <th> Iva </th>
@@ -416,10 +417,11 @@
           <td>{{data.ruc}}</td>
           <td>{{data.debtNumber}}</td>
           <td>{{data.billNumber}}</td>
+          <td>{{data.authorizationNumber}}</td>
           <td>{{data.status}}</td>
-          <td>{{data.subTotalDoce}}</td>
-          <td>{{data.iva}}</td>
-          <td>{{data.subTotalCero}}</td>
+          <td>{{data.subTotalDoce.toFixed(2)}}</td>
+          <td>{{data.iva.toFixed(2)}}</td>
+          <td>{{data.subTotalCero.toFixed(2)}}</td>
           <td>{{data.status === 'ACTIVA' ? data.total.toFixed(2) : ''}}</td>
           <td>{{data.endDate}}</td>
           <td>{{data.cashier}}</td>
