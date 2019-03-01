@@ -218,7 +218,13 @@ angular.module('integridadUiApp')
             NUMERO_FACTURA: retention.documentNumber,
             EJERCICIO_FISCAL: retention.ejercicioFiscal,
             ESTADO: retention.status,
-            TOTAL:parseFloat(retention.total.toFixed(2)),
+            BASE_FUENTE: parseFloat((retention.baseFuente).toFixed(2)),
+            PORCENT_FUENTE: parseFloat((retention.porcenFuente).toFixed(2)),
+            SUBTOTAL_FUENTE: parseFloat((retention.subTotalFuente).toFixed(2)),
+            BASE_IVA: parseFloat((retention.baseIva).toFixed(2)),
+            PORCENT_IVA: parseFloat((retention.porcenIva).toFixed(2)),
+            SUBTOTAL_IVA: parseFloat((retention.subTotalIva).toFixed(2)),
+            TOTAL: parseFloat((retention.total).toFixed(2)),
             SUCURSAL: retention.subsidiary,
             USUARIO: retention.userName
           };

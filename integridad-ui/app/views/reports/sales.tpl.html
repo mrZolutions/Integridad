@@ -215,6 +215,12 @@
           <th> No. Factura</th>
           <th> Ejercicio Fiscal</th>
           <th> Estado</th>
+          <th> Base Fuente</th>
+          <th> % Fuente</th>
+          <th> Sub Total Fuente</th>
+          <th> Base IVA</th>
+          <th> % IVA</th>
+          <th> Sub Total IVA</th>
           <th> Total</th>
           <th> Sucursal</th>
           <th> Usuario</th>
@@ -232,7 +238,13 @@
           <td>{{data.documentNumber}}</td>
           <td>{{data.ejercicioFiscal}}</td>
           <td>{{data.status}}</td>
-          <td>{{data.total.toFixed(2)}}</td>
+          <td>{{(data.baseFuente).toFixed(2)}}</td>
+          <td>{{(data.porcenFuente).toFixed(2)}}</td>
+          <td>{{(data.subTotalFuente).toFixed(2)}}</td>
+          <td>{{(data.baseIva).toFixed(2)}}</td>
+          <td>{{(data.porcenIva).toFixed(2)}}</td>
+          <td>{{(data.subTotalIva).toFixed(2)}}</td>
+          <td>{{(data.total).toFixed(2)}}</td>
           <td>{{data.subsidiary}}</td>
           <td>{{data.userName}}</td>
         </tr>

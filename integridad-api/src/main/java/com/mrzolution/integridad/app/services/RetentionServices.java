@@ -153,15 +153,31 @@ public class RetentionServices {
         retentions.forEach(retention -> {
             populateChildren(retention);
             Double sum = Double.valueOf(0);
+            Double baseF = Double.valueOf(0);
+            Double porcenF = Double.valueOf(0);
+            Double subTotalF = Double.valueOf(0);
+            Double baseIva = Double.valueOf(0);
+            Double porcenIva = Double.valueOf(0);
+            Double subTotalIva = Double.valueOf(0);
             for (DetailRetention detail : retention.getDetailRetentions()) {
                 sum = Double.sum(sum, detail.getTotal());
+                if ("RETENCION EN LA FUENTE".equals(detail.getTaxType())) {
+                    baseF = Double.sum(baseF, detail.getBaseImponible());
+                    porcenF = Double.sum(porcenF, detail.getPercentage());
+                    subTotalF = baseF * (porcenF / 100.00);
+                }
+                if ("RETENCION EN EL IVA".equals(detail.getTaxType())) {
+                    baseIva = Double.sum(baseIva, detail.getBaseImponible());
+                    porcenIva = Double.sum(porcenIva, detail.getPercentage());
+                    subTotalIva = baseIva * (porcenIva / 100.00);
+                }
             }
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
             String date = dateFormat.format(new Date(retention.getDateCreated()));
             String status = retention.isActive() ? "ACTIVA" : "ANULADA";
             String docDate = dateFormat.format(new Date(retention.getDocumentDate()));
             RetentionReport saleReport= new RetentionReport(date, docDate, retention.getProvider().getCodeIntegridad(), retention.getProvider().getName(), retention.getProvider().getRuc(), retention.getStringSeq(), retention.getClaveDeAcceso(),
-			retention.getDocumentNumber(),retention.getEjercicioFiscal(), sum, retention.getSubsidiary().getName(), retention.getUserIntegridad().getFirstName(), status);
+			retention.getDocumentNumber(),retention.getEjercicioFiscal(), baseF, porcenF, subTotalF, baseIva, porcenIva, subTotalIva, sum, retention.getSubsidiary().getName(), retention.getUserIntegridad().getFirstName(), status);
 
             retentionReportList.add(saleReport);
         });

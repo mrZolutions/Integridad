@@ -230,7 +230,7 @@ angular.module('integridadUiApp')
       vm.retentionClientCreated = false;
       vm.billNumber = bill.stringSeq;
       vm.creditValue = bill.total;
-      vm.creditValueSubtotal = bill.baseTaxes;
+      vm.creditValueSubtotal = bill.subTotal;
       vm.creditValueIva = bill.iva;
       vm.BillId = bill.id;
       vm.retentionClient = {
