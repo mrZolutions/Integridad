@@ -68,4 +68,10 @@ angular
         return response.data;
       });
     };
+
+    this.getForCashClosureReportAndDate = function(userClientId, dateOne, dateTwo) {
+      return securityService.get('/bill/rep/closure/' + userClientId + '/' + dateOne + '/' + dateTwo).then(function successCallback(response) {
+        return response.data;
+      });
+    };
 });

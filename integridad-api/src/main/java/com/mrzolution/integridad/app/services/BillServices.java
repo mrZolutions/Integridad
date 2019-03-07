@@ -9,6 +9,7 @@ import com.mrzolution.integridad.app.cons.Constants;
 import com.mrzolution.integridad.app.domain.*;
 import com.mrzolution.integridad.app.domain.Pago;
 import com.mrzolution.integridad.app.domain.ebill.*;
+import com.mrzolution.integridad.app.domain.report.CashClosureReport;
 import com.mrzolution.integridad.app.domain.report.ItemReport;
 import com.mrzolution.integridad.app.domain.report.SalesReport;
 import com.mrzolution.integridad.app.repositories.*;
@@ -48,7 +49,7 @@ public class BillServices {
     KardexRepository kardexRepository;
     @Autowired
     KardexChildRepository kardexChildRepository;
-            
+    
     public String getDatil(Requirement requirement, UUID userClientId) throws Exception {
         UserClient userClient = userClientRepository.findOne(userClientId);
         if (userClient == null) {
@@ -358,7 +359,26 @@ public class BillServices {
         });
         return salesReportList;
     }
-
+    
+    //Reporte de Cierre de Caja
+    public List<CashClosureReport> getForCashClosureReport(UUID userClientId, long dateOne, long dateTwo) {
+        log.info("BillServices getForCashClosureReport: {}, {}, {}", userClientId, dateOne, dateTwo);
+        Iterable<Pago> pagos = pagoRepository.findForCashClosureReport(userClientId, dateOne, dateTwo);
+        List<CashClosureReport> cashClosureReportList = new ArrayList<>();
+        pagos.forEach(pago -> {
+            pago.setListsNull();
+            Long endDateLong = pago.getBill().getDateCreated();
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+            String endDate = dateFormat.format(new Date(endDateLong));
+            
+            CashClosureReport cashClosureReport = new CashClosureReport(endDate, pago.getBill().getStringSeq(), pago.getBill().getBaseTaxes(), pago.getBill().getBaseNoTaxes(), pago.getBill().getSubTotal(),
+                              pago.getBill().getIva(), pago.getBill().getTotal(), pago.getMedio(), pago.getCardBrand(), pago.getNumeroLote(), pago.getChequeAccount(), pago.getChequeBank(), pago.getChequeNumber());
+            
+            cashClosureReportList.add(cashClosureReport);
+        });
+        return cashClosureReportList;
+    }
+    
     private void populateChildren(Bill bill) {
         List<Detail> detailList = getDetailsByBill(bill);
         List<Pago> pagoList = getPagosByBill(bill);

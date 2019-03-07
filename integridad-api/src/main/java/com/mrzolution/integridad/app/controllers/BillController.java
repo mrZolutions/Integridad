@@ -2,6 +2,7 @@ package com.mrzolution.integridad.app.controllers;
 
 import com.mrzolution.integridad.app.domain.Bill;
 import com.mrzolution.integridad.app.domain.ebill.Requirement;
+import com.mrzolution.integridad.app.domain.report.CashClosureReport;
 import com.mrzolution.integridad.app.domain.report.ItemReport;
 import com.mrzolution.integridad.app.domain.report.SalesReport;
 import com.mrzolution.integridad.app.exceptions.BadRequestException;
@@ -124,6 +125,20 @@ public class BillController {
             response = service.getAllBySubIdAndDates(userClientId, dateOne, dateTwo);
         } catch (BadRequestException e) {
             log.error("BillController getAllByUserClientIdAndDates Exception thrown: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+        return new ResponseEntity<List>(response, HttpStatus.ACCEPTED);
+    }
+    
+    //Reporte de Cierre de Caja
+    @RequestMapping(method = RequestMethod.GET, value="/rep/closure/{userClientId}/{dateOne}/{dateTwo}")
+    public ResponseEntity getForCashClosureReportAndDate(@PathVariable("userClientId") UUID userClientId, @PathVariable("dateOne") long dateOne, @PathVariable("dateTwo") long dateTwo) {
+        log.info("BillController getForCashClosureReportAndDate: {}, {}, {}", userClientId, dateOne, dateTwo);
+        List<CashClosureReport> response = null;
+        try {
+            response = service.getForCashClosureReport(userClientId, dateOne, dateTwo);
+        } catch (BadRequestException e) {
+            log.error("BillController getForCashClosureReportAndDate Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
         return new ResponseEntity<List>(response, HttpStatus.ACCEPTED);

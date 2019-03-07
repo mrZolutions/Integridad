@@ -15,7 +15,7 @@ spring:
 email:
     username: daniel.arcos@mrzolutions.com
     pass: hijodedios
-    emailFrom: Integridad - MrZolutions <Soporte.tecnico1@mrzolutions.com>
+    emailFrom: Integridad - MrZolutions <derarrollo.integridad@mrzolutions.com>
 
 ---
 spring:
@@ -31,4 +31,4 @@ spring:
 email:
     username: daniel.arcos@mrzolutions.com
     pass: hijodedios
-    emailFrom: Integridad - MrZolutions <Soporte.tecnico1@mrzolutions.com>
+    emailFrom: Integridad - MrZolutions <derarrollo.integridad@mrzolutions.com>

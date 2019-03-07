@@ -25,9 +25,9 @@ angular.module('integridadUiApp')
       var dateOne = $('#pickerBillDateOne').data("DateTimePicker").date().toDate().getTime();
       var dateTwo = $('#pickerBillDateTwo').data("DateTimePicker").date().toDate().getTime();
       dateTwo += 86340000;
-      var subId = $localStorage.user.subsidiary.userClient.id;
+      var userCliId = $localStorage.user.subsidiary.userClient.id;
 
-      billService.getActivesByUserClientAndDates(subId, dateOne, dateTwo).then(function(response) {
+      billService.getActivesByUserClientAndDates(userCliId, dateOne, dateTwo).then(function(response) {
         vm.reportList = response;
         vm.loading = false;
       }).catch(function(error) {
@@ -43,9 +43,9 @@ angular.module('integridadUiApp')
       var dateOne = $('#pickerBillDateOne').data("DateTimePicker").date().toDate().getTime();
       var dateTwo = $('#pickerBillDateTwo').data("DateTimePicker").date().toDate().getTime();
       dateTwo += 86340000;
-      var subId = $localStorage.user.subsidiary.userClient.id;
+      var userCliId = $localStorage.user.subsidiary.userClient.id;
 
-      billService.getAllByUserClientAndDates(subId, dateOne, dateTwo).then(function(response) {
+      billService.getAllByUserClientAndDates(userCliId, dateOne, dateTwo).then(function(response) {
         vm.reportList = response;
         vm.loading = false;
       }).catch(function(error) {
@@ -61,9 +61,9 @@ angular.module('integridadUiApp')
       var dateOne = $('#pickerBillDateOne').data("DateTimePicker").date().toDate().getTime();
       var dateTwo = $('#pickerBillDateTwo').data("DateTimePicker").date().toDate().getTime();
       dateTwo += 86340000;
-      var subId = $localStorage.user.subsidiary.userClient.id;
+      var userCliId = $localStorage.user.subsidiary.userClient.id;
 
-      eretentionService.getAllByUserClientAndDates(subId, dateOne, dateTwo).then(function(response) {
+      eretentionService.getAllByUserClientAndDates(userCliId, dateOne, dateTwo).then(function(response) {
         vm.reportList = response;
         vm.loading = false;
       }).catch(function(error) {
@@ -78,9 +78,9 @@ angular.module('integridadUiApp')
       vm.loading = true;
       var dateTwo = $('#pickerBillDateTwo').data("DateTimePicker").date().toDate().getTime();
       dateTwo += 86340000;
-      var subId = $localStorage.user.subsidiary.userClient.id;
+      var userCliId = $localStorage.user.subsidiary.userClient.id;
 
-      creditsbillService.getAllCreditsOfBillByUserClientId(subId, dateTwo).then(function(response) {
+      creditsbillService.getAllCreditsOfBillByUserClientId(userCliId, dateTwo).then(function(response) {
         vm.reportList = response;
         vm.loading = false;
       }).catch(function(error) {
@@ -93,9 +93,9 @@ angular.module('integridadUiApp')
       vm.isProductReportList = '5';
       vm.reportList = undefined;
       vm.loading = true;
-      var subId = $localStorage.user.subsidiary.userClient.id;
+      var userCliId = $localStorage.user.subsidiary.userClient.id;
 
-      creditsbillService.getAllPayedOfBillByUserClientId(subId).then(function(response) {
+      creditsbillService.getAllPayedOfBillByUserClientId(userCliId).then(function(response) {
         vm.reportList = response;
         vm.loading = false;
       }).catch(function(error) {
@@ -111,9 +111,9 @@ angular.module('integridadUiApp')
       var dateOne = $('#pickerBillDateOne').data("DateTimePicker").date().toDate().getTime();
       var dateTwo = $('#pickerBillDateTwo').data("DateTimePicker").date().toDate().getTime();
       dateTwo += 86340000;
-      var subId = $localStorage.user.subsidiary.userClient.id;
+      var userCliId = $localStorage.user.subsidiary.userClient.id;
 
-      paymentService.getAllPaymentsByUserClientIdAndDates(subId, dateOne, dateTwo).then(function(response) {
+      paymentService.getAllPaymentsByUserClientIdAndDates(userCliId, dateOne, dateTwo).then(function(response) {
         vm.reportList = response;
         vm.loading = false;
       }).catch(function(error) {
@@ -128,9 +128,9 @@ angular.module('integridadUiApp')
       vm.loading = true;
       var dateTwo = $('#pickerBillDateTwo').data("DateTimePicker").date().toDate().getTime();
       dateTwo += 86340000;
-      var subId = $localStorage.user.subsidiary.userClient.id;
+      var userCliId = $localStorage.user.subsidiary.userClient.id;
 
-      creditsDebtsService.getAllCreditsDebtsPendingOfDebtsToPayByUserClientId(subId, dateTwo).then(function(response) {
+      creditsDebtsService.getAllCreditsDebtsPendingOfDebtsToPayByUserClientId(userCliId, dateTwo).then(function(response) {
         vm.reportList = response;
         vm.loading = false;
       }).catch(function(error) {
@@ -146,9 +146,27 @@ angular.module('integridadUiApp')
       var dateOne = $('#pickerBillDateOne').data("DateTimePicker").date().toDate().getTime();
       var dateTwo = $('#pickerBillDateTwo').data("DateTimePicker").date().toDate().getTime();
       dateTwo += 86340000;
-      var subId = $localStorage.user.subsidiary.userClient.id;
+      var userCliId = $localStorage.user.subsidiary.userClient.id;
 
-      debtsToPayService.getDebtsToPayByUserClientIdAndDates(subId, dateOne, dateTwo).then(function(response) {
+      debtsToPayService.getDebtsToPayByUserClientIdAndDates(userCliId, dateOne, dateTwo).then(function(response) {
+        vm.reportList = response;
+        vm.loading = false;
+      }).catch(function(error) {
+        vm.loading = false;
+        vm.error = error.data;
+      });
+    };
+
+    vm.getReportCierreCaja = function() {
+      vm.isProductReportList = '9';
+      vm.reportList = undefined;
+      vm.loading = true;
+      var dateOne = $('#pickerBillDateOne').data("DateTimePicker").date().toDate().getTime();
+      var dateTwo = $('#pickerBillDateTwo').data("DateTimePicker").date().toDate().getTime();
+      dateTwo += 86340000;
+      var userCliId = $localStorage.user.subsidiary.userClient.id;
+
+      billService.getForCashClosureReportAndDate(userCliId, dateOne, dateTwo).then(function(response) {
         vm.reportList = response;
         vm.loading = false;
       }).catch(function(error) {
@@ -320,6 +338,26 @@ angular.module('integridadUiApp')
             BODEGA: debt.warehouse,
             SUCURSAL: debt.subsidiary,
             USUARIO: debt.userName
+          };
+
+          dataReport.push(data);
+        });
+      } else if (vm.isProductReportList === '9') {
+        _.each(vm.reportList, function(closure) {
+          var data = {
+            FECHA: closure.billDateCreated,
+            NUMERO_FACTURA: closure.billStringSeq,
+            BASE_DOCE: closure.billBaseTaxes,
+            BASE_CERO: closure.billBaseNoTaxes,
+            SUBTOTAL: closure.billSubTotal,
+            IVA: closure.billIva,
+            TOTAL: closure.billTotal,
+            FORMA_PAGO: closure.pagoMedio,
+            TARJETA: closure.pagoCardBrand,
+            No_LOTE: closure.pagoNumeroLote,
+            CHEQUE_CUENTA: closure.pagoChequeAccount,
+            CHEQUE_BANCO: closure.pagoChequeBank,
+            CHEQUE_NUMERO: closure.pagoChequeNumber
           };
 
           dataReport.push(data);

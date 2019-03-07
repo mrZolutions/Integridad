@@ -71,17 +71,21 @@
       <div class="row">
         <div class="form-group col-md-10">
           <p><b>Productos, Ventas y Retenciones</b></p>
-          <button type="button" title="Seleccione Fechas Inicio - Fin" class="btn btn-primary"
+          <button type="button" title="Seleccione Fecha Inicio - Fecha Fin" class="btn btn-primary"
                   ng-click="vm.getReportProducts()">
                   De Productos
           </button>
-          <button type="button" title="Seleccione Fechas Inicio - Fin" class="btn btn-primary"
+          <button type="button" title="Seleccione Fecha Inicio - Fecha Fin" class="btn btn-primary"
                   ng-click="vm.getReportSales()">
                   De Ventas
           </button>
-          <button type="button" title="Seleccione Fechas Inicio - Fin" class="btn btn-primary"
+          <button type="button" title="Seleccione Fecha Inicio - Fecha Fin" class="btn btn-primary"
                   ng-click="vm.getReportRetention()">
                   De Retenciones
+          </button>
+          <button type="button" title="Seleccione Fecha Inicio = Fecha Fin" class="btn btn-primary"
+                  ng-click="vm.getReportCierreCaja()">
+                  Cierre Caja
           </button>
         </div>
         <div class="form-group col-md-2">
@@ -104,7 +108,7 @@
         </div>
         <div class="form-group col-md-6">
           <p><b>Cuentas por Pagar</b></p>
-          <button type="button" title="Seleccione Fechas Inicio - Fin" class="btn btn-primary"
+          <button type="button" title="Seleccione Fecha Inicio - Fecha Fin" class="btn btn-primary"
                   ng-click="vm.getReportDebts()">
                   De Compras
           </button>
@@ -386,7 +390,7 @@
     </table>
   </div>
 
-  <div class="table-responsive" ng-if="vm.isProductReportList === '8'">
+  <div class="table-responsive" ng-if="vm.isProductReportList === '8' && vm.reportList !== undefined">
     <table class="table table-striped">
       <thead>
         <tr>
@@ -428,6 +432,45 @@
           <td>{{data.warehouse}}</td>
           <td>{{data.subsidiary}}</td>
           <td>{{data.userName}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="table-responsive" ng-if="vm.isProductReportList === '9' && vm.reportList !== undefined">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th> Fecha </th>
+          <th> No. Factura </th>
+          <th> Base 12% </th>
+          <th> Base 0% </th>
+          <th> Sub Total </th>
+          <th> Iva </th>
+          <th> Total </th>
+          <th> Forma de Pago </th>
+          <th> Tarjeta </th>
+          <th> No. Lote </th>
+          <th> Cheque Cuenta </th>
+          <th> Banco </th>
+          <th> No. Cheque </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="data in vm.reportList | orderBy:'pagoMedio'" >
+          <td>{{data.billDateCreated}}</td>
+          <td>{{data.billStringSeq}}</td>
+          <td>{{data.billBaseTaxes.toFixed(2)}}</td>
+          <td>{{data.billBaseNoTaxes.toFixed(2)}}</td>
+          <td>{{data.billSubTotal.toFixed(2)}}</td>
+          <td>{{data.billIva.toFixed(2)}}</td>
+          <td>{{data.billTotal.toFixed(2)}}</td>
+          <td>{{data.pagoMedio}}</td>
+          <td>{{data.pagoCardBrand}}</td>
+          <td>{{data.pagoNumeroLote}}</td>
+          <td>{{data.pagoChequeAccount}}</td>
+          <td>{{data.pagoChequeBank}}</td>
+          <td>{{data.pagoChequeNumber}}</td>
         </tr>
       </tbody>
     </table>
