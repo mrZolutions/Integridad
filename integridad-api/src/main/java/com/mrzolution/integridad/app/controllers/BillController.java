@@ -129,20 +129,6 @@ public class BillController {
         }
         return new ResponseEntity<List>(response, HttpStatus.ACCEPTED);
     }
-    
-    //Reporte de Cierre de Caja
-    @RequestMapping(method = RequestMethod.GET, value="/rep/closure/{userClientId}/{dateOne}/{dateTwo}")
-    public ResponseEntity getForCashClosureReportAndDate(@PathVariable("userClientId") UUID userClientId, @PathVariable("dateOne") long dateOne, @PathVariable("dateTwo") long dateTwo) {
-        log.info("BillController getForCashClosureReportAndDate: {}, {}, {}", userClientId, dateOne, dateTwo);
-        List<CashClosureReport> response = null;
-        try {
-            response = service.getForCashClosureReport(userClientId, dateOne, dateTwo);
-        } catch (BadRequestException e) {
-            log.error("BillController getForCashClosureReportAndDate Exception thrown: {}", e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-        }
-        return new ResponseEntity<List>(response, HttpStatus.ACCEPTED);
-    }
 
     @RequestMapping(method = RequestMethod.GET, value="/{id}")
     public ResponseEntity getBillById(@PathVariable("id") UUID id) {
@@ -180,5 +166,19 @@ public class BillController {
         }
         log.info("BillController deactivateBill DONE: {}", bill.getId());
         return new ResponseEntity<Void>(HttpStatus.ACCEPTED);
+    }
+    
+    //Reporte de Cierre de Caja
+    @RequestMapping(method = RequestMethod.GET, value="/rep/closure/{userClientId}/{dateOne}/{dateTwo}")
+    public ResponseEntity getForCashClosureReportAndDate(@PathVariable("userClientId") UUID userClientId, @PathVariable("dateOne") long dateOne, @PathVariable("dateTwo") long dateTwo) {
+        log.info("BillController getForCashClosureReportAndDate: {}, {}, {}", userClientId, dateOne, dateTwo);
+        List<CashClosureReport> response = null;
+        try {
+            response = service.getForCashClosureReport(userClientId, dateOne, dateTwo);
+        } catch (BadRequestException e) {
+            log.error("BillController getForCashClosureReportAndDate Exception thrown: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+        return new ResponseEntity<List>(response, HttpStatus.ACCEPTED);
     }
 }

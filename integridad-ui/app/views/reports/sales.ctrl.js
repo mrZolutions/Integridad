@@ -162,7 +162,7 @@ angular.module('integridadUiApp')
       vm.reportList = undefined;
       vm.loading = true;
       var dateOne = $('#pickerBillDateOne').data("DateTimePicker").date().toDate().getTime();
-      var dateTwo = $('#pickerBillDateTwo').data("DateTimePicker").date().toDate().getTime();
+      var dateTwo = $('#pickerBillDateOne').data("DateTimePicker").date().toDate().getTime();
       dateTwo += 86340000;
       var userCliId = $localStorage.user.subsidiary.userClient.id;
 

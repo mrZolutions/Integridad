@@ -22,7 +22,6 @@ import lombok.Data;
 @Entity
 @Data
 public class Bill {
-
     @Id
     @GeneratedValue
     private UUID id;

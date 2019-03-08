@@ -31,4 +31,4 @@ angular
       return $http.put(url, data, config);
     };
 
-  });
+});
