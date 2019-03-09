@@ -250,11 +250,11 @@
                         <table class = "table table-striped">
                             <thead>
                                 <tr>
-                                    <th> CODIGO </th>
-                                    <th> CUENTA ASOCIADA </th>
-                                    <th> DESCRIPCION </th>
-                                    <th> TIPO </th>
-                                    <th> VALOR </th>
+                                    <th>CÓDIGO</th>
+                                    <th>CUENTA ASOCIADA</th>
+                                    <th>DESCRIPCIÓN</th>
+                                    <th>TIPO</th>
+                                    <th>VALOR</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -282,14 +282,18 @@
                                 </tr>
                                 <tr>
                                     <td></td>
-                                    <td>DEBITO: {{vm.getTotalDebito()}}</td>
-                                    <td>CREDITO: {{vm.getTotalCredito()}}</td>
+                                    <td>DÉBITO: {{vm.getTotalDebito()}}</td>
+                                    <td>CRÉDITO: {{vm.getTotalCredito()}}</td>
                                     <td><b>SALDO: {{vm.getTotalSaldo()}}</b></td>
                                     <td></td>
                                 </tr>
                             </tbody>
                         </table>
                     </div> 
+                    <div class="form-group col-md-12">
+                        <label>Descripci&oacute;n:</label>
+                        <input type="text" class="form-control" ng-model="vm.debtsToPay.observacion">
+                    </div>
                 </div>
             </div>
             <div class="panel-footer">
@@ -321,9 +325,9 @@
                     <table class="table table-striped">
                         <thead>
                             <tr>
-                                <th> Nro. Retenci&oacute;n </th>
-                                <th> Fecha </th>
-                                <th> Nro. Factura </th>
+                                <th>Nro. Retenci&oacute;n</th>
+                                <th>Fecha</th>
+                                <th>Nro. Factura</th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -372,9 +376,9 @@
                                 <tr>
                                     <td>
                                         <div>
-                                            <b>COMPROBANTE DE RETENCION</b><br/>
+                                            <b>COMPROBANTE DE RETENCIÓN</b><br/>
                                             <b>No: {{vm.retention.stringSeq}}</b><br/>
-                                            <b>AUTORIZACION: {{vm.retention.claveDeAcceso}}</b><br/>
+                                            <b>AUTORIZACIÓN: {{vm.retention.claveDeAcceso}}</b><br/>
                                             <b>FECHA DE EMISIÓN: {{vm.retention.dateCreated | date : "dd-MM-yyyy"}}</b><br/>
                                             <b>FACTURA: {{vm.retention.documentNumber}}</b><br/>
                                         </div>
@@ -425,12 +429,12 @@
                         <div class="form-group col-md-12 ">
                             <table width="100%" border="1">
                                 <tr>
-                                    <td><b>EJERCICIO FISCAL </b></td>
-                                    <td><b>TIPO IMPUESTO </b></td>
-                                    <td><b>CODIGO </b></td>
-                                    <td><b>BASE IMPONIBLE </b></td>
-                                    <td><b>RETENCIONES % </b></td>
-                                    <td><b>VALOR </b></td>
+                                    <td><b>EJERCICIO FISCAL</b></td>
+                                    <td><b>TIPO IMPUESTO</b></td>
+                                    <td><b>CÓDIGO</b></td>
+                                    <td><b>BASE IMPONIBLE</b></td>
+                                    <td><b>RETENCIONES %</b></td>
+                                    <td><b>VALOR</b></td>
                                 </tr>
                                 <tr ng-repeat="detail in vm.retention.detailRetentions">
                                     <td>{{vm.retention.ejercicioFiscal}}</td>
@@ -650,10 +654,10 @@
                             <table class = "table table-striped">
                                 <thead>
                                     <tr>
-                                        <th> PAGO </th>
-                                        <th> DIAS PLAZO </th>
-                                        <th> FECHAS </th>
-                                        <th> VALOR </th>
+                                        <th>PAGO</th>
+                                        <th>DIAS PLAZO</th>
+                                        <th>FECHAS</th>
+                                        <th>VALOR</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -715,8 +719,8 @@
                                         </td>
                                     </tr>
                                     <tr ng-repeat = "pago in vm.pagos">
-                                        <td>{{ pago.medio }}</td>
-                                        <td>{{ pago.total }}</td>
+                                        <td>{{pago.medio}}</td>
+                                        <td>{{pago.total.toFixed(2)}}</td>
                                         <td>
                                             <button type = "button" title = "Eliminar Pago" class = "btn btn-primary btn-sm" ng-click = "vm.removePago($index)">
                                                     <span class = "glyphicon glyphicon-trash" aria-hidden = "true"></span>
@@ -993,11 +997,14 @@
                 </div>
             </div>
             <div class = "panel-body">
+                <label>B&uacute;squeda de Cuentas</label>
+                <input ng-model="searchText" class="form-control" placeholder="Buscar">
                 <table class = "table table-striped">
                     <thead>
                         <tr>
                             <th>No. Cuenta</th>
                             <th>No. Factura</th>
+                            <th>Descripci&oacute;n</th>
                             <th>Fecha</th>
                             <th>Total</th>
                         </tr>
@@ -1011,6 +1018,7 @@
                         <tr ng-repeat = "debts in vm.providerDebtsList">
                             <td>{{debts.debtsSeq}}</td>
                             <td>{{debts.billNumber}}</td>
+                            <td>{{debts.observacion}}</td>
                             <td>{{debts.fecha | date : "dd/MM/yyyy"}}</td>
                             <td>{{debts.total}}</td>
                             <td>
@@ -1111,7 +1119,7 @@
                     <div class = "form-group col-md-12">
                         <table width = "100%">
                             <tr>
-                                <td><b>DIRECCION: </b>{{vm.debtsProviderSelected.address1}}</td>
+                                <td><b>DIRECCIÓN: </b>{{vm.debtsProviderSelected.address1}}</td>
                             </tr>
                         </table>
                     </div>
@@ -1128,11 +1136,11 @@
                         <table class = "table table-striped">
                             <thead>
                                 <tr>
-                                    <th> CODIGO </th>
-                                    <th> CUENTA ASOCIADA </th>
-                                    <th> DESCRIPCION </th>
-                                    <th> TIPO </th>
-                                    <th> VALOR </th>
+                                    <th>CÓDIGO</th>
+                                    <th>CUENTA ASOCIADA</th>
+                                    <th>DESCRIPCIÓN</th>
+                                    <th>TIPO</th>
+                                    <th>VALOR</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -1153,6 +1161,10 @@
                             </tbody>
                         </table>
                     </div> 
+                    <div class="form-group col-md-12">
+                        <label>Descripci&oacute;n:</label>
+                        {{vm.debtsToPay.observacion}}
+                    </div>
                 </div>
             </div>
         </div>
@@ -1166,37 +1178,37 @@
                         <table class="table table-striped">
                             <thead>
                                 <tr>
-                                    <th> Medio </th>
-                                    <th> Valor</th>
+                                    <th>Medio</th>
+                                    <th>Valor</th>
                                     <th></th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr ng-repeat="pago in vm.pagos">
                                     <td>
-                                        {{ pago.medio }}<br/>
+                                        {{pago.medio}}<br/>
                                         <span ng-if="pago.medio === 'cheque'">
-                                            {{ pago.chequeBank }} - {{ pago.chequeAccount }} - {{pago.chequeNumber}}<br/>
+                                            {{pago.chequeBank}} - {{pago.chequeAccount}} - {{pago.chequeNumber}}<br/>
                                         </span>
                                         <span ng-if="pago.medio === 'credito'">
-                                            NUMER DE PAGOS: {{ pago.creditoNumeroPagos }} - DIAS: {{ pago.creditoIntervalos }}<br/>
+                                            NÚMERO DE PAGOS: {{pago.creditoNumeroPagos}} - DIAS: {{pago.creditoIntervalos}}<br/>
                                         </span>
                                         <span ng-if="pago.medio === 'cheque_posfechado'">
-                                            {{ pago.chequeBank }} - {{ pago.chequeAccount }} - {{pago.chequeNumber}} - {{pago.fechaCobro | date :  "dd/MM/yyyy"}}<br/>
+                                            {{pago.chequeBank}} - {{pago.chequeAccount}} - {{pago.chequeNumber}} - {{pago.fechaCobro | date :  "dd/MM/yyyy"}}<br/>
                                         </span>
                                         <span ng-if="pago.medio === 'tarjeta_credito' || pago.medio === 'tarjeta_debito'">
-                                            {{ pago.cardBrand }}<br/>
+                                            {{pago.cardBrand}}<br/>
                                         </span>
-                                        {{ pago.payForm }}
+                                        {{pago.payForm}}
                                     </td>
-                                    <td>{{ pago.total }}</td>
+                                    <td>{{(pago.total).toFixed(2)}}</td>
                                     <td></td>
                                 </tr>
                                 <tr>
                                     <td><b>TOTAL</b></td>
-                                    <td>{{vm.getTotalPago()}}</td>
+                                    <td>{{(vm.getTotalPago()).toFixed(2)}}</td>
                                     <td>
-                                        Vuelto: {{vm.getCambio}}
+                                        Vuelto: {{(vm.getCambio).toFixed(2)}}
                                     </td>
                                 </tr>
                             </tbody>
@@ -1383,11 +1395,11 @@
                         <table class = "table table-striped">
                             <thead>
                                 <tr>
-                                    <th> CODIGO </th>
-                                    <th> CUENTA ASOCIADA </th>
-                                    <th> DESCRIPCION </th>
-                                    <th> TIPO </th>
-                                    <th> VALOR </th>
+                                    <th>CÓDIGO</th>
+                                    <th>CUENTA ASOCIADA</th>
+                                    <th>DESCRIPCIÓN</th>
+                                    <th>TIPO</th>
+                                    <th>VALOR</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -1422,7 +1434,11 @@
                                 </tr>
                             </tbody>
                         </table>
-                    </div> 
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label>Descripci&oacute;n:</label>
+                        <input type="text" class="form-control" ng-model="vm.debtsToPay.observacion">
+                    </div>
                 </div>
             </div>
             <div class="panel-footer">
