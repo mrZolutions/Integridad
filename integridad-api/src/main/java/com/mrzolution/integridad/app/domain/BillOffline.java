@@ -40,6 +40,8 @@ public class BillOffline {
     private String saldo;
     private int typeDocument;
     private String observation;
+    private String claveDeAcceso;
+    private String idSri;
 
     @ManyToOne
     @JoinColumn(name = "client_id")

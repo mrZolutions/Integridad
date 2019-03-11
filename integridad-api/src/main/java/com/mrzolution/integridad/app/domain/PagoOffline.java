@@ -28,7 +28,6 @@ public class PagoOffline implements Child {
     private String chequeAccount;
     private String chequeBank;
     private String chequeNumber;
-    private String chequeDiasPlazo;
     private String numeroLote;
     private long fechaCobro;
 

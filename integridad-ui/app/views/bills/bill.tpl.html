@@ -47,9 +47,9 @@
     <table class="table table-striped">
       <thead>
         <tr>
-          <th> C&oacute;digo </th>
-          <th> Nombre </th>
-          <th> No. Identidad </th>
+          <th>C&oacute;digo</th>
+          <th>Nombre</th>
+          <th>No. Identidad</th>
         </tr>
       </thead>
       <tbody>
@@ -88,10 +88,10 @@
     <table class="table table-striped">
       <thead>
         <tr>
-          <th> N&uacute;mero </th>
-          <th> Fecha </th>
-          <th> Cliente </th>
-          <th> Total </th>
+          <th>N&uacute;mero</th>
+          <th>Fecha</th>
+          <th>Cliente</th>
+          <th>Total</th>
           <th></th>
         </tr>
       </thead>
@@ -451,10 +451,9 @@
             <table class="table table-striped">
               <thead>
                 <tr>
-                  <th> Medio </th>
-                  <th> Valor</th>
-                  <th>
-                  </th>
+                  <th>Medio</th>
+                  <th>Valor</th>
+                  <th></th>
                 </tr>
               </thead>
               <tbody>
@@ -481,9 +480,7 @@
                 <tr>
                   <td><b>TOTAL</b></td>
                   <td>{{vm.getTotalPago()}}</td>
-                  <td>
-                    Vuelto: {{vm.getCambio}}
-                  </td>
+                  <td>Vuelto: {{vm.getCambio}}</td>
                 </tr>
               </tbody>
             </table>
@@ -524,8 +521,8 @@
             <table class="table table-striped">
               <thead>
                 <tr>
-                  <th> Medio </th>
-                  <th> Valor</th>
+                  <th>Medio</th>
+                  <th>Valor</th>
                   <th></th>
                 </tr>
               </thead>
@@ -796,8 +793,7 @@
                   <tr>
                     <th>Medio</th>
                     <th>Valor</th>
-                    <th>
-                    </th>
+                    <th></th>
                   </tr>
                 </thead>
                 <tbody>
@@ -818,9 +814,7 @@
                   <tr>
                     <td><b>TOTAL</b></td>
                     <td>{{vm.getTotalPago()}}</td>
-                    <td>
-                      Vuelto: {{vm.getCambio}}
-                    </td>
+                    <td>Vuelto: {{vm.getCambio}}</td>
                   </tr>
                 </tbody>
               </table>
@@ -864,12 +858,11 @@
               <table class="table table-striped">
                 <thead>
                   <tr>
-                    <th> C&oacute;digo </th>
-                    <th> Nombre </th>
-                    <th> Cantidad Disponible</th>
-                    <th> Precio Unitario $</th>
-                    <th>
-                    </th>
+                    <th>C&oacute;digo</th>
+                    <th>Nombre</th>
+                    <th>Cantidad Disponible</th>
+                    <th>Precio Unitario $</th>
+                    <th></th>
                   </tr>
                 </thead>
                 <tbody>
@@ -882,7 +875,7 @@
                     <td>{{productSelect.codeIntegridad}}</td>
                     <td>{{productSelect.name}}</td>
                     <td>{{productSelect.quantity}}</td>
-                    <td>{{vm.getCost(productSelect.cashPercentage, productSelect.averageCost)}}</td>
+                    <td>{{vm.getCost(productSelect[vm.priceType.cod], productSelect.averageCost)}}</td>
                     <td>
                       <button type="button" title="Seleccionar" class="btn btn-primary btn-sm" ng-click="vm.selectProductToAdd(productSelect)">
                               <span class = "glyphicon glyphicon-check" aria-hidden = "true"></span>
