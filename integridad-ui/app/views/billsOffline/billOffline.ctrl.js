@@ -8,9 +8,9 @@
  * Controller of the integridadUiApp
  */
 angular.module('integridadUiApp')
-    .controller('BillOfflineCtrl', function( _, $rootScope, $location, utilStringService, $localStorage,
+    .controller('BillOfflineCtrl', function( _, $location, utilStringService, $localStorage,
                                             clientService, productService, authService, billOfflineService, $window,
-                                            cashierService, requirementService, utilSeqService) {
+                                            cashierService, utilSeqService) {
 
         var vm = this;
         vm.error = undefined;
@@ -70,7 +70,6 @@ angular.module('integridadUiApp')
             vm.priceType = vm.prices[0];
             vm.seqChanged = false;
             vm.impuestosTotales = [];
-            vm.items = [];
             vm.impuestoICE = {
                 "base_imponible":0.0,
                 "valor":0.0,
@@ -201,13 +200,7 @@ angular.module('integridadUiApp')
                 +  parseFloat(vm.billOffline.iva)
                 +  parseFloat(vm.billOffline.ice)).toFixed(2));
         };
-      
-        function _addDays(date, days) {
-            var result = new Date(date);
-            result.setDate(result.getDate() + days);
-            return result.getTime();
-        };
-      
+            
         vm.acceptNewSeq = function() {
             vm.seqErrorNumber = undefined;
             vm.loading = true;
@@ -438,7 +431,7 @@ angular.module('integridadUiApp')
 
         vm.billOfflineSelect = function(billOffline) {
             vm.loading = true;
-            billOfflineService.getBillsOfflineById(bill.id).then(function(response) {
+            billOfflineService.getBillsOfflineById(billOffline.id).then(function(response) {
                 vm.billOfflineList = undefined;
                 vm.billOffline = response;
                 vm.companyData = $localStorage.user.subsidiary;
@@ -488,6 +481,22 @@ angular.module('integridadUiApp')
             };
         };
 
+        vm.billOfflineDeactivate = function() {
+            vm.loading = true;
+            var index = vm.billOfflineList.indexOf(vm.cancelBillOffline);
+            billOfflineService.deactivateBillOffline(vm.cancelBillOffline).then(function(response) {
+              var index = vm.billOfflineList.indexOf(vm.cancelBillOffline);
+              if (index > -1) {
+                  vm.billOfflineList.splice(index, 1);
+              };
+              vm.cancelBillOffline = undefined
+              vm.loading = false;
+            }).catch(function(error) {
+              vm.loading = false;
+              vm.error = error.data;
+            });
+          };
+
         vm.saveBillOffline = function() {
             vm.loading = true;
             $('#modalAddPago').modal('hide');
@@ -531,33 +540,35 @@ angular.module('integridadUiApp')
                     impuestos.push(impuesto);
                 };
                 
-                vm.billOffline.pagosOffline = vm.pagosOffline;
-                
                 if (vm.billOffline.discountPercentage === undefined) {
                     vm.billOffline.discountPercentage = 0;
                 };
-              
-                var obj = {clave_acceso: '1124225675', id:'id12345'};
-                vm.billOffline.claveDeAcceso = obj.clave_acceso;
-                vm.billOffline.idSri = obj.id;
-                vm.billOffline.stringSeq = vm.seqNumber;
-                vm.billOffline.priceType = vm.priceType.name;
-                billOfflineService.createBillOffline(vm.billOffline, 1).then(function(respBill) {
-                    vm.billedOffline = true;
-                    $localStorage.user.cashier.billOfflineNumberSeq = vm.billOffline.billSeq;
-                    if (vm.seqChanged) {
-                        cashierService.update($localStorage.user.cashier).then(function(resp) {
-                        // cashier updated
-                        }).catch(function(error) {
-                            vm.loading = false;
-                            vm.error = error.data;
-                        });
-                    };
-                    vm.loading = false;
-                }).catch(function(error) {
-                    vm.loading = false;
-                    vm.error = error.data;
-                });
+            });
+
+            var obj = {clave_acceso: '1124225675', id:'id12345'};
+            vm.billOffline.pagosOffline = vm.pagosOffline;
+            vm.billOffline.claveDeAcceso = obj.clave_acceso;
+            vm.billOffline.idSri = obj.id;
+            vm.billOffline.billSeq = vm.numberAddedOne;
+            vm.billOffline.stringSeq = vm.seqNumber;
+            vm.billOffline.priceType = vm.priceType.name;
+
+            billOfflineService.createBillOffline(vm.billOffline, 1).then(function(respBill) {
+                vm.billedOffline = true;
+                vm.billOfflineCreated = respBill;
+                $localStorage.user.cashier.billOfflineNumberSeq = vm.billOffline.billSeq;
+                if (vm.seqChanged) {
+                    cashierService.update($localStorage.user.cashier).then(function(resp) {
+                    
+                    }).catch(function(error) {
+                        vm.loading = false;
+                        vm.error = error.data;
+                    });
+                };
+                vm.loading = false;
+            }).catch(function(error) {
+                vm.loading = false;
+                vm.error = error.data;
             });
         };
     

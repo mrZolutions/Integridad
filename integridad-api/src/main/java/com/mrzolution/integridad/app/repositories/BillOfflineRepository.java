@@ -18,12 +18,18 @@ import org.springframework.stereotype.Repository;
 @Repository
 @Qualifier(value="BillOfflineRepository")
 public interface BillOfflineRepository extends CrudRepository<BillOffline, UUID> {
-    Iterable<BillOffline> findByClient(Client client);
+    Iterable<BillOffline> findBillOfflineByClient(Client client);
 	
-    Iterable<BillOffline> findByUserIntegridad(UserIntegridad user);
+    Iterable<BillOffline> findBillsOfflineByUserIntegridad(UserIntegridad user);
     
-    Iterable<BillOffline> findByStringSeq(String stringSeq);
+    Iterable<BillOffline> findBillsOfflineByStringSeq(String stringSeq);
+    
+    @Query("SELECT b FROM BillOffline b WHERE b.typeDocument = (:value) AND b.active = true")
+    Iterable<BillOffline> findBillsOfflineByTypeDocument(@Param("value") int value);
+    
+    @Query("SELECT b FROM BillOffline b WHERE b.client.id = (:id) AND b.typeDocument = (:type) AND b.active = true ORDER BY b.stringSeq")
+    Iterable<BillOffline> findBillsOfflineByClientId(@Param("id") UUID id, @Param("type") int type);
     
     @Query("SELECT b FROM BillOffline b WHERE b.subsidiary.id = (:subId) AND b.stringSeq = (:seq) AND b.typeDocument = 1 AND b.active = true")
-    Iterable<BillOffline> findByStringSeqAndSubsidiaryId(@Param("seq") String stringSeq, @Param("subId") UUID id);
+    Iterable<BillOffline> findBillsOfflineByStringSeqAndSubsidiaryId(@Param("seq") String stringSeq, @Param("subId") UUID id);
 }

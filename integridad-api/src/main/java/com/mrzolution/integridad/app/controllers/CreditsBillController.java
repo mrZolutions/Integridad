@@ -1,8 +1,5 @@
 package com.mrzolution.integridad.app.controllers;
-/**
- *
- * @author mrzolutions-daniel
- */
+
 import com.mrzolution.integridad.app.domain.Credits;
 import com.mrzolution.integridad.app.domain.report.CreditsReport;
 import com.mrzolution.integridad.app.exceptions.BadRequestException;
@@ -18,11 +15,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ *
+ * @author mrzolutions-daniel
+ */
 
 @Slf4j
 @RestController
 @RequestMapping(value = "/integridad/v1/creditsbybill")
-public class CreditsBillControler {
+public class CreditsBillController {
     @Autowired
     CreditsServices service;
     

@@ -29,7 +29,6 @@ public class PagoOffline implements Child {
     private String chequeBank;
     private String chequeNumber;
     private String numeroLote;
-    private long fechaCobro;
 
    @ManyToOne
     @JoinColumn(name = "billOffline_id")

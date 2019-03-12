@@ -241,6 +241,7 @@ angular.module('integridadUiApp')
 
     vm.removeDetail = function(index) {
         vm.cellar.items.splice(index,1);
+        _getCellarTotalSubtotal();
     };
 
     vm.saveToCellar = function(cellar) {
