@@ -117,6 +117,13 @@
                   Ctas Pendientes
           </button>
         </div>
+        <div class="form-group col-md-6">
+          <p><b>Consumos</b></p>
+          <button type="button" title="Seleccione Fecha Inicio - Fecha Fin" class="btn btn-primary"
+                  ng-click="vm.getReportCsmProducts()">
+                  De Productos
+          </button>
+        </div>
       </div>
       <div ng-show="vm.reportList.length === 0">
         <br/>
@@ -129,16 +136,16 @@
     <table class="table table-striped">
       <thead>
         <tr>
-          <th> Tipo </th>
-          <th> Fact. No. </th>
-          <th> C&oacute;digo </th>
-          <th> Descripci&oacute;n </th>
-          <th> Cantidad </th>
-          <th> V. Unitario </th>
-          <th> Subtotal </th>
-          <th> Descuento </th>
-          <th> Iva </th>
-          <th> Total </th>
+          <th>Tipo</th>
+          <th>Fact. No.</th>
+          <th>C&oacute;digo</th>
+          <th>Descripci&oacute;n</th>
+          <th>Cantidad</th>
+          <th>V. Unitario</th>
+          <th>Subtotal</th>
+          <th>Descuento</th>
+          <th>Iva</th>
+          <th>Total</th>
         </tr>
       </thead>
       <tbody>
@@ -162,23 +169,23 @@
     <table class="table table-striped">
       <thead>
         <tr>
-          <th> Fecha </th>
-          <th> C&oacute;digo-Cliente </th>
-          <th> Cliente </th>
-          <th> RUC/CI </th>
-          <th> No. Factura </th>
-          <th> Estado </th>
-          <th> OTI </th>
-          <th> Base 12% </th>
-          <th> Descuento </th>
-          <th> Base 0% </th>
-          <th> Iva </th>
-          <th> Total </th>
-          <th> Fecha-Vencimiento </th>
-          <th> Caja </th>
-          <th> Bodega </th>
-          <th> Sucursal </th>
-          <th> Usuario </th>
+          <th>Fecha</th>
+          <th>C&oacute;digo-Cliente</th>
+          <th>Cliente</th>
+          <th>RUC/CI</th>
+          <th>No. Factura</th>
+          <th>Estado</th>
+          <th>OTI</th>
+          <th>Base 12%</th>
+          <th>Descuento</th>
+          <th>Base 0%</th>
+          <th>Iva</th>
+          <th>Total</th>
+          <th>Fecha-Vencimiento</th>
+          <th>Caja</th>
+          <th>Bodega</th>
+          <th>Sucursal</th>
+          <th>Usuario</th>
         </tr>
       </thead>
       <tbody>
@@ -209,25 +216,25 @@
     <table class="table table-striped">
       <thead>
         <tr>
-          <th> Fecha de Retenci&oacute;n</th>
-          <th> Fecha de Documento</th>
-          <th> C&oacute;digo-Proveedor</th>
-          <th> Proveedor</th>
-          <th> RUC</th>
-          <th> No. Retenci&oacute;n</th>
-          <th> No. Autorizaci&oacute;n</th>
-          <th> No. Factura</th>
-          <th> Ejercicio Fiscal</th>
-          <th> Estado</th>
-          <th> Base Fuente</th>
-          <th> % Fuente</th>
-          <th> Sub Total Fuente</th>
-          <th> Base IVA</th>
-          <th> % IVA</th>
-          <th> Sub Total IVA</th>
-          <th> Total</th>
-          <th> Sucursal</th>
-          <th> Usuario</th>
+          <th>Fecha de Retenci&oacute;n</th>
+          <th>Fecha de Documento</th>
+          <th>C&oacute;digo-Proveedor</th>
+          <th>Proveedor</th>
+          <th>RUC</th>
+          <th>No. Retenci&oacute;n</th>
+          <th>No. Autorizaci&oacute;n</th>
+          <th>No. Factura</th>
+          <th>Ejercicio Fiscal</th>
+          <th>Estado</th>
+          <th>Base Fuente</th>
+          <th>% Fuente</th>
+          <th>Sub Total Fuente</th>
+          <th>Base IVA</th>
+          <th>% IVA</th>
+          <th>Sub Total IVA</th>
+          <th>Total</th>
+          <th>Sucursal</th>
+          <th>Usuario</th>
         </tr>
       </thead>
       <tbody>
@@ -394,23 +401,23 @@
     <table class="table table-striped">
       <thead>
         <tr>
-          <th> Fecha </th>
-          <th> C&oacute;digo-Proveedor </th>
-          <th> Proveedor </th>
-          <th> RUC </th>
-          <th> No. Cuenta </th>
-          <th> No. Factura</th>
-          <th> No. Autorizaci&oacute;n</th>
-          <th> Estado </th>
-          <th> Sub Total 12% </th>
-          <th> Iva </th>
-          <th> Sub Total 0% </th>
-          <th> Total </th>
-          <th> Fecha-Vencimiento </th>
-          <th> Caja </th>
-          <th> Bodega </th>
-          <th> Sucursal </th>
-          <th> Usuario </th>
+          <th>Fecha</th>
+          <th>C&oacute;digo-Proveedor</th>
+          <th>Proveedor</th>
+          <th>RUC</th>
+          <th>No. Cuenta</th>
+          <th>No. Factura</th>
+          <th>No. Autorizaci&oacute;n</th>
+          <th>Estado</th>
+          <th>Sub Total 12%</th>
+          <th>Iva</th>
+          <th>Sub Total 0%</th>
+          <th>Tota </th>
+          <th>Fecha-Vencimiento</th>
+          <th>Caja</th>
+          <th>Bodega</th>
+          <th>Sucursal</th>
+          <th>Usuario</th>
         </tr>
       </thead>
       <tbody>
@@ -441,19 +448,19 @@
     <table class="table table-striped">
       <thead>
         <tr>
-          <th> Fecha </th>
-          <th> No. Factura </th>
-          <th> Base 12% </th>
-          <th> Base 0% </th>
-          <th> Sub Total </th>
-          <th> Iva </th>
-          <th> Total </th>
-          <th> Forma de Pago </th>
-          <th> Tarjeta </th>
-          <th> No. Lote </th>
-          <th> Cheque Cuenta </th>
-          <th> Banco </th>
-          <th> No. Cheque </th>
+          <th>Fecha </th>
+          <th>No. Factura</th>
+          <th>Base 12%</th>
+          <th>Base 0%</th>
+          <th>Sub Total</th>
+          <th>Iva</th>
+          <th>Total</th>
+          <th>Forma de Pago</th>
+          <th>Tarjeta</th>
+          <th>No. Lote</th>
+          <th>Cheque Cuenta</th>
+          <th>Banco</th>
+          <th>No. Cheque</th>
         </tr>
       </thead>
       <tbody>
@@ -475,6 +482,38 @@
       </tbody>
     </table>
   </div>
+
+  <div class="table-responsive" ng-if="vm.isProductReportList === '10' && vm.reportList !== undefined">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Tipo</th>
+            <th>Consum. No.</th>
+            <th>C&oacute;digo</th>
+            <th>Descripci&oacute;n</th>
+            <th>Cantidad</th>
+            <th>V. Unitario</th>
+            <th>Subtotal</th>
+            <th>Iva</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="data in vm.reportList | orderBy:'code'" >
+            <td>{{data.type}}</td>
+            <td>{{data.csmNumberSeq}}</td>
+            <td>{{data.code}}</td>
+            <td>{{data.description}}</td>
+            <td>{{data.quantity}}</td>
+            <td>{{data.valUnit}}</td>
+            <td>{{data.subTotal.toFixed(2)}}</td>
+            <td>{{data.iva.toFixed(2)}}</td>
+            <td>{{data.total.toFixed(2)}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
   <div class="row">
     <div class="form-group col-md-12">
       <button type="button" title="Salir" class="btn btn-danger btn-sm"

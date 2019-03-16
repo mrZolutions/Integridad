@@ -18,6 +18,12 @@ angular
             });
         };
 
+        this.getCellarsByProviderId = function(id) {
+            return securityService.get('/cellar/provider/' + id).then(function successCallback(response) {
+                return response.data;
+            });
+        };
+
         this.validateCellar = function(cellar) {
             return securityService.put('/cellar', cellar).then(function successCallback(response) {
                 return response.data;

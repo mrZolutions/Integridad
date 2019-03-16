@@ -36,4 +36,7 @@ public interface ConsumptionRepository extends CrudRepository<Consumption, UUID>
     
     @Query("SELECT cm FROM Consumption cm WHERE cm.subsidiary.userClient.id = (:userClientId) AND cm.active = 'true' ORDER BY cm.csmSeq")
     Iterable<Consumption> findConsumptionByUserClientId(@Param("userClientId") UUID id);
+    
+    @Query("SELECT cm FROM Consumption cm WHERE cm.subsidiary.userClient.id = (:userClientId) AND cm.dateConsumption >= (:dateOne) AND cm.dateConsumption <= (:dateTwo) AND cm.active = true ORDER BY cm.csmSeq")
+    Iterable<Consumption> findByUserClientIdAndDatesActives(@Param("userClientId") UUID id, @Param("dateOne") long dateOne, @Param("dateTwo") long dateTwo);
 }

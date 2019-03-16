@@ -77,4 +77,16 @@ public class CellarController {
         return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
     }
     
+    @RequestMapping(method = RequestMethod.GET, value="/provider/{id}")
+    public ResponseEntity getCellarsByProviderId(@PathVariable("id") UUID id) {
+        log.info("CellarController getCellarsByProviderId: {}", id);
+        Iterable<Cellar> response = null;
+        try {
+            response = service.getCellarsByProviderId(id);
+        } catch (BadRequestException e) {
+            log.error("CellarController getCellarsByProviderId Exception thrown: {}", e.getMessage());
+	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+        return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
+    }
 }

@@ -320,7 +320,7 @@ public class BillServices {
                     }
                 }
             }
-            ItemReport itemTotal = new ItemReport(uuidCurrent, "R", "", code,
+            ItemReport itemTotal = new ItemReport(uuidCurrent, "SUB-TOTAL", "", code,
 			desc, quantityTotal, null, subTotalTotal, discountTotal, ivaTotal, totalTotal);
 
             reportList.add(itemTotal);

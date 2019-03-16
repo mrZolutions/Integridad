@@ -377,47 +377,6 @@
                 </button>
             </div>
         </div>
-        <div class="panel panel-primary" print-only>
-            <div class="panel-heading">
-                <b>Forma de Pago</b>
-            </div>
-            <div class="panel-body">
-                <div class="row">
-                    <div class="col-md-12">
-                        <table class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th>Medio</th>
-                                    <th>Valor</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr ng-repeat="pago in vm.pagosOffline">
-                                    <td>
-                                        {{pago.medio}}<br/>
-                                        <span ng-if="pago.medio === 'cheque'">
-                                            {{pago.chequeBank}} - {{pago.chequeAccount}} - {{pago.chequeNumber}}<br/>
-                                        </span>
-                                        <span ng-if="pago.medio === 'tarjeta_credito' || pago.medio === 'tarjeta_debito'">
-                                            {{pago.cardBrand}}<br/>
-                                        </span>
-                                        {{pago.payForm}}
-                                    </td>
-                                    <td>{{pago.total}}</td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td><b>TOTAL</b></td>
-                                    <td>{{vm.getTotalPago()}}</td>
-                                    <td>Vuelto: {{vm.getCambio}}</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
         <div class="panel panel-primary" ng-if="!vm.newBillOffline">
             <div class="panel-heading">
                 <b>Forma de Pago</b>

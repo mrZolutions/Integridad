@@ -1,11 +1,13 @@
 package com.mrzolution.integridad.app.services;
 
 import com.mrzolution.integridad.app.domain.Cashier;
+import com.google.common.collect.Lists;
 import com.mrzolution.integridad.app.domain.Consumption;
 import com.mrzolution.integridad.app.domain.DetailConsumption;
 import com.mrzolution.integridad.app.domain.Kardex;
 import com.mrzolution.integridad.app.domain.ProductBySubsidiary;
 import com.mrzolution.integridad.app.domain.UserIntegridad;
+import com.mrzolution.integridad.app.domain.report.CsmItemReport;
 import com.mrzolution.integridad.app.exceptions.BadRequestException;
 import com.mrzolution.integridad.app.repositories.CashierRepository;
 import com.mrzolution.integridad.app.repositories.ConsumptionRepository;
@@ -14,7 +16,9 @@ import com.mrzolution.integridad.app.repositories.DetailConsumptionRepository;
 import com.mrzolution.integridad.app.repositories.KardexRepository;
 import com.mrzolution.integridad.app.repositories.ProductBySubsidiairyRepository;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -161,5 +165,51 @@ public class ConsumptionServices {
             }
         });
         log.info("ConsumptionServices updateProductBySubsidiary DONE");
+    }
+    
+    //Reporte de Consumo de Productos
+    public List<CsmItemReport> getByUserClientIdAndDatesActives(UUID userClientId, long dateOne, long dateTwo) {
+        log.info("ConsumptionServices getByUserClientIdAndDatesActives: {}, {}, {}", userClientId, dateOne, dateTwo);
+        Iterable<Consumption> consumptions = consumptionRepository.findByUserClientIdAndDatesActives(userClientId, dateOne, dateTwo);
+        Set<UUID> productIds = new HashSet<>();
+        consumptions.forEach(consumption-> {
+            populateChildren(consumption);
+            for (DetailConsumption detail: consumption.getDetailsConsumption()) {
+                productIds.add(detail.getProduct().getId());
+            }
+        });	
+        return loadListItems(Lists.newArrayList(consumptions), productIds);
+    }
+    
+    private List<CsmItemReport> loadListItems(List<Consumption> consumptions, Set<UUID> productIds) {
+        List<CsmItemReport> reportList = new ArrayList<>();
+        for (UUID uuidCurrent: productIds) {
+            Double quantityTotal = new Double(0);
+            Double subTotalTotal = new Double(0);
+            Double ivaTotal = new Double(0);
+            Double totalTotal = new Double(0);
+            String code = "";
+            String desc = "";
+            for (Consumption consumption: consumptions) {
+                for (DetailConsumption detail: consumption.getDetailsConsumption()) {
+                    if (uuidCurrent.equals(detail.getProduct().getId())) {
+                        CsmItemReport item = new CsmItemReport(detail.getProduct().getId(),"", consumption.getCsmNumberSeq(), detail.getProduct().getCodeIntegridad(),
+					detail.getProduct().getName(),Double.valueOf(detail.getQuantity()), detail.getCostEach(), detail.getTotal(), (detail.getTotal() * 0.12), (detail.getTotal() * 1.12));
+                        quantityTotal += item.getQuantity();
+                        subTotalTotal += item.getSubTotal();
+                        ivaTotal += item.getIva();
+                        totalTotal += item.getTotal();
+                        code = detail.getProduct().getCodeIntegridad();
+                        desc = detail.getProduct().getName();
+                        reportList.add(item);
+                    }
+                }
+            }
+            CsmItemReport itemTotal = new CsmItemReport(uuidCurrent, "SUB-TOTAL", "", code,
+			desc, quantityTotal, null, subTotalTotal, ivaTotal, totalTotal);
+
+            reportList.add(itemTotal);
+        }
+        return reportList;
     }
 }

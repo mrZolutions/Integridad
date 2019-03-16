@@ -1,8 +1,10 @@
 package com.mrzolution.integridad.app.controllers;
 
 import com.mrzolution.integridad.app.domain.Consumption;
+import com.mrzolution.integridad.app.domain.report.CsmItemReport;
 import com.mrzolution.integridad.app.exceptions.BadRequestException;
 import com.mrzolution.integridad.app.services.ConsumptionServices;
+import java.util.List;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,5 +63,18 @@ public class ConsumptionController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
         return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
+    }
+    
+    @RequestMapping(method = RequestMethod.GET, value="/rep/{userClientId}/{dateOne}/{dateTwo}")
+    public ResponseEntity getByUserClientIdAndDatesActives(@PathVariable("userClientId") UUID userClientId, @PathVariable("dateOne") long dateOne, @PathVariable("dateTwo") long dateTwo) {
+        log.info("ConsumptionController getByUserClientIdAndDatesActives: {}, {}, {}", userClientId, dateOne, dateTwo);
+        List<CsmItemReport> response = null;
+        try {
+            response = service.getByUserClientIdAndDatesActives(userClientId, dateOne, dateTwo);
+        } catch (BadRequestException e) {
+            log.error("ConsumptionController getByUserClientIdAndDatesActives Exception thrown: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+        return new ResponseEntity<List>(response, HttpStatus.ACCEPTED);
     }
 }

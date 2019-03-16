@@ -66,7 +66,7 @@ public class CellarServices {
         populateChildren(retrieved);
         return retrieved;
     }
-    
+       
     //Validate Cellar and updateProductBySubsidiary
     @Async("asyncExecutor")
     public Cellar validateCellar(Cellar cellar) throws BadRequestException {
@@ -172,6 +172,16 @@ public class CellarServices {
             }
         });
         log.info("CellarServices updateProductBySubsidiary DONE");
+    }
+    
+    public Iterable<Cellar> getCellarsByProviderId(UUID id) {
+        log.info("CellarServices getCellarByProviderId: {}", id);
+        Iterable<Cellar> cellars = cellarRepository.findCellarsByProviderId(id);
+        cellars.forEach(cellar -> {
+            cellar.setListsNull();
+            cellar.setFatherListToNull();
+        });
+        return cellars;
     }
     
     public Iterable<Cellar> getCellarPendingOfWarehouse(UUID id) {

@@ -55,7 +55,7 @@ angular.module('integridadUiApp')
         function _activate() {
             vm.error = undefined;
             vm.aux = undefined;
-            vm.newBillOffline = true;
+            vm.newBillOffline = undefined;
             vm.billedOffline = false;
             vm.clientSelected = undefined;
             vm.dateBillOffline = undefined;

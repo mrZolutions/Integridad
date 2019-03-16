@@ -69,9 +69,6 @@
                         <button type="button" title="Consumos Internos" class="btn btn-primary btn-sm" ng-click="vm.consumptionFromWarehouse(warehouse)">
                                 <span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
                         </button>
-                        <!--<button type="button" title = "Transferencia entre Bodegas" class="btn btn-primary btn-sm" ng-click="">
-                                <span class = "glyphicon glyphicon-transfer" aria-hidden = "true"></span>
-                        </button>-->
                     </td>
                 </tr>
             </tbody>
@@ -86,10 +83,11 @@
         </div>
     </div>
 
-    <!--CARGA DE PROVEEDORES POR WAREHOUSE-->
+    <!--CARGA DE PROVEEDORES POR WAREHOUSE PARA INGRESO A BODEGA-->
     <div class="table-responsive" ng-show="vm.warehouseSelected !== undefined && vm.providerList !== undefined">
         <div class="row">
             <div class="form-group col-md-12">
+                <h4><b>Ingreso a Bodega</b></h4>
                 <h4>Sucursal: {{vm.warehouseSubsidiaryName}}</h4>
                 <h5>Bodega: {{vm.warehouseName}}</h5>
             </div>
@@ -120,8 +118,12 @@
                     <td></td>
                     <td>
                         <button type="button" title="Ingreso a Bodega" class="btn btn-primary btn-sm" 
-                                ng-click="vm.enterToCellar(provider)">
+                                ng-click="vm.providerSelectToEnterCellar(provider)">
                                 <span class="glyphicon glyphicon-import" aria-hidden="true"></span>
+                        </button>
+                        <button type="button" title="Consulta de Ingreso a Bodega" class="btn btn-primary btn-sm" 
+                                ng-click="vm.consultSavedCellar(provider)">
+                                <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
                         </button>
                     </td>
                 </tr>
@@ -130,26 +132,77 @@
         <div class="row">
             <div class="form-group col-md-12">
                 <button type="button" title="Salir" class="btn btn-primary btn-sm" 
-                        ng-click="vm.cancelselectWarehouse()">
+                        ng-click="vm.cancelSelectWarehouse()">
                         <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
                 </button>
             </div>
         </div>
     </div>
-    <!--FIN DE CARGA DE PROVEEDORES POR WAREHOUSE-->
+    <!--FIN DE CARGA DE PROVEEDORES POR WAREHOUSE PARA INGRESO A BODEGA-->
+
+    <!--VISUALIZACIÓN DE INGRESOS A BODEGA POR PROVEEDOR-->
+    <div class="table-responsive" ng-show="vm.cellarSavedList !== undefined">
+        <div class="row">
+            <div class="form-group col-md-12">
+                <h4><b>Ingreso a Bodega</b></h4>
+                <h4>Sucursal: {{vm.warehouseSubsidiaryName}}</h4>
+                <h5>Bodega: {{vm.warehouseName}}</h5>
+            </div>
+            <div class="form-group col-md-12">
+                <input ng-model = "searchText" class = "form-control" placeholder = "Buscar Ingresos">
+            </div>
+        </div>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>N&uacute;mero</th>
+                    <th>Fecha</th>
+                    <th>Cliente</th>
+                    <th>Total</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-show="vm.cellarSavedList == 0">
+                    <td colspan="4">
+                        No hay Ingresos a Bodega registrados
+                    </td>
+                </tr>
+                <tr ng-repeat="cellarSaved in vm.cellarSavedList | orderBy:'dateCreated':true | filter:searchText">
+                    <td>{{cellarSaved.whNumberSeq}}</td>
+                    <td>{{cellarSaved.dateEnterCellar | date : "dd/MM/yyyy"}}</td>
+                    <td>{{cellarSaved.provider.name}}</td>
+                    <td>{{cellarSaved.total}}</td>
+                    <td>
+                        <button type="button" title="Ver Ingreso a Bodega" class="btn btn-primary btn-sm" ng-click="vm.cellarSelect(cellarSaved)">
+                                <span class = "glyphicon glyphicon-eye-open" aria-hidden = "true"></span>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="row">
+            <div class="form-group col-md-12">
+                <button type="button" title="Salir" class="btn btn-primary btn-sm" ng-click="vm.cancelConsultSavedCellar()">
+                        <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+    
     <!--SECCIÓN DE INGRESO A BODEGA-->
     <div class="panel-group table-responsive" ng-show="vm.providerSelected !== undefined">
         <div class="row">
             <div class="form-group col-md-12">
+                <h4><b>Ingreso a Bodega</b></h4>
                 <h4>Sucursal: {{vm.warehouseSubsidiaryName}}</h4>
                 <h5>Bodega: {{vm.warehouseName}}</h5>
             </div>
         </div>
         <div class="panel panel-primary">
             <div class="panel-heading">
-                <h4>Ingreso a Bodega</h4>
                 <div>
-                    <b>Ingreso Nro: </b>{{vm.seqNumber}}
+                    <b>Ingreso Nro: </b>{{vm.cellSeqNumber}}
                 </div>
             </div>
             <div class="panel-body">
@@ -229,14 +282,14 @@
                         <table class="table table-striped">
                             <thead>
                                 <tr>
-                                    <th> Item </th>
-                                    <th> C&oacute;digo </th>
-                                    <th> Descripci&oacute;n </th>
-                                    <th> Cant. </th>
-                                    <th> U. Med. </th>
-                                    <th> V. Unit. </th>
-                                    <th> V. Total. </th>
-                                    <th>
+                                    <th>Item</th>
+                                    <th>C&oacute;digo</th>
+                                    <th>Descripci&oacute;n</th>
+                                    <th>Cant.</th>
+                                    <th>U. Med.</th>
+                                    <th>V. Unit.</th>
+                                    <th>V. Total.</th>
+                                    <th ng-if="vm.newCellar">
                                         <button type="button" title="Agregar Productos" class="btn btn-primary" ng-click="vm.addProduct()"
                                                 data-toggle="modal" data-target="#modalAddProduct">
                                                 <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
@@ -245,12 +298,12 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr ng-show="vm.cellar.items == 0">
+                                <tr ng-show="vm.cellar.detailsCellar == 0">
                                     <td colspan="4">
                                         No hay detalles ingresados
                                     </td>
                                 </tr>
-                                <tr ng-repeat="detail in vm.cellar.items">
+                                <tr ng-repeat="detail in vm.cellar.detailsCellar">
                                     <td>{{$index + 1}}</td>
                                     <td>{{detail.product.codeIntegridad}}</td>
                                     <td>{{detail.product.name}}</td>
@@ -258,13 +311,14 @@
                                     <td>{{detail.product.unitOfMeasurementFull}}</td>
                                     <td>{{detail.costEach}}</td>
                                     <td>{{detail.total}}</td>
-                                    <td>
+                                    <td ng-if="vm.newCellar">
                                         <button type="button" title="Editar Producto" class="btn btn-primary btn-sm"
                                                 ng-click="vm.editDetail(detail, $index)"
                                                 data-toggle="modal" data-target="#modalAddProduct">
                                                 <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
                                         </button>
-                                        <button type="button" title="Eliminar Producto" class="btn btn-primary btn-sm" ng-click="vm.removeDetail($index)">
+                                        <button type="button" title="Eliminar Producto" class="btn btn-primary btn-sm" 
+                                                ng-click="vm.removeDetail($index)">
                                                 <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
                                         </button>
                                     </td>
@@ -330,10 +384,14 @@
                 </div>
             </div>
             <div class="panel-footer">
-                <button type="button" title="Guardar Ingreso a Bodega" class="btn btn-primary btn-sm"
-                        ng-click="vm.saveToCellar(vm.cellar); vm.cancelCellar()"
+                <button type="button" title="Guardar Ingreso a Bodega" class="btn btn-primary btn-sm" ng-if="vm.newCellar"
+                        ng-click="vm.saveCellar(vm.cellar)"
                         ng-disabled="vm.cellar.total <= 0">
                         <span class="glyphicon glyphicon-floppy-saved" aria-hidden="true"></span>
+                </button>
+                <button type="button" title = "Imprimir Ticket-Ingreso Bodega" class="btn btn-danger btn-sm"
+                        ng-show="!vm.newCellar" ng-click="vm.printToCartAndCancel('printMatrixCellarId')">
+                        <span class = "glyphicon glyphicon-print" aria-hidden = "true"></span>
                 </button>
                 <button type="button" title="Salir" class="btn btn-primary btn-sm"
                         ng-click="vm.cancelCellar()">
@@ -342,6 +400,59 @@
             </div>
         </div>
     </div>
+
+    <!--IMPRIME TICKET DE INGRESO A BODEGA-->
+    <div id="printMatrixCellarId" ng-show='false'>
+        ------------------------------<br/>
+        <b>INGRESO No. {{vm.cellSeqNumber}}</b><br/>
+        <b>FACTURA No. {{vm.cellar.billNumber}}</b><br/>
+        <b>CLAVE ACCESO: {{vm.cellar.authNumber}}</b><br/>
+    
+        <b>RAZON SOCIAL:</b><br/>
+        <b>{{vm.cellar.provider.name}}</b><br/>
+        <b>IDENTIFICACION: {{vm.cellar.provider.ruc}}</b><br/>
+        <b>FECHA: {{vm.getDateToPrint() | date :  "dd/MM/yyyy"}}</b><br/>
+      
+        <table width="100%">
+            <thead>
+                <tr>
+                    <th align="left">DESCRIP&nbsp;</th>
+                    <th align="left">&nbsp;CANT&nbsp;</th>
+                    <th align="left">&nbsp;P.UNIT</th>
+                    <th align="right">&nbsp;TOTAL</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="detail in vm.cellar.detailsCellar">
+                    <td align="left">{{detail.product.name}}</td>
+                    <td align="left">&nbsp;{{detail.quantity}}&nbsp;</td>
+                    <td align="left"> &#36;{{detail.costEach}}&nbsp;</td>
+                    <td align="right">&#36;{{detail.total}}</td>
+                </tr>
+            </tbody>
+        </table>
+        <br/>
+        <table width="100%">
+            <tr>
+                <td>SUBTOTAL: &#36;{{vm.cellar.subTotal}}</td>
+            </tr>
+            <tr>
+                <td>BASE 0%: &#36;{{vm.cellar.baseNoTaxes}}</td>
+            </tr>
+            <tr>
+                <td>BASE 12%: &#36;{{vm.cellar.baseTaxes}}</td>
+            </tr>
+            <tr>
+                <td>IVA:   &#36;{{vm.cellar.iva}}</td>
+            </tr>
+            <tr>
+                <td>TOTAL: &#36;{{vm.cellar.total}}</td>
+            </tr>
+        </table>
+    
+        ------------------------------------
+    </div>
+
     <!--MODAL PARA AGREGAR PRODUCTOS-->
     <div id="modalAddProduct" class="modal fade" role="dialog">
         <div class="modal-dialog">
@@ -444,6 +555,7 @@
     <div class="table-responsive" ng-show="vm.warehouseSelected !== undefined && vm.cellarList !== undefined && vm.cellarPendingSelected === undefined">
         <div class="row">
             <div class="form-group col-md-12">
+                <h4><b>Pendientes por Aprobación</b></h4>
                 <h4>Sucursal: {{vm.warehouseSubsidiaryName}}</h4>
                 <h5>Bodega: {{vm.warehouseName}}</h5>
             </div>
@@ -500,13 +612,14 @@
     <div class="panel-group table-responsive" ng-show = "vm.cellarPendingSelected !== undefined">
         <div class="row">
             <div class="form-group col-md-12">
+                <h4><b>Pendientes por Aprobación</b></h4>
                 <h4>Sucursal: {{vm.warehouseSubsidiaryName}}</h4>
                 <h5>Bodega: {{vm.warehouseName}}</h5>
             </div>
         </div>
         <div class="panel panel-primary">
             <div class="panel-heading">
-                <h4><b>Ingreso a Bodega Nro: </b>{{vm.seqNumber}}</h4>
+                <h4><b>Ingreso a Bodega Nro: </b>{{vm.cellSeqNumber}}</h4>
                 <div>
                    <p>Factura Nro: {{vm.billNumber}}</p>
                 </div>
@@ -552,13 +665,13 @@
                         <table class="table table-striped">
                             <thead>
                                 <tr>
-                                    <th> Item </th>
-                                    <th> C&oacute;digo </th>
-                                    <th> Descripci&oacute;n </th>
-                                    <th> Cant. </th>
-                                    <th> U. Med. </th>
-                                    <th> V. Unit. </th>
-                                    <th> V. Total. </th>
+                                    <th>Item</th>
+                                    <th>C&oacute;digo</th>
+                                    <th>Descripci&oacute;n</th>
+                                    <th>Cant.</th>
+                                    <th>U. Med.</th>
+                                    <th>V. Unit.</th>
+                                    <th>V. Total.</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -676,6 +789,7 @@
     <div class="table-responsive" ng-show="vm.warehouseSelected !== undefined && vm.clientList !== undefined">
         <div class="row">
             <div class="form-group col-md-12">
+                <h4><b>Consumos Internos</b></h4>
                 <h4>Sucursal: {{vm.warehouseSubsidiaryName}}</h4>
                 <h5>Bodega: {{vm.warehouseName}}</h5>
             </div>
@@ -688,10 +802,10 @@
         <table class="table table-striped">
             <thead>
                 <tr>
-                    <th> C&oacute;digo </th>
-                    <th> Nombre </th>
-                    <th> Tipo ID</th>
-                    <th> No. Identidad </th>
+                    <th>C&oacute;digo</th>
+                    <th>Nombre</th>
+                    <th>Tipo ID</th>
+                    <th>No. Identidad</th>
                 </tr>
             </thead>
             <tbody>
@@ -701,10 +815,10 @@
                     </td>
                 </tr>
                 <tr ng-repeat="clientPreSelect in vm.clientList | orderBy:'name' | filter:searchText">
-                    <td>{{ clientPreSelect.codApp }}</td>
-                    <td>{{ clientPreSelect.name }}</td>
-                    <td>{{ clientPreSelect.typeId }}</td>
-                    <td>{{ clientPreSelect.identification }}</td>
+                    <td>{{clientPreSelect.codApp}}</td>
+                    <td>{{clientPreSelect.name}}</td>
+                    <td>{{clientPreSelect.typeId}}</td>
+                    <td>{{clientPreSelect.identification}}</td>
                     <td>
                         <button type="button" title="Nuevo Consumo" class="btn btn-primary btn-sm" ng-click="vm.clientSelect(clientPreSelect)">
                                 <span class = "glyphicon glyphicon-file" aria-hidden = "true"></span>
@@ -729,6 +843,7 @@
     <div class="table-responsive" ng-show="vm.consumptionList !== undefined">
         <div class="row">
             <div class="form-group col-md-12">
+                <h4><b>Consumos Internos</b></h4>
                 <h4>Sucursal: {{vm.warehouseSubsidiaryName}}</h4>
                 <h5>Bodega: {{vm.warehouseName}}</h5>
             </div>
@@ -759,10 +874,6 @@
                         <button type="button" title="Ver Consumo" class="btn btn-primary btn-sm" ng-click="vm.findConsumptionByClient(consumption)">
                                 <span class = "glyphicon glyphicon-eye-open" aria-hidden = "true"></span>
                         </button>
-                        <!--<button type="button" title="Anular Consumo" class="btn btn-warning btn-sm" ng-click=""
-                                data-toggle="modal" data-target="#modalAnularCsm">
-                                <span class = "glyphicon glyphicon-warning-sign" aria-hidden = "true"></span>
-                        </button>-->
                     </td>
                 </tr>
             </tbody>
@@ -775,177 +886,18 @@
             </div>
         </div>
     </div>
-    <!--SECCIÓN DE CONSULTA DE CONSUMO INDIVIDUAL PARA IMPRIMIR-->
-    <div class="panel-group table-responsive" ng-show="vm.consumptionSelected !== undefined" id="printArea" print-section>
-        <div class="row">
-            <div class="form-group col-md-12">
-                <h4>Sucursal: {{vm.warehouseSubsidiaryName}}</h4>
-                <h5>Bodega: {{vm.warehouseName}}</h5>
-            </div>
-        </div>
-        <div class="panel panel-primary">
-            <div class="panel-heading" print-remove>
-                <h4>M&oacute;dulo Consumo</h4>
-                <div>
-                    <b>Consumo Nro: </b>{{vm.csmSeqNumber}}
-                </div>
-            </div>
-            <div class="panel-body">
-                <div class="row">
-                    <div class="form-group col-md-3">
-                        <label>Consumo:</label>
-                        {{vm.csmSeqNumber}}
-                    </div>
-                    <div class="form-group col-md-3">
-                        <label>C&oacute;digo Cliente:</label>
-                        {{vm.consumptionClientSelected.codApp}}
-                    </div>
-                    <div class="form-group col-md-6">
-                        <label>Nombre:</label>
-                        {{vm.consumptionClientSelected.name}}
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="form-group col-md-4">
-                        <label ng-if="vm.clientSelected.typeId === 'RUC'">RUC:</label>
-                        <label ng-if="vm.clientSelected.typeId === 'CED'">CEDULA:</label>
-                        <label ng-if="vm.clientSelected.typeId === 'PAS'">PASAPORTE:</label>
-                        {{vm.consumptionClientSelected.identification}}
-                    </div>
-                    <div class="form-group col-md-4">
-                        <label>Email:</label>
-                        {{vm.consumptionClientSelected.email}}
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="form-group col-md-6">
-                        <label>Supervisor que Autoriza el Consumo:</label><br/>
-                        {{vm.consumption.nameSupervisor}}
-                    </div>
-                    <div class="form-group col-md-6">
-                        <label>Observaciones:</label><br/>
-                        {{vm.consumption.observation}}
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="panel panel-primary">
-            <div class="panel-heading">
-                <b>Detalle</b>
-            </div>
-            <div class="panel-body table-responsive">
-                <div class="row">
-                    <div class="form-group col-md-12">
-                        <table class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th> Item </th>
-                                    <th> C&oacute;digo </th>
-                                    <th> Descripci&oacute;n </th>
-                                    <th> Cant. </th>
-                                    <th> U. Med. </th>
-                                    <th> V. Unit. </th>
-                                    <th> V. Total. </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr ng-show="vm.consumptionDetails == 0">
-                                    <td colspan="4">
-                                        No hay detalles ingresados
-                                    </td>
-                                </tr>
-                                <tr ng-repeat="detail in vm.consumptionDetails">
-                                    <td>{{$index + 1}}</td>
-                                    <td>{{detail.product.codeIntegridad}}</td>
-                                    <td>{{detail.product.name}}</td>
-                                    <td>{{detail.quantity}}</td>
-                                    <td>{{detail.product.unitOfMeasurementFull}}</td>
-                                    <td>{{detail.costEach}}</td>
-                                    <td>{{detail.total}}</td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td><b>SUBTOTAL: </b></td>
-                                    <td>{{vm.consumption.subTotal}}</td>
-                                    <td> </td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td><b>BASE 0%: </b></td>
-                                    <td>{{vm.consumption.baseNoTaxes}}</td>
-                                    <td> </td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td><b>BASE 12%: </b></td>
-                                    <td>{{vm.consumption.baseTaxes}}</td>
-                                    <td> </td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td><b>IVA: </b></td>
-                                    <td>{{vm.consumption.iva}}</td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td><b>TOTAL: </b></td>
-                                    <td>{{vm.consumption.total}}</td>
-                                    <td></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-            <div class="panel-footer" print-remove>
-                <button print-btn type="button" title = "Imprimir Consumo" class="btn btn-primary btn-sm" print-remove>
-                        <span class = "glyphicon glyphicon-print" aria-hidden = "true"></span>
-                </button>
-                <button type="button" title="Salir" class="btn btn-primary btn-sm"
-                        ng-click="vm.cancelFindConsumption()">
-                        <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
-                </button>
-            </div>
-        </div>
-    </div>
-    <!--FIN DE CONSULTA DE CONSUMO INDIVIDUAL PARA IMPRIMIR-->
+
     <!--SECCIÓN DE CONSUMO DESDE BODEGA-->
     <div class="panel-group table-responsive" ng-show="vm.clientSelected !== undefined">
         <div class="row">
             <div class="form-group col-md-12">
+                <h4><b>Consumos Internos</b></h4>
                 <h4>Sucursal: {{vm.warehouseSubsidiaryName}}</h4>
                 <h5>Bodega: {{vm.warehouseName}}</h5>
             </div>
         </div>
         <div class="panel panel-primary">
             <div class="panel-heading">
-                <h4>M&oacute;dulo Consumo</h4>
                 <div>
                     <b>Consumo Nro: </b>{{vm.csmSeqNumber}}
                 </div>
@@ -1010,14 +962,14 @@
                         <table class="table table-striped">
                             <thead>
                                 <tr>
-                                    <th> Item </th>
-                                    <th> C&oacute;digo </th>
-                                    <th> Descripci&oacute;n </th>
-                                    <th> Cant. </th>
-                                    <th> U. Med. </th>
-                                    <th> V. Unit. </th>
-                                    <th> V. Total. </th>
-                                    <th>
+                                    <th>Item</th>
+                                    <th>C&oacute;digo</th>
+                                    <th>Descripci&oacute;n</th>
+                                    <th>Cant.</th>
+                                    <th>U. Med.</th>
+                                    <th>V. Unit.</th>
+                                    <th>V. Total.</th>
+                                    <th ng-if="vm.newConsumption">
                                         <button type="button" title="Agregar Productos" class="btn btn-primary" ng-click="vm.addProductCsm()"
                                                 data-toggle="modal" data-target="#modalAddProductConsump">
                                                 <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
@@ -1026,12 +978,12 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr ng-show="vm.consumption.items == 0">
+                                <tr ng-show="vm.consumption.detailsConsumption == 0">
                                     <td colspan="4">
                                         No hay detalles ingresados
                                     </td>
                                 </tr>
-                                <tr ng-repeat="detail in vm.consumption.items">
+                                <tr ng-repeat="detail in vm.consumption.detailsConsumption">
                                     <td>{{$index + 1}}</td>
                                     <td>{{detail.product.codeIntegridad}}</td>
                                     <td>{{detail.product.name}}</td>
@@ -1039,7 +991,7 @@
                                     <td>{{detail.product.unitOfMeasurementFull}}</td>
                                     <td>{{detail.costEach}}</td>
                                     <td>{{detail.total}}</td>
-                                    <td>
+                                    <td ng-if="vm.newConsumption">
                                         <button type="button" title="Editar Producto" class="btn btn-primary btn-sm"
                                                 ng-click="vm.editDetailCsm(detail, $index)"
                                                 data-toggle="modal" data-target="#modalAddProductConsump">
@@ -1113,9 +1065,13 @@
             </div>
             <div class="panel-footer">
                 <button type="button" title="Guardar Consumo" class="btn btn-primary btn-sm"
-                        ng-click="vm.saveConsumption(vm.consumption); vm.cancelConsumption()"
+                        ng-click="vm.saveConsumption(vm.consumption)" ng-if="vm.newConsumption"
                         ng-disabled="vm.consumption.total <= 0">
                         <span class="glyphicon glyphicon-floppy-saved" aria-hidden="true"></span>
+                </button>
+                <button type="button" title = "Imprimir Ticket-Consumo" class="btn btn-danger btn-sm"
+                        ng-show="!vm.newConsumption" ng-click="vm.printToCartAndCancelCsm('printMatrixConsumptionId')">
+                        <span class = "glyphicon glyphicon-print" aria-hidden = "true"></span>
                 </button>
                 <button type="button" title="Salir" class="btn btn-primary btn-sm"
                         ng-click="vm.cancelConsumption()">
@@ -1124,6 +1080,59 @@
             </div>
         </div>
     </div>
+
+    <!--IMPRIME TICKET DE CONSUMO-->
+    <div id="printMatrixConsumptionId" ng-show='false'>
+        ------------------------------<br/>
+        <b>CONSUMO No. {{vm.csmSeqNumber}}</b><br/>
+        <b>SUPERVISOR: {{vm.consumption.nameSupervisor}}</b><br/>
+        <b>OBSERVACIONES: {{vm.consumption.observation}}</b><br/>
+        
+        <b>RAZON SOCIAL:</b><br/>
+        <b>{{vm.consumption.client.name}}</b><br/>
+        <b>IDENTIFICACION: {{vm.consumption.client.identification}}</b><br/>
+        <b>FECHA: {{vm.getDateToPrintCsm() | date :  "dd/MM/yyyy"}}</b><br/>
+          
+        <table width="100%">
+            <thead>
+                <tr>
+                    <th align="left">DESCRIP&nbsp;</th>
+                    <th align="left">&nbsp;CANT&nbsp;</th>
+                    <th align="left">&nbsp;P.UNIT</th>
+                    <th align="right">&nbsp;TOTAL</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="detail in vm.consumption.detailsConsumption">
+                    <td align="left">{{detail.product.name}}</td>
+                    <td align="left">&nbsp;{{detail.quantity}}&nbsp;</td>
+                    <td align="left"> &#36;{{detail.costEach}}&nbsp;</td>
+                    <td align="right">&#36;{{detail.total}}</td>
+                </tr>
+            </tbody>
+        </table>
+        <br/>
+        <table width="100%">
+            <tr>
+                <td>SUBTOTAL: &#36;{{vm.consumption.subTotal}}</td>
+            </tr>
+            <tr>
+                <td>BASE 0%: &#36;{{vm.consumption.baseNoTaxes}}</td>
+            </tr>
+            <tr>
+                <td>BASE 12%: &#36;{{vm.consumption.baseTaxes}}</td>
+            </tr>
+            <tr>
+                <td>IVA:   &#36;{{vm.consumption.iva}}</td>
+            </tr>
+            <tr>
+                <td>TOTAL: &#36;{{vm.consumption.total}}</td>
+            </tr>
+        </table>
+        
+        ------------------------------------
+    </div>
+
     <!--MODAL PARA AGREGAR PRODUCTOS A CONSUMIR-->
     <div id="modalAddProductConsump" class="modal fade" role="dialog">
         <div class="modal-dialog">

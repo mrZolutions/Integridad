@@ -9,7 +9,7 @@
  */
 angular.module('integridadUiApp')
   .controller('ReportSalesCtrl', function(_, $localStorage, creditsbillService, billService, eretentionService, 
-                                          paymentService, creditsDebtsService, $location, debtsToPayService) {
+                                          paymentService, creditsDebtsService, $location, debtsToPayService, consumptionService) {
     var vm = this;
     var today = new Date();
     $('#pickerBillDateOne').data("DateTimePicker").date(today);
@@ -167,6 +167,24 @@ angular.module('integridadUiApp')
       var userCliId = $localStorage.user.subsidiary.userClient.id;
 
       billService.getForCashClosureReportAndDate(userCliId, dateOne, dateTwo).then(function(response) {
+        vm.reportList = response;
+        vm.loading = false;
+      }).catch(function(error) {
+        vm.loading = false;
+        vm.error = error.data;
+      });
+    };
+
+    vm.getReportCsmProducts = function() {
+      vm.isProductReportList = '10';
+      vm.reportList = undefined;
+      vm.loading = true;
+      var dateOne = $('#pickerBillDateOne').data("DateTimePicker").date().toDate().getTime();
+      var dateTwo = $('#pickerBillDateTwo').data("DateTimePicker").date().toDate().getTime();
+      dateTwo += 86340000;
+      var userCliId = $localStorage.user.subsidiary.userClient.id;
+
+      consumptionService.getActivesByUserClientAndDates(userCliId, dateOne, dateTwo).then(function(response) {
         vm.reportList = response;
         vm.loading = false;
       }).catch(function(error) {
@@ -358,6 +376,22 @@ angular.module('integridadUiApp')
             CHEQUE_CUENTA: closure.pagoChequeAccount,
             CHEQUE_BANCO: closure.pagoChequeBank,
             CHEQUE_NUMERO: closure.pagoChequeNumber
+          };
+
+          dataReport.push(data);
+        });
+      } else if (vm.isProductReportList === '10') {
+        _.each(vm.reportList, function(consp) {
+          var data = {
+            TIPO: consp.type,
+            CONSUMO_NUM: consp.csmNumberSeq,
+            CODIGO: consp.code,
+            DESCRIPCION: consp.description,
+            CANTIDAD: consp.quantity,
+            VAL_UNITARIO: consp.valUnit,
+            SUBTOTAL: parseFloat(consp.subTotal.toFixed(2)),
+            IVA: parseFloat(consp.iva.toFixed(2)),
+            TOTAL: parseFloat(consp.total.toFixed(2))
           };
 
           dataReport.push(data);

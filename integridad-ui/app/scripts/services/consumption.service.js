@@ -18,4 +18,10 @@ angular
                 return response.data;
             });
         };
+
+        this.getActivesByUserClientAndDates = function(userClientId, dateOne, dateTwo) {
+            return securityService.get('/consumption/rep/' + userClientId + '/' + dateOne + '/' + dateTwo).then(function successCallback(response) {
+                return response.data;
+            });
+        };
 });
