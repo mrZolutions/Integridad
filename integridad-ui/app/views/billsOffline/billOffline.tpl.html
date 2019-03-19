@@ -432,60 +432,31 @@
 
     <!--IMPRIME TICKET FACTURA-->
     <div id="printMatrixBillOfflineId" ng-show='false'>
-        ------------------------------<br/>
-        <b>{{vm.companyData.userClient.name}}</b><br/>
-        <b>RUC: {{vm.companyData.userClient.ruc}}</b><br/>
-        <b>DIRECCION MATRIZ:</b><br/>
-        <b>{{vm.companyData.userClient.address1}} </b></br>
-        <b>TELÉFONO: {{vm.companyData.userClient.phone}}</b><br/>
-        <b>E-MAIL: {{vm.companyData.userClient.email}}</b><br/>
-
-        <b>FACTURA No. {{vm.seqNumber}}</b><br/>
-        <b>CLAVE ACCESO: {{vm.billOffline.claveDeAcceso}}</b><br/>
-
-        <b>RAZON SOCIAL:</b><br/>
-        <b>{{vm.clientSelected.name}}</b><br/>
-        <b>IDENTIFICACION: {{vm.clientSelected.identification}}</b><br/>
-        <b>FECHA: {{vm.getDateToPrint() | date :  "dd/MM/yyyy"}}</b><br/>
-  
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        {{(vm.clientSelected.name).substr(0,18)}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{vm.clientSelected.identification}}<br/>
+        {{vm.getDateToPrint() | date : "dd/MM/yyyy"}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{vm.clientSelected.city}}<br/>
+        {{(vm.clientSelected.address).substr(0,20)}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{vm.clientSelected.celPhone}}<br/>
+        <br/>
+        <br/>
         <table width="100%">
-            <thead>
-                <tr>
-                    <th align="left">DESCRIP&nbsp;</th>
-                    <th align="left">&nbsp;CANT&nbsp;</th>
-                    <th align="left">&nbsp;P.UNIT</th>
-                    <th align="right">&nbsp;TOTAL</th>
-                </tr>
-            </thead>
             <tbody>
                 <tr ng-repeat="detailOffline in vm.billOffline.detailsOffline">
-                    <td align="left">{{detailOffline.product.name}}</td>
-                    <td align="left">&nbsp;{{detailOffline.quantity}}&nbsp;</td>
-                    <td align="left"> &#36;{{detailOffline.costEach}}&nbsp;</td>
-                    <td align="right">&#36;{{detailOffline.total}}</td>
+                    <td>{{detailOffline.quantity}}&nbsp;&nbsp;&nbsp;{{(detailOffline.product.name).substr(0,17)}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#36;{{(detailOffline.costEach).toFixed(2)}}&nbsp;&nbsp;&#36;{{(detailOffline.total).toFixed(2)}}<br></td>
                 </tr>
             </tbody>
         </table>
         <br/>
         <table width="100%">
             <tr>
-                <td>SUBTOTAL: &#36;{{vm.billOffline.subTotal}}</td>
-            </tr>
-            <tr>
-                <td>BASE 0%: &#36;{{vm.billOffline.baseNoTaxes}}</td>
-            </tr>
-            <tr>
-                <td>BASE 12%: &#36;{{vm.billOffline.baseTaxes}}</td>
-            </tr>
-            <tr>
-                <td>IVA:   &#36;{{vm.billOffline.iva}}</td>
-            </tr>
-            <tr>
-                <td>TOTAL: &#36;{{vm.billOffline.total}}</td>
+                <td>S.TOT: &#36;{{(vm.billOffline.subTotal).toFixed(2)}}&nbsp;&nbsp;&nbsp;&nbsp;IVA: &#36;{{(vm.billOffline.iva).toFixed(2)}}&nbsp;&nbsp;&nbsp;&nbsp;TOT: &#36;{{(vm.billOffline.total).toFixed(2)}}</td>
             </tr>
         </table>
-
-        ------------------------------------
     </div>
 
     <!--ANULAR FACTURA-->

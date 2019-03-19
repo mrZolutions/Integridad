@@ -451,7 +451,7 @@ angular.module('integridadUiApp')
         vm.printToCartAndCancel = function(printBillOfflineId) {
             var innerContents = document.getElementById(printBillOfflineId).innerHTML;
             var popupWinindow = window.open('', 'printMatrixBillOfflineId', 'width=300,height=400');
-            popupWinindow.document.write('<html><head><title>printMatrixBillOfflineId</title>');
+            popupWinindow.document.write('<html><head><title></title>');
             popupWinindow.document.write('</head><body>');
             popupWinindow.document.write(innerContents);
             popupWinindow.document.write('</body></html>');
