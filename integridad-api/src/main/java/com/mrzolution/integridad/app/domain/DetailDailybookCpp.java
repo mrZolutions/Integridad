@@ -11,31 +11,31 @@ import lombok.Data;
 
 /**
  *
- * @author mrzolutions-daniel
+ * @author daniel-one
  */
 
 @Entity
 @Data
-public class DetailDailybookCg implements Child {
+public class DetailDailybookCpp implements Child {
     @Id
     @GeneratedValue
     private UUID id;
     
-    private String code;
-    private String name;
+    private String codeConta;
     private String descrip;
+    private String name;
     private String tipo;
-    private double valor;
+    private double baseImponible;
     
     @ManyToOne
-    @JoinColumn(name = "dailybookCg_id")
-    private DailybookCg dailybookCg;
+    @JoinColumn(name = "dailybookCpp_id")
+    private DailybookCpp dailybookCpp;
     
     public void setListsNull() {
     }
     
     public void setFatherListToNull() {
-        dailybookCg.setListsNull();
-        dailybookCg.setFatherListToNull();
+        dailybookCpp.setListsNull();
+        dailybookCpp.setFatherListToNull();
     }
 }

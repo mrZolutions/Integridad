@@ -24,7 +24,7 @@ angular.module('integridadUiApp')
       vm.loading = true;
       var dateOne = $('#pickerBillDateOne').data("DateTimePicker").date().toDate().getTime();
       var dateTwo = $('#pickerBillDateTwo').data("DateTimePicker").date().toDate().getTime();
-      dateTwo += 86340000;
+      dateTwo += 86399000;
       var userCliId = $localStorage.user.subsidiary.userClient.id;
 
       billService.getActivesByUserClientAndDates(userCliId, dateOne, dateTwo).then(function(response) {
@@ -42,7 +42,7 @@ angular.module('integridadUiApp')
       vm.loading = true;
       var dateOne = $('#pickerBillDateOne').data("DateTimePicker").date().toDate().getTime();
       var dateTwo = $('#pickerBillDateTwo').data("DateTimePicker").date().toDate().getTime();
-      dateTwo += 86340000;
+      dateTwo += 86399000;
       var userCliId = $localStorage.user.subsidiary.userClient.id;
 
       billService.getAllByUserClientAndDates(userCliId, dateOne, dateTwo).then(function(response) {
@@ -60,7 +60,7 @@ angular.module('integridadUiApp')
       vm.loading = true;
       var dateOne = $('#pickerBillDateOne').data("DateTimePicker").date().toDate().getTime();
       var dateTwo = $('#pickerBillDateTwo').data("DateTimePicker").date().toDate().getTime();
-      dateTwo += 86340000;
+      dateTwo += 86399000;
       var userCliId = $localStorage.user.subsidiary.userClient.id;
 
       eretentionService.getAllByUserClientAndDates(userCliId, dateOne, dateTwo).then(function(response) {
@@ -77,7 +77,7 @@ angular.module('integridadUiApp')
       vm.reportList = undefined;
       vm.loading = true;
       var dateTwo = $('#pickerBillDateTwo').data("DateTimePicker").date().toDate().getTime();
-      dateTwo += 86340000;
+      dateTwo += 86399000;
       var userCliId = $localStorage.user.subsidiary.userClient.id;
 
       creditsbillService.getAllCreditsOfBillByUserClientId(userCliId, dateTwo).then(function(response) {
@@ -110,7 +110,7 @@ angular.module('integridadUiApp')
       vm.loading = true;
       var dateOne = $('#pickerBillDateOne').data("DateTimePicker").date().toDate().getTime();
       var dateTwo = $('#pickerBillDateTwo').data("DateTimePicker").date().toDate().getTime();
-      dateTwo += 86340000;
+      dateTwo += 86399000;
       var userCliId = $localStorage.user.subsidiary.userClient.id;
 
       paymentService.getAllPaymentsByUserClientIdAndDates(userCliId, dateOne, dateTwo).then(function(response) {
@@ -127,7 +127,7 @@ angular.module('integridadUiApp')
       vm.reportList = undefined;
       vm.loading = true;
       var dateTwo = $('#pickerBillDateTwo').data("DateTimePicker").date().toDate().getTime();
-      dateTwo += 86340000;
+      dateTwo += 86399000;
       var userCliId = $localStorage.user.subsidiary.userClient.id;
 
       creditsDebtsService.getAllCreditsDebtsPendingOfDebtsToPayByUserClientId(userCliId, dateTwo).then(function(response) {
@@ -145,7 +145,7 @@ angular.module('integridadUiApp')
       vm.loading = true;
       var dateOne = $('#pickerBillDateOne').data("DateTimePicker").date().toDate().getTime();
       var dateTwo = $('#pickerBillDateTwo').data("DateTimePicker").date().toDate().getTime();
-      dateTwo += 86340000;
+      dateTwo += 86399000;
       var userCliId = $localStorage.user.subsidiary.userClient.id;
 
       debtsToPayService.getDebtsToPayByUserClientIdAndDates(userCliId, dateOne, dateTwo).then(function(response) {
@@ -163,7 +163,7 @@ angular.module('integridadUiApp')
       vm.loading = true;
       var dateOne = $('#pickerBillDateOne').data("DateTimePicker").date().toDate().getTime();
       var dateTwo = $('#pickerBillDateOne').data("DateTimePicker").date().toDate().getTime();
-      dateTwo += 86340000;
+      dateTwo += 86399000;
       var userCliId = $localStorage.user.subsidiary.userClient.id;
 
       billService.getForCashClosureReportAndDate(userCliId, dateOne, dateTwo).then(function(response) {
@@ -181,7 +181,7 @@ angular.module('integridadUiApp')
       vm.loading = true;
       var dateOne = $('#pickerBillDateOne').data("DateTimePicker").date().toDate().getTime();
       var dateTwo = $('#pickerBillDateTwo').data("DateTimePicker").date().toDate().getTime();
-      dateTwo += 86340000;
+      dateTwo += 86399000;
       var userCliId = $localStorage.user.subsidiary.userClient.id;
 
       consumptionService.getActivesByUserClientAndDates(userCliId, dateOne, dateTwo).then(function(response) {

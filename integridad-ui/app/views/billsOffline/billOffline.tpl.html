@@ -219,7 +219,7 @@
                     <div class="form-group col-md-6">
                         <b>DESCUENTO &#37;: </b>
                         <input type="text" ng-change="vm.reCalculateTotal()" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
-                               ng-model="vm.billOffline.discountPercentage" class="form-control" maxlength="9" ng-change="vm.getFechaCobro()" ng-disabled="!vm.newBillOffline">
+                               ng-model="vm.billOffline.discountPercentage" class="form-control" maxlength="9" ng-disabled="!vm.newBillOffline">
                     </div>
                 </div>
                 <div class="row" ng-if="vm.companyData.userClient.espTemp != 'A-1'" print-if="vm.companyData.userClient.espTemp != 'A-1'">
@@ -308,39 +308,6 @@
                                     <td></td>
                                     <td><b>DESCUENTO: </b></td>
                                     <td>{{(vm.billOffline.discount).toFixed(4)}}</td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td><b>BASE 0%: </b></td>
-                                    <td>{{(vm.billOffline.baseNoTaxes).toFixed(4)}}</td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td><b>BASE 12%: </b></td>
-                                    <td>{{(vm.billOffline.baseTaxes).toFixed(4)}}</td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td><b>IVA: </b></td>
-                                    <td>{{(vm.billOffline.iva).toFixed(4)}}</td>
                                     <td></td>
                                 </tr>
                                 <tr>
@@ -454,7 +421,10 @@
         <br/>
         <table width="100%">
             <tr>
-                <td>S.TOT: &#36;{{(vm.billOffline.subTotal).toFixed(2)}}&nbsp;&nbsp;&nbsp;&nbsp;IVA: &#36;{{(vm.billOffline.iva).toFixed(2)}}&nbsp;&nbsp;&nbsp;&nbsp;TOT: &#36;{{(vm.billOffline.total).toFixed(2)}}</td>
+                <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TOT: &#36;{{(vm.billOffline.total).toFixed(2)}}
+                </td>
             </tr>
         </table>
     </div>

@@ -68,7 +68,7 @@ public class DailybookCgServices {
         DailybookCg saved = dailybookCgRepository.save(dailybookCg);
         
         Cashier cashier = cashierRepository.findOne(dailybookCg.getUserIntegridad().getCashier().getId());
-        cashier.setDebtsNumberSeq(cashier.getDailyCgNumberSeq() + 1);
+        cashier.setDailyCgNumberSeq(cashier.getDailyCgNumberSeq() + 1);
         cashierRepository.save(cashier);
         
         detailDailybookCg.forEach(detail -> {

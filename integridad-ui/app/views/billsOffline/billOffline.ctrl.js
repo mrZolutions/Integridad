@@ -163,19 +163,16 @@ angular.module('integridadUiApp')
                 };
                 if (detail.product.iva) {
                     vm.billOffline.baseTaxes += parseFloat((detail.total).toFixed(4));
-                    vm.billOffline.iva = parseFloat((parseFloat(vm.billOffline.iva) + (parseFloat(tot) * 0.12)).toFixed(4));
+                    vm.billOffline.iva = 0.0;
                     if (vm.billOffline.discountPercentage) {
                         discountWithIva = parseFloat((parseFloat(discountWithIva) + (parseFloat(detail.total) * parseFloat((vm.billOffline.discountPercentage) / 100))).toFixed(4));
                     };
                 } else {
                     vm.billOffline.baseNoTaxes += parseFloat((detail.total).toFixed(4));
-                    vm.billOffline.ivaZero = parseFloat((parseFloat(vm.billOffline.ivaZero) + parseFloat(tot)).toFixed(4));
+                    vm.billOffline.ivaZero = 0.0;
                     if (vm.billOffline.discountPercentage) {
                         discountWithNoIva = parseFloat((parseFloat(discountWithNoIva) + ((parseFloat(vm.billOffline.discountPercentage) / 100) * parseFloat(detail.total))).toFixed(4));
                     };
-                };
-                if (detail.product.ice) {
-                    vm.billOffline.ice = parseFloat((parseFloat(vm.billOffline.ice) + (parseFloat(tot) * 0.10)).toFixed(4));
                 };
             });
             if (vm.billOffline.discountPercentage) {
@@ -187,18 +184,14 @@ angular.module('integridadUiApp')
             } else {
                 vm.billOffline.discount = 0;
             };
-            vm.impuestoICE.base_imponible = parseFloat((vm.billOffline.subTotal).toFixed(4));
+            vm.impuestoICE.base_imponible = 0.0;
             vm.impuestoIVA.base_imponible = parseFloat((vm.billOffline.baseTaxes).toFixed(4));
             vm.impuestoIVAZero.base_imponible = parseFloat((vm.billOffline.baseNoTaxes).toFixed(4));
             vm.impuestoICE.valor = vm.billOffline.ice;
             vm.impuestoIVA.valor = vm.billOffline.iva;
             vm.impuestoIVAZero.valor = 0.0;
-            vm.billOffline.baseTaxes = parseFloat((vm.billOffline.baseTaxes).toFixed(4));
-            vm.billOffline.baseNoTaxes = parseFloat((vm.billOffline.baseNoTaxes).toFixed(4));
             vm.billOffline.total = parseFloat((parseFloat(vm.billOffline.baseTaxes)
-                +  parseFloat(vm.billOffline.baseNoTaxes)
-                +  parseFloat(vm.billOffline.iva)
-                +  parseFloat(vm.billOffline.ice)).toFixed(2));
+                +  parseFloat(vm.billOffline.baseNoTaxes)).toFixed(2));
         };
             
         vm.acceptNewSeq = function() {
