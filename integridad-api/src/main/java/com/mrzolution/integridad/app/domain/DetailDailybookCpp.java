@@ -26,6 +26,8 @@ public class DetailDailybookCpp implements Child {
     private String name;
     private String tipo;
     private double baseImponible;
+    private String deber;
+    private String haber;
     
     @ManyToOne
     @JoinColumn(name = "dailybookCpp_id")

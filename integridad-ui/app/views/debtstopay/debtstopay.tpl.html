@@ -63,11 +63,11 @@
                         <button type = "button" title = "Ingreso de Cuentas por Pagar" class = "btn btn-primary btn-sm" ng-click = "vm.providerSelect(provider)">
                                 <span class = "glyphicon glyphicon-file" aria-hidden = "true"></span>
                         </button>
-                        <button type = "button" title = "Pagos y Abonos" class = "btn btn-primary btn-sm" ng-click = "vm.providerDebts(provider)">
-                                <span class = "glyphicon glyphicon-usd" aria-hidden = "true"></span>
-                        </button>
                         <button type = "button" title = "Consultar Cuentas por Pagar" class = "btn btn-primary btn-sm" ng-click = "vm.consultProviderDebts(provider)">
                                 <span class = "glyphicon glyphicon-search" aria-hidden = "true"></span>
+                        </button>
+                        <button type = "button" title = "Pagos y Abonos" class = "btn btn-primary btn-sm" ng-click = "vm.providerDebts(provider)">
+                                <span class = "glyphicon glyphicon-usd" aria-hidden = "true"></span>
                         </button>
                     </td>
                 </tr>
@@ -217,6 +217,7 @@
                 </div>
                 <div class="row table-responsive" ng-show="vm.cuentaContableList !== undefined">
                     <div class="form-group col-md-12">
+                        <input ng-model="searchTextTaxes" class="form-control" placeholder="Buscar">
                         <table class="table table-striped">
                             <thead>
                                 <tr>
@@ -774,7 +775,7 @@
                             <th>No. Factura</th>
                             <th>Fecha</th>
                             <th>Total</th>
-                            <th>Saldo</th>
+                            <th>Pendiente</th>
                         </tr>
                     </thead>
                     <tbody>

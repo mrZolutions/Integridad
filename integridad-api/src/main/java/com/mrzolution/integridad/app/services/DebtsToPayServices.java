@@ -90,6 +90,17 @@ public class DebtsToPayServices {
         return debts;
     }
     
+    //Selección de Debts con Saldo (Crédito) por Id de Proveedor
+    public Iterable<DebtsToPay> getDebtsToPayWithSaldoByProviderId(UUID id) {
+        log.info("DebtsToPayServices getDebtsToPayWithSaldoByProviderId: {}", id);
+        Iterable<DebtsToPay> debts = debtsToPayRepository.findDebtsToPayWithSaldoByProviderId(id);
+        debts.forEach(debt -> {
+            debt.setListsNull();
+            debt.setFatherListToNull();
+        });
+        return debts;
+    }
+    
     //Creación de los Debts
     public DebtsToPay createDebtsToPay(DebtsToPay debtsToPay) throws BadRequestException {
         List<DetailDebtsToPay> detailDebtsToPay = debtsToPay.getDetailDebtsToPay();

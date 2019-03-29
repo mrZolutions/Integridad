@@ -174,6 +174,7 @@
           <th>Cliente</th>
           <th>RUC/CI</th>
           <th>No. Factura</th>
+          <th>No. Autorizaci&oacute;n</th>
           <th>Estado</th>
           <th>OTI</th>
           <th>Base 12%</th>
@@ -195,6 +196,7 @@
           <td>{{data.clientName}}</td>
           <td>{{data.ruc}}</td>
           <td>{{data.billNumber}}</td>
+          <td>{{data.authorizationNumber}}</td>
           <td>{{data.status}}</td>
           <td>{{data.oti}}</td>
           <td>{{data.status === 'ACTIVA' ? data.baseTaxes.toFixed(2) : ''}}</td>

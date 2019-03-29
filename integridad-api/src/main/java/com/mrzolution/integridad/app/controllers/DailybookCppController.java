@@ -31,7 +31,7 @@ public class DailybookCppController {
         log.info("DailybookCppController getDailybookCppById: {}", id);
 	DailybookCpp response = null;
 	try {
-            response = service.getDailybookCgById(id);
+            response = service.getDailybookCppById(id);
 	} catch (BadRequestException e) {
             log.error("DailybookCppController getDailybookCppById Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
@@ -39,12 +39,25 @@ public class DailybookCppController {
         return new ResponseEntity<DailybookCpp>(response, HttpStatus.ACCEPTED);
     }
     
+    @RequestMapping(method = RequestMethod.GET, value="/provider/{id}")
+    public ResponseEntity getDailybookCppByProviderId(@PathVariable("id") UUID id) {
+        log.info("DailybookCgController getDailybookCppByProviderId: {}", id);
+        Iterable<DailybookCpp> response = null;
+        try {
+            response = service.getDailybookCppByProviderId(id);
+        } catch (BadRequestException e) {
+            log.error("DailybookCppController getDailybookCppByProviderId Exception thrown: {}", e.getMessage());
+	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+        return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
+    }
+    
     @RequestMapping(method = RequestMethod.GET, value="/userclient/{id}")
     public ResponseEntity getDailybookCppByUserClientId(@PathVariable("id") UUID id) {
         log.info("DailybookCgController getDailybookCppByUserClientId: {}", id);
         Iterable<DailybookCpp> response = null;
         try {
-            response = service.getDailybookCgByUserClientId(id);
+            response = service.getDailybookCppByUserClientId(id);
         } catch (BadRequestException e) {
             log.error("DailybookCppController getDailybookCppByUserClientId Exception thrown: {}", e.getMessage());
 	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());

@@ -19,6 +19,12 @@ angular
       });
     };
 
+    this.getDebtsToPayWithSaldoByProviderId = function(id) {
+      return securityService.get('/debts/debts/provider/credit/' + id).then(function successCallback(response) {
+        return response.data;
+      });
+    };
+
     this.getById = function(id) {
       return securityService.get('/debts/' + id).then(function successCallback(response) {
         return response.data;

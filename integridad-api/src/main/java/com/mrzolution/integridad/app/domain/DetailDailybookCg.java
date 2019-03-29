@@ -21,11 +21,13 @@ public class DetailDailybookCg implements Child {
     @GeneratedValue
     private UUID id;
     
-    private String code;
-    private String name;
+    private String codeConta;
     private String descrip;
+    private String name;
     private String tipo;
-    private double valor;
+    private double baseImponible;
+    private String deber;
+    private String haber;
     
     @ManyToOne
     @JoinColumn(name = "dailybookCg_id")

@@ -45,6 +45,7 @@ public class DebtsToPay {
     private long retentionDateCreated;
     private double retentionTotal;
     private String observacion;
+    private String estado;
 
     @ManyToOne
     @JoinColumn(name = "provider_id")

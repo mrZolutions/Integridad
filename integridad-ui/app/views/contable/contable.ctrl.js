@@ -9,13 +9,14 @@
  */
 angular.module('integridadUiApp')
     .controller('ContableCtrl', function(_, $localStorage, cuentaContableService, providerService, eretentionService,
-                                            utilSeqService, creditsDebtsService, contableService, $location) {
+                                            utilSeqService, debtsToPayService, contableService, $location) {
     var vm = this;
     vm.error = undefined;
     vm.success = undefined;
     vm.loading = false;
     
     vm.aux = undefined;
+    vm.userData = $localStorage.user;
     vm.retentionId = undefined;
     vm.retentionNumber = undefined;
     vm.retentionDateCreated = undefined;
@@ -75,6 +76,9 @@ angular.module('integridadUiApp')
         vm.dailybookCppList = undefined;
         
         vm.contable = undefined;
+        vm.debtsToPayList = undefined;
+        vm.debtsBillNumber = undefined;
+        vm.debtsTotal = undefined;
         vm.provider = undefined;
         vm.providerId = undefined;
         vm.providerRuc = undefined;
@@ -207,6 +211,11 @@ angular.module('integridadUiApp')
             vm.dailybookCg.detailDailybookCg.splice(vm.indexEdit, 1);
             vm.indexEdit = undefined;
         };
+        if (vm.item.tipo == 'DEBITO (D)') {
+            vm.item.deber = vm.item.baseImponible;
+        } else if (vm.item.tipo == 'CREDITO (C)') {
+            vm.item.haber = vm.item.baseImponible;
+        };
         vm.dailybookCg.detailDailybookCg.push(vm.item);
         vm.item = undefined;
         vm.cuenta = undefined;
@@ -227,7 +236,7 @@ angular.module('integridadUiApp')
         if (vm.dailybookCg) {
             _.each (vm.dailybookCg.detailDailybookCg, function(detail) {
                 if (detail.tipo === 'DEBITO (D)') {
-                    totalDebitoCg = (parseFloat(totalDebitoCg) + parseFloat(detail.valor)).toFixed(2);
+                    totalDebitoCg = (parseFloat(totalDebitoCg) + parseFloat(detail.baseImponible)).toFixed(2);
                 };
             });
         };
@@ -240,7 +249,7 @@ angular.module('integridadUiApp')
         if (vm.dailybookCg) {
             _.each(vm.dailybookCg.detailDailybookCg, function(detail) {
                 if (detail.tipo === 'CREDITO (C)') {
-                    totalCreditoCg = (parseFloat(totalCreditoCg) + parseFloat(detail.valor)).toFixed(2);
+                    totalCreditoCg = (parseFloat(totalCreditoCg) + parseFloat(detail.baseImponible)).toFixed(2);
                 };
             });
         };
@@ -260,6 +269,7 @@ angular.module('integridadUiApp')
         vm.dailybookCg.typeContab = vm.typeContab;
         vm.dailybookCg.dailyCgSeq = vm.dailyCgSeq;
         vm.dailybookCg.dailyCgStringSeq = vm.dailyCgStringSeq;
+        vm.dailybookCg.total = vm.saldoDebitoCg;
         vm.dailybookCg.dateRecordBook = $('#pickerDateRecordBookCg').data("DateTimePicker").date().toDate().getTime();
         contableService.createDailybookCg(vm.dailybookCg).then(function(response) {
             vm.dailybookCgNew = false;
@@ -286,12 +296,40 @@ angular.module('integridadUiApp')
         var today = new Date();
         $('#pickerDateRecordBookCg').data("DateTimePicker").date(today);
         vm.dailybookCppNew = true;
-        vm.generalDetailCpp = vm.putGeneralDetailCpp();
     };
 
-    vm.putGeneralDetailCpp = function() {
-        var genDetail = vm.providerName + ' ' + 'Fc' + ' ';
-        return genDetail; 
+    vm.consultDailybookCpp = function(provider) {
+        vm.success = undefined;
+        vm.loading = true;
+        contableService.getDailybookCppByProviderId(provider.id).then(function(response) {
+            vm.dailybookCppList = response;
+            vm.loading = false;
+        }).catch(function(error) {
+            vm.loading = false;
+            vm.error = error.data;
+        });
+    };
+
+    vm.getDebtsToPayByProvider = function() {
+        vm.loading = true;
+        debtsToPayService.getAllDebtsToPayByProviderId(vm.providerId).then(function(response) {
+            vm.debtsToPayList = response;
+            vm.loading = false;
+        }).catch(function(error) {
+            vm.loading = false;
+            vm.error = error.data;
+        });
+    };
+
+    vm.debtsToPaySelected = function(debtsToPay) {
+        vm.loading = true;
+        $('#modalFindRetention').modal('hide');
+        vm.debtsBillNumber = debtsToPay.billNumber;
+        vm.debtsTotal = debtsToPay.total;
+        vm.generalDetailCpp = vm.providerName + ' ' + 'Fc' + ' ' + vm.debtsBillNumber;
+        vm.dailybookCpp.billNumber = vm.debtsBillNumber;
+        vm.dailybookCpp.total = vm.debtsTotal;
+        vm.loading = false;
     };
 
     vm.getRetentionByProvider = function() {
@@ -307,7 +345,7 @@ angular.module('integridadUiApp')
 
     vm.retentionSelected = function(retention) {
         vm.loading = true;
-        $('#modalFindRetention').modal('hide');
+        $('#modalShowDebtsToPay').modal('hide');
         vm.retentionList = undefined;
         vm.retentionId = retention.id;
         vm.retentionNumber = retention.stringSeq;
@@ -352,8 +390,8 @@ angular.module('integridadUiApp')
     };
 
     vm.selectCuentasCpp = function(cuenta) {
-        vm.item = undefined;
-        vm.item = {
+        vm.itema = undefined;
+        vm.itema = {
             codeConta: cuenta.code,
             descrip: cuenta.description,
             name: cuenta.name
@@ -365,14 +403,19 @@ angular.module('integridadUiApp')
             vm.dailybookCpp.detailDailybookCpp.splice(vm.indexEdit, 1);
             vm.indexEdit = undefined;
         };
-        vm.dailybookCpp.detailDailybookCpp.push(vm.item);
-        vm.item = undefined;
+        if (vm.itema.tipo == 'DEBITO (D)') {
+            vm.itema.deber = vm.itema.baseImponible;
+        } else if (vm.itema.tipo == 'CREDITO (C)') {
+            vm.itema.haber = vm.itema.baseImponible;
+        };
+        vm.dailybookCpp.detailDailybookCpp.push(vm.itema);
+        vm.itema = undefined;
         vm.cuenta = undefined;
         vm.cuentaContableList = undefined;
     };
 
     vm.editItemCpp = function(index) {
-        vm.item = angular.copy(vm.dailybookCpp.detailDailybookCpp[index]);
+        vm.itema = angular.copy(vm.dailybookCpp.detailDailybookCpp[index]);
         vm.indexEdit = index;
     };
   
@@ -620,11 +663,11 @@ angular.module('integridadUiApp')
 
         vm.itemRetentionFuente = undefined;
         vm.itemRetentionFuente = { codeConta: vm.retenFteCodeContable, descrip: vm.retenFteDescContable,
-                                           tipo: 'CREDITO (C)', baseImponible: vm.retenFteValor, name: vm.retenFteNombContable
+                                    tipo: 'CREDITO (C)', baseImponible: vm.retenFteValor, name: vm.retenFteNombContable, haber: vm.retenFteValor
                                  };
         vm.itemRetentionIVA = undefined;
         vm.itemRetentionIVA = { codeConta: vm.retenIvaCodeContable, descrip: vm.retenIvaDescContable,
-                                        tipo: 'CREDITO (C)', baseImponible: vm.retenIvaValor, name: vm.retenIvaNombContable
+                                tipo: 'CREDITO (C)', baseImponible: vm.retenIvaValor, name: vm.retenIvaNombContable, haber: vm.retenIvaValor
                               };
   
         if (vm.retenCodeFuente != null) {
@@ -669,14 +712,16 @@ angular.module('integridadUiApp')
             descrip: 'IVA EN COMPRAS',
             tipo: 'DEBITO (D)',
             baseImponible: vm.subIva,
-            name: vm.generalDetailCpp
+            name: vm.generalDetailCpp,
+            deber: vm.subIva
         };
         vm.itemProvider = {
             codeConta: vm.provContable,
             descrip: 'PROVEEDORES LOCALES',
             tipo: 'CREDITO (C)',
             baseImponible: vm.dailybookCpp.total - vm.retentionTotal,
-            name: vm.generalDetailCpp
+            name: vm.generalDetailCpp,
+            haber: vm.dailybookCpp.total - vm.retentionTotal
         };
         if (vm.item.baseImponible == 0) {
             vm.dailybookCpp.detailDailybookCpp.push(vm.itemProvider);
@@ -686,9 +731,81 @@ angular.module('integridadUiApp')
         };
     };
 
-    
-    vm.addDailybookCpp = function(provider) {
-        
+    vm.saveDailybookCpp = function() {
+        vm.loading = true;
+        vm.providerSelected = undefined;
+        vm.dailybookCpp.codeTypeContab = vm.selectedTypeBook;
+        vm.dailybookCpp.typeContab = vm.typeContab;
+        vm.dailybookCpp.dailyCppSeq = vm.dailyCppSeq;
+        vm.dailybookCpp.dailyCppStringSeq = vm.dailyCppStringSeq;
+        vm.dailybookCpp.clientProvName = vm.providerName;
+        vm.dailybookCpp.generalDetail = vm.generalDetailCpp;
+        vm.dailybookCpp.iva = vm.subIva;
+        vm.dailybookCpp.subTotalDoce = vm.subTotalDoce;
+        vm.dailybookCpp.subTotalCero = vm.subTotalCero;
+        vm.dailybookCpp.dateRecordBook = $('#pickerDateRecordBookCpp').data("DateTimePicker").date().toDate().getTime();
+        if (vm.retentionId == null) {
+            vm.dailybookCpp.retentionId = 'SIN RETENCIÓN';
+            vm.dailybookCpp.retentionNumber = 0;
+            vm.dailybookCpp.retentionDateCreated = 0;
+            vm.dailybookCpp.retentionTotal = 0.0;
+        } else {
+            vm.dailybookCpp.retentionId = vm.retentionId;
+            vm.dailybookCpp.retentionNumber = vm.retentionNumber;
+            vm.dailybookCpp.retentionDateCreated = vm.retentionDateCreated;
+            vm.dailybookCpp.retentionTotal = vm.retentionTotal;
+        };
+        contableService.createDailybookCpp(vm.dailybookCpp).then(function(response) {
+            vm.dailybookCppNew = false;
+            vm.dailybookCppCreated = response;
+            $localStorage.user.cashier.dailyCppNumberSeq = vm.dailybookCpp.dailyCppSeq;
+            vm.dailiedCpp = true;
+            vm.loading = false;
+        }).catch(function(error) {
+            vm.loading = false;
+            vm.error = error.data;
+        });
+    };
+
+    vm.getTotalDebitoCppCreated = function() {
+        var totalDebito = 0.0;
+        if (vm.dailybookCppCreated) {
+            _.each(vm.dailybookCppCreated.detailDailybookCpp, function(detail) {
+                if (detail.tipo === 'DEBITO (D)') {
+                    totalDebito = (parseFloat(totalDebito) + parseFloat(detail.baseImponible)).toFixed(2);
+                };
+            });
+        };
+        return totalDebito;
+    };
+
+    vm.getTotalCreditoCppCreated = function() {
+        var totalCredito = 0.0;
+        if (vm.dailybookCppCreated) {
+            _.each(vm.dailybookCppCreated.detailDailybookCpp, function(detail) {
+                if (detail.tipo === 'CREDITO (C)') {
+                    totalCredito = (parseFloat(totalCredito) + parseFloat(detail.baseImponible)).toFixed(2);
+                };
+            });
+        };
+        return totalCredito;
+    };
+
+    vm.cancelDailybookCppCreated = function() {
+        vm.dailybookCppCreated = undefined;
+    };
+
+    vm.dailybookCppSelected = function(dailybookCpp) {
+        vm.loading = true;
+        vm.dailybookCppList = undefined;
+        contableService.getDailybookCppById(dailybookCpp.id).then(function(response) {
+            vm.dailybookCppCreated = response;
+            vm.dailybookCpp = response;
+            vm.loading = false;
+        }).catch(function(error) {
+            vm.loading = false;
+            vm.error = error.data;
+        });
     };
 
     vm.exit = function() {

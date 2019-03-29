@@ -30,7 +30,7 @@ public class DailybookCppServices {
     CashierRepository cashierRepository;
     
     //Selecciona Diario CxP por Id
-    public DailybookCpp getDailybookCgById(UUID id) {
+    public DailybookCpp getDailybookCppById(UUID id) {
         log.info("DailybookCppServices getDailybookCppById: {}", id);
         DailybookCpp retrieved = dailybookCppRepository.findOne(id);
         if (retrieved != null) {
@@ -43,9 +43,20 @@ public class DailybookCppServices {
     }
     
     //Selecciona todos los Diarios CxP por UserClientId
-    public Iterable<DailybookCpp> getDailybookCgByUserClientId(UUID userClientId) {
+    public Iterable<DailybookCpp> getDailybookCppByUserClientId(UUID userClientId) {
         log.info("DailybookCgServices getDailybookCgByUserClientId: {}", userClientId);
         Iterable<DailybookCpp> dailys = dailybookCppRepository.findDailybookCppByUserClientId(userClientId);
+        dailys.forEach(daily -> {
+            daily.setListsNull();
+            daily.setFatherListToNull();
+        });
+        return dailys;
+    }
+    
+    //Selecciona todos los Diarios CxP por ProviderId
+    public Iterable<DailybookCpp> getDailybookCppByProviderId(UUID Id) {
+        log.info("DailybookCgServices getDailybookCgByProviderId: {}", Id);
+        Iterable<DailybookCpp> dailys = dailybookCppRepository.findDailybookCppByProviderId(Id);
         dailys.forEach(daily -> {
             daily.setListsNull();
             daily.setFatherListToNull();

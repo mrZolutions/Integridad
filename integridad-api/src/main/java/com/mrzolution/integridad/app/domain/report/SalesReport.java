@@ -9,6 +9,7 @@ public class SalesReport {
     private String clientName;
     private String ruc;
     private String billNumber;
+    private String authorizationNumber;
     private String status;
     private String oti;
     private Double baseTaxes;
@@ -22,12 +23,13 @@ public class SalesReport {
     private String subsidiary;
     private String userName;
 
-    public SalesReport(String date, String clientCode, String clientName, String ruc, String billNumber, String status, String oti, Double baseTaxes, Double discount, Double baseNoTaxes, Double iva, Double total, String endDate, String cashier, String warehouse, String subsidiary, String userName) {
+    public SalesReport(String date, String clientCode, String clientName, String ruc, String billNumber, String authorizationNumber, String status, String oti, Double baseTaxes, Double discount, Double baseNoTaxes, Double iva, Double total, String endDate, String cashier, String warehouse, String subsidiary, String userName) {
         this.date = date;
         this.clientCode = clientCode;
         this.clientName = clientName;
         this.ruc = ruc;
         this.billNumber = billNumber;
+        this.authorizationNumber = authorizationNumber;
         this.status = status;
         this.oti = oti;
         this.baseTaxes = baseTaxes;

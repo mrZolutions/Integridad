@@ -43,6 +43,12 @@ angular
             });
         };
 
+        this.getDailybookCppByProviderId = function(id) {
+            return securityService.get('/contable/dailycpp/provider/' + id).then(function successCallback(response) {
+                return response.data;
+            });
+        };
+
         this.getDailybookCppByUserClientId = function(userclientId) {
             return securityService.get('/contable/dailycpp/userclient/' + userclientId).then(function successCallback(response) {
                 return response.data;

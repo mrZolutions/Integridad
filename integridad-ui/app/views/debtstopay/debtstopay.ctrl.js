@@ -237,6 +237,7 @@ angular.module('integridadUiApp')
       vm.retenTaxTypeFuente = undefined;
       vm.retenTaxTypeIva = undefined;
       vm.debtsToPaySelectedToUpdate = undefined;
+      vm.status = undefined;
       vm.loading = true;
       vm.success = undefined;
       vm.error = undefined;
@@ -289,14 +290,14 @@ angular.module('integridadUiApp')
       });
     };
 
-    //Busqueda de las Cuentas por Pagar por Proveedor
+    //Busqueda de las Cuentas Crédito por Pagar por Proveedor
     vm.providerDebts = function(provider) {
       vm.loading = true;
       vm.success = undefined;
       vm.providerName = provider.name;
       vm.providerRuc = provider.ruc;
       vm.providerId = provider.id;
-      debtsToPayService.getAllDebtsToPayByProviderId(provider.id).then(function(response) {
+      debtsToPayService.getDebtsToPayWithSaldoByProviderId(provider.id).then(function(response) {
         vm.debtsToPayList = response;
         vm.loading = false;
       }).catch(function(error) {
@@ -575,11 +576,13 @@ angular.module('integridadUiApp')
       if (vm.update === false) {
         vm.itemRetentionFuente = undefined;
         vm.itemRetentionFuente = { codigo_contable: vm.retenFteCodeContable, desc_contable: vm.retenFteDescContable, 
-                                   tipo: 'CREDITO (C)', base_imponible: vm.retenFteValor, nomb_contable: vm.retenFteNombContable
+                                   tipo: 'CREDITO (C)', base_imponible: vm.retenFteValor, nomb_contable: vm.retenFteNombContable,
+                                   haber: vm.retenFteValor
                                  };
         vm.itemRetentionIVA = undefined;
         vm.itemRetentionIVA = { codigo_contable: vm.retenIvaCodeContable, desc_contable: vm.retenIvaDescContable,
-                                tipo: 'CREDITO (C)', base_imponible: vm.retenIvaValor, nomb_contable: vm.retenIvaNombContable
+                                tipo: 'CREDITO (C)', base_imponible: vm.retenIvaValor, nomb_contable: vm.retenIvaNombContable,
+                                haber: vm.retenIvaValor
                               };
 
         if (vm.retenCodeFuente != null) {
@@ -594,11 +597,13 @@ angular.module('integridadUiApp')
       } else {
         vm.itemRetentionFuenteToUpdate = undefined;
         vm.itemRetentionFuenteToUpdate = { codigo: vm.retenCodeFuente, codeConta: vm.retenFteCodeContable,
-                                           descrip: vm.retenFteDescContable, tipo: 'CREDITO (C)', baseImponible: vm.retenFteValor, name: vm.retenFteNombContable
+                                           descrip: vm.retenFteDescContable, tipo: 'CREDITO (C)', baseImponible: vm.retenFteValor, name: vm.retenFteNombContable,
+                                           haber: vm.retenFteValor
                                          };
         vm.itemRetentionIVAToUpdate = undefined;
         vm.itemRetentionIVAToUpdate = { codigo: vm.retenCodeIva, codeConta: vm.retenIvaCodeContable,
-                                        descrip: vm.retenIvaDescContable, tipo: 'CREDITO (C)', baseImponible: vm.retenIvaValor, name: vm.retenIvaNombContable
+                                        descrip: vm.retenIvaDescContable, tipo: 'CREDITO (C)', baseImponible: vm.retenIvaValor, name: vm.retenIvaNombContable,
+                                        haber: vm.retenIvaValor
                                       };
 
         if (vm.retenCodeFuente != null) {
@@ -645,14 +650,16 @@ angular.module('integridadUiApp')
           desc_contable: 'IVA EN COMPRAS',
           tipo: 'DEBITO (D)',
           base_imponible: vm.subIva,
-          nomb_contable: 'DEFINIDA PARA TODAS LAS COMPRAS'
+          nomb_contable: 'DEFINIDA PARA TODAS LAS COMPRAS',
+          deber: vm.subIva
         };
         vm.itemProvider = {
           codigo_contable: vm.provContable,
           desc_contable: 'PROVEEDORES LOCALES',
           tipo: 'CREDITO (C)',
           base_imponible: vm.debtsToPay.total - vm.retentionTotal,
-          nomb_contable: 'DEFINIDA PARA TODOS LOS PROVEEDORES'
+          nomb_contable: 'DEFINIDA PARA TODOS LOS PROVEEDORES',
+          haber: vm.debtsToPay.total - vm.retentionTotal
         };
         vm.debtsToPay.items.push(vm.itemIva);
         vm.debtsToPay.items.push(vm.itemProvider);
@@ -717,6 +724,11 @@ angular.module('integridadUiApp')
         vm.debtsToPay.items.splice(vm.indexEdit, 1);
         vm.indexEdit = undefined;
       };
+      if (vm.item.tipo == 'DEBITO (D)') {
+        vm.item.deber = vm.item.base_imponible;
+      } else if (vm.item.tipo == 'CREDITO (C)') {
+        vm.item.haber = vm.item.base_imponible;
+      };
       vm.debtsToPay.items.push(vm.item);
       vm.item = undefined;
       vm.debtsToPay.typeTaxes = undefined;
@@ -771,22 +783,25 @@ angular.module('integridadUiApp')
       _.each(vm.pagos, function(pago){
         payed += parseFloat(pago.total);
       });
-      vm.pagos;
       if (vm.medio.medio === 'efectivo' || vm.medio.medio === 'dinero_electronico_ec' || vm.medio.medio === 'transferencia') {
         vm.medio.payForm = '20 - OTROS CON UTILIZACION DEL SISTEMA FINANCIERO';
-        vm.medio.total = vm.aux;
+        vm.medio.total = parseFloat((vm.debtsToPay.total - payed).toFixed(4));
+        vm.status = 'PAGADO';
       };
       if (vm.medio.medio === 'credito') {
         vm.medio.payForm = '20 - OTROS CON UTILIZACION DEL SISTEMA FINANCIERO';
-        vm.medio.total = (vm.debtsToPay.total - payed).toFixed(4);
+        vm.medio.total = parseFloat((vm.debtsToPay.total - payed).toFixed(4));
+        vm.status = 'PENDIENTE';
       };
       if (vm.medio.medio === 'cheque' || vm.medio.medio === 'cheque_posfechado') {
         vm.medio.payForm = '20 - OTROS CON UTILIZACION DEL SISTEMA FINANCIERO';
-        vm.medio.total = (vm.debtsToPay.total - payed).toFixed(4);
+        vm.medio.total = parseFloat((vm.debtsToPay.total - payed).toFixed(4));
+        vm.status = 'PAGADO';
       };
       if (vm.medio.medio === 'tarjeta_credito' || vm.medio.medio === 'tarjeta_debito') {
         vm.medio.payForm = '19 - TARJETA DE CREDITO';
-        vm.medio.total = (vm.debtsToPay.total - payed).toFixed(4);
+        vm.medio.total = parseFloat((vm.debtsToPay.total - payed).toFixed(4));
+        vm.status = 'PAGADO';
       };
     };
 
@@ -924,7 +939,12 @@ angular.module('integridadUiApp')
       vm.debtsToPay.subTotalCero = vm.subTotalCero;
       vm.debtsToPay.debtsSeq = vm.seqNumber;
       vm.debtsToPay.ejercicio = vm.ejercicio;
-      vm.debtsToPay.saldo = vm.debtsToPay.total;
+      if (vm.status == 'PENDIENTE') {
+        vm.debtsToPay.saldo = vm.debtsToPay.total;
+      } else {
+        vm.debtsToPay.saldo = 0.0;
+      };
+      vm.debtsToPay.estado = vm.status;
       vm.debtsToPay.retentionId = vm.retentionId;
       vm.debtsToPay.retentionNumber = vm.retentionNumber;
       vm.debtsToPay.retentionDateCreated = vm.retentionDateCreated;
@@ -950,7 +970,7 @@ angular.module('integridadUiApp')
           vm.totalDebtsToPay = (parseFloat(vm.totalDebtsToPay) + parseFloat(detail.baseImponible)).toFixed(2);
         });
         vm.debtsToPayCreated = true;
-        vm.success = 'Factura Ingresada con Exito';
+        vm.success = 'Factura de Compra Ingresada con Exito';
         vm.loading = false;
       }).catch(function(error) {
         vm.loading = false;
@@ -1104,6 +1124,11 @@ angular.module('integridadUiApp')
         vm.debtsToPay.detailDebtsToPay.splice(vm.indexEdit, 1);
         vm.indexEdit = undefined;
       };
+      if (vm.item.tipo == 'DEBITO (D)') {
+        vm.item.deber = vm.item.baseImponible;
+      } else if (vm.item.tipo == 'CREDITO (C)') {
+        vm.item.haber = vm.item.baseImponible;
+      };
       vm.debtsToPay.detailDebtsToPay.push(vm.item);
       vm.item = undefined;
       vm.debtsToPay.typeTaxes = undefined;
@@ -1142,14 +1167,16 @@ angular.module('integridadUiApp')
           descrip: 'IVA EN COMPRAS',
           tipo: 'DEBITO (D)',
           baseImponible: vm.subIva,
-          name: 'DEFINIDA PARA TODAS LAS COMPRAS'
+          name: 'DEFINIDA PARA TODAS LAS COMPRAS',
+          deber: vm.subIva
         };
         vm.itemProvider = {
           codeConta: vm.provContable,
           descrip: 'PROVEEDORES LOCALES',
           tipo: 'CREDITO (C)',
           baseImponible: vm.debtsToPay.total - vm.retentionTotal,
-          name: 'DEFINIDA PARA TODOS LOS PROVEEDORES'
+          name: 'DEFINIDA PARA TODOS LOS PROVEEDORES',
+          haber: vm.debtsToPay.total - vm.retentionTotal
         };
         vm.debtsToPay.detailDebtsToPay.push(vm.itemIva);
         vm.debtsToPay.detailDebtsToPay.push(vm.itemProvider);
@@ -1162,7 +1189,8 @@ angular.module('integridadUiApp')
           descrip: 'PROVEEDORES LOCALES',
           tipo: 'CREDITO (C)',
           baseImponible: vm.debtsToPay.total - vm.retentionTotal,
-          name: 'DEFINIDA PARA TODOS LOS PROVEEDORES'
+          name: 'DEFINIDA PARA TODOS LOS PROVEEDORES',
+          haber: vm.debtsToPay.total - vm.retentionTotal
         };
         vm.debtsToPay.detailDebtsToPay.push(vm.itemProvider);
       };
