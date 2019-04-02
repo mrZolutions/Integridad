@@ -6,6 +6,6 @@ import lombok.Data;
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class DetalleAdicional {
-    private String observacion;
-    private String observacion1;
+    private String SR;
+    private String SR1;
 }

@@ -63,6 +63,10 @@ angular.module('integridadUiApp')
         vm.subTotalCeroCg = undefined;
         vm.totalCg = undefined;
         vm.dailybookCgList = undefined;
+        vm.templateDailybookCg = undefined;
+        vm.dailybookCgCreated = undefined;
+        vm.dailybookCgTemp = undefined;
+        vm.generalDetailCg = undefined;
         
         //Cuentas por Pagar
         vm.dailybookCppNew = undefined;
@@ -74,6 +78,8 @@ angular.module('integridadUiApp')
         vm.subTotalCeroCpp = undefined;
         vm.totalCpp = undefined;
         vm.dailybookCppList = undefined;
+        vm.dailybookCppCreated = undefined;
+        vm.generalDetailCpp = undefined;
         
         vm.contable = undefined;
         vm.debtsToPayList = undefined;
@@ -167,20 +173,24 @@ angular.module('integridadUiApp')
     };
 
     vm.cancel = function() {
-        vm.selectedTypeBook = undefined;
-        vm.dailybookCgList = undefined;
-        vm.dailybookCppList = undefined;
+        _activate();
     };
 
 // Funciones para el Diario de Contabilidad General
     vm.addDailybookCg = function() {
-        vm.dailybookCgList = undefined;
+        vm.templateDailybookCg = false;
         _getDailyCgSeqNumber();
         _initializeDailybookCg();
         var today = new Date();
         $('#pickerDateRecordBookCg').data("DateTimePicker").date(today);
         vm.dailybookCgTemp = true;
         vm.dailybookCgNew = true;
+    };
+
+    vm.putGeneralDetailCg = function() {
+        if (vm.generalDetailCg == null || vm.generalDetailCg == undefined || vm.generalDetailCg == '') {
+            vm.generalDetailCg = vm.dailybookCg.clientProvName + ' No: ' + vm.dailybookCg.dailyCgStringUserSeq;
+        };
     };
 
     vm.getCuentasContablesCg = function() {
@@ -265,17 +275,58 @@ angular.module('integridadUiApp')
 
     vm.saveDailybookCg = function() {
         vm.loading = true;
+        vm.dailybookCgTemp = false;
         vm.dailybookCg.codeTypeContab = vm.selectedTypeBook;
         vm.dailybookCg.typeContab = vm.typeContab;
         vm.dailybookCg.dailyCgSeq = vm.dailyCgSeq;
         vm.dailybookCg.dailyCgStringSeq = vm.dailyCgStringSeq;
-        vm.dailybookCg.total = vm.saldoDebitoCg;
+        vm.dailybookCg.generalDetail = vm.generalDetailCg;
         vm.dailybookCg.dateRecordBook = $('#pickerDateRecordBookCg').data("DateTimePicker").date().toDate().getTime();
         contableService.createDailybookCg(vm.dailybookCg).then(function(response) {
             vm.dailybookCgNew = false;
             vm.dailybookCgCreated = response;
             $localStorage.user.cashier.dailyCgNumberSeq = vm.dailybookCg.dailyCgSeq;
             vm.dailiedCg = true;
+            vm.loading = false;
+        }).catch(function(error) {
+            vm.loading = false;
+            vm.error = error.data;
+        });
+    };
+
+    vm.getTotalDebitoCgCreated = function() {
+        var totalDebito = 0.0;
+        if (vm.dailybookCgCreated) {
+            _.each(vm.dailybookCgCreated.detailDailybookCg, function(detail) {
+                if (detail.tipo === 'DEBITO (D)') {
+                    totalDebito = (parseFloat(totalDebito) + parseFloat(detail.baseImponible)).toFixed(2);
+                };
+            });
+        };
+        return totalDebito;
+    };
+
+    vm.getTotalCreditoCgCreated = function() {
+        var totalCredito = 0.0;
+        if (vm.dailybookCgCreated) {
+            _.each(vm.dailybookCgCreated.detailDailybookCg, function(detail) {
+                if (detail.tipo === 'CREDITO (C)') {
+                    totalCredito = (parseFloat(totalCredito) + parseFloat(detail.baseImponible)).toFixed(2);
+                };
+            });
+        };
+        return totalCredito;
+    };
+
+    vm.cancelDailybookCgCreated = function() {
+        _activate();
+    };
+
+    vm.dailybookCgSelected = function(dailybookCg) {
+        vm.loading = true;
+        contableService.getDailybookCgById(dailybookCg.id).then(function(response) {
+            vm.dailybookCgCreated = response;
+            vm.dailybookCg = response;
             vm.loading = false;
         }).catch(function(error) {
             vm.loading = false;
@@ -323,13 +374,19 @@ angular.module('integridadUiApp')
 
     vm.debtsToPaySelected = function(debtsToPay) {
         vm.loading = true;
-        $('#modalFindRetention').modal('hide');
+        $('#modalShowDebtsToPay').modal('hide');
         vm.debtsBillNumber = debtsToPay.billNumber;
         vm.debtsTotal = debtsToPay.total;
         vm.generalDetailCpp = vm.providerName + ' ' + 'Fc' + ' ' + vm.debtsBillNumber;
         vm.dailybookCpp.billNumber = vm.debtsBillNumber;
         vm.dailybookCpp.total = vm.debtsTotal;
         vm.loading = false;
+    };
+
+    vm.putGeneralDetailCpp = function() {
+        if (vm.generalDetailCpp == null || vm.generalDetailCpp == undefined || vm.generalDetailCpp == '') {
+            vm.generalDetailCpp = vm.providerName + ' ' + 'Fc' + ' ' + vm.dailybookCpp.billNumber;
+        };
     };
 
     vm.getRetentionByProvider = function() {
@@ -345,7 +402,7 @@ angular.module('integridadUiApp')
 
     vm.retentionSelected = function(retention) {
         vm.loading = true;
-        $('#modalShowDebtsToPay').modal('hide');
+        $('#modalFindRetention').modal('hide');
         vm.retentionList = undefined;
         vm.retentionId = retention.id;
         vm.retentionNumber = retention.stringSeq;
@@ -792,7 +849,7 @@ angular.module('integridadUiApp')
     };
 
     vm.cancelDailybookCppCreated = function() {
-        vm.dailybookCppCreated = undefined;
+        _activate();
     };
 
     vm.dailybookCppSelected = function(dailybookCpp) {

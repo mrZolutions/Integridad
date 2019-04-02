@@ -672,7 +672,8 @@ angular.module('integridadUiApp')
           desc_contable: 'PROVEEDORES LOCALES',
           tipo: 'CREDITO (C)',
           base_imponible: vm.debtsToPay.total - vm.retentionTotal,
-          nomb_contable: 'DEFINIDA PARA TODOS LOS PROVEEDORES'
+          nomb_contable: 'DEFINIDA PARA TODOS LOS PROVEEDORES',
+          haber: vm.debtsToPay.total - vm.retentionTotal
         };
         vm.debtsToPay.items.push(vm.itemProvider);
       };
@@ -805,7 +806,7 @@ angular.module('integridadUiApp')
       };
     };
 
-    //Funciones que calculas la fecha de Cobro
+    //Funciones que calculan la fecha de Cobro
     vm.getFechaCobro = function() {
       var d = new Date();
       vm.medio.fechaCobro = _addDays(d, parseInt(vm.medio.chequeDiasPlazo));
@@ -939,7 +940,7 @@ angular.module('integridadUiApp')
       vm.debtsToPay.subTotalCero = vm.subTotalCero;
       vm.debtsToPay.debtsSeq = vm.seqNumber;
       vm.debtsToPay.ejercicio = vm.ejercicio;
-      if (vm.status == 'PENDIENTE') {
+      if (vm.status === 'PENDIENTE') {
         vm.debtsToPay.saldo = vm.debtsToPay.total;
       } else {
         vm.debtsToPay.saldo = 0.0;
@@ -1254,7 +1255,7 @@ angular.module('integridadUiApp')
       _activate();
     };
 
-    //Fin de sección
+//Fin de sección
 
     vm.exit = function() {
       $location.path('/home');

@@ -82,12 +82,18 @@ angular
       } else if (user.cashier.subsidiary.userClient.espTemp === 'A-2') {
         req.comprador.email = req.comprador.email + ', ferrelozada@yahoo.com';
         var informAdicional = {
-          observ: 'OBSERVACIÓN: ' + bill.observation
+          observ: ' ' + bill.observation
         };
         req.informacion_adicional = informAdicional;
       } else if (user.cashier.subsidiary.userClient.espTemp === 'A-3') {
         var informAdicional = {
-          observ: 'OBSERVACIÓN: ' + bill.observation
+          observ: ' ' + bill.observation
+        };
+        req.informacion_adicional = informAdicional;
+      } else if (user.cashier.subsidiary.userClient.espTemp === 'A-4') {
+        req.comprador.email = req.comprador.email + ', facturacion@catedral.com.ec';
+        var informAdicional = {
+          observ: ' ' + bill.observation
         };
         req.informacion_adicional = informAdicional;
       };

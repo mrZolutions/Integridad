@@ -25,6 +25,8 @@ public class DailybookCg {
     
     private boolean active;
     private long dateRecordBook;
+    private String clientProvName;
+    private String billNumber;
     private String codeTypeContab;
     private String typeContab;
     private String generalDetail;

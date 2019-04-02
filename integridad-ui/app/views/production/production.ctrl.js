@@ -51,22 +51,22 @@ angular.module('integridadUiApp')
 
         vm.impuestosTotales = [];
         vm.impuestoICE = {
-            "base_imponible":0.0,
-            "valor":0.0,
-            "codigo":"3",
-            "codigo_porcentaje":2
+            "base_imponible": 0.0,
+            "valor": 0.0,
+            "codigo": "3",
+            "codigo_porcentaje": 2
         };
         vm.impuestoIVA = {
-            "base_imponible":0.0,
-            "valor":0.0,
-            "codigo":"2",
-            "codigo_porcentaje":2
+            "base_imponible": 0.0,
+            "valor": 0.0,
+            "codigo": "2",
+            "codigo_porcentaje": 2
         };
         vm.impuestoIVAZero = {
-            "base_imponible":0.0,
-            "valor":0.0,
-            "codigo":"2",
-            "codigo_porcentaje":0
+            "base_imponible": 0.0,
+            "valor": 0.0,
+            "codigo": "2",
+            "codigo_porcentaje": 0
         };
         vm.usrCliId = $localStorage.user.subsidiary.userClient.id;
         vm.userCode = $localStorage.user.userType.code;

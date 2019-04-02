@@ -53,6 +53,7 @@ angular.module('integridadUiApp')
     function _activate() {
       vm.error = undefined;
       vm.aux = undefined;
+      vm.estado = undefined;
       vm.newBill = true;
       vm.billed = false;
       vm.clientSelected = undefined;
@@ -71,22 +72,22 @@ angular.module('integridadUiApp')
       vm.impuestosTotales = [];
       vm.items = [];
       vm.impuestoICE = {
-        "base_imponible":0.0,
-        "valor":0.0,
-        "codigo":"3",
-        "codigo_porcentaje":"2"
+        "base_imponible": 0.0,
+        "valor": 0.0,
+        "codigo": "3",
+        "codigo_porcentaje": "2"
       };
       vm.impuestoIVA = {
-        "base_imponible":0.0,
-        "valor":0.0,
-        "codigo":"2",
-        "codigo_porcentaje":"2"
+        "base_imponible": 0.0,
+        "valor": 0.0,
+        "codigo": "2",
+        "codigo_porcentaje": "2"
       };
       vm.impuestoIVAZero = {
-        "base_imponible":0.0,
-        "valor":0.0,
-        "codigo":"2",
-        "codigo_porcentaje":"0"
+        "base_imponible": 0.0,
+        "valor": 0.0,
+        "codigo": "2",
+        "codigo_porcentaje": "0"
       };
       vm.medio = {};
       vm.pagos = [];
@@ -200,7 +201,6 @@ angular.module('integridadUiApp')
         +  parseFloat(vm.bill.baseNoTaxes)
         +  parseFloat(vm.bill.iva)
         +  parseFloat(vm.bill.ice)).toFixed(2));
-      vm.bill.saldo = (vm.bill.total).toString();
     };
 
     function _addDays(date, days) {
@@ -356,7 +356,8 @@ angular.module('integridadUiApp')
     vm.editDetail = function(detail, index) {
       vm.indexDetail = index;
       vm.productToAdd = detail.product;
-      vm.quantity = detail.quantity
+      vm.quantity = detail.quantity;
+      vm.adicional = detail.adicional;
       _getTotalSubtotal();
     };
 
@@ -425,6 +426,7 @@ angular.module('integridadUiApp')
       var statusCredits = 'PENDIENTE';
       var total = parseFloat((vm.bill.total / vm.medio.creditoNumeroPagos).toFixed(4));
       vm.seqNumberCredits = vm.seqNumber;
+      vm.estado = statusCredits;
       for (var i = 1; i <= parseInt(vm.medio.creditoNumeroPagos); i++) {
         var credito = {
           payNumber: i,
@@ -605,7 +607,7 @@ angular.module('integridadUiApp')
         var impuestos = [];
         var impuesto = {};
         var detaAdic = {
-          "observacion": det.adicional
+          "SR": det.adicional
         };
         
         if (det.product.iva) {
@@ -668,13 +670,18 @@ angular.module('integridadUiApp')
         if (vm.bill.discountPercentage === undefined) {
           vm.bill.discountPercentage = 0;
         };
-        var obj = JSON.parse(resp.data);
-        //var obj = {clave_acceso: '1234560', id:'id12345'};
+        //var obj = JSON.parse(resp.data);
+        var obj = {clave_acceso: '1234560', id:'id12345'};
         if (obj.errors === undefined) {
           vm.bill.claveDeAcceso = obj.clave_acceso;
           vm.bill.idSri = obj.id;
           vm.bill.stringSeq = vm.seqNumber;
           vm.bill.priceType = vm.priceType.name;
+          if (vm.estado === 'PENDIENTE') {
+            vm.bill.saldo = (vm.bill.total).toString();
+          } else {
+            vm.bill.saldo = '0.0';
+          };
           // 1 is typeDocument Bill **************!!!
           billService.create(vm.bill, 1).then(function(respBill) {
             vm.billed = true;

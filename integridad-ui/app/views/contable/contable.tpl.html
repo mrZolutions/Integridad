@@ -49,7 +49,7 @@
     </div>
     <!--FIN SECCIÓN DE SELECCIÓN DE TIPO DE DIARIO-->
     
-    <div class="table-responsive" ng-show="vm.selectedTypeBook === '1' && vm.dailybookCgList !== undefined">
+    <div class="table-responsive" ng-show="vm.selectedTypeBook === '1' && vm.templateDailybookCg === undefinded && vm.dailybookCgCreated === undefinded && vm.dailybookCgList !== undefined">
         <div class="panel panel-primary">
             <div class="panel-heading">
                 <b>DIARIO DE CONTABILIDAD GENERAL</b>
@@ -85,14 +85,14 @@
                             <td>{{dailyCg.generalDetail}}</td>
                             <td>
                                 <button type = "button" title = "Ver Diario de Contabilidad General" class = "btn btn-primary btn-sm" 
-                                        ng-click = "">
+                                        ng-click = "vm.dailybookCgSelected(dailyCg)">
                                         <span class = "glyphicon glyphicon-eye-open" aria-hidden = "true"></span>
                                 </button>
-                                <button type = "button" title = "Anular Diario de Contabilidad General" 
+                                <!--<button type = "button" title = "Anular Diario de Contabilidad General" 
                                         class = "btn btn-warning btn-sm" ng-click = "vm.deactivateDailyBookCg = dailyCg"
                                         data-toggle = "modal" data-target = "#modalAnularDailyBookCg">
                                         <span class = "glyphicon glyphicon-warning-sign" aria-hidden = "true"></span>
-                                </button>
+                                </button>-->
                             </td>
                         </tr>
                     </tbody>
@@ -130,16 +130,37 @@
                         </script>
                     </div>
                     <div class="form-group col-md-6">
-                        <label>Ingrese el N&uacute;mero de Diario:</label><br/>
+                        <label>Facturas: </label><br/>
+                        <input type="text" ng-model="vm.dailybookCg.billNumber" class="form-control">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-3">
+                        <label>Valor Total: </label><br/>
+                        <input type="text" ng-model="vm.dailybookCg.total" class="form-control">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label>Cliente / Proveedor: </label><br/>
+                        <input type="text" ng-model="vm.dailybookCg.clientProvName" class="form-control">
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label>N&uacute;mero de Diario:</label><br/>
                         <input type="text" ng-model="vm.dailybookCg.dailyCgStringUserSeq" 
                                onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
                                class="form-control" maxlength="6"/>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="form-group col-md-12">
+                    <div class="form-group col-md-11">
                         <b>DETALLE GENERAL:</b>
-                        <input type="text" ng-model="vm.dailybookCg.generalDetail" class="form-control">
+                        <input type="text" ng-model="vm.generalDetailCg" class="form-control">
+                    </div>
+                    <div class="form-group col-md-1">
+                        <br/>
+                        <button type = "button" title = "Llenar Detalle General" class = "btn btn-primary btn-sm"
+                                ng-click = "vm.putGeneralDetailCg()" ng-show="vm.generalDetailCg == undefinded || vm.generalDetailCg == ''">
+                                <span class = "glyphicon glyphicon-ok" aria-hidden = "true"></span>
+                        </button>
                     </div>
                 </div>
                 <div class="row">
@@ -217,8 +238,8 @@
                                 </tr>
                                 <tr>
                                     <td></td>
-                                    <td>DEBITO: {{vm.getTotalDebitoCg()}}</td>
-                                    <td>CREDITO: {{vm.getTotalCreditoCg()}}</td>
+                                    <td>DEBE: {{vm.getTotalDebitoCg()}}</td>
+                                    <td>HABER: {{vm.getTotalCreditoCg()}}</td>
                                     <td><b>SALDO: {{vm.getTotalSaldoCg()}}</b></td>
                                     <td></td>
                                 </tr>
@@ -229,17 +250,126 @@
             </div>
             <div class="panel-footer">
                 <button type="button" title="Guardar Diario" class="btn btn-primary btn-sm" ng-if="vm.dailybookCgNew"
-                        ng-click="vm.saveDailybookCg()">
+                        ng-click="vm.saveDailybookCg()" ng-disabled = "vm.dailybookCg.detailDailybookCg == 0 || vm.getTotalSaldoCg() != 0.00">
                         <span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>
                 </button>
-                <button type="button" title="Imprimir Diario" class="btn btn-danger btn-sm" ng-show="vm.dailiedCg == true"
-                        ng-click="vm.dailybookCgTemp = undefined; vm.selectedTypeBook = undefined">
-                        <span class = "glyphicon glyphicon-print" aria-hidden = "true"></span>
-                </button>
                 <button type="button" title="Volver" class="btn btn-primary btn-sm"
-                        ng-click="vm.dailybookCgTemp = undefined; vm.selectedTypeBook = undefined">
+                        ng-click="vm.cancel()">
                         <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
                 </button>
+            </div>
+        </div>
+    </div>
+
+    <!--SECCIÓN DE IMPRESIÓN DE DIARIO DE CUENTAS POR PAGAR-->
+    <div class="table-responsive" ng-show="vm.dailybookCgCreated" id="printArea" print-section>
+        <div class="panel panel-primary">
+            <div class="panel-body">
+                <div class="row">
+                    <div class="form-group col-md-12 ">
+                        <table width="100%">
+                            <tr>
+                                <td width="20%" align="center"><img src="images/{{vm.userData.subsidiary.userClient.logo}}" ><br></td>
+                                <td width="80%" rowspan="2">
+                                    <div style="padding:0px 20px;">
+                                        <b>{{vm.userData.subsidiary.userClient.name}}</b><br/>
+                                        <b>{{vm.userData.subsidiary.userClient.address1}}</b><br/>
+                                        <b>Tel&eacute;fono: {{vm.userData.subsidiary.phone}} - {{vm.userData.subsidiary.userClient.email}}</b><br/>
+                                        <b>RUC: {{vm.userData.subsidiary.userClient.ruc}}</b>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-12" align="center">
+                        <label>COMPROBANTE DE DIARIO Nro: </label>
+                        {{vm.dailybookCg.dailyCgStringSeq}}
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label>Fecha: </label>
+                        {{vm.dailybookCg.dateRecordBook | date : "dd-MM-yyyy"}}
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label>Facturas: </label>
+                        {{vm.dailybookCg.billNumber}}
+                    </div>
+                    <div class="form-group col-md-8">
+                        <label>Cliente/Proveedor: </label>
+                        {{vm.dailybookCg.clientProvName}}
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label>Monto: </label>
+                        {{vm.dailybookCg.total}}
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label>Detalle: </label>
+                        {{vm.dailybookCg.generalDetail}}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-12">
+                        <table width="100%" border="1">
+                            <tr>
+                                <td><b>CUENTA</b></td>
+                                <td><b>NOMBRE CUENTA</b></td>
+                                <td><b>DESCRIPCIÓN</b></td>
+                                <td><b>DEBE</b></td>
+                                <td><b>HABER</b></td>
+                            </tr>
+                            <tr ng-repeat="detail in vm.dailybookCg.detailDailybookCg">
+                                <td>{{detail.codeConta}}</td>
+                                <td>{{detail.descrip}}</td>
+                                <td>{{detail.name}}</td>
+                                <td>{{detail.deber}}</td>
+                                <td>{{detail.haber}}</td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td><b>TOTALES:</b></td>
+                                <td>{{vm.getTotalDebitoCgCreated()}}</td>
+                                <td>{{vm.getTotalCreditoCgCreated()}}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <table width="100%">
+                            <tr>
+                                <td width="33%" align="center">
+                                    <br/><br/>
+                                    _____________<br/>
+                                    AUTORIZADO
+                                </td>
+                                <td width="33%" align="center">
+                                    <br/><br/>
+                                    ___________<br/>
+                                    CONTADOR
+                                </td>
+                                <td width="33%" align="center">
+                                    <br/><br/>
+                                    ________________<br/>
+                                    CONTABILIZADO
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="row" print-remove>
+                    <div class="form-group col-md-12">
+                        <button print-btn type="button" title = "Imprimir Comprobante de Diario" class="btn btn-primary btn-sm"
+                                ng-click="vm.cancelDailybookCgCreated()">
+                                <span class = "glyphicon glyphicon-print" aria-hidden = "true"></span>
+                        </button>
+                        <button type="button" title = "Salir" class="btn btn-primary btn-sm"
+                                ng-click="vm.cancelDailybookCgCreated()">
+                                <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -359,7 +489,7 @@
                     <td>{{provider.ruc_type}} - {{provider.ruc}}</td>
                     <td>
                         <button type = "button" title = "Nuevo Diario Cuentas por Pagar" class = "btn btn-primary btn-sm" ng-click = "vm.providerSelect(provider)">
-                                <span class = "glyphicon glyphicon-file" aria-hidden = "true"></span>
+                                <span class = "glyphicon glyphicon-book" aria-hidden = "true"></span>
                         </button>
                         <button type = "button" title = "Consultar Diario Cuentas por Pagar" class = "btn btn-primary btn-sm" ng-click = "vm.consultDailybookCpp(provider)">
                                 <span class = "glyphicon glyphicon-search" aria-hidden = "true"></span>
@@ -370,7 +500,7 @@
         </table>
         <div class="row">
             <div class="form-group col-md-12">
-                <button type="button" title="Salir" class="btn btn-danger btn-sm"
+                <button type="button" title="Salir" class="btn btn-primary btn-sm"
                         ng-click="vm.cancel()">
                         <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
                 </button>
@@ -412,11 +542,11 @@
                                         ng-click = "vm.dailybookCppSelected(dailyCpp)">
                                         <span class = "glyphicon glyphicon-eye-open" aria-hidden = "true"></span>
                                 </button>
-                                <button type = "button" title = "Anular Diario de Cuentas por Pagar" 
+                                <!--<button type = "button" title = "Anular Diario de Cuentas por Pagar" 
                                         class = "btn btn-warning btn-sm" ng-click = "vm.deactivateDailyBookCpp = dailyCpp"
                                         data-toggle = "modal" data-target = "#modalAnularDailyBookCg">
                                         <span class = "glyphicon glyphicon-warning-sign" aria-hidden = "true"></span>
-                                </button>
+                                </button>-->
                             </td>
                         </tr>
                     </tbody>
@@ -449,12 +579,13 @@
                     <div class="form-group col-md-1">
                         <br/>
                         <button type = "button" title = "Buscar y Agregar Factura" class = "btn btn-primary btn-sm"
-                                ng-click = "vm.getDebtsToPayByProvider()" data-toggle = "modal" data-target = "#modalShowDebtsToPay">
+                                ng-click = "vm.getDebtsToPayByProvider()" data-toggle = "modal" 
+                                data-target = "#modalShowDebtsToPay" ng-show = "vm.dailybookCpp.billNumber == undefinded || vm.dailybookCpp.billNumber == ''">
                                 <span class = "glyphicon glyphicon-search" aria-hidden = "true"></span>
                         </button>
                     </div>
                     <div class="form-group col-md-3">
-                        <label>Nunero de Factura: </label><br/>
+                        <label>N&uacute;mero de Factura: </label><br/>
                         <input type="text" ng-model="vm.dailybookCpp.billNumber" class="form-control" maxlength="17">
                     </div>
                     <div class="form-group col-md-3">
@@ -483,9 +614,16 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="form-group col-md-12">
+                    <div class="form-group col-md-11">
                         <b>DETALLE GENERAL:</b>
                         <input type="text" ng-model="vm.generalDetailCpp" class="form-control">
+                    </div>
+                    <div class="form-group col-md-1">
+                        <br/>
+                        <button type = "button" title = "Llenar Detalle General" class = "btn btn-primary btn-sm"
+                                ng-click = "vm.putGeneralDetailCpp()" ng-show="vm.generalDetailCpp == undefinded || vm.generalDetailCpp == ''">
+                                <span class = "glyphicon glyphicon-ok" aria-hidden = "true"></span>
+                        </button>
                     </div>
                 </div>
                 <div class="row">
@@ -575,8 +713,8 @@
                                 </tr>
                                 <tr>
                                     <td></td>
-                                    <td>DEBITO: {{vm.getTotalDebitoCpp()}}</td>
-                                    <td>CREDITO: {{vm.getTotalCreditoCpp()}}</td>
+                                    <td>DEBE: {{vm.getTotalDebitoCpp()}}</td>
+                                    <td>HABER: {{vm.getTotalCreditoCpp()}}</td>
                                     <td><b>SALDO: {{vm.getTotalSaldoCpp()}}</b></td>
                                     <td></td>
                                 </tr>
@@ -587,11 +725,11 @@
             </div>
             <div class="panel-footer">
                 <button type="button" title="Guardar Diario" class="btn btn-primary btn-sm" ng-if="vm.dailybookCppNew"
-                        ng-click="vm.saveDailybookCpp()">
+                        ng-click="vm.saveDailybookCpp()" ng-disabled = "vm.dailybookCpp.detailDailybookCpp == 0 || vm.getTotalSaldoCpp() != 0.00">
                         <span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>
                 </button>
                 <button type="button" title="Volver" class="btn btn-primary btn-sm"
-                        ng-click="vm.selectedTypeBook = undefined; vm.providerSelected = undefined">
+                        ng-click="vm.cancel()">
                         <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
                 </button>
             </div>
@@ -606,8 +744,8 @@
                     <div class="form-group col-md-12 ">
                         <table width="100%">
                             <tr>
-                                <td width="30%" align="center"><img src="images/{{vm.userData.subsidiary.userClient.logo}}" ><br></td>
-                                <td width="70%" rowspan="2">
+                                <td width="20%" align="center"><img src="images/{{vm.userData.subsidiary.userClient.logo}}" ><br></td>
+                                <td width="80%" rowspan="2">
                                     <div style="padding:0px 20px;">
                                         <b>{{vm.userData.subsidiary.userClient.name}}</b><br/>
                                         <b>{{vm.userData.subsidiary.userClient.address1}}</b><br/>
@@ -620,7 +758,7 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="form-group col-md-12">
+                    <div class="form-group col-md-12" align="center">
                         <label>COMPROBANTE DE DIARIO Nro: </label>
                         {{vm.dailybookCpp.dailyCppStringSeq}}
                     </div>
