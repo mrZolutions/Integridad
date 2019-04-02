@@ -63,6 +63,8 @@ angular
         req.informacion_adicional = infoAdicional;
       } else if (user.cashier.subsidiary.userClient.espTemp === 'A-2') {
         req.comprador.email = req.comprador.email + ', ferrelozada@yahoo.com';
+      } else if (user.cashier.subsidiary.userClient.espTemp === 'A-4') {
+        req.comprador.email = req.comprador.email + ', facturacion@catedral.com.ec';
       };
       return req;
     };
