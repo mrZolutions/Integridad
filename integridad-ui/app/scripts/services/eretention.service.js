@@ -82,6 +82,12 @@ angular
       });
     };
 
+    this.getRetentionsByProviderIdAndDocumentNumber = function(id, seq) {
+      return securityService.get('/retention/retention/provider/docnum/' + id + '/' + seq).then(function successCallback(response) {
+        return response.data;
+      });
+    };
+
     this.getAllByUserClientAndDates = function(userClientId, dateOne, dateTwo) {
       return securityService.get('/retention/rep/retentions/' + userClientId + '/' + dateOne + '/' + dateTwo).then(function successCallback(response) {
         return response.data;

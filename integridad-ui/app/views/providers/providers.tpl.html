@@ -99,9 +99,9 @@
       <table class="table table-striped">
         <thead>
           <tr>
-            <th> Nro. Retenci&oacute;n </th>
-            <th> Fecha </th>
-            <th> Nro. Factura </th>
+            <th>Nro. Retenci&oacute;n</th>
+            <th>Fecha</th>
+            <th>Nro. Factura</th>
             <th></th>
           </tr>
         </thead>
@@ -156,8 +156,8 @@
       </div>
       <div class="row">
         <div class="form-group col-md-6">
-          <label>Tipo de Identificacion: </label>
-          <select ng-options="item.code as item.name for item in [{code:'CED', name:'CEDULA'}, {code:'RUC', name:'RUC'}, {code:'PAS', name:'PASAPORTE'}]"
+          <label>Tipo de Identificaci&oacute;n: </label>
+          <select ng-options="item.code as item.name for item in [{code:'CED', name:'CEDULA'}, {code:'RUC', name:'RUC'}]"
                   ng-model="vm.provider.ruc_type" class="form-control">
           </select>
         </div>
@@ -171,11 +171,11 @@
             <input type="text" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
                    ng-model="vm.provider.ruc" class="form-control" maxlength="13">
         </div>
-        <div class="form-group col-md-6" ng-show="vm.provider.ruc_type === 'PAS'">
+        <!--<div class="form-group col-md-6" ng-show="vm.provider.ruc_type === 'PAS'">
             <label>Pasaporte: </label>
             <input type="text" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
                    ng-model="vm.provider.ruc" class="form-control" maxlength="10">
-        </div>
+        </div>-->
       </div>
       <div class="row">
         <div class="form-group col-md-12">

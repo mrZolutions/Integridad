@@ -283,12 +283,10 @@ angular.module('integridadUiApp')
 
     vm.register = function() {
       var idValid = true;
-      if (vm.provider.ruc.length > 12) {
+      if (vm.provider.ruc.length > 10) {
         idValid = validatorService.isRucValid(vm.provider.ruc);
-      } else if (vm.provider.ruc.length == 10) {
-        idValid = validatorService.isCedulaValid(vm.provider.ruc);
       } else {
-        idValid = true;
+        idValid = validatorService.isCedulaValid(vm.provider.ruc);
       };
       if (vm.provider.id) {
         update();

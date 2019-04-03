@@ -120,13 +120,11 @@
           <select ng-options = "country for country in vm.countryList"
                   ng-model = "vm.client.country" class = "form-control" ng-change = "vm.validateEcuador()"></select>
         </div>
-
         <div class = "form-group col-md-6" ng-show = "vm.client.country === 'Ecuador'">
           <label>Ciudad: </label>
           <select ng-options = "city for city in vm.citiesList"
                   ng-model = "vm.client.city" class = "form-control"></select>
         </div>
-
         <div class = "form-group col-md-6" ng-show = "vm.client.country !== 'Ecuador'">
           <label>Ciudad: </label>
           <input type = "text" ng-model = "vm.client.city" class = "form-control">
@@ -136,28 +134,25 @@
       <div class = "row">
         <div class = "form-group col-md-6">
           <label>Tipo de Identificacion: </label>
-          <select ng-options = "item.code as item.name for item in [{code:'CED', name:'CEDULA'}, {code:'RUC', name:'RUC'}, {code:'PAS', name:'PASAPORTE'}]"
+          <select ng-options = "item.code as item.name for item in [{code:'CED', name:'CEDULA'}, {code:'RUC', name:'RUC'}]"
                   ng-model = "vm.client.typeId" class = "form-control">
           </select>
         </div>
-
         <div class = "form-group col-md-6" ng-show = "vm.client.typeId === 'CED'">
           <label>C&eacute;dula: </label>
           <input type = "text" onkeypress = "return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
                  ng-model = "vm.client.identification" class = "form-control" maxlength = "10">
         </div>
-
         <div class = "form-group col-md-6" ng-show = "vm.client.typeId === 'RUC'">
           <label>RUC: </label>
           <input type = "text" onkeypress = "return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
                  ng-model = "vm.client.identification" class = "form-control" maxlength = "13">
         </div>
-
-        <div class = "form-group col-md-6" ng-show = "vm.client.typeId === 'PAS'">
+        <!--<div class = "form-group col-md-6" ng-show = "vm.client.typeId === 'PAS'">
           <label>Pasaporte: </label>
           <input type = "text" onkeypress = "return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
-                 ng-model = "vm.client.identification" class = "form-control" maxlength = "10">
-        </div>
+                 ng-model = "vm.client.identification" class = "form-control" maxlength = "9">
+        </div>-->
       </div>
 
       <div class = "row">
@@ -166,7 +161,7 @@
           <input type = "text" ng-model = "vm.client.email" class = "form-control">
         </div>
       </div>
-
+      
       <div class = "row">
         <div class = "form-group col-md-12">
           <label>Direcci&oacute;n: </label>

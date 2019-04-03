@@ -89,6 +89,16 @@ public class RetentionServices {
         log.info("RetentionServices getRetentionByProviderId size retrieved: {}", Iterables.size(retentions));
         return retentions;
     }
+    
+    //Selecciona todas las Retenciones del Proveedor y Factura de Compra
+    public Iterable<Retention> getRetentionByProviderIdAndDocumentNumber (UUID id, String documentNumber) {
+        Iterable<Retention> retentions = retentionRepository.findRetentionByProviderIdAndDocumentNumber(id, documentNumber);
+        retentions.forEach(retention -> {
+            retention.setListsNull();
+            retention.setFatherListToNull();
+        });
+        return retentions;
+    }
 
     public Retention createRetention(Retention retention) throws BadRequestException {
         List<DetailRetention> details = retention.getDetailRetentions();

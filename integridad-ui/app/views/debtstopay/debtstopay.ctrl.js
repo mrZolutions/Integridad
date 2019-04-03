@@ -236,6 +236,7 @@ angular.module('integridadUiApp')
       vm.retenSelected = undefined;
       vm.retenTaxTypeFuente = undefined;
       vm.retenTaxTypeIva = undefined;
+      vm.debtsBillNumber = undefined;
       vm.debtsToPaySelectedToUpdate = undefined;
       vm.status = undefined;
       vm.loading = true;
@@ -894,6 +895,18 @@ angular.module('integridadUiApp')
       });
     };
 
+    vm.getRetentionByProviderAndDocumentNumber = function() {
+      vm.loading = true;
+      vm.debtsBillNumber = vm.debtsToPay.threeNumberOne + '-' + vm.debtsToPay.threeNumberTwo + '-' + vm.debtsToPay.seccondPartNumber;
+      eretentionService.getRetentionsByProviderIdAndDocumentNumber(vm.providerId, vm.debtsBillNumber).then(function(response) {
+        vm.retentionList = response;
+        vm.loading = false;
+      }).catch(function(error) {
+        vm.loading = false;
+        vm.error = error.data;
+      });
+  };
+
     //Función que obtiene los Datos de una Retención
     vm.retentionSelected = function(retention) {
       vm.loading = true;
@@ -941,7 +954,7 @@ angular.module('integridadUiApp')
       vm.debtsToPay.debtsSeq = vm.seqNumber;
       vm.debtsToPay.ejercicio = vm.ejercicio;
       if (vm.status === 'PENDIENTE') {
-        vm.debtsToPay.saldo = vm.debtsToPay.total;
+        vm.debtsToPay.saldo = vm.debtsToPay.total - vm.retentionTotal;
       } else {
         vm.debtsToPay.saldo = 0.0;
       };
@@ -958,8 +971,7 @@ angular.module('integridadUiApp')
           baseImponible: item.base_imponible,
           descrip: item.desc_contable,
           name: item.nomb_contable,
-          tipo: item.tipo,
-          cuentaContableId: item.cta_contable
+          tipo: item.tipo
         };
         vm.debtsToPay.detailDebtsToPay.push(detail);
       });
@@ -1011,11 +1023,12 @@ angular.module('integridadUiApp')
       vm.loading = true;
       if (vm.paymentDebts.typePayment == 'PAC') {
         vm.valorReten = 0.00;
+      } else if (vm.paymentDebts.typePayment == 'RET') {
+        vm.valorAbono = 0.00;
       };
       vm.paymentDebts.datePayment = $('#pickerDateOfPayment').data("DateTimePicker").date().toDate().getTime();
       vm.paymentDebts.creditId = vm.creditsDebtsId;
       vm.paymentDebts.documentNumber = vm.debtsBillNumber;
-      vm.paymentDebts.valorReten = vm.valorReten;
       paymentDebtsService.create(paymentDebts).then(function(response) {
         vm.error = undefined;
         vm.success = 'Abono realizado con exito';

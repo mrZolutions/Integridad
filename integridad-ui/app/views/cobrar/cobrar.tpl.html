@@ -220,11 +220,11 @@
               <label class="radio-inline"><input type="radio" ng-model="vm.payment.modePayment" 
                      value="CHQ" name="cheque">Cheque</label>
               <label class="radio-inline"><input type="radio" ng-model="vm.payment.modePayment" 
-                     value="TRF" name="transfer">Transferencia</label>
+                     value="TRF" name="transferencia">Transferencia</label>
               <label class="radio-inline"><input type="radio" ng-model="vm.payment.modePayment" 
                      value="TDC" name="tdc">Tarjeta de Cŕedito</label>
               <label class="radio-inline"><input type="radio" ng-model="vm.payment.modePayment" 
-                     value="DEP" name="tdc">Depósito Bancario</label>
+                     value="DEP" name="deposito">Depósito Bancario</label>
             </div>
             <div class="form-group col-md-12">
               <div class="row" ng-show="vm.payment.modePayment === 'EFC'">
@@ -345,7 +345,7 @@
               <div class="row">
                 <div class="form-group col-md-6">
                   <label>N&uacute;mero de Nota de Cr&eacute;dito:</label><br/>
-                  <input type="text" class="form-control" ng-model="vm.payment.noDocument"/>
+                  <input type="text" class="form-control" ng-model="vm.payment.noDocument" maxlength="17"/>
                 </div>
                 <div class="form-group col-md-6">
                   <label>Detalle:</label><br/>

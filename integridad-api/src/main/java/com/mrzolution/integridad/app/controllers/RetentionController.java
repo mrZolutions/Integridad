@@ -58,6 +58,19 @@ public class RetentionController {
         log.info("RetentionController getAllRetentionsByProviderId DONE: {}", id);
         return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
     }
+    
+    @RequestMapping(method = RequestMethod.GET, value="/retention/provider/docnum/{id}/{seq}")
+    public ResponseEntity getRetentionByProviderIdAndDocumentNumber(@PathVariable("id") UUID id, @PathVariable("seq") String documentNumber) {
+        Iterable<Retention> response = null;
+        try {
+            response = service.getRetentionByProviderIdAndDocumentNumber(id, documentNumber);
+        } catch (BadRequestException e) {
+            log.error("RetentionController getRetentionByProviderIdAndDocumentNumber Exception thrown: {}", e.getMessage());
+	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+	}
+        log.info("RetentionController getRetentionByProviderIdAndDocumentNumber DONE");
+        return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
+    }
 
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity createRetention(@RequestBody Retention retention) {

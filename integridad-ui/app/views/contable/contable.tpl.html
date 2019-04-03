@@ -586,12 +586,12 @@
                     </div>
                     <div class="form-group col-md-3">
                         <label>N&uacute;mero de Factura: </label><br/>
-                        <input type="text" ng-model="vm.dailybookCpp.billNumber" class="form-control" maxlength="17">
+                        <input type="text" ng-model="vm.dailybookCpp.billNumber" class="form-control" maxlength="17"/>
                     </div>
                     <div class="form-group col-md-3">
                             <label>Valor Total:</label>
                             <input type="text" ng-model="vm.dailybookCpp.total"
-                                   class="form-control" maxlength="20">
+                                   class="form-control" maxlength="20"/>
                     </div>
                 </div>
                 <div class="row">
@@ -616,7 +616,7 @@
                 <div class="row">
                     <div class="form-group col-md-11">
                         <b>DETALLE GENERAL:</b>
-                        <input type="text" ng-model="vm.generalDetailCpp" class="form-control">
+                        <input type="text" ng-model="vm.generalDetailCpp" class="form-control"/>
                     </div>
                     <div class="form-group col-md-1">
                         <br/>
@@ -634,7 +634,7 @@
                     </div>
                     <div class="form-group col-md-4" ng-if="vm.dailybookCppNew">
                         <button type = "button" title = "Buscar y Agregar Retención" class = "btn btn-primary btn-sm"
-                                ng-click = "vm.getRetentionByProvider()" data-toggle = "modal" data-target = "#modalFindRetention">
+                                ng-click = "vm.getRetentionByProviderAndDocumentNumber()" data-toggle = "modal" data-target = "#modalFindRetention">
                                 Buscar Retenci&oacute;n
                         </button>
                     </div>
@@ -647,7 +647,7 @@
                 </div>
                 <div class="row table-responsive" ng-show="vm.cuentaContableList !== undefined">
                     <div class="form-group col-md-12">
-                        <input ng-model="searchTextTaxes" class="form-control" placeholder="Buscar">
+                        <input ng-model="searchTextTaxes" class="form-control" placeholder="Buscar"/>
                         <table class="table table-striped">
                             <thead>
                                 <tr>

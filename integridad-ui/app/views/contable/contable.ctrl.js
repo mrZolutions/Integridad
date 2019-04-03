@@ -400,6 +400,17 @@ angular.module('integridadUiApp')
         });
     };
 
+    vm.getRetentionByProviderAndDocumentNumber = function() {
+        vm.loading = true;
+        eretentionService.getRetentionsByProviderIdAndDocumentNumber(vm.providerId, vm.debtsBillNumber).then(function(response) {
+          vm.retentionList = response;
+          vm.loading = false;
+        }).catch(function(error) {
+          vm.loading = false;
+          vm.error = error.data;
+        });
+    };
+
     vm.retentionSelected = function(retention) {
         vm.loading = true;
         $('#modalFindRetention').modal('hide');

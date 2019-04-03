@@ -20,11 +20,11 @@ angular
     this.isRucValid = function(number) {
       var dto = number.length;
       var valor;
-      var acu=0;
-      for (var i=0; i<dto; i++) {
-        valor = number.substring(i, i+1);
+      var acu = 0;
+      for (var i = 0; i < dto; i++) {
+        valor = number.substring(i, i + 1);
         if (valor == 0 || valor == 1 || valor == 2 || valor == 3 || valor == 4 || valor == 5 || valor == 6 || valor == 7 || valor == 8 || valor == 9) {
-          acu = acu+1;
+          acu = acu + 1;
         };
       };
       if (acu == dto) {

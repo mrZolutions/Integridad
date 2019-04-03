@@ -44,7 +44,11 @@ public class PaymentDebtsServices {
         document = saved.getCreditsDebts().getPagoDebts().getDebtsToPay().getId().toString();
         if (saved.getCreditsDebts().getId() != null) {
             idCreditsDebts = saved.getCreditsDebts().getId();
-            abono = saved.getValorAbono();
+            if ("PAC".equals(saved.getTypePayment())) {
+                abono = saved.getValorAbono();
+            } else {
+                abono = saved.getValorReten();
+            }
             updateCreditsDebts(idCreditsDebts);
             updateDebtsToPay(paymentDebts, document);
         }
