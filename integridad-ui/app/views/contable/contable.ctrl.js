@@ -464,6 +464,20 @@ angular.module('integridadUiApp')
             descrip: cuenta.description,
             name: cuenta.name
         };
+        vm.subTotalDoceCpp = parseFloat((vm.dailybookCpp.total / 1.1200).toFixed(2));
+    };
+
+    //Obtiene la Base Imponible para el tipo de IVA 12
+    vm.getBaseImponibleCodigo_1 = function() {
+        var totalDebito = vm.subTotalDoceCpp;
+        if (vm.dailybookCpp) {
+            _.each (vm.dailybookCpp.detailDailybookCpp, function(detail) {
+                if (detail.tipo === 'DEBITO (D)') {
+                    totalDebito = (parseFloat(totalDebito) - parseFloat(detail.baseImponible)).toFixed(2);
+                };
+            });
+        };
+        return totalDebito;
     };
 
     vm.addItemCpp = function() {

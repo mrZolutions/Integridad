@@ -5,6 +5,7 @@ import com.mrzolution.integridad.app.domain.CreditsDebts;
 import com.mrzolution.integridad.app.domain.DebtsToPay;
 import com.mrzolution.integridad.app.domain.DetailDebtsToPay;
 import com.mrzolution.integridad.app.domain.PagoDebts;
+import com.mrzolution.integridad.app.domain.PaymentDebts;
 import com.mrzolution.integridad.app.domain.report.DebtsReport;
 import com.mrzolution.integridad.app.exceptions.BadRequestException;
 import com.mrzolution.integridad.app.father.Father;
@@ -16,6 +17,7 @@ import com.mrzolution.integridad.app.repositories.DetailDebtsToPayChildRepositor
 import com.mrzolution.integridad.app.repositories.DetailDebtsToPayRepository;
 import com.mrzolution.integridad.app.repositories.PagoDebtsChildRepository;
 import com.mrzolution.integridad.app.repositories.PagoDebtsRepository;
+import com.mrzolution.integridad.app.repositories.PaymentDebtsRepository;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -47,6 +49,8 @@ public class DebtsToPayServices {
     CreditsDebtsRepository creditsDebtsRepository;
     @Autowired
     CashierRepository cashierRepository;
+    @Autowired
+    PaymentDebtsRepository paymentDebtsRepository;
     
     //Selecciona Debts por Id
     public DebtsToPay getDebtsToPayById(UUID id) {
@@ -59,24 +63,6 @@ public class DebtsToPayServices {
 	}
         populateChildren(retrieved);
         return retrieved;
-    }
-
-    //Guarda Pagos y Credits de Debts
-    void savePagosAndCreditsOfDebts(DebtsToPay saved, List<PagoDebts> pagosDebts) {
-        pagosDebts.forEach(pagoDebt -> {
-            List<CreditsDebts> creditsDebtsList = pagoDebt.getCreditsDebts();
-            pagoDebt.setCreditsDebts(null);
-            pagoDebt.setDebtsToPay(saved);
-            PagoDebts pagoDebtSaved = pagoDebtsRepository.save(pagoDebt);
-            if (creditsDebtsList != null) {
-                creditsDebtsList.forEach(creditDebt -> {
-                    creditDebt.setPagoDebts(pagoDebtSaved);
-                    creditDebt.setDebtsToPayId(saved.getId().toString());
-                    creditsDebtsRepository.save(creditDebt);
-                });
-            }
-        });
-        log.info("DebtsToPayServices savePagosAndCreditsOfDebts DONE");
     }
     
     //Selección de Debts por Id de Proveedor
@@ -131,6 +117,47 @@ public class DebtsToPayServices {
         saved.setDetailDebtsToPay(detailDebtsToPay);
         log.info("DebtsToPayServices createDebtsToPay DONE id: {}", saved.getId());
         return saved;
+    }
+    
+    //Guarda Pagos y Credits de Debts
+    void savePagosAndCreditsOfDebts(DebtsToPay saved, List<PagoDebts> pagosDebts) {
+        pagosDebts.forEach(pagoDebt -> {
+            List<CreditsDebts> creditsDebtsList = pagoDebt.getCreditsDebts();
+            pagoDebt.setCreditsDebts(null);
+            pagoDebt.setDebtsToPay(saved);
+            PagoDebts pagoDebtSaved = pagoDebtsRepository.save(pagoDebt);
+            if (creditsDebtsList != null) {
+                creditsDebtsList.forEach(creditDebt -> {
+                    creditDebt.setPagoDebts(pagoDebtSaved);
+                    creditDebt.setDebtsToPayId(saved.getId().toString());
+                    if (saved.getRetentionId() != null) {
+                        creditDebt.setValor(saved.getTotal() - saved.getRetentionTotal());
+                    }
+                    CreditsDebts savedCreditDebt = creditsDebtsRepository.save(creditDebt);
+                    if (saved.getRetentionId() != null) {
+                        PaymentDebts paymentDebt = new PaymentDebts();
+                        paymentDebt.setCreditsDebts(savedCreditDebt);
+                        
+                        paymentDebt.setDatePayment(saved.getFecha());
+                        paymentDebt.setNoDocument(saved.getRetentionNumber());
+                        paymentDebt.setNoAccount("-");
+                        paymentDebt.setDocumentNumber(saved.getBillNumber());
+                        paymentDebt.setModePayment("RET");
+                        paymentDebt.setTypePayment("RET");
+                        paymentDebt.setDetail("ABONO POR RETENCIÓN");
+                        paymentDebt.setBanco("-");
+                        paymentDebt.setCardBrand("-");
+                        paymentDebt.setNumeroLote("-");
+                        paymentDebt.setValorAbono(0.0);
+                        paymentDebt.setValorReten(saved.getRetentionTotal());
+                        
+                        paymentDebtsRepository.save(paymentDebt);
+                        log.info("DebtsToPayServices saveRetentionInPaymentDebts DONE");
+                    }
+                });
+            } 
+        });
+        log.info("DebtsToPayServices savePagosAndCreditsOfDebts DONE");
     }
     
     //Desactivación o Anulación de los Debts

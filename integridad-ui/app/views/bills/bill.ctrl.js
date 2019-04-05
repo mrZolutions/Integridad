@@ -607,7 +607,7 @@ angular.module('integridadUiApp')
         var impuestos = [];
         var impuesto = {};
         var detaAdic = {
-          "SR": det.adicional
+          "det": det.adicional
         };
         
         if (det.product.iva) {
