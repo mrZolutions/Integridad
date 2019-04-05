@@ -46,7 +46,7 @@ angular
       } else if (user.cashier.subsidiary.userClient.espTemp === 'A-2') {
         eRet.sujeto.email = eRet.sujeto.email + ', ferrelozada@yahoo.com';
       } else if (user.cashier.subsidiary.userClient.espTemp === 'A-4') {
-        req.comprador.email = req.comprador.email + ', facturacion@catedral.com.ec';
+        eRet.sujeto.email = eRet.sujeto.email + ', facturacion@catedral.com.ec';
       };
       _.each(eRet.items, function(item) {
         item.codigo = String(item.codigo);
