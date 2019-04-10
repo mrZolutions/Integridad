@@ -9,6 +9,7 @@ import lombok.Data;
 
 @Data
 public class CreditsDebtsReport {
+    private String ruc;
     private String providerName;
     private String billNumber;
     private String fechVenta;
@@ -20,7 +21,8 @@ public class CreditsDebtsReport {
     private Double valorReten;
     private Double saldo;
     
-    public CreditsDebtsReport(String providerName, String billNumber, String fechVenta, String fechVence, int diasCredit, int diasVencim, Double total, Double valorAbono, Double valorReten, Double saldo) {
+    public CreditsDebtsReport(String ruc, String providerName, String billNumber, String fechVenta, String fechVence, int diasCredit, int diasVencim, Double total, Double valorAbono, Double valorReten, Double saldo) {
+        this.ruc = ruc;
         this.providerName = providerName;
         this.billNumber =  billNumber;
         this.fechVenta =  fechVenta;

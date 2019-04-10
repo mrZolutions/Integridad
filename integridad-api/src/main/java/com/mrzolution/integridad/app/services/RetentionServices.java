@@ -51,8 +51,8 @@ public class RetentionServices {
         String data = mapper.writeValueAsString(requirement);
         log.info("RetentionServices getDatil MAPPER creado");
 	
-        String response = httpCallerService.post(Constants.DATIL_RETENTION_LINK, data, userClient);
-        //String response = "OK";
+        //String response = httpCallerService.post(Constants.DATIL_RETENTION_LINK, data, userClient);
+        String response = "OK";
         log.info("RetentionServices getDatil httpcall SUCCESS");
         return response;
     }
@@ -169,17 +169,29 @@ public class RetentionServices {
             Double baseIva = Double.valueOf(0);
             Double porcenIva = Double.valueOf(0);
             Double subTotalIva = Double.valueOf(0);
+            String codRetenFuente = null;
+            String codRetenIva = null;
             for (DetailRetention detail : retention.getDetailRetentions()) {
                 sum = Double.sum(sum, detail.getTotal());
                 if ("RETENCION EN LA FUENTE".equals(detail.getTaxType())) {
                     baseF = Double.sum(baseF, detail.getBaseImponible());
                     porcenF = Double.sum(porcenF, detail.getPercentage());
                     subTotalF = baseF * (porcenF / 100.00);
+                    if (detail.getCode() != null) {
+                        codRetenFuente = detail.getCode();
+                    } else {
+                        codRetenFuente = null;
+                    }
                 }
                 if ("RETENCION EN EL IVA".equals(detail.getTaxType())) {
                     baseIva = Double.sum(baseIva, detail.getBaseImponible());
                     porcenIva = Double.sum(porcenIva, detail.getPercentage());
                     subTotalIva = baseIva * (porcenIva / 100.00);
+                    if (detail.getCode() != null) {
+                        codRetenIva = detail.getCode();
+                    } else {
+                        codRetenIva = null;
+                    }
                 }
             }
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
@@ -187,7 +199,8 @@ public class RetentionServices {
             String status = retention.isActive() ? "ACTIVA" : "ANULADA";
             String docDate = dateFormat.format(new Date(retention.getDocumentDate()));
             RetentionReport saleReport= new RetentionReport(date, docDate, retention.getProvider().getCodeIntegridad(), retention.getProvider().getName(), retention.getProvider().getRuc(), retention.getStringSeq(), retention.getClaveDeAcceso(),
-			retention.getDocumentNumber(),retention.getEjercicioFiscal(), baseF, porcenF, subTotalF, baseIva, porcenIva, subTotalIva, sum, retention.getSubsidiary().getName(), retention.getUserIntegridad().getFirstName(), status);
+                                                            retention.getDocumentNumber(),retention.getEjercicioFiscal(), status, codRetenFuente, baseF, porcenF, subTotalF, codRetenIva, baseIva, porcenIva, subTotalIva, sum, retention.getSubsidiary().getName(),
+                                                            retention.getUserIntegridad().getFirstName());
 
             retentionReportList.add(saleReport);
         });

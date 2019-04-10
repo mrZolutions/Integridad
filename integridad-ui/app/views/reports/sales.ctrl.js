@@ -89,21 +89,6 @@ angular.module('integridadUiApp')
       });
     };
 
-    vm.getCreditsPayedReport = function() {
-      vm.isProductReportList = '5';
-      vm.reportList = undefined;
-      vm.loading = true;
-      var userCliId = $localStorage.user.subsidiary.userClient.id;
-
-      creditsbillService.getAllPayedOfBillByUserClientId(userCliId).then(function(response) {
-        vm.reportList = response;
-        vm.loading = false;
-      }).catch(function(error) {
-        vm.loading = false;
-        vm.error = error.data;
-      });
-    };
-
     vm.getCCResumenReport = function() {
       vm.isProductReportList = '6';
       vm.reportList = undefined;
@@ -255,13 +240,15 @@ angular.module('integridadUiApp')
             NUMERO_FACTURA: retention.documentNumber,
             EJERCICIO_FISCAL: retention.ejercicioFiscal,
             ESTADO: retention.status,
+            COD_RET_FTE: retention.codigoRetentionFuente,
             BASE_FUENTE: parseFloat((retention.baseFuente).toFixed(2)),
             PORCENT_FUENTE: parseFloat((retention.porcenFuente).toFixed(2)),
-            SUBTOTAL_FUENTE: parseFloat((retention.subTotalFuente).toFixed(2)),
+            RETENCION_FTE: parseFloat((retention.subTotalFuente).toFixed(2)),
+            COD_RET_IVA: retention.codigoRetentionIva,
             BASE_IVA: parseFloat((retention.baseIva).toFixed(2)),
             PORCENT_IVA: parseFloat((retention.porcenIva).toFixed(2)),
-            SUBTOTAL_IVA: parseFloat((retention.subTotalIva).toFixed(2)),
-            TOTAL: parseFloat((retention.total).toFixed(2)),
+            RETENCION_IVA: parseFloat((retention.subTotalIva).toFixed(2)),
+            TOTAL_RETENIDO: parseFloat((retention.total).toFixed(2)),
             SUCURSAL: retention.subsidiary,
             USUARIO: retention.userName
           };
@@ -271,6 +258,7 @@ angular.module('integridadUiApp')
       } else if (vm.isProductReportList === '4') {
         _.each(vm.reportList, function(creditsreport) {
           var data = {
+            RUC_CI: creditsreport.identification,
             CLIENTE: creditsreport.clientName,
             FACTURA: creditsreport.billNumber,
             FECHA_VENTA: creditsreport.fechVenta !== null ? new Date(creditsreport.fechVenta) : creditsreport.fechVenta,
@@ -291,22 +279,10 @@ angular.module('integridadUiApp')
 
           dataReport.push(data);
         });
-      } else if (vm.isProductReportList === '5') {
-        _.each(vm.reportList, function(creditspayedreport) {
-          var data = {
-            CLIENTE: creditspayedreport.clientName,
-            IDENTIFICACION: creditspayedreport.ruc,
-            FACTURA: creditspayedreport.billNumber,
-            VALOR_FACTURA: creditspayedreport.costo,
-            SALDO: creditspayedreport.saldo,
-            STATUS: creditspayedreport.statusCredits
-          };
-
-          dataReport.push(data);
-        });
       } else if (vm.isProductReportList === '6') {
         _.each(vm.reportList, function(ccresumenreport) {
           var data = {
+            RUC_CI: ccresumenreport.identification,
             CLIENTE: ccresumenreport.nameClient,
             FACTURA: ccresumenreport.billNumber,
             VENTA: ccresumenreport.billTotal,
@@ -323,6 +299,7 @@ angular.module('integridadUiApp')
       } else if (vm.isProductReportList === '7') {
         _.each(vm.reportList, function(creditsdebtsreport) {
           var data = {
+            RUC: creditsdebtsreport.ruc,
             PROVEEDOR: creditsdebtsreport.providerName,
             FACTURA: creditsdebtsreport.billNumber,
             FECHA_VENTA: creditsdebtsreport.fechVenta !== null ? new Date(creditsdebtsreport.fechVenta) : creditsdebtsreport.fechVenta,
@@ -343,7 +320,7 @@ angular.module('integridadUiApp')
             FECHA: debt.date,
             CODIGO_PROVEEDOR: debt.providerCode,
             PROVEEDOR: debt.providerName,
-            RUC_CI: debt.ruc,
+            RUC: debt.ruc,
             NUMERO_CUENTA: debt.debtNumber,
             NUMERO_FACTURA: debt.billNumber,
             NUMERO_AUTORIZACION: debt.authorizationNumber,

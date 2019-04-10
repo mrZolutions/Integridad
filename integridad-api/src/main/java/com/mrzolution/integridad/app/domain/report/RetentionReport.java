@@ -13,18 +13,20 @@ public class RetentionReport {
     private String authorizationNumber;
     private String documentNumber;
     private String ejercicioFiscal;
+    private String status;
+    private String codigoRetentionFuente;
     private Double baseFuente;
     private Double porcenFuente;
     private Double subTotalFuente;
+    private String codigoRetentionIva;
     private Double baseIva;
     private Double porcenIva;
     private Double subTotalIva;
     private Double total;
     private String subsidiary;
     private String userName;
-    private String status;
 
-    public RetentionReport(String date, String documentDate, String providerCode, String providerName, String ruc, String retentionNumber, String authorizationNumber, String documentNumber, String ejercicioFiscal, Double baseFuente, Double porcenFuente, Double subTotalFuente, Double baseIva, Double porcenIva, Double subTotalIva, Double total, String subsidiary, String userName, String status) {
+    public RetentionReport(String date, String documentDate, String providerCode, String providerName, String ruc, String retentionNumber, String authorizationNumber, String documentNumber, String ejercicioFiscal, String status, String codigoRetentionFuente, Double baseFuente, Double porcenFuente, Double subTotalFuente, String codigoRetentionIva, Double baseIva, Double porcenIva, Double subTotalIva, Double total, String subsidiary, String userName) {
         this.date = date;
         this.documentDate = documentDate;
         this.providerCode = providerCode;
@@ -34,15 +36,17 @@ public class RetentionReport {
         this.authorizationNumber = authorizationNumber;
         this.documentNumber = documentNumber;
         this.ejercicioFiscal = ejercicioFiscal;
+        this.status = status;
+        this.codigoRetentionFuente = codigoRetentionFuente;
         this.baseFuente = baseFuente;
         this.porcenFuente = porcenFuente;
         this.subTotalFuente = subTotalFuente;
+        this.codigoRetentionIva = codigoRetentionIva;
         this.baseIva = baseIva;
         this.porcenIva = porcenIva;
         this.subTotalIva = subTotalIva;
         this.total = total;
         this.subsidiary = subsidiary;
         this.userName = userName;
-        this.status = status;
     }
 }

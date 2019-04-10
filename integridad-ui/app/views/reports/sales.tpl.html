@@ -132,6 +132,7 @@
     </div>
   </div>
 
+  <!--Reporte de Productos-->
   <div class="table-responsive" ng-if="vm.isProductReportList === '1'">
     <table class="table table-striped">
       <thead>
@@ -165,6 +166,7 @@
     </table>
   </div>
 
+  <!--Reporte de Ventas-->
   <div class="table-responsive" ng-if="vm.isProductReportList === '2'">
     <table class="table table-striped">
       <thead>
@@ -214,12 +216,13 @@
     </table>
   </div>
 
+  <!--Reporte de Retenciones-->
   <div class="table-responsive" ng-if="vm.isProductReportList === '3' && vm.reportList !== undefined">
     <table class="table table-striped">
       <thead>
         <tr>
           <th>Fecha de Retenci&oacute;n</th>
-          <th>Fecha de Documento</th>
+          <th>Fecha de Factura</th>
           <th>C&oacute;digo-Proveedor</th>
           <th>Proveedor</th>
           <th>RUC</th>
@@ -228,13 +231,15 @@
           <th>No. Factura</th>
           <th>Ejercicio Fiscal</th>
           <th>Estado</th>
+          <th>C&oacute;digo Retenci&oacute;n Fuente</th>
           <th>Base Fuente</th>
           <th>% Fuente</th>
-          <th>Sub Total Fuente</th>
+          <th>Retenci&oacute;n en Fuente</th>
+          <th>C&oacute;digo Retenci&oacute;n IVA</th>
           <th>Base IVA</th>
           <th>% IVA</th>
-          <th>Sub Total IVA</th>
-          <th>Total</th>
+          <th>Retenci&oacute;n en IVA</th>
+          <th>Total Retenido</th>
           <th>Sucursal</th>
           <th>Usuario</th>
         </tr>
@@ -251,9 +256,11 @@
           <td>{{data.documentNumber}}</td>
           <td>{{data.ejercicioFiscal}}</td>
           <td>{{data.status}}</td>
+          <td>{{data.codigoRetentionFuente}}</td>
           <td>{{(data.baseFuente).toFixed(2)}}</td>
           <td>{{(data.porcenFuente).toFixed(2)}}</td>
           <td>{{(data.subTotalFuente).toFixed(2)}}</td>
+          <td>{{data.codigoRetentionIva}}</td>
           <td>{{(data.baseIva).toFixed(2)}}</td>
           <td>{{(data.porcenIva).toFixed(2)}}</td>
           <td>{{(data.subTotalIva).toFixed(2)}}</td>
@@ -265,10 +272,12 @@
     </table>
   </div>
 
+  <!--Reporte de Ctas Pendientes-->
   <div class="table-responsive" ng-if="vm.isProductReportList === '4' && vm.reportList !== undefined">
     <table class="table table-striped">
       <thead>
         <tr>
+          <th>RUC/CI</th>
           <th>Cliente</th>
           <th>Factura</th>
           <th>Fecha Emision</th>
@@ -289,6 +298,7 @@
       </thead>
       <tbody>
         <tr ng-repeat="data in vm.reportList | orderBy:'clientName'" >
+          <td>{{data.identification}}</td>
           <td>{{data.clientName}}</td>
           <td>{{data.billNumber}}</td>
           <td>{{data.fechVenta}}</td>
@@ -310,36 +320,13 @@
     </table>
   </div>
 
-  <div class="table-responsive" ng-if="vm.isProductReportList === '5' && vm.reportList !== undefined">
-    <table class="table table-striped">
-      <thead>
-        <tr>
-          <th>Cliente</th>
-          <th>Identificaci&oacute;n</th>
-          <th>N&uacute;mero de Factura</th>
-          <th>Valor de la Factura</th>
-          <th>Saldo Pendiente</th>
-          <th>Estatus</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr ng-repeat="data in vm.reportList | orderBy:'clientName'" >
-          <td>{{data.clientName}}</td>
-          <td>{{data.ruc}}</td>
-          <td>{{data.billNumber}}</td>
-          <td>{{data.costo}}</td>
-          <td>{{data.saldo}}</td>
-          <td>{{data.statusCredits}}</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
+  <!--Reporte de Pagos y Abonos-->
   <div class="table-responsive" ng-if="vm.isProductReportList === '6' && vm.reportList !== undefined">
     <table class="table table-striped">
       <thead>
         <tr>
-          <th>Nombre del Cliente</th>
+          <th>RUC/CI</th>
+          <th>Cliente</th>
           <th>N&uacute;mero Factura</th>
           <th>Valor Factura</th>
           <th>Tipo Transacci&oacute;n</th>
@@ -352,6 +339,7 @@
       </thead>
       <tbody>
         <tr ng-repeat="data in vm.reportList | orderBy:'nomCliente'" >
+          <td>{{data.identification}}</td>
           <td>{{data.nameClient}}</td>
           <td>{{data.billNumber}}</td>
           <td>{{data.billTotal.toFixed(2)}}</td>
@@ -366,10 +354,12 @@
     </table>
   </div>
 
+  <!--Reporte de Ctas Pendientes DebtsToPay-->
   <div class="table-responsive" ng-if="vm.isProductReportList === '7' && vm.reportList !== undefined">
     <table class="table table-striped">
       <thead>
         <tr>
+          <th>RUC</th>
           <th>Proveedor</th>
           <th>Factura</th>
           <th>Fecha Emision</th>
@@ -384,6 +374,7 @@
       </thead>
       <tbody>
         <tr ng-repeat="data in vm.reportList | orderBy:'providerName'" >
+          <td>{{data.ruc}}</td>
           <td>{{data.providerName}}</td>
           <td>{{data.billNumber}}</td>
           <td>{{data.fechVenta}}</td>
@@ -399,6 +390,7 @@
     </table>
   </div>
 
+  <!--Reporte de Compras DebtsToPay-->
   <div class="table-responsive" ng-if="vm.isProductReportList === '8' && vm.reportList !== undefined">
     <table class="table table-striped">
       <thead>
@@ -446,6 +438,7 @@
     </table>
   </div>
 
+  <!--Reporte de Cierre de Caja-->
   <div class="table-responsive" ng-if="vm.isProductReportList === '9' && vm.reportList !== undefined">
     <table class="table table-striped">
       <thead>
@@ -485,6 +478,7 @@
     </table>
   </div>
 
+  <!--Reporte de Productos Consumidos-->
   <div class="table-responsive" ng-if="vm.isProductReportList === '10' && vm.reportList !== undefined">
       <table class="table table-striped">
         <thead>

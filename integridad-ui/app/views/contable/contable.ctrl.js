@@ -741,6 +741,104 @@ angular.module('integridadUiApp')
                     break;
                 };
             };
+        } else if (vm.usrCliId === '1e2049c3-a3bc-4231-a0de-dded8020dc1b') {
+            if (vm.retenTaxTypeFuente == 'RETENCION EN LA FUENTE') {
+                switch(vm.retenCodeFuente) {
+                    case '302':
+                        vm.retenFteCodeContable = '2.12.40.201'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
+                        vm.retenFteNombContable = 'RET:' + ' ' + vm.generalDetailCpp; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
+                    break;
+                    case '303':
+                        vm.retenFteCodeContable = '2.12.40.202'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
+                        vm.retenFteNombContable = 'RET:' + ' ' + vm.generalDetailCpp; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
+                    break;
+                    case '304':
+                        vm.retenFteCodeContable = '2.12.40.203'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
+                        vm.retenFteNombContable = 'RET:' + ' ' + vm.generalDetailCpp; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
+                    break;
+                    case '307':
+                        vm.retenFteCodeContable = '2.12.40.204'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
+                        vm.retenFteNombContable = 'RET:' + ' ' + vm.generalDetailCpp; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
+                    break;
+                    case '308':
+                        vm.retenFteCodeContable = '2.12.40.205'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
+                        vm.retenFteNombContable = 'RET:' + ' ' + vm.generalDetailCpp; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
+                    break;
+                    case '309':
+                        vm.retenFteCodeContable = '2.12.40.206'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
+                        vm.retenFteNombContable = 'RET:' + ' ' + vm.generalDetailCpp; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
+                    break;
+                    case '310':
+                        vm.retenFteCodeContable = '2.12.40.207'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
+                        vm.retenFteNombContable = 'RET:' + ' ' + vm.generalDetailCpp; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
+                    break;
+                    case '312':
+                        vm.retenFteCodeContable = '2.12.40.208'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
+                        vm.retenFteNombContable = 'RET:' + ' ' + vm.generalDetailCpp; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
+                    break;
+                    case '319':
+                        vm.retenFteCodeContable = '2.12.40.209'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
+                        vm.retenFteNombContable = 'RET:' + ' ' + vm.generalDetailCpp; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
+                    break;
+                    case '320':
+                        vm.retenFteCodeContable = '2.12.40.210'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
+                        vm.retenFteNombContable = 'RET:' + ' ' + vm.generalDetailCpp; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
+                    break;
+                    case '322':
+                        vm.retenFteCodeContable = '2.12.40.211'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
+                        vm.retenFteNombContable = 'RET:' + ' ' + vm.generalDetailCpp; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
+                    break;
+                    case '323':
+                        vm.retenFteCodeContable = '2.12.40.212'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
+                        vm.retenFteNombContable = 'RET:' + ' ' + vm.generalDetailCpp; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
+                    break;
+                    case '327':
+                        vm.retenFteCodeContable = '2.12.40.213'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
+                        vm.retenFteNombContable = 'RET:' + ' ' + vm.generalDetailCpp; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
+                    break;
+                    case '328':
+                        vm.retenFteCodeContable = '2.12.40.214'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
+                        vm.retenFteNombContable = 'RET:' + ' ' + vm.generalDetailCpp; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
+                    break;
+                    case '340':
+                        vm.retenFteCodeContable = '2.12.40.215'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
+                        vm.retenFteNombContable = 'RET:' + ' ' + vm.generalDetailCpp; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
+                    break;
+                    case '341':
+                        vm.retenFteCodeContable = '2.12.40.216'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
+                        vm.retenFteNombContable = 'RET:' + ' ' + vm.generalDetailCpp; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
+                    break;
+                    case '342':
+                        vm.retenFteCodeContable = '2.12.40.217'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
+                        vm.retenFteNombContable = 'RET:' + ' ' + vm.generalDetailCpp; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
+                    break;
+                    case '343':
+                        vm.retenFteCodeContable = '2.12.40.218'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
+                        vm.retenFteNombContable = 'RET:' + ' ' + vm.generalDetailCpp; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
+                    break;
+                    case '344':
+                        vm.retenFteCodeContable = '2.12.40.219'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
+                        vm.retenFteNombContable = 'RET:' + ' ' + vm.generalDetailCpp; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
+                    break;
+                };
+            };
+            
+            if (vm.retenTaxTypeIva == 'RETENCION EN EL IVA') {
+                switch(vm.retenCodeIva) {
+                    case '725':
+                        vm.retenIvaCodeContable = '2.12.40.103'; vm.retenIvaDescContable = 'RETENCIÓN EN IVA';
+                        vm.retenIvaNombContable = 'RET:' + ' ' + vm.generalDetailCpp; vm.retenIvaValor = parseFloat(vm.retenTotalIva);
+                    break;
+                    case '729':
+                        vm.retenIvaCodeContable = '2.12.40.104'; vm.retenIvaDescContable = 'RETENCIÓN EN IVA';
+                        vm.retenIvaNombContable = 'RET:' + ' ' + vm.generalDetailCpp; vm.retenIvaValor = parseFloat(vm.retenTotalIva);
+                    break;
+                    case '731':
+                        vm.retenIvaCodeContable = '2.12.40.105'; vm.retenIvaDescContable = 'RETENCIÓN EN IVA';
+                        vm.retenIvaNombContable = 'RET:' + ' ' + vm.generalDetailCpp; vm.retenIvaValor = parseFloat(vm.retenTotalIva);
+                    break;
+                };
+            };
         };
 
         vm.itemRetentionFuente = undefined;
@@ -781,6 +879,8 @@ angular.module('integridadUiApp')
         } else if (vm.usrCliId === '4907601b-6e54-4675-80a8-ab6503e1dfeb') {
             vm.ivaContable = '1.01.05.02.001';
             vm.provContable = '2.01.03.01.001';
+        } else if (vm.usrCliId === '1e2049c3-a3bc-4231-a0de-dded8020dc1b') {
+            vm.ivaContable = '1.14.10.201'; vm.provContable = '2.12.10.101';
         } else {
             vm.ivaContable = '1.01.01.01';
             vm.provContable = '2.01.01.01';

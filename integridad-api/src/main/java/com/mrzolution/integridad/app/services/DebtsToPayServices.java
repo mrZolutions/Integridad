@@ -161,17 +161,17 @@ public class DebtsToPayServices {
     }
     
     //Desactivación o Anulación de los Debts
-    public DebtsToPay deactivateDebtsToPay(DebtsToPay debtsToPay) throws BadRequestException {
-        if (debtsToPay.getId() == null) {
-            throw new BadRequestException("Invalid DebtsToPay");
-        }
-        DebtsToPay debtsToPayToDeactivate = debtsToPayRepository.findOne(debtsToPay.getId());
-        debtsToPayToDeactivate.setListsNull();
-        debtsToPayToDeactivate.setActive(false);
-        debtsToPayRepository.save(debtsToPayToDeactivate);
-        log.info("DebtsToPayServices deactivateDebtsToPay DONE id: {}", debtsToPayToDeactivate.getId());
-        return debtsToPayToDeactivate;
-    }
+    //public DebtsToPay deactivateDebtsToPay(DebtsToPay debtsToPay) throws BadRequestException {
+    //    if (debtsToPay.getId() == null) {
+    //        throw new BadRequestException("Invalid DebtsToPay");
+    //    }
+    //    DebtsToPay debtsToPayToDeactivate = debtsToPayRepository.findOne(debtsToPay.getId());
+    //    debtsToPayToDeactivate.setListsNull();
+    //    debtsToPayToDeactivate.setActive(false);
+    //    debtsToPayRepository.save(debtsToPayToDeactivate);
+    //    log.info("DebtsToPayServices deactivateDebtsToPay DONE id: {}", debtsToPayToDeactivate.getId());
+    //    return debtsToPayToDeactivate;
+    //}
     
     //Actualización de los Debts
     public DebtsToPay updateDebtsToPay(DebtsToPay debtsToPay) throws BadRequestException {

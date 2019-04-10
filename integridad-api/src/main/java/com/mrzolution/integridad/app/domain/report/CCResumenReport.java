@@ -8,7 +8,7 @@ import lombok.Data;
  */
 @Data
 public class CCResumenReport {
-    private String idClient;
+    private String identification;
     private String nameClient;
     private String billNumber;
     private Double billTotal;
@@ -16,11 +16,11 @@ public class CCResumenReport {
     private String formPago;
     private String fechPago;
     private Double valorAbono;
-    private Double valorNotac;
     private Double valorReten;
+    private Double valorNotac;
     
-    public CCResumenReport(String idClient, String nameClient, String billNumber, Double billTotal, String tipTransac, String formPago, String fechPago, Double valorAbono, Double valorReten, Double valorNotac) {
-        this.idClient = idClient;
+    public CCResumenReport(String identification, String nameClient, String billNumber, Double billTotal, String tipTransac, String formPago, String fechPago, Double valorAbono, Double valorReten, Double valorNotac) {
+        this.identification = identification;
         this.nameClient = nameClient;
         this.billNumber = billNumber;
         this.billTotal = billTotal;

@@ -87,7 +87,7 @@ public class CreditsDebtsServices {
                 sumTotalValor = sumTotal - (sumTotalAbono + sumTotalReten);
             } else {
                 providerId = creditD.getPagoDebts().getDebtsToPay().getProvider().getId();
-                CreditsDebtsReport creditDebtReport = new CreditsDebtsReport("SUB-TOTAL ", null, null, null, 0, 0, sumTotal, sumTotalAbono, sumTotalReten, sumTotalValor);
+                CreditsDebtsReport creditDebtReport = new CreditsDebtsReport("SUB-TOTAL ", null, null, null, null, 0, 0, sumTotal, sumTotalAbono, sumTotalReten, sumTotalValor);
                 creditsDebtsReportList.add(creditDebtReport);
                 sumTotal = creditD.getPagoDebts().getDebtsToPay().getTotal();
                 sumTotalValor = creditD.getValor();
@@ -106,12 +106,12 @@ public class CreditsDebtsServices {
             
             saldo = creditD.getPagoDebts().getDebtsToPay().getTotal() - (sumAbono + sumReten);
             
-            CreditsDebtsReport creditDebtReport = new CreditsDebtsReport(creditD.getPagoDebts().getDebtsToPay().getProvider().getName(), creditD.getPagoDebts().getDebtsToPay().getBillNumber(), 
+            CreditsDebtsReport creditDebtReport = new CreditsDebtsReport(creditD.getPagoDebts().getDebtsToPay().getProvider().getRuc(), creditD.getPagoDebts().getDebtsToPay().getProvider().getName(), creditD.getPagoDebts().getDebtsToPay().getBillNumber(), 
                                                                          fechaVenta, fechaVence, creditD.getDiasPlazo(), diasVencim, creditD.getPagoDebts().getDebtsToPay().getTotal(),
                                                                          sumAbono, sumReten, saldo);
             creditsDebtsReportList.add(creditDebtReport);
         });
-        CreditsDebtsReport creditDebtReport = new CreditsDebtsReport("SUB-TOTAL ", null, null, null, 0, 0, sumTotal, sumTotalAbono, sumTotalReten, sumTotalValor);
+        CreditsDebtsReport creditDebtReport = new CreditsDebtsReport("SUB-TOTAL ", null, null, null, null, 0, 0, sumTotal, sumTotalAbono, sumTotalReten, sumTotalValor);
         creditsDebtsReportList.add(creditDebtReport);
         
         sumTotal = 0;
