@@ -38,6 +38,11 @@ public class CreditsServices {
     private double sumTotalReten = 0.0;
     private double sumTotalNotac = 0.0;
     private double sumTotalValor = 0.0;
+    private double total = 0.0;
+    private double totalAbono = 0.0;
+    private double totalReten = 0.0;
+    private double totalNotac = 0.0;
+    private double totalValor = 0.0;
     
     public Iterable<Credits> getCreditsOfBillByBillId(UUID id) {
         log.info("CreditsServices getCreditsOfBillByBillId: {}", id);
@@ -56,6 +61,12 @@ public class CreditsServices {
         sumTotalNotac = 0;
         sumTotalValor = 0;
         saldo = 0;
+        total = 0;
+        totalAbono = 0;
+        totalReten = 0;
+        totalNotac = 0;
+        totalValor = 0;
+        
         log.info("CreditsServices getCreditsPendingOfBillByUserClientId: {}", id);
         Iterable<Credits> credits = creditsRepository.findCreditsPendingOfBillByUserClientId(id, dateTwo);
         List<CreditsReport> creditsReportList = new ArrayList<>();
@@ -138,10 +149,20 @@ public class CreditsServices {
             CreditsReport saleReport = new CreditsReport(credit.getPago().getBill().getClient().getIdentification(), credit.getPago().getBill().getClient().getName(), credit.getPago().getBill().getStringSeq(), 
                                                          fechaVenta, fechaVence, credit.getDiasPlazo(), diasVencim, credit.getPago().getBill().getTotal(), sumAbono, sumReten, sumNotac, saldo, pPlazo, sPlazo,
                                                          tPlazo, cPlazo, qPlazo);
-            creditsReportList.add(saleReport);    
-        });
+            creditsReportList.add(saleReport);
+            
+            total = Double.sum(total, credit.getPago().getBill().getTotal());
+            totalAbono = Double.sum(totalAbono, sumAbono);
+            totalReten = Double.sum(totalReten, sumReten);
+            totalNotac = Double.sum(totalNotac, sumNotac);
+            totalValor = total - (totalAbono + totalReten + totalNotac);
+        });    
         CreditsReport saleReport = new CreditsReport("SUB-TOTAL ", null, null, null, null, 0, 0, sumTotal, sumTotalAbono, sumTotalReten, sumTotalNotac, sumTotalValor, 0, 0, 0, 0, 0);
         creditsReportList.add(saleReport);
+        
+        CreditsReport salesReport = new CreditsReport("TOTAL GENERAL ", null, null, null, null, 0, 0, total, totalAbono, totalReten, totalNotac, totalValor, 0, 0, 0, 0, 0);
+        creditsReportList.add(salesReport);
+        
         sumTotal = 0;
         sumTotalAbono = 0;
         sumTotalReten = 0;

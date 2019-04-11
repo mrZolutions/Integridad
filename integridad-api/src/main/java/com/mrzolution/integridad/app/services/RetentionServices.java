@@ -156,8 +156,8 @@ public class RetentionServices {
         return retentionToDeactivate;
     }
 
-    public List<RetentionReport> getAllBySubIdAndDates(UUID userClientId, long dateOne, long dateTwo) {
-        log.info("RetentionServices getAllBySubIdAndDates: {}, {}, {}", userClientId, dateOne, dateTwo);
+    public List<RetentionReport> getAllByUserClientIdAndDates(UUID userClientId, long dateOne, long dateTwo) {
+        log.info("RetentionServices getAllByUserClientIdAndDates: {}, {}, {}", userClientId, dateOne, dateTwo);
         Iterable<Retention> retentions = retentionRepository.findAllRetentionByUserClientIdAndDates(userClientId, dateOne, dateTwo);
         List<RetentionReport> retentionReportList = new ArrayList<>();
         retentions.forEach(retention -> {

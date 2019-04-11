@@ -21,4 +21,7 @@ public interface RetentionClientRepository extends CrudRepository<RetentionClien
     
     @Query("SELECT r FROM RetentionClient r WHERE r.documentNumber = (:docNum) and r.bill.id = (:id)")
     Iterable<RetentionClient> findByDocumentNumberAndBillId(@Param("docNum") String docNum, @Param("id") UUID id);
+    
+    @Query("SELECT r FROM RetentionClient r JOIN r.bill b JOIN b.client cl WHERE cl.userClient.id = (:userClientId) AND r.dateToday >= (:dateOne) AND r.dateToday <= (:dateTwo) ORDER BY cl.name")
+    Iterable<RetentionClient> findRetentionClientByUserClientIdAndDates(@Param("userClientId") UUID id, @Param("dateOne") long dateOne, @Param("dateTwo") long dateTwo);
 }

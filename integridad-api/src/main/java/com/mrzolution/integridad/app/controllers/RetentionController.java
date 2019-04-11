@@ -90,7 +90,7 @@ public class RetentionController {
 	log.info("RetentionController getAllByUserClientIdAndDatesActives: {}, {}, {}", userClientId, dateOne, dateTwo);
 	List<RetentionReport> response = null;
 	try {
-            response = service.getAllBySubIdAndDates(userClientId, dateOne, dateTwo);
+            response = service.getAllByUserClientIdAndDates(userClientId, dateOne, dateTwo);
 	} catch(BadRequestException e) {
             log.error("RetentionController getAllByUserClientIdAndDatesActives Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());

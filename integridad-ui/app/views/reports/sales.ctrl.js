@@ -8,7 +8,7 @@
  * Controller of the menu
  */
 angular.module('integridadUiApp')
-  .controller('ReportSalesCtrl', function(_, $localStorage, creditsbillService, billService, eretentionService, 
+  .controller('ReportSalesCtrl', function(_, $localStorage, creditsbillService, billService, eretentionService, eretentionClientService,
                                           paymentService, creditsDebtsService, $location, debtsToPayService, consumptionService) {
     var vm = this;
     var today = new Date();
@@ -81,6 +81,24 @@ angular.module('integridadUiApp')
       var userCliId = $localStorage.user.subsidiary.userClient.id;
 
       creditsbillService.getAllCreditsOfBillByUserClientId(userCliId, dateTwo).then(function(response) {
+        vm.reportList = response;
+        vm.loading = false;
+      }).catch(function(error) {
+        vm.loading = false;
+        vm.error = error.data;
+      });
+    };
+
+    vm.getReportRetentionClient = function() {
+      vm.isProductReportList = '5';
+      vm.reportList = undefined;
+      vm.loading = true;
+      var dateOne = $('#pickerBillDateOne').data("DateTimePicker").date().toDate().getTime();
+      var dateTwo = $('#pickerBillDateTwo').data("DateTimePicker").date().toDate().getTime();
+      dateTwo += 86399000;
+      var userCliId = $localStorage.user.subsidiary.userClient.id;
+
+      eretentionClientService.getRetentionClientByUserClientAndDates(userCliId, dateOne, dateTwo).then(function(response) {
         vm.reportList = response;
         vm.loading = false;
       }).catch(function(error) {
@@ -231,23 +249,23 @@ angular.module('integridadUiApp')
         _.each(vm.reportList, function(retention) {
           var data = {
             FECHA: retention.date,
-            FECHA_DOCUMENTO: retention.documentDate,
-            CODIGO_PROVEEDOR: retention.providerCode,
+            FECHA_FACT: retention.documentDate,
+            COD_PROV: retention.providerCode,
             PROVEEDOR: retention.providerName,
             RUC: retention.ruc,
-            NUMERO_RETENCION: retention.retentionNumber,
-            NUMERO_AUTORIZACION: retention.authorizationNumber,
-            NUMERO_FACTURA: retention.documentNumber,
-            EJERCICIO_FISCAL: retention.ejercicioFiscal,
+            NUM_RET: retention.retentionNumber,
+            NUM_AUTOR: retention.authorizationNumber,
+            NUM_FACT: retention.documentNumber,
+            EJER_FISCAL: retention.ejercicioFiscal,
             ESTADO: retention.status,
             COD_RET_FTE: retention.codigoRetentionFuente,
-            BASE_FUENTE: parseFloat((retention.baseFuente).toFixed(2)),
-            PORCENT_FUENTE: parseFloat((retention.porcenFuente).toFixed(2)),
-            RETENCION_FTE: parseFloat((retention.subTotalFuente).toFixed(2)),
+            BASE_FTE: parseFloat((retention.baseFuente).toFixed(2)),
+            PORCENT_FTE: parseFloat((retention.porcenFuente).toFixed(2)),
+            RETEN_FTE: parseFloat((retention.subTotalFuente).toFixed(2)),
             COD_RET_IVA: retention.codigoRetentionIva,
             BASE_IVA: parseFloat((retention.baseIva).toFixed(2)),
             PORCENT_IVA: parseFloat((retention.porcenIva).toFixed(2)),
-            RETENCION_IVA: parseFloat((retention.subTotalIva).toFixed(2)),
+            RETEN_IVA: parseFloat((retention.subTotalIva).toFixed(2)),
             TOTAL_RETENIDO: parseFloat((retention.total).toFixed(2)),
             SUCURSAL: retention.subsidiary,
             USUARIO: retention.userName
@@ -270,13 +288,37 @@ angular.module('integridadUiApp')
             RETEN: parseFloat(creditsreport.valorReten.toFixed(2)),
             N_C: parseFloat(creditsreport.valorNotac.toFixed(2)),
             SALDO: parseFloat(creditsreport.saldo.toFixed(2)),
-            PLAZO_MENOR_30: parseFloat(creditsreport.pplazo.toFixed(2)),
-            PLAZO_31_60: parseFloat(creditsreport.splazo.toFixed(2)),
-            PLAZO_61_90: parseFloat(creditsreport.tplazo.toFixed(2)),
-            PLAZO_91_120: parseFloat(creditsreport.cplazo.toFixed(2)),
-            PLAZO_MAYOR_120: parseFloat(creditsreport.qplazo.toFixed(2))
+            PLZO_MEN_30: parseFloat(creditsreport.pplazo.toFixed(2)),
+            PLZO_31_60: parseFloat(creditsreport.splazo.toFixed(2)),
+            PLZO_61_90: parseFloat(creditsreport.tplazo.toFixed(2)),
+            PLZO_91_120: parseFloat(creditsreport.cplazo.toFixed(2)),
+            PLZO_MAY_120: parseFloat(creditsreport.qplazo.toFixed(2))
           };      
 
+          dataReport.push(data);
+        });
+      } else if (vm.isProductReportList === '5') {
+        _.each(vm.reportList, function(retention) {
+          var data = {
+            FECHA: retention.date,
+            FECHA_FACT: retention.documentDate,
+            COD_CLIENTE: retention.clientCode,
+            CLIENTE: retention.clientName,
+            RUC_CI: retention.identification,
+            NUM_RETEN: retention.retentionNumber,
+            NUM_FACT: retention.documentNumber,
+            EJER_FISCAL: retention.ejercicioFiscal,
+            COD_RET_FTE: retention.codigoRetentionFuente,
+            BASE_FUENTE: parseFloat((retention.baseFuente).toFixed(2)),
+            PORCENT_FTE: parseFloat((retention.porcenFuente).toFixed(2)),
+            RETEN_FTE: parseFloat((retention.subTotalFuente).toFixed(2)),
+            COD_RET_IVA: retention.codigoRetentionIva,
+            BASE_IVA: parseFloat((retention.baseIva).toFixed(2)),
+            PORCENT_IVA: parseFloat((retention.porcenIva).toFixed(2)),
+            RETEN_IVA: parseFloat((retention.subTotalIva).toFixed(2)),
+            TOTAL_RETENIDO: parseFloat((retention.total).toFixed(2))
+          };
+        
           dataReport.push(data);
         });
       } else if (vm.isProductReportList === '6') {

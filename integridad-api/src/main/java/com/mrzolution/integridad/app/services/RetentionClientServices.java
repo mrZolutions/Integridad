@@ -6,6 +6,7 @@ import com.mrzolution.integridad.app.domain.Credits;
 import com.mrzolution.integridad.app.domain.DetailRetentionClient;
 import com.mrzolution.integridad.app.domain.Payment;
 import com.mrzolution.integridad.app.domain.RetentionClient;
+import com.mrzolution.integridad.app.domain.report.RetentionClientReport;
 import com.mrzolution.integridad.app.exceptions.BadRequestException;
 import com.mrzolution.integridad.app.repositories.BillRepository;
 import com.mrzolution.integridad.app.repositories.CreditsRepository;
@@ -14,6 +15,7 @@ import com.mrzolution.integridad.app.repositories.DetailRetentionClientRepositor
 import com.mrzolution.integridad.app.repositories.PaymentRepository;
 import com.mrzolution.integridad.app.repositories.RetentionClientRepository;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -132,6 +134,55 @@ public class RetentionClientServices {
             billRepository.save(bill);
         }
         log.info("RetentionClientServices Bill UPDATED");
+    }
+    
+    public List<RetentionClientReport> getRetentionClientByUserClientIdAndDates(UUID userClientId, long dateOne, long dateTwo) {
+        log.info("RetentionServices getRetentionClientByUserClientIdAndDates: {}, {}, {}", userClientId, dateOne, dateTwo);
+        Iterable<RetentionClient> retentionsClient = retentionClientRepository.findRetentionClientByUserClientIdAndDates(userClientId, dateOne, dateTwo);
+        List<RetentionClientReport> retentionClientReportList = new ArrayList<>();
+        retentionsClient.forEach(retention -> {
+            populateChildren(retention);
+            Double sum = Double.valueOf(0);
+            Double baseF = Double.valueOf(0);
+            Double porcenF = Double.valueOf(0);
+            Double subTotalF = Double.valueOf(0);
+            Double baseIva = Double.valueOf(0);
+            Double porcenIva = Double.valueOf(0);
+            Double subTotalIva = Double.valueOf(0);
+            String codRetenFuente = null;
+            String codRetenIva = null;
+            for (DetailRetentionClient detail : retention.getDetailRetentionClient()) {
+                sum = Double.sum(sum, detail.getTotal());
+                if ("RETENCION EN LA FUENTE".equals(detail.getTaxType())) {
+                    baseF = Double.sum(baseF, detail.getBaseImponible());
+                    porcenF = Double.sum(porcenF, detail.getPercentage());
+                    subTotalF = baseF * (porcenF / 100.00);
+                    if (detail.getCode() != null) {
+                        codRetenFuente = detail.getCode();
+                    } else {
+                        codRetenFuente = null;
+                    }
+                }
+                if ("RETENCION EN EL IVA".equals(detail.getTaxType())) {
+                    baseIva = Double.sum(baseIva, detail.getBaseImponible());
+                    porcenIva = Double.sum(porcenIva, detail.getPercentage());
+                    subTotalIva = baseIva * (porcenIva / 100.00);
+                    if (detail.getCode() != null) {
+                        codRetenIva = detail.getCode();
+                    } else {
+                        codRetenIva = null;
+                    }
+                }
+            }
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+            String date = dateFormat.format(new Date(retention.getDateToday()));
+            String docDate = dateFormat.format(new Date(retention.getDocumentDate()));
+            RetentionClientReport retentionClReport= new RetentionClientReport(date, docDate, retention.getBill().getClient().getCodApp(), retention.getBill().getClient().getName(), retention.getBill().getClient().getIdentification(), retention.getRetentionNumber(),
+                                                                               retention.getDocumentNumber(),retention.getEjercicioFiscal(), codRetenFuente, baseF, porcenF, subTotalF, codRetenIva, baseIva, porcenIva, subTotalIva, sum);
+
+            retentionClientReportList.add(retentionClReport);
+        });
+        return retentionClientReportList;
     }
     
     private void populateChildren(RetentionClient retentionClient) {

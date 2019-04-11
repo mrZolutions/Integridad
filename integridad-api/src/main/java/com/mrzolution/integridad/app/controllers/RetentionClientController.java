@@ -1,8 +1,10 @@
 package com.mrzolution.integridad.app.controllers;
 
 import com.mrzolution.integridad.app.domain.RetentionClient;
+import com.mrzolution.integridad.app.domain.report.RetentionClientReport;
 import com.mrzolution.integridad.app.exceptions.BadRequestException;
 import com.mrzolution.integridad.app.services.RetentionClientServices;
+import java.util.List;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,5 +52,18 @@ public class RetentionClientController {
 	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
         return new ResponseEntity<RetentionClient>(response, HttpStatus.CREATED);
+    }
+    
+    @RequestMapping(method = RequestMethod.GET, value="/rep/retenclient/{userClientId}/{dateOne}/{dateTwo}")
+    public ResponseEntity getRetentionClientByUserClientIdAndDates(@PathVariable("userClientId") UUID userClientId, @PathVariable("dateOne") long dateOne, @PathVariable("dateTwo") long dateTwo) {
+	log.info("RetentionClientController getRetentionClientByUserClientIdAndDates: {}, {}, {}", userClientId, dateOne, dateTwo);
+	List<RetentionClientReport> response = null;
+	try {
+            response = service.getRetentionClientByUserClientIdAndDates(userClientId, dateOne, dateTwo);
+	} catch(BadRequestException e) {
+            log.error("RetentionClientController getRetentionClientByUserClientIdAndDates Exception thrown: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+	}
+	return new ResponseEntity<List>(response, HttpStatus.ACCEPTED);
     }
 }
