@@ -11,12 +11,14 @@ import com.mrzolution.integridad.app.exceptions.BadRequestException;
 import com.mrzolution.integridad.app.father.Father;
 import com.mrzolution.integridad.app.father.FatherManageChildren;
 import com.mrzolution.integridad.app.repositories.CashierRepository;
+import com.mrzolution.integridad.app.repositories.CreditsDebtsChildRepository;
 import com.mrzolution.integridad.app.repositories.CreditsDebtsRepository;
 import com.mrzolution.integridad.app.repositories.DebtsToPayRepository;
 import com.mrzolution.integridad.app.repositories.DetailDebtsToPayChildRepository;
 import com.mrzolution.integridad.app.repositories.DetailDebtsToPayRepository;
 import com.mrzolution.integridad.app.repositories.PagoDebtsChildRepository;
 import com.mrzolution.integridad.app.repositories.PagoDebtsRepository;
+import com.mrzolution.integridad.app.repositories.PaymentDebtsChildRepository;
 import com.mrzolution.integridad.app.repositories.PaymentDebtsRepository;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -48,9 +50,15 @@ public class DebtsToPayServices {
     @Autowired
     CreditsDebtsRepository creditsDebtsRepository;
     @Autowired
+    CreditsDebtsChildRepository creditsDebtsChildRepository;
+    @Autowired
     CashierRepository cashierRepository;
     @Autowired
     PaymentDebtsRepository paymentDebtsRepository;
+    @Autowired
+    PaymentDebtsChildRepository paymentDebtsChildRepository;
+    
+    public String debtsId = "";
     
     //Selecciona Debts por Id
     public DebtsToPay getDebtsToPayById(UUID id) {
@@ -121,11 +129,11 @@ public class DebtsToPayServices {
     
     //Guarda Pagos y Credits de Debts
     void savePagosAndCreditsOfDebts(DebtsToPay saved, List<PagoDebts> pagosDebts) {
-        pagosDebts.forEach(pagoDebt -> {
-            List<CreditsDebts> creditsDebtsList = pagoDebt.getCreditsDebts();
-            pagoDebt.setCreditsDebts(null);
-            pagoDebt.setDebtsToPay(saved);
-            PagoDebts pagoDebtSaved = pagoDebtsRepository.save(pagoDebt);
+        pagosDebts.forEach(pagoDebts -> {
+            List<CreditsDebts> creditsDebtsList = pagoDebts.getCreditsDebts();
+            pagoDebts.setCreditsDebts(null);
+            pagoDebts.setDebtsToPay(saved);
+            PagoDebts pagoDebtSaved = pagoDebtsRepository.save(pagoDebts);
             if (creditsDebtsList != null) {
                 creditsDebtsList.forEach(creditDebt -> {
                     creditDebt.setPagoDebts(pagoDebtSaved);
@@ -180,12 +188,19 @@ public class DebtsToPayServices {
         }
         log.info("DebtsToPayServices updateDebtsToPay: {}", debtsToPay.getId());
         Father<DebtsToPay, DetailDebtsToPay> fatherDebts = new Father<>(debtsToPay, debtsToPay.getDetailDebtsToPay());
-        FatherManageChildren fatherUpdateChildren = new FatherManageChildren(fatherDebts, detailDebtsToPayChildRepository, detailDebtsToPayRepository);
-        fatherUpdateChildren.updateChildren();
+        FatherManageChildren fatherUpdateDetailsChildren = new FatherManageChildren(fatherDebts, detailDebtsToPayChildRepository, detailDebtsToPayRepository);
+        fatherUpdateDetailsChildren.updateChildren();
         Father<DebtsToPay, PagoDebts> fatherPagoDebts = new Father<>(debtsToPay, debtsToPay.getPagos());
-        FatherManageChildren fatherUpdateChildrenPagoDebts = new FatherManageChildren(fatherPagoDebts, pagoDebtsChildRepository, pagoDebtsRepository);
-        fatherUpdateChildrenPagoDebts.updateChildren();
-        log.info("DebtsToPayServices CHILDREN updated: {}", debtsToPay.getId());
+        FatherManageChildren fatherUpdatePagoDebtsChildren = new FatherManageChildren(fatherPagoDebts, pagoDebtsChildRepository, pagoDebtsRepository);
+        fatherUpdatePagoDebtsChildren.updateChildren();
+        debtsId = debtsToPay.getId().toString();
+        debtsToPay.getPagos().forEach(pagoDebts -> {
+            if (pagoDebts.getCreditsDebts() != null) {
+                Father<PagoDebts, CreditsDebts> fatherCreditsDebts = new Father<>(pagoDebts, pagoDebts.getCreditsDebts());
+                FatherManageChildren fatherUpdateChildrenCreditsDebts = new FatherManageChildren(fatherCreditsDebts, creditsDebtsChildRepository , creditsDebtsRepository);
+                fatherUpdateChildrenCreditsDebts.updateChildren();
+            }
+        });
         debtsToPay.setListsNull();
         DebtsToPay updated = debtsToPayRepository.save(debtsToPay);
         log.info("DebtsToPayServices updateDebtsToPay DONE id: {}", updated.getId());

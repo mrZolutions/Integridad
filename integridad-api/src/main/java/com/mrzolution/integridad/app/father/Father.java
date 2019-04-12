@@ -15,11 +15,11 @@ public class Father<F, C> {
         this.children = children;
     }
 
-    public List<C> obtainChildren(){
+    public List<C> obtainChildren() {
         return children;
     }
 
-    public F getDad()  {
+    public F getDad() {
         return dad;
     }
 }

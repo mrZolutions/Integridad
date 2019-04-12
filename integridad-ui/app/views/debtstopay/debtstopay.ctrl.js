@@ -982,18 +982,6 @@ angular.module('integridadUiApp')
       });
     };
 
-    //Función que obtiene las Retenciones por Proveedor
-    vm.getRetentionByProvider = function() {
-      vm.loading = true;
-      eretentionService.getAllRetentionsByProviderId(vm.providerId).then(function(response) {
-        vm.retentionList = response;
-        vm.loading = false;
-      }).catch(function(error) {
-        vm.loading = false;
-        vm.error = error.data;
-      });
-    };
-
     vm.getRetentionByProviderAndDocumentNumber = function() {
       vm.loading = true;
       vm.debtsBillNumber = vm.debtsToPay.threeNumberOne + '-' + vm.debtsToPay.threeNumberTwo + '-' + vm.debtsToPay.seccondPartNumber;
@@ -1004,7 +992,7 @@ angular.module('integridadUiApp')
         vm.loading = false;
         vm.error = error.data;
       });
-  };
+    };
 
     //Función que obtiene los Datos de una Retención
     vm.retentionSelected = function(retention) {
@@ -1355,11 +1343,12 @@ angular.module('integridadUiApp')
       vm.debtsToPay.subTotalDoce = vm.subTotalDoce;
       vm.debtsToPay.subTotalCero = vm.subTotalCero;
       vm.debtsToPay.debtsSeq = vm.seqNumber;
-      vm.debtsToPay.retentionId = vm.retentionId;
-      vm.debtsToPay.retentionNumber = vm.retentionNumber;
-      vm.debtsToPay.retentionDateCreated = vm.retentionDateCreated;
-      vm.debtsToPay.retentionTotal = vm.retentionTotal;
-      vm.debtsToPay.saldo = vm.debtsToPay.total;
+      vm.debtsToPay.estado = vm.status;
+      if (vm.status === 'PENDIENTE') {
+        vm.debtsToPay.saldo = vm.debtsToPay.total - vm.debtsToPay.retentionTotal;
+      } else {
+        vm.debtsToPay.saldo = 0.0;
+      };
       vm.debtsToPay.pagos = vm.pagos;
       debtsToPayService.update(debtsToPay).then(function(respDebtsToPay) {
         vm.totalDebtsToPay = 0;

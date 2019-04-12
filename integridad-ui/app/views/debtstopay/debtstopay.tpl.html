@@ -1377,12 +1377,12 @@
                     <div class="form-group col-md-3">
                         <br/>
                         <button type = "button" title = "Buscar y Agregar Retención" class = "btn btn-primary btn-block"
-                                ng-click = "vm.getRetentionByProvider()" data-toggle = "modal" data-target = "#modalFindRetention">
+                                ng-click = "vm.getRetentionByProviderAndDocumentNumber()" data-toggle = "modal" data-target = "#modalFindRetention">
                                 Buscar Retenci&oacute;n
                         </button>
                     </div>
                     <div class="form-group col-md-4">
-                        <label>Impuesto:</label><br>
+                        <label>Impuesto:</label><br/>
                         <label class="radio-inline"><input type="radio" ng-model="vm.debtsToPay.typeTaxes" value="1" name="tipo"
                                ng-change="vm.getPercentageTableAll()">IVA</label>
                         <label class="radio-inline"><input type="radio" ng-model="vm.debtsToPay.typeTaxes" value="2" name="tipo"
@@ -1396,19 +1396,19 @@
                     </div>
                 </div>
                 <div class="row">
-                        <div class="form-group col-md-4">
-                            <label>Nro. Retención</label><br/>
-                            {{vm.retentionNumber}}
-                        </div>
-                        <div class="form-group col-md-4">
-                            <label>Fecha de Retención</label><br/>
-                            {{vm.retentionDateCreated | date : "dd/MM/yyyy"}}
-                        </div>
-                        <div class="form-group col-md-4">
-                            <label>Valor Retención</label><br/>
-                            {{(vm.retentionTotal).toFixed(2)}}
-                        </div>
+                    <div class="form-group col-md-4">
+                        <label>Nro. Retención</label><br/>
+                        {{vm.debtsToPay.retentionNumber}}
                     </div>
+                    <div class="form-group col-md-4">
+                        <label>Fecha de Retención</label><br/>
+                        {{vm.debtsToPay.retentionDateCreated | date : "dd/MM/yyyy"}}
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label>Valor Retención</label><br/>
+                        {{(vm.debtsToPay.retentionTotal).toFixed(2)}}
+                    </div>
+                </div>
                 <div class="row table-responsive" ng-show="vm.cuentaContableList !== undefined">
                     <div class="form-group col-md-12">
                         <table class="table table-striped">

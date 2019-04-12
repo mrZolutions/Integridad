@@ -15,7 +15,6 @@ import com.mrzolution.integridad.app.interfaces.ChildRepository;
  * Created by daniel on 5/5/17.
  */
 public class FatherManageChildren {
-
     Father father;
     ChildRepository childRepository;
     CrudRepository crudRepository;
@@ -26,14 +25,14 @@ public class FatherManageChildren {
         this.crudRepository = crudRepository;
     }
 
-    public void updateChildren (){
+    public void updateChildren () {
         List<UUID> childrenOldIdList = new ArrayList<>();
         List<UUID> childrenNewIdList = new ArrayList<>();
 
         List childList = new ArrayList();
 
-        if(father.obtainChildren() != null){
-        	List<Child> childrenNew = father.obtainChildren();
+        if (father.obtainChildren() != null) {
+            List<Child> childrenNew = father.obtainChildren();
             childrenNew.forEach(children -> childrenNewIdList.add(children.getId()));
 
             Iterable<UUID> childrenOld = childRepository.findByFather(father.getDad());
@@ -51,16 +50,12 @@ public class FatherManageChildren {
                 } catch (IllegalAccessException e) {
                     e.printStackTrace();
                 }
-
                 childList.add(child);
 //                crudRepository.save(child);
-
             });
-
             if(!childList.isEmpty()){
                 crudRepository.save(childList);
             }
-
             childrenOldIdList.stream().filter(
                     childId -> !childrenNewIdList.contains(childId)
             ).forEach(childId -> {crudRepository.delete(childId);});
