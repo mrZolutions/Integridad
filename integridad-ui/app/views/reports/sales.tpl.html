@@ -71,59 +71,63 @@
       <div class="row">
         <div class="form-group col-md-10">
           <p><b>Rep. Productos, Ventas y Retenciones</b></p>
-          <button type="button" title="Seleccione Fecha Inicio - Fecha Fin" class="btn btn-primary"
+          <button type="button" title="Seleccione Fecha Inicio - Fecha Fin" class="btn btn-primary btn-sm"
                   ng-click="vm.getReportProducts()">
                   De Productos
           </button>
-          <button type="button" title="Seleccione Fecha Inicio - Fecha Fin" class="btn btn-primary"
+          <button type="button" title="Seleccione Fecha Inicio - Fecha Fin" class="btn btn-primary btn-sm"
                   ng-click="vm.getReportSales()">
                   De Ventas
           </button>
-          <button type="button" title="Seleccione Fecha Inicio - Fecha Fin" class="btn btn-primary"
+          <button type="button" title="Seleccione Fecha Inicio - Fecha Fin" class="btn btn-primary btn-sm"
                   ng-click="vm.getReportRetention()">
                   RET en Compras
           </button>
-          <button type="button" title="Seleccione Fecha Inicio" class="btn btn-primary"
+          <button type="button" title="Seleccione Fecha Inicio" class="btn btn-primary btn-sm"
                   ng-click="vm.getReportCierreCaja()">
                   Cierre Caja
           </button>
         </div>
         <div class="form-group col-md-2">
           <p><b>Exportar</b></p>
-          <button type="button" class="btn btn-primary"
+          <button type="button" class="btn btn-primary btn-sm"
                   ng-click="vm.exportExcel()" ng-disabled="vm.reportList === undefined || vm.reportList.length === 0">
                   Excel
           </button>
         </div>
-        <div class="form-group col-md-7">
+        <div class="form-group col-md-6">
           <p><b>Rep. Cuentas por Cobrar</b></p>
-          <button type="button" title="Seleccione Fecha Fin" class="btn btn-primary"
+          <button type="button" title="Seleccione Fecha Fin" class="btn btn-primary btn-sm"
                   ng-click="vm.getCreditsPendingReport()">
                   Ctas Pendientes
           </button>
-          <button type="button" title="Seleccione Fecha Inicio - Fecha Fin" class="btn btn-primary"
+          <button type="button" title="Seleccione Fecha Inicio - Fecha Fin" class="btn btn-primary btn-sm"
                   ng-click="vm.getReportRetentionClient()">
                   RET en Ventas
           </button>
-          <button type="button" class="btn btn-primary"
+          <button type="button" title="Seleccione Fecha Inicio - Fecha Fin" class="btn btn-primary btn-sm"
                   ng-click="vm.getCCResumenReport()">
                   Abonos y Otros
           </button>
         </div>
-        <div class="form-group col-md-5">
+        <div class="form-group col-md-6">
           <p><b>Rep. Cuentas por Pagar</b></p>
-          <button type="button" title="Seleccione Fecha Inicio - Fecha Fin" class="btn btn-primary"
+          <button type="button" title="Seleccione Fecha Inicio - Fecha Fin" class="btn btn-primary btn-sm"
                   ng-click="vm.getReportDebts()">
                   De Compras
           </button>
-          <button type="button" title="Seleccione Fecha Fin" class="btn btn-primary"
+          <button type="button" title="Seleccione Fecha Fin" class="btn btn-primary btn-sm"
                   ng-click="vm.getCreditsDebtsPendingReport()">
                   Ctas Pendientes
+          </button>
+          <button type="button" title="Seleccione Fecha Inicio - Fecha Fin" class="btn btn-primary btn-sm"
+                  ng-click="vm.getCPResumenPaymentDebtsReport()">
+                  Abonos y Otros
           </button>
         </div>
         <div class="form-group col-md-6">
           <p><b>Consumos</b></p>
-          <button type="button" title="Seleccione Fecha Inicio - Fecha Fin" class="btn btn-primary"
+          <button type="button" title="Seleccione Fecha Inicio - Fecha Fin" class="btn btn-primary btn-sm"
                   ng-click="vm.getReportCsmProducts()">
                   De Productos
           </button>
@@ -383,6 +387,7 @@
           <th>Valor Factura</th>
           <th>Tipo Transacci&oacute;n</th>
           <th>Forma de Pago</th>
+          <th>N&uacute;mero Cheque</th>
           <th>Fecha de Pago</th>
           <th>Abonos</th>
           <th>Retenciones</th>
@@ -390,13 +395,14 @@
         </tr>
       </thead>
       <tbody>
-        <tr ng-repeat="data in vm.reportList | orderBy:'nomCliente'" >
+        <tr ng-repeat="data in vm.reportList | orderBy:'nameClient'" >
           <td>{{data.identification}}</td>
           <td>{{data.nameClient}}</td>
           <td>{{data.billNumber}}</td>
           <td>{{data.billTotal.toFixed(2)}}</td>
           <td>{{data.tipTransac}}</td>
           <td>{{data.formPago}}</td>
+          <td>{{data.numCheque}}</td>
           <td>{{data.fechPago}}</td>
           <td>{{data.valorAbono.toFixed(2)}}</td>
           <td>{{data.valorReten.toFixed(2)}}</td>
@@ -532,35 +538,71 @@
 
   <!--Reporte de Productos Consumidos-->
   <div class="table-responsive" ng-if="vm.isProductReportList === '10' && vm.reportList !== undefined">
-      <table class="table table-striped">
-        <thead>
-          <tr>
-            <th>Tipo</th>
-            <th>Consum. No.</th>
-            <th>C&oacute;digo</th>
-            <th>Descripci&oacute;n</th>
-            <th>Cantidad</th>
-            <th>V. Unitario</th>
-            <th>Subtotal</th>
-            <th>Iva</th>
-            <th>Total</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr ng-repeat="data in vm.reportList | orderBy:'code'" >
-            <td>{{data.type}}</td>
-            <td>{{data.csmNumberSeq}}</td>
-            <td>{{data.code}}</td>
-            <td>{{data.description}}</td>
-            <td>{{data.quantity}}</td>
-            <td>{{data.valUnit}}</td>
-            <td>{{data.subTotal.toFixed(2)}}</td>
-            <td>{{data.iva.toFixed(2)}}</td>
-            <td>{{data.total.toFixed(2)}}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Tipo</th>
+          <th>Consum. No.</th>
+          <th>C&oacute;digo</th>
+          <th>Descripci&oacute;n</th>
+          <th>Cantidad</th>
+          <th>V. Unitario</th>
+          <th>Subtotal</th>
+          <th>Iva</th>
+          <th>Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="data in vm.reportList | orderBy:'code'" >
+          <td>{{data.type}}</td>
+          <td>{{data.csmNumberSeq}}</td>
+          <td>{{data.code}}</td>
+          <td>{{data.description}}</td>
+          <td>{{data.quantity}}</td>
+          <td>{{data.valUnit}}</td>
+          <td>{{data.subTotal.toFixed(2)}}</td>
+          <td>{{data.iva.toFixed(2)}}</td>
+          <td>{{data.total.toFixed(2)}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!--Reporte de Pagos y Abonos-->
+  <div class="table-responsive" ng-if="vm.isProductReportList === '11' && vm.reportList !== undefined">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>RUC</th>
+          <th>Proveedor</th>
+          <th>N&uacute;mero CxP</th>
+          <th>N&uacute;mero Factura</th>
+          <th>Valor CxP</th>
+          <th>Tipo Transacci&oacute;n</th>
+          <th>Forma de Pago</th>
+          <th>N&uacute;mero Cheque</th>
+          <th>Fecha de Pago</th>
+          <th>Abonos</th>
+          <th>Retenciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="data in vm.reportList | orderBy:'nomCliente'" >
+          <td>{{data.ruc}}</td>
+          <td>{{data.nameProv}}</td>
+          <td>{{data.debtsNumber}}</td>
+          <td>{{data.billNumber}}</td>
+          <td>{{data.debtsTotal.toFixed(2)}}</td>
+          <td>{{data.tipTransac}}</td>
+          <td>{{data.formPago}}</td>
+          <td>{{data.numCheque}}</td>
+          <td>{{data.fechPago}}</td>
+          <td>{{data.valorAbono.toFixed(2)}}</td>
+          <td>{{data.valorReten.toFixed(2)}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 
   <div class="row">
     <div class="form-group col-md-12">

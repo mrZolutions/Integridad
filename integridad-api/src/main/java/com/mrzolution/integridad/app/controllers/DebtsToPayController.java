@@ -41,6 +41,32 @@ public class DebtsToPayController {
         return new ResponseEntity<DebtsToPay>(response, HttpStatus.ACCEPTED);
     }
     
+    @RequestMapping(method = RequestMethod.GET, value="/seq/{seq}/{subId}")
+    public ResponseEntity getDebtsToPayByDebtsSeqAndSubId(@PathVariable("seq") String stringSeq, @PathVariable("subId") UUID subId) {
+        Iterable<DebtsToPay> response = null;
+        try {
+            response = service.getDebtsToPayByDebtsSeqAndSubId(stringSeq, subId);
+        } catch (BadRequestException e) {
+            log.error("DebtsToPayController getDebtsToPayByDebtsSeqAndSubId Exception thrown: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+        log.info("DebtsToPayController getDebtsToPayByDebtsSeqAndSubId DONE: {}, {}", stringSeq, subId);
+        return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
+    }
+    
+    @RequestMapping(method = RequestMethod.GET, value="/userclient/{userClientId}/{billNumber}/{authoNumber}")
+    public ResponseEntity getDebtsToPayByBillNumberAndAuthoNumber(@PathVariable("userClientId") UUID userClientId, @PathVariable("billNumber") String billNumber, @PathVariable("authoNumber") String authoNumber) {
+        Iterable<DebtsToPay> response = null;
+        try {
+            response = service.getDebtsToPayByBillNumberAndAuthoNumber(userClientId, billNumber, authoNumber);
+        } catch (BadRequestException e) {
+            log.error("DebtsToPayController getDebtsToPayByBillNumberAndAuthoNumber Exception thrown: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+        log.info("DebtsToPayController getDebtsToPayByBillNumberAndAuthoNumber DONE: {}, {}, {}", userClientId, billNumber, authoNumber);
+        return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
+    }
+    
     @RequestMapping(method = RequestMethod.GET, value="/debts/provider/{id}")
     public ResponseEntity getDebtsToPayByProviderId(@PathVariable("id") UUID id) {
         log.info("DebtsToPayController getDebtsByProviderId: {}", id);

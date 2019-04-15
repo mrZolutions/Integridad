@@ -1,13 +1,19 @@
 package com.mrzolution.integridad.app.services;
 
+import com.google.common.collect.Iterables;
 import com.mrzolution.integridad.app.domain.CreditsDebts;
 import com.mrzolution.integridad.app.domain.DebtsToPay;
 import com.mrzolution.integridad.app.domain.PaymentDebts;
+import com.mrzolution.integridad.app.domain.report.CPResumenPaymentDebtsReport;
 import com.mrzolution.integridad.app.repositories.CreditsDebtsRepository;
 import com.mrzolution.integridad.app.repositories.DebtsToPayRepository;
 import com.mrzolution.integridad.app.repositories.PagoDebtsRepository;
 import com.mrzolution.integridad.app.repositories.PaymentDebtsRepository;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,11 +39,24 @@ public class PaymentDebtsServices {
     private UUID idCreditsDebts;
     private double nume = 0.0;
     private double abono = 0.0;
-    private String estadoCambio = "";
     private double resto = 0.0;
-    private String document = "";
+    private String document = "-";
     private double saldo = 0.0;
     private double sumado = 0.0;
+    
+    private String numCheque = "-";
+    
+    private String ruc = "-";
+    private String nameProv = "-";
+    private String debtsNumber = "-";
+    private String billNumber = "-";
+    
+    private UUID providerId;
+    private double sumTotalAbono = 0.0;
+    private double sumTotalReten = 0.0;
+    
+    private double totalAbono = 0.0;
+    private double totalReten = 0.0;
     
     public PaymentDebts createPaymentDebts(PaymentDebts paymentDebts) {
         PaymentDebts saved = paymentDebtsRepository.save(paymentDebts);
@@ -79,6 +98,64 @@ public class PaymentDebtsServices {
             debtsToPayRepository.save(debts);
         }
         log.info("PaymentDebtsServices updateDebtsToPay DONE");
+    }
+    
+    public List<CPResumenPaymentDebtsReport> getPaymentsDebtsByUserClientIdAndDates(UUID id, long dateOne, long dateTwo) {
+        sumTotalAbono = 0;
+        sumTotalReten = 0;
+        
+        totalAbono = 0;
+        totalReten = 0;
+        
+        log.info("PaymentServices getPaymentsDebtsByUserClientIdAndDates: {}", id);
+        Iterable<PaymentDebts> paymentsDebts = paymentDebtsRepository.findPaymentsDebtsByUserClientIdAndDates(id, dateOne, dateTwo);
+        List<CPResumenPaymentDebtsReport> cpResumenPaymentDebtsReportList = new ArrayList<>();
+        
+        if (Iterables.size(paymentsDebts) > 0) {
+            PaymentDebts firstPayment = Iterables.getFirst(paymentsDebts, new PaymentDebts());
+            providerId = firstPayment.getCreditsDebts().getPagoDebts().getDebtsToPay().getProvider().getId();
+        }
+        
+        paymentsDebts.forEach(paymentDebt -> {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd");
+            String fechaPago = dateFormat.format(new Date(paymentDebt.getDatePayment()));
+            
+            if (providerId != null && providerId.equals(paymentDebt.getCreditsDebts().getPagoDebts().getDebtsToPay().getProvider().getId())) {
+                sumTotalAbono = Double.sum(sumTotalAbono, paymentDebt.getValorAbono());
+                sumTotalReten = Double.sum(sumTotalReten, paymentDebt.getValorReten());
+            } else {
+                providerId = paymentDebt.getCreditsDebts().getPagoDebts().getDebtsToPay().getProvider().getId();
+                CPResumenPaymentDebtsReport resumenPaymentDebtsReport = new CPResumenPaymentDebtsReport("SUB-TOTAL ", null, null, null, null, null, null, null, null, sumTotalAbono, sumTotalReten);
+                cpResumenPaymentDebtsReportList.add(resumenPaymentDebtsReport);
+                sumTotalAbono = paymentDebt.getValorAbono();
+                sumTotalReten = paymentDebt.getValorReten();
+            }
+            
+            if ("CHQ".equals(paymentDebt.getModePayment())) {
+                numCheque = paymentDebt.getNoDocument();
+            } else {
+                numCheque = "-";
+            }
+            
+            ruc = paymentDebt.getCreditsDebts().getPagoDebts().getDebtsToPay().getProvider().getRuc();
+            nameProv = paymentDebt.getCreditsDebts().getPagoDebts().getDebtsToPay().getProvider().getName();
+            debtsNumber = paymentDebt.getCreditsDebts().getPagoDebts().getDebtsToPay().getDebtsSeq();
+            billNumber = paymentDebt.getCreditsDebts().getPagoDebts().getDebtsToPay().getBillNumber();
+            
+            CPResumenPaymentDebtsReport resumenPaymentDebtsReport = new CPResumenPaymentDebtsReport(ruc, nameProv, debtsNumber, billNumber, paymentDebt.getCreditsDebts().getPagoDebts().getDebtsToPay().getTotal(),
+                                                                paymentDebt.getTypePayment(), paymentDebt.getModePayment(), numCheque, fechaPago, paymentDebt.getValorAbono(), paymentDebt.getValorReten());
+            cpResumenPaymentDebtsReportList.add(resumenPaymentDebtsReport);
+            
+            totalAbono = Double.sum(totalAbono, paymentDebt.getValorAbono());
+            totalReten = Double.sum(totalReten, paymentDebt.getValorReten());
+        });
+        CPResumenPaymentDebtsReport resumenPaymentDebtsReport = new CPResumenPaymentDebtsReport("SUB-TOTAL ", null, null, null, null, null, null, null, null, sumTotalAbono, sumTotalReten);
+        cpResumenPaymentDebtsReportList.add(resumenPaymentDebtsReport);
+        
+        CPResumenPaymentDebtsReport totResumenPaymentDebtsReport = new CPResumenPaymentDebtsReport("TOTAL GENERAL ", null, null, null, null, null, null, null, null, totalAbono, totalReten);
+        cpResumenPaymentDebtsReportList.add(totResumenPaymentDebtsReport);
+        
+        return cpResumenPaymentDebtsReportList;
     }
 
 }

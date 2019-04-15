@@ -91,7 +91,7 @@
       <div class="row">
         <div class="form-group col-md-3">
           <label>Tipo:</label>
-          <select ng-options="tipe.code as tipe.name for tipe in [{code: 'GENE' ,name:'GENERAL'}, {code: 'BIEN' ,name:'BIENES'}, {code: 'SERV', name:'SERVICIOS'}, {code: 'MATP', name:'MATERIA PRIMA'}, {code: 'CONS', name:'CONSUMIBLES'}, {code: 'RMBG', name:'REEMBOLSO GASTOS'}, {code: 'TKAE', name:'TICKETS AEREOS'}]"
+          <select ng-options="tipe.code as tipe.name for tipe in vm.tipoCtaCtable"
                   ng-model="vm.cuentaSelected.type" class="form-control">
           </select>
         </div>

@@ -95,6 +95,28 @@ public class DebtsToPayServices {
         return debts;
     }
     
+    //Busca Debts por Numero de Secuencia y Subsidiaria
+    public Iterable<DebtsToPay> getDebtsToPayByDebtsSeqAndSubId(String stringSeq, UUID subId) {
+        log.info("DebtsToPayServices getDebtsToPayByDebtsSeqAndSubId : {}, {}", stringSeq, subId);
+        Iterable<DebtsToPay> debts = debtsToPayRepository.findDebtsToPayByDebtsSeqAndSubsidiaryId(stringSeq, subId);
+        debts.forEach(debt -> {
+            debt.setFatherListToNull();
+            debt.setListsNull();
+        });
+        return debts;
+    }
+    
+    //Busca Debts por Nro. Factura y Nro. Autorización
+    public Iterable<DebtsToPay> getDebtsToPayByBillNumberAndAuthoNumber(UUID userClientId, String billNumber, String authoNumber) {
+        log.info("DebtsToPayServices getDebtsToPayByBillNumberAndAuthoNumber : {}, {}, {}", userClientId, billNumber, authoNumber);
+        Iterable<DebtsToPay> debts = debtsToPayRepository.findDebtsToPayByBillNumberAndAuthoNumber(userClientId, billNumber, authoNumber);
+        debts.forEach(debt -> {
+            debt.setFatherListToNull();
+            debt.setListsNull();
+        });
+        return debts;
+    }
+    
     //Creación de los Debts
     public DebtsToPay createDebtsToPay(DebtsToPay debtsToPay) throws BadRequestException {
         List<DetailDebtsToPay> detailDebtsToPay = debtsToPay.getDetailDebtsToPay();

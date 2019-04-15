@@ -23,5 +23,5 @@ public interface DailybookCppRepository extends CrudRepository<DailybookCpp, UUI
     Iterable<DailybookCpp> findDailybookCppByProviderId(@Param("id") UUID id);
     
     @Query("SELECT d FROM DailybookCpp d WHERE d.subsidiary.userClient.id = (:userClientId) AND d.active = true")
-    Iterable<DailybookCpp>findDailybookCppByUserClientId(@Param("userClientId") UUID id);
+    Iterable<DailybookCpp> findDailybookCppByUserClientId(@Param("userClientId") UUID id);
 }

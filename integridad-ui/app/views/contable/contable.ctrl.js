@@ -53,7 +53,7 @@ angular.module('integridadUiApp')
         vm.cuenta = undefined;
         vm.cuentaContableList = undefined;
         
-        //Contabilidad General
+        //Contabilidad General Cg
         vm.dailybookCgNew = undefined;
         vm.dailyCgSeq = undefined;
         vm.dailyCgStringSeq = undefined;
@@ -67,8 +67,21 @@ angular.module('integridadUiApp')
         vm.dailybookCgCreated = undefined;
         vm.dailybookCgTemp = undefined;
         vm.generalDetailCg = undefined;
+
+        //Comprobante de Egreso Ce
+        vm.dailybookCeNew = undefined;
+        vm.dailyCeSeq = undefined;
+        vm.dailyCeStringSeq = undefined;
+        vm.dailiedCe = false;
+        vm.subIvaCe = undefined;
+        vm.subTotalDoceCe = undefined;
+        vm.subTotalCeroCe = undefined;
+        vm.totalCe = undefined;
+        vm.dailybookCeList = undefined;
+        vm.dailybookCeCreated = undefined;
+        vm.generalDetailCe = undefined;
         
-        //Cuentas por Pagar
+        //Cuentas por Pagar Cpp
         vm.dailybookCppNew = undefined;
         vm.dailyCppSeq = undefined;
         vm.dailyCppStringSeq = undefined;
@@ -126,6 +139,24 @@ angular.module('integridadUiApp')
         };
     };
 
+    function _getDailyCeSeqNumber() {
+        vm.numberAddedOne = parseInt($localStorage.user.cashier.dailyCeNumberSeq) + 1;
+        vm.dailyCeSeq = vm.numberAddedOne;
+        vm.dailyCeStringSeq = utilSeqService._pad_with_zeroes(vm.numberAddedOne, 6);
+    };
+
+    function _initializeDailybookCe() {
+        vm.dailybookCe = {
+            userIntegridad: $localStorage.user,
+            subsidiary: $localStorage.user.subsidiary,
+            subTotalDoce: 0.0,
+            iva: 0.0,
+            subTotalCero: 0.0,
+            total: 0.0,
+            detailDailybookCe: []
+        };
+    };
+
     function _getDailyCppSeqNumber() {
         vm.numberAddedOne = parseInt($localStorage.user.cashier.dailyCppNumberSeq) + 1;
         vm.dailyCppSeq = vm.numberAddedOne;
@@ -142,7 +173,7 @@ angular.module('integridadUiApp')
             subTotalCero: 0.0,
             total: 0.0,
             detailDailybookCpp: []
-        }
+        };
     };
 
     vm.loadTypeDailybook = function() {
@@ -152,6 +183,17 @@ angular.module('integridadUiApp')
                 vm.typeContab = 'CONTABILIDAD GENERAL';
                 contableService.getDailybookCgByUserClientId(vm.usrCliId).then(function(response) {
                     vm.dailybookCgList = response;
+                    vm.loading = false;
+                }).catch(function(error) {
+                    vm.loading = false;
+                    vm.error = error.data;
+                });
+            break;
+            case '2':
+                vm.selectedTypeBook = vm.dailybookType;
+                vm.typeContab = 'COMPROBANTE DE EGRESO';
+                providerService.getLazyByUserClientId(vm.usrCliId).then(function(response) {
+                    vm.providerList = response;
                     vm.loading = false;
                 }).catch(function(error) {
                     vm.loading = false;

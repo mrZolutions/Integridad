@@ -6,4 +6,10 @@ angular
                 return response.data;
             });
         };
+
+        this.getPaymentsDebtsByUserClientIdAndDates = function(userClientId, dateOne, dateTwo) {
+            return securityService.get('/paymentdebts/rep/ccrespdreport/' + userClientId + '/' + dateOne + '/' + dateTwo).then(function successCallback(response) {
+                return response.data;
+            });
+        };
 });

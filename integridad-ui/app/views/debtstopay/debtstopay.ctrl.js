@@ -8,8 +8,8 @@
  * Controller of the menu
  */
 angular.module('integridadUiApp')
-  .controller('DebtsToPayCtrl', function(_, $localStorage, providerService, cuentaContableService, debtsToPayService, 
-                                        utilSeqService, creditsDebtsService, paymentDebtsService, $location, eretentionService) {
+  .controller('DebtsToPayCtrl', function(_, $localStorage, providerService, cuentaContableService, debtsToPayService, authService,
+                                        utilSeqService, creditsDebtsService, paymentDebtsService, $location, eretentionService, cashierService) {
     var vm = this;
     vm.error = undefined;
     vm.success = undefined;
@@ -259,6 +259,7 @@ angular.module('integridadUiApp')
     function _getSeqNumber() {
       vm.numberAddedOne = parseInt($localStorage.user.cashier.debtsNumberSeq) + 1;
       vm.seqNumber = utilSeqService._pad_with_zeroes(vm.numberAddedOne, 6);
+      vm.newSeqNumber = vm.seqNumber;
     };
 
     //Inicialización de los Debts
@@ -288,6 +289,42 @@ angular.module('integridadUiApp')
       $('#pickerDateDebtsToPay').data("DateTimePicker").date(today);
       $('#pickerDateDebtsToPay').on("dp.change", function(data) {
         vm.ejercicio = ('0' + ($('#pickerDateDebtsToPay').data("DateTimePicker").date().toDate().getMonth() + 1)).slice(-2) + '/' + $('#pickerDateDebtsToPay').data("DateTimePicker").date().toDate().getFullYear();
+      });
+    };
+
+    vm.validateAdm = function() {
+      vm.errorValidateAdm = undefined;
+      var userAdm = $localStorage.user.user;
+      userAdm.password = vm.passwordAdm;
+      authService.authUser(userAdm).then(function(response) {
+        vm.loading = false;
+        vm.isEmp = false;
+      }).catch(function(error) {
+        vm.loading = false;
+        vm.errorValidateAdm = error.data;
+      });
+    };
+
+    vm.verifyUser = function() {
+      vm.isEmp = $localStorage.user.userType.code === 'EMP';
+    };
+
+    vm.acceptNewSeq = function() {
+      vm.seqErrorNumber = undefined;
+      vm.loading = true;
+      var stringSeq =  vm.newSeqNumber;
+      debtsToPayService.getDebtsToPayByDebtsSeqAndSubId(stringSeq, vm.companyData.id).then(function(response) {
+        if (response.length === 0) {
+          vm.seqNumber = stringSeq;
+          vm.seqChanged = true;
+          $('#modalEditDebtsToPayNumber').modal('hide');
+        } else {
+          vm.seqErrorNumber = "NUMERO DE CUENTA POR PAGAR YA EXISTENTE"
+        };
+        vm.loading = false;
+      }).catch(function(error) {
+        vm.loading = false;
+        vm.error = error.data;
       });
     };
 
@@ -1069,21 +1106,35 @@ angular.module('integridadUiApp')
         };
         vm.debtsToPay.detailDebtsToPay.push(detail);
       });
-      debtsToPayService.create(debtsToPay).then(function(respDebtsToPay) {
-        vm.totalDebtsToPay = 0;
-        vm.debtsToPay = respDebtsToPay;
-        $localStorage.user.cashier.debtsNumberSeq = vm.debtsToPay.debtsSeq;
-        _.each(vm.debtsToPay.detailDebtsToPay, function(detail) {
-          vm.totalDebtsToPay = (parseFloat(vm.totalDebtsToPay) + parseFloat(detail.baseImponible)).toFixed(2);
-        });
-        vm.debtsToPayCreated = true;
-        vm.success = 'Factura de Compra Ingresada con Exito';
+      debtsToPayService.getDebtsToPayByBillNumberAndAuthoNumber(vm.usrCliId, vm.debtsToPay.billNumber, vm.debtsToPay.authorizationNumber).then(function(response) {
+        if (response.length === 0) {
+          debtsToPayService.create(debtsToPay).then(function(respDebtsToPay) {
+            vm.debtsToPay = respDebtsToPay;
+            $localStorage.user.cashier.debtsNumberSeq = vm.debtsToPay.debtsSeq;
+            if (vm.seqChanged) {
+              cashierService.update($localStorage.user.cashier).then(function(resp) {
+                // cashier updated
+              }).catch(function(error) {
+                vm.loading = false;
+                vm.error = error.data;
+              });
+            };
+            vm.debtsToPayCreated = true;
+            vm.success = 'Factura de Compra Ingresada con Exito';
+            vm.loading = false;
+          }).catch(function(error) {
+            vm.loading = false;
+            vm.error = error.data;
+          });
+          _activate();
+        } else {
+          vm.error = 'Factura de Compra Ya Existe';
+        };
         vm.loading = false;
       }).catch(function(error) {
         vm.loading = false;
         vm.error = error.data;
       });
-      _activate();
     };
 
     //Función que obtiene los créditos pendientes de las Cuentas por Pagar

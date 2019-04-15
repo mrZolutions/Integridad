@@ -9,7 +9,7 @@
  */
 angular.module('integridadUiApp')
   .controller('ReportSalesCtrl', function(_, $localStorage, creditsbillService, billService, eretentionService, eretentionClientService,
-                                          paymentService, creditsDebtsService, $location, debtsToPayService, consumptionService) {
+                                          paymentService, paymentDebtsService, creditsDebtsService, $location, debtsToPayService, consumptionService) {
     var vm = this;
     var today = new Date();
     $('#pickerBillDateOne').data("DateTimePicker").date(today);
@@ -196,6 +196,24 @@ angular.module('integridadUiApp')
       });
     };
 
+    vm.getCPResumenPaymentDebtsReport = function() {
+      vm.isProductReportList = '11';
+      vm.reportList = undefined;
+      vm.loading = true;
+      var dateOne = $('#pickerBillDateOne').data("DateTimePicker").date().toDate().getTime();
+      var dateTwo = $('#pickerBillDateTwo').data("DateTimePicker").date().toDate().getTime();
+      dateTwo += 86399000;
+      var userCliId = $localStorage.user.subsidiary.userClient.id;
+
+      paymentDebtsService.getPaymentsDebtsByUserClientIdAndDates(userCliId, dateOne, dateTwo).then(function(response) {
+        vm.reportList = response;
+        vm.loading = false;
+      }).catch(function(error) {
+        vm.loading = false;
+        vm.error = error.data;
+      });
+    };
+
     vm.getTotal = function(total, subTotal) {
       var total = total - subTotal;
       return (total).toFixed(2);
@@ -330,6 +348,7 @@ angular.module('integridadUiApp')
             VENTA: ccresumenreport.billTotal,
             TIPO_TRANSAC: ccresumenreport.tipTransac,
             MODO_PAGO: ccresumenreport.formPago,
+            NUME_CHQ: ccresumenreport.numCheque,
             FECHA_PAGO: ccresumenreport.fechPago !== null ? new Date(ccresumenreport.fechPago) : ccresumenreport.fechPago,
             VALOR_ABONO: parseFloat(ccresumenreport.valorAbono.toFixed(2)),
             VALOR_RETEN: parseFloat(ccresumenreport.valorReten.toFixed(2)),
@@ -412,6 +431,24 @@ angular.module('integridadUiApp')
             SUBTOTAL: parseFloat(consp.subTotal.toFixed(2)),
             IVA: parseFloat(consp.iva.toFixed(2)),
             TOTAL: parseFloat(consp.total.toFixed(2))
+          };
+
+          dataReport.push(data);
+        });
+      } else if (vm.isProductReportList === '11') {
+        _.each(vm.reportList, function(ccresumenpdreport) {
+          var data = {
+            RUC: ccresumenpdreport.ruc,
+            PROVEEDOR: ccresumenpdreport.nameProv,
+            NRO_CXP: ccresumenpdreport.debtsNumber,
+            NRO_FACTURA: ccresumenpdreport.billNumber,
+            VALOR_COMPRA: ccresumenpdreport.debtsTotal,
+            TIPO_TRANSAC: ccresumenpdreport.tipTransac,
+            MODO_PAGO: ccresumenpdreport.formPago,
+            NUME_CHQ: ccresumenpdreport.numCheque,
+            FECHA_PAGO: ccresumenpdreport.fechPago !== null ? new Date(ccresumenpdreport.fechPago) : ccresumenpdreport.fechPago,
+            VALOR_ABONO: parseFloat(ccresumenpdreport.valorAbono.toFixed(2)),
+            VALOR_RETEN: parseFloat(ccresumenpdreport.valorReten.toFixed(2))
           };
 
           dataReport.push(data);
