@@ -31,21 +31,21 @@ public class ProductServices {
         
     public Product createProduct(Product product) throws BadRequestException {
     	Iterable<Product> products = productRepository.findByCodeIntegridadAndClientId(product.getCodeIntegridad(), product.getUserClient().getId());
-            if (Iterables.size(products) > 0) {
-		throw new BadRequestException("CODIGO DUPLICADO");
-            }
-            product.setActive(true);
-            product.setDateCreated(new Date().getTime());
-            product.setLastDateUpdated(new Date().getTime());
-            List<ProductBySubsidiary> productBySubsidiaryList = product.getProductBySubsidiaries();
-            product.setListsNull();
-            Product saved = productRepository.save(product);
-            productBySubsidiaryList.forEach(productBySubsidiary -> {
-		productBySubsidiary.setProduct(saved);
-		productBySubsidiary.setFatherListToNull();
-		productBySubsidiairyRepository.save(productBySubsidiary);
-            });
-            return saved;
+        if (Iterables.size(products) > 0) {
+            throw new BadRequestException("CODIGO DUPLICADO");
+        }
+        product.setActive(true);
+        product.setDateCreated(new Date().getTime());
+        product.setLastDateUpdated(new Date().getTime());
+        List<ProductBySubsidiary> productBySubsidiaryList = product.getProductBySubsidiaries();
+        product.setListsNull();
+        Product saved = productRepository.save(product);
+        productBySubsidiaryList.forEach(productBySubsidiary -> {
+            productBySubsidiary.setProduct(saved);
+            productBySubsidiary.setFatherListToNull();
+            productBySubsidiairyRepository.save(productBySubsidiary);
+        });
+        return saved;
     }
 	
     //@Async("asyncExecutor")

@@ -1,6 +1,7 @@
 package com.mrzolution.integridad.app.controllers;
 
 import com.mrzolution.integridad.app.domain.Bill;
+import com.mrzolution.integridad.app.domain.Detail;
 import com.mrzolution.integridad.app.domain.ebill.Requirement;
 import com.mrzolution.integridad.app.domain.report.CashClosureReport;
 import com.mrzolution.integridad.app.domain.report.ItemReport;
@@ -129,7 +130,7 @@ public class BillController {
         }
         return new ResponseEntity<List>(response, HttpStatus.ACCEPTED);
     }
-
+    
     @RequestMapping(method = RequestMethod.GET, value="/{id}")
     public ResponseEntity getBillById(@PathVariable("id") UUID id) {
         Bill response = null;

@@ -108,7 +108,6 @@ public class DebtsToPayServices {
     
     //Busca Debts por Nro. Factura y Nro. Autorización
     public Iterable<DebtsToPay> getDebtsToPayByBillNumberAndAuthoNumber(UUID userClientId, String billNumber, String authoNumber) {
-        log.info("DebtsToPayServices getDebtsToPayByBillNumberAndAuthoNumber : {}, {}, {}", userClientId, billNumber, authoNumber);
         Iterable<DebtsToPay> debts = debtsToPayRepository.findDebtsToPayByBillNumberAndAuthoNumber(userClientId, billNumber, authoNumber);
         debts.forEach(debt -> {
             debt.setFatherListToNull();

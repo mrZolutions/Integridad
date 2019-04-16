@@ -379,7 +379,7 @@ public class BillServices {
         });
         return cashClosureReportList;
     }
-    
+       
     private void populateChildren(Bill bill) {
         List<Detail> detailList = getDetailsByBill(bill);
         List<Pago> pagoList = getPagosByBill(bill);

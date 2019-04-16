@@ -63,7 +63,7 @@ public class DebtsToPayController {
             log.error("DebtsToPayController getDebtsToPayByBillNumberAndAuthoNumber Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
-        log.info("DebtsToPayController getDebtsToPayByBillNumberAndAuthoNumber DONE: {}, {}, {}", userClientId, billNumber, authoNumber);
+        log.info("DebtsToPayController getDebtsToPayByBillNumberAndAuthoNumber DONE");
         return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
     }
     

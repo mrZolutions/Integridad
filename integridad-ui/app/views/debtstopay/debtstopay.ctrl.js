@@ -962,7 +962,7 @@ angular.module('integridadUiApp')
     vm.loadCredit = function() {
       var creditArray = [];
       var diasPlazo = parseInt(vm.medio.creditoIntervalos);
-      var billNumber = vm.debtsToPay.threeNumberOne + '-' + vm.debtsToPay.threeNumberTwo + '-' + vm.debtsToPay.seccondPartNumber;
+      var billNumber = vm.threeNumberOne + '-' + vm.threeNumberTwo + '-' + vm.seccondPartNumber;
       var d = new Date();
       var statusCredits = 'PENDIENTE';
       var total = parseFloat(parseFloat(vm.debtsToPay.total) / parseFloat(vm.medio.creditoNumeroPagos)).toFixed(4);
@@ -1024,7 +1024,7 @@ angular.module('integridadUiApp')
 
     vm.getRetentionByProviderAndDocumentNumber = function() {
       vm.loading = true;
-      vm.debtsBillNumber = vm.debtsToPay.threeNumberOne + '-' + vm.debtsToPay.threeNumberTwo + '-' + vm.debtsToPay.seccondPartNumber;
+      vm.debtsBillNumber = vm.threeNumberOne + '-' + vm.threeNumberTwo + '-' + vm.seccondPartNumber;
       eretentionService.getRetentionsByProviderIdAndDocumentNumber(vm.providerId, vm.debtsBillNumber).then(function(response) {
         vm.retentionList = response;
         vm.loading = false;
