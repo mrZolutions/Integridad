@@ -8,9 +8,14 @@ import org.springframework.stereotype.Repository;
 
 import com.mrzolution.integridad.app.domain.Bill;
 import com.mrzolution.integridad.app.domain.Detail;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 @Repository
 @Qualifier(value="DetailRepository")
 public interface DetailRepository extends CrudRepository<Detail, UUID> {	
     Iterable<Detail> findByBill(Bill bill);
+    
+    @Query("SELECT d FROM Detail d JOIN d.bill b WHERE b.client.id = (:id) AND b.typeDocument = (:type) AND b.active = true ORDER BY b.stringSeq")
+    Iterable<Detail> findBillByClientId(@Param("id") UUID id, @Param("type") int type);
 }

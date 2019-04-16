@@ -24,6 +24,7 @@ public class DetailCellar implements Child {
     private long quantity;
     private Double costEach;
     private Double total;
+    private String adicional;
     
     @ManyToOne
     @JoinColumn(name = "cellar_id")

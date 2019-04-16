@@ -277,7 +277,7 @@ public class DebtsToPayServices {
 	debtsToPay.setFatherListToNull();
     }
     
-    //Carga los Pagos de un Debt
+    //Carga los Pagos y Créditos de un Debt
     private List<PagoDebts> getPagosDebtsToPay (DebtsToPay debtsToPay) {
         List<PagoDebts> pagoDebtsList = new ArrayList<>(); 
         Iterable<PagoDebts> pagosDebts = pagoDebtsRepository.findByDebtsToPay(debtsToPay);

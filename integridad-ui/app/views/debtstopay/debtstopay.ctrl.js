@@ -238,6 +238,9 @@ angular.module('integridadUiApp')
       vm.retenTaxTypeIva = undefined;
       vm.debtsBillNumber = undefined;
       vm.debtsToPaySelectedToUpdate = undefined;
+      vm.threeNumberOne = undefined;
+      vm.threeNumberTwo = undefined;
+      vm.seccondPartNumber = undefined;
       vm.status = undefined;
       vm.loading = true;
       vm.success = undefined;
@@ -1070,6 +1073,9 @@ angular.module('integridadUiApp')
       vm.pagos.total = vm.aux;
       $('#modalAddPago').modal('hide');
       vm.debtsToPay.fecha = $('#pickerDateDebtsToPay').data("DateTimePicker").date().toDate().getTime();
+      vm.debtsToPay.threeNumberOne = utilSeqService._pad_with_zeroes(vm.threeNumberOne, 3);
+      vm.debtsToPay.threeNumberTwo = utilSeqService._pad_with_zeroes(vm.threeNumberTwo, 3);
+      vm.debtsToPay.seccondPartNumber = utilSeqService._pad_with_zeroes(vm.seccondPartNumber, 9);
       vm.debtsToPay.billNumber = vm.debtsToPay.threeNumberOne + '-' + vm.debtsToPay.threeNumberTwo + '-' + vm.debtsToPay.seccondPartNumber;
       vm.debtsToPay.providerId = vm.providerId;
       vm.debtsToPay.iva = vm.subIva;

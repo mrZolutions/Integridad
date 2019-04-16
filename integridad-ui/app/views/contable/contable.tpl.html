@@ -100,7 +100,7 @@
             </div>
             <div class="panel-footer">
                 <button type="button" title="Volver" class="btn btn-primary btn-sm"
-                        ng-click = "vm.cancel()">
+                        ng-click="vm.cancel()">
                         <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
                 </button>
             </div>
@@ -462,44 +462,49 @@
     <!--INICIO DE DIARIO DE COMPROBANTE DE EGRESO-->
     <!--SECCIÓN DE CARGA DE PROVEEDORES PARA DIARIO DE COMPROBANTE DE EGRESO-->
     <div class="table-responsive" ng-show="vm.selectedTypeBook === '2' && vm.providerSelected === undefined && vm.dailybookCeCreated === undefinded && vm.dailybookCeList === undefined">
-        <div class="row">
-            <div class="form-group col-md-12">
-                <input ng-model="searchText" class="form-control" placeholder="Buscar Proveedores">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <b>DIARIO DE COMPROBANTE DE EGRESO</b>
             </div>
-        </div>
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>C&oacute;digo</th>
-                    <th>Nombre</th>
-                    <th>No. Identidad</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr ng-show="vm.providerList == 0">
-                    <td colspan="4">
-                        No hay proveedores ingresados
-                    </td>
-                </tr>
-                <tr ng-repeat="provider in vm.providerList | orderBy:'name' | filter:searchText">
-                    <td>{{provider.codeIntegridad}}</td>
-                    <td>{{provider.name}}</td>
-                    <td>{{provider.ruc_type}} - {{provider.ruc}}</td>
-                    <td>
-                        <button type = "button" title = "Nuevo Diario Comprobante de Egreso" class = "btn btn-primary btn-sm" ng-click = "">
-                                <span class = "glyphicon glyphicon-book" aria-hidden = "true"></span>
-                        </button>
-                        <button type = "button" title = "Consultar Diario Comprobante de Egreso" class = "btn btn-primary btn-sm" ng-click = "">
-                                <span class = "glyphicon glyphicon-search" aria-hidden = "true"></span>
-                        </button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-        <div class="row">
-            <div class="form-group col-md-12">
-                <button type="button" title="Salir" class="btn btn-primary btn-sm"
+            <div class="panel-body">
+                <div class="row">
+                    <div class="form-group col-md-12">
+                        <input ng-model="searchText" class="form-control" placeholder="Buscar Proveedores">
+                    </div>
+                </div>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>C&oacute;digo</th>
+                            <th>Nombre</th>
+                            <th>No. Identidad</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-show="vm.providerList == 0">
+                            <td colspan="4">
+                                No hay proveedores ingresados
+                            </td>
+                        </tr>
+                        <tr ng-repeat="provider in vm.providerList | orderBy:'name' | filter:searchText">
+                            <td>{{provider.codeIntegridad}}</td>
+                            <td>{{provider.name}}</td>
+                            <td>{{provider.ruc_type}} - {{provider.ruc}}</td>
+                            <td>
+                                <button type = "button" title = "Nuevo Diario Comprobante de Egreso" class = "btn btn-primary btn-sm" ng-click = "">
+                                        <span class = "glyphicon glyphicon-book" aria-hidden = "true"></span>
+                                </button>
+                                <button type = "button" title = "Consultar Diario Comprobante de Egreso" class = "btn btn-primary btn-sm" ng-click = "">
+                                        <span class = "glyphicon glyphicon-search" aria-hidden = "true"></span>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="panel-footer">
+                <button type="button" title="Volver" class="btn btn-primary btn-sm"
                         ng-click="vm.cancel()">
                         <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
                 </button>
@@ -511,44 +516,49 @@
     <!--INICIO DE DIARIO DE CUENTAS POR PAGAR-->
     <!--SECCIÓN DE CARGA DE PROVEEDORES PARA DIARIO DE CUENTAS POR PAGAR-->
     <div class="table-responsive" ng-show="vm.selectedTypeBook === '5' && vm.providerSelected === undefined && vm.dailybookCppCreated === undefinded && vm.dailybookCppList === undefined">
-        <div class="row">
-            <div class="form-group col-md-12">
-                <input ng-model="searchText" class="form-control" placeholder="Buscar Proveedores">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <b>DIARIO DE CUENTAS POR PAGAR</b>
             </div>
-        </div>
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>C&oacute;digo</th>
-                    <th>Nombre</th>
-                    <th>No. Identidad</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr ng-show="vm.providerList == 0">
-                    <td colspan="4">
-                        No hay proveedores ingresados
-                    </td>
-                </tr>
-                <tr ng-repeat="provider in vm.providerList | orderBy:'name' | filter:searchText">
-                    <td>{{provider.codeIntegridad}}</td>
-                    <td>{{provider.name}}</td>
-                    <td>{{provider.ruc_type}} - {{provider.ruc}}</td>
-                    <td>
-                        <button type = "button" title = "Nuevo Diario Cuentas por Pagar" class = "btn btn-primary btn-sm" ng-click = "vm.providerSelect(provider)">
-                                <span class = "glyphicon glyphicon-book" aria-hidden = "true"></span>
-                        </button>
-                        <button type = "button" title = "Consultar Diario Cuentas por Pagar" class = "btn btn-primary btn-sm" ng-click = "vm.consultDailybookCpp(provider)">
-                                <span class = "glyphicon glyphicon-search" aria-hidden = "true"></span>
-                        </button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-        <div class="row">
-            <div class="form-group col-md-12">
-                <button type="button" title="Salir" class="btn btn-primary btn-sm"
+            <div class="panel-body">
+                <div class="row">
+                    <div class="form-group col-md-12">
+                        <input ng-model="searchText" class="form-control" placeholder="Buscar Proveedores">
+                    </div>
+                </div>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>C&oacute;digo</th>
+                            <th>Nombre</th>
+                            <th>No. Identidad</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-show="vm.providerList == 0">
+                            <td colspan="4">
+                                No hay proveedores ingresados
+                            </td>
+                        </tr>
+                        <tr ng-repeat="provider in vm.providerList | orderBy:'name' | filter:searchText">
+                            <td>{{provider.codeIntegridad}}</td>
+                            <td>{{provider.name}}</td>
+                            <td>{{provider.ruc_type}} - {{provider.ruc}}</td>
+                            <td>
+                                <button type = "button" title = "Nuevo Diario Cuentas por Pagar" class = "btn btn-primary btn-sm" ng-click = "vm.providerSelect(provider)">
+                                        <span class = "glyphicon glyphicon-book" aria-hidden = "true"></span>
+                                </button>
+                                <button type = "button" title = "Consultar Diario Cuentas por Pagar" class = "btn btn-primary btn-sm" ng-click = "vm.consultDailybookCpp(provider)">
+                                        <span class = "glyphicon glyphicon-search" aria-hidden = "true"></span>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="panel-footer">
+                <button type="button" title="Volver" class="btn btn-primary btn-sm"
                         ng-click="vm.cancel()">
                         <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
                 </button>

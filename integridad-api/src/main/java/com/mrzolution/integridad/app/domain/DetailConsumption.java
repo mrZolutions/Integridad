@@ -24,6 +24,7 @@ public class DetailConsumption implements Child {
     private long quantity;
     private Double costEach;
     private Double total;
+    private String adicional;
     
     @ManyToOne
     @JoinColumn(name = "consumption_id")
