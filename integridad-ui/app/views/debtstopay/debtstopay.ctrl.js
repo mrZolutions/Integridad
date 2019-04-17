@@ -962,7 +962,10 @@ angular.module('integridadUiApp')
     vm.loadCredit = function() {
       var creditArray = [];
       var diasPlazo = parseInt(vm.medio.creditoIntervalos);
-      var billNumber = vm.threeNumberOne + '-' + vm.threeNumberTwo + '-' + vm.seccondPartNumber;
+      var nOne = utilSeqService._pad_with_zeroes(vm.threeNumberOne, 3);
+      var nTwo = utilSeqService._pad_with_zeroes(vm.threeNumberTwo, 3);
+      var pNum = utilSeqService._pad_with_zeroes(vm.seccondPartNumber, 9);
+      var billNumber = nOne + '-' + nTwo + '-' + pNum;
       var d = new Date();
       var statusCredits = 'PENDIENTE';
       var total = parseFloat(parseFloat(vm.debtsToPay.total) / parseFloat(vm.medio.creditoNumeroPagos)).toFixed(4);
@@ -1024,7 +1027,10 @@ angular.module('integridadUiApp')
 
     vm.getRetentionByProviderAndDocumentNumber = function() {
       vm.loading = true;
-      vm.debtsBillNumber = vm.threeNumberOne + '-' + vm.threeNumberTwo + '-' + vm.seccondPartNumber;
+      var numOne = utilSeqService._pad_with_zeroes(vm.threeNumberOne, 3);
+      var numTwo = utilSeqService._pad_with_zeroes(vm.threeNumberTwo, 3);
+      var parNum = utilSeqService._pad_with_zeroes(vm.seccondPartNumber, 9);
+      vm.debtsBillNumber = numOne + '-' + numTwo + '-' + parNum;
       eretentionService.getRetentionsByProviderIdAndDocumentNumber(vm.providerId, vm.debtsBillNumber).then(function(response) {
         vm.retentionList = response;
         vm.loading = false;
@@ -1394,6 +1400,9 @@ angular.module('integridadUiApp')
       vm.pagos.total = vm.aux;
       $('#modalAddPago').modal('hide');
       vm.debtsToPay.fecha = $('#pickerDateDebtsToPayToUpdate').data("DateTimePicker").date().toDate().getTime();
+      vm.debtsToPay.threeNumberOne = utilSeqService._pad_with_zeroes(vm.threeNumberOne, 3);
+      vm.debtsToPay.threeNumberTwo = utilSeqService._pad_with_zeroes(vm.threeNumberTwo, 3);
+      vm.debtsToPay.seccondPartNumber = utilSeqService._pad_with_zeroes(vm.seccondPartNumber, 9);
       vm.debtsToPay.billNumber = vm.debtsToPay.threeNumberOne + '-' + vm.debtsToPay.threeNumberTwo + '-' + vm.debtsToPay.seccondPartNumber;
       vm.debtsToPay.providerId = vm.providerId;
       vm.debtsToPay.iva = vm.subIva;
