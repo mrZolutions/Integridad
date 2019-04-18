@@ -48,7 +48,8 @@
     <thead>
       <tr>
         <th>C&oacute;digo</th>
-        <th>Nombre</th>
+        <th>Nombre Comercial</th>
+        <th>Raz&oacute;n Social</th>
         <th>Tipo</th>
       </tr>
     </thead>
@@ -61,6 +62,7 @@
       <tr ng-repeat="providerEdit in vm.providerList | orderBy:'name' | filter:searchText">
         <td>{{providerEdit.codeIntegridad}}</td>
         <td>{{providerEdit.name}}</td>
+        <td>{{providerEdit.razonSocial}}</td>
         <td>{{providerEdit.providerType}}</td>
         <td>
           <button type="button" title = "Editar Proveedor" class="btn btn-primary btn-sm" ng-click="vm.editProvider(providerEdit)">

@@ -16,6 +16,6 @@ import org.springframework.data.repository.query.Param;
 public interface DetailRepository extends CrudRepository<Detail, UUID> {	
     Iterable<Detail> findByBill(Bill bill);
     
-    @Query("SELECT d FROM Detail d JOIN d.bill b JOIN b.client cl WHERE cl.userClient.id = (:userClientId) AND d.adicional = (:adic) AND b.active = true ORDER BY b.stringSeq")
-    Iterable<Detail> findDetailByUserClientIdAndAdicional(@Param("userClientId") UUID id, @Param("adic") String adic);
+    @Query("SELECT d FROM Detail d JOIN d.bill b JOIN b.client cl WHERE cl.userClient.id = (:userClientId) AND (d.adicional != null OR d.adicional != '') AND b.active = true AND b.typeDocument = 1 ORDER BY b.stringSeq")
+    Iterable<Detail> findDetailByUserClientIdAndAdicional(@Param("userClientId") UUID id);
 }

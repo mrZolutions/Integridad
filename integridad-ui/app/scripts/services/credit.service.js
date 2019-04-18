@@ -20,34 +20,34 @@ angular
         "numero_documento_modificado":bill.stringSeq,
         "tipo_documento_modificado": '01',
         "motivo": bill.motivo,
-        "emisor":{
-          "ruc":user.cashier.subsidiary.userClient.ruc,
-          "obligado_contabilidad":true,
-          "contribuyente_especial":"",
-          "nombre_comercial":user.cashier.subsidiary.userClient.name,
-          "razon_social":user.cashier.subsidiary.userClient.name,
-          "direccion":user.cashier.subsidiary.userClient.address1,
-          "establecimiento":{
-            "punto_emision":user.cashier.threeCode,
-            "codigo":user.cashier.subsidiary.threeCode,
-            "direccion":user.cashier.subsidiary.address1
+        "emisor": {
+          "ruc": user.cashier.subsidiary.userClient.ruc,
+          "obligado_contabilidad": true,
+          "contribuyente_especial": "",
+          "nombre_comercial": user.cashier.subsidiary.userClient.name,
+          "razon_social": user.cashier.subsidiary.userClient.name,
+          "direccion": user.cashier.subsidiary.userClient.address1,
+          "establecimiento": {
+            "punto_emision": user.cashier.threeCode,
+            "codigo": user.cashier.subsidiary.threeCode,
+            "direccion": user.cashier.subsidiary.address1
           }
         },
         "moneda":"USD",
-        "totales":{
+        "totales": {
           "total_sin_impuestos": parseFloat((bill.subTotal).toFixed(4)),
           "impuestos": impuestosTotales,
           "importe_total": parseFloat((bill.total).toFixed(4))
         },
-        "comprador":{
-          "email":clientSelected.email,
-          "identificacion":clientSelected.identification,
-          "tipo_identificacion":getTipyCode(clientSelected.typeId),
-          "razon_social":clientSelected.name,
-          "direccion":clientSelected.address,
-          "telefono":clientSelected.phone
+        "comprador": {
+          "email": clientSelected.email,
+          "identificacion": clientSelected.identification,
+          "tipo_identificacion": getTipyCode(clientSelected.typeId),
+          "razon_social": clientSelected.name,
+          "direccion": clientSelected.address,
+          "telefono": clientSelected.phone
         },
-        "items":items,
+        "items": items,
         "valor_retenido_iva": 0,
         "valor_retenido_renta": 0,
       };
@@ -57,8 +57,8 @@ angular
       if (user.cashier.subsidiary.userClient.espTemp === 'A-1') {
         req.comprador.email = req.comprador.email + ', facturacionelecppe2018@gmail.com, facturacionppecoca@gmail.com';
         var infoAdicional = {
-          info1: 'ORDEN DE COMPRA: '+bill.ordenDecompra,
-          info2: 'OTI/OTIR: '+bill.otir
+          info1: 'ORDEN DE COMPRA: ' + bill.ordenDecompra,
+          info2: 'OTI/OTIR: ' + bill.otir
         };
         req.informacion_adicional = infoAdicional;
       } else if (user.cashier.subsidiary.userClient.espTemp === 'A-2') {

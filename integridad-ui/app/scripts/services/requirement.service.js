@@ -57,7 +57,7 @@ angular
           "propina": 0.0,
           "descuento": parseFloat((bill.discount).toFixed(4))
         },
-        "comprador":{
+        "comprador": {
           "email": clientSelected.email,
           "identificacion": clientSelected.identification,
           "tipo_identificacion": getTipyCode(clientSelected.typeId),

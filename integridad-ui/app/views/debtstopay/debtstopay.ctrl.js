@@ -151,8 +151,8 @@ angular.module('integridadUiApp')
     ];
 
     vm.medLista = [
-      {code: 'efectivo', name: 'Efectivo' },
-      {code: 'cheque', name: 'Cheque' },
+      {code: 'efectivo', name: 'Efectivo'},
+      {code: 'cheque', name: 'Cheque'},
       {code: 'cheque_posfechado', name: 'Cheque posfechado'},
       {code: 'tarjeta_credito', name: 'Tarjeta de crédito'},
       {code: 'tarjeta_debito', name: 'Tarjeta de débito'},
