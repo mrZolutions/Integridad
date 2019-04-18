@@ -34,7 +34,7 @@
     </div>
 
     <!--SECCIÓN DE CARGA DE PROVEEDORES POR USERCLIENT-->
-    <div class="table-responsive" ng-show="vm.providerSelected === undefined && vm.debtsToPayList === undefined && vm.providerDebtsList === undefined && vm.debtsProviderSelected === undefinded && vm.debtsToPaySelectedToUpdate === undefinded">
+    <div class="table-responsive" ng-show="vm.providerSelected === undefined && vm.debtsToPayList === undefined && vm.providerDebtsList === undefined && vm.debtsProviderSelected === undefinded && vm.debtsToPaySelectedToUpdate === undefinded && vm.allDebtsToPayList === undefined">
         <div class="row">
             <div class="form-group col-md-12">
                 <input ng-model="searchText" class="form-control" placeholder="Buscar Proveedores">
@@ -46,7 +46,11 @@
                     <th>C&oacute;digo</th>
                     <th>Nombre</th>
                     <th>No. Identidad</th>
-                    <th></th>
+                    <th>
+                        <button type="button" title="Busqueda por Detalles" class="btn btn-primary btn-sm" ng-click="vm.getAllDebtsToPay()">
+                                Busqueda por Detalles
+                        </button>
+                    </th>
                 </tr>
             </thead>
             <tbody>
@@ -78,6 +82,49 @@
                 <button type="button" title="Salir" class="btn btn-danger btn-sm"
                         ng-click="vm.exit()">
                         <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="table-responsive" ng-show = "vm.allDebtsToPayList !== undefined">
+        <div class = "panel panel-primary">
+            <div class = "panel-heading">
+                <h4>Consulta de Cuentas por Pagar</h4>
+            </div>
+            <div class = "panel-body">
+                <label>B&uacute;squeda de Cuentas</label>
+                <input ng-model="searchText" class="form-control" placeholder="Buscar">
+                <table class = "table table-striped">
+                    <thead>
+                        <tr>
+                            <th>No. Factura</th>
+                            <th>No. Retenci&oacute;n</th>
+                            <th>Descripci&oacute;n</th>
+                            <th>Fecha</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat = "debts in vm.allDebtsToPayList">
+                            <td>{{debts.billNumber}}</td>
+                            <td>{{debts.retentionNumber}}</td>
+                            <td>{{debts.observacion}}</td>
+                            <td>{{debts.fecha | date : "dd/MM/yyyy"}}</td>
+                            <td>{{debts.total}}</td>
+                            <td>
+                                <button type = "button" title = "Ver Cuenta por Pagar" 
+                                        class = "btn btn-primary btn-sm" ng-click = "vm.debtsToPayToPrint(debts)">
+                                        <span class = "glyphicon glyphicon-eye-open" aria-hidden = "true"></span>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class = "panel-footer">
+                <button type = "button" title = "Salir" class = "btn btn-primary btn-sm" ng-click = "vm.cancel()">
+                        <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
                 </button>
             </div>
         </div>

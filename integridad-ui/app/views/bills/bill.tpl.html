@@ -33,7 +33,7 @@
     </div>
   </div>
 
-  <div class="table-responsive" ng-show="vm.clientSelected === undefined && vm.billList === undefined">
+  <div class="table-responsive" ng-show="vm.clientSelected === undefined && vm.billList === undefined && vm.detailList === undefined">
     <div class="row">
       <div class="form-group col-md-10">
         <input ng-model="searchText" class="form-control" placeholder="Buscar">
@@ -50,6 +50,11 @@
           <th>C&oacute;digo</th>
           <th>Nombre</th>
           <th>No. Identidad</th>
+          <th>
+            <button type="button" title="Busqueda por Detalles" class="btn btn-primary btn-sm" ng-click="vm.getDetailsOfBills()">
+                    Busqueda por Detalles
+            </button>
+          </th>
         </tr>
       </thead>
       <tbody>
@@ -78,6 +83,48 @@
         <button type="button" title="Salir" class="btn btn-danger btn-sm"
                 ng-click="vm.exit()">
                 <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="table-responsive" ng-show="vm.detailList !== undefined">
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+        <b>BUSQUEDA DE DETALLES POR FACTURAS</b>
+      </div>
+      <div class="panel-body">
+        <div class="row">
+          <div class="form-group col-md-12">
+            <input ng-model="searchText" class="form-control" placeholder="Buscar">
+          </div>
+        </div>
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>N&uacute;mero</th>
+              <th>Fecha</th>
+              <th>Descripci&oacute;n</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="detail in vm.detailList | orderBy:'dateCreated':true | filter:searchText">
+              <td>{{detail.bill.stringSeq}}</td>
+              <td>{{detail.bill.dateCreated | date : "dd/MM/yyyy"}}</td>
+              <td>{{detail.adicional}}</td>
+              <td>
+                <button type="button" title="Ver Factura" class="btn btn-primary btn-sm" ng-click="vm.billSelect(detail.bill)">
+                        <span class = "glyphicon glyphicon-eye-open" aria-hidden = "true"></span>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="panel-footer">
+        <button type="button" title="Salir"  class="btn btn-primary btn-sm" ng-click="vm.detailList = undefined; searchText = undefinded">
+                <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
         </button>
       </div>
     </div>
@@ -436,7 +483,7 @@
                 <span class = "glyphicon glyphicon-print" aria-hidden = "true"></span>
         </button>
         <button type="button" title="Salir" class="btn btn-primary btn-sm" ng-if="vm.newBill"
-                ng-click="vm.cancelBill()">
+                ng-click="vm.cancelBill(); searchText = undefined">
                 <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
         </button>
       </div>
@@ -575,7 +622,7 @@
                 <span class = "glyphicon glyphicon-print" aria-hidden = "true"></span>
         </button>
         <button type="button" title="Salir" class="btn btn-primary btn-sm"
-                ng-click="vm.clientSelected = undefined">
+                ng-click="vm.clientSelected = undefined; searchText = undefined">
                 <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
         </button>
       </div>

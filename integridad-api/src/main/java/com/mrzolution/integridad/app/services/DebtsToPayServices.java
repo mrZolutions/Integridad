@@ -75,8 +75,17 @@ public class DebtsToPayServices {
     
     //Selección de Debts por Id de Proveedor
     public Iterable<DebtsToPay> getDebtsToPayByProviderId(UUID id) {
-        log.info("DebtsToPayServices getDebtsByProviderId: {}", id);
         Iterable<DebtsToPay> debts = debtsToPayRepository.findDebtsToPayByProviderId(id);
+        debts.forEach(debt -> {
+            debt.setListsNull();
+            debt.setFatherListToNull();
+        });
+        return debts;
+    }
+    
+    //Selección de Debts por Id de Empresa
+    public Iterable<DebtsToPay> getDebtsToPayByUserClientId(UUID id) {
+        Iterable<DebtsToPay> debts = debtsToPayRepository.findDebtsToPayByUserClientId(id);
         debts.forEach(debt -> {
             debt.setListsNull();
             debt.setFatherListToNull();
@@ -86,7 +95,6 @@ public class DebtsToPayServices {
     
     //Selección de Debts con Saldo (Crédito) por Id de Proveedor
     public Iterable<DebtsToPay> getDebtsToPayWithSaldoByProviderId(UUID id) {
-        log.info("DebtsToPayServices getDebtsToPayWithSaldoByProviderId: {}", id);
         Iterable<DebtsToPay> debts = debtsToPayRepository.findDebtsToPayWithSaldoByProviderId(id);
         debts.forEach(debt -> {
             debt.setListsNull();
@@ -97,7 +105,6 @@ public class DebtsToPayServices {
     
     //Busca Debts por Numero de Secuencia y Subsidiaria
     public Iterable<DebtsToPay> getDebtsToPayByDebtsSeqAndSubId(String stringSeq, UUID subId) {
-        log.info("DebtsToPayServices getDebtsToPayByDebtsSeqAndSubId : {}, {}", stringSeq, subId);
         Iterable<DebtsToPay> debts = debtsToPayRepository.findDebtsToPayByDebtsSeqAndSubsidiaryId(stringSeq, subId);
         debts.forEach(debt -> {
             debt.setFatherListToNull();

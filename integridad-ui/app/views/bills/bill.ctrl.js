@@ -63,6 +63,7 @@ angular.module('integridadUiApp')
       vm.productToAdd = undefined;
       vm.pagoTot = undefined;
       vm.quantity = undefined;
+      vm.userClientId = undefined;
       vm.adicional = undefined;
       vm.loading = true;
       vm.detailList = undefined;
@@ -95,6 +96,18 @@ angular.module('integridadUiApp')
       vm.user = $localStorage.user;
       clientService.getLazyByProjectId(vm.user.subsidiary.userClient.id).then(function(response) {
         vm.clientList = response;
+        vm.loading = false;
+      }).catch(function(error) {
+        vm.loading = false;
+        vm.error = error.data;
+      });
+    };
+
+    vm.getDetailsOfBills = function() {
+      vm.loading = true;
+      vm.userClientId = vm.user.subsidiary.userClient.id;
+      billService.getDetailsOfBillsByUserClientId(vm.userClientId).then(function(response) {
+        vm.detailList = response;
         vm.loading = false;
       }).catch(function(error) {
         vm.loading = false;
@@ -489,6 +502,7 @@ angular.module('integridadUiApp')
     vm.billSelect = function(bill) {
       vm.loading = true;
       billService.getById(bill.id).then(function(response) {
+        vm.detailList = undefined;
         vm.billList = undefined;
         vm.bill = response;
         vm.companyData = $localStorage.user.subsidiary;

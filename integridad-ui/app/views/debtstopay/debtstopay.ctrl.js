@@ -226,6 +226,7 @@ angular.module('integridadUiApp')
       vm.update = undefined;
       vm.ejercicio = undefined;
       vm.debtsToPayList = undefined;
+      vm.allDebtsToPayList = undefined;
       vm.providerSelected = undefined;
       vm.providerDebtsList = undefined;
       vm.debtsToPayCreated = undefined;
@@ -275,6 +276,17 @@ angular.module('integridadUiApp')
         items: [],
         pagos: []
       };
+    };
+
+    vm.getAllDebtsToPay = function() {
+      vm.loading = true;
+      debtsToPayService.getDebtsToPayByUserClientId(vm.usrCliId).then(function(response) {
+        vm.allDebtsToPayList = response;
+        vm.loading = false;
+      }).catch(function(error) {
+        vm.loading = false;
+        vm.error = error.data;
+      });
     };
 
     //Selección del Prooveedor
@@ -1201,6 +1213,7 @@ angular.module('integridadUiApp')
     vm.debtsToPayToPrint = function(debts) {
       vm.loading = true;
       debtsToPayService.getById(debts.id).then(function(response) {
+        vm.allDebtsToPayList = undefined;
         vm.providerDebtsList = undefined;
         vm.debtsToPay = response;
         vm.debtsDetails = response.detailDebtsToPay;

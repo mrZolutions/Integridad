@@ -54,4 +54,10 @@ angular
                 return response.data;
             });
         };
+
+        this.getDebtsToPayByUserClientId = function(id) {
+            return securityService.get('/debts/company/' + id).then(function successCallback(response) {
+                return response.data;
+            });
+        };
 });
