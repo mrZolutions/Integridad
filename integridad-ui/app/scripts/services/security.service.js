@@ -1,8 +1,8 @@
 angular
     .module('app.services')
     .service('securityService', function ($http, $base64) {
-        //var baseUrl = 'https://integridad.herokuapp.com/integridad/v1';
-        var baseUrl = 'http://localhost:8080//integridad/v1';
+        var baseUrl = 'https://integridad.herokuapp.com/integridad/v1';
+        //var baseUrl = 'http://localhost:8080//integridad/v1';
         var config = {};
         var authdata = $base64.encode("integridaduser:e3tkwy");
         config.headers = {

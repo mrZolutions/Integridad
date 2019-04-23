@@ -467,7 +467,6 @@ angular.module('integridadUiApp')
         vm.printBillThermal = function(billPrint) {
             var innerContents = document.getElementById(billPrint).innerHTML;
             var popupWinindow = window.open('', 'billPrint', 'width=300,height=400');
-            var b = document.body.appendChild(document.createElement("b"));
             popupWinindow.document.write('<html><body>');
             popupWinindow.document.write(innerContents);
             popupWinindow.document.write('</body></html>');
