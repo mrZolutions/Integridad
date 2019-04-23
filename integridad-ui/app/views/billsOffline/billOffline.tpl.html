@@ -440,7 +440,7 @@
 
     <!--CREA TICKET FACTURA PARA THERMAL PRINTER-->
     <div id="billPrint" ng-show='false'>
-        <p>------------------------------</p><br>
+        <p>------------------</p><br>
         <p>FACTURA No. {{vm.seqNumber}}</p><br>
         <p>CLAVE ACCESO: {{vm.billOffline.claveDeAcceso}}</p><br><br>
         <p>RAZON SOCIAL: {{(vm.clientSelected.name).substr(0,18)}}</p><br>
@@ -449,12 +449,12 @@
         <p>CANT... DESCRIP... P.UNT... TOTAL</p><br>
         <table width="100%">
             <tr ng-repeat="detailOffline in vm.billOffline.detailsOffline">
-                <td>{{detail.quantity}} {{(detail.product.name).substr(0,16)}} &#36;{{detail.costEach}} &#36;{{detail.total}}<br></br></td>
+                <td>{{detailOffline.quantity}} {{(detailOffline.product.name).substr(0,16)}} &#36;{{detailOffline.costEach}} &#36;{{detailOffline.total}}<br></br></td>
             </tr>
         </table><br>
-        <p>SUBTOTAL: {{vm.bill.subTotal}}</p><br>
-        <p>TOTAL: {{vm.bill.total}}</p><br>
-        <p>------------------------------</p>
+        <p>SUBTOTAL: {{vm.billOffline.subTotal}}</p><br>
+        <p>TOTAL: {{vm.billOffline.total}}</p><br>
+        <p>-----------------</p>
     </div>
 
     <!--ANULAR FACTURA-->
