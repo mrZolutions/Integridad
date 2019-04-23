@@ -30,6 +30,7 @@ angular.module('integridadUiApp')
         vm.cellarPendingSelected = undefined;
         vm.cellSeqNumber = undefined;
         vm.dateCellar = undefined;
+        vm.detailCellarList = undefined;
         vm.clientSelected = undefined;
         vm.consumption = undefined;
         vm.newConsumption = undefined;
@@ -148,6 +149,18 @@ angular.module('integridadUiApp')
         vm.providerList = undefined;
         cellarService.getCellarsByProviderId(provider.id).then(function(response) {
             vm.cellarSavedList = response;
+            vm.loading = false;
+        }).catch(function(error) {
+            vm.loading = false;
+            vm.error = error.data;
+        });
+    };
+
+    vm.getDetailsOfCellars = function() {
+        vm.loading = true;
+        vm.providerList = undefined;
+        cellarService.getDetailsOfCellarsByUserClientId(vm.usrCliId).then(function(response) {
+            vm.detailCellarList = response;
             vm.loading = false;
         }).catch(function(error) {
             vm.loading = false;
@@ -275,7 +288,8 @@ angular.module('integridadUiApp')
             product: angular.copy(vm.productToAdd),
             quantity: vm.quantity,
             costEach: vm.productToAdd.costEachCalculated,
-            total: (parseFloat(vm.quantity) * parseFloat(vm.productToAdd.costEachCalculated)).toFixed(4)
+            total: (parseFloat(vm.quantity) * parseFloat(vm.productToAdd.costEachCalculated)).toFixed(4),
+            adicional: vm.adicional
         };
         if (vm.indexDetail !== undefined) {
             vm.cellar.detailsCellar[vm.indexDetail] = detail;
@@ -284,6 +298,7 @@ angular.module('integridadUiApp')
         };
         vm.productToAdd = undefined;
         vm.quantity = undefined;
+        vm.adicional = undefined;
         _getCellarTotalSubtotal();
         if (closeModal) {
             $('#modalAddProduct').modal('hide');
@@ -764,7 +779,8 @@ angular.module('integridadUiApp')
     vm.editDetail = function(detail, index) {
         vm.indexDetail = index;
         vm.productToAdd= detail.product;
-        vm.quantity= detail.quantity
+        vm.quantity= detail.quantity;
+        vm.adicional = detail.adicional;
     };
   
     vm.range = function() {

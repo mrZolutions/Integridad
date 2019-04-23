@@ -333,7 +333,7 @@
                         ng-show="vm.billOffline.claveDeAcceso === undefined">
                         <span class = "glyphicon glyphicon-usd" aria-hidden = "true"></span>
                 </button>
-                <button type="button" title = "Imprimir Ticket-Factura" class="btn btn-danger btn-sm"
+                <button type="button" title = "Imprimir a Epson LX-300" class="btn btn-primary btn-sm"
                         ng-if="vm.newBillOffline" ng-disabled="vm.billOffline.claveDeAcceso === undefined"
                         ng-click="vm.printToCartAndCancel('printMatrixBillOfflineId')">
                         <span class = "glyphicon glyphicon-print" aria-hidden = "true"></span>
@@ -341,6 +341,11 @@
                 <button type="button" title="Salir" class="btn btn-primary btn-sm" ng-if="vm.newBillOffline"
                         ng-click="vm.cancelBillOffline()">
                         <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
+                </button>
+                <button type="button" title = "Imprimir a ThermalPrint" class="btn btn-danger btn-sm"
+                        ng-if="vm.newBillOffline" ng-disabled="vm.billOffline.claveDeAcceso === undefined"
+                        ng-click="vm.printBillThermal('billPrint')">
+                        <span class = "glyphicon glyphicon-print" aria-hidden = "true"></span>
                 </button>
             </div>
         </div>
@@ -385,13 +390,17 @@
                 </div>
             </div>
             <div class="panel-footer">
-                <button type="button" title = "Imprimir Ticket-Factura" class="btn btn-danger btn-sm"
+                <button type="button" title = "Imprimir a Epson LX-300" class="btn btn-primary btn-sm"
                         ng-if="!vm.newBillOffline" ng-click="vm.printToCart('printMatrixBillOfflineId')">
                         <span class = "glyphicon glyphicon-print" aria-hidden = "true"></span>
                 </button>
                 <button type="button" title="Salir" class="btn btn-primary btn-sm"
                         ng-click="vm.clientSelected = undefined">
                         <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
+                </button>
+                <button type="button" title = "Imprimir a ThermalPrint" class="btn btn-danger btn-sm"
+                        ng-if="!vm.newBillOffline" ng-click="vm.printBillThermal('billPrint')">
+                        <span class = "glyphicon glyphicon-print" aria-hidden = "true"></span>
                 </button>
             </div>
         </div>
@@ -427,6 +436,25 @@
                 </td>
             </tr>
         </table>
+    </div>
+
+    <!--CREA TICKET FACTURA PARA THERMAL PRINTER-->
+    <div id="billPrint" ng-show='false'>
+        <p>------------------------------</p><br>
+        <p>FACTURA No. {{vm.seqNumber}}</p><br>
+        <p>CLAVE ACCESO: {{vm.billOffline.claveDeAcceso}}</p><br><br>
+        <p>RAZON SOCIAL: {{(vm.clientSelected.name).substr(0,18)}}</p><br>
+        <p>IDENTIFICACION: {{vm.clientSelected.identification}}</p><br>
+        <p>FECHA: {{vm.getDateToPrint() | date:  "dd/MM/yyyy"}}</p><br><br>
+        <p>CANT... DESCRIP... P.UNT... TOTAL</p><br>
+        <table width="100%">
+            <tr ng-repeat="detailOffline in vm.billOffline.detailsOffline">
+                <td>{{detail.quantity}} {{(detail.product.name).substr(0,16)}} &#36;{{detail.costEach}} &#36;{{detail.total}}<br></br></td>
+            </tr>
+        </table><br>
+        <p>SUBTOTAL: {{vm.bill.subTotal}}</p><br>
+        <p>TOTAL: {{vm.bill.total}}</p><br>
+        <p>------------------------------</p>
     </div>
 
     <!--ANULAR FACTURA-->

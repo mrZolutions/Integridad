@@ -106,7 +106,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr ng-repeat = "debts in vm.allDebtsToPayList">
+                        <tr ng-repeat = "debts in vm.allDebtsToPayList | orderBy:'billNumber':true | filter:searchText">
                             <td>{{debts.billNumber}}</td>
                             <td>{{debts.retentionNumber}}</td>
                             <td>{{debts.observacion}}</td>

@@ -102,6 +102,11 @@
                     <th>Nombre</th>
                     <th>Tipo ID</th>
                     <th>No. Identidad</th>
+                    <th>
+                        <button type="button" title="Busqueda por Detalles" class="btn btn-primary btn-sm" ng-click="vm.getDetailsOfCellars()">
+                                Busqueda por Detalles
+                        </button>
+                    </th>
                 </tr>
             </thead>
             <tbody>
@@ -139,6 +144,53 @@
         </div>
     </div>
     <!--FIN DE CARGA DE PROVEEDORES POR WAREHOUSE PARA INGRESO A BODEGA-->
+
+    <div class="table-responsive" ng-show="vm.detailCellarList !== undefined">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <b>BUSQUEDA DE DETALLES POR FACTURAS</b>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="form-group col-md-12">
+                        <input ng-model="searchText" class="form-control" placeholder="Buscar">
+                    </div>
+                </div>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>N&uacute;mero</th>
+                            <th>Fecha</th>
+                            <th>Descripci&oacute;n</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-show="vm.detailCellarList == 0">
+                            <td colspan="4">
+                                No hay Detalles ingresados
+                            </td>
+                        </tr>
+                        <tr ng-repeat="detailCellar in vm.detailCellarList | orderBy:'billNumber':true | filter:searchText">
+                            <td>{{detailCellar.cellar.billNumber}}</td>
+                            <td>{{detailCellar.cellar.dateEnterCellar | date : "dd/MM/yyyy"}}</td>
+                            <td>{{detailCellar.adicional}}</td>
+                            <td>
+                                <button type="button" title="Ver Factura de Ingreso" class="btn btn-primary btn-sm" ng-click="">
+                                        <span class = "glyphicon glyphicon-eye-open" aria-hidden = "true"></span>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="panel-footer">
+                <button type="button" title="Salir"  class="btn btn-primary btn-sm" ng-click="vm.detailCellarList = undefined; searchText = undefinded">
+                        <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
+                </button>
+            </div>
+        </div>
+    </div>
 
     <!--VISUALIZACIÓN DE INGRESOS A BODEGA POR PROVEEDOR-->
     <div class="table-responsive" ng-show="vm.cellarSavedList !== undefined">
@@ -284,6 +336,7 @@
                                 <tr>
                                     <th>Item</th>
                                     <th>C&oacute;digo</th>
+                                    <th>Nombre Producto</th>
                                     <th>Descripci&oacute;n</th>
                                     <th>Cant.</th>
                                     <th>U. Med.</th>
@@ -307,6 +360,7 @@
                                     <td>{{$index + 1}}</td>
                                     <td>{{detail.product.codeIntegridad}}</td>
                                     <td>{{detail.product.name}}</td>
+                                    <td>{{detail.adicional}}</td>
                                     <td>{{detail.quantity}}</td>
                                     <td>{{detail.product.unitOfMeasurementFull}}</td>
                                     <td>{{detail.costEach}}</td>
@@ -525,6 +579,13 @@
                                             <b>PRECIO UNITARIO: </b>
                                             <input type="text"
                                                    ng-model="vm.productToAdd.costEachCalculated" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="form-group col-md-6">
+                                            <b>DESCRIPCIÓN: </b>
+                                            <input type="text"
+                                                   ng-model="vm.adicional" class="form-control">
                                         </div>
                                     </div>
                                 </div>

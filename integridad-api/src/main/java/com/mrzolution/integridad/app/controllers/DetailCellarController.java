@@ -1,8 +1,8 @@
 package com.mrzolution.integridad.app.controllers;
 
-import com.mrzolution.integridad.app.domain.Detail;
+import com.mrzolution.integridad.app.domain.DetailCellar;
 import com.mrzolution.integridad.app.exceptions.BadRequestException;
-import com.mrzolution.integridad.app.services.DetailServices;
+import com.mrzolution.integridad.app.services.DetailCellarServices;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,21 +20,21 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
-@RequestMapping(value = "/integridad/v1/bill/details")
-public class DetailController {
+@RequestMapping(value = "/integridad/v1/cellar/details")
+public class DetailCellarController {
     @Autowired
-    DetailServices service;
+    DetailCellarServices service;
     
     @RequestMapping(method = RequestMethod.GET, value="/details/{id}")
-    public ResponseEntity getDetailsOfBillsByUserClientId(@PathVariable("id") UUID id) {
-        Iterable<Detail> response = null;
+    public ResponseEntity getDetailsOfCellarsByUserClientId(@PathVariable("id") UUID id) {
+        Iterable<DetailCellar> response = null;
         try {
-            response = service.getDetailsOfBillsByUserClientId(id);
+            response = service.getDetailsOfCellarsByUserClientId(id);
         } catch (BadRequestException e) {
-            log.error("DetailController getDetailsOfBillsByUserClientId Exception thrown: {}", e.getMessage());
+            log.error("DetailCellarController getDetailsOfCellarsByUserClientId Exception thrown: {}", e.getMessage());
 	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
-        log.info("DetailController getDetailsOfBillsByUserClientId DONE");
+        log.info("DetailCellarController getDetailsOfCellarsByUserClientId DONE");
         return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
     }
 }

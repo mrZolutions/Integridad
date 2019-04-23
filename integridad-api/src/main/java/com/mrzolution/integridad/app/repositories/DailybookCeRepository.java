@@ -20,8 +20,8 @@ public interface DailybookCeRepository extends CrudRepository<DailybookCe, UUID>
     Iterable<DailybookCe> findByProvider(Provider provider);
     
     @Query("SELECT d FROM DailybookCe d WHERE d.provider.id = (:id) AND d.active = true ORDER BY d.dailyCeSeq")
-    Iterable<DailybookCe> findDailybookCppByProviderId(@Param("id") UUID id);
+    Iterable<DailybookCe> findDailybookCeByProviderId(@Param("id") UUID id);
     
     @Query("SELECT d FROM DailybookCe d WHERE d.subsidiary.userClient.id = (:userClientId) AND d.active = true")
-    Iterable<DailybookCe> findDailybookCppByUserClientId(@Param("userClientId") UUID id);
+    Iterable<DailybookCe> findDailybookCeByUserClientId(@Param("userClientId") UUID id);
 }

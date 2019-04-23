@@ -90,8 +90,6 @@ public class RetentionClientServices {
         saved.setDetailRetentionClient(details);
         updateBill(retentionClient, document);
         updateCreditsAndPayment(retentionClient, document);
-        sum = 0.0;
-        valor = 0.0;
         return saved;
     }
 
@@ -118,6 +116,8 @@ public class RetentionClientServices {
             paymentRepository.save(specialPayment);
         }
         log.info("RetentionClientServices Credits and Payment UPDATED");
+        sum = 0.0;
+        valor = 0.0;
     }
     
     public void updateBill(RetentionClient retentionClient, String document) {
