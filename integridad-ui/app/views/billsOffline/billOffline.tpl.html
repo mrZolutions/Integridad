@@ -440,21 +440,23 @@
 
     <!--CREA TICKET FACTURA PARA THERMAL PRINTER-->
     <div id="billPrint" ng-show='false'>
-        <p>------------------</p><br>
-        <p>FACTURA No. {{vm.seqNumber}}</p><br>
-        <p>CLAVE ACCESO: {{vm.billOffline.claveDeAcceso}}</p><br><br>
-        <p>RAZON SOCIAL: {{(vm.clientSelected.name).substr(0,18)}}</p><br>
-        <p>IDENTIFICACION: {{vm.clientSelected.identification}}</p><br>
-        <p>FECHA: {{vm.getDateToPrint() | date:  "dd/MM/yyyy"}}</p><br><br>
-        <p>CANT... DESCRIP... P.UNT... TOTAL</p><br>
+        --------------------
+        {{vm.companyData.userClient.name}}<br/>
+        RUC: {{vm.companyData.userClient.ruc}}<br/>
+        FC No. {{vm.seqNumber}}<br/>
+        C.A: {{vm.billOffline.claveDeAcceso}}
+        R.S: {{(vm.clientSelected.name).substr(0,16)}}<br/>
+        RUC: {{vm.clientSelected.identification}}
+        FCH: {{vm.getDateToPrint() | date:  "dd/MM/yy"}}
+        CANT... DESC... TOT
         <table width="100%">
             <tr ng-repeat="detailOffline in vm.billOffline.detailsOffline">
-                <td>{{detailOffline.quantity}} {{(detailOffline.product.name).substr(0,16)}} &#36;{{detailOffline.costEach}} &#36;{{detailOffline.total}}<br></br></td>
+                <td>{{detailOffline.quantity}} {{(detailOffline.product.name).substr(0,18)}} &#36;{{(detailOffline.total).toFixed(2)}}<br/></td>
             </tr>
-        </table><br>
-        <p>SUBTOTAL: {{vm.billOffline.subTotal}}</p><br>
-        <p>TOTAL: {{vm.billOffline.total}}</p><br>
-        <p>-----------------</p>
+        </table>
+        S.TOT: {{(vm.billOffline.subTotal).toFixed(2)}}<br/>
+        TOT: {{vm.billOffline.total}}<br/>
+        --------------------
     </div>
 
     <!--ANULAR FACTURA-->
