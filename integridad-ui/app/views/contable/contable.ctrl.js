@@ -319,6 +319,7 @@ angular.module('integridadUiApp')
         vm.dailybookCg.dailyCgSeq = vm.dailyCgSeq;
         vm.dailybookCg.dailyCgStringSeq = vm.dailyCgStringSeq;
         vm.dailybookCg.generalDetail = vm.generalDetailCg;
+        vm.dailybookCg.total = vm.saldoDebitoCg;
         vm.dailybookCg.dateRecordBook = $('#pickerDateRecordBookCg').data("DateTimePicker").date().toDate().getTime();
         contableService.createDailybookCg(vm.dailybookCg).then(function(response) {
             vm.dailybookCgNew = false;
