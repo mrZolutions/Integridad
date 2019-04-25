@@ -448,6 +448,27 @@ angular.module('integridadUiApp')
     vm.putGeneralDetailCe = function() {
         if (vm.generalDetailCe == null || vm.generalDetailCe == undefined || vm.generalDetailCe == '') {
             vm.generalDetailCe = vm.providerName + ' ' + 'Fc' + ' ' + vm.dailybookCe.billNumber;
+            //Selección de las Cuentas Contables por defecto dependiendo del Cliente
+            if (vm.usrCliId === '758dea84-74f5-4209-b218-9b84c10621fc') {
+                vm.provContable = '2.01.03.01.001';
+            } else if (vm.usrCliId === '4907601b-6e54-4675-80a8-ab6503e1dfeb') {
+                vm.provContable = '2.01.03.01.001';
+            } else if (vm.usrCliId === '1e2049c3-a3bc-4231-a0de-dded8020dc1b') {
+                vm.provContable = '2.12.10.101';
+            } else {
+                vm.provContable = '2.01.01.01';
+            };
+            vm.itemProvider = {
+                typeContab: vm.typeContab,
+                codeConta: vm.provContable,
+                descrip: 'PROVEEDORES LOCALES',
+                tipo: 'DEBITO (D)',
+                baseImponible: parseFloat(vm.dailybookCe.total),
+                name: vm.generalDetailCe,
+                deber: parseFloat(vm.dailybookCe.total)
+            };
+            vm.itemProvider.numCheque =  '--';
+            vm.dailybookCe.detailDailybookContab.push(vm.itemProvider);
         };
     };
 
