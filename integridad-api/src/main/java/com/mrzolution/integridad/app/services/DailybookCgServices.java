@@ -2,11 +2,11 @@ package com.mrzolution.integridad.app.services;
 
 import com.mrzolution.integridad.app.domain.Cashier;
 import com.mrzolution.integridad.app.domain.DailybookCg;
-import com.mrzolution.integridad.app.domain.DetailDailybookCg;
+import com.mrzolution.integridad.app.domain.DetailDailybookContab;
 import com.mrzolution.integridad.app.exceptions.BadRequestException;
 import com.mrzolution.integridad.app.repositories.CashierRepository;
 import com.mrzolution.integridad.app.repositories.DailybookCgRepository;
-import com.mrzolution.integridad.app.repositories.DetailDailybookCgRepository;
+import com.mrzolution.integridad.app.repositories.DetailDailybookContabRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -25,7 +25,7 @@ public class DailybookCgServices {
     @Autowired
     DailybookCgRepository dailybookCgRepository;
     @Autowired
-    DetailDailybookCgRepository detailDailybookCgRepository;
+    DetailDailybookContabRepository detailDailybookContabRepository;
     @Autowired
     CashierRepository cashierRepository;
     
@@ -55,14 +55,14 @@ public class DailybookCgServices {
     
     //Creación de los Diarios CG
     public DailybookCg createDailybookCg(DailybookCg dailybookCg) throws BadRequestException {
-        List<DetailDailybookCg> detailDailybookCg = dailybookCg.getDetailDailybookCg();
+        List<DetailDailybookContab> detailDailybookContab = dailybookCg.getDetailDailybookContab();
         
-        if (detailDailybookCg == null) {
+        if (detailDailybookContab == null) {
             throw new BadRequestException("Debe tener una cuenta por lo menos");
         }
         
         dailybookCg.setActive(true);
-        dailybookCg.setDetailDailybookCg(null);
+        dailybookCg.setDetailDailybookContab(null);
         dailybookCg.setFatherListToNull();
         dailybookCg.setListsNull();
         DailybookCg saved = dailybookCgRepository.save(dailybookCg);
@@ -71,13 +71,13 @@ public class DailybookCgServices {
         cashier.setDailyCgNumberSeq(cashier.getDailyCgNumberSeq() + 1);
         cashierRepository.save(cashier);
         
-        detailDailybookCg.forEach(detail -> {
+        detailDailybookContab.forEach(detail -> {
             detail.setDailybookCg(saved);
-            detailDailybookCgRepository.save(detail);
+            detailDailybookContabRepository.save(detail);
             detail.setDailybookCg(null);
         });
         
-        saved.setDetailDailybookCg(detailDailybookCg);
+        saved.setDetailDailybookContab(detailDailybookContab);
         log.info("DailybookCgServices createDailybookCg DONE id: {}", saved.getId());
         return saved;
     }
@@ -97,15 +97,15 @@ public class DailybookCgServices {
     
     //Carga los Detalles hacia un Diario Gc
     private void populateChildren(DailybookCg dailybookCg) {
-	List<DetailDailybookCg> detailDailybookCgList = new ArrayList<>();
-	Iterable<DetailDailybookCg> dailybookCgsDetail = detailDailybookCgRepository.findByDailybookCg(dailybookCg);
-        dailybookCgsDetail.forEach(detail -> {
+	List<DetailDailybookContab> detailDailybookContabList = new ArrayList<>();
+	Iterable<DetailDailybookContab> dailybookContabsDetail = detailDailybookContabRepository.findByDailybookCg(dailybookCg);
+        dailybookContabsDetail.forEach(detail -> {
             detail.setListsNull();
             detail.setFatherListToNull();
             detail.setDailybookCg(null);
-            detailDailybookCgList.add(detail);
+            detailDailybookContabList.add(detail);
 	});
-	dailybookCg.setDetailDailybookCg(detailDailybookCgList);
+	dailybookCg.setDetailDailybookContab(detailDailybookContabList);
 	dailybookCg.setFatherListToNull();
     }
 }

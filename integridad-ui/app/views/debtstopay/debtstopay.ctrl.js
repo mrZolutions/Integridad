@@ -378,7 +378,7 @@ angular.module('integridadUiApp')
     //Selección de las Cuentas Contables
     vm.getPercentageTableAll = function() {
       if (vm.debtsToPay.typeTaxes === '1') {
-        cuentaContableService.getCuentaContableByUserClient(vm.usrCliId).then(function(response) {
+        cuentaContableService.getCuentaContableByUserClientNoBank(vm.usrCliId).then(function(response) {
           vm.cuentaContableList = response;
           vm.loading = false;
         }).catch(function(error) {
@@ -387,7 +387,7 @@ angular.module('integridadUiApp')
         });
         vm.typeTaxes = vm.debtsToPay.typeTaxes;
       } else if (vm.debtsToPay.typeTaxes === '2') {
-        cuentaContableService.getCuentaContableByUserClient(vm.usrCliId).then(function(response) {
+        cuentaContableService.getCuentaContableByUserClientNoBank(vm.usrCliId).then(function(response) {
           vm.cuentaContableList = response;
           vm.loading = false;
         }).catch(function(error) {

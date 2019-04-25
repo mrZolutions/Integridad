@@ -25,8 +25,6 @@ public class DailybookCg {
     
     private boolean active;
     private long dateRecordBook;
-    private String clientProvName;
-    private String billNumber;
     private String codeTypeContab;
     private String typeContab;
     private String generalDetail;
@@ -47,10 +45,10 @@ public class DailybookCg {
     private Subsidiary subsidiary;
     
     @OneToMany(mappedBy = "dailybookCg", cascade = CascadeType.ALL)
-    private List<DetailDailybookCg> detailDailybookCg;
+    private List<DetailDailybookContab> detailDailybookContab;
     
     public void setListsNull() {
-        detailDailybookCg = null;
+        detailDailybookContab = null;
     }
     
     public void setFatherListToNull() {

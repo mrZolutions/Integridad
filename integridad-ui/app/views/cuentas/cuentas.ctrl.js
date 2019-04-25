@@ -21,7 +21,8 @@ angular.module('integridadUiApp')
       {code: 'CONS', name: 'CONSUMIBLES'}, {code: 'RMBG', name: 'REEMBOLSO GASTOS'},
       {code: 'TKAE', name: 'TICKETS AEREOS'}, {code: 'ACT', name: 'ACTIVOS'},
       {code: 'PAS', name: 'PASIVOS'}, {code: 'INGR', name: 'INGRESOS'},
-      {code: 'EGRE', name: 'EGRESOS'}, {code: 'PATR', name: 'PATRIMONIOS'}
+      {code: 'EGRE', name: 'EGRESOS'}, {code: 'PATR', name: 'PATRIMONIOS'},
+      {code: 'BANC', name: 'DEFINIDA PARA BANCOS'}
     ];
 
     function _activate() {

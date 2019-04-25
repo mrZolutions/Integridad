@@ -18,7 +18,7 @@ import lombok.Data;
 
 @Entity
 @Data
-public class DailybookCpp {
+public class DailybookCxP {
     @Id
     @GeneratedValue
     private UUID id;
@@ -30,9 +30,9 @@ public class DailybookCpp {
     private String codeTypeContab;
     private String typeContab;
     private String generalDetail;
-    private String dailyCppSeq;
-    private String dailyCppStringSeq; //Generado automáticamente por el Sistema
-    private String dailyCppStringUserSeq; //Introducido por el Usuario
+    private String dailycxpSeq;
+    private String dailycxpStringSeq; //Generado automáticamente por el Sistema
+    private String dailycxpStringUserSeq; //Introducido por el Usuario
     private double subTotalDoce;
     private double iva;
     private double subTotalCero;
@@ -54,11 +54,11 @@ public class DailybookCpp {
     @JoinColumn(name = "subsidiary_id")
     private Subsidiary subsidiary;
     
-    @OneToMany(mappedBy = "dailybookCpp", cascade = CascadeType.ALL)
-    private List<DetailDailybookCpp> detailDailybookCpp;
+    @OneToMany(mappedBy = "dailybookCxP", cascade = CascadeType.ALL)
+    private List<DetailDailybookContab> detailDailybookContab;
     
     public void setListsNull() {
-        detailDailybookCpp = null;
+        detailDailybookContab = null;
     }
     
     public void setFatherListToNull() {

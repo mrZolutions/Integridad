@@ -36,4 +36,16 @@ angular
                 return response.data;
             });
         };
+
+        this.getCuentaContableByUserClientAndBank = function(id) {
+            return securityService.get('/cuenta_contable/userclient/bank/' + id).then(function successCallback(response) {
+                return response.data;
+            });
+        };
+
+        this.getCuentaContableByUserClientNoBank = function(id) {
+            return securityService.get('/cuenta_contable/userclient/nobank/' + id).then(function successCallback(response) {
+                return response.data;
+            });
+        };
 });

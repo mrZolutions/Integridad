@@ -11,16 +11,18 @@ import lombok.Data;
 
 /**
  *
- * @author mrzolutions-daniel
+ * @author daniel-one
  */
 
 @Entity
 @Data
-public class DetailDailybookCg implements Child {
+public class DetailDailybookContab implements Child {
     @Id
     @GeneratedValue
     private UUID id;
     
+    private String typeContab;
+    private String numCheque;
     private String codeConta;
     private String descrip;
     private String name;
@@ -33,11 +35,29 @@ public class DetailDailybookCg implements Child {
     @JoinColumn(name = "dailybookCg_id")
     private DailybookCg dailybookCg;
     
+    @ManyToOne
+    @JoinColumn(name = "dailybookCe_id")
+    private DailybookCe dailybookCe;
+    
+    @ManyToOne
+    @JoinColumn(name = "dailybookCxP_id")
+    private DailybookCxP dailybookCxP;
+    
     public void setListsNull() {
     }
     
     public void setFatherListToNull() {
-        dailybookCg.setListsNull();
-        dailybookCg.setFatherListToNull();
+        if (dailybookCg != null) {
+            dailybookCg.setListsNull();
+            dailybookCg.setFatherListToNull();
+        }
+        if (dailybookCe != null) {
+            dailybookCe.setListsNull();
+            dailybookCe.setFatherListToNull();
+        }
+        if (dailybookCxP != null) {
+            dailybookCxP.setListsNull();
+        dailybookCxP.setFatherListToNull();
+        }
     }
 }

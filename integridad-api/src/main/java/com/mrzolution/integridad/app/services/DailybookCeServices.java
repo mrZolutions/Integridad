@@ -2,11 +2,11 @@ package com.mrzolution.integridad.app.services;
 
 import com.mrzolution.integridad.app.domain.Cashier;
 import com.mrzolution.integridad.app.domain.DailybookCe;
-import com.mrzolution.integridad.app.domain.DetailDailybookCe;
+import com.mrzolution.integridad.app.domain.DetailDailybookContab;
 import com.mrzolution.integridad.app.exceptions.BadRequestException;
 import com.mrzolution.integridad.app.repositories.CashierRepository;
 import com.mrzolution.integridad.app.repositories.DailybookCeRepository;
-import com.mrzolution.integridad.app.repositories.DetailDailybookCeRepository;
+import com.mrzolution.integridad.app.repositories.DetailDailybookContabRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -25,7 +25,7 @@ public class DailybookCeServices {
     @Autowired
     DailybookCeRepository dailybookCeRepository;
     @Autowired
-    DetailDailybookCeRepository detailDailybookCeRepository;
+    DetailDailybookContabRepository detailDailybookContabRepository;
     @Autowired
     CashierRepository cashierRepository;
     
@@ -64,46 +64,69 @@ public class DailybookCeServices {
         return dailys;
     }
     
-    //Creación de los Diarios CxP
-    public DailybookCe createDailybookCg(DailybookCe dailybookCe) throws BadRequestException {
-        List<DetailDailybookCe> detailDailybookCe = dailybookCe.getDetailDailybookCe();
+    //Busca COMPROBANTES DE EGRESO por Proveedor y Nro. Factura
+    public Iterable<DailybookCe> getDailybookCeByUserClientIdAndProvIdAndBillNumber(UUID userClientId, UUID provId, String billNumber) {
+        Iterable<DailybookCe> dailys = dailybookCeRepository.findDailybookCeByUserClientIdAndProvIdAndBillNumber(userClientId, provId, billNumber);
+        dailys.forEach(daily -> {
+            daily.setFatherListToNull();
+            daily.setListsNull();
+        });
+        return dailys;
+    }
+    
+    //Creación de los COMPROBANTES DE EGRESO
+    public DailybookCe createDailybookCe(DailybookCe dailybookCe) throws BadRequestException {
+        List<DetailDailybookContab> detailDailybookContab = dailybookCe.getDetailDailybookContab();
         
-        if (detailDailybookCe == null) {
+        if (detailDailybookContab == null) {
             throw new BadRequestException("Debe tener una cuenta por lo menos");
         }
         
         dailybookCe.setActive(true);
-        dailybookCe.setDetailDailybookCe(null);
+        dailybookCe.setDetailDailybookContab(null);
         dailybookCe.setFatherListToNull();
         dailybookCe.setListsNull();
         DailybookCe saved = dailybookCeRepository.save(dailybookCe);
         
         Cashier cashier = cashierRepository.findOne(dailybookCe.getUserIntegridad().getCashier().getId());
-        cashier.setDailyCppNumberSeq(cashier.getDailyCeNumberSeq() + 1);
+        cashier.setDailyCeNumberSeq(cashier.getDailyCeNumberSeq() + 1);
         cashierRepository.save(cashier);
         
-        detailDailybookCe.forEach(detail -> {
+        detailDailybookContab.forEach(detail -> {
             detail.setDailybookCe(saved);
-            detailDailybookCeRepository.save(detail);
+            detailDailybookContabRepository.save(detail);
             detail.setDailybookCe(null);
         });
         
-        saved.setDetailDailybookCe(detailDailybookCe);
+        saved.setDetailDailybookContab(detailDailybookContab);
         log.info("DailybookCeServices createDailybookCe DONE id: {}", saved.getId());
         return saved;
     }
     
+    //Desactivación o Anulación de los COMPROBANTES DE EGRESO
+    public DailybookCe deactivateDailybookCe(DailybookCe dailybookCe) throws BadRequestException {
+        if (dailybookCe.getId() == null) {
+            throw new BadRequestException("Invalid DailybookCe");
+        }
+        DailybookCe dailybookCeToDeactivate = dailybookCeRepository.findOne(dailybookCe.getId());
+        dailybookCeToDeactivate.setListsNull();
+        dailybookCeToDeactivate.setActive(false);
+        dailybookCeRepository.save(dailybookCeToDeactivate);
+        log.info("DailybookCeServices deactivateDailybookCe DONE id: {}", dailybookCeToDeactivate.getId());
+        return dailybookCeToDeactivate;
+    }
+    
     //Carga los Detalles hacia un COMPROBANTE DE EGRESO
     private void populateChildren(DailybookCe dailybookCe) {
-	List<DetailDailybookCe> detailDailybookCeList = new ArrayList<>();
-	Iterable<DetailDailybookCe> dailybookCesDetail = detailDailybookCeRepository.findByDailybookCe(dailybookCe);
-        dailybookCesDetail.forEach(detail -> {
+	List<DetailDailybookContab> detailDailybookContabList = new ArrayList<>();
+	Iterable<DetailDailybookContab> dailybookContabsDetail = detailDailybookContabRepository.findByDailybookCe(dailybookCe);
+        dailybookContabsDetail.forEach(detail -> {
             detail.setListsNull();
             detail.setFatherListToNull();
             detail.setDailybookCe(null);
-            detailDailybookCeList.add(detail);
+            detailDailybookContabList.add(detail);
 	});
-	dailybookCe.setDetailDailybookCe(detailDailybookCeList);
+	dailybookCe.setDetailDailybookContab(detailDailybookContabList);
 	dailybookCe.setFatherListToNull();
     }
 }

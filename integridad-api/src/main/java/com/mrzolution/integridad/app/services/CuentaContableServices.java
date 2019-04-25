@@ -53,6 +53,26 @@ public class CuentaContableServices {
 	return cuentas;
     }
     
+    public Iterable<CuentaContable> getCuentaContableByUserClientNoBank(UUID id) {
+	log.info("CuentaContableServices getCuentaContableByUserClientNoBank");
+	Iterable<CuentaContable> cuentas = cuentaContableRepository.findByUserClientIdNoBank(id);
+	for (CuentaContable cuenta : cuentas) {
+            cuenta.setListsNull();
+            cuenta.setFatherListToNull();
+	}
+	return cuentas;
+    }
+    
+    public Iterable<CuentaContable> getCuentaContableByUserClientAndBank(UUID id) {
+	log.info("CuentaContableServices getCuentaContableByUserClient");
+	Iterable<CuentaContable> cuentas = cuentaContableRepository.findByUserClientIdAndBank(id);
+	for (CuentaContable cuenta : cuentas) {
+            cuenta.setListsNull();
+            cuenta.setFatherListToNull();
+	}
+	return cuentas;
+    }
+    
     // Selecciona Ctas Contables por Tipo
     public Iterable<CuentaContable> getCuentaContableByType(UUID id, String typ) {
         Iterable<CuentaContable> cuentasType = cuentaContableRepository.findByType(id, typ);

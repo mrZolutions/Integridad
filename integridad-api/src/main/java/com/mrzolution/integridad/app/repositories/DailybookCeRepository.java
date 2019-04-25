@@ -24,4 +24,7 @@ public interface DailybookCeRepository extends CrudRepository<DailybookCe, UUID>
     
     @Query("SELECT d FROM DailybookCe d WHERE d.subsidiary.userClient.id = (:userClientId) AND d.active = true")
     Iterable<DailybookCe> findDailybookCeByUserClientId(@Param("userClientId") UUID id);
+    
+    @Query("SELECT d FROM DailybookCe d WHERE d.subsidiary.userClient.id = (:userClientId) AND d.provider.id = (:providerId) AND d.billNumber = (:bill) AND d.active = true")
+    Iterable<DailybookCe> findDailybookCeByUserClientIdAndProvIdAndBillNumber(@Param("userClientId") UUID id, @Param("providerId") UUID provid, @Param("bill") String billNumber);
 }
