@@ -249,7 +249,7 @@
                             <tr>
                                 <td width="20%" align="center"><img src="images/{{vm.userData.subsidiary.userClient.logo}}"><br></td>
                                 <td width="80%" rowspan="2">
-                                    <div style="padding:0px 20px;">
+                                    <div style="padding:0px 15px;">
                                         <b>{{vm.userData.subsidiary.userClient.name}}</b><br/>
                                         <b>{{vm.userData.subsidiary.userClient.address1}}</b><br/>
                                         <b>Tel&eacute;fono: {{vm.userData.subsidiary.phone}} - {{vm.userData.subsidiary.userClient.email}}</b><br/>
@@ -261,17 +261,35 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="form-group col-md-12" align="center">
-                        <label>COMPROBANTE DE DIARIO Nro: </label>
-                        {{vm.dailybookCg.dailyCgStringSeq}}
-                    </div>
-                    <div class="form-group col-md-6">
-                        <label>Fecha: </label>
-                        {{vm.dailybookCg.dateRecordBook | date : "dd-MM-yyyy"}}
-                    </div>
-                    <div class="form-group col-md-12">
-                        <label>Detalle: </label>
-                        {{vm.dailybookCg.generalDetail}}
+                    <div class="form-group col-md-12 ">
+                        <table width="100%">
+                            <tr>
+                                <td align="center">
+                                    <div>
+                                        <h4>
+                                            <label>COMPROBANTE DE DIARIO Nro: </label>
+                                            {{vm.dailybookCg.dailyCgStringSeq}}
+                                        </h4>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                        <table width="100%">
+                            <tr>
+                                <td width="25%">
+                                    <div>
+                                        <label>Fecha: </label>
+                                        {{vm.dailybookCg.dateRecordBook | date : "dd-MM-yyyy"}}
+                                    </div>
+                                </td>
+                                <td width="75%">
+                                    <div>
+                                        <label>Detalle: </label>
+                                        {{vm.dailybookCg.generalDetail}}
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
                     </div>
                 </div>
                 <div class="row">
@@ -705,10 +723,12 @@
                             <tr>
                                 <td width="40%" align="center"><img src="images/{{vm.userData.subsidiary.userClient.logo}}"><br></td>
                                 <td width="60%" rowspan="2">
-                                    <div style="padding:0px 20px;">
+                                    <div style="padding:0px 15px;">
                                         <div class="form-group col-md-12">
-                                            <h3><label>COMPROBANTE DE EGRESO</label></h3>
-                                            <h3>Nro: {{vm.dailybookCe.dailyCeStringSeq}}</h3>
+                                            <h3>
+                                                <label>COMPROBANTE DE EGRESO</label>
+                                                <label>Nro: {{vm.dailybookCe.dailyCeStringSeq}}</label>
+                                            </h3>
                                         </div>
                                     </div>
                                 </td>
@@ -717,43 +737,73 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="form-group col-md-8">
-                        <label>BANCO: </label>
-                        {{vm.dailybookCe.nameBank}}
-                    </div>
-                    <div class="form-group col-md-4">
-                        <label>VALOR: </label>
-                        &#36;{{vm.dailybookCe.total}}
-                    </div>
-                    <div class="form-group col-md-3">
-                        <label>FECHA: </label>
-                        {{vm.dailybookCe.dateRecordBook | date : "dd-MM-yyyy"}}
-                    </div>
-                    <div class="form-group col-md-3">
-                        <label>CHEQUE: </label>
-                        {{vm.dailybookCe.numCheque}}
-                    </div>
-                    <div class="form-group col-md-6">
-                        <label>Nro REF.: </label>
-                        {{vm.dailybookCe.dailyCeStringUserSeq}}
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="form-group col-md-8">
-                        <label>BENEFICIARIO: </label>
-                        {{vm.dailybookCe.provider.razonSocial}}
-                    </div>
-                    <div class="form-group col-md-4">
-                        <label>RUC: </label>
-                        {{vm.dailybookCe.provider.ruc}}
-                    </div>
-                    <div class="form-group col-md-4">
-                        <label>FACTURA: </label>
-                        {{vm.dailybookCe.billNumber}}
-                    </div>
-                    <div class="form-group col-md-8">
-                        <label>DETALLE: </label>
-                        {{vm.dailybookCe.generalDetail}}
+                    <div class="form-group col-md-12 ">
+                        <table width="100%">
+                            <tr>
+                                <td width="30%">
+                                    <div>
+                                        <label>BANCO: </label>
+                                        {{vm.dailybookCe.nameBank}}
+                                    </div>
+                                </td>
+                                <td width="20%">
+                                    <div>
+                                        <label>FECHA: </label>
+                                        {{vm.dailybookCe.dateRecordBook | date : "dd-MM-yyyy"}}
+                                    </div>
+                                </td>
+                                <td width="30%">
+                                    <div>
+                                        <label>CHEQUE: </label>
+                                        {{vm.dailybookCe.numCheque}}
+                                    </div>
+                                </td>
+                                <td width="20%">
+                                    <div>
+                                        <label>VALOR: </label>
+                                        &#36;{{vm.dailybookCe.total}}
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                        <table width="100%">
+                            <tr>
+                                <td width="50%">
+                                    <div>
+                                        <label>BENEFICIARIO: </label>
+                                        {{vm.dailybookCe.provider.razonSocial}}
+                                    </div>
+                                </td>
+                                <td width="20%">
+                                    <div>
+                                        <label>RUC: </label>
+                                        {{vm.dailybookCe.provider.ruc}}
+                                    </div>
+                                </td>
+                                <td width="30%">
+                                    <div>
+                                        <label>Nro REF.: </label>
+                                        {{vm.dailybookCe.dailyCeStringUserSeq}}
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                        <table width="100%">
+                            <tr>
+                                <td width="30%">
+                                    <div>
+                                        <label>FACTURA: </label>
+                                        {{vm.dailybookCe.billNumber}}
+                                    </div>
+                                </td>
+                                <td width="70%">
+                                    <div>
+                                        <label>DETALLE: </label>
+                                        {{vm.dailybookCe.generalDetail}}
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
                     </div>
                 </div>
                 <div class="row">
@@ -785,7 +835,7 @@
                 </div>
                 <div class="row">
                     <div class="col-md-12">
-                        <table width="100%" border="1">
+                        <table width="100%">
                             <tr>
                                 <td width="20%" align="center">
                                     <br/><br/>
@@ -1246,7 +1296,7 @@
                             <tr>
                                 <td width="20%" align="center"><img src="images/{{vm.userData.subsidiary.userClient.logo}}"><br></td>
                                 <td width="80%" rowspan="2">
-                                    <div style="padding:0px 20px;">
+                                    <div style="padding:0px 15px;">
                                         <b>{{vm.userData.subsidiary.userClient.name}}</b><br/>
                                         <b>{{vm.userData.subsidiary.userClient.address1}}</b><br/>
                                         <b>Tel&eacute;fono: {{vm.userData.subsidiary.phone}} - {{vm.userData.subsidiary.userClient.email}}</b><br/>
@@ -1258,29 +1308,57 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="form-group col-md-12" align="center">
-                        <label>COMPROBANTE DE DIARIO Nro: </label>
-                        {{vm.dailybookCxP.dailycxpStringSeq}}
-                    </div>
-                    <div class="form-group col-md-6">
-                        <label>Fecha: </label>
-                        {{vm.dailybookCxP.dateRecordBook | date : "dd-MM-yyyy"}}
-                    </div>
-                    <div class="form-group col-md-6">
-                        <label>Factura: </label>
-                        {{vm.dailybookCxP.billNumber}}
-                    </div>
-                    <div class="form-group col-md-8">
-                        <label>Cliente/Proveedor: </label>
-                        {{vm.dailybookCxP.provider.razonSocial}}
-                    </div>
-                    <div class="form-group col-md-4">
-                        <label>Monto: </label>
-                        &#36; {{vm.dailybookCxP.total}}
-                    </div>
-                    <div class="form-group col-md-12">
-                        <label>Detalle: </label>
-                        {{vm.dailybookCxP.generalDetail}}
+                    <div class="form-group col-md-12 ">
+                        <table width="100%">
+                            <tr>
+                                <td align="center">
+                                    <div>
+                                        <h4>
+                                            <label>COMPROBANTE DE DIARIO Nro: </label>
+                                            {{vm.dailybookCxP.dailycxpStringSeq}}
+                                        </h4>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                        <table width="100%">
+                            <tr>
+                                <td width="50%">
+                                    <div>
+                                        <label>Cliente/Proveedor: </label>
+                                        {{vm.dailybookCxP.provider.razonSocial}}
+                                    </div>
+                                </td>
+                                <td width="30%">
+                                    <div>
+                                        <label>Factura: </label>
+                                        {{vm.dailybookCxP.billNumber}}
+                                    </div>
+                                </td>
+                                <td width="20%">
+                                    <div>
+                                        <label>Monto: </label>
+                                        &#36; {{vm.dailybookCxP.total}}
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                        <table width="100%">
+                            <tr>
+                                <td width="25%">
+                                    <div>
+                                        <label>Fecha: </label>
+                                        {{vm.dailybookCxP.dateRecordBook | date : "dd-MM-yyyy"}}
+                                    </div>
+                                </td>
+                                <td width="75%">
+                                    <div>
+                                        <label>Detalle: </label>
+                                        {{vm.dailybookCxP.generalDetail}}
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
                     </div>
                 </div>
                 <div class="row">
