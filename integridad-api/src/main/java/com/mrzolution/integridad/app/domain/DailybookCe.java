@@ -60,11 +60,17 @@ public class DailybookCe {
     }
     
     public void setFatherListToNull() {
-        provider.setListsNull();
-        provider.setFatherListToNull();
-        userIntegridad.setListsNull();
-        userIntegridad.setFatherListToNull();
-    	subsidiary.setListsNull();
-    	subsidiary.setFatherListToNull();
+        if (provider != null) {
+            provider.setListsNull();
+            provider.setFatherListToNull();
+        }
+        if (userIntegridad != null) {
+            userIntegridad.setListsNull();
+            userIntegridad.setFatherListToNull();
+        }
+        if (subsidiary != null) {
+            subsidiary.setListsNull();
+            subsidiary.setFatherListToNull();
+        }
     }
 }

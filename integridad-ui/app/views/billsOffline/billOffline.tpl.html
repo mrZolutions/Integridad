@@ -342,7 +342,7 @@
                         ng-click="vm.cancelBillOffline()">
                         <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
                 </button>
-                <button type="button" title = "Imprimir a ThermalPrint" class="btn btn-danger btn-sm"
+                <button type="button" title = "Imprimir a ThermalPrint P58" class="btn btn-danger btn-sm"
                         ng-if="vm.newBillOffline" ng-disabled="vm.billOffline.claveDeAcceso === undefined"
                         ng-click="vm.printBillThermal('billPrint')">
                         <span class = "glyphicon glyphicon-print" aria-hidden = "true"></span>
@@ -398,7 +398,7 @@
                         ng-click="vm.clientSelected = undefined">
                         <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
                 </button>
-                <button type="button" title = "Imprimir a ThermalPrint" class="btn btn-danger btn-sm"
+                <button type="button" title = "Imprimir a ThermalPrint P58" class="btn btn-danger btn-sm"
                         ng-if="!vm.newBillOffline" ng-click="vm.printBillThermal('billPrint')">
                         <span class = "glyphicon glyphicon-print" aria-hidden = "true"></span>
                 </button>

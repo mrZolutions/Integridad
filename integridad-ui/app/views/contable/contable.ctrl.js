@@ -609,21 +609,11 @@ angular.module('integridadUiApp')
         vm.dailybookCe.subTotalDoce = vm.subTotalDoceCe;
         vm.dailybookCe.subTotalCero = vm.subTotalCeroCe;
         vm.dailybookCe.dateRecordBook = $('#pickerDateRecordBookCe').data("DateTimePicker").date().toDate().getTime();
-        contableService.getDailybookCeByUserClientIdAndProvIdAndBillNumber(vm.usrCliId, vm.providerId, vm.dailybookCe.billNumber).then(function(response) {
-            if (response.length === 0) {
-                contableService.createDailybookCe(vm.dailybookCe).then(function(response) {
-                    vm.dailybookCeNew = false;
-                    vm.dailybookCeCreated = response;
-                    $localStorage.user.cashier.dailyCeNumberSeq = vm.dailybookCe.dailyCeSeq;
-                    vm.dailiedCe = true;
-                    vm.loading = false;
-                }).catch(function(error) {
-                    vm.loading = false;
-                    vm.error = error.data;
-                });
-            } else {
-                vm.error = 'Ya Existe un Comprobante de Pago para esta Factura';
-            };
+        contableService.createDailybookCe(vm.dailybookCe).then(function(response) {
+            vm.dailybookCeNew = false;
+            vm.dailybookCeCreated = response;
+            $localStorage.user.cashier.dailyCeNumberSeq = vm.dailybookCe.dailyCeSeq;
+            vm.dailiedCe = true;
             vm.loading = false;
         }).catch(function(error) {
             vm.loading = false;

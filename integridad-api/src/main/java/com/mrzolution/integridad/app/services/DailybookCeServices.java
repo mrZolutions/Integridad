@@ -64,7 +64,7 @@ public class DailybookCeServices {
         return dailys;
     }
     
-    //Busca COMPROBANTES DE EGRESO por Proveedor y Nro. Factura
+    //Busca COMPROBANTES DE EGRESO por UserClient, Proveedor y Nro. Factura
     public Iterable<DailybookCe> getDailybookCeByUserClientIdAndProvIdAndBillNumber(UUID userClientId, UUID provId, String billNumber) {
         Iterable<DailybookCe> dailys = dailybookCeRepository.findDailybookCeByUserClientIdAndProvIdAndBillNumber(userClientId, provId, billNumber);
         dailys.forEach(daily -> {

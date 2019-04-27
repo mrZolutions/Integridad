@@ -443,7 +443,7 @@
                         ng-disabled="vm.cellar.total <= 0">
                         <span class="glyphicon glyphicon-floppy-saved" aria-hidden="true"></span>
                 </button>
-                <button type="button" title = "Imprimir Ticket-Ingreso Bodega" class="btn btn-danger btn-sm"
+                <button type="button" title = "Imprimir Ticket-Ingreso Bodega" class="btn btn-primary btn-sm"
                         ng-show="!vm.newCellar" ng-click="vm.printToCartAndCancel('printMatrixCellarId')">
                         <span class = "glyphicon glyphicon-print" aria-hidden = "true"></span>
                 </button>
@@ -1130,13 +1130,17 @@
                         ng-disabled="vm.consumption.total <= 0">
                         <span class="glyphicon glyphicon-floppy-saved" aria-hidden="true"></span>
                 </button>
-                <button type="button" title = "Imprimir Ticket-Consumo" class="btn btn-danger btn-sm"
+                <button type="button" title = "Imprimir Ticket-Consumo" class="btn btn-primary btn-sm"
                         ng-show="!vm.newConsumption" ng-click="vm.printToCartAndCancelCsm('printMatrixConsumptionId')">
                         <span class = "glyphicon glyphicon-print" aria-hidden = "true"></span>
                 </button>
                 <button type="button" title="Salir" class="btn btn-primary btn-sm"
                         ng-click="vm.cancelConsumption()">
                         <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
+                </button>
+                <button type="button" title = "Imprimir a ThermalPrint P58" class="btn btn-danger btn-sm"
+                        ng-show="!vm.newConsumption" ng-click="vm.printBillThermal('billPrint')">
+                        <span class = "glyphicon glyphicon-print" aria-hidden = "true"></span>
                 </button>
             </div>
         </div>
@@ -1192,6 +1196,25 @@
         </table>
         
         ------------------------------------
+    </div>
+
+    <!--CREA TICKET CONSUMO PARA THERMAL PRINTER-->
+    <div id="billPrint" ng-show='false'>
+        --------------------
+        CSMO No. {{vm.csmSeqNumber}}<br/>
+        SUP: {{vm.consumption.nameSupervisor}}<br/>
+        R.S: {{(vm.consumption.client.name).substr(0,16)}}<br/>
+        RUC: {{vm.consumption.client.identification}}
+        FCH: {{vm.getDateToPrintCsm() | date:  "dd/MM/yy"}}
+        CANT... DESC... TOT
+        <table width="100%">
+            <tr ng-repeat="detail in vm.consumption.detailsConsumption">
+                <td>{{detail.quantity}} {{(detail.product.name).substr(0,18)}} &#36;{{(detail.total).toFixed(2)}}<br/></td>
+            </tr>
+        </table>
+        S.TOT: {{(vm.consumption.subTotal).toFixed(2)}}<br/>
+        TOT: {{vm.consumption.total}}<br/>
+        --------------------
     </div>
 
     <!--MODAL PARA AGREGAR PRODUCTOS A CONSUMIR-->

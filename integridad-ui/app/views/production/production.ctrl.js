@@ -663,6 +663,16 @@ angular.module('integridadUiApp')
         _activate();
     };
 
+    vm.printBillThermal = function(billPrint) {
+        var innerContents = document.getElementById(billPrint).innerHTML;
+        var popupWinindow = window.open('', 'billPrint', 'width=300,height=400');
+        popupWinindow.document.write('<html><body>');
+        popupWinindow.document.write(innerContents);
+        popupWinindow.document.write('</body></html>');
+        popupWinindow.print();
+        popupWinindow.close();
+    };
+
     vm.getDateToPrintCsm = function() {
         if (vm.consumption != undefined) {
             return $('#pickerDateConsumption').data("DateTimePicker").date().toDate();
