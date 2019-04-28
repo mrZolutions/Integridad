@@ -25,6 +25,7 @@ public class PaymentDebts implements Child {
     private String noDocument;
     private String documentNumber;
     private String banco;
+    private String ctaCtableBanco;
     private String cardBrand;
     private String numeroLote;
     private double valorAbono;

@@ -954,7 +954,7 @@
                             <b>{{vm.providerName}}</b>
                         </div>
                         <div class = "form-group col-md-6">
-                            <label>Identificación del Proveedor:</label><br/>
+                            <label>Identificaci&oacute;n del Proveedor:</label><br/>
                             <b>{{vm.providerRuc}}</b><br/>
                         </div>
                     </div>
@@ -1006,11 +1006,40 @@
                                 </div>
                             </div>
                             <div class = "row" ng-show = "vm.paymentDebts.modePayment === 'CHQ'">
+                                <div class="form-group col-md-12" ng-show="vm.ctaCtableBankList !== undefined">
+                                    <input ng-model="searchTextTaxes" class="form-control" placeholder="Buscar">
+                                    <table class="table table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>N&uacute;mero de Cuenta</th>
+                                                <th>Nombre del Banco</th>
+                                                <th>Tipo de Cuenta</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr ng-show="vm.ctaCtableBankList == 0">
+                                                <td colspan="2">
+                                                    No hay Cuentas Contables de Bancos Ingresadas
+                                                </td>
+                                            </tr>
+                                            <tr dir-paginate = "cuenta in vm.ctaCtableBankList | orderBy:'description' | filter:searchTextTaxes | itemsPerPage: 3" pagination-id = "taxesPagination">
+                                                <td>{{cuenta.code}}</td>
+                                                <td>{{cuenta.accountType}}</td>
+                                                <td>{{cuenta.description}}</td>
+                                                <td>
+                                                    <button type = "button" title = "Seleccionar" class = "btn btn-primary btn-sm"
+                                                            ng-click = "vm.selectCtaCtableBank(cuenta)">
+                                                            <span class = "glyphicon glyphicon-check" aria-hidden = "true"></span>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <dir-pagination-controls pagination-id = "taxesPagination"></dir-pagination-controls>
+                                </div>
                                 <div class = "form-group col-md-6">
                                     <label>Banco:</label><br/>
-                                    <select ng-options = "bank.description as bank.description for bank in vm.bankList"
-                                            ng-model = "vm.paymentDebts.banco" class = "form-control">
-                                    </select>
+                                    <input type = "text" class = "form-control" ng-model = "vm.bankName"/>
                                 </div>
                                 <div class = "form-group col-md-6">
                                     <label>N&uacute;mero de Cheque:</label><br/>
@@ -1032,11 +1061,40 @@
                                 </div>
                             </div>
                             <div class = "row" ng-show = "vm.paymentDebts.modePayment === 'TRF'">
+                                <div class="form-group col-md-12" ng-show="vm.ctaCtableBankList !== undefined">
+                                    <input ng-model="searchTextTaxes" class="form-control" placeholder="Buscar">
+                                    <table class="table table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>N&uacute;mero de Cuenta</th>
+                                                <th>Nombre del Banco</th>
+                                                <th>Tipo de Cuenta</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr ng-show="vm.ctaCtableBankList == 0">
+                                                <td colspan="2">
+                                                    No hay Cuentas Contables de Bancos Ingresadas
+                                                </td>
+                                            </tr>
+                                            <tr dir-paginate = "cuenta in vm.ctaCtableBankList | orderBy:'description' | filter:searchTextTaxes | itemsPerPage: 3" pagination-id = "taxesPagination">
+                                                <td>{{cuenta.code}}</td>
+                                                <td>{{cuenta.accountType}}</td>
+                                                <td>{{cuenta.description}}</td>
+                                                <td>
+                                                    <button type = "button" title = "Seleccionar" class = "btn btn-primary btn-sm"
+                                                            ng-click = "vm.selectCtaCtableBank(cuenta)">
+                                                            <span class = "glyphicon glyphicon-check" aria-hidden = "true"></span>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <dir-pagination-controls pagination-id = "taxesPagination"></dir-pagination-controls>
+                                </div>
                                 <div class = "form-group col-md-6">
                                     <label>Banco:</label><br/>
-                                    <select ng-options = "bank.description as bank.description for bank in vm.bankList"
-                                            ng-model = "vm.paymentDebts.banco" class = "form-control">
-                                    </select>
+                                    <input type = "text" class = "form-control" ng-model = "vm.bankName"/>
                                 </div>
                                 <div class = "form-group col-md-6">
                                     <label>N&uacute;mero de Transferencia:</label><br/>
@@ -1074,11 +1132,40 @@
                                 </div>
                             </div>
                             <div class = "row" ng-show="vm.paymentDebts.modePayment === 'DEP'">
+                                <div class="form-group col-md-12" ng-show="vm.ctaCtableBankList !== undefined">
+                                    <input ng-model="searchTextTaxes" class="form-control" placeholder="Buscar">
+                                    <table class="table table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>N&uacute;mero de Cuenta</th>
+                                                <th>Nombre del Banco</th>
+                                                <th>Tipo de Cuenta</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr ng-show="vm.ctaCtableBankList == 0">
+                                                <td colspan="2">
+                                                    No hay Cuentas Contables de Bancos Ingresadas
+                                                </td>
+                                            </tr>
+                                            <tr dir-paginate = "cuenta in vm.ctaCtableBankList | orderBy:'description' | filter:searchTextTaxes | itemsPerPage: 3" pagination-id = "taxesPagination">
+                                                <td>{{cuenta.code}}</td>
+                                                <td>{{cuenta.accountType}}</td>
+                                                <td>{{cuenta.description}}</td>
+                                                <td>
+                                                    <button type = "button" title = "Seleccionar" class = "btn btn-primary btn-sm"
+                                                            ng-click = "vm.selectCtaCtableBank(cuenta)">
+                                                            <span class = "glyphicon glyphicon-check" aria-hidden = "true"></span>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <dir-pagination-controls pagination-id = "taxesPagination"></dir-pagination-controls>
+                                </div>
                                 <div class = "form-group col-md-6">
                                     <label>Banco:</label><br/>
-                                    <select ng-options = "bank.description as bank.description for bank in vm.bankList"
-                                            ng-model = "vm.paymentDebts.banco" class = "form-control">
-                                    </select>
+                                    <input type = "text" class = "form-control" ng-model = "vm.bankName"/>
                                 </div>
                                 <div class = "form-group col-md-6">
                                     <label>N&uacute;mero de Depósito:</label><br/>
