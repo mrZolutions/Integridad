@@ -1,7 +1,6 @@
 angular
     .module('app.services')
     .service('billService', function(securityService) {
-
         this.getClaveDeAcceso = function(req, id) {
             return securityService.post('/bill/clave_acceso/' + id, req).then(function successCallback(response) {
                 return response;

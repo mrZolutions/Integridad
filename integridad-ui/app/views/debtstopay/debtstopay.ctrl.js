@@ -15,35 +15,7 @@ angular.module('integridadUiApp')
         vm.success = undefined;
         vm.loading = false;
         vm.userData = $localStorage.user;
-    
-        vm.aux = undefined;
-        vm.billNumber = undefined;
-        vm.cuentaCtableId = undefined;
-        vm.creditsDebtsValue = undefined;
-        vm.debtsToPayList = undefined;
-        vm.debtsToPayCreated = undefined;
-        vm.ejercicio = undefined;
-        vm.provider = undefined;
-        vm.providerId = undefined;
-        vm.providerRuc = undefined;
-        vm.providerName = undefined;
-        vm.providerSelected = undefined;
-        vm.providerList = undefined;
-        vm.providerDebtsList = undefined;
-        vm.retentionId = undefined;
-        vm.retentionNumber = undefined;
-        vm.retentionDateCreated = undefined;
-        vm.retentionTotal = undefined;
-        vm.retenSelected = undefined;
-        vm.retenTaxTypeFuente = undefined;
-        vm.retenTaxTypeIva = undefined;
-        vm.retenCodeFuente = undefined;
-        vm.retenTotalFuente = undefined;
-        vm.retenCodeIva = undefined;
-        vm.retenTotalIva = undefined;
-        vm.saldoCredito = undefined;
-        vm.saldoDebito = undefined;
-        vm.saldo = undefined;
+
         vm.seqNumber = undefined;
         vm.subIva = undefined;
         vm.subTotalDoce = undefined;
@@ -51,7 +23,6 @@ angular.module('integridadUiApp')
         vm.subTotal = undefined;
         vm.totalTotal = undefined;
         vm.typeTaxes = undefined;
-        vm.update = undefined;
 
         vm.countries = [
             {code:'16',name:'16 - AMERICAN SAMOA'},{code:'74',name:'74 - BOUVET ISLAND'},{code:'101',name:'101 - ARGENTINA'},{code:'102',name:'102 - BOLIVIA'},
@@ -214,13 +185,18 @@ angular.module('integridadUiApp')
         //Función de activación del módulo de Cuentas por Pagar
         function _activate() {
             vm.loading = true;
-            vm.provider = undefined;
             vm.aux = undefined;
+            vm.billNumber = undefined;
+            vm.creditsDebtsValue = undefined;
             vm.update = undefined;
             vm.ejercicio = undefined;
             vm.debtsToPayList = undefined;
             vm.allDebtsToPayList = undefined;
+            vm.provider = undefined;
+            vm.providerId = undefined;
+            vm.providerName = undefined;
             vm.providerSelected = undefined;
+            vm.providerList = undefined;
             vm.providerDebtsList = undefined;
             vm.debtsToPayCreated = undefined;
             vm.paymentDebtsCreated = undefined;
@@ -231,12 +207,15 @@ angular.module('integridadUiApp')
             vm.retenSelected = undefined;
             vm.retenTaxTypeFuente = undefined;
             vm.retenTaxTypeIva = undefined;
+            vm.retenCodeFuente = undefined;
+            vm.retenTotalFuente = undefined;
+            vm.retenCodeIva = undefined;
+            vm.retenTotalIva = undefined;
             vm.debtsBillNumber = undefined;
             vm.debtsToPaySelectedToUpdate = undefined;
             vm.threeNumberOne = undefined;
             vm.threeNumberTwo = undefined;
             vm.seccondPartNumber = undefined;
-            
 
             //Comprobante de Egreso
             vm.selectedTypeBook = undefined;
@@ -251,9 +230,10 @@ angular.module('integridadUiApp')
             vm.ctaCtableBankList = undefined;
 
             vm.status = undefined;
+            vm.saldoCredito = undefined;
+            vm.saldoDebito = undefined;
             vm.success = undefined;
             vm.error = undefined;
-            vm.providerList = undefined;
             vm.medio = {};
             vm.pagos = [];
             vm.usrCliId = $localStorage.user.subsidiary.userClient.id;
@@ -1198,16 +1178,25 @@ angular.module('integridadUiApp')
                 vm.valorReten = 0.00;
             } else if (vm.paymentDebts.typePayment == 'RET') {
                 vm.valorAbono = 0.00;
+            } else if (vm.paymentDebts.typePayment == 'CEG') {
+                vm.valorReten = 0.00;
             };
             vm.paymentDebts.datePayment = $('#pickerDateOfPayment').data("DateTimePicker").date().toDate().getTime();
             vm.paymentDebts.creditId = vm.creditsDebtsId;
             vm.paymentDebts.documentNumber = vm.debtsBillNumber;
-            vm.paymentDebts.ctaCtableBanco = vm.ctaCtableBankCode;
-            vm.paymentDebts.banco = vm.bankName;
+            if (vm.paymentDebts.modePayment === 'CHQ' || vm.paymentDebts.modePayment === 'TRF' || vm.paymentDebts.modePayment === 'DEP') {
+                vm.paymentDebts.ctaCtableBanco = vm.ctaCtableBankCode;
+                vm.paymentDebts.banco = vm.bankName;
+            } else {
+                vm.paymentDebts.ctaCtableBanco = '--';
+                vm.paymentDebts.banco = '--';
+            };
             paymentDebtsService.create(paymentDebts).then(function(response) {
                 vm.paymentDebtsCreated = response;
                 vm.success = 'Abono realizado con exito';
-                _asientoComprobanteEgreso();
+                if (vm.paymentDebtsCreated.modePayment === 'CHQ' || vm.paymentDebtsCreated.modePayment === 'TRF' || vm.paymentDebtsCreated.modePayment === 'DEP') {
+                    _asientoComprobanteEgreso();
+                };
                 vm.loading = false;
             }).catch(function(error) {
                 vm.loading = false;

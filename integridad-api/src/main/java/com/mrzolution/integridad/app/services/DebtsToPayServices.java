@@ -176,14 +176,14 @@ public class DebtsToPayServices {
                         
                         paymentDebt.setDatePayment(saved.getFecha());
                         paymentDebt.setNoDocument(saved.getRetentionNumber());
-                        paymentDebt.setNoAccount("-");
+                        paymentDebt.setNoAccount("--");
                         paymentDebt.setDocumentNumber(saved.getBillNumber());
                         paymentDebt.setModePayment("RET");
                         paymentDebt.setTypePayment("RET");
                         paymentDebt.setDetail("ABONO POR RETENCIÓN");
-                        paymentDebt.setBanco("-");
-                        paymentDebt.setCardBrand("-");
-                        paymentDebt.setNumeroLote("-");
+                        paymentDebt.setBanco("--");
+                        paymentDebt.setCardBrand("--");
+                        paymentDebt.setNumeroLote("--");
                         paymentDebt.setValorAbono(0.0);
                         paymentDebt.setValorReten(saved.getRetentionTotal());
                         
@@ -197,43 +197,43 @@ public class DebtsToPayServices {
     }
     
     //Desactivación o Anulación de los Debts
-    //public DebtsToPay deactivateDebtsToPay(DebtsToPay debtsToPay) throws BadRequestException {
-    //    if (debtsToPay.getId() == null) {
-    //        throw new BadRequestException("Invalid DebtsToPay");
-    //    }
-    //    DebtsToPay debtsToPayToDeactivate = debtsToPayRepository.findOne(debtsToPay.getId());
-    //    debtsToPayToDeactivate.setListsNull();
-    //    debtsToPayToDeactivate.setActive(false);
-    //    debtsToPayRepository.save(debtsToPayToDeactivate);
-    //    log.info("DebtsToPayServices deactivateDebtsToPay DONE id: {}", debtsToPayToDeactivate.getId());
-    //    return debtsToPayToDeactivate;
-    //}
-    
-    //Actualización de los Debts
-    public DebtsToPay updateDebtsToPay(DebtsToPay debtsToPay) throws BadRequestException {
+    public DebtsToPay deactivateDebtsToPay(DebtsToPay debtsToPay) throws BadRequestException {
         if (debtsToPay.getId() == null) {
             throw new BadRequestException("Invalid DebtsToPay");
         }
-        log.info("DebtsToPayServices updateDebtsToPay: {}", debtsToPay.getId());
-        Father<DebtsToPay, DetailDebtsToPay> fatherDebts = new Father<>(debtsToPay, debtsToPay.getDetailDebtsToPay());
-        FatherManageChildren fatherUpdateDetailsChildren = new FatherManageChildren(fatherDebts, detailDebtsToPayChildRepository, detailDebtsToPayRepository);
-        fatherUpdateDetailsChildren.updateChildren();
-        Father<DebtsToPay, PagoDebts> fatherPagoDebts = new Father<>(debtsToPay, debtsToPay.getPagos());
-        FatherManageChildren fatherUpdatePagoDebtsChildren = new FatherManageChildren(fatherPagoDebts, pagoDebtsChildRepository, pagoDebtsRepository);
-        fatherUpdatePagoDebtsChildren.updateChildren();
-        debtsId = debtsToPay.getId().toString();
-        debtsToPay.getPagos().forEach(pagoDebts -> {
-            if (pagoDebts.getCreditsDebts() != null) {
-                Father<PagoDebts, CreditsDebts> fatherCreditsDebts = new Father<>(pagoDebts, pagoDebts.getCreditsDebts());
-                FatherManageChildren fatherUpdateChildrenCreditsDebts = new FatherManageChildren(fatherCreditsDebts, creditsDebtsChildRepository , creditsDebtsRepository);
-                fatherUpdateChildrenCreditsDebts.updateChildren();
-            }
-        });
-        debtsToPay.setListsNull();
-        DebtsToPay updated = debtsToPayRepository.save(debtsToPay);
-        log.info("DebtsToPayServices updateDebtsToPay DONE id: {}", updated.getId());
-        return updated;
+        DebtsToPay debtsToPayToDeactivate = debtsToPayRepository.findOne(debtsToPay.getId());
+        debtsToPayToDeactivate.setListsNull();
+        debtsToPayToDeactivate.setActive(false);
+        debtsToPayRepository.save(debtsToPayToDeactivate);
+        log.info("DebtsToPayServices deactivateDebtsToPay DONE id: {}", debtsToPayToDeactivate.getId());
+        return debtsToPayToDeactivate;
     }
+    
+    //Actualización de los Debts
+    //public DebtsToPay updateDebtsToPay(DebtsToPay debtsToPay) throws BadRequestException {
+    //    if (debtsToPay.getId() == null) {
+    //        throw new BadRequestException("Invalid DebtsToPay");
+    //    }
+    //    log.info("DebtsToPayServices updateDebtsToPay: {}", debtsToPay.getId());
+    //    Father<DebtsToPay, DetailDebtsToPay> fatherDebts = new Father<>(debtsToPay, debtsToPay.getDetailDebtsToPay());
+    //    FatherManageChildren fatherUpdateDetailsChildren = new FatherManageChildren(fatherDebts, detailDebtsToPayChildRepository, detailDebtsToPayRepository);
+    //    fatherUpdateDetailsChildren.updateChildren();
+    //    Father<DebtsToPay, PagoDebts> fatherPagoDebts = new Father<>(debtsToPay, debtsToPay.getPagos());
+    //    FatherManageChildren fatherUpdatePagoDebtsChildren = new FatherManageChildren(fatherPagoDebts, pagoDebtsChildRepository, pagoDebtsRepository);
+    //    fatherUpdatePagoDebtsChildren.updateChildren();
+    //    debtsId = debtsToPay.getId().toString();
+    //    debtsToPay.getPagos().forEach(pagoDebts -> {
+    //        if (pagoDebts.getCreditsDebts() != null) {
+    //            Father<PagoDebts, CreditsDebts> fatherCreditsDebts = new Father<>(pagoDebts, pagoDebts.getCreditsDebts());
+    //            FatherManageChildren fatherUpdateChildrenCreditsDebts = new FatherManageChildren(fatherCreditsDebts, creditsDebtsChildRepository , creditsDebtsRepository);
+    //            fatherUpdateChildrenCreditsDebts.updateChildren();
+    //        }
+    //    });
+    //    debtsToPay.setListsNull();
+    //    DebtsToPay updated = debtsToPayRepository.save(debtsToPay);
+    //    log.info("DebtsToPayServices updateDebtsToPay DONE id: {}", updated.getId());
+    //    return updated;
+    //}
     
     //Reporte de Compras
     public List<DebtsReport> getDebtsToPayByUserClientIdAndDates(UUID userClientId, long dateOne, long dateTwo) {

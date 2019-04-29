@@ -40,16 +40,16 @@ public class PaymentDebtsServices {
     private double nume = 0.0;
     private double abono = 0.0;
     private double resto = 0.0;
-    private String document = "-";
+    private String document = "--";
     private double saldo = 0.0;
     private double sumado = 0.0;
     
-    private String numCheque = "-";
+    private String numCheque = "--";
     
-    private String ruc = "-";
-    private String nameProv = "-";
-    private String debtsNumber = "-";
-    private String billNumber = "-";
+    private String ruc = "--";
+    private String nameProv = "--";
+    private String debtsNumber = "--";
+    private String billNumber = "--";
     
     private UUID providerId;
     private double sumTotalAbono = 0.0;
@@ -64,6 +64,8 @@ public class PaymentDebtsServices {
         if (saved.getCreditsDebts().getId() != null) {
             idCreditsDebts = saved.getCreditsDebts().getId();
             if ("PAC".equals(saved.getTypePayment())) {
+                abono = saved.getValorAbono();
+            } else if ("CEG".equals(saved.getTypePayment())) {
                 abono = saved.getValorAbono();
             } else {
                 abono = saved.getValorReten();
@@ -134,7 +136,7 @@ public class PaymentDebtsServices {
             if ("CHQ".equals(paymentDebt.getModePayment())) {
                 numCheque = paymentDebt.getNoDocument();
             } else {
-                numCheque = "-";
+                numCheque = "--";
             }
             
             ruc = paymentDebt.getCreditsDebts().getPagoDebts().getDebtsToPay().getProvider().getRuc();

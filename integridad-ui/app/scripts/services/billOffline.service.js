@@ -1,7 +1,6 @@
 angular
     .module('app.services')
     .service('billOfflineService', function(securityService) {
-
         this.createBillOffline = function(billOffline, type) {
             return securityService.post('/billoffline/' + type, billOffline).then(function successCallback(response) {
                 return response.data;
