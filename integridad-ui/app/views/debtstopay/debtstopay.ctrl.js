@@ -211,6 +211,7 @@ angular.module('integridadUiApp')
             vm.retenTotalFuente = undefined;
             vm.retenCodeIva = undefined;
             vm.retenTotalIva = undefined;
+            vm.responseDebtsToPay = undefined;
             vm.debtsBillNumber = undefined;
             vm.debtsToPaySelectedToUpdate = undefined;
             vm.threeNumberOne = undefined;
@@ -228,6 +229,9 @@ angular.module('integridadUiApp')
             vm.bankName = undefined;
             vm.typeCuenta = undefined;
             vm.ctaCtableBankList = undefined;
+
+            //Diario CxP
+            vm.generalDetailCxP = undefined;
 
             vm.status = undefined;
             vm.saldoCredito = undefined;
@@ -265,6 +269,26 @@ angular.module('integridadUiApp')
             };
         };
 
+        //Inicio de Secuencia de Numeración del Diario e Inicialización del Diario de CxP
+        function _getDailyCxPSeqNumber() {
+            vm.numberAddedOneCxP = parseInt($localStorage.user.cashier.dailyCppNumberSeq) + 1;
+            vm.dailycxpSeq = vm.numberAddedOneCxP;
+            vm.dailycxpStringSeq = utilSeqService._pad_with_zeroes(vm.numberAddedOneCxP, 6);
+        };
+
+        function _initializeDailybookCxP() {
+            vm.dailybookCxP = {
+                provider: vm.providerSelected,
+                userIntegridad: $localStorage.user,
+                subsidiary: $localStorage.user.subsidiary,
+                subTotalDoce: 0.0,
+                iva: 0.0,
+                subTotalCero: 0.0,
+                total: 0.0,
+                detailDailybookContab: []
+            };
+        };
+
         vm.getAllDebtsToPay = function() {
             vm.loading = true;
             debtsToPayService.getDebtsToPayByUserClientId(vm.usrCliId).then(function(response) {
@@ -278,14 +302,17 @@ angular.module('integridadUiApp')
 
         //Selección del Prooveedor
         vm.providerSelect = function(provider) {
+            vm.loading = true;
             vm.success = undefined;
             vm.update = false;
-            vm.loading = true;
             vm.providerSelected = provider;
             vm.providerId = provider.id;
+            vm.providerName = provider.name;
             vm.companyData = $localStorage.user.subsidiary;
             _getSeqNumber();
             _initializeDebts();
+            _getDailyCxPSeqNumber();
+            _initializeDailybookCxP();
             var today = new Date();
             $('#pickerDateDebtsToPay').data("DateTimePicker").date(today);
             $('#pickerDateDebtsToPay').on("dp.change", function(data) {
@@ -408,422 +435,6 @@ angular.module('integridadUiApp')
             };
         };
 
-        //Función que agrega los detalles de la Retención a los detalles de la Cuenta por Pagar
-        vm.addRetentionToDebtsDetail = function() {
-            vm.retenSelected = true;
-            // Usuario La Quinta
-            if (vm.usrCliId === '758dea84-74f5-4209-b218-9b84c10621fc') {
-                if (vm.retenTaxTypeFuente == 'RETENCION EN LA FUENTE') {
-                    switch(vm.retenCodeFuente) {
-                        case '302':
-                            vm.retenFteCodeContable = '2.01.07.01.001'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
-                            vm.retenFteNombContable = 'En Relación de Dependencia'; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
-                        break;
-                        case '303':
-                            vm.retenFteCodeContable = '2.01.07.01.002'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
-                            vm.retenFteNombContable = 'Honorarios Profesionales'; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
-                        break;
-                        case '304':
-                            vm.retenFteCodeContable = '2.01.07.01.003'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
-                            vm.retenFteNombContable = 'Servicios Profesionales predomina intelecto'; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
-                        break;
-                        case '307':
-                            vm.retenFteCodeContable = '2.01.07.01.004'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
-                            vm.retenFteNombContable = 'Servicios Mano de Obra'; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
-                        break;
-                        case '308':
-                            vm.retenFteCodeContable = '2.01.07.01.005'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
-                            vm.retenFteNombContable = 'Servicios entre Sociedades'; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
-                        break;
-                        case '309':
-                            vm.retenFteCodeContable = '2.01.07.01.006'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
-                            vm.retenFteNombContable = 'Servicios Publicidad y Comunicación'; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
-                        break;
-                        case '310':
-                            vm.retenFteCodeContable = '2.01.07.01.007'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
-                            vm.retenFteNombContable = 'Transporte Privado de Pasajeros o de Carga'; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
-                        break;
-                        case '312':
-                            vm.retenFteCodeContable = '2.01.07.01.008'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
-                            vm.retenFteNombContable = 'Transferencia Bienes Muebles naturales'; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
-                        break;
-                        case '319':
-                            vm.retenFteCodeContable = '2.01.07.01.009'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
-                            vm.retenFteNombContable = 'Arrendamiento Mercantil'; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
-                        break;
-                        case '320':
-                            vm.retenFteCodeContable = '2.01.07.01.010'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
-                            vm.retenFteNombContable = 'Arrendamiento Bienes Inmuebles'; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
-                        break;
-                        case '322':
-                            vm.retenFteCodeContable = '2.01.07.01.011'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
-                            vm.retenFteNombContable = 'Seguros y Reaseguros'; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
-                        break;
-                        case '323':
-                            vm.retenFteCodeContable = '2.01.07.01.012'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
-                            vm.retenFteNombContable = 'Rendimientos Financieros'; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
-                        break;
-                        case '327':
-                            vm.retenFteCodeContable = '2.01.07.01.013'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
-                            vm.retenFteNombContable = 'Venta de Combustibles'; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
-                        break;
-                        case '328':
-                            vm.retenFteCodeContable = '2.01.07.01.014'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
-                            vm.retenFteNombContable = 'Venta de Combustibles a distribuidores'; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
-                        break;
-                        case '340':
-                            vm.retenFteCodeContable = '2.01.07.01.015'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
-                            vm.retenFteNombContable = 'Otras Retenciones aplicables al 1%'; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
-                        break;
-                        case '341':
-                            vm.retenFteCodeContable = '2.01.07.01.016'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
-                            vm.retenFteNombContable = 'Otras Retenciones aplicables al 2%'; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
-                        break;
-                        case '342':
-                            vm.retenFteCodeContable = '2.01.07.01.017'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
-                            vm.retenFteNombContable = 'Otras Retenciones aplicables al 8%'; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
-                        break;
-                        case '343':
-                            vm.retenFteCodeContable = '2.01.07.01.018'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
-                            vm.retenFteNombContable = 'Otras Retenciones aplicables al 25%'; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
-                        break;
-                        case '344':
-                            vm.retenFteCodeContable = '2.01.07.01.019'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
-                            vm.retenFteNombContable = 'Otras Retenciones aplicables a otros porcentajes'; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
-                        break;
-                    };
-                };
-
-                if (vm.retenTaxTypeIva == 'RETENCION EN EL IVA') {
-                    switch(vm.retenCodeIva) {
-                        case '721':
-                            vm.retenIvaCodeContable = '2.01.07.02.001'; vm.retenIvaDescContable = 'RETENCIÓN EN IVA';
-                            vm.retenIvaNombContable = 'RETENCION IVA DEL 10% (Bienes)'; vm.retenIvaValor = parseFloat(vm.retenTotalIva);
-                        break;
-                        case '723':
-                            vm.retenIvaCodeContable = '2.01.07.02.002'; vm.retenIvaDescContable = 'RETENCIÓN EN IVA';
-                            vm.retenIvaNombContable = 'RETENCION IVA DEL 20% (Servicios)'; vm.retenIvaValor = parseFloat(vm.retenTotalIva);
-                        break;
-                        case '725':
-                            vm.retenIvaCodeContable = '2.01.07.02.003'; vm.retenIvaDescContable = 'RETENCIÓN EN IVA';
-                            vm.retenIvaNombContable = 'RETENCION IVA DEL 30%'; vm.retenIvaValor = parseFloat(vm.retenTotalIva);
-                        break;
-                        case '727':
-                            vm.retenIvaCodeContable = '2.01.07.02.004'; vm.retenIvaDescContable = 'RETENCIÓN EN IVA';
-                            vm.retenIvaNombContable = 'RETENCION IVA DEL 50%'; vm.retenIvaValor = parseFloat(vm.retenTotalIva);
-                        break;
-                        case '729':
-                            vm.retenIvaCodeContable = '2.01.07.02.005'; vm.retenIvaDescContable = 'RETENCIÓN EN IVA';
-                            vm.retenIvaNombContable = 'RETENCION IVA DEL 70%'; vm.retenIvaValor = parseFloat(vm.retenTotalIva);
-                        break;
-                        case '731':
-                            vm.retenIvaCodeContable = '2.01.07.02.006'; vm.retenIvaDescContable = 'RETENCIÓN EN IVA';
-                            vm.retenIvaNombContable = 'RETENCION IVA DEL 100%'; vm.retenIvaValor = parseFloat(vm.retenTotalIva);
-                        break;
-                    };
-                };
-            // Usuario Mr. Zolutions
-            } else if (vm.usrCliId === '4907601b-6e54-4675-80a8-ab6503e1dfeb') {
-                if (vm.retenTaxTypeFuente == 'RETENCION EN LA FUENTE') {
-                    switch(vm.retenCodeFuente) {
-                        case '303':
-                            vm.retenFteCodeContable = '2.01.07.03.303'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
-                            vm.retenFteNombContable = 'RF 10% Honorarios Profesionales Dietas'; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
-                        break;
-                        case '304':
-                            vm.retenFteCodeContable = '2.01.07.03.304'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
-                            vm.retenFteNombContable = 'RF 8% Servicios predomina el Intelecto'; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
-                        break;
-                        case '307':
-                            vm.retenFteCodeContable = '2.01.07.03.307'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
-                            vm.retenFteNombContable = 'RF 2% Servicios predomina Mano de Obra'; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
-                        break;
-                        case '309':
-                            vm.retenFteCodeContable = '2.01.07.03.309'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
-                            vm.retenFteNombContable = 'RF 1% Servicios de Publicidad y Comunicación'; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
-                        break;
-                        case '310':
-                            vm.retenFteCodeContable = '2.01.07.03.310'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
-                            vm.retenFteNombContable = 'RF 1% Servicios de Transporte'; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
-                        break;
-                        case '312':
-                            vm.retenFteCodeContable = '2.01.07.03.312'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
-                            vm.retenFteNombContable = 'RF 1% Transferencia de Bienes Muebles Naturales'; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
-                        break;
-                        case '319':
-                            vm.retenFteCodeContable = '2.01.07.03.319'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
-                            vm.retenFteNombContable = 'RF 1% Arrendamiento Mercantil'; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
-                        break;
-                        case '320':
-                            vm.retenFteCodeContable = '2.01.07.03.320'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
-                            vm.retenFteNombContable = 'RF 8% Arrendamiento de Inmuebles'; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
-                        break;
-                        case '322':
-                            vm.retenFteCodeContable = '2.01.07.03.322'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
-                            vm.retenFteNombContable = 'Seguros y Reaseguros'; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
-                        break;
-                        case '323':
-                            vm.retenFteCodeContable = '2.01.07.03.323'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
-                            vm.retenFteNombContable = 'RF 2% Rendimientos Financieros'; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
-                        break;
-                        case '325':
-                            vm.retenFteCodeContable = '2.01.07.03.325'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
-                            vm.retenFteNombContable = 'RF 15% Anticipo Dividendos'; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
-                        break;
-                        case '327':
-                            vm.retenFteCodeContable = '2.01.07.03.327'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
-                            vm.retenFteNombContable = 'RF 0.2% Venta de Combustibles'; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
-                        break;
-                        case '342':
-                            vm.retenFteCodeContable = '2.01.07.03.342'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
-                            vm.retenFteNombContable = 'RF 8% Otras Retenciones Aplicables'; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
-                        break;
-                        case '344':
-                            vm.retenFteCodeContable = '2.01.07.03.344'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
-                            vm.retenFteNombContable = 'RF 2% Otras Retenciones Aplicables'; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
-                        break;
-                    };
-                };
-
-                if (vm.retenTaxTypeIva == 'RETENCION EN EL IVA') {
-                    switch(vm.retenCodeIva) {
-                        case '721':
-                            vm.retenIvaCodeContable = '2.01.07.02.721'; vm.retenIvaDescContable = 'RETENCIÓN EN IVA';
-                            vm.retenIvaNombContable = 'RETENCION IVA 10%'; vm.retenIvaValor = parseFloat(vm.retenTotalIva);
-                        break;
-                        case '723':
-                            vm.retenIvaCodeContable = '2.01.07.02.723'; vm.retenIvaDescContable = 'RETENCIÓN EN IVA';
-                            vm.retenIvaNombContable = 'RETENCION IVA 20%'; vm.retenIvaValor = parseFloat(vm.retenTotalIva);
-                        break;
-                        case '725':
-                            vm.retenIvaCodeContable = '2.01.07.02.725'; vm.retenIvaDescContable = 'RETENCIÓN EN IVA';
-                            vm.retenIvaNombContable = 'RETENCION IVA 30%'; vm.retenIvaValor = parseFloat(vm.retenTotalIva);
-                        break;
-                        case '727':
-                            vm.retenIvaCodeContable = '2.01.07.02.727'; vm.retenIvaDescContable = 'RETENCIÓN EN IVA';
-                            vm.retenIvaNombContable = 'RETENCION IVA 50%'; vm.retenIvaValor = parseFloat(vm.retenTotalIva);
-                        break;
-                        case '729':
-                            vm.retenIvaCodeContable = '2.01.07.02.729'; vm.retenIvaDescContable = 'RETENCIÓN EN IVA';
-                            vm.retenIvaNombContable = 'RETENCION IVA 70%'; vm.retenIvaValor = parseFloat(vm.retenTotalIva);
-                        break;
-                        case '731':
-                            vm.retenIvaCodeContable = '2.01.07.02.731'; vm.retenIvaDescContable = 'RETENCIÓN EN IVA';
-                            vm.retenIvaNombContable = 'RETENCION IVA 100%'; vm.retenIvaValor = parseFloat(vm.retenTotalIva);
-                        break;
-                    };
-                };
-            // Usuario Catedral
-            } else if (vm.usrCliId === '1e2049c3-a3bc-4231-a0de-dded8020dc1b') {
-                if (vm.retenTaxTypeFuente == 'RETENCION EN LA FUENTE') {
-                    switch(vm.retenCodeFuente) {
-                        case '302':
-                            vm.retenFteCodeContable = '2.12.40.201'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
-                            vm.retenFteNombContable = 'En Relación de Dependencia'; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
-                        break;
-                        case '303':
-                            vm.retenFteCodeContable = '2.12.40.202'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
-                            vm.retenFteNombContable = 'Honorarios Profesionales Dietas'; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
-                        break;
-                        case '304':
-                            vm.retenFteCodeContable = '2.12.40.203'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
-                            vm.retenFteNombContable = 'Servicios predomina el Intelecto'; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
-                        break;
-                        case '307':
-                            vm.retenFteCodeContable = '2.12.40.204'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
-                            vm.retenFteNombContable = 'Servicios predomina Mano de Obra'; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
-                        break;
-                        case '308':
-                            vm.retenFteCodeContable = '2.12.40.205'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
-                            vm.retenFteNombContable = 'Servicios entre Sociedades'; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
-                        break;
-                        case '309':
-                            vm.retenFteCodeContable = '2.12.40.206'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
-                            vm.retenFteNombContable = 'Servicios de Publicidad y Comunicación'; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
-                        break;
-                        case '310':
-                            vm.retenFteCodeContable = '2.12.40.207'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
-                            vm.retenFteNombContable = 'Servicios de Transporte'; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
-                        break;
-                        case '312':
-                            vm.retenFteCodeContable = '2.12.40.208'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
-                            vm.retenFteNombContable = 'Transferencia de Bienes Muebles Naturales'; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
-                        break;
-                        case '319':
-                            vm.retenFteCodeContable = '2.12.40.209'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
-                            vm.retenFteNombContable = 'Arrendamiento Mercantil'; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
-                        break;
-                        case '320':
-                            vm.retenFteCodeContable = '2.12.40.210'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
-                            vm.retenFteNombContable = 'Arrendamiento de Inmuebles'; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
-                        break;
-                        case '322':
-                            vm.retenFteCodeContable = '2.12.40.211'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
-                            vm.retenFteNombContable = 'Seguros y Reaseguros'; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
-                        break;
-                        case '323':
-                            vm.retenFteCodeContable = '2.12.40.212'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
-                            vm.retenFteNombContable = 'Rendimientos Financieros'; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
-                        break;
-                        case '327':
-                            vm.retenFteCodeContable = '2.12.40.213'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
-                            vm.retenFteNombContable = 'Venta de Combustibles'; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
-                        break;
-                        case '328':
-                            vm.retenFteCodeContable = '2.12.40.214'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
-                            vm.retenFteNombContable = 'Venta de Combustibles a distribuidores'; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
-                        break;
-                        case '340':
-                            vm.retenFteCodeContable = '2.12.40.215'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
-                            vm.retenFteNombContable = 'Otras Retenciones aplicables al 1%'; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
-                        break;
-                        case '341':
-                            vm.retenFteCodeContable = '2.12.40.216'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
-                            vm.retenFteNombContable = 'Otras Retenciones aplicables al 2%'; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
-                        break;
-                        case '342':
-                            vm.retenFteCodeContable = '2.12.40.217'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
-                            vm.retenFteNombContable = 'Otras Retenciones aplicables al 8%'; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
-                        break;
-                        case '343':
-                            vm.retenFteCodeContable = '2.12.40.218'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
-                            vm.retenFteNombContable = 'Otras Retenciones aplicables al 25%'; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
-                        break;
-                        case '344':
-                            vm.retenFteCodeContable = '2.12.40.219'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
-                            vm.retenFteNombContable = 'Aplicables a otros porcentajes'; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
-                        break;
-                    };
-                };
-
-                if (vm.retenTaxTypeIva == 'RETENCION EN EL IVA') {
-                    switch(vm.retenCodeIva) {
-                        case '725':
-                            vm.retenIvaCodeContable = '2.12.40.103'; vm.retenIvaDescContable = 'RETENCIÓN EN IVA';
-                            vm.retenIvaNombContable = 'RETENCION IVA 30%'; vm.retenIvaValor = parseFloat(vm.retenTotalIva);
-                        break;
-                        case '729':
-                            vm.retenIvaCodeContable = '2.12.40.104'; vm.retenIvaDescContable = 'RETENCIÓN EN IVA';
-                            vm.retenIvaNombContable = 'RETENCION IVA 70%'; vm.retenIvaValor = parseFloat(vm.retenTotalIva);
-                        break;
-                        case '731':
-                            vm.retenIvaCodeContable = '2.12.40.105'; vm.retenIvaDescContable = 'RETENCIÓN EN IVA';
-                            vm.retenIvaNombContable = 'RETENCION IVA 100%'; vm.retenIvaValor = parseFloat(vm.retenTotalIva);
-                        break;
-                    };
-                };
-            };
-
-            if (vm.update === false) {
-                vm.itemRetentionFuente = undefined;
-                vm.itemRetentionFuente = { 
-                    codigo_contable: vm.retenFteCodeContable, desc_contable: vm.retenFteDescContable, 
-                    tipo: 'CREDITO (C)', base_imponible: vm.retenFteValor,
-                    nomb_contable: vm.retenFteNombContable, haber: vm.retenFteValor
-                };
-                vm.itemRetentionIVA = undefined;
-                vm.itemRetentionIVA = { 
-                    codigo_contable: vm.retenIvaCodeContable, desc_contable: vm.retenIvaDescContable,
-                    tipo: 'CREDITO (C)', base_imponible: vm.retenIvaValor,
-                    nomb_contable: vm.retenIvaNombContable, haber: vm.retenIvaValor
-                };
-
-                if (vm.retenCodeFuente != null) {
-                    vm.debtsToPay.items.push(vm.itemRetentionFuente);
-                };
-                vm.itemRetentionFuente = undefined;
-
-                if (vm.retenCodeIva != null) {
-                    vm.debtsToPay.items.push(vm.itemRetentionIVA);
-                };
-                vm.itemRetentionIVA = undefined;
-            } else {
-                vm.itemRetentionFuenteToUpdate = undefined;
-                vm.itemRetentionFuenteToUpdate = { 
-                    codigo: vm.retenCodeFuente, codeConta: vm.retenFteCodeContable,
-                    descrip: vm.retenFteDescContable, tipo: 'CREDITO (C)', baseImponible: vm.retenFteValor,
-                    name: vm.retenFteNombContable, haber: vm.retenFteValor
-                };
-                vm.itemRetentionIVAToUpdate = undefined;
-                vm.itemRetentionIVAToUpdate = { 
-                    codigo: vm.retenCodeIva, codeConta: vm.retenIvaCodeContable,
-                    descrip: vm.retenIvaDescContable, tipo: 'CREDITO (C)', baseImponible: vm.retenIvaValor,
-                    name: vm.retenIvaNombContable, haber: vm.retenIvaValor
-                };
-
-                if (vm.retenCodeFuente != null) {
-                    vm.debtsToPay.detailDebtsToPay.push(vm.itemRetentionFuenteToUpdate);
-                };
-                vm.itemRetentionFuenteToUpdate = undefined;
-
-                if (vm.retenCodeIva != null) {
-                    vm.debtsToPay.detailDebtsToPay.push(vm.itemRetentionIVAToUpdate);
-                };
-                vm.itemRetentionIVAToUpdate = undefined;
-            };
-            vm.retenCodeFuente = undefined;
-            vm.retenCodeIva = undefined;
-        };
-
-        //Funión que permite agregar las Cuentas Contables por defecto, Iva y Proveedor
-        vm.addIvaAndProvider = function() {
-            if (vm.indexEdit !== undefined) {
-                vm.debtsToPay.items.splice(vm.indexEdit, 1);
-                vm.indexEdit = undefined;
-            };
-            if (vm.retentionId == null) {
-                vm.retentionTotal = 0;
-            };
-            //Selección de las Cuentas Contables por defecto dependiendo del Cliente
-            if (vm.usrCliId === '758dea84-74f5-4209-b218-9b84c10621fc') {
-                vm.ivaContable = '1.01.05.01.001'; vm.provContable = '2.01.03.01.001';
-            } else if (vm.usrCliId === '4907601b-6e54-4675-80a8-ab6503e1dfeb') {
-                vm.ivaContable = '1.01.05.02.001'; vm.provContable = '2.01.03.01.001';
-            } else if (vm.usrCliId === '1e2049c3-a3bc-4231-a0de-dded8020dc1b') {
-                vm.ivaContable = '1.14.10.201'; vm.provContable = '2.12.10.101';
-            } else {
-                vm.ivaContable = '1.01.01.01';
-                vm.provContable = '2.01.01.01';
-            };
-          
-            if (vm.typeTaxes === '1') {
-                vm.subIva = parseFloat((vm.item.base_imponible * 0.1200).toFixed(2));
-                vm.subTotalDoce = vm.item.base_imponible;
-                vm.subTotalCero = vm.debtsToPay.total - vm.subTotalDoce - vm.subIva;
-                vm.itemIva = {
-                    codigo_contable: vm.ivaContable,
-                    desc_contable: 'IVA EN COMPRAS',
-                    tipo: 'DEBITO (D)',
-                    base_imponible: vm.subIva,
-                    nomb_contable: 'DEFINIDA PARA TODAS LAS COMPRAS',
-                    deber: vm.subIva
-                };
-                vm.itemProvider = {
-                    codigo_contable: vm.provContable,
-                    desc_contable: 'PROVEEDORES LOCALES',
-                    tipo: 'CREDITO (C)',
-                    base_imponible: vm.debtsToPay.total - vm.retentionTotal,
-                    nomb_contable: 'DEFINIDA PARA TODOS LOS PROVEEDORES',
-                    haber: vm.debtsToPay.total - vm.retentionTotal
-                };
-                vm.debtsToPay.items.push(vm.itemIva);
-                vm.debtsToPay.items.push(vm.itemProvider);
-            } else if (vm.typeTaxes === '2') {
-                vm.subIva = 0.0;
-                vm.subTotalDoce = 0.0;
-                vm.subTotalCero = vm.debtsToPay.total;
-                vm.itemProvider = {
-                    codigo_contable: vm.provContable,
-                    desc_contable: 'PROVEEDORES LOCALES',
-                    tipo: 'CREDITO (C)',
-                    base_imponible: vm.debtsToPay.total - vm.retentionTotal,
-                    nomb_contable: 'DEFINIDA PARA TODOS LOS PROVEEDORES',
-                    haber: vm.debtsToPay.total - vm.retentionTotal
-                };
-                vm.debtsToPay.items.push(vm.itemProvider);
-            };
-        };
-
         vm.selectTaxes = function(tax) {
             vm.item = undefined;
             vm.item = {
@@ -836,6 +447,17 @@ angular.module('integridadUiApp')
             };
             vm.subTotal = parseFloat((vm.debtsToPay.total / 1.1200).toFixed(2));
             vm.totalTotal = parseFloat(vm.debtsToPay.total);
+
+            //Diario CxP
+            vm.itema = undefined;
+            vm.itema = {
+                typeContab: vm.typeContab,
+                codeConta: tax.code,
+                descrip: tax.description,
+                tipo: tax.accountType,
+                name: tax.name
+            };
+            vm.subTotalDoceCxP = parseFloat((vm.debtsToPay.total / 1.1200).toFixed(2));
         };
 
         //Obtiene la Base Imponible para el tipo de IVA 12
@@ -868,6 +490,7 @@ angular.module('integridadUiApp')
         vm.addItem = function() {
             if (vm.indexEdit !== undefined) {
                 vm.debtsToPay.items.splice(vm.indexEdit, 1);
+                vm.dailybookCxP.detailDailybookContab.splice(vm.indexEdit, 1);
                 vm.indexEdit = undefined;
             };
             if (vm.item.tipo == 'DEBITO (D)') {
@@ -876,18 +499,37 @@ angular.module('integridadUiApp')
                 vm.item.haber = vm.item.base_imponible;
             };
             vm.debtsToPay.items.push(vm.item);
+            
+
+            //Diario CxP
+            if (vm.itema.tipo == 'DEBITO (D)') {
+                vm.itema.deber = vm.item.base_imponible;
+            } else if (vm.itema.tipo == 'CREDITO (C)') {
+                vm.itema.haber = vm.item.base_imponible;
+            };
+            vm.itema.baseImponible = vm.item.base_imponible
+            vm.itema.numCheque =  '--';
+            vm.dailybookCxP.detailDailybookContab.push(vm.itema);
+            
             vm.item = undefined;
+            vm.itema = undefined;
             vm.debtsToPay.typeTaxes = undefined;
             vm.cuentaContableList = undefined;
         };
 
         vm.editItemTaxes = function(index) {
             vm.item = angular.copy(vm.debtsToPay.items[index]);
+            
+            //Diario CxP
+            vm.itema = angular.copy(vm.dailybookCxP.detailDailybookContab[index]);
             vm.indexEdit = index;
         };
 
         vm.deleteItemTaxes = function(index) {
             vm.debtsToPay.items.splice(index, 1);
+            
+            //Diario CxP
+            vm.dailybookCxP.detailDailybookContab.splice(index, 1);
         };
 
         //Funciones que obtienen los totales de los detalles por tipo
@@ -998,23 +640,6 @@ angular.module('integridadUiApp')
             return vm.varPago;
         };
 
-        //Función que anula una Cuenta por Pagar
-        vm.debtsToPayDeactivate = function() {
-            vm.loading = true;
-            var index = vm.providerDebtsList.indexOf(vm.deactivateDebtsToPay);
-            debtsToPayService.cancelDebtsToPay(vm.deactivateDebtsToPay).then(function(response) {
-                var index = vm.providerDebtsList.indexOf(vm.deactivateDebtsToPay);
-                if (index > -1) {
-                    vm.providerDebtsList.splice(index, 1);
-                };
-                vm.deactivateDebtsToPay = undefined
-                vm.loading = false;
-            }).catch(function(error) {
-                vm.loading = false;
-                vm.error = error.data;
-            });
-        };
-
         vm.getRetentionByProviderAndDocumentNumber = function() {
             vm.loading = true;
             var numOne = utilSeqService._pad_with_zeroes(vm.threeNumberOne, 3);
@@ -1061,6 +686,544 @@ angular.module('integridadUiApp')
                 vm.loading = false;
                 vm.error = error.data;
             });
+        };
+
+        //Función que agrega los detalles de la Retención a los detalles de la Cuenta por Pagar
+        vm.addRetentionToDebtsDetail = function() {
+            vm.retenSelected = true;
+            var numOne = utilSeqService._pad_with_zeroes(vm.threeNumberOne, 3);
+            var numTwo = utilSeqService._pad_with_zeroes(vm.threeNumberTwo, 3);
+            var parNum = utilSeqService._pad_with_zeroes(vm.seccondPartNumber, 9);
+            vm.debtsBillNumber = numOne + '-' + numTwo + '-' + parNum;
+            vm.generalDetailCxP = vm.providerName + ' ' + 'Fc' + ' ' + vm.debtsBillNumber;
+            // Usuario La Quinta
+            if (vm.usrCliId === '758dea84-74f5-4209-b218-9b84c10621fc') {
+                if (vm.retenTaxTypeFuente == 'RETENCION EN LA FUENTE') {
+                    switch(vm.retenCodeFuente) {
+                        case '302':
+                            vm.retenFteCodeContable = '2.01.07.01.001'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
+                            vm.retenFteNombContable = 'En Relación de Dependencia'; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
+                            vm.retenFteNombContableCxP = 'RET:' + ' ' + vm.generalDetailCxP; vm.retenFteValorCxP = parseFloat(vm.retenTotalFuente);
+                        break;
+                        case '303':
+                            vm.retenFteCodeContable = '2.01.07.01.002'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
+                            vm.retenFteNombContable = 'Honorarios Profesionales'; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
+                            vm.retenFteNombContableCxP = 'RET:' + ' ' + vm.generalDetailCxP; vm.retenFteValorCxP = parseFloat(vm.retenTotalFuente);
+                        break;
+                        case '304':
+                            vm.retenFteCodeContable = '2.01.07.01.003'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
+                            vm.retenFteNombContable = 'Servicios Profesionales predomina intelecto'; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
+                            vm.retenFteNombContableCxP = 'RET:' + ' ' + vm.generalDetailCxP; vm.retenFteValorCxP = parseFloat(vm.retenTotalFuente);
+                        break;
+                        case '307':
+                            vm.retenFteCodeContable = '2.01.07.01.004'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
+                            vm.retenFteNombContable = 'Servicios Mano de Obra'; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
+                            vm.retenFteNombContableCxP = 'RET:' + ' ' + vm.generalDetailCxP; vm.retenFteValorCxP = parseFloat(vm.retenTotalFuente);
+                        break;
+                        case '308':
+                            vm.retenFteCodeContable = '2.01.07.01.005'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
+                            vm.retenFteNombContable = 'Servicios entre Sociedades'; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
+                            vm.retenFteNombContableCxP = 'RET:' + ' ' + vm.generalDetailCxP; vm.retenFteValorCxP = parseFloat(vm.retenTotalFuente);
+                        break;
+                        case '309':
+                            vm.retenFteCodeContable = '2.01.07.01.006'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
+                            vm.retenFteNombContable = 'Servicios Publicidad y Comunicación'; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
+                            vm.retenFteNombContableCxP = 'RET:' + ' ' + vm.generalDetailCxP; vm.retenFteValorCxP = parseFloat(vm.retenTotalFuente);
+                        break;
+                        case '310':
+                            vm.retenFteCodeContable = '2.01.07.01.007'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
+                            vm.retenFteNombContable = 'Transporte Privado de Pasajeros o de Carga'; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
+                            vm.retenFteNombContableCxP = 'RET:' + ' ' + vm.generalDetailCxP; vm.retenFteValorCxP = parseFloat(vm.retenTotalFuente);
+                        break;
+                        case '312':
+                            vm.retenFteCodeContable = '2.01.07.01.008'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
+                            vm.retenFteNombContable = 'Transferencia Bienes Muebles naturales'; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
+                            vm.retenFteNombContableCxP = 'RET:' + ' ' + vm.generalDetailCxP; vm.retenFteValorCxP = parseFloat(vm.retenTotalFuente);
+                        break;
+                        case '319':
+                            vm.retenFteCodeContable = '2.01.07.01.009'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
+                            vm.retenFteNombContable = 'Arrendamiento Mercantil'; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
+                            vm.retenFteNombContableCxP = 'RET:' + ' ' + vm.generalDetailCxP; vm.retenFteValorCxP = parseFloat(vm.retenTotalFuente);
+                        break;
+                        case '320':
+                            vm.retenFteCodeContable = '2.01.07.01.010'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
+                            vm.retenFteNombContable = 'Arrendamiento Bienes Inmuebles'; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
+                            vm.retenFteNombContableCxP = 'RET:' + ' ' + vm.generalDetailCxP; vm.retenFteValorCxP = parseFloat(vm.retenTotalFuente);
+                        break;
+                        case '322':
+                            vm.retenFteCodeContable = '2.01.07.01.011'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
+                            vm.retenFteNombContable = 'Seguros y Reaseguros'; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
+                            vm.retenFteNombContableCxP = 'RET:' + ' ' + vm.generalDetailCxP; vm.retenFteValorCxP = parseFloat(vm.retenTotalFuente);
+                        break;
+                        case '323':
+                            vm.retenFteCodeContable = '2.01.07.01.012'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
+                            vm.retenFteNombContable = 'Rendimientos Financieros'; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
+                            vm.retenFteNombContableCxP = 'RET:' + ' ' + vm.generalDetailCxP; vm.retenFteValorCxP = parseFloat(vm.retenTotalFuente);
+                        break;
+                        case '327':
+                            vm.retenFteCodeContable = '2.01.07.01.013'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
+                            vm.retenFteNombContable = 'Venta de Combustibles'; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
+                            vm.retenFteNombContableCxP = 'RET:' + ' ' + vm.generalDetailCxP; vm.retenFteValorCxP = parseFloat(vm.retenTotalFuente);
+                        break;
+                        case '328':
+                            vm.retenFteCodeContable = '2.01.07.01.014'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
+                            vm.retenFteNombContable = 'Venta de Combustibles a distribuidores'; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
+                            vm.retenFteNombContableCxP = 'RET:' + ' ' + vm.generalDetailCxP; vm.retenFteValorCxP = parseFloat(vm.retenTotalFuente);
+                        break;
+                        case '340':
+                            vm.retenFteCodeContable = '2.01.07.01.015'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
+                            vm.retenFteNombContable = 'Otras Retenciones aplicables al 1%'; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
+                            vm.retenFteNombContableCxP = 'RET:' + ' ' + vm.generalDetailCxP; vm.retenFteValorCxP = parseFloat(vm.retenTotalFuente);
+                        break;
+                        case '341':
+                            vm.retenFteCodeContable = '2.01.07.01.016'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
+                            vm.retenFteNombContable = 'Otras Retenciones aplicables al 2%'; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
+                            vm.retenFteNombContableCxP = 'RET:' + ' ' + vm.generalDetailCxP; vm.retenFteValorCxP = parseFloat(vm.retenTotalFuente);
+                        break;
+                        case '342':
+                            vm.retenFteCodeContable = '2.01.07.01.017'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
+                            vm.retenFteNombContable = 'Otras Retenciones aplicables al 8%'; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
+                            vm.retenFteNombContableCxP = 'RET:' + ' ' + vm.generalDetailCxP; vm.retenFteValorCxP = parseFloat(vm.retenTotalFuente);
+                        break;
+                        case '343':
+                            vm.retenFteCodeContable = '2.01.07.01.018'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
+                            vm.retenFteNombContable = 'Otras Retenciones aplicables al 25%'; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
+                            vm.retenFteNombContableCxP = 'RET:' + ' ' + vm.generalDetailCxP; vm.retenFteValorCxP = parseFloat(vm.retenTotalFuente);
+                        break;
+                        case '344':
+                            vm.retenFteCodeContable = '2.01.07.01.019'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
+                            vm.retenFteNombContable = 'Otras Retenciones aplicables a otros porcentajes'; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
+                            vm.retenFteNombContableCxP = 'RET:' + ' ' + vm.generalDetailCxP; vm.retenFteValorCxP = parseFloat(vm.retenTotalFuente);
+                        break;
+                    };
+                };
+
+                if (vm.retenTaxTypeIva == 'RETENCION EN EL IVA') {
+                    switch(vm.retenCodeIva) {
+                        case '721':
+                            vm.retenIvaCodeContable = '2.01.07.02.001'; vm.retenIvaDescContable = 'RETENCIÓN EN IVA';
+                            vm.retenIvaNombContable = 'RETENCION IVA DEL 10% (Bienes)'; vm.retenIvaValor = parseFloat(vm.retenTotalIva);
+                            vm.retenIvaNombContableCxP = 'RET:' + ' ' + vm.generalDetailCxP; vm.retenIvaValorCxP = parseFloat(vm.retenTotalIva);
+                        break;
+                        case '723':
+                            vm.retenIvaCodeContable = '2.01.07.02.002'; vm.retenIvaDescContable = 'RETENCIÓN EN IVA';
+                            vm.retenIvaNombContable = 'RETENCION IVA DEL 20% (Servicios)'; vm.retenIvaValor = parseFloat(vm.retenTotalIva);
+                            vm.retenIvaNombContableCxP = 'RET:' + ' ' + vm.generalDetailCxP; vm.retenIvaValorCxP = parseFloat(vm.retenTotalIva);
+                        break;
+                        case '725':
+                            vm.retenIvaCodeContable = '2.01.07.02.003'; vm.retenIvaDescContable = 'RETENCIÓN EN IVA';
+                            vm.retenIvaNombContable = 'RETENCION IVA DEL 30%'; vm.retenIvaValor = parseFloat(vm.retenTotalIva);
+                            vm.retenIvaNombContableCxP = 'RET:' + ' ' + vm.generalDetailCxP; vm.retenIvaValorCxP = parseFloat(vm.retenTotalIva);
+                        break;
+                        case '727':
+                            vm.retenIvaCodeContable = '2.01.07.02.004'; vm.retenIvaDescContable = 'RETENCIÓN EN IVA';
+                            vm.retenIvaNombContable = 'RETENCION IVA DEL 50%'; vm.retenIvaValor = parseFloat(vm.retenTotalIva);
+                            vm.retenIvaNombContableCxP = 'RET:' + ' ' + vm.generalDetailCxP; vm.retenIvaValorCxP = parseFloat(vm.retenTotalIva);
+                        break;
+                        case '729':
+                            vm.retenIvaCodeContable = '2.01.07.02.005'; vm.retenIvaDescContable = 'RETENCIÓN EN IVA';
+                            vm.retenIvaNombContable = 'RETENCION IVA DEL 70%'; vm.retenIvaValor = parseFloat(vm.retenTotalIva);
+                            vm.retenIvaNombContableCxP = 'RET:' + ' ' + vm.generalDetailCxP; vm.retenIvaValorCxP = parseFloat(vm.retenTotalIva);
+                        break;
+                        case '731':
+                            vm.retenIvaCodeContable = '2.01.07.02.006'; vm.retenIvaDescContable = 'RETENCIÓN EN IVA';
+                            vm.retenIvaNombContable = 'RETENCION IVA DEL 100%'; vm.retenIvaValor = parseFloat(vm.retenTotalIva);
+                            vm.retenIvaNombContableCxP = 'RET:' + ' ' + vm.generalDetailCxP; vm.retenIvaValorCxP = parseFloat(vm.retenTotalIva);
+                        break;
+                    };
+                };
+            // Usuario Mr. Zolutions
+            } else if (vm.usrCliId === '4907601b-6e54-4675-80a8-ab6503e1dfeb') {
+                if (vm.retenTaxTypeFuente == 'RETENCION EN LA FUENTE') {
+                    switch(vm.retenCodeFuente) {
+                        case '303':
+                            vm.retenFteCodeContable = '2.01.07.03.303'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
+                            vm.retenFteNombContable = 'RF 10% Honorarios Profesionales Dietas'; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
+                            vm.retenFteNombContableCxP = 'RET:' + ' ' + vm.generalDetailCxP; vm.retenFteValorCxP = parseFloat(vm.retenTotalFuente);
+                        break;
+                        case '304':
+                            vm.retenFteCodeContable = '2.01.07.03.304'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
+                            vm.retenFteNombContable = 'RF 8% Servicios predomina el Intelecto'; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
+                            vm.retenFteNombContableCxP = 'RET:' + ' ' + vm.generalDetailCxP; vm.retenFteValorCxP = parseFloat(vm.retenTotalFuente);
+                        break;
+                        case '307':
+                            vm.retenFteCodeContable = '2.01.07.03.307'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
+                            vm.retenFteNombContable = 'RF 2% Servicios predomina Mano de Obra'; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
+                            vm.retenFteNombContableCxP = 'RET:' + ' ' + vm.generalDetailCxP; vm.retenFteValorCxP = parseFloat(vm.retenTotalFuente);
+                        break;
+                        case '309':
+                            vm.retenFteCodeContable = '2.01.07.03.309'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
+                            vm.retenFteNombContable = 'RF 1% Servicios de Publicidad y Comunicación'; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
+                            vm.retenFteNombContableCxP = 'RET:' + ' ' + vm.generalDetailCxP; vm.retenFteValorCxP = parseFloat(vm.retenTotalFuente);
+                        break;
+                        case '310':
+                            vm.retenFteCodeContable = '2.01.07.03.310'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
+                            vm.retenFteNombContable = 'RF 1% Servicios de Transporte'; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
+                            vm.retenFteNombContableCxP = 'RET:' + ' ' + vm.generalDetailCxP; vm.retenFteValorCxP = parseFloat(vm.retenTotalFuente);
+                        break;
+                        case '312':
+                            vm.retenFteCodeContable = '2.01.07.03.312'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
+                            vm.retenFteNombContable = 'RF 1% Transferencia de Bienes Muebles Naturales'; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
+                            vm.retenFteNombContableCxP = 'RET:' + ' ' + vm.generalDetailCxP; vm.retenFteValorCxP = parseFloat(vm.retenTotalFuente);
+                        break;
+                        case '319':
+                            vm.retenFteCodeContable = '2.01.07.03.319'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
+                            vm.retenFteNombContable = 'RF 1% Arrendamiento Mercantil'; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
+                            vm.retenFteNombContableCxP = 'RET:' + ' ' + vm.generalDetailCxP; vm.retenFteValorCxP = parseFloat(vm.retenTotalFuente);
+                        break;
+                        case '320':
+                            vm.retenFteCodeContable = '2.01.07.03.320'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
+                            vm.retenFteNombContable = 'RF 8% Arrendamiento de Inmuebles'; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
+                            vm.retenFteNombContableCxP = 'RET:' + ' ' + vm.generalDetailCxP; vm.retenFteValorCxP = parseFloat(vm.retenTotalFuente);
+                        break;
+                        case '322':
+                            vm.retenFteCodeContable = '2.01.07.03.322'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
+                            vm.retenFteNombContable = 'Seguros y Reaseguros'; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
+                            vm.retenFteNombContableCxP = 'RET:' + ' ' + vm.generalDetailCxP; vm.retenFteValorCxP = parseFloat(vm.retenTotalFuente);
+                        break;
+                        case '323':
+                            vm.retenFteCodeContable = '2.01.07.03.323'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
+                            vm.retenFteNombContable = 'RF 2% Rendimientos Financieros'; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
+                            vm.retenFteNombContableCxP = 'RET:' + ' ' + vm.generalDetailCxP; vm.retenFteValorCxP = parseFloat(vm.retenTotalFuente);
+                        break;
+                        case '325':
+                            vm.retenFteCodeContable = '2.01.07.03.325'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
+                            vm.retenFteNombContable = 'RF 15% Anticipo Dividendos'; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
+                            vm.retenFteNombContableCxP = 'RET:' + ' ' + vm.generalDetailCxP; vm.retenFteValorCxP = parseFloat(vm.retenTotalFuente);
+                        break;
+                        case '327':
+                            vm.retenFteCodeContable = '2.01.07.03.327'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
+                            vm.retenFteNombContable = 'RF 0.2% Venta de Combustibles'; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
+                            vm.retenFteNombContableCxP = 'RET:' + ' ' + vm.generalDetailCxP; vm.retenFteValorCxP = parseFloat(vm.retenTotalFuente);
+                        break;
+                        case '342':
+                            vm.retenFteCodeContable = '2.01.07.03.342'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
+                            vm.retenFteNombContable = 'RF 8% Otras Retenciones Aplicables'; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
+                            vm.retenFteNombContableCxP = 'RET:' + ' ' + vm.generalDetailCxP; vm.retenFteValorCxP = parseFloat(vm.retenTotalFuente);
+                        break;
+                        case '344':
+                            vm.retenFteCodeContable = '2.01.07.03.344'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
+                            vm.retenFteNombContable = 'RF 2% Otras Retenciones Aplicables'; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
+                            vm.retenFteNombContableCxP = 'RET:' + ' ' + vm.generalDetailCxP; vm.retenFteValorCxP = parseFloat(vm.retenTotalFuente);
+                        break;
+                    };
+                };
+
+                if (vm.retenTaxTypeIva == 'RETENCION EN EL IVA') {
+                    switch(vm.retenCodeIva) {
+                        case '721':
+                            vm.retenIvaCodeContable = '2.01.07.02.721'; vm.retenIvaDescContable = 'RETENCIÓN EN IVA';
+                            vm.retenIvaNombContable = 'RETENCION IVA 10%'; vm.retenIvaValor = parseFloat(vm.retenTotalIva);
+                            vm.retenIvaNombContableCxP = 'RET:' + ' ' + vm.generalDetailCxP; vm.retenIvaValorCxP = parseFloat(vm.retenTotalIva);
+                        break;
+                        case '723':
+                            vm.retenIvaCodeContable = '2.01.07.02.723'; vm.retenIvaDescContable = 'RETENCIÓN EN IVA';
+                            vm.retenIvaNombContable = 'RETENCION IVA 20%'; vm.retenIvaValor = parseFloat(vm.retenTotalIva);
+                            vm.retenIvaNombContableCxP = 'RET:' + ' ' + vm.generalDetailCxP; vm.retenIvaValorCxP = parseFloat(vm.retenTotalIva);
+                        break;
+                        case '725':
+                            vm.retenIvaCodeContable = '2.01.07.02.725'; vm.retenIvaDescContable = 'RETENCIÓN EN IVA';
+                            vm.retenIvaNombContable = 'RETENCION IVA 30%'; vm.retenIvaValor = parseFloat(vm.retenTotalIva);
+                            vm.retenIvaNombContableCxP = 'RET:' + ' ' + vm.generalDetailCxP; vm.retenIvaValorCxP = parseFloat(vm.retenTotalIva);
+                        break;
+                        case '727':
+                            vm.retenIvaCodeContable = '2.01.07.02.727'; vm.retenIvaDescContable = 'RETENCIÓN EN IVA';
+                            vm.retenIvaNombContable = 'RETENCION IVA 50%'; vm.retenIvaValor = parseFloat(vm.retenTotalIva);
+                            vm.retenIvaNombContableCxP = 'RET:' + ' ' + vm.generalDetailCxP; vm.retenIvaValorCxP = parseFloat(vm.retenTotalIva);
+                        break;
+                        case '729':
+                            vm.retenIvaCodeContable = '2.01.07.02.729'; vm.retenIvaDescContable = 'RETENCIÓN EN IVA';
+                            vm.retenIvaNombContable = 'RETENCION IVA 70%'; vm.retenIvaValor = parseFloat(vm.retenTotalIva);
+                            vm.retenIvaNombContableCxP = 'RET:' + ' ' + vm.generalDetailCxP; vm.retenIvaValorCxP = parseFloat(vm.retenTotalIva);
+                        break;
+                        case '731':
+                            vm.retenIvaCodeContable = '2.01.07.02.731'; vm.retenIvaDescContable = 'RETENCIÓN EN IVA';
+                            vm.retenIvaNombContable = 'RETENCION IVA 100%'; vm.retenIvaValor = parseFloat(vm.retenTotalIva);
+                            vm.retenIvaNombContableCxP = 'RET:' + ' ' + vm.generalDetailCxP; vm.retenIvaValorCxP = parseFloat(vm.retenTotalIva);
+                        break;
+                    };
+                };
+            // Usuario Catedral
+            } else if (vm.usrCliId === '1e2049c3-a3bc-4231-a0de-dded8020dc1b') {
+                if (vm.retenTaxTypeFuente == 'RETENCION EN LA FUENTE') {
+                    switch(vm.retenCodeFuente) {
+                        case '302':
+                            vm.retenFteCodeContable = '2.12.40.201'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
+                            vm.retenFteNombContable = 'En Relación de Dependencia'; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
+                            vm.retenFteNombContableCxP = 'RET:' + ' ' + vm.generalDetailCxP; vm.retenFteValorCxP = parseFloat(vm.retenTotalFuente);
+                        break;
+                        case '303':
+                            vm.retenFteCodeContable = '2.12.40.202'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
+                            vm.retenFteNombContable = 'Honorarios Profesionales Dietas'; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
+                            vm.retenFteNombContableCxP = 'RET:' + ' ' + vm.generalDetailCxP; vm.retenFteValorCxP = parseFloat(vm.retenTotalFuente);
+                        break;
+                        case '304':
+                            vm.retenFteCodeContable = '2.12.40.203'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
+                            vm.retenFteNombContable = 'Servicios predomina el Intelecto'; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
+                            vm.retenFteNombContableCxP = 'RET:' + ' ' + vm.generalDetailCxP; vm.retenFteValorCxP = parseFloat(vm.retenTotalFuente);
+                        break;
+                        case '307':
+                            vm.retenFteCodeContable = '2.12.40.204'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
+                            vm.retenFteNombContable = 'Servicios predomina Mano de Obra'; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
+                            vm.retenFteNombContableCxP = 'RET:' + ' ' + vm.generalDetailCxP; vm.retenFteValorCxP = parseFloat(vm.retenTotalFuente);
+                        break;
+                        case '308':
+                            vm.retenFteCodeContable = '2.12.40.205'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
+                            vm.retenFteNombContable = 'Servicios entre Sociedades'; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
+                            vm.retenFteNombContableCxP = 'RET:' + ' ' + vm.generalDetailCxP; vm.retenFteValorCxP = parseFloat(vm.retenTotalFuente);
+                        break;
+                        case '309':
+                            vm.retenFteCodeContable = '2.12.40.206'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
+                            vm.retenFteNombContable = 'Servicios de Publicidad y Comunicación'; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
+                            vm.retenFteNombContableCxP = 'RET:' + ' ' + vm.generalDetailCxP; vm.retenFteValorCxP = parseFloat(vm.retenTotalFuente);
+                        break;
+                        case '310':
+                            vm.retenFteCodeContable = '2.12.40.207'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
+                            vm.retenFteNombContable = 'Servicios de Transporte'; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
+                            vm.retenFteNombContableCxP = 'RET:' + ' ' + vm.generalDetailCxP; vm.retenFteValorCxP = parseFloat(vm.retenTotalFuente);
+                        break;
+                        case '312':
+                            vm.retenFteCodeContable = '2.12.40.208'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
+                            vm.retenFteNombContable = 'Transferencia de Bienes Muebles Naturales'; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
+                            vm.retenFteNombContableCxP = 'RET:' + ' ' + vm.generalDetailCxP; vm.retenFteValorCxP = parseFloat(vm.retenTotalFuente);
+                        break;
+                        case '319':
+                            vm.retenFteCodeContable = '2.12.40.209'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
+                            vm.retenFteNombContable = 'Arrendamiento Mercantil'; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
+                            vm.retenFteNombContableCxP = 'RET:' + ' ' + vm.generalDetailCxP; vm.retenFteValorCxP = parseFloat(vm.retenTotalFuente);
+                        break;
+                        case '320':
+                            vm.retenFteCodeContable = '2.12.40.210'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
+                            vm.retenFteNombContable = 'Arrendamiento de Inmuebles'; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
+                            vm.retenFteNombContableCxP = 'RET:' + ' ' + vm.generalDetailCxP; vm.retenFteValorCxP = parseFloat(vm.retenTotalFuente);
+                        break;
+                        case '322':
+                            vm.retenFteCodeContable = '2.12.40.211'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
+                            vm.retenFteNombContable = 'Seguros y Reaseguros'; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
+                            vm.retenFteNombContableCxP = 'RET:' + ' ' + vm.generalDetailCxP; vm.retenFteValorCxP = parseFloat(vm.retenTotalFuente);
+                        break;
+                        case '323':
+                            vm.retenFteCodeContable = '2.12.40.212'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
+                            vm.retenFteNombContable = 'Rendimientos Financieros'; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
+                            vm.retenFteNombContableCxP = 'RET:' + ' ' + vm.generalDetailCxP; vm.retenFteValorCxP = parseFloat(vm.retenTotalFuente);
+                        break;
+                        case '327':
+                            vm.retenFteCodeContable = '2.12.40.213'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
+                            vm.retenFteNombContable = 'Venta de Combustibles'; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
+                            vm.retenFteNombContableCxP = 'RET:' + ' ' + vm.generalDetailCxP; vm.retenFteValorCxP = parseFloat(vm.retenTotalFuente);
+                        break;
+                        case '328':
+                            vm.retenFteCodeContable = '2.12.40.214'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
+                            vm.retenFteNombContable = 'Venta de Combustibles a distribuidores'; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
+                            vm.retenFteNombContableCxP = 'RET:' + ' ' + vm.generalDetailCxP; vm.retenFteValorCxP = parseFloat(vm.retenTotalFuente);
+                        break;
+                        case '340':
+                            vm.retenFteCodeContable = '2.12.40.215'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
+                            vm.retenFteNombContable = 'Otras Retenciones aplicables al 1%'; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
+                            vm.retenFteNombContableCxP = 'RET:' + ' ' + vm.generalDetailCxP; vm.retenFteValorCxP = parseFloat(vm.retenTotalFuente);
+                        break;
+                        case '341':
+                            vm.retenFteCodeContable = '2.12.40.216'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
+                            vm.retenFteNombContable = 'Otras Retenciones aplicables al 2%'; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
+                            vm.retenFteNombContableCxP = 'RET:' + ' ' + vm.generalDetailCxP; vm.retenFteValorCxP = parseFloat(vm.retenTotalFuente);
+                        break;
+                        case '342':
+                            vm.retenFteCodeContable = '2.12.40.217'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
+                            vm.retenFteNombContable = 'Otras Retenciones aplicables al 8%'; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
+                            vm.retenFteNombContableCxP = 'RET:' + ' ' + vm.generalDetailCxP; vm.retenFteValorCxP = parseFloat(vm.retenTotalFuente);
+                        break;
+                        case '343':
+                            vm.retenFteCodeContable = '2.12.40.218'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
+                            vm.retenFteNombContable = 'Otras Retenciones aplicables al 25%'; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
+                            vm.retenFteNombContableCxP = 'RET:' + ' ' + vm.generalDetailCxP; vm.retenFteValorCxP = parseFloat(vm.retenTotalFuente);
+                        break;
+                        case '344':
+                            vm.retenFteCodeContable = '2.12.40.219'; vm.retenFteDescContable = 'RETENCIÓN EN FUENTE';
+                            vm.retenFteNombContable = 'Aplicables a otros porcentajes'; vm.retenFteValor = parseFloat(vm.retenTotalFuente);
+                            vm.retenFteNombContableCxP = 'RET:' + ' ' + vm.generalDetailCxP; vm.retenFteValorCxP = parseFloat(vm.retenTotalFuente);
+                        break;
+                    };
+                };
+
+                if (vm.retenTaxTypeIva == 'RETENCION EN EL IVA') {
+                    switch(vm.retenCodeIva) {
+                        case '725':
+                            vm.retenIvaCodeContable = '2.12.40.103'; vm.retenIvaDescContable = 'RETENCIÓN EN IVA';
+                            vm.retenIvaNombContable = 'RETENCION IVA 30%'; vm.retenIvaValor = parseFloat(vm.retenTotalIva);
+                            vm.retenIvaNombContableCxP = 'RET:' + ' ' + vm.generalDetailCxP; vm.retenIvaValorCxP = parseFloat(vm.retenTotalIva);
+                        break;
+                        case '729':
+                            vm.retenIvaCodeContable = '2.12.40.104'; vm.retenIvaDescContable = 'RETENCIÓN EN IVA';
+                            vm.retenIvaNombContable = 'RETENCION IVA 70%'; vm.retenIvaValor = parseFloat(vm.retenTotalIva);
+                            vm.retenIvaNombContableCxP = 'RET:' + ' ' + vm.generalDetailCxP; vm.retenIvaValorCxP = parseFloat(vm.retenTotalIva);
+                        break;
+                        case '731':
+                            vm.retenIvaCodeContable = '2.12.40.105'; vm.retenIvaDescContable = 'RETENCIÓN EN IVA';
+                            vm.retenIvaNombContable = 'RETENCION IVA 100%'; vm.retenIvaValor = parseFloat(vm.retenTotalIva);
+                            vm.retenIvaNombContableCxP = 'RET:' + ' ' + vm.generalDetailCxP; vm.retenIvaValorCxP = parseFloat(vm.retenTotalIva);
+                        break;
+                    };
+                };
+            };
+
+            vm.itemRetentionFuente = undefined;
+             vm.itemRetentionFuente = { 
+                codigo_contable: vm.retenFteCodeContable, desc_contable: vm.retenFteDescContable, 
+                tipo: 'CREDITO (C)', base_imponible: vm.retenFteValor,
+                nomb_contable: vm.retenFteNombContable, haber: vm.retenFteValor
+            };
+
+            vm.itemRetentionIVA = undefined;
+            vm.itemRetentionIVA = { 
+                codigo_contable: vm.retenIvaCodeContable, desc_contable: vm.retenIvaDescContable,
+                tipo: 'CREDITO (C)', base_imponible: vm.retenIvaValor,
+                nomb_contable: vm.retenIvaNombContable, haber: vm.retenIvaValor
+            };
+
+            if (vm.retenCodeFuente != null) {
+                vm.debtsToPay.items.push(vm.itemRetentionFuente);
+            };
+            vm.itemRetentionFuente = undefined;
+
+            if (vm.retenCodeIva != null) {
+                vm.debtsToPay.items.push(vm.itemRetentionIVA);
+            };
+            vm.itemRetentionIVA = undefined;
+            
+            //Diario CxP
+            vm.itemRetentionFuenteCxP = undefined;
+            vm.itemRetentionFuenteCxP = { typeContab: vm.typeContab, codeConta: vm.retenFteCodeContable,
+                descrip: vm.retenFteDescContable, tipo: 'CREDITO (C)',
+                baseImponible: vm.retenFteValor, name: vm.retenFteNombContableCxP,
+                haber: vm.retenFteValor
+            };
+            
+            vm.itemRetentionIVACxP = undefined;
+            vm.itemRetentionIVACxP = { typeContab: vm.typeContab, codeConta: vm.retenIvaCodeContable,
+                descrip: vm.retenIvaDescContable, tipo: 'CREDITO (C)',
+                baseImponible: vm.retenIvaValor, name: vm.retenIvaNombContableCxP,
+                haber: vm.retenIvaValor
+            };
+    
+            if (vm.retenCodeFuente != null) {
+                vm.itemRetentionFuente.numCheque = '--';
+                vm.dailybookCxP.detailDailybookContab.push(vm.itemRetentionFuenteCxP);
+            };
+            
+            if (vm.retenCodeIva != null) {
+                vm.itemRetentionIVA.numCheque = '--';
+                vm.dailybookCxP.detailDailybookContab.push(vm.itemRetentionIVACxP);
+            };
+
+            vm.itemRetentionFuenteCxP = undefined;
+            vm.itemRetentionIVACxP = undefined;
+            vm.retenCodeFuente = undefined;
+            vm.retenCodeIva = undefined;
+        };
+
+        //Función que permite agregar las Cuentas Contables por defecto, Iva y Proveedor
+        vm.addIvaAndProvider = function() {
+            if (vm.generalDetailCxP == null || vm.generalDetailCxP == '') {
+                var numOne = utilSeqService._pad_with_zeroes(vm.threeNumberOne, 3);
+                var numTwo = utilSeqService._pad_with_zeroes(vm.threeNumberTwo, 3);
+                var parNum = utilSeqService._pad_with_zeroes(vm.seccondPartNumber, 9);
+                vm.debtsBillNumber = numOne + '-' + numTwo + '-' + parNum;
+                vm.generalDetailCxP = vm.providerName + ' ' + 'Fc' + ' ' + vm.debtsBillNumber;
+            };
+
+            if (vm.indexEdit !== undefined) {
+                vm.debtsToPay.items.splice(vm.indexEdit, 1);
+                vm.indexEdit = undefined;
+            };
+            if (vm.retentionId == null) {
+                vm.retentionTotal = 0;
+            };
+
+            //Selección de las Cuentas Contables por defecto dependiendo del Cliente
+            if (vm.usrCliId === '758dea84-74f5-4209-b218-9b84c10621fc') {
+                vm.ivaContable = '1.01.05.01.001'; vm.provContable = '2.01.03.01.001';
+            } else if (vm.usrCliId === '4907601b-6e54-4675-80a8-ab6503e1dfeb') {
+                vm.ivaContable = '1.01.05.02.001'; vm.provContable = '2.01.03.01.001';
+            } else if (vm.usrCliId === '1e2049c3-a3bc-4231-a0de-dded8020dc1b') {
+                vm.ivaContable = '1.14.10.201'; vm.provContable = '2.12.10.101';
+            } else {
+                vm.ivaContable = '1.01.01.01';
+                vm.provContable = '2.01.01.01';
+            };
+          
+            if (vm.typeTaxes === '1') {
+                vm.subIva = parseFloat((vm.item.base_imponible * 0.1200).toFixed(2));
+                vm.subTotalDoce = vm.item.base_imponible;
+                vm.subTotalCero = vm.debtsToPay.total - vm.subTotalDoce - vm.subIva;
+                vm.itemIva = {
+                    codigo_contable: vm.ivaContable,
+                    desc_contable: 'IVA EN COMPRAS',
+                    tipo: 'DEBITO (D)',
+                    base_imponible: vm.subIva,
+                    nomb_contable: 'DEFINIDA PARA TODAS LAS COMPRAS',
+                    deber: vm.subIva
+                };
+                vm.itemProvider = {
+                    codigo_contable: vm.provContable,
+                    desc_contable: 'PROVEEDORES LOCALES',
+                    tipo: 'CREDITO (C)',
+                    base_imponible: parseFloat((vm.debtsToPay.total - vm.retentionTotal).toFixed(2)),
+                    nomb_contable: 'DEFINIDA PARA TODOS LOS PROVEEDORES',
+                    haber: parseFloat((vm.debtsToPay.total - vm.retentionTotal).toFixed(2))
+                };
+                vm.debtsToPay.items.push(vm.itemIva);
+                vm.debtsToPay.items.push(vm.itemProvider);
+
+                //Diario Cxp
+                vm.itemIvaCxP = {
+                    typeContab: vm.typeContab,
+                    codeConta: vm.ivaContable,
+                    descrip: 'IVA EN COMPRAS',
+                    tipo: 'DEBITO (D)',
+                    baseImponible: vm.subIva,
+                    name: vm.generalDetailCxP,
+                    deber: vm.subIva
+                };
+                vm.itemIvaCxP.numCheque = '--';
+                vm.itemProviderCxP = {
+                    typeContab: vm.typeContab,
+                    codeConta: vm.provContable,
+                    descrip: 'PROVEEDORES LOCALES',
+                    tipo: 'CREDITO (C)',
+                    baseImponible: parseFloat((vm.debtsToPay.total - vm.retentionTotal).toFixed(2)),
+                    name: vm.generalDetailCxP,
+                    haber: parseFloat((vm.debtsToPay.total - vm.retentionTotal).toFixed(2))
+                };
+                vm.itemProviderCxP.numCheque = '--';
+                vm.dailybookCxP.detailDailybookContab.push(vm.itemIvaCxP);
+                vm.dailybookCxP.detailDailybookContab.push(vm.itemProviderCxP);
+
+            } else if (vm.typeTaxes === '2') {
+                vm.subIva = 0.0;
+                vm.subTotalDoce = 0.0;
+                vm.subTotalCero = vm.debtsToPay.total;
+                vm.itemProvider = {
+                    codigo_contable: vm.provContable,
+                    desc_contable: 'PROVEEDORES LOCALES',
+                    tipo: 'CREDITO (C)',
+                    base_imponible: parseFloat((vm.debtsToPay.total - vm.retentionTotal).toFixed(2)),
+                    nomb_contable: 'DEFINIDA PARA TODOS LOS PROVEEDORES',
+                    haber: parseFloat((vm.debtsToPay.total - vm.retentionTotal).toFixed(2))
+                };
+                vm.debtsToPay.items.push(vm.itemProvider);
+
+                vm.itemProviderCxP = {
+                    typeContab: vm.typeContab,
+                    codeConta: vm.provContable,
+                    descrip: 'PROVEEDORES LOCALES',
+                    tipo: 'CREDITO (C)',
+                    baseImponible: parseFloat((vm.debtsToPay.total - vm.retentionTotal).toFixed(2)),
+                    name: vm.generalDetailCxP,
+                    haber: parseFloat((vm.debtsToPay.total - vm.retentionTotal).toFixed(2))
+                };
+                vm.itemProviderCxP.numCheque = '--';
+                vm.dailybookCxP.detailDailybookContab.push(vm.itemProviderCxP);
+            };
         };
 
         //Función que Guarda la Cuenta por Pagar con sus Detalles y Pagos
@@ -1112,15 +1275,17 @@ angular.module('integridadUiApp')
                 if (response.length === 0) {
                     debtsToPayService.create(debtsToPay).then(function(respDebtsToPay) {
                         vm.debtsToPay = respDebtsToPay;
+                        vm.responseDebtsToPay = respDebtsToPay;
                         $localStorage.user.cashier.debtsNumberSeq = vm.debtsToPay.debtsSeq;
                         if (vm.seqChanged) {
                             cashierService.update($localStorage.user.cashier).then(function(resp) {
-                                // cashier actualizado en caso de haber sido cambiado manualmente
+                                //cashier actualizado en caso de haber sido cambiado manualmente
                             }).catch(function(error) {
                                 vm.loading = false;
                                 vm.error = error.data;
                             });
                         };
+                        _asientoDiarioCxP();
                         vm.debtsToPayCreated = true;
                         vm.success = 'Factura de Compra Ingresada con Exito';
                         vm.loading = false;
@@ -1132,6 +1297,58 @@ angular.module('integridadUiApp')
                 } else {
                     vm.error = 'Factura de Compra Ya Existe';
                 };
+                vm.loading = false;
+            }).catch(function(error) {
+                vm.loading = false;
+                vm.error = error.data;
+            });
+        };
+
+        function _asientoDiarioCxP() {
+            vm.selectedTypeBook = '5';
+            vm.typeContab = 'CUENTA POR PAGAR CON RETENCIONES';
+            vm.dailybookCxP.codeTypeContab = vm.selectedTypeBook;
+            vm.dailybookCxP.billNumber = vm.responseDebtsToPay.billNumber;
+            vm.dailybookCxP.typeContab = vm.typeContab;
+            vm.dailybookCxP.dailycxpSeq = vm.dailycxpSeq;
+            vm.dailybookCxP.dailycxpStringSeq = vm.dailycxpStringSeq;
+            vm.dailybookCxP.dailycxpStringUserSeq = 'DIARIO CxP GENERADO ' + vm.dailycxpStringSeq;
+            vm.dailybookCxP.clientProvName = vm.responseDebtsToPay.provider.name;
+            vm.dailybookCxP.generalDetail = vm.responseDebtsToPay.provider.name + ' ' + 'Fc' + ' ' + vm.responseDebtsToPay.billNumber;
+            vm.dailybookCxP.total =  vm.responseDebtsToPay.total;
+            vm.dailybookCxP.iva = parseFloat((vm.responseDebtsToPay.total * 0.1200).toFixed(2));
+            vm.dailybookCxP.subTotalDoce = parseFloat((vm.responseDebtsToPay.total / 1.1200).toFixed(2));
+            vm.dailybookCxP.subTotalCero = 0.0;
+            vm.dailybookCxP.dateRecordBook = $('#pickerDateDebtsToPay').data("DateTimePicker").date().toDate().getTime();
+            if (vm.retentionId == null) {
+                vm.dailybookCxP.retentionId = 'SIN RETENCIÓN';
+                vm.dailybookCxP.retentionNumber = 0;
+                vm.dailybookCxP.retentionDateCreated = 0;
+                vm.dailybookCxP.retentionTotal = 0.0;
+            } else {
+                vm.dailybookCxP.retentionId = vm.retentionId;
+                vm.dailybookCxP.retentionNumber = vm.retentionNumber;
+                vm.dailybookCxP.retentionDateCreated = vm.retentionDateCreated;
+                vm.dailybookCxP.retentionTotal = vm.retentionTotal;
+            };
+            contableService.createDailybookCxP(vm.dailybookCxP).then(function(response) {
+                $localStorage.user.cashier.dailyCppNumberSeq = vm.dailybookCxP.dailycxpSeq;
+            }).catch(function(error) {
+                vm.loading = false;
+                vm.error = error.data;
+            });
+        };
+
+        //Función que anula una Cuenta por Pagar
+        vm.debtsToPayDeactivate = function() {
+            vm.loading = true;
+            var index = vm.providerDebtsList.indexOf(vm.deactivateDebtsToPay);
+            debtsToPayService.cancelDebtsToPay(vm.deactivateDebtsToPay).then(function(response) {
+                var index = vm.providerDebtsList.indexOf(vm.deactivateDebtsToPay);
+                if (index > -1) {
+                    vm.providerDebtsList.splice(index, 1);
+                };
+                vm.deactivateDebtsToPay = undefined
                 vm.loading = false;
             }).catch(function(error) {
                 vm.loading = false;
@@ -1282,7 +1499,7 @@ angular.module('integridadUiApp')
             vm.dailybookCe.clientProvName = vm.providerName;
             vm.dailybookCe.generalDetail = vm.generalDetailCe_1;
             vm.dailybookCe.total = vm.paymentDebtsCreated.valorAbono;
-            vm.dailybookCe.iva = parseFloat((vm.paymentDebtsCreated * 0.1200).toFixed(2));
+            vm.dailybookCe.iva = parseFloat((vm.paymentDebtsCreated.valorAbono * 0.1200).toFixed(2));
             vm.dailybookCe.subTotalDoce = parseFloat((vm.paymentDebtsCreated.valorAbono / 1.1200).toFixed(2));
             vm.dailybookCe.subTotalCero = 0.0;
             vm.dailybookCe.dateRecordBook = $('#pickerDateOfPayment').data("DateTimePicker").date().toDate().getTime();
@@ -1350,183 +1567,6 @@ angular.module('integridadUiApp')
         };
 
         vm.cancel = function() {
-            _activate();
-        };
-
-        //Sección de Funciones utilizadas para la edición y actualización de los Debts
-        vm.debtsToPayToUpdate = function(debts) {
-            vm.loading = true;
-            vm.update = true;
-            vm.providerDebtsList = undefined;
-            debtsToPayService.getById(debts.id).then(function(response) {
-                vm.debtsToPay = response;
-                vm.debtsDetails = response.detailDebtsToPay;
-                vm.debtsToPaySelectedToUpdate = debts.id;
-                vm.pagos = response.pagos;
-                var dateToShow = new Date(response.fecha);
-                vm.billNumber = response.billNumber;
-                vm.seqNumber = response.debtsSeq;
-                $('#pickerDateDebtsToPayToUpdate').data("DateTimePicker").date(dateToShow);
-                vm.loading = false;
-            }).catch(function(error) {
-                vm.loading = false;
-                vm.error = error.data;
-            });
-        };
-
-        //Funciones que Agregan, Editan y Eliminan detalles a la Cuenta por Pagar para su Actualización
-        vm.selectTaxesToUpdate = function(tax) {
-            vm.item = undefined;
-            vm.item = {
-                codigo: parseInt(vm.debtsToPay.typeTaxes),
-                codeConta: tax.code,
-                descrip: tax.description,
-                tipo: tax.accountType,
-                name: tax.name,
-                valor: vm.debtsDetails.baseImponible
-            };
-            vm.subTotal = parseFloat((vm.debtsToPay.total / 1.1200).toFixed(2));
-            vm.totalTotal = parseFloat(vm.debtsToPay.total);
-        };
-
-        vm.addItemToUpdate = function() {
-            if (vm.indexEdit !== undefined) {
-                vm.debtsToPay.detailDebtsToPay.splice(vm.indexEdit, 1);
-                vm.indexEdit = undefined;
-            };
-            if (vm.item.tipo == 'DEBITO (D)') {
-                vm.item.deber = vm.item.baseImponible;
-            } else if (vm.item.tipo == 'CREDITO (C)') {
-                vm.item.haber = vm.item.baseImponible;
-            };
-            vm.debtsToPay.detailDebtsToPay.push(vm.item);
-            vm.item = undefined;
-            vm.debtsToPay.typeTaxes = undefined;
-            vm.cuentaContableList = undefined;
-        };
-
-        vm.editItemToUpdate = function(index) {
-            vm.item = angular.copy(vm.debtsToPay.detailDebtsToPay[index]);
-            vm.indexEdit = index;
-        };
-
-        vm.deleteItemToUpdate = function(index) {
-            vm.debtsToPay.detailDebtsToPay.splice(index, 1);
-        };
-
-        vm.addIvaAndProviderToUpdate = function() {
-            if (vm.indexEdit !== undefined) {
-                vm.debtsToPay.detailDebtsToPay.splice(vm.indexEdit, 1);
-                vm.indexEdit = undefined;
-            };
-            //Selección de las Cuentas Contables por defecto dependiendo del Cliente
-            if (vm.usrCliId === '758dea84-74f5-4209-b218-9b84c10621fc') {
-                vm.ivaContable = '1.01.05.01.001'; vm.provContable = '2.01.03.01.001';
-            } else if (vm.usrCliId === '4907601b-6e54-4675-80a8-ab6503e1dfeb') {
-                vm.ivaContable = '1.01.05.02.001'; vm.provContable = '2.01.03.01.001';
-            } else if (vm.usrCliId === '1e2049c3-a3bc-4231-a0de-dded8020dc1b') {
-                vm.ivaContable = '1.14.10.201'; vm.provContable = '2.12.10.101';
-            } else {
-                vm.ivaContable = '1.01.01.01'; vm.provContable = '2.01.01.01';
-            };
-          
-            if (vm.typeTaxes === '1') {
-                vm.subIva = parseFloat((vm.item.baseImponible * 0.1200).toFixed(2));
-                vm.subTotalDoce = vm.item.baseImponible;
-                vm.subTotalCero = vm.debtsToPay.total - vm.subTotalDoce - vm.subIva;
-                vm.itemIva = {
-                    codeConta: vm.ivaContable,
-                    descrip: 'IVA EN COMPRAS',
-                    tipo: 'DEBITO (D)',
-                    baseImponible: vm.subIva,
-                    name: 'DEFINIDA PARA TODAS LAS COMPRAS',
-                    deber: vm.subIva
-                };
-                vm.itemProvider = {
-                    codeConta: vm.provContable,
-                    descrip: 'PROVEEDORES LOCALES',
-                    tipo: 'CREDITO (C)',
-                    baseImponible: vm.debtsToPay.total - vm.retentionTotal,
-                    name: 'DEFINIDA PARA TODOS LOS PROVEEDORES',
-                    haber: vm.debtsToPay.total - vm.retentionTotal
-                };
-                vm.debtsToPay.detailDebtsToPay.push(vm.itemIva);
-                vm.debtsToPay.detailDebtsToPay.push(vm.itemProvider);
-            } else if (vm.typeTaxes === '2') {
-                vm.subIva = 0.0;
-                vm.subTotalDoce = 0.0;
-                vm.subTotalCero = vm.debtsToPay.total;
-                vm.itemProvider = {
-                    codeConta: vm.provContable,
-                    descrip: 'PROVEEDORES LOCALES',
-                    tipo: 'CREDITO (C)',
-                    baseImponible: vm.debtsToPay.total - vm.retentionTotal,
-                    name: 'DEFINIDA PARA TODOS LOS PROVEEDORES',
-                    haber: vm.debtsToPay.total - vm.retentionTotal
-                };
-                vm.debtsToPay.detailDebtsToPay.push(vm.itemProvider);
-            };
-        };
-
-        //Obtiene la Base Imponible para el tipo de IVA 12
-        vm.getBaseImponibleToUpdateCodigo_1 = function() {
-            var totalDebito = vm.subTotal;
-            if (vm.debtsToPay) {
-                _.each (vm.debtsToPay.detailDebtsToPay, function(detail) {
-                    if (detail.tipo === 'DEBITO (D)') {
-                        totalDebito = (parseFloat(totalDebito) - parseFloat(detail.baseImponible)).toFixed(2);
-                    };
-                });
-            };
-            return totalDebito;
-        };
-
-        //Obtiene la Base Imponible para el tipo de IVA 0
-        vm.getBaseImponibleToUpdateCodigo_2 = function() {
-            var totalDebito = vm.totalTotal;
-            if (vm.debtsToPay) {
-                _.each (vm.debtsToPay.detailDebtsToPay, function(detail) {
-                    if (detail.tipo === 'DEBITO (D)') {
-                        totalDebito = (parseFloat(totalDebito) - parseFloat(detail.baseImponible)).toFixed(2);
-                    };
-                });
-            };
-            return totalDebito;
-        };
-
-        vm.updateDebtsToPay = function(debtsToPay) {
-            vm.loading = true;
-            vm.pagos.total = vm.aux;
-            $('#modalAddPago').modal('hide');
-            vm.debtsToPay.fecha = $('#pickerDateDebtsToPayToUpdate').data("DateTimePicker").date().toDate().getTime();
-            vm.debtsToPay.threeNumberOne = utilSeqService._pad_with_zeroes(vm.threeNumberOne, 3);
-            vm.debtsToPay.threeNumberTwo = utilSeqService._pad_with_zeroes(vm.threeNumberTwo, 3);
-            vm.debtsToPay.seccondPartNumber = utilSeqService._pad_with_zeroes(vm.seccondPartNumber, 9);
-            vm.debtsToPay.billNumber = vm.debtsToPay.threeNumberOne + '-' + vm.debtsToPay.threeNumberTwo + '-' + vm.debtsToPay.seccondPartNumber;
-            vm.debtsToPay.providerId = vm.providerId;
-            vm.debtsToPay.iva = vm.subIva;
-            vm.debtsToPay.subTotalDoce = vm.subTotalDoce;
-            vm.debtsToPay.subTotalCero = vm.subTotalCero;
-            vm.debtsToPay.debtsSeq = vm.seqNumber;
-            vm.debtsToPay.estado = vm.status;
-            if (vm.status === 'PENDIENTE') {
-                vm.debtsToPay.saldo = vm.debtsToPay.total - vm.debtsToPay.retentionTotal;
-            } else {
-                vm.debtsToPay.saldo = 0.0;
-            };
-            vm.debtsToPay.pagos = vm.pagos;
-            debtsToPayService.update(debtsToPay).then(function(respDebtsToPay) {
-                vm.totalDebtsToPay = 0;
-                vm.debtsToPay = respDebtsToPay;
-                _.each(vm.debtsToPay.detailDebtsToPay, function(detail) {
-                    vm.totalDebtsToPay = (parseFloat(vm.totalDebtsToPay) + parseFloat(detail.baseImponible)).toFixed(2);
-                });
-                vm.success = 'Factura Actualizada con Exito';
-                vm.loading = false;
-            }).catch(function(error) {
-                vm.loading = false;
-                vm.error = error.data;
-            });
             _activate();
         };
 

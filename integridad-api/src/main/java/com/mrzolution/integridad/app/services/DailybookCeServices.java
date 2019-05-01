@@ -53,6 +53,17 @@ public class DailybookCeServices {
         return dailys;
     }
     
+    //Selecciona todos los COMPROBANTES DE EGRESO por UserClientId Sin Id de Provveedor
+    public Iterable<DailybookCe> getDailybookCeByUserClientIdWithNoProvider(UUID userClientId) {
+        log.info("DailybookCeServices getDailybookCgByUserClientIdWithNoProvider: {}", userClientId);
+        Iterable<DailybookCe> dailys = dailybookCeRepository.findDailybookCeByUserClientIdWithNoProvider(userClientId);
+        dailys.forEach(daily -> {
+            daily.setListsNull();
+            daily.setFatherListToNull();
+        });
+        return dailys;
+    }
+    
     //Selecciona todos los COMPROBANTES DE EGRESO por ProviderId
     public Iterable<DailybookCe> getDailybookCeByProviderId(UUID Id) {
         log.info("DailybookCeServices getDailybookCeByProviderId: {}", Id);
@@ -100,6 +111,7 @@ public class DailybookCeServices {
         
         saved.setDetailDailybookContab(detailDailybookContab);
         log.info("DailybookCeServices createDailybookCe DONE id: {}", saved.getId());
+        //System.out.print(saved);
         return saved;
     }
     

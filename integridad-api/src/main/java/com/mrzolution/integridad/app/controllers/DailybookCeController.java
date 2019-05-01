@@ -65,6 +65,19 @@ public class DailybookCeController {
         return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
     }
     
+    @RequestMapping(method = RequestMethod.GET, value="/userclient/noprovider/{id}")
+    public ResponseEntity getDailybookCeByUserClientIdWithNoProvider(@PathVariable("id") UUID id) {
+        log.info("DailybookCeController getDailybookCeByUserClientIdWithNoProvider: {}", id);
+        Iterable<DailybookCe> response = null;
+        try {
+            response = service.getDailybookCeByUserClientIdWithNoProvider(id);
+        } catch (BadRequestException e) {
+            log.error("DailybookCeController getDailybookCeByUserClientIdWithNoProvider Exception thrown: {}", e.getMessage());
+	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+        return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
+    }
+    
     @RequestMapping(method = RequestMethod.GET, value="/userclient/{userClientId}/{provId}/{billNumber}")
     public ResponseEntity getDailybookCeByUserClientIdAndProvIdAndBillNumber(@PathVariable("userClientId") UUID userClientId, @PathVariable("provId") UUID provId, @PathVariable("billNumber") String billNumber) {
         Iterable<DailybookCe> response = null;

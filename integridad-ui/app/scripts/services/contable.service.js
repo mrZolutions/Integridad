@@ -55,6 +55,12 @@ angular
             });
         };
 
+        this.getDailybookCeByUserClientIdWithNoProvider = function(userclientId) {
+            return securityService.get('/contable/dailyce/userclient/noprovider/' + userclientId).then(function successCallback(response) {
+                return response.data;
+            });
+        };
+
         this.getDailybookCeByUserClientIdAndProvIdAndBillNumber = function(userClientId, provId, billNumber) {
             return securityService.get('/contable/dailyce/userclient/' + userClientId + '/' + provId + '/' + billNumber).then(function successCallback(response) {
                 return response.data;

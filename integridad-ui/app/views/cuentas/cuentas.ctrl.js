@@ -7,108 +7,108 @@
  * Controller of the integridadUiApp
  */
 angular.module('integridadUiApp')
-  .controller('CuentasContablesCtrl', function( _, $location, $localStorage, cuentaContableService) {
-    var vm = this;
-    vm.error = undefined;
-    vm.success = undefined;
-    vm.loading = false;
-    vm.cuentasContablesList = undefined;
-    vm.cuetaSelected = undefined;
-
-    vm.tipoCtaCtable = [
-      {code: 'GENE' ,name: 'GENERAL'}, {code: 'BIEN' ,name: 'BIENES'}, 
-      {code: 'SERV', name: 'SERVICIOS'}, {code: 'MATP', name: 'MATERIA PRIMA'},
-      {code: 'CONS', name: 'CONSUMIBLES'}, {code: 'RMBG', name: 'REEMBOLSO GASTOS'},
-      {code: 'TKAE', name: 'TICKETS AEREOS'}, {code: 'ACT', name: 'ACTIVOS'},
-      {code: 'PAS', name: 'PASIVOS'}, {code: 'INGR', name: 'INGRESOS'},
-      {code: 'EGRE', name: 'EGRESOS'}, {code: 'PATR', name: 'PATRIMONIOS'},
-      {code: 'BANC', name: 'DEFINIDA PARA BANCOS'}
-    ];
-
-    function _activate() {
-      vm.loading = true;
-      vm.error = undefined;
-      vm.success = undefined;
-      vm.cuentaSelected = undefined;
-      vm.user = $localStorage.user;
-      cuentaContableService.getCuentaContableByUserClient(vm.user.subsidiary.userClient.id).then(function(response) {
-        vm.cuentasContablesList = response;
-        vm.loading = false;
-      }).catch(function(error) {
-        vm.loading = false;
-        vm.error = error.data;
-      });
-    };
-
-    function _initializeCuenta() {
-      vm.cuentaSelected = {
-        userClient: vm.user.subsidiary.userClient
-      };
-    };
-
-    function create() {
-      vm.loading = true;
-      cuentaContableService.create(vm.cuentaSelected).then(function(response) {
-        _activate();
+    .controller('CuentasContablesCtrl', function( _, $location, $localStorage, cuentaContableService) {
+        var vm = this;
         vm.error = undefined;
-        vm.success = 'Registro realizado con exito';
-      }).catch(function(error) {
+        vm.success = undefined;
         vm.loading = false;
-        vm.error = error.data;
-      });
-    };
+        vm.cuentasContablesList = undefined;
+        vm.cuetaSelected = undefined;
 
-    function update() {
-      cuentaContableService.update(vm.cuentaSelected).then(function(response) {
-        _activate();
-        if (vm.cuentaSelected.active) {
-          vm.success = 'Registro actualizado con exito';
-        } else {
-          vm.success = 'Registro eliminado con exito';
+        vm.tipoCtaCtable = [
+            {code: 'GENE' ,name: 'GENERAL'}, {code: 'BIEN' ,name: 'BIENES'}, 
+            {code: 'SERV', name: 'SERVICIOS'}, {code: 'MATP', name: 'MATERIA PRIMA'},
+            {code: 'CONS', name: 'CONSUMIBLES'}, {code: 'RMBG', name: 'REEMBOLSO GASTOS'},
+            {code: 'TKAE', name: 'TICKETS AEREOS'}, {code: 'ACT', name: 'ACTIVOS'},
+            {code: 'PAS', name: 'PASIVOS'}, {code: 'INGR', name: 'INGRESOS'},
+            {code: 'EGRE', name: 'EGRESOS'}, {code: 'PATR', name: 'PATRIMONIOS'},
+            {code: 'BANC', name: 'DEFINIDA PARA BANCOS'}
+        ];
+
+        function _activate() {
+            vm.loading = true;
+            vm.error = undefined;
+            vm.success = undefined;
+            vm.cuentaSelected = undefined;
+            vm.user = $localStorage.user;
+            cuentaContableService.getCuentaContableByUserClient(vm.user.subsidiary.userClient.id).then(function(response) {
+                vm.cuentasContablesList = response;
+                vm.loading = false;
+            }).catch(function(error) {
+                vm.loading = false;
+                vm.error = error.data;
+            });
         };
-        vm.error = undefined;
-      }).catch(function(error) {
-        vm.loading = false;
-        vm.error = error.data;
-      });
-    };
 
-    vm.cuentaEdit = function(cuenta) {
-      vm.error = undefined;
-      vm.success = undefined;
-      vm.cuentaSelected = cuenta;
-    };
+        function _initializeCuenta() {
+            vm.cuentaSelected = {
+                userClient: vm.user.subsidiary.userClient
+            };
+        };
 
-    vm.remove = function() {
-      vm.cuentaSelected.active = false;
-      update();
-    };
+        function create() {
+            vm.loading = true;
+            cuentaContableService.create(vm.cuentaSelected).then(function(response) {
+                _activate();
+                vm.error = undefined;
+                vm.success = 'Registro realizado con exito';
+            }).catch(function(error) {
+                vm.loading = false;
+                vm.error = error.data;
+            });
+        };
 
-    vm.cuentaCreate = function() {
-      vm.error = undefined;
-      vm.success = undefined;
-      _initializeCuenta();
-    };
+        function update() {
+            cuentaContableService.update(vm.cuentaSelected).then(function(response) {
+                _activate();
+                if (vm.cuentaSelected.active) {
+                    vm.success = 'Registro actualizado con exito';
+                } else {
+                    vm.success = 'Registro eliminado con exito';
+                };
+                vm.error = undefined;
+            }).catch(function(error) {
+                vm.loading = false;
+                vm.error = error.data;
+            });
+        };
 
-    vm.save = function() {
-      vm.error = undefined;
-      vm.success = undefined;
-      if (vm.cuentaSelected.id) {
-        update();
-      } else {
-        create();
-      };
-    };
+        vm.cuentaEdit = function(cuenta) {
+            vm.error = undefined;
+            vm.success = undefined;
+            vm.cuentaSelected = cuenta;
+        };
 
-    vm.cancel = function() {
-      _activate();
-    };
+        vm.remove = function() {
+            vm.cuentaSelected.active = false;
+            update();
+        };
 
-    vm.exit = function() {
-      $location.path('/home');
-    };
+        vm.cuentaCreate = function() {
+            vm.error = undefined;
+            vm.success = undefined;
+            _initializeCuenta();
+        };
 
-    (function initController() {
-      _activate();
-    })();
+        vm.save = function() {
+            vm.error = undefined;
+            vm.success = undefined;
+            if (vm.cuentaSelected.id) {
+                update();
+            } else {
+                create();
+            };
+        };
+
+        vm.cancel = function() {
+            _activate();
+        };
+
+        vm.exit = function() {
+            $location.path('/home');
+        };
+
+        (function initController() {
+            _activate();
+        })();
 });
