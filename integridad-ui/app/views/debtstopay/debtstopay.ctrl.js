@@ -192,6 +192,8 @@ angular.module('integridadUiApp')
             vm.ejercicio = undefined;
             vm.debtsToPayList = undefined;
             vm.allDebtsToPayList = undefined;
+            vm.multipleSelected = undefined;
+            vm.debtsToPayMultipleList = undefined;
             vm.provider = undefined;
             vm.providerId = undefined;
             vm.providerName = undefined;
@@ -232,7 +234,7 @@ angular.module('integridadUiApp')
 
             //Diario CxP
             vm.generalDetailCxP = undefined;
-
+            
             vm.status = undefined;
             vm.saldoCredito = undefined;
             vm.saldoDebito = undefined;
@@ -368,6 +370,34 @@ angular.module('integridadUiApp')
             _initializeDailybookCe();
             debtsToPayService.getDebtsToPayWithSaldoByProviderId(provider.id).then(function(response) {
                 vm.debtsToPayList = response;
+                vm.loading = false;
+            }).catch(function(error) {
+                vm.loading = false;
+                vm.error = error.data;
+            });
+        };
+
+        vm.providerMultipleDebts = function(provider) {
+            vm.loading = true;
+            vm.success = undefined;
+            vm.multipleSelected = provider;
+            vm.providerName = provider.name;
+            vm.providerRuc = provider.ruc;
+            vm.providerId = provider.id;
+            cuentaContableService.getCuentaContableByUserClientAndBank(vm.usrCliId).then(function(response) {
+                vm.ctaCtableBankList = response;
+                vm.loading = false;
+            }).catch(function(error) {
+                vm.loading = false;
+                vm.error = error.data;
+            });
+        };
+
+        vm.findDebtsToPay = function() {
+            vm.loading = true;
+            vm.success = undefined;
+            debtsToPayService.getDebtsToPayWithSaldoByProviderId(vm.providerId).then(function(response) {
+                vm.debtsToPayMultipleList = response;
                 vm.loading = false;
             }).catch(function(error) {
                 vm.loading = false;
