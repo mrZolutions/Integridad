@@ -173,14 +173,14 @@ angular.module('integridadUiApp')
                 var impuesto = {};
                 if (det.product.iva) {
                     impuesto.base_imponible = parseFloat(((parseFloat(det.costEach) - (parseFloat(det.costEach) * parseFloat((vm.bill.discountPercentage / 100)))) * parseFloat(det.quantity)).toFixed(4));
-                    impuesto.valor = parseFloat((parseFloat(costWithIva) * parseFloat(det.quantity)).toFixed(4));
+                    impuesto.valor = parseFloat((parseFloat(impuesto.base_imponible) * 0.1200).toFixed(4));
                     impuesto.tarifa = 12.0;
                     impuesto.codigo = '2';
                     impuesto.codigo_porcentaje = '2';
                     impuestos.push(impuesto);
                 } else {
                     impuesto.base_imponible = parseFloat(((parseFloat(det.costEach) - (parseFloat(det.costEach) * parseFloat((vm.bill.discountPercentage / 100)))) * parseFloat(det.quantity)).toFixed(4));
-                    impuesto.valor = parseFloat((parseFloat(det.total) * parseFloat(det.quantity)).toFixed(4));
+                    impuesto.valor = parseFloat((parseFloat(impuesto.base_imponible) * 0.0000).toFixed(4));
                     impuesto.tarifa = 0.0;
                     impuesto.codigo = '2';
                     impuesto.codigo_porcentaje = '0';
@@ -200,8 +200,8 @@ angular.module('integridadUiApp')
                     "codigo_auxiliar": det.product.barCode,
                     "precio_unitario": det.costEach,
                     "descripcion": det.product.name,
-                    "precio_total_sin_impuestos": parseFloat(((parseFloat(det.costEach) - (parseFloat(det.costEach) * (parseInt(vm.bill.discountPercentage)/100))) * parseFloat(det.quantity)).toFixed(2)),
-                    "descuento": parseFloat((parseFloat(det.costEach) * (parseInt(vm.bill.discountPercentage)/100)).toFixed(2))
+                    "precio_total_sin_impuestos": parseFloat(((parseFloat(det.costEach) - (parseFloat(det.costEach) * parseFloat((vm.bill.discountPercentage / 100)))) * parseFloat(det.quantity)).toFixed(4)),
+                    "descuento": parseFloat(((det.quantity * det.costEach) * parseFloat((vm.bill.discountPercentage) / 100)).toFixed(4)),
                 };
 
                 if (!_.isEmpty(impuestos)) {
@@ -213,8 +213,8 @@ angular.module('integridadUiApp')
             var req = creditService.createRequirement(vm.clientSelected, vm.bill, $localStorage.user, vm.impuestosTotales, vm.items);
             
             creditService.getClaveDeAcceso(req, vm.companyData.userClient.id).then(function(resp) {
-                //var obj = JSON.parse(resp.data);
-                var obj = {clave_acceso: '1234560', id:'id12345'};
+                var obj = JSON.parse(resp.data);
+                //var obj = {clave_acceso: '1234560', id:'id12345'};
                 if (obj.errors === undefined) {
                     vm.claveDeAcceso = obj.clave_acceso;
                     vm.bill.claveDeAcceso = obj.clave_acceso;

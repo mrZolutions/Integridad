@@ -193,6 +193,7 @@ angular.module('integridadUiApp')
             vm.debtsToPayList = undefined;
             vm.allDebtsToPayList = undefined;
             vm.multipleSelected = undefined;
+            vm.creditsDebtsSelected = undefined;
             vm.debtsToPayMultipleList = undefined;
             vm.provider = undefined;
             vm.providerId = undefined;
@@ -202,6 +203,7 @@ angular.module('integridadUiApp')
             vm.providerDebtsList = undefined;
             vm.debtsToPayCreated = undefined;
             vm.paymentDebtsCreated = undefined;
+            //vm.paymentDebts = undefined;
             vm.retentionId = undefined;
             vm.retentionNumber = undefined;
             vm.retentionDateCreated = undefined;
@@ -1401,6 +1403,20 @@ angular.module('integridadUiApp')
                 vm.error = error.data;
             });
         };
+
+
+        vm.createMultipleAbonoDebts = function(creditsDebts) {
+            vm.loading = true;
+            vm.creditsDebtsList = undefined;
+            vm.creditsDebtsSelected = creditsDebts;
+            vm.creditsDebtsValue = (creditsDebts.valor).toFixed(2);
+            vm.creditsDebtsId = creditsDebts.id;
+            vm.paymentDebts = {
+                creditsDebts: creditsDebts
+            };
+            vm.loading = false;
+        };
+
 
         //Funciones que permiten hacer los Abonos y/o Pagos de los Creditos pendientes por pagar de las Cuentas por Pagar
         vm.createAbonoDebts = function(creditsDebts) {

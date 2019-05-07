@@ -123,7 +123,7 @@
         </table>
       </div>
       <div class="panel-footer">
-        <button type="button" title="Salir"  class="btn btn-primary btn-sm" ng-click="vm.detailList = undefined; searchText = undefinded">
+        <button type="button" title="Salir"  class="btn btn-primary btn-sm" ng-click="vm.detailList = undefined; searchText = undefined">
                 <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
         </button>
       </div>
@@ -774,7 +774,7 @@
             <div class="form-group col-md-4">
               <br/>
               <button type="button" title = "Calcular" class="btn btn-primary btn-sm" ng-click="vm.loadCredit()"
-                      ng-disabled="vm.medio.creditoIntervalos === undefinded || vm.medio.creditoNumeroPagos === undefined">
+                      ng-disabled="vm.medio.creditoIntervalos === undefined || vm.medio.creditoNumeroPagos === undefined">
                       <span class = "glyphicon glyphicon-th" aria-hidden = "true"></span>
               </button>
             </div>
@@ -827,7 +827,7 @@
             <div class="form-group col-md-4">
               <br/>
               <button type="button" title = "Agregar Pago" class="btn btn-primary btn-sm" ng-click="vm.addPago()"
-                      ng-disabled="vm.medio.medio === undefinded || vm.medio.total === undefined">
+                      ng-disabled="vm.medio.medio === undefined || vm.medio.total === undefined">
                       <span class = "glyphicon glyphicon-plus" aria-hidden = "true"></span>
               </button>
             </div>

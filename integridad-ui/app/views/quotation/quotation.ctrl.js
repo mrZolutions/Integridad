@@ -27,6 +27,7 @@ angular.module('integridadUiApp')
       vm.productList = undefined;
       vm.productToAdd = undefined;
       vm.quantity = undefined;
+      vm.adicional = undefined;
       vm.loading = true;
       vm.indexDetail = undefined;
       vm.priceType = vm.prices[0];
@@ -241,7 +242,8 @@ angular.module('integridadUiApp')
         product: angular.copy(vm.productToAdd),
         quantity: vm.quantity,
         costEach: vm.productToAdd.costEachCalculated,
-        total: (parseFloat(vm.quantity) * parseFloat(vm.productToAdd.costEachCalculated)).toFixed(2)
+        total: (parseFloat(vm.quantity) * parseFloat(vm.productToAdd.costEachCalculated)).toFixed(2),
+        adicional: vm.adicional
       };
       if (vm.indexDetail !== undefined) {
           vm.bill.details[vm.indexDetail] = detail;
@@ -250,6 +252,7 @@ angular.module('integridadUiApp')
       };
       vm.productToAdd = undefined;
       vm.quantity = undefined;
+      vm.adicional = undefined;
       _getTotalSubtotal();
       if (closeModal) {
         $('#modalAddProduct').modal('hide');
@@ -270,7 +273,9 @@ angular.module('integridadUiApp')
     vm.editDetail = function(detail, index) {
       vm.indexDetail = index;
       vm.productToAdd = detail.product;
-      vm.quantity = detail.quantity
+      vm.quantity = detail.quantity;
+      vm.adicional = detail.adicional;
+      _getTotalSubtotal();
     };
 
     vm.removeDetail = function(index) {
