@@ -171,6 +171,9 @@ angular.module('integridadUiApp')
                 var costWithIce = parseFloat((det.total * 1.10).toFixed(4));
                 var impuestos = [];
                 var impuesto = {};
+                var detaAdic = {
+                    "det": det.adicional
+                };
                 if (det.product.iva) {
                     impuesto.base_imponible = parseFloat(((parseFloat(det.costEach) - (parseFloat(det.costEach) * parseFloat((vm.bill.discountPercentage / 100)))) * parseFloat(det.quantity)).toFixed(4));
                     impuesto.valor = parseFloat((parseFloat(impuesto.base_imponible) * 0.1200).toFixed(4));
@@ -202,6 +205,7 @@ angular.module('integridadUiApp')
                     "descripcion": det.product.name,
                     "precio_total_sin_impuestos": parseFloat(((parseFloat(det.costEach) - (parseFloat(det.costEach) * parseFloat((vm.bill.discountPercentage / 100)))) * parseFloat(det.quantity)).toFixed(4)),
                     "descuento": parseFloat(((det.quantity * det.costEach) * parseFloat((vm.bill.discountPercentage) / 100)).toFixed(4)),
+                    "detalles_adicionales": detaAdic
                 };
 
                 if (!_.isEmpty(impuestos)) {
