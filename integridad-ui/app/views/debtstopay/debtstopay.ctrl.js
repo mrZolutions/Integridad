@@ -243,6 +243,7 @@ angular.module('integridadUiApp')
             vm.success = undefined;
             vm.error = undefined;
             vm.medio = {};
+            vm.itemsMultiplePayments = [];
             vm.pagos = [];
             vm.usrCliId = $localStorage.user.subsidiary.userClient.id;
             providerService.getLazyByUserClientId(vm.usrCliId).then(function(response) {
@@ -1415,6 +1416,7 @@ angular.module('integridadUiApp')
                 creditsDebts: creditsDebts
             };
             vm.loading = false;
+            
         };
 
 
