@@ -1330,7 +1330,7 @@
                             </div>
                             <div class = "form-group col-md-3">
                                 <label>Monto del Cheque:</label><br/>
-                                <input type = "text" class = "form-control" ng-model = "vm.valorAbono"/>
+                                <input type = "text" class = "form-control" ng-model = "vm.valorDocumento"/>
                             </div>
                             <div class = "form-group col-md-3">
                                 <label>N&uacute;mero de Cuenta:</label><br/>
@@ -1392,7 +1392,7 @@
                             </div>
                             <div class = "form-group col-md-3">
                                 <label>Monto de la Transferencia:</label><br/>
-                                <input type = "text" class = "form-control" ng-model = "vm.valorAbono"/>
+                                <input type = "text" class = "form-control" ng-model = "vm.valorDocumento"/>
                             </div>
                             <div class = "form-group col-md-3">
                                 <label>N&uacute;mero de Cuenta:</label><br/>
@@ -1454,7 +1454,7 @@
                             </div>
                             <div class = "form-group col-md-3">
                                 <label>Monto del Dep&oacute;sito:</label><br/>
-                                <input type = "text" class = "form-control" ng-model = "vm.valorAbono"/>
+                                <input type = "text" class = "form-control" ng-model = "vm.valorDocumento"/>
                             </div>
                             <div class = "form-group col-md-3">
                                 <label>N&uacute;mero de Cuenta:</label><br/>
@@ -1481,29 +1481,35 @@
                         <table class="table table-striped">
                             <thead>
                                 <tr>
-                                    <th>No. Cuenta</th>
                                     <th>No. Factura</th>
                                     <th>Total</th>
+                                    <th>Pendiente</th>
                                     <th>Abono Realizado</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr ng-show="vm.debtsList == 0">
+                                <tr ng-show="vm.itemsMultiplePayments == 0">
                                     <td colspan="4">
                                         No hay Facturas de Compra Ingresadas
                                     </td>
                                 </tr>
                                 <tr ng-repeat="mp in vm.itemsMultiplePayments">
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
+                                    <td>{{mp.bill_number}}</td>
+                                    <td>{{mp.debt_total}}</td>
+                                    <td>{{mp.debt_pending}}</td>
+                                    <td>{{mp.debt_abono}}</td>
+                                    <td>
+                                        <button type = "button" title = "Eliminar Abono" class = "btn btn-primary btn-sm" 
+                                                ng-click = "vm.eliminaAbono($index)">
+                                                <span class = "glyphicon glyphicon-trash" aria-hidden = "true"></span>
+                                        </button>
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td></td>
                                     <td></td>
                                     <td></td>
-                                    <td><b>SALDO: {{vm.getTotalSaldo()}}</b></td>
+                                    <td><b>SALDO: {{vm.getTotalMultiAbonos()}}</b></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -1511,7 +1517,8 @@
                 </div>
             </div>
             <div class = "panel-footer">
-                <button type = "button" title = "Aceptar" class = "btn btn-success btn-sm" ng-click = "">
+                <button type = "button" title = "Aceptar" class = "btn btn-success btn-sm" ng-click = "vm.pagoMultiAbonoDebts()"
+                        ng-disabled ="vm.getTotalMultiAbonos() != vm.valorDocumento">
                         <span class = "glyphicon glyphicon-thumbs-up" aria-hidden = "true"></span>
                 </button>
                 <button type = "button" title = "Salir" class = "btn btn-primary btn-sm" ng-click = "vm.cancel()">
@@ -1531,7 +1538,7 @@
                 </div>
                 <div class = "modal-body">
                     <div class ="row">
-                        <div class = "col-md-12" ng-if = "vm.creditsDebtsList === undefined && vm.creditsDebtsSelected === undefined">
+                        <div class = "col-md-12" ng-if = "vm.creditsMultiDebtsList === undefined && vm.creditsDebtsSelected === undefined">
                             <table class = "table table-striped">
                                 <thead>
                                     <tr>
@@ -1556,7 +1563,7 @@
                                         <td>{{debts.total}}</td>
                                         <td>
                                             <button type = "button" title = "Consultar Créditos Pendientes" class = "btn btn-primary btn-sm" 
-                                                    ng-click = "vm.creditsByDebts(debts)">
+                                                    ng-click = "vm.creditsMultiByDebts(debts)">
                                                     <span class = "glyphicon glyphicon-ok" aria-hidden = "true"></span>
                                             </button>
                                         </td>
@@ -1569,7 +1576,7 @@
                                 </button>
                             </div>
                         </div>
-                        <div class = "col-md-12" ng-if = "vm.creditsDebtsList !== undefined">
+                        <div class = "col-md-12" ng-if = "vm.creditsMultiDebtsList !== undefined">
                             <table class = "table table-striped">
                                 <thead>
                                     <tr>
@@ -1580,17 +1587,17 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr ng-show = "vm.creditsDebtsList == 0">
+                                    <tr ng-show = "vm.creditsMultiDebtsList == 0">
                                         <td colspan = "4">
                                             La Cuenta por Pagar <b>No Presenta</b> Cobros Pendientes por Cancelar...
                                         </td>
                                     </tr>
-                                    <tr ng-repeat = "creditsDebts in vm.creditsDebtsList | orderBy : 'payNumber' : true">
+                                    <tr ng-repeat = "creditsDebts in vm.creditsMultiDebtsList | orderBy : 'payNumber' : true">
                                         <td>{{creditsDebts.fecha | date : "dd/MM/yyyy"}}</td>
                                         <td>{{creditsDebts.payNumber}}</td>
                                         <td>{{(creditsDebts.valor).toFixed(2)}}</td>
                                         <td>
-                                            <button type = "button" title = "Seleccionar Factura" class = "btn btn-primary btn-sm" ng-click = "vm.createMultipleAbonoDebts(creditsDebts)">
+                                            <button type = "button" title = "Seleccionar Factura" class = "btn btn-primary btn-sm" ng-click = "vm.multipleAbonoDebts(creditsDebts)">
                                                     <span class = "glyphicon glyphicon-ok" aria-hidden = "true"></span>
                                             </button>
                                         </td>
@@ -1598,7 +1605,7 @@
                                 </tbody>
                             </table>
                             <div>
-                                <button type = "button" title = "Anterior" class = "btn btn-primary btn-sm" ng-click = "vm.creditsDebtsList = undefined">
+                                <button type = "button" title = "Anterior" class = "btn btn-primary btn-sm" ng-click = "vm.creditsMultiDebtsList = undefined">
                                         <span class = "glyphicon glyphicon-arrow-left" aria-hidden = "true"></span>
                                 </button>
                                 <button type = "button" title = "Salir" class = "btn btn-primary btn-sm" data-dismiss = "modal">
@@ -1607,7 +1614,24 @@
                             </div>
                         </div>
                         <div class = "col-md-12" ng-if = "vm.creditsDebtsSelected !== undefined">
-                            
+                            <div>
+                                <div class="form-group col-md-6">
+                                    <label>Factura Nro:</label><br/>
+                                    {{vm.debtsBillNumber}}
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label>Valor Abono:</label><br/>
+                                    <input type = "text" class = "form-control" ng-model = "vm.valorAbono"/>
+                                </div>
+                            </div>
+                            <div>
+                                <button type = "button" title = "Aceptar" class = "btn btn-success btn-sm" ng-click = "vm.aceptaAbono()">
+                                        <span class = "glyphicon glyphicon-thumbs-up" aria-hidden = "true"></span>
+                                </button>
+                                <button type = "button" title = "Salir" class = "btn btn-primary btn-sm" data-dismiss = "modal">
+                                        <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>

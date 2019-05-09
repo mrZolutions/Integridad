@@ -194,7 +194,11 @@ angular.module('integridadUiApp')
             vm.allDebtsToPayList = undefined;
             vm.multipleSelected = undefined;
             vm.creditsDebtsSelected = undefined;
+            vm.creditsMultipleDebtsSelected = [];
             vm.debtsToPayMultipleList = undefined;
+            vm.creditsMultiDebtsList = undefined;
+            vm.itemDebtsMulti = {};
+            
             vm.provider = undefined;
             vm.providerId = undefined;
             vm.providerName = undefined;
@@ -203,7 +207,7 @@ angular.module('integridadUiApp')
             vm.providerDebtsList = undefined;
             vm.debtsToPayCreated = undefined;
             vm.paymentDebtsCreated = undefined;
-            //vm.paymentDebts = undefined;
+
             vm.retentionId = undefined;
             vm.retentionNumber = undefined;
             vm.retentionDateCreated = undefined;
@@ -217,6 +221,8 @@ angular.module('integridadUiApp')
             vm.retenTotalIva = undefined;
             vm.responseDebtsToPay = undefined;
             vm.debtsBillNumber = undefined;
+            vm.debtsNumber = undefined;
+            vm.debtsPending = undefined;
             vm.debtsToPaySelectedToUpdate = undefined;
             vm.threeNumberOne = undefined;
             vm.threeNumberTwo = undefined;
@@ -231,7 +237,13 @@ angular.module('integridadUiApp')
             vm.generalDetailCe_2 = undefined;
             vm.ctaCtableBankCode = undefined;
             vm.bankName = undefined;
+            vm.noDocument = undefined;
+            vm.valorDocumento = undefined;
+            vm.noAccount = undefined;
             vm.typeCuenta = undefined;
+            vm.details = undefined;
+            vm.modePayment = undefined;
+            vm.typePayment = undefined;
             vm.ctaCtableBankList = undefined;
 
             //Diario CxP
@@ -1281,7 +1293,6 @@ angular.module('integridadUiApp')
                 vm.debtsToPay.saldo = 0.0;
             };
             if (vm.retentionId == null) {
-                vm.debtsToPay.retentionId = 'SIN RETENCIÓN';
                 vm.debtsToPay.retentionNumber = 0;
                 vm.debtsToPay.retentionDateCreated = 0;
                 vm.debtsToPay.retentionTotal = 0.0;
@@ -1354,7 +1365,6 @@ angular.module('integridadUiApp')
             vm.dailybookCxP.subTotalCero = 0.0;
             vm.dailybookCxP.dateRecordBook = $('#pickerDateDebtsToPay').data("DateTimePicker").date().toDate().getTime();
             if (vm.retentionId == null) {
-                vm.dailybookCxP.retentionId = 'SIN RETENCIÓN';
                 vm.dailybookCxP.retentionNumber = 0;
                 vm.dailybookCxP.retentionDateCreated = 0;
                 vm.dailybookCxP.retentionTotal = 0.0;
@@ -1405,20 +1415,90 @@ angular.module('integridadUiApp')
             });
         };
 
-
-        vm.createMultipleAbonoDebts = function(creditsDebts) {
+        vm.creditsMultiByDebts = function(debtsToPay) {
             vm.loading = true;
-            vm.creditsDebtsList = undefined;
+            vm.success = undefined;
+            vm.error = undefined;
+            vm.debtsNumber = debtsToPay.debtsSeq;
+            vm.debtsBillNumber = debtsToPay.billNumber;
+            vm.debtsValue = (debtsToPay.total).toFixed(2);
+            vm.debtsPending = (debtsToPay.saldo).toFixed(2);
+            creditsDebtsService.getAllCreditsDebtsOfDebtsToPayByDebtsToPayId(debtsToPay.id).then(function(response) {
+                vm.creditsMultiDebtsList = response;
+                vm.loading = false;
+            }).catch(function(error) {
+                vm.loading = false;
+                vm.error = error.data;
+            });
+        };
+
+        vm.multipleAbonoDebts = function(creditsDebts) {
+            vm.loading = true;
+            vm.creditsMultiDebtsList = undefined;
             vm.creditsDebtsSelected = creditsDebts;
             vm.creditsDebtsValue = (creditsDebts.valor).toFixed(2);
             vm.creditsDebtsId = creditsDebts.id;
-            vm.paymentDebts = {
-                creditsDebts: creditsDebts
+            vm.itemDebtsMulti = {
+                credit_debt: creditsDebts,
+                bill_number: vm.debtsBillNumber,
+                debt_total: vm.debtsValue,
+                debt_pending: vm.debtsPending
             };
             vm.loading = false;
-            
         };
 
+        vm.aceptaAbono = function() {
+            vm.loading = true;
+            $('#modalFindDebtsToPay').modal('hide');
+            vm.creditsMultipleDebtsSelected.push(vm.creditsDebtsSelected);
+            vm.creditsDebtsSelected = undefined;
+            vm.itemDebtsMulti.debt_abono = vm.valorAbono;
+            vm.itemsMultiplePayments.push(vm.itemDebtsMulti);
+            vm.loading = false;
+        };
+
+        vm.eliminaAbono = function(index) {
+            vm.itemsMultiplePayments.splice(index, 1);
+        };
+
+        vm.getTotalMultiAbonos = function() {
+            var totalMultiAbono = 0;
+            _.each(vm.itemsMultiplePayments, function(detail) {
+                totalMultiAbono = (parseFloat(totalMultiAbono) + parseFloat(detail.debt_abono)).toFixed(2);
+            });
+            return totalMultiAbono;
+        };
+
+        vm.pagoMultiAbonoDebts = function() {
+            vm.loading = true;
+            _.each(vm.itemsMultiplePayments, function(detail) {
+                vm.paymentDebts = {
+                    creditsDebts: detail.credit_debt
+                };
+                vm.paymentDebts.typePayment = vm.typePayment;
+                if (vm.paymentDebts.typePayment == 'PAC') {
+                    vm.valorReten = 0.00;
+                };
+                vm.paymentDebts.datePayment = $('#pickerDateOfMultiPayment').data("DateTimePicker").date().toDate().getTime();
+                vm.paymentDebts.documentNumber = detail.bill_number;
+                vm.paymentDebts.modePayment = vm.modePayment;
+                vm.paymentDebts.detail = vm.details;
+                vm.paymentDebts.valorAbono = detail.debt_abono;
+                vm.paymentDebts.noAccount = vm.noAccount;
+                vm.paymentDebts.noDocument = vm.noDocument;
+                vm.paymentDebts.ctaCtableBanco = vm.ctaCtableBankCode;
+                vm.paymentDebts.banco = vm.bankName;
+                paymentDebtsService.create(vm.paymentDebts).then(function(response) {
+                    vm.paymentDebtsCreated = response;
+                    vm.success = 'Abono realizado con exito';
+                    vm.loading = false;
+                }).catch(function(error) {
+                    vm.loading = false;
+                    vm.error = error.data;
+                });
+            });
+            _activate();
+        };
 
         //Funciones que permiten hacer los Abonos y/o Pagos de los Creditos pendientes por pagar de las Cuentas por Pagar
         vm.createAbonoDebts = function(creditsDebts) {

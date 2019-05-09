@@ -16,16 +16,20 @@ import java.util.UUID;
 public class ProviderServices {
     @Autowired
     ProviderRepository providerRepository;
+    
+    public Iterable<Provider> getProviderByUserClientIdAndRuc(UUID userClientId, String ruc) {
+	Iterable<Provider> providers = providerRepository.findProviderByUserClientIdAndRuc(userClientId, ruc);
+	providers.forEach(provider -> {
+            provider.setFatherListToNull();
+            provider.setListsNull();
+        });
+	return providers;
+    }
 
     public Provider createProvider(Provider provider) {
 	if (provider.getCodeIntegridad() == null) {
             throw new BadRequestException("Debe tener el codigo de contabilidad");
 	}
-        
-        Iterable<Provider> providers = providerRepository.findProviderByRucAndId(provider.getName(), provider.getRuc(), provider.getUserClient().getId());
-        if (Iterables.size(providers) > 0) {
-            throw new BadRequestException("El Proveedor Ya Existe");
-        }
         
 	log.info("ProviderServices create: {}", provider.getName());
 	provider.setDateCreated(new Date().getTime());

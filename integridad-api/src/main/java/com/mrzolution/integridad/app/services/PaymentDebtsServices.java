@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 /**
@@ -58,6 +59,7 @@ public class PaymentDebtsServices {
     private double totalAbono = 0.0;
     private double totalReten = 0.0;
     
+    @Async("asyncExecutor")
     public PaymentDebts createPaymentDebts(PaymentDebts paymentDebts) {
         PaymentDebts saved = paymentDebtsRepository.save(paymentDebts);
         document = saved.getCreditsDebts().getPagoDebts().getDebtsToPay().getId().toString();
@@ -70,8 +72,8 @@ public class PaymentDebtsServices {
             } else {
                 abono = saved.getValorReten();
             }
-            updateCreditsDebts(idCreditsDebts);
             updateDebtsToPay(paymentDebts, document);
+            updateCreditsDebts(idCreditsDebts);
         }
         log.info("PaymentDebtsServices createPaymentDebts DONE id: {}", saved.getId());
         return saved;

@@ -30,4 +30,10 @@ angular
                 return response.data;
             });
         };
+
+        this.getProviderByUserClientIdAndRuc = function(userClientId, ruc) {
+            return securityService.get('/provider/userclient/' + userClientId + '/' + ruc).then(function successCallback(response) {
+                return response.data;
+            });
+        };
 });

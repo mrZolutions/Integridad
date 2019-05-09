@@ -8,8 +8,6 @@ import com.mrzolution.integridad.app.domain.PagoDebts;
 import com.mrzolution.integridad.app.domain.PaymentDebts;
 import com.mrzolution.integridad.app.domain.report.DebtsReport;
 import com.mrzolution.integridad.app.exceptions.BadRequestException;
-import com.mrzolution.integridad.app.father.Father;
-import com.mrzolution.integridad.app.father.FatherManageChildren;
 import com.mrzolution.integridad.app.repositories.CashierRepository;
 import com.mrzolution.integridad.app.repositories.CreditsDebtsChildRepository;
 import com.mrzolution.integridad.app.repositories.CreditsDebtsRepository;

@@ -200,6 +200,7 @@ angular.module('integridadUiApp')
             vm.success = undefined;
             vm.provider = undefined;
             vm.providerToUse = undefined;
+            vm.usrCliId = $localStorage.user.subsidiary.userClient.id;
             vm.providerList = [];
             providerService.getLazyByUserClientId(vm.userData.subsidiary.userClient.id).then(function(response) {
                 vm.providerList = response;
@@ -211,10 +212,20 @@ angular.module('integridadUiApp')
         };
 
         function create() {
-            providerService.create(vm.provider).then(function(response) {
-                _activate();
-                vm.error = undefined;
-                vm.success = 'Registro realizado con exito';
+            providerService.getProviderByUserClientIdAndRuc(vm.usrCliId, vm.provider.ruc).then(function(response) {
+                if (response.length === 0) {
+                    providerService.create(vm.provider).then(function(responseProv) {
+                        _activate();
+                        vm.error = undefined;
+                        vm.success = 'Registro realizado con exito';
+                    }).catch(function(error) {
+                        vm.loading = false;
+                        vm.error = error.data;
+                    });
+                } else {
+                    vm.error = 'Proveedor Ya Existe';
+                };
+                vm.loading = false;
             }).catch(function(error) {
                 vm.loading = false;
                 vm.error = error.data;

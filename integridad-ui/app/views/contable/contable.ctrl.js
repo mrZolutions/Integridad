@@ -1303,7 +1303,6 @@ angular.module('integridadUiApp')
         vm.dailybookCxP.subTotalCero = vm.subTotalCeroCxP;
         vm.dailybookCxP.dateRecordBook = $('#pickerDateRecordBookCxP').data("DateTimePicker").date().toDate().getTime();
         if (vm.retentionId == null) {
-            vm.dailybookCxP.retentionId = 'SIN RETENCIÓN';
             vm.dailybookCxP.retentionNumber = 0;
             vm.dailybookCxP.retentionDateCreated = 0;
             vm.dailybookCxP.retentionTotal = 0.0;

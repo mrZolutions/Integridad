@@ -83,4 +83,16 @@ public class ProviderController {
 	}
 	return new ResponseEntity<Provider>(response, HttpStatus.CREATED);
     }
+    
+    @RequestMapping(method = RequestMethod.GET, value="/userclient/{userClientId}/{ruc}")
+    public ResponseEntity getProviderByUserClientIdAndRuc(@PathVariable("userClientId") UUID userClientId, @PathVariable("ruc") String ruc) {
+        Iterable<Provider> response = null;
+        try {
+            response = service.getProviderByUserClientIdAndRuc(userClientId, ruc);
+        } catch (BadRequestException e) {
+            log.error("ProviderController getProviderByUserClientIdAndRuc Exception thrown: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+        return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
+    }
 }
