@@ -37,7 +37,6 @@ public class PaymentDebtsServices {
     @Autowired
     DebtsToPayRepository debtsToPayRepository;
     
-    private UUID idCreditsDebts;
     private double nume = 0.0;
     private double abono = 0.0;
     private double resto = 0.0;
@@ -59,12 +58,11 @@ public class PaymentDebtsServices {
     private double totalAbono = 0.0;
     private double totalReten = 0.0;
     
-    @Async("asyncExecutor")
+    //@Async("asyncExecutor")
     public PaymentDebts createPaymentDebts(PaymentDebts paymentDebts) {
         PaymentDebts saved = paymentDebtsRepository.save(paymentDebts);
         document = saved.getCreditsDebts().getPagoDebts().getDebtsToPay().getId().toString();
         if (saved.getCreditsDebts().getId() != null) {
-            idCreditsDebts = saved.getCreditsDebts().getId();
             if ("PAC".equals(saved.getTypePayment())) {
                 abono = saved.getValorAbono();
             } else if ("CEG".equals(saved.getTypePayment())) {
@@ -72,25 +70,21 @@ public class PaymentDebtsServices {
             } else {
                 abono = saved.getValorReten();
             }
-            updateDebtsToPay(paymentDebts, document);
-            updateCreditsDebts(idCreditsDebts);
         }
+        updateCreditsDebtsAndDebtsToPay(saved, document);
         log.info("PaymentDebtsServices createPaymentDebts DONE id: {}", saved.getId());
         return saved;
     }
     
-    public void updateCreditsDebts(UUID creditsDebts) {
-        CreditsDebts cambio = creditsDebtsRepository.findOne(idCreditsDebts);
+    public void updateCreditsDebtsAndDebtsToPay(PaymentDebts saved, String document) {
+        CreditsDebts cambio = creditsDebtsRepository.findOne(saved.getCreditsDebts().getId());
         nume = cambio.getValor();
         resto = nume - abono;
         cambio.setValor(resto);
         creditsDebtsRepository.save(cambio);
         resto = 0.0;
-        log.info("PaymentDebtsServices updateCreditsDebts DONE");
-    }
-    
-    public void updateDebtsToPay(PaymentDebts paymentDebts, String document) {
-        DebtsToPay debts = debtsToPayRepository.findOne(paymentDebts.getCreditsDebts().getPagoDebts().getDebtsToPay().getId());
+        
+        DebtsToPay debts = debtsToPayRepository.findOne(saved.getCreditsDebts().getPagoDebts().getDebtsToPay().getId());
         String debtsToPayId = debts.getId().toString();
         if (debtsToPayId.equals(document)) {
             saldo = debts.getSaldo();
@@ -101,13 +95,12 @@ public class PaymentDebtsServices {
             debts.setSaldo(saldo);
             debtsToPayRepository.save(debts);
         }
-        log.info("PaymentDebtsServices updateDebtsToPay DONE");
+        log.info("PaymentDebtsServices updateCreditsDebtsAndDebtsToPay DONE");
     }
     
     public List<CPResumenPaymentDebtsReport> getPaymentsDebtsByUserClientIdAndDates(UUID id, long dateOne, long dateTwo) {
         sumTotalAbono = 0;
         sumTotalReten = 0;
-        
         totalAbono = 0;
         totalReten = 0;
         

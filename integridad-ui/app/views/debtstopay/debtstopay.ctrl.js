@@ -241,10 +241,12 @@ angular.module('integridadUiApp')
             vm.valorDocumento = undefined;
             vm.noAccount = undefined;
             vm.typeCuenta = undefined;
+            vm.valorAbono = undefined;
             vm.details = undefined;
             vm.modePayment = undefined;
             vm.typePayment = undefined;
             vm.ctaCtableBankList = undefined;
+            vm.debtsBillsNumberPayed = undefined;
 
             //Diario CxP
             vm.generalDetailCxP = undefined;
@@ -298,6 +300,26 @@ angular.module('integridadUiApp')
                 provider: vm.providerSelected,
                 userIntegridad: $localStorage.user,
                 subsidiary: $localStorage.user.subsidiary,
+                subTotalDoce: 0.0,
+                iva: 0.0,
+                subTotalCero: 0.0,
+                total: 0.0,
+                detailDailybookContab: []
+            };
+        };
+
+        //Sección de Comprobante de Egreso para el Asiento Automático
+        function _getDailyCeSeqNumber() {
+            vm.numberAddedOneCe = parseInt($localStorage.user.cashier.dailyCeNumberSeq) + 1;
+            vm.dailyCeSeq = vm.numberAddedOneCe;
+            vm.dailyCeStringSeq = utilSeqService._pad_with_zeroes(vm.numberAddedOneCe, 6);
+        };
+
+        function _initializeDailybookCe() {
+            vm.dailybookCe = {
+                userIntegridad: $localStorage.user,
+                subsidiary: $localStorage.user.subsidiary,
+                provider: vm.provider,
                 subTotalDoce: 0.0,
                 iva: 0.0,
                 subTotalCero: 0.0,
@@ -395,10 +417,12 @@ angular.module('integridadUiApp')
         vm.providerMultipleDebts = function(provider) {
             vm.loading = true;
             vm.success = undefined;
+            vm.provider = provider;
             vm.multipleSelected = provider;
             vm.providerName = provider.name;
             vm.providerRuc = provider.ruc;
             vm.providerId = provider.id;
+            _initializeDailybookCe();
             cuentaContableService.getCuentaContableByUserClientAndBank(vm.usrCliId).then(function(response) {
                 vm.ctaCtableBankList = response;
                 vm.loading = false;
@@ -411,6 +435,7 @@ angular.module('integridadUiApp')
         vm.findDebtsToPay = function() {
             vm.loading = true;
             vm.success = undefined;
+            vm.valorAbono = 0;
             debtsToPayService.getDebtsToPayWithSaldoByProviderId(vm.providerId).then(function(response) {
                 vm.debtsToPayMultipleList = response;
                 vm.loading = false;
@@ -1436,10 +1461,8 @@ angular.module('integridadUiApp')
             vm.loading = true;
             vm.creditsMultiDebtsList = undefined;
             vm.creditsDebtsSelected = creditsDebts;
-            vm.creditsDebtsValue = (creditsDebts.valor).toFixed(2);
-            vm.creditsDebtsId = creditsDebts.id;
             vm.itemDebtsMulti = {
-                credit_debt: creditsDebts,
+                credit_debt: vm.creditsDebtsSelected,
                 bill_number: vm.debtsBillNumber,
                 debt_total: vm.debtsValue,
                 debt_pending: vm.debtsPending
@@ -1469,9 +1492,18 @@ angular.module('integridadUiApp')
             return totalMultiAbono;
         };
 
+        vm.getDebtsBillNumberPayed = function() {
+            var debtsBillNumberPayed = '';
+            _.each(vm.itemsMultiplePayments, function(detail) {
+                debtsBillNumberPayed = debtsBillNumberPayed + ' ' + detail.bill_number;
+            });
+            return debtsBillNumberPayed;
+        };
+
         vm.pagoMultiAbonoDebts = function() {
             vm.loading = true;
-            _.each(vm.itemsMultiplePayments, function(detail) {
+            vm.debtsBillsNumberPayed = vm.getDebtsBillNumberPayed();
+            _.each(vm.itemsMultiplePayments, function(detail) { 
                 vm.paymentDebts = {
                     creditsDebts: detail.credit_debt
                 };
@@ -1497,7 +1529,72 @@ angular.module('integridadUiApp')
                     vm.error = error.data;
                 });
             });
+            _asientoComprobanteUnicoEgreso();
             _activate();
+        };
+
+        function _asientoComprobanteUnicoEgreso() {
+            _getDailyCeSeqNumber();
+            vm.selectedTypeBook = '2';
+            vm.typeContab = 'COMPROBANTE DE EGRESO';
+            //Selección de las Cuentas Contables por defecto dependiendo del Cliente
+            if (vm.usrCliId === '758dea84-74f5-4209-b218-9b84c10621fc') {
+                vm.provContable = '2.01.03.01.001';
+            } else if (vm.usrCliId === '4907601b-6e54-4675-80a8-ab6503e1dfeb') {
+                vm.provContable = '2.01.03.01.001';
+            } else if (vm.usrCliId === '1e2049c3-a3bc-4231-a0de-dded8020dc1b') {
+                vm.provContable = '2.12.10.101';
+            } else {
+                vm.provContable = '2.01.01.01';
+            };
+            vm.generalDetailCe_1 = vm.providerName + ' ' + 'Fcs' + ' ' + vm.debtsBillsNumberPayed;
+            vm.itema = {
+                typeContab: vm.typeContab,
+                codeConta: vm.provContable,
+                descrip: 'PROVEEDORES LOCALES',
+                tipo: 'DEBITO (D)',
+                baseImponible: parseFloat(vm.valorDocumento),
+                name: vm.generalDetailCe_1,
+                deber: parseFloat(vm.valorDocumento)
+            };
+            vm.itema.numCheque =  '--';
+            vm.dailybookCe.detailDailybookContab.push(vm.itema);
+            vm.generalDetailCe_2 = vm.bankName + ' ' + 'Cancela Fcs' + ' ' + vm.debtsBillsNumberPayed;
+            vm.itemb = {
+                typeContab: vm.typeContab,
+                codeConta: vm.ctaCtableBankCode,
+                descrip: vm.bankName,
+                tipo: 'CREDITO (C)',
+                baseImponible: parseFloat(vm.valorDocumento),
+                name: vm.generalDetailCe_2,
+                haber: parseFloat(vm.valorDocumento)
+            };
+            vm.itemb.numCheque = vm.noDocument;
+            vm.dailybookCe.detailDailybookContab.push(vm.itemb);
+            vm.providerCeSelected = undefined;
+            
+            vm.dailybookCe.codeTypeContab = vm.selectedTypeBook;
+            vm.dailybookCe.nameBank = vm.bankName;
+            vm.dailybookCe.billNumber = vm.debtsBillsNumberPayed;
+            vm.dailybookCe.numCheque = vm.noDocument;
+            vm.dailybookCe.typeContab = vm.typeContab;
+            vm.dailybookCe.dailyCeSeq = vm.dailyCeSeq;
+            vm.dailybookCe.dailyCeStringSeq = vm.dailyCeStringSeq;
+            vm.dailybookCe.dailyCeStringUserSeq = 'PAGO GENERADO ' + vm.dailyCeStringSeq;
+            vm.dailybookCe.clientProvName = vm.providerName;
+            vm.dailybookCe.generalDetail = vm.generalDetailCe_1;
+            vm.dailybookCe.total = vm.valorDocumento;
+            vm.dailybookCe.iva = parseFloat((vm.valorDocumento * 0.1200).toFixed(2));
+            vm.dailybookCe.subTotalDoce = parseFloat((vm.valorDocumento / 1.1200).toFixed(2));
+            vm.dailybookCe.subTotalCero = 0.0;
+            vm.dailybookCe.dateRecordBook = $('#pickerDateOfMultiPayment').data("DateTimePicker").date().toDate().getTime();
+            
+            contableService.createDailybookCe(vm.dailybookCe).then(function(response) {
+                $localStorage.user.cashier.dailyCeNumberSeq = vm.dailybookCe.dailyCeSeq;
+            }).catch(function(error) {
+                vm.loading = false;
+                vm.error = error.data;
+            });
         };
 
         //Funciones que permiten hacer los Abonos y/o Pagos de los Creditos pendientes por pagar de las Cuentas por Pagar
@@ -1548,26 +1645,6 @@ angular.module('integridadUiApp')
                 vm.error = error.data;
             });
             _activate();
-        };
-
-        //Sección de Comprobante de Egreso para el Asiento Automático
-        function _getDailyCeSeqNumber() {
-            vm.numberAddedOneCe = parseInt($localStorage.user.cashier.dailyCeNumberSeq) + 1;
-            vm.dailyCeSeq = vm.numberAddedOneCe;
-            vm.dailyCeStringSeq = utilSeqService._pad_with_zeroes(vm.numberAddedOneCe, 6);
-        };
-
-        function _initializeDailybookCe() {
-            vm.dailybookCe = {
-                userIntegridad: $localStorage.user,
-                subsidiary: $localStorage.user.subsidiary,
-                provider: vm.provider,
-                subTotalDoce: 0.0,
-                iva: 0.0,
-                subTotalCero: 0.0,
-                total: 0.0,
-                detailDailybookContab: []
-            };
         };
 
         vm.selectCtaCtableBank = function(cuenta) {

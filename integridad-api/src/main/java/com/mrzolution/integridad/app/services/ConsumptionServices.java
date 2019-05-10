@@ -193,8 +193,8 @@ public class ConsumptionServices {
             for (Consumption consumption: consumptions) {
                 for (DetailConsumption detail: consumption.getDetailsConsumption()) {
                     if (uuidCurrent.equals(detail.getProduct().getId())) {
-                        CsmItemReport item = new CsmItemReport(detail.getProduct().getId(),"", consumption.getCsmNumberSeq(), detail.getProduct().getCodeIntegridad(),
-					detail.getProduct().getName(),Double.valueOf(detail.getQuantity()), detail.getCostEach(), detail.getTotal(), (detail.getTotal() * 0.12), (detail.getTotal() * 1.12));
+                        CsmItemReport item = new CsmItemReport(detail.getProduct().getId(),"", consumption.getCsmNumberSeq(), detail.getProduct().getCodeIntegridad(), detail.getProduct().getName(),Double.valueOf(detail.getQuantity()),
+					detail.getCostEach(), detail.getTotal(), (detail.getTotal() * 0.12), (detail.getTotal() * 1.12), detail.getConsumption().getClientName());
                         quantityTotal += item.getQuantity();
                         subTotalTotal += item.getSubTotal();
                         ivaTotal += item.getIva();
@@ -206,7 +206,7 @@ public class ConsumptionServices {
                 }
             }
             CsmItemReport itemTotal = new CsmItemReport(uuidCurrent, "SUB-TOTAL", "", code,
-			desc, quantityTotal, null, subTotalTotal, ivaTotal, totalTotal);
+			desc, quantityTotal, null, subTotalTotal, ivaTotal, totalTotal, null);
 
             reportList.add(itemTotal);
         }

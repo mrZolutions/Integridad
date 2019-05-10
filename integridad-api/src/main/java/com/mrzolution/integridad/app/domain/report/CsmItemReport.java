@@ -20,8 +20,9 @@ public class CsmItemReport {
     private Double subTotal;
     private Double iva;
     private Double total;
+    private String clientName;
 
-    public CsmItemReport(UUID id, String type, String csmNumberSeq, String code, String description, Double quantity, Double valUnit, Double subTotal, Double iva, Double total) {
+    public CsmItemReport(UUID id, String type, String csmNumberSeq, String code, String description, Double quantity, Double valUnit, Double subTotal, Double iva, Double total, String clientName) {
         this.type = type;
         this.csmNumberSeq = csmNumberSeq;
         this.code = code;
@@ -31,5 +32,6 @@ public class CsmItemReport {
         this.subTotal = subTotal;
         this.iva = iva;
         this.total = total;
+        this.clientName = clientName;
     }
 }

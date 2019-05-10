@@ -430,7 +430,8 @@ angular.module('integridadUiApp')
             VAL_UNITARIO: consp.valUnit,
             SUBTOTAL: parseFloat(consp.subTotal.toFixed(2)),
             IVA: parseFloat(consp.iva.toFixed(2)),
-            TOTAL: parseFloat(consp.total.toFixed(2))
+            TOTAL: parseFloat(consp.total.toFixed(2)),
+            CLIENTE: consp.clientName
           };
 
           dataReport.push(data);
