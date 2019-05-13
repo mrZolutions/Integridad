@@ -118,7 +118,7 @@
                 <tr ng-repeat="provider in vm.providerList | orderBy:'name' | filter:searchText">
                     <td>{{provider.codeIntegridad}}</td>
                     <td>{{provider.name}}</td>
-                    <td>{{provider.ruc_type}}</td>
+                    <td>{{provider.rucType}}</td>
                     <td>{{provider.ruc}}</td>
                     <td></td>
                     <td>
@@ -264,9 +264,9 @@
                         {{vm.cellar.provider.codeIntegridad}}
                     </div>
                     <div class="form-group col-md-6">
-                        <label ng-if="vm.cellar.provider.ruc_type === 'RUC'">RUC:</label>
-                        <label ng-if="vm.cellar.provider.ruc_type === 'CED'">CEDULA:</label>
-                        <label ng-if="vm.cellar.provider.ruc_type === 'PAS'">PASAPORTE:</label>
+                        <label ng-if="vm.cellar.provider.rucType === 'RUC'">RUC:</label>
+                        <label ng-if="vm.cellar.provider.rucType === 'CED'">CEDULA:</label>
+                        <label ng-if="vm.cellar.provider.rucType === 'IEX'">ID. EXTERIOR:</label>
                         {{vm.cellar.provider.ruc}}
                     </div>
                 </div>
@@ -692,9 +692,9 @@
                         {{vm.cellarProviderSelected.codeIntegridad}}
                     </div>
                     <div class="form-group col-md-6">
-                        <label ng-if="vm.cellarProviderSelected.ruc_type === 'RUC'">RUC:</label>
-                        <label ng-if="vm.cellarProviderSelected.ruc_type === 'CED'">CEDULA:</label>
-                        <label ng-if="vm.cellarProviderSelected.ruc_type === 'PAS'">PASAPORTE:</label>
+                        <label ng-if="vm.cellar.provider.rucType === 'RUC'">RUC:</label>
+                        <label ng-if="vm.cellar.provider.rucType === 'CED'">CEDULA:</label>
+                        <label ng-if="vm.cellar.provider.rucType === 'IEX'">ID. EXTERIOR:</label>
                         {{vm.cellarProviderSelected.ruc}}
                     </div>
                 </div>

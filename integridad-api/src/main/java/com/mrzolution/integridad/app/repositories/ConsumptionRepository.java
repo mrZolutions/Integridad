@@ -22,19 +22,19 @@ public interface ConsumptionRepository extends CrudRepository<Consumption, UUID>
     
     Iterable<Consumption> findConsumptionByClient(Client client);
     
-    @Query("SELECT cm FROM Consumption cm WHERE cm.client.id = (:id) AND cm.active = 'true' ORDER BY cm.csmSeq")
+    @Query("SELECT cm FROM Consumption cm WHERE cm.client.id = (:id) AND cm.active = true ORDER BY cm.csmSeq")
     Iterable<Consumption> findConsumptionByClientId(@Param("id") UUID id);
     
-    @Query("SELECT cm FROM Consumption cm WHERE cm.subsidiary.id = (:id) AND cm.active = 'true' ORDER BY cm.csmSeq")
+    @Query("SELECT cm FROM Consumption cm WHERE cm.subsidiary.id = (:id) AND cm.active = true ORDER BY cm.csmSeq")
     Iterable<Consumption> findConsumptionBySubsidiaryId(@Param("id") UUID id);
     
-    @Query("SELECT cm FROM Consumption cm WHERE cm.csmNumberSeq = (:seq) AND cm.subsidiary.id = (:subId) AND cm.active = 'true' ORDER BY cm.csmSeq")
+    @Query("SELECT cm FROM Consumption cm WHERE cm.csmNumberSeq = (:seq) AND cm.subsidiary.id = (:subId) AND cm.active = true ORDER BY cm.csmSeq")
     Iterable<Consumption> findConsumptionByCsmNumberSeqAndSubsidiaryId(@Param("seq") String csmNumberSeq, @Param("subId") UUID id);
     
-    @Query("SELECT cm FROM Consumption cm WHERE cm.csmNumberSeq = (:seq) AND cm.subsidiary.userClient.id = (:userClientId) AND cm.active = 'true' ORDER BY cm.csmSeq")
+    @Query("SELECT cm FROM Consumption cm WHERE cm.csmNumberSeq = (:seq) AND cm.subsidiary.userClient.id = (:userClientId) AND cm.active = true ORDER BY cm.csmSeq")
     Iterable<Consumption> findConsumptionByCsmNumberSeqAndUserClientId(@Param("seq") String csmNumberSeq, @Param("userClientId") UUID id);
     
-    @Query("SELECT cm FROM Consumption cm WHERE cm.subsidiary.userClient.id = (:userClientId) AND cm.active = 'true' ORDER BY cm.csmSeq")
+    @Query("SELECT cm FROM Consumption cm WHERE cm.subsidiary.userClient.id = (:userClientId) AND cm.active = true ORDER BY cm.csmSeq")
     Iterable<Consumption> findConsumptionByUserClientId(@Param("userClientId") UUID id);
     
     @Query("SELECT cm FROM Consumption cm WHERE cm.subsidiary.userClient.id = (:userClientId) AND cm.dateConsumption >= (:dateOne) AND cm.dateConsumption <= (:dateTwo) AND cm.active = true ORDER BY cm.csmSeq")

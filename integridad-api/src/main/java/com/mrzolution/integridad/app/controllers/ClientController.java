@@ -68,5 +68,16 @@ public class ClientController {
 	}
 	return new ResponseEntity<Iterable>(response, HttpStatus.CREATED);
     }
-	
+    
+    @RequestMapping(method = RequestMethod.GET, value="/userclient/{userClientId}/{identification}")
+    public ResponseEntity getClientByUserClientAndIdentification(@PathVariable("userClientId") UUID userClientId, @PathVariable("identification") String identification) {
+        Iterable<Client> response = null;
+        try {
+            response = service.getClientByUserClientAndIdentification(userClientId, identification);
+        } catch (BadRequestException e) {
+            log.error("ClientController getClientByUserClientAndIdentification Exception thrown: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+        return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
+    }
 }

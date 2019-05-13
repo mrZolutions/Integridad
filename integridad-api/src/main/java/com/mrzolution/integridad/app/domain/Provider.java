@@ -4,8 +4,6 @@ import lombok.Data;
 import org.hibernate.validator.constraints.Email;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 /**
@@ -27,7 +25,7 @@ public class Provider {
     private String country;
     private String city;
     private String address1;
-    private String ruc_type;
+    private String rucType;
     private String ruc;
     private String contact;
     private String providerType;

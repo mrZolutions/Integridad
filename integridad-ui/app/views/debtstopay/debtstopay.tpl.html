@@ -62,7 +62,7 @@
                 <tr ng-repeat="provider in vm.providerList | orderBy:'name' | filter:searchText">
                     <td>{{provider.codeIntegridad}}</td>
                     <td>{{provider.name}}</td>
-                    <td>{{provider.ruc_type}} - {{provider.ruc}}</td>
+                    <td>{{provider.rucType}} - {{provider.ruc}}</td>
                     <td>
                         <button type = "button" title = "Ingreso de Factura de Compra" class = "btn btn-primary btn-sm" ng-click = "vm.providerSelect(provider)">
                                 <span class = "glyphicon glyphicon-file" aria-hidden = "true"></span>
@@ -155,9 +155,9 @@
                         {{vm.debtsToPay.provider.codeIntegridad}}
                     </div>
                     <div class="form-group col-md-6">
-                        <label ng-if="vm.debtsToPay.provider.ruc_type === 'RUC'">RUC:</label>
-                        <label ng-if="vm.debtsToPay.provider.ruc_type === 'CED'">CEDULA:</label>
-                        <label ng-if="vm.debtsToPay.provider.ruc_type === 'PAS'">PASAPORTE:</label>
+                        <label ng-if="vm.debtsToPay.provider.rucType === 'RUC'">RUC:</label>
+                        <label ng-if="vm.debtsToPay.provider.rucType === 'CED'">CEDULA:</label>
+                        <label ng-if="vm.debtsToPay.provider.rucType === 'PAS'">ID. EXTERIOR:</label>
                         {{vm.debtsToPay.provider.ruc}}
                     </div>
                 </div>
@@ -1755,9 +1755,9 @@
                                     <b>PROVEEDOR: </b>{{vm.debtsProviderSelected.razonSocial}}<br/>
                                 </td>
                                 <td>
-                                    <b ng-if = "vm.debtsProviderSelected.ruc_type === 'CED'">CEDULA: </b>
-                                    <b ng-if = "vm.debtsProviderSelected.ruc_type === 'RUC'">RUC: </b>
-                                    <b ng-if = "vm.debtsProviderSelected.ruc_type === 'PAS'">PASAPORTE: </b>
+                                    <label ng-if="vm.debtsToPay.provider.rucType === 'RUC'">RUC:</label>
+                                    <label ng-if="vm.debtsToPay.provider.rucType === 'CED'">CEDULA:</label>
+                                    <label ng-if="vm.debtsToPay.provider.rucType === 'PAS'">ID. EXTERIOR:</label>
                                     {{vm.debtsProviderSelected.ruc}}
                                 </td>
                                 <td>

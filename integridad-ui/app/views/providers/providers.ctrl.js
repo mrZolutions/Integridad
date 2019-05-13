@@ -223,7 +223,7 @@ angular.module('integridadUiApp')
                         vm.error = error.data;
                     });
                 } else {
-                    vm.error = 'Proveedor Ya Existe';
+                    vm.error = 'El Proveedor Ya Existe';
                 };
                 vm.loading = false;
             }).catch(function(error) {
@@ -275,7 +275,7 @@ angular.module('integridadUiApp')
                 return utilStringService.isAnyInArrayStringEmpty([
                     vm.provider.codeIntegridad,
                     vm.provider.ruc,
-                    vm.provider.ruc_type,
+                    vm.provider.rucType,
                     vm.provider.name,
                     vm.provider.razonSocial,
                     vm.provider.country,
@@ -294,15 +294,28 @@ angular.module('integridadUiApp')
 
         vm.register = function() {
             var idValid = true;
-            if (vm.provider.ruc.length > 10) {
-                idValid = validatorService.isRucValid(vm.provider.ruc);
-            } else {
+            if (vm.provider.rucType === 'CED') {
                 idValid = validatorService.isCedulaValid(vm.provider.ruc);
+            } else if (vm.provider.rucType === 'RUC') {
+                idValid = validatorService.isRucValid(vm.provider.ruc);
+            } else if (vm.provider.rucType === 'IEX') {
+                idValid = true;
             };
-            if (vm.provider.id) {
-                update();
+            
+            //if (vm.provider.ruc.length > 10) {
+            //    idValid = validatorService.isRucValid(vm.provider.ruc);
+            //} else {
+            //    idValid = validatorService.isCedulaValid(vm.provider.ruc);
+            //};
+
+            if (!idValid) {
+                vm.error = 'Identificacion invalida';
             } else {
-                create();
+                if (vm.provider.id) {
+                    update();
+                } else {
+                    create();
+                };
             };
         };
 

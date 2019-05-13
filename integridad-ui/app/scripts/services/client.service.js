@@ -24,4 +24,10 @@ angular
                 return response.data;
             });
         };
+
+        this.getClientByUserClientAndIdentification = function(userClientId, identification) {
+            return securityService.get('/client/userclient/' + userClientId + '/' + identification).then(function successCallback(response) {
+                return response.data;
+            });
+        };
 });

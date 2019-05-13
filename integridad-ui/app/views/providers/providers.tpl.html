@@ -159,17 +159,22 @@
       <div class="row">
         <div class="form-group col-md-6">
           <label>Tipo de Identificaci&oacute;n: </label>
-          <select ng-options="item.code as item.name for item in [{code:'CED', name:'CEDULA'}, {code:'RUC', name:'RUC'}]"
-                  ng-model="vm.provider.ruc_type" class="form-control">
+          <select ng-options="item.code as item.name for item in [{code:'CED', name:'CEDULA'}, {code:'RUC', name:'RUC'}, {code:'IEX', name:'IDENTIFICACIÓN EXTERIOR'}]"
+                  ng-model="vm.provider.rucType" class="form-control">
           </select>
         </div>
-        <div class="form-group col-md-6" ng-show="vm.provider.ruc_type === 'CED'">
+        <div class="form-group col-md-6" ng-show="vm.provider.rucType === 'CED'">
           <label>C&eacute;dula: </label>
           <input type="text" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
                  ng-model="vm.provider.ruc" class="form-control" maxlength="10">
         </div>
-        <div class="form-group col-md-6" ng-show="vm.provider.ruc_type === 'RUC'">
+        <div class="form-group col-md-6" ng-show="vm.provider.rucType === 'RUC'">
             <label>RUC: </label>
+            <input type="text" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+                   ng-model="vm.provider.ruc" class="form-control" maxlength="13">
+        </div>
+        <div class="form-group col-md-6" ng-show="vm.provider.rucType === 'IEX'">
+            <label>ID. Exterior: </label>
             <input type="text" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
                    ng-model="vm.provider.ruc" class="form-control" maxlength="13">
         </div>

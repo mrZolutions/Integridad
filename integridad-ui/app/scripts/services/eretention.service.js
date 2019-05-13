@@ -3,9 +3,9 @@ angular
     .service('eretentionService', function(_, dateService, securityService) {
         function getTipyCode(code) {
             tipyIdCode = {
-                RUC : '04',
-                CED : '05',
-                PAS : '06'
+                RUC: '04',
+                CED: '05',
+                IEX: '08'
             };
             return tipyIdCode[code];
         };
@@ -33,7 +33,7 @@ angular
                 "sujeto": {
                     "email": retention.provider.email,
                     "identificacion": retention.provider.ruc,
-                    "tipo_identificacion": '04',
+                    "tipo_identificacion": getTipyCode(retention.provider.rucType),
                     "razon_social": retention.provider.razonSocial,
                     "direccion": retention.provider.address1,
                     "telefono": retention.provider.phone

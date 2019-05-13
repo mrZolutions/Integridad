@@ -24,17 +24,21 @@ public class ClientServices {
     ClientRepository clientRepository;
     @Autowired
     BillRepository billRepository;
+    
+    public Iterable<Client> getClientByUserClientAndIdentification(UUID userClientId, String identification) {
+	Iterable<Client> clients = clientRepository.findClientByUserClientAndIdentification(userClientId, identification);
+	clients.forEach(client -> {
+            client.setFatherListToNull();
+            client.setListsNull();
+        });
+	return clients;
+    }
 	
     public Client createClient(Client client) {
         if (client.getCodApp() == null) {
             throw new BadRequestException("Debe tener el codigo de contabilidad");
         }
-            
-        Iterable<Client> clients = clientRepository.findByIdentificationAndId(client.getName(), client.getIdentification(), client.getUserClient().getId());
-        if (Iterables.size(clients) > 0) {
-            throw new BadRequestException("El Cliente Ya Existe");
-        }
-            
+        
         client.setDateCreated(new Date().getTime());
         client.setActive(true);
         Client saved = clientRepository.save(client);

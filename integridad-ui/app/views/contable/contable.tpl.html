@@ -484,7 +484,7 @@
                         <tr ng-repeat="provider in vm.providerCeList | orderBy:'name' | filter:searchText">
                             <td>{{provider.codeIntegridad}}</td>
                             <td>{{provider.name}}</td>
-                            <td>{{provider.ruc_type}} - {{provider.ruc}}</td>
+                            <td>{{provider.rucType}} - {{provider.ruc}}</td>
                             <td>
                                 <button type = "button" title = "Nuevo Diario Comprobante de Egreso" class = "btn btn-primary btn-sm" ng-click = "vm.providerCeSelect(provider)">
                                         <span class = "glyphicon glyphicon-book" aria-hidden = "true"></span>
@@ -1172,7 +1172,7 @@
                         <tr ng-repeat="provider in vm.providerCxPList | orderBy:'name' | filter:searchText">
                             <td>{{provider.codeIntegridad}}</td>
                             <td>{{provider.name}}</td>
-                            <td>{{provider.ruc_type}} - {{provider.ruc}}</td>
+                            <td>{{provider.rucType}} - {{provider.ruc}}</td>
                             <td>
                                 <button type = "button" title = "Nuevo Diario Cuentas por Pagar" class = "btn btn-primary btn-sm" ng-click = "vm.providerCxPSelect(provider)">
                                         <span class = "glyphicon glyphicon-book" aria-hidden = "true"></span>

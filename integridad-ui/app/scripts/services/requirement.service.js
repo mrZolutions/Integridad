@@ -3,9 +3,9 @@ angular
   .service('requirementService', function(dateService) {
         function getTipyCode(code) {
             tipyIdCode = {
-                RUC : '04',
-                CED : '05',
-                PAS : '06'
+                RUC: '04',
+                CED: '05',
+                IEX: '08'
             };
             return tipyIdCode[code];
         };

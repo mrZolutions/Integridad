@@ -19,11 +19,12 @@ angular.module('integridadUiApp')
         vm.clientList = undefined;
 
         function _activate() {
+            vm.usrCliId = $localStorage.user.subsidiary.userClient.id;
             if ($routeParams.create) {
                 vm.clientCreate();
             } else {
                 vm.loading = true;
-                clientService.getLazyByProjectId($localStorage.user.subsidiary.userClient.id).then(function(response) {
+                clientService.getLazyByProjectId(vm.usrCliId).then(function(response) {
                     vm.clientList = response;
                     vm.loading = false;
                 }).catch(function(error) {
@@ -34,14 +35,24 @@ angular.module('integridadUiApp')
         };
 
         function create() {
-            clientService.create(vm.client).then(function(response) {
-                vm.client=undefined;
-                _activate();
-                vm.error = undefined;
-                vm.success = 'Registro realizado con exito';
-                if ($routeParams.create) {
-                    $location.path('/bills/bill');
+            clientService.getClientByUserClientAndIdentification(vm.usrCliId, vm.client.identification).then(function(response) {
+                if (response.length === 0) {
+                    clientService.create(vm.client).then(function(response) {
+                        vm.client=undefined;
+                        _activate();
+                        vm.error = undefined;
+                        vm.success = 'Registro realizado con exito';
+                        if ($routeParams.create) {
+                            $location.path('/bills/bill');
+                        };
+                    }).catch(function(error) {
+                        vm.loading = false;
+                        vm.error = error.data;
+                    });
+                } else {
+                    vm.error = 'El Cliente Ya Existe';
                 };
+                vm.loading = false;
             }).catch(function(error) {
                 vm.loading = false;
                 vm.error = error.data;
@@ -99,16 +110,15 @@ angular.module('integridadUiApp')
         };
 
         vm.save = function() {
+            var idValid = true;
             var validationError = utilStringService.isAnyInArrayStringEmpty([
                 vm.client.name, vm.client.identification, vm.client.codApp
             ]);
-
-            var idValid = true;
             if (vm.client.typeId === 'CED') {
                 idValid = validatorService.isCedulaValid(vm.client.identification);
             } else if (vm.client.typeId === 'RUC') {
                 idValid = validatorService.isRucValid(vm.client.identification);
-            } else if (vm.client.typeId === 'PAS') {
+            } else if (vm.client.typeId === 'IEX') {
                 idValid = true;
             };
 

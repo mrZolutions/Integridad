@@ -1,227 +1,225 @@
 <div style = "width: 100%;height: 100%;top: 0px;left: 0px;position: fixed;display: block; z-index: 99; background: rgba(255, 255, 255, 0.3)" ng-show="vm.loading">
-  <div style = "position: absolute;top: 15%;z-index: 100; width: 100%; text-align: center;">
-    <div class = "sk-circle">
-      <div class = "sk-circle1 sk-child"></div>
-      <div class = "sk-circle2 sk-child"></div>
-      <div class = "sk-circle3 sk-child"></div>
-      <div class = "sk-circle4 sk-child"></div>
-      <div class = "sk-circle5 sk-child"></div>
-      <div class = "sk-circle6 sk-child"></div>
-      <div class = "sk-circle7 sk-child"></div>
-      <div class = "sk-circle8 sk-child"></div>
-      <div class = "sk-circle9 sk-child"></div>
-      <div class = "sk-circle10 sk-child"></div>
-      <div class = "sk-circle11 sk-child"></div>
-      <div class = "sk-circle12 sk-child"></div>
+    <div style = "position: absolute;top: 15%;z-index: 100; width: 100%; text-align: center;">
+        <div class = "sk-circle">
+            <div class = "sk-circle1 sk-child"></div>
+            <div class = "sk-circle2 sk-child"></div>
+            <div class = "sk-circle3 sk-child"></div>
+            <div class = "sk-circle4 sk-child"></div>
+            <div class = "sk-circle5 sk-child"></div>
+            <div class = "sk-circle6 sk-child"></div>
+            <div class = "sk-circle7 sk-child"></div>
+            <div class = "sk-circle8 sk-child"></div>
+            <div class = "sk-circle9 sk-child"></div>
+            <div class = "sk-circle10 sk-child"></div>
+            <div class = "sk-circle11 sk-child"></div>
+            <div class = "sk-circle12 sk-child"></div>
+        </div>
     </div>
-  </div>
 </div>
 
 <div class="form-group col-md-12">
-  <div class = "header">
-    <h4><b>Clientes</b></h4>
-  </div>
+    <div class = "header">
+        <h4><b>Clientes</b></h4>
+    </div>
 
-  <div class = "row" ng-show = "vm.error !== undefined">
-    <div class = "form-group col-md-12">
-      <div class = "alert alert-danger">{{vm.error}}</div>
-    </div>
-  </div>
-  <div class="row" ng-show = "vm.success !== undefined">
-    <div class = "form-group col-md-12">
-      <div class = "alert alert-success">{{vm.success}}</div>
-    </div>
-  </div>
-
-  <div class="table-responsive" ng-show = "vm.client === undefined">
-    <div class = "row">
-      <div class = "form-group col-md-10">
-        <input ng-model = "searchText" class = "form-control" placeholder = "Buscar">
-      </div>
-      <div class = "form-group col-md-1">
-        <button type = "button" title = "Agregar Nuevo Cliente" class = "btn btn-primary" ng-click = "vm.clientCreate()">
-                <span class = "glyphicon glyphicon-user" aria-hidden = "true"></span>
-        </button>
-      </div>
-    </div>
-    <table class = "table table-striped">
-      <thead>
-        <tr>
-          <th>C&oacute;digo</th>
-          <th>Nombre</th>
-          <th>No. Identidad</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr ng-show = "vm.clientList == 0">
-          <td colspan = "4">
-            No hay clientes ingresados
-          </td>
-        </tr>
-        <tr ng-repeat = "clientEdit in vm.clientList | orderBy:'name' | filter:searchText">
-          <td>{{clientEdit.codApp}}</td>
-          <td>{{clientEdit.name}}</td>
-          <td>{{clientEdit.typeId}} - {{clientEdit.identification}}</td>
-          <td>
-            <button type="button" title = "Editar Cliente" class = "btn btn-primary btn-sm" ng-click = "vm.clientEdit(clientEdit)">
-                    <span class = "glyphicon glyphicon-pencil" aria-hidden = "true"></span>
-            </button>
-            <button type="button" title = "Eliminar Cliente" class = "btn btn-primary btn-sm" ng-click = "vm.client=clientEdit"
-                    data-toggle = "modal" data-target="#modalEliminar">
-                    <span class = "glyphicon glyphicon-trash" aria-hidden = "true"></span>
-            </button>
-            <button type="button" title = "Nueva Cotización" class = "btn btn-success btn-sm" ng-click = "vm.clientCotizar(clientEdit)">
-                    <span class = "glyphicon glyphicon-usd" aria-hidden = "true"></span>
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-    <div class="row">
-      <div class="form-group col-md-12">
-        <button type="button" title="Salir" class="btn btn-danger btn-sm"
-                ng-click="vm.exit()">
-                <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <div class = "panel panel-primary" ng-show = "vm.client">
-    <div class="panel-heading" print-remove>
-      <b>Datos del Cliente</b>
-    </div>
-    <div class = "panel-body">
-      <div class = "row">
+    <div class = "row" ng-show = "vm.error !== undefined">
         <div class = "form-group col-md-12">
-          <label>Nombre *: </label>
-          <input type = "text" ng-model = "vm.client.name" class = "form-control">
+            <div class = "alert alert-danger">{{vm.error}}</div>
         </div>
-      </div>
-
-      <div class = "row">
-        <div class = "form-group col-md-6">
-          <label>Tel&eacute;fono: (incluir c&oacute;digo de provincia ej: 02) </label>
-          <input type = "text" onkeypress = "return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
-                 ng-model = "vm.client.phone" class = "form-control" maxlength = "9">
-        </div>
-
-        <div class = "form-group col-md-6">
-          <label>Tel&eacute;fono celular: </label>
-          <input type = "text" onkeypress = "return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
-                 ng-model = "vm.client.celPhone" class = "form-control" maxlength = "10">
-        </div>
-      </div>
-
-      <div class = "row">
-        <div class = "form-group col-md-6">
-          <label>Pa&iacute;s: </label>
-          <select ng-options = "country for country in vm.countryList"
-                  ng-model = "vm.client.country" class = "form-control" ng-change = "vm.validateEcuador()"></select>
-        </div>
-        <div class = "form-group col-md-6" ng-show = "vm.client.country === 'Ecuador'">
-          <label>Ciudad: </label>
-          <select ng-options = "city for city in vm.citiesList"
-                  ng-model = "vm.client.city" class = "form-control"></select>
-        </div>
-        <div class = "form-group col-md-6" ng-show = "vm.client.country !== 'Ecuador'">
-          <label>Ciudad: </label>
-          <input type = "text" ng-model = "vm.client.city" class = "form-control">
-        </div>
-      </div>
-
-      <div class = "row">
-        <div class = "form-group col-md-6">
-          <label>Tipo de Identificacion: </label>
-          <select ng-options = "item.code as item.name for item in [{code:'CED', name:'CEDULA'}, {code:'RUC', name:'RUC'}]"
-                  ng-model = "vm.client.typeId" class = "form-control">
-          </select>
-        </div>
-        <div class = "form-group col-md-6" ng-show = "vm.client.typeId === 'CED'">
-          <label>C&eacute;dula: </label>
-          <input type = "text" onkeypress = "return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
-                 ng-model = "vm.client.identification" class = "form-control" maxlength = "10">
-        </div>
-        <div class = "form-group col-md-6" ng-show = "vm.client.typeId === 'RUC'">
-          <label>RUC: </label>
-          <input type = "text" onkeypress = "return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
-                 ng-model = "vm.client.identification" class = "form-control" maxlength = "13">
-        </div>
-        <!--<div class = "form-group col-md-6" ng-show = "vm.client.typeId === 'PAS'">
-          <label>Pasaporte: </label>
-          <input type = "text" onkeypress = "return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
-                 ng-model = "vm.client.identification" class = "form-control" maxlength = "9">
-        </div>-->
-      </div>
-
-      <div class = "row">
+    </div>
+    <div class="row" ng-show = "vm.success !== undefined">
         <div class = "form-group col-md-12">
-          <label>E-mail: </label>
-          <input type = "text" ng-model = "vm.client.email" class = "form-control">
+            <div class = "alert alert-success">{{vm.success}}</div>
         </div>
-      </div>
-      
-      <div class = "row">
-        <div class = "form-group col-md-12">
-          <label>Direcci&oacute;n: </label>
-          <input type = "text" ng-model = "vm.client.address" class = "form-control">
-        </div>
-      </div>
-
-      <div class = "row">
-        <div class = "form-group col-md-6">
-          <label>C&oacute;digo Contabilidad: </label>
-          <input type = "text" ng-model = "vm.client.codConta" class = "form-control">
-        </div>
-
-        <div class = "form-group col-md-6">
-          <label>Contacto: </label>
-          <input type = "text" ng-model = "vm.client.contact" class = "form-control">
-        </div>
-      </div>
-
-      <div class = "row">
-        <div class = "form-group col-md-6">
-          <label>C&oacute;digo : </label>
-          <input type = "text" ng-model = "vm.client.codApp" class = "form-control">
-        </div>
-      </div>
     </div>
 
-    <div class = "panel-footer">
-      <button type = "button" title = "Guardar Cliente" class = "btn btn-success btn-sm" ng-click = "vm.save()"
-              ng-disabled = "vm.client.name === undefined || vm.client.identification === undefined || vm.client.codApp === undefined">
-              <span class = "glyphicon glyphicon-floppy-save" aria-hidden = "true"></span>
-      </button>
-      <button type = "button" title = "Salir" class = "btn btn-primary btn-sm"
-              ng-click = "vm.cancel()">
-              <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
-      </button>
-    </div>
-  </div>
-
-  <div id = "modalEliminar" class = "modal fade" role = "dialog">
-    <div class = "modal-dialog">
-      <div class = "modal-content">
-        <div class = "modal-header">
-          <button type = "button" class = "close" data-dismiss = "modal" ng-click = "vm.client=undefined">&times;</button>
-          <h4 class = "modal-title">Advertencia</h4>
-        </div>
-        <div class = "modal-body">
-          <div class = "row">
-            <div class = "col-md-12" >
-              Esta seguro que desea Eliminar el cliente {{vm.client.name}} con identificacion:
-              {{vm.client.identification}}
+    <div class="table-responsive" ng-show = "vm.client === undefined">
+        <div class = "row">
+            <div class = "form-group col-md-10">
+                <input ng-model = "searchText" class = "form-control" placeholder = "Buscar">
             </div>
-          </div>
+            <div class = "form-group col-md-1">
+                <button type = "button" title = "Agregar Nuevo Cliente" class = "btn btn-primary" ng-click = "vm.clientCreate()">
+                        <span class = "glyphicon glyphicon-user" aria-hidden = "true"></span>
+                </button>
+            </div>
         </div>
-        <div class = "modal-footer">
-          <button type = "button" title = "Eliminar Cliente" class="btn btn-primary btn-sm" ng-click="vm.remove()" data-dismiss="modal">
-                  <span class = "glyphicon glyphicon-trash" aria-hidden = "true"></span>
-          </button>
+        <table class = "table table-striped">
+            <thead>
+                <tr>
+                    <th>C&oacute;digo</th>
+                    <th>Nombre</th>
+                    <th>No. Identidad</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-show = "vm.clientList == 0">
+                    <td colspan = "4">
+                        No hay clientes ingresados
+                    </td>
+                </tr>
+                <tr ng-repeat = "clientEdit in vm.clientList | orderBy:'name' | filter:searchText">
+                    <td>{{clientEdit.codApp}}</td>
+                    <td>{{clientEdit.name}}</td>
+                    <td>{{clientEdit.typeId}} - {{clientEdit.identification}}</td>
+                    <td>
+                        <button type="button" title = "Editar Cliente" class = "btn btn-primary btn-sm" ng-click = "vm.clientEdit(clientEdit)">
+                                <span class = "glyphicon glyphicon-pencil" aria-hidden = "true"></span>
+                        </button>
+                        <button type="button" title = "Eliminar Cliente" class = "btn btn-primary btn-sm" ng-click = "vm.client=clientEdit"
+                                data-toggle = "modal" data-target="#modalEliminar">
+                                <span class = "glyphicon glyphicon-trash" aria-hidden = "true"></span>
+                        </button>
+                        <button type="button" title = "Nueva Cotización" class = "btn btn-success btn-sm" ng-click = "vm.clientCotizar(clientEdit)">
+                                <span class = "glyphicon glyphicon-usd" aria-hidden = "true"></span>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="row">
+            <div class="form-group col-md-12">
+                <button type="button" title="Salir" class="btn btn-danger btn-sm"
+                        ng-click="vm.exit()">
+                        <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
+                </button>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
+
+    <div class = "panel panel-primary" ng-show = "vm.client">
+        <div class="panel-heading" print-remove>
+            <b>Datos del Cliente</b>
+        </div>
+        <div class = "panel-body">
+            <div class = "row">
+                <div class = "form-group col-md-12">
+                    <label>Nombre *: </label>
+                    <input type = "text" ng-model = "vm.client.name" class = "form-control">
+                </div>
+            </div>
+
+            <div class = "row">
+                <div class = "form-group col-md-6">
+                    <label>Tel&eacute;fono: (incluir c&oacute;digo de provincia ej: 02) </label>
+                    <input type = "text" onkeypress = "return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+                            ng-model = "vm.client.phone" class = "form-control" maxlength = "9">
+                </div>
+                <div class = "form-group col-md-6">
+                    <label>Tel&eacute;fono celular: </label>
+                    <input type = "text" onkeypress = "return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+                            ng-model = "vm.client.celPhone" class = "form-control" maxlength = "10">
+                </div>
+            </div>
+
+            <div class = "row">
+                <div class = "form-group col-md-6">
+                    <label>Pa&iacute;s: </label>
+                    <select ng-options = "country for country in vm.countryList"
+                            ng-model = "vm.client.country" class = "form-control" ng-change = "vm.validateEcuador()"></select>
+                </div>
+                <div class = "form-group col-md-6" ng-show = "vm.client.country === 'Ecuador'">
+                    <label>Ciudad: </label>
+                    <select ng-options = "city for city in vm.citiesList"
+                            ng-model = "vm.client.city" class = "form-control"></select>
+                </div>
+                <div class = "form-group col-md-6" ng-show = "vm.client.country !== 'Ecuador'">
+                    <label>Ciudad: </label>
+                    <input type = "text" ng-model = "vm.client.city" class = "form-control">
+                </div>
+            </div>
+
+            <div class = "row">
+                <div class = "form-group col-md-6">
+                    <label>Tipo de Identificacion: </label>
+                    <select ng-options = "item.code as item.name for item in [{code:'CED', name:'CEDULA'}, {code:'RUC', name:'RUC'}, {code:'IEX', name:'IDENTIFICACIÓN EXTERIOR'}]"
+                            ng-model = "vm.client.typeId" class = "form-control">
+                    </select>
+                </div>
+                <div class = "form-group col-md-6" ng-show = "vm.client.typeId === 'CED'">
+                    <label>C&eacute;dula: </label>
+                    <input type = "text" onkeypress = "return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+                           ng-model = "vm.client.identification" class = "form-control" maxlength = "10">
+                </div>
+                <div class = "form-group col-md-6" ng-show = "vm.client.typeId === 'RUC'">
+                    <label>RUC: </label>
+                    <input type = "text" onkeypress = "return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+                           ng-model = "vm.client.identification" class = "form-control" maxlength = "13">
+                </div>
+                <div class = "form-group col-md-6" ng-show = "vm.client.typeId === 'IEX'">
+                    <label>ID. Exterior: </label>
+                    <input type = "text" onkeypress = "return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+                           ng-model = "vm.client.identification" class = "form-control" maxlength = "10">
+                </div>
+            </div>
+
+            <div class = "row">
+                <div class = "form-group col-md-12">
+                    <label>E-mail: </label>
+                    <input type = "text" ng-model = "vm.client.email" class = "form-control">
+                </div>
+            </div>
+            
+            <div class = "row">
+                <div class = "form-group col-md-12">
+                    <label>Direcci&oacute;n: </label>
+                    <input type = "text" ng-model = "vm.client.address" class = "form-control">
+                </div>
+            </div>
+
+            <div class = "row">
+                <div class = "form-group col-md-6">
+                    <label>C&oacute;digo Contabilidad: </label>
+                    <input type = "text" ng-model = "vm.client.codConta" class = "form-control">
+                </div>
+                <div class = "form-group col-md-6">
+                    <label>Contacto: </label>
+                    <input type = "text" ng-model = "vm.client.contact" class = "form-control">
+                </div>
+            </div>
+
+            <div class = "row">
+                <div class = "form-group col-md-6">
+                    <label>C&oacute;digo : </label>
+                    <input type = "text" ng-model = "vm.client.codApp" class = "form-control">
+                </div>
+            </div>
+        </div>
+
+        <div class = "panel-footer">
+            <button type = "button" title = "Guardar Cliente" class = "btn btn-success btn-sm" ng-click = "vm.save()"
+                    ng-disabled = "vm.client.name === undefined || vm.client.identification === undefined || vm.client.codApp === undefined">
+                    <span class = "glyphicon glyphicon-floppy-save" aria-hidden = "true"></span>
+            </button>
+            <button type = "button" title = "Salir" class = "btn btn-primary btn-sm"
+                    ng-click = "vm.cancel()">
+                    <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
+            </button>
+        </div>
+    </div>
+
+    <div id = "modalEliminar" class = "modal fade" role = "dialog">
+        <div class = "modal-dialog">
+            <div class = "modal-content">
+                <div class = "modal-header">
+                    <button type = "button" class = "close" data-dismiss = "modal" ng-click = "vm.client=undefined">&times;</button>
+                    <h4 class = "modal-title">Advertencia</h4>
+                </div>
+                <div class = "modal-body">
+                    <div class = "row">
+                        <div class = "col-md-12" >
+                            Esta seguro que desea Eliminar el cliente {{vm.client.name}} con identificacion:
+                            {{vm.client.identification}}
+                        </div>
+                    </div>
+                </div>
+                <div class = "modal-footer">
+                    <button type = "button" title = "Eliminar Cliente" class="btn btn-primary btn-sm" ng-click="vm.remove()" data-dismiss="modal">
+                            <span class = "glyphicon glyphicon-trash" aria-hidden = "true"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
