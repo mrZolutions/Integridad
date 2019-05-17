@@ -53,4 +53,16 @@ public class PaymentDebtsController {
 	}
         return new ResponseEntity<List>(response, HttpStatus.ACCEPTED);
     }
+    
+    @RequestMapping(method = RequestMethod.GET, value="/userclient/{userClientId}/{banco}/{nrodoc}")
+    public ResponseEntity getPaymentsDebtsByUserClientIdWithBankAndNroDocument(@PathVariable("userClientId") UUID userClientId, @PathVariable("banco") String banco, @PathVariable("nrodoc") String nrodoc) {
+        Iterable<PaymentDebts> response = null;
+        try {
+            response = service.getPaymentsDebtsByUserClientIdWithBankAndNroDocument(userClientId, banco, nrodoc);
+        } catch (BadRequestException e) {
+            log.error("PaymentDebtsController getPaymentsDebtsByUserClientIdWithBankAndNroDocument Exception thrown: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+        return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
+    }
 }

@@ -2,6 +2,7 @@ package com.mrzolution.integridad.app.repositories;
 
 import com.mrzolution.integridad.app.domain.DailybookCe;
 import com.mrzolution.integridad.app.domain.DailybookCg;
+import com.mrzolution.integridad.app.domain.DailybookCi;
 import com.mrzolution.integridad.app.domain.DailybookCxP;
 import com.mrzolution.integridad.app.domain.DetailDailybookContab;
 import java.util.UUID;
@@ -20,6 +21,8 @@ public interface DetailDailybookContabRepository extends CrudRepository<DetailDa
     Iterable<DetailDailybookContab> findByDailybookCg(DailybookCg dailybookCg);
     
     Iterable<DetailDailybookContab> findByDailybookCe(DailybookCe dailybookCe);
+    
+    Iterable<DetailDailybookContab> findByDailybookCi(DailybookCi dailybookCi);
     
     Iterable<DetailDailybookContab> findByDailybookCxP(DailybookCxP dailybookCxP);
 }

@@ -207,32 +207,6 @@ public class DebtsToPayServices {
         return debtsToPayToDeactivate;
     }
     
-    //Actualización de los Debts
-    //public DebtsToPay updateDebtsToPay(DebtsToPay debtsToPay) throws BadRequestException {
-    //    if (debtsToPay.getId() == null) {
-    //        throw new BadRequestException("Invalid DebtsToPay");
-    //    }
-    //    log.info("DebtsToPayServices updateDebtsToPay: {}", debtsToPay.getId());
-    //    Father<DebtsToPay, DetailDebtsToPay> fatherDebts = new Father<>(debtsToPay, debtsToPay.getDetailDebtsToPay());
-    //    FatherManageChildren fatherUpdateDetailsChildren = new FatherManageChildren(fatherDebts, detailDebtsToPayChildRepository, detailDebtsToPayRepository);
-    //    fatherUpdateDetailsChildren.updateChildren();
-    //    Father<DebtsToPay, PagoDebts> fatherPagoDebts = new Father<>(debtsToPay, debtsToPay.getPagos());
-    //    FatherManageChildren fatherUpdatePagoDebtsChildren = new FatherManageChildren(fatherPagoDebts, pagoDebtsChildRepository, pagoDebtsRepository);
-    //    fatherUpdatePagoDebtsChildren.updateChildren();
-    //    debtsId = debtsToPay.getId().toString();
-    //    debtsToPay.getPagos().forEach(pagoDebts -> {
-    //        if (pagoDebts.getCreditsDebts() != null) {
-    //            Father<PagoDebts, CreditsDebts> fatherCreditsDebts = new Father<>(pagoDebts, pagoDebts.getCreditsDebts());
-    //            FatherManageChildren fatherUpdateChildrenCreditsDebts = new FatherManageChildren(fatherCreditsDebts, creditsDebtsChildRepository , creditsDebtsRepository);
-    //            fatherUpdateChildrenCreditsDebts.updateChildren();
-    //        }
-    //    });
-    //    debtsToPay.setListsNull();
-    //    DebtsToPay updated = debtsToPayRepository.save(debtsToPay);
-    //    log.info("DebtsToPayServices updateDebtsToPay DONE id: {}", updated.getId());
-    //    return updated;
-    //}
-    
     //Reporte de Compras
     public List<DebtsReport> getDebtsToPayByUserClientIdAndDates(UUID userClientId, long dateOne, long dateTwo) {
         log.info("DebtsToPayServices getDebtsToPayByUserClientIdAndDates: {}, {}, {}", userClientId, dateOne, dateTwo);

@@ -110,7 +110,7 @@ public class ProductController {
             log.error("ProductController getAllActivesBySubsidiaryId Exception thrown: {}", e.getMessage());	    
 	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
-            return new ResponseEntity<Page>(response, HttpStatus.CREATED);
+        return new ResponseEntity<Page>(response, HttpStatus.CREATED);
     }
 	
 }

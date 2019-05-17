@@ -521,7 +521,7 @@ angular.module('integridadUiApp')
               
                 if (det.product.iva) {
                     impuesto.base_imponible = parseFloat(((parseFloat(det.costEach) - (parseFloat(det.costEach) * parseFloat((vm.billOffline.discountPercentage / 100)))) * parseFloat(det.quantity)).toFixed(4));
-                    impuesto.valor = parseFloat((parseFloat(impuesto.base_imponible) * 0.1200).toFixed(4));
+                    impuesto.valor = parseFloat((parseFloat(impuesto.base_imponible) * 0.12).toFixed(4));
                     impuesto.tarifa = 12.0;
                     impuesto.codigo = '2';
                     impuesto.codigo_porcentaje = '2';

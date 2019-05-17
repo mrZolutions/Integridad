@@ -30,7 +30,6 @@ public class DebtsToPayController {
     
     @RequestMapping(method = RequestMethod.GET, value="/{id}")
     public ResponseEntity getDebtsToPayById(@PathVariable("id") UUID id) {
-        log.info("DebtsToPayController getDebtsToPayById: {}", id);
 	DebtsToPay response = null;
 	try {
             response = service.getDebtsToPayById(id);
@@ -38,6 +37,7 @@ public class DebtsToPayController {
             log.error("DebtsToPayController getDebtsToPayById Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
+        log.info("DebtsToPayController getDebtsToPayById: {}", id);
         return new ResponseEntity<DebtsToPay>(response, HttpStatus.ACCEPTED);
     }
     
@@ -50,7 +50,7 @@ public class DebtsToPayController {
             log.error("DebtsToPayController getDebtsToPayByDebtsSeqAndSubId Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
-        log.info("DebtsToPayController getDebtsToPayByDebtsSeqAndSubId DONE: {}, {}", stringSeq, subId);
+        log.info("DebtsToPayController getDebtsToPayByDebtsSeqAndSubId DONE");
         return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
     }
     
@@ -82,7 +82,6 @@ public class DebtsToPayController {
     
     @RequestMapping(method = RequestMethod.GET, value="/company/{id}")
     public ResponseEntity getDebtsToPayByUserClientId(@PathVariable("id") UUID id) {
-        log.info("DebtsToPayController getDebtsToPayByUserClientId: {}", id);
         Iterable<DebtsToPay> response = null;
         try {
             response = service.getDebtsToPayByUserClientId(id);
@@ -90,12 +89,12 @@ public class DebtsToPayController {
             log.error("DebtsToPayController getDebtsToPayByUserClientId Exception thrown: {}", e.getMessage());
 	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
+        log.info("DebtsToPayController getDebtsToPayByUserClientId: {}", id);
         return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
     }
     
     @RequestMapping(method = RequestMethod.GET, value="/debts/provider/credit/{id}")
     public ResponseEntity getDebtsToPayWithSaldoByProviderId(@PathVariable("id") UUID id) {
-        log.info("DebtsToPayController getDebtsWithSaldoByProviderId: {}", id);
         Iterable<DebtsToPay> response = null;
         try {
             response = service.getDebtsToPayWithSaldoByProviderId(id);
@@ -103,6 +102,7 @@ public class DebtsToPayController {
             log.error("DebtsToPayController getDebtsWithSaldoByProviderId Exception thrown: {}", e.getMessage());
 	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
+        log.info("DebtsToPayController getDebtsWithSaldoByProviderId: {}", id);
         return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
     }
     
@@ -126,21 +126,9 @@ public class DebtsToPayController {
             log.error("DebtsToPayController deactivateDebtsToPay Exception thrown: {}", e.getMessage());
     	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
-        log.info("DebtsToPayController deactivateDebtsToPay DONE: {}", debtsToPay.getId());
+        log.info("DebtsToPayController deactivateDebtsToPay DONE");
         return new ResponseEntity<Void>(HttpStatus.ACCEPTED);
     }
-    
-    //@RequestMapping(method = RequestMethod.PUT)
-    //public ResponseEntity updateDebtsToPay(@RequestBody DebtsToPay debtsToPay) {
-    //    try {
-    //        service.updateDebtsToPay(debtsToPay);
-    //    } catch (BadRequestException e) {
-    //        log.error("DebtsToPayController updateDebtsToPay Exception thrown: {}", e.getMessage());
-    //	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-    //    }
-    //    log.info("DebtsToPayController updateDebtsToPay DONE: {}", debtsToPay.getId());
-    //    return new ResponseEntity<Void>(HttpStatus.ACCEPTED);
-    //}
     
     //Reporte de Compras
     @RequestMapping(method = RequestMethod.GET, value="/rep/purchases/{userClientId}/{dateOne}/{dateTwo}")

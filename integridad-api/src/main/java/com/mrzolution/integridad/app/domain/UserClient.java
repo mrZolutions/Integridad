@@ -70,8 +70,7 @@ public class UserClient {
         UserClient userClient = new UserClient();
         userClient.setSubsidiaries(new ArrayList<>());
         userClient.setProviders(new ArrayList<>());
-        userClient.setCuentaContables(new ArrayList<>());
-        
+        userClient.setCuentaContables(new ArrayList<>());       
         return userClient;
     }
 

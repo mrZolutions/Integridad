@@ -46,5 +46,4 @@ public class UserTypePermissionController {
 	}
 	return new ResponseEntity<Iterable>(response, HttpStatus.OK);
     }
-
 }

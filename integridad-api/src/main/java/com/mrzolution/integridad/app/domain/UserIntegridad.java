@@ -78,13 +78,10 @@ public class UserIntegridad {
         userIntegridad.setUserType(UserType.newUserTypeTest());
         userIntegridad.setSubsidiary(Subsidiary.newSubsidiaryTest());
         userIntegridad.setCashier(Cashier.newCashierTest());
-
         UserIntegridad userFatther = new UserIntegridad();
         userFatther.setUserType(UserType.newUserTypeTest());
         userFatther.setSubsidiary(Subsidiary.newSubsidiaryTest());
-
         userIntegridad.setUser(userFatther);
-
         return userIntegridad;
     }
 

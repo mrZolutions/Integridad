@@ -300,10 +300,10 @@ angular.module('integridadUiApp')
                 provider: vm.providerSelected,
                 userIntegridad: $localStorage.user,
                 subsidiary: $localStorage.user.subsidiary,
-                subTotalDoce: 0.0,
-                iva: 0.0,
-                subTotalCero: 0.0,
-                total: 0.0,
+                subTotalDoce: 0,
+                iva: 0,
+                subTotalCero: 0,
+                total: 0,
                 detailDailybookContab: []
             };
         };
@@ -320,10 +320,10 @@ angular.module('integridadUiApp')
                 userIntegridad: $localStorage.user,
                 subsidiary: $localStorage.user.subsidiary,
                 provider: vm.provider,
-                subTotalDoce: 0.0,
-                iva: 0.0,
-                subTotalCero: 0.0,
-                total: 0.0,
+                subTotalDoce: 0,
+                iva: 0,
+                subTotalCero: 0,
+                total: 0,
                 detailDailybookContab: []
             };
         };
@@ -515,7 +515,7 @@ angular.module('integridadUiApp')
                 tipo: tax.accountType,
                 nomb_contable: tax.name
             };
-            vm.subTotal = parseFloat((vm.debtsToPay.total / 1.1200).toFixed(2));
+            vm.subTotal = parseFloat((vm.debtsToPay.total / 1.12).toFixed(2));
             vm.totalTotal = parseFloat(vm.debtsToPay.total);
 
             //Diario CxP
@@ -527,7 +527,7 @@ angular.module('integridadUiApp')
                 tipo: tax.accountType,
                 name: tax.name
             };
-            vm.subTotalDoceCxP = parseFloat((vm.debtsToPay.total / 1.1200).toFixed(2));
+            vm.subTotalDoceCxP = parseFloat((vm.debtsToPay.total / 1.12).toFixed(2));
         };
 
         //Obtiene la Base Imponible para el tipo de IVA 12
@@ -1222,7 +1222,7 @@ angular.module('integridadUiApp')
             };
           
             if (vm.typeTaxes === '1') {
-                vm.subIva = parseFloat((vm.item.base_imponible * 0.1200).toFixed(2));
+                vm.subIva = parseFloat((vm.item.base_imponible * 0.12).toFixed(2));
                 vm.subTotalDoce = vm.item.base_imponible;
                 vm.subTotalCero = vm.debtsToPay.total - vm.subTotalDoce - vm.subIva;
                 vm.itemIva = {
@@ -1269,8 +1269,8 @@ angular.module('integridadUiApp')
                 vm.dailybookCxP.detailDailybookContab.push(vm.itemProviderCxP);
 
             } else if (vm.typeTaxes === '2') {
-                vm.subIva = 0.0;
-                vm.subTotalDoce = 0.0;
+                vm.subIva = 0;
+                vm.subTotalDoce = 0;
                 vm.subTotalCero = vm.debtsToPay.total;
                 vm.itemProvider = {
                     codigo_contable: vm.provContable,
@@ -1315,12 +1315,12 @@ angular.module('integridadUiApp')
             if (vm.status === 'PENDIENTE') {
                 vm.debtsToPay.saldo = vm.debtsToPay.total - vm.retentionTotal;
             } else {
-                vm.debtsToPay.saldo = 0.0;
+                vm.debtsToPay.saldo = 0;
             };
             if (vm.retentionId == null) {
-                vm.debtsToPay.retentionNumber = 0;
+                vm.debtsToPay.retentionNumber = 'SIN RETENCIÓN';
                 vm.debtsToPay.retentionDateCreated = 0;
-                vm.debtsToPay.retentionTotal = 0.0;
+                vm.debtsToPay.retentionTotal = 0;
             } else {
                 vm.debtsToPay.retentionId = vm.retentionId;
                 vm.debtsToPay.retentionNumber = vm.retentionNumber;
@@ -1342,7 +1342,7 @@ angular.module('integridadUiApp')
             });
             debtsToPayService.getDebtsToPayByBillNumberAndAuthoNumber(vm.usrCliId, vm.debtsToPay.billNumber, vm.debtsToPay.authorizationNumber).then(function(response) {
                 if (response.length === 0) {
-                    debtsToPayService.create(debtsToPay).then(function(respDebtsToPay) {
+                    debtsToPayService.createDebtsToPay(debtsToPay).then(function(respDebtsToPay) {
                         vm.debtsToPay = respDebtsToPay;
                         vm.responseDebtsToPay = respDebtsToPay;
                         $localStorage.user.cashier.debtsNumberSeq = vm.debtsToPay.debtsSeq;
@@ -1385,14 +1385,14 @@ angular.module('integridadUiApp')
             vm.dailybookCxP.clientProvName = vm.responseDebtsToPay.provider.name;
             vm.dailybookCxP.generalDetail = vm.responseDebtsToPay.provider.name + ' ' + 'Fc' + ' ' + vm.responseDebtsToPay.billNumber;
             vm.dailybookCxP.total =  vm.responseDebtsToPay.total;
-            vm.dailybookCxP.iva = parseFloat((vm.responseDebtsToPay.total * 0.1200).toFixed(2));
-            vm.dailybookCxP.subTotalDoce = parseFloat((vm.responseDebtsToPay.total / 1.1200).toFixed(2));
-            vm.dailybookCxP.subTotalCero = 0.0;
+            vm.dailybookCxP.iva = parseFloat((vm.responseDebtsToPay.total * 0.12).toFixed(2));
+            vm.dailybookCxP.subTotalDoce = parseFloat((vm.responseDebtsToPay.total / 1.12).toFixed(2));
+            vm.dailybookCxP.subTotalCero = 0;
             vm.dailybookCxP.dateRecordBook = $('#pickerDateDebtsToPay').data("DateTimePicker").date().toDate().getTime();
             if (vm.retentionId == null) {
-                vm.dailybookCxP.retentionNumber = 0;
+                vm.dailybookCxP.retentionNumber = 'SIN RETENCIÓN';
                 vm.dailybookCxP.retentionDateCreated = 0;
-                vm.dailybookCxP.retentionTotal = 0.0;
+                vm.dailybookCxP.retentionTotal = 0;
             } else {
                 vm.dailybookCxP.retentionId = vm.retentionId;
                 vm.dailybookCxP.retentionNumber = vm.retentionNumber;
@@ -1503,34 +1503,44 @@ angular.module('integridadUiApp')
         vm.pagoMultiAbonoDebts = function() {
             vm.loading = true;
             vm.debtsBillsNumberPayed = vm.getDebtsBillNumberPayed();
-            _.each(vm.itemsMultiplePayments, function(detail) { 
-                vm.paymentDebts = {
-                    creditsDebts: detail.credit_debt
+            paymentDebtsService.getPaymentsDebtsByUserClientIdWithBankAndNroDocument(vm.usrCliId, vm.bankName, vm.noDocument).then(function(response) {
+                if (response.length === 0) {
+                    _.each(vm.itemsMultiplePayments, function(detail) { 
+                        vm.paymentDebts = {
+                            creditsDebts: detail.credit_debt
+                        };
+                        vm.paymentDebts.typePayment = vm.typePayment;
+                        if (vm.paymentDebts.typePayment == 'PAC') {
+                            vm.valorReten = 0;
+                        };
+                        vm.paymentDebts.datePayment = $('#pickerDateOfMultiPayment').data("DateTimePicker").date().toDate().getTime();
+                        vm.paymentDebts.documentNumber = detail.bill_number;
+                        vm.paymentDebts.modePayment = vm.modePayment;
+                        vm.paymentDebts.detail = vm.details;
+                        vm.paymentDebts.valorAbono = detail.debt_abono;
+                        vm.paymentDebts.noAccount = vm.noAccount;
+                        vm.paymentDebts.noDocument = vm.noDocument;
+                        vm.paymentDebts.ctaCtableBanco = vm.ctaCtableBankCode;
+                        vm.paymentDebts.banco = vm.bankName;
+                        paymentDebtsService.createPaymentsDebts(vm.paymentDebts).then(function(response) {
+                            vm.paymentDebtsCreated = response;
+                            vm.success = 'Abono realizado con exito';
+                            vm.loading = false;
+                        }).catch(function(error) {
+                            vm.loading = false;
+                            vm.error = error.data;
+                        });
+                    });
+                    _asientoComprobanteUnicoEgreso();
+                    _activate();
+                } else {
+                    vm.error = 'El Nro. de Documento (Cheque, Transferencia y/o Depósito) Ya Existe y no puede repetirse';
                 };
-                vm.paymentDebts.typePayment = vm.typePayment;
-                if (vm.paymentDebts.typePayment == 'PAC') {
-                    vm.valorReten = 0.00;
-                };
-                vm.paymentDebts.datePayment = $('#pickerDateOfMultiPayment').data("DateTimePicker").date().toDate().getTime();
-                vm.paymentDebts.documentNumber = detail.bill_number;
-                vm.paymentDebts.modePayment = vm.modePayment;
-                vm.paymentDebts.detail = vm.details;
-                vm.paymentDebts.valorAbono = detail.debt_abono;
-                vm.paymentDebts.noAccount = vm.noAccount;
-                vm.paymentDebts.noDocument = vm.noDocument;
-                vm.paymentDebts.ctaCtableBanco = vm.ctaCtableBankCode;
-                vm.paymentDebts.banco = vm.bankName;
-                paymentDebtsService.create(vm.paymentDebts).then(function(response) {
-                    vm.paymentDebtsCreated = response;
-                    vm.success = 'Abono realizado con exito';
-                    vm.loading = false;
-                }).catch(function(error) {
-                    vm.loading = false;
-                    vm.error = error.data;
-                });
+                vm.loading = false;
+            }).catch(function(error) {
+                vm.loading = false;
+                vm.error = error.data;
             });
-            _asientoComprobanteUnicoEgreso();
-            _activate();
         };
 
         function _asientoComprobanteUnicoEgreso() {
@@ -1584,9 +1594,9 @@ angular.module('integridadUiApp')
             vm.dailybookCe.clientProvName = vm.providerName;
             vm.dailybookCe.generalDetail = vm.generalDetailCe_1;
             vm.dailybookCe.total = vm.valorDocumento;
-            vm.dailybookCe.iva = parseFloat((vm.valorDocumento * 0.1200).toFixed(2));
-            vm.dailybookCe.subTotalDoce = parseFloat((vm.valorDocumento / 1.1200).toFixed(2));
-            vm.dailybookCe.subTotalCero = 0.0;
+            vm.dailybookCe.iva = parseFloat((vm.valorDocumento * 0.12).toFixed(2));
+            vm.dailybookCe.subTotalDoce = parseFloat((vm.valorDocumento / 1.12).toFixed(2));
+            vm.dailybookCe.subTotalCero = 0;
             vm.dailybookCe.dateRecordBook = $('#pickerDateOfMultiPayment').data("DateTimePicker").date().toDate().getTime();
             
             contableService.createDailybookCe(vm.dailybookCe).then(function(response) {
@@ -1617,11 +1627,11 @@ angular.module('integridadUiApp')
         vm.pAbonoDebts = function(paymentDebts) {
             vm.loading = true;
             if (vm.paymentDebts.typePayment == 'PAC') {
-                vm.valorReten = 0.00;
+                vm.valorReten = 0;
             } else if (vm.paymentDebts.typePayment == 'RET') {
-                vm.valorAbono = 0.00;
+                vm.valorAbono = 0;
             } else if (vm.paymentDebts.typePayment == 'CEG') {
-                vm.valorReten = 0.00;
+                vm.valorReten = 0;
             };
             vm.paymentDebts.datePayment = $('#pickerDateOfPayment').data("DateTimePicker").date().toDate().getTime();
             vm.paymentDebts.creditId = vm.creditsDebtsId;
@@ -1633,11 +1643,21 @@ angular.module('integridadUiApp')
                 vm.paymentDebts.ctaCtableBanco = '--';
                 vm.paymentDebts.banco = '--';
             };
-            paymentDebtsService.create(paymentDebts).then(function(response) {
-                vm.paymentDebtsCreated = response;
-                vm.success = 'Abono realizado con exito';
-                if (vm.paymentDebtsCreated.modePayment === 'CHQ' || vm.paymentDebtsCreated.modePayment === 'TRF' || vm.paymentDebtsCreated.modePayment === 'DEP') {
-                    _asientoComprobanteEgreso();
+            paymentDebtsService.getPaymentsDebtsByUserClientIdWithBankAndNroDocument(vm.usrCliId, vm.paymentDebts.banco, vm.paymentDebts.noDocument).then(function(response) {
+                if (response.length === 0) {
+                    paymentDebtsService.createPaymentsDebts(paymentDebts).then(function(response) {
+                        vm.paymentDebtsCreated = response;
+                        vm.success = 'Abono realizado con exito';
+                        if (vm.paymentDebtsCreated.modePayment === 'CHQ' || vm.paymentDebtsCreated.modePayment === 'TRF' || vm.paymentDebtsCreated.modePayment === 'DEP') {
+                            _asientoComprobanteEgreso();
+                        };
+                        vm.loading = false;
+                    }).catch(function(error) {
+                        vm.loading = false;
+                        vm.error = error.data;
+                    });
+                } else {
+                    vm.error = 'El Nro. de Documento (Cheque, Transferencia y/o Depósito) Ya Existe y no puede repetirse';
                 };
                 vm.loading = false;
             }).catch(function(error) {
@@ -1704,9 +1724,9 @@ angular.module('integridadUiApp')
             vm.dailybookCe.clientProvName = vm.providerName;
             vm.dailybookCe.generalDetail = vm.generalDetailCe_1;
             vm.dailybookCe.total = vm.paymentDebtsCreated.valorAbono;
-            vm.dailybookCe.iva = parseFloat((vm.paymentDebtsCreated.valorAbono * 0.1200).toFixed(2));
-            vm.dailybookCe.subTotalDoce = parseFloat((vm.paymentDebtsCreated.valorAbono / 1.1200).toFixed(2));
-            vm.dailybookCe.subTotalCero = 0.0;
+            vm.dailybookCe.iva = parseFloat((vm.paymentDebtsCreated.valorAbono * 0.12).toFixed(2));
+            vm.dailybookCe.subTotalDoce = parseFloat((vm.paymentDebtsCreated.valorAbono / 1.12).toFixed(2));
+            vm.dailybookCe.subTotalCero = 0;
             vm.dailybookCe.dateRecordBook = $('#pickerDateOfPayment').data("DateTimePicker").date().toDate().getTime();
             
             contableService.createDailybookCe(vm.dailybookCe).then(function(response) {
@@ -1720,7 +1740,7 @@ angular.module('integridadUiApp')
         //Funciones que permiten obtener los datos de una Cuenta por Pagar para su impresión
         vm.debtsToPayToPrint = function(debts) {
             vm.loading = true;
-            debtsToPayService.getById(debts.id).then(function(response) {
+            debtsToPayService.getDebtsToPayById(debts.id).then(function(response) {
                 vm.allDebtsToPayList = undefined;
                 vm.providerDebtsList = undefined;
                 vm.debtsToPay = response;
@@ -1732,6 +1752,22 @@ angular.module('integridadUiApp')
                 vm.billNumber = response.billNumber;
                 vm.seqNumber = response.debtsSeq;
                 $('#pickerDebtsToPayDate').data("DateTimePicker").date(dateToShow);
+                vm.loading = false;
+            }).catch(function(error) {
+                vm.loading = false;
+                vm.error = error.data;
+            });
+        };
+
+        vm.debtsToPayDeactivate = function() {
+            vm.loading = true;
+            var index = vm.providerDebtsList.indexOf(vm.deactivateDebtsToPay);
+            debtsToPayService.deactivateDebtsToPay(vm.deactivateDebtsToPay).then(function(response) {
+                var index = vm.providerDebtsList.indexOf(vm.deactivateDebtsToPay);
+                if (index > -1) {
+                    vm.providerDebtsList.splice(index, 1);
+                };
+                vm.deactivateDebtsToPay = undefined
                 vm.loading = false;
             }).catch(function(error) {
                 vm.loading = false;

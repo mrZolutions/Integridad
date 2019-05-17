@@ -199,7 +199,7 @@ angular.module('integridadUiApp')
   };
                                       
   vm.getIva = function(cashPercen, averageCost) {
-    const IVA = 1.1200;
+    const IVA = 1.12;
     var aC = 1 + ((cashPercen) / 100);
     var cost = aC * averageCost * IVA;
     return (cost).toFixed(4);

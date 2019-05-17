@@ -44,7 +44,6 @@ public class DetailRetentionClient implements Child {
     public static DetailRetentionClient newDetailRetentionClientTest() {
         DetailRetentionClient detail = new DetailRetentionClient();
         detail.setRetentionClient(RetentionClient.newRetentionClientTest());
-
         return detail;
     }
 }

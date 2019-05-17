@@ -41,7 +41,6 @@ public class GroupLine {
     	GroupLine groupLine = new GroupLine();
     	groupLine.setLine(Line.newLineTest());
     	groupLine.setSubGroups(new ArrayList<>());
-
         return groupLine;
     }
 }

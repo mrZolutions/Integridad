@@ -111,6 +111,7 @@ public class DailybookCxPServices {
         DailybookCxP dailybookCxPToDeactivate = dailybookCxPRepository.findOne(dailybookCxP.getId());
         dailybookCxPToDeactivate.setListsNull();
         dailybookCxPToDeactivate.setActive(false);
+        dailybookCxPToDeactivate.setGeneralDetail("DIARIO DE CUENTAS POR PAGAR ANULADO");
         dailybookCxPRepository.save(dailybookCxPToDeactivate);
         log.info("DailybookCxPServices deactivateDailybookCxP DONE id: {}", dailybookCxPToDeactivate.getId());
         return dailybookCxPToDeactivate;

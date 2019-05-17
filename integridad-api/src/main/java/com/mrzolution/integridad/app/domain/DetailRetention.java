@@ -40,7 +40,6 @@ public class DetailRetention implements Child {
     public static DetailRetention newDetailRetentionTest() {
         DetailRetention detail = new DetailRetention();
         detail.setRetention(Retention.newRetentionTest());
-
         return detail;
     }
 

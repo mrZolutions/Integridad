@@ -36,7 +36,6 @@ public class UserTypePermissions {
     @Transient
     public static UserTypePermissions newUserTypePermissionsTest(){
     	UserTypePermissions userTypepermissions = new UserTypePermissions();
-
         return userTypepermissions;
     }
 }

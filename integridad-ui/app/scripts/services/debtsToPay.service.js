@@ -1,13 +1,13 @@
 angular
     .module('app.services')
     .service('debtsToPayService', function(securityService) {
-        this.create = function(debtsToPay) {
+        this.createDebtsToPay = function(debtsToPay) {
             return securityService.post('/debts', debtsToPay).then(function successCallback(response) {
                 return response.data;
             });
         };
 
-        this.update = function(debtsToPay) {
+        this.updateDebtsToPay = function(debtsToPay) {
             return securityService.put('/debts', debtsToPay).then(function successCallback(response) {
                 return response.data;
             });
@@ -25,7 +25,7 @@ angular
             });
         };
 
-        this.getById = function(id) {
+        this.getDebtsToPayById = function(id) {
             return securityService.get('/debts/' + id).then(function successCallback(response) {
                 return response.data;
             });
@@ -37,7 +37,7 @@ angular
             });
         };
 
-        this.cancelDebtsToPay = function(debtsToPay) {
+        this.deactivateDebtsToPay = function(debtsToPay) {
             return securityService.put('/debts', debtsToPay).then(function successCallback(response) {
                 return response.data;
             });

@@ -40,6 +40,10 @@ public class DetailDailybookContab implements Child {
     private DailybookCe dailybookCe;
     
     @ManyToOne
+    @JoinColumn(name = "dailybookCi_id")
+    private DailybookCi dailybookCi;
+    
+    @ManyToOne
     @JoinColumn(name = "dailybookCxP_id")
     private DailybookCxP dailybookCxP;
     
@@ -54,6 +58,10 @@ public class DetailDailybookContab implements Child {
         if (dailybookCe != null) {
             dailybookCe.setListsNull();
             dailybookCe.setFatherListToNull();
+        }
+        if (dailybookCi != null) {
+            dailybookCi.setListsNull();
+            dailybookCi.setFatherListToNull();
         }
         if (dailybookCxP != null) {
             dailybookCxP.setListsNull();

@@ -44,7 +44,7 @@ public class DailybookCeServices {
     
     //Selecciona todos los COMPROBANTES DE EGRESO por UserClientId
     public Iterable<DailybookCe> getDailybookCeByUserClientId(UUID userClientId) {
-        log.info("DailybookCeServices getDailybookCgByUserClientId: {}", userClientId);
+        log.info("DailybookCeServices getDailybookCeByUserClientId: {}", userClientId);
         Iterable<DailybookCe> dailys = dailybookCeRepository.findDailybookCeByUserClientId(userClientId);
         dailys.forEach(daily -> {
             daily.setListsNull();
@@ -55,7 +55,7 @@ public class DailybookCeServices {
     
     //Selecciona todos los COMPROBANTES DE EGRESO por UserClientId Sin Id de Provveedor
     public Iterable<DailybookCe> getDailybookCeByUserClientIdWithNoProvider(UUID userClientId) {
-        log.info("DailybookCeServices getDailybookCgByUserClientIdWithNoProvider: {}", userClientId);
+        log.info("DailybookCeServices getDailybookCeByUserClientIdWithNoProvider: {}", userClientId);
         Iterable<DailybookCe> dailys = dailybookCeRepository.findDailybookCeByUserClientIdWithNoProvider(userClientId);
         dailys.forEach(daily -> {
             daily.setListsNull();
@@ -123,6 +123,7 @@ public class DailybookCeServices {
         DailybookCe dailybookCeToDeactivate = dailybookCeRepository.findOne(dailybookCe.getId());
         dailybookCeToDeactivate.setListsNull();
         dailybookCeToDeactivate.setActive(false);
+        dailybookCeToDeactivate.setGeneralDetail("COMPROBANTE DE EGRESO ANULADO");
         dailybookCeRepository.save(dailybookCeToDeactivate);
         log.info("DailybookCeServices deactivateDailybookCe DONE id: {}", dailybookCeToDeactivate.getId());
         return dailybookCeToDeactivate;

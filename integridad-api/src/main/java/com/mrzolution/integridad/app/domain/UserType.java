@@ -34,7 +34,6 @@ public class UserType {
     public static UserType newUserTypeTest(){
     	UserType userType = new UserType();
     	userType.setUsers(new ArrayList<>());
-
         return userType;
     }
 }

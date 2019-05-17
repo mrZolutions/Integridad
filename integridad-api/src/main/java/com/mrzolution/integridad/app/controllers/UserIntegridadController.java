@@ -21,99 +21,98 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @RequestMapping(value = "/integridad/v1/user")
 public class UserIntegridadController {
-	
-	@Autowired
-	UserIntegridadServices service;
+    @Autowired
+    UserIntegridadServices service;
 
-	@RequestMapping(method = RequestMethod.POST)
+    @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity create(@RequestBody UserIntegridad userIntegridad){
-		log.info("UserIntegridadController create: {}", userIntegridad);
-		UserIntegridad response = null;
-		try {
-			response = service.create(userIntegridad);
-		}catch(BadRequestException e) {
-			log.error("UserIntegridadController create Exception thrown: {}", e.getMessage());	    
-	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-	    }
-		return new ResponseEntity<UserIntegridad>(response, HttpStatus.CREATED);
+	log.info("UserIntegridadController create: {}", userIntegridad);
+	UserIntegridad response = null;
+	try {
+            response = service.create(userIntegridad);
+	} catch (BadRequestException e) {
+            log.error("UserIntegridadController create Exception thrown: {}", e.getMessage());	    
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
+	return new ResponseEntity<UserIntegridad>(response, HttpStatus.CREATED);
+    }
 	
-	@RequestMapping(method = RequestMethod.PUT)
+    @RequestMapping(method = RequestMethod.PUT)
     public ResponseEntity update(@RequestBody UserIntegridad userIntegridad){
-		log.info("UserIntegridadController update: {}", userIntegridad.getId());
-		UserIntegridad response = null;
-		try {
-			response = service.update(userIntegridad);
-		}catch(BadRequestException e) {
-			log.error("UserIntegridadController update Exception thrown: {}", e.getMessage());	    
-	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-	    }
-		return new ResponseEntity<UserIntegridad>(response, HttpStatus.CREATED);
-	}
+	log.info("UserIntegridadController update: {}", userIntegridad.getId());
+	UserIntegridad response = null;
+	try {
+            response = service.update(userIntegridad);
+	} catch (BadRequestException e) {
+            log.error("UserIntegridadController update Exception thrown: {}", e.getMessage());	    
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+	return new ResponseEntity<UserIntegridad>(response, HttpStatus.CREATED);
+    }
 	
-	@RequestMapping(method = RequestMethod.POST, value="/auth")
+    @RequestMapping(method = RequestMethod.POST, value="/auth")
     public ResponseEntity authenticate(@RequestBody UserIntegridad userIntegridad){
-		log.info("UserIntegridadController authenticate: {}", userIntegridad);
-		UserIntegridad response = null;
-		try {
-			response = service.authenticate(userIntegridad);
-		}catch(BadRequestException e) {
-			log.info("UserIntegridadController authenticate Exception thrown: {}", e.getMessage());	    
-	        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
-	    }
-		return new ResponseEntity<UserIntegridad>(response, HttpStatus.OK);
-	}
+	log.info("UserIntegridadController authenticate: {}", userIntegridad);
+	UserIntegridad response = null;
+	try {
+            response = service.authenticate(userIntegridad);
+	} catch (BadRequestException e) {
+            log.info("UserIntegridadController authenticate Exception thrown: {}", e.getMessage());	    
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+        }
+	return new ResponseEntity<UserIntegridad>(response, HttpStatus.OK);
+    }
 	
-	@RequestMapping(method = RequestMethod.PUT, value="/{id}/{validation}")
+    @RequestMapping(method = RequestMethod.PUT, value="/{id}/{validation}")
     public ResponseEntity activate(@PathVariable("id") UUID id, @PathVariable("validation") String validation){
-		log.info("UserIntegridadController activate: {}", id);
-		UserIntegridad response = null;
-		try {
-			response = service.activate(id, validation);
-		}catch(BadRequestException e) {
-			log.info("UserIntegridadController activate Exception thrown: {}", e.getMessage());	    
-	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-	    }
-		return new ResponseEntity<UserIntegridad>(response, HttpStatus.OK);
-	}
+	log.info("UserIntegridadController activate: {}", id);
+	UserIntegridad response = null;
+	try {
+            response = service.activate(id, validation);
+	} catch (BadRequestException e) {
+            log.info("UserIntegridadController activate Exception thrown: {}", e.getMessage());	    
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+	return new ResponseEntity<UserIntegridad>(response, HttpStatus.OK);
+    }
 	
-	@RequestMapping(method = RequestMethod.POST, value="/recover")
+    @RequestMapping(method = RequestMethod.POST, value="/recover")
     public ResponseEntity recoverPass(@RequestBody UserIntegridad userIntegridad){
-		String email = userIntegridad.getEmail();
-		log.info("UserIntegridadController recoverPass: {}", email);
-		UserIntegridad response = null;
-		try {
-			response = service.recoverPassword(email);
-		}catch(BadRequestException e) {
-			log.info("UserIntegridadController recoverPass Exception thrown: {}", e.getMessage());	    
-	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-	    }
-		return new ResponseEntity<UserIntegridad>(response, HttpStatus.OK);
-	}
+	String email = userIntegridad.getEmail();
+	log.info("UserIntegridadController recoverPass: {}", email);
+	UserIntegridad response = null;
+	try {
+            response = service.recoverPassword(email);
+	} catch (BadRequestException e) {
+            log.info("UserIntegridadController recoverPass Exception thrown: {}", e.getMessage());	    
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+	return new ResponseEntity<UserIntegridad>(response, HttpStatus.OK);
+    }
 	
-	@RequestMapping(method = RequestMethod.GET, value="/lazy")
+    @RequestMapping(method = RequestMethod.GET, value="/lazy")
     public ResponseEntity getAllActivesLazy(){
-		log.info("UserIntegridadController getAllActivesLazy");
-		Iterable<UserIntegridad> response = null;
-		try {
-			response = service.getAllActivesLazy();
-		}catch(BadRequestException e) {
-			log.info("UserIntegridadController getAllActivesLazy Exception thrown: {}", e.getMessage());
-	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-	    }
-		return new ResponseEntity<Iterable>(response, HttpStatus.OK);
-	}
+        log.info("UserIntegridadController getAllActivesLazy");
+	Iterable<UserIntegridad> response = null;
+	try {
+            response = service.getAllActivesLazy();
+	} catch (BadRequestException e) {
+            log.info("UserIntegridadController getAllActivesLazy Exception thrown: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+	return new ResponseEntity<Iterable>(response, HttpStatus.OK);
+    }
 
-	@RequestMapping(method = RequestMethod.GET, value="/lazy/bosses/{id}/{code}")
-	public ResponseEntity getAllActivesBosesLazy(@PathVariable("id") UUID idSubsidiary, @PathVariable("code") String code){
-		log.info("UserIntegridadController getAllActivesBosesLazy");
-		Iterable<UserIntegridad> response = null;
-		try {
-			response = service.getByCodeTypeAndSubsidiaryIdActivesLazy(code, idSubsidiary);
-		}catch(BadRequestException e) {
-			log.info("UserIntegridadController getAllActivesBosesLazy Exception thrown: {}", e.getMessage());
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-		}
-		return new ResponseEntity<Iterable>(response, HttpStatus.OK);
+    @RequestMapping(method = RequestMethod.GET, value="/lazy/bosses/{id}/{code}")
+    public ResponseEntity getAllActivesBosesLazy(@PathVariable("id") UUID idSubsidiary, @PathVariable("code") String code){
+	log.info("UserIntegridadController getAllActivesBosesLazy");
+	Iterable<UserIntegridad> response = null;
+	try {
+            response = service.getByCodeTypeAndSubsidiaryIdActivesLazy(code, idSubsidiary);
+	} catch (BadRequestException e) {
+            log.info("UserIntegridadController getAllActivesBosesLazy Exception thrown: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
+	return new ResponseEntity<Iterable>(response, HttpStatus.OK);
+    }
 }

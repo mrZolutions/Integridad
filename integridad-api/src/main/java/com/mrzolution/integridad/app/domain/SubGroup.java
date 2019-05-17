@@ -41,7 +41,6 @@ public class SubGroup {
     	SubGroup subGroup = new SubGroup();
     	subGroup.setGroupLine(GroupLine.newGroupLineTest());
     	subGroup.setProducts(new ArrayList<>());
-
         return subGroup;
     }
 }

@@ -32,7 +32,7 @@
         </div>
     </div>
 
-    <!--SECCIÓN DE SELECCIÓN DE TIPO DE DIARIO-->
+    <!--SELECCIÓN DE TIPO DE DIARIO-->
     <div class="row" ng-show="vm.selectedTypeBook === undefined">
         <div class="form-group col-md-4">
             <label>Seleccione tipo de Diario:</label><br/>
@@ -44,10 +44,10 @@
             <br/>
             <button type="button" title="Continuar" class="btn btn-primary btn-sm" ng-click="vm.loadTypeDailybook()">
                     <span class = "glyphicon glyphicon-ok" aria-hidden = "true"></span>
-             </button>
+            </button>
         </div>
     </div>
-    <!--FIN SECCIÓN DE SELECCIÓN DE TIPO DE DIARIO-->
+    <!--FIN SELECCIÓN DE TIPO DE DIARIO-->
     
     <!--DIARIO DE CONTABILIDAD GENERAL-->
     <div class="table-responsive" ng-show="vm.selectedTypeBook === '1' && vm.templateDailybookCg === undefinded && vm.dailybookCgCreated === undefinded && vm.dailybookCgList !== undefined">
@@ -89,11 +89,11 @@
                                         ng-click = "vm.dailybookCgSelected(dailyCg)">
                                         <span class = "glyphicon glyphicon-eye-open" aria-hidden = "true"></span>
                                 </button>
-                                <!--<button type = "button" title = "Anular Diario de Contabilidad General" 
+                                <button type = "button" title = "Anular Diario de Contabilidad General" ng-show = "dailyCg.active !== false"
                                         class = "btn btn-warning btn-sm" ng-click = "vm.deactivateDailyBookCg = dailyCg"
                                         data-toggle = "modal" data-target = "#modalAnularDailyBookCg">
                                         <span class = "glyphicon glyphicon-warning-sign" aria-hidden = "true"></span>
-                                </button>-->
+                                </button>
                             </td>
                         </tr>
                     </tbody>
@@ -104,6 +104,34 @@
                         ng-click="vm.cancel()">
                         <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
                 </button>
+            </div>
+        </div>
+    </div>
+
+    <!--ANULAR DIARIO DE CONTABILIDAD GENERAL-->
+    <div id="modalAnularDailyBookCg" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h3 class="modal-title">¡¡¡Advertencia!!!</h3>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12" >
+                            <p>¿Est&aacute; seguro que desea Anular el Diario de Contabilidad General <b>No. {{vm.deactivatedailybookCg.dailyCgStringSeq}}</b>?</p>
+                            <p>Recuerde que el Diario de Contabilidad General <b>NO puede ser Recuperado</b></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" title = "Salir" class="btn btn-primary btn-sm" data-dismiss="modal">
+                            <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
+                    </button>
+                    <button type="button" title="Anular Diario de Contabilidad General" class="btn btn-danger btn-sm" ng-click="vm.dailybookCgDeactivate()" data-dismiss="modal">
+                            <span class = "glyphicon glyphicon-screenshot" aria-hidden = "true"></span>
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -239,7 +267,7 @@
         </div>
     </div>
 
-    <!--SECCIÓN DE IMPRESIÓN DE DIARIO DE CONTABILIDAD GENERAL-->
+    <!--IMPRESIÓN DE DIARIO DE CONTABILIDAD GENERAL-->
     <div class="table-responsive" ng-show="vm.dailybookCgCreated" id="printArea" print-section>
         <div class="panel panel-primary">
             <div class="panel-body">
@@ -345,7 +373,7 @@
                 <div class="row" print-remove>
                     <div class="form-group col-md-12">
                         <button print-btn type="button" title = "Imprimir Comprobante de Diario" class="btn btn-primary btn-sm"
-                                ng-click="vm.cancelDailybookCgCreated()">
+                                ng-show="vm.activeCg === true" ng-click="vm.cancelDailybookCgCreated()">
                                 <span class = "glyphicon glyphicon-print" aria-hidden = "true"></span>
                         </button>
                         <button type="button" title = "Salir" class="btn btn-primary btn-sm"
@@ -358,7 +386,7 @@
         </div>
     </div>
 
-    <!--SECCIÓN DE SELECCION DE LAS CUENTAS CONTABLES-->
+    <!--SELECCION DE LAS CUENTAS CONTABLES-->
     <div id="modalSelectedCuentasCg" class="modal fade" role="dialog">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -400,7 +428,6 @@
             </div>
         </div>
     </div>
-
     <div id="modalEditCuentasCg" class="modal fade" role="dialog">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -442,11 +469,10 @@
             </div>
         </div>
     </div>
-    <!--FINAL SELECCION Y EDICIÓN DE LAS CUENTAS CONTABLES-->
     <!--FIN DE DIARIO DE CONTABILIDAD GENERAL-->
 
     <!--INICIO DE DIARIO DE COMPROBANTE DE EGRESO-->
-    <!--SECCIÓN DE CARGA DE PROVEEDORES PARA DIARIO DE COMPROBANTE DE EGRESO-->
+    <!--CARGA DE PROVEEDORES PARA DIARIO DE COMPROBANTE DE EGRESO-->
     <div class="table-responsive" ng-show="vm.selectedTypeBook === '2' && vm.providerCeSelected === undefined && vm.dailybookCeCreated === undefinded && vm.dailybookCeList === undefined && vm.dailybookCeManualCreatedList === undefined && vm.dailybookCeManual === false">
         <div class="panel panel-primary">
             <div class="panel-heading">
@@ -505,7 +531,6 @@
             </div>
         </div>
     </div>
-
     <div class="table-responsive" ng-show="vm.dailybookCeList !== undefined">
         <div class="panel panel-primary">
             <div class="panel-heading">
@@ -540,11 +565,11 @@
                                         ng-click = "vm.dailybookCeSelected(dailyCe)">
                                         <span class = "glyphicon glyphicon-eye-open" aria-hidden = "true"></span>
                                 </button>
-                                <!--<button type = "button" title = "Anular Comprobante de Egreso" 
-                                        class = "btn btn-warning btn-sm" ng-click = "vm.deactivatedailybookCxP = dailyCe"
-                                        data-toggle = "modal" data-target = "#modalAnularDailyBookCg">
+                                <button type = "button" title = "Anular Comprobante de Egreso" ng-show = "dailyCe.active !== false"
+                                        class = "btn btn-warning btn-sm" ng-click = "vm.deactivatedailybookCe = dailyCe"
+                                        data-toggle = "modal" data-target = "#modalAnularDailyBookCe">
                                         <span class = "glyphicon glyphicon-warning-sign" aria-hidden = "true"></span>
-                                </button>-->
+                                </button>
                             </td>
                         </tr>
                     </tbody>
@@ -555,6 +580,34 @@
                         ng-click = "vm.dailybookCeList = undefined">
                         <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
                 </button>
+            </div>
+        </div>
+    </div>
+
+    <!--ANULAR COMPROBANTE DE EGRESO-->
+    <div id="modalAnularDailyBookCe" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h3 class="modal-title">¡¡¡Advertencia!!!</h3>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12" >
+                            <p>¿Est&aacute; seguro que desea Anular el Comprobante de Egreso <b>No. {{vm.deactivatedailybookCe.dailyCeStringSeq}}</b>?</p>
+                            <p>Recuerde que el Comprobante de Egreso Anulado <b>NO puede ser Recuperado</b></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" title = "Salir" class="btn btn-primary btn-sm" data-dismiss="modal">
+                            <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
+                    </button>
+                    <button type="button" title="Anular Comprobante de Egreso" class="btn btn-danger btn-sm" ng-click="vm.dailybookCeDeactivate()" data-dismiss="modal">
+                            <span class = "glyphicon glyphicon-screenshot" aria-hidden = "true"></span>
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -580,7 +633,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr ng-show="vm.dailybookCeList == 0">
+                        <tr ng-show="vm.dailybookCeManualCreatedList == 0">
                             <td colspan="4">
                                 No hay Comprobantes de Egreso ingresados...
                             </td>
@@ -594,11 +647,11 @@
                                         ng-click = "vm.dailybookCeSelected(dailyCe)">
                                         <span class = "glyphicon glyphicon-eye-open" aria-hidden = "true"></span>
                                 </button>
-                                <!--<button type = "button" title = "Anular Comprobante de Egreso" 
-                                        class = "btn btn-warning btn-sm" ng-click = "vm.deactivatedailybookCxP = dailyCe"
-                                        data-toggle = "modal" data-target = "#modalAnularDailyBookCg">
+                                <button type = "button" title = "Anular Comprobante de Egreso" 
+                                        class = "btn btn-warning btn-sm" ng-click = "vm.deactivatedailybookCe = dailyCe"
+                                        data-toggle = "modal" data-target = "#modalAnularDailyBookCe">
                                         <span class = "glyphicon glyphicon-warning-sign" aria-hidden = "true"></span>
-                                </button>-->
+                                </button>
                             </td>
                         </tr>
                     </tbody>
@@ -844,7 +897,7 @@
         </div>
     </div>
 
-    <!--SECCIÓN DE IMPRESIÓN DE COMPROBANTES DE EGRESO-->
+    <!--IMPRESIÓN DE COMPROBANTES DE EGRESO-->
     <div class="table-responsive" ng-show="vm.dailybookCeCreated" id="printArea" print-section>
         <div class="panel panel-primary">
             <div class="panel-body">
@@ -996,7 +1049,7 @@
                 <div class="row" print-remove>
                     <div class="form-group col-md-12">
                         <button print-btn type="button" title = "Imprimir Comprobante de Diario" class="btn btn-primary btn-sm"
-                                ng-click="vm.cancelDailybookCxPCreated()">
+                                ng-show="vm.activeCe === true" ng-click="vm.cancelDailybookCxPCreated()">
                                 <span class = "glyphicon glyphicon-print" aria-hidden = "true"></span>
                         </button>
                         <button type="button" title = "Salir" class="btn btn-primary btn-sm"
@@ -1009,7 +1062,7 @@
         </div>
     </div>
 
-    <!--SECCIÓN DE BUSQUEDA DE DEBTS TO PAY POR PROVEEDOR-->
+    <!--BUSQUEDA DE DEBTS TO PAY POR PROVEEDOR-->
     <div id="modalShowDebtsToPayCe" class="modal fade" role="dialog">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -1055,7 +1108,7 @@
         </div>
     </div>
 
-    <!--SECCIÓN DE SELECCION DE LAS CUENTAS CONTABLES PARA COMPROBANTE DE EGRESO-->
+    <!--SELECCION DE LAS CUENTAS CONTABLES PARA COMPROBANTE DE EGRESO-->
     <div id="modalSelectedCuentasCe" class="modal fade" role="dialog">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -1138,11 +1191,72 @@
             </div>
         </div>
     </div>
-    <!--FINAL SELECCION Y EDICIÓN DE LAS CUENTAS CONTABLES PARA COMPROBANTE DE EGRESO-->
-    <!--FIN DE COMPROBANTE DE EGRESO-->
+    <!--FIN DE DIARIO COMPROBANTE DE EGRESO-->
+
+    <!--DIARIO DE COMPROBANTE DE INGRESO-->
+    <!--CARGA DE PROVEEDORES PARA DIARIO DE COMPROBANTE DE INGRESO-->
+    <div class="table-responsive" ng-show="vm.selectedTypeBook === '2' && vm.providerCiSelected === undefined && vm.dailybookCiCreated === undefinded && vm.dailybookCiList === undefined && vm.dailybookCiManualCreatedList === undefined && vm.dailybookCiManual === false">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <b>DIARIO DE COMPROBANTE DE INGRESO</b>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="form-group col-md-10">
+                        <input ng-model="searchText" class="form-control" placeholder="Buscar Proveedores">
+                    </div>
+                    <div class="form-group col-md-2">
+                        <button type = "button" title = "Comprobante de Ingreso Manual" class = "btn btn-success btn-sm" ng-click = "vm.manualDailybookCi()">
+                                <span class = "glyphicon glyphicon-book" aria-hidden = "true"></span>
+                        </button>
+                        <button type = "button" title = "Consultar Comprobante de Ingreso Manual" class = "btn btn-success btn-sm" ng-click = "vm.consultManualDailybookCi()">
+                                <span class = "glyphicon glyphicon-search" aria-hidden = "true"></span>
+                        </button>
+                    </div>
+                </div>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>C&oacute;digo</th>
+                            <th>Nombre</th>
+                            <th>No. Identidad</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-show="vm.providerCiList == 0">
+                            <td colspan="4">
+                                No hay proveedores ingresados
+                            </td>
+                        </tr>
+                        <tr ng-repeat="provider in vm.providerCiList | orderBy:'name' | filter:searchText">
+                            <td>{{provider.codeIntegridad}}</td>
+                            <td>{{provider.name}}</td>
+                            <td>{{provider.rucType}} - {{provider.ruc}}</td>
+                            <td>
+                                <button type = "button" title = "Nuevo Comprobante de Ingreso" class = "btn btn-primary btn-sm" ng-click = "vm.providerCeSelect(provider)">
+                                        <span class = "glyphicon glyphicon-book" aria-hidden = "true"></span>
+                                </button>
+                                <button type = "button" title = "Consultar Comprobante de Ingreso" class = "btn btn-primary btn-sm" ng-click = "vm.consultDailybookCe(provider)">
+                                        <span class = "glyphicon glyphicon-search" aria-hidden = "true"></span>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="panel-footer">
+                <button type="button" title="Volver" class="btn btn-primary btn-sm"
+                        ng-click="vm.cancel()">
+                        <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+    <!--FIN DIARIO DE COMPROBANTE DE INGRESO-->
 
     <!--INICIO DE DIARIO DE CUENTAS POR PAGAR-->
-    <!--SECCIÓN DE CARGA DE PROVEEDORES PARA DIARIO DE CUENTAS POR PAGAR-->
+    <!--CARGA DE PROVEEDORES PARA DIARIO DE CUENTAS POR PAGAR-->
     <div class="table-responsive" ng-show="vm.selectedTypeBook === '5' && vm.providerCxPSelected === undefined && vm.dailybookCxPCreated === undefinded && vm.dailybookCxPList === undefined">
         <div class="panel panel-primary">
             <div class="panel-heading">
@@ -1193,7 +1307,6 @@
             </div>
         </div>
     </div>
-
     <div class="table-responsive" ng-show="vm.dailybookCxPList !== undefined">
         <div class="panel panel-primary">
             <div class="panel-heading">
@@ -1228,11 +1341,11 @@
                                         ng-click = "vm.dailybookCxPSelected(dailycxp)">
                                         <span class = "glyphicon glyphicon-eye-open" aria-hidden = "true"></span>
                                 </button>
-                                <!--<button type = "button" title = "Anular Diario de Cuentas por Pagar" 
+                                <button type = "button" title = "Anular Diario de Cuentas por Pagar" ng-show = "dailycxp.active !== false"
                                         class = "btn btn-warning btn-sm" ng-click = "vm.deactivatedailybookCxP = dailycxp"
-                                        data-toggle = "modal" data-target = "#modalAnularDailyBookCg">
+                                        data-toggle = "modal" data-target = "#modalAnularDailyBookCxP">
                                         <span class = "glyphicon glyphicon-warning-sign" aria-hidden = "true"></span>
-                                </button>-->
+                                </button>
                             </td>
                         </tr>
                     </tbody>
@@ -1245,7 +1358,35 @@
                 </button>
             </div>
         </div>
-    </div>    
+    </div>
+
+    <!--ANULAR DIARIOS DE CUENTAS POR PAGAR-->
+    <div id="modalAnularDailyBookCxP" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h3 class="modal-title">¡¡¡Advertencia!!!</h3>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12" >
+                            <p>¿Est&aacute; seguro que desea Anular el Diario de Cuentas por Pagar <b>No. {{vm.deactivatedailybookCxP.dailyCxPStringSeq}}</b>?</p>
+                            <p>Recuerde que el Diario de Cuentas por Pagar Anulado <b>NO puede ser Recuperado</b></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" title = "Salir" class="btn btn-primary btn-sm" data-dismiss="modal">
+                            <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
+                    </button>
+                    <button type="button" title="Anular Diario de Cuentas por Pagar" class="btn btn-danger btn-sm" ng-click="vm.dailybookCxPDeactivate()" data-dismiss="modal">
+                            <span class = "glyphicon glyphicon-screenshot" aria-hidden = "true"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!--INGRESO DE DIARIO DE CUENTAS POR PAGAR-->
     <div class="form-group col-md-12" ng-show="vm.providerCxPSelected !== undefined">
@@ -1421,7 +1562,7 @@
         </div>
     </div>
 
-    <!--SECCIÓN DE IMPRESIÓN DE DIARIO DE CUENTAS POR PAGAR-->
+    <!--IMPRESIÓN DE DIARIO DE CUENTAS POR PAGAR-->
     <div class="table-responsive" ng-show="vm.dailybookCxPCreated" id="printArea" print-section>
         <div class="panel panel-primary">
             <div class="panel-body">
@@ -1549,7 +1690,7 @@
                 <div class="row" print-remove>
                     <div class="form-group col-md-12">
                         <button print-btn type="button" title = "Imprimir Comprobante de Diario" class="btn btn-primary btn-sm"
-                                ng-click="vm.cancelDailybookCxPCreated()">
+                                ng-show="vm.activeCxP === true" ng-click="vm.cancelDailybookCxPCreated()">
                                 <span class = "glyphicon glyphicon-print" aria-hidden = "true"></span>
                         </button>
                         <button type="button" title = "Salir" class="btn btn-primary btn-sm"
@@ -1562,7 +1703,7 @@
         </div>
     </div>
 
-    <!--SECCIÓN DE SELECCION DE LAS CUENTAS CONTABLES-->
+    <!--SELECCION DE LAS CUENTAS CONTABLES-->
     <div id="modalSelectedCuentasCxP" class="modal fade" role="dialog">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -1645,9 +1786,8 @@
             </div>
         </div>
     </div>
-    <!--FINAL SELECCION Y EDICIÓN DE LAS CUENTAS CONTABLES-->
 
-    <!--SECCIÓN DE BUSQUEDA DE RETENCIONES POR PROVEEDOR-->
+    <!--BUSQUEDA DE RETENCIONES POR PROVEEDOR-->
     <div id="modalFindRetention" class="modal fade" role="dialog">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -1803,7 +1943,7 @@
         </div>
     </div>
 
-    <!--SECCIÓN DE BUSQUEDA DE DEBTS TO PAY POR PROVEEDOR-->
+    <!--BUSQUEDA DE DEBTS TO PAY POR PROVEEDOR-->
     <div id="modalShowDebtsToPay" class="modal fade" role="dialog">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -1850,7 +1990,7 @@
         </div>
     </div>
 
-    <!--SECCIÓN DE INGRESO DE LAS CUENTAS IVA Y PROVEEDOR-->
+    <!--INGRESO DE LAS CUENTAS IVA Y PROVEEDOR-->
     <div id = "modalBaseImponibleIVA" class = "modal fade" role = "dialog">
         <div class = "modal-dialog">
             <div class = "modal-content">

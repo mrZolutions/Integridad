@@ -36,12 +36,12 @@ public class PaymentDebtsServices {
     @Autowired
     DebtsToPayRepository debtsToPayRepository;
     
-    private double nume = 0.0;
-    private double abono = 0.0;
-    private double resto = 0.0;
+    private double nume = 0;
+    private double abono = 0;
+    private double resto = 0;
     private String document = "--";
-    private double saldo = 0.0;
-    private double sumado = 0.0;
+    private double saldo = 0;
+    private double sumado = 0;
     
     private String numCheque = "--";
     
@@ -51,11 +51,21 @@ public class PaymentDebtsServices {
     private String billNumber = "--";
     
     private UUID providerId;
-    private double sumTotalAbono = 0.0;
-    private double sumTotalReten = 0.0;
+    private double sumTotalAbono = 0;
+    private double sumTotalReten = 0;
     
-    private double totalAbono = 0.0;
-    private double totalReten = 0.0;
+    private double totalAbono = 0;
+    private double totalReten = 0;
+    
+    
+    public Iterable<PaymentDebts> getPaymentsDebtsByUserClientIdWithBankAndNroDocument(UUID userClientId, String banco, String nroduc) {
+	Iterable<PaymentDebts> paymentsDebts = paymentDebtsRepository.findPaymentsDebtsByUserClientIdWithBankAndNroDocument(userClientId, banco, nroduc);
+	paymentsDebts.forEach(paymentsDebt -> {
+            paymentsDebt.setFatherListToNull();
+            paymentsDebt.setListsNull();
+        });
+	return paymentsDebts;
+    }
     
     //@Async("asyncExecutor")
     public PaymentDebts createPaymentDebts(PaymentDebts paymentDebts) {
@@ -69,8 +79,8 @@ public class PaymentDebtsServices {
             } else {
                 abono = saved.getValorReten();
             }
+            updateCreditsDebtsAndDebtsToPay(saved, document);
         }
-        updateCreditsDebtsAndDebtsToPay(saved, document);
         log.info("PaymentDebtsServices createPaymentDebts DONE id: {}", saved.getId());
         return saved;
     }
@@ -81,7 +91,6 @@ public class PaymentDebtsServices {
         resto = nume - abono;
         cambio.setValor(resto);
         creditsDebtsRepository.save(cambio);
-        resto = 0.0;
         
         DebtsToPay debts = debtsToPayRepository.findOne(saved.getCreditsDebts().getPagoDebts().getDebtsToPay().getId());
         String debtsToPayId = debts.getId().toString();
@@ -95,6 +104,10 @@ public class PaymentDebtsServices {
             debtsToPayRepository.save(debts);
         }
         log.info("PaymentDebtsServices updateCreditsDebtsAndDebtsToPay DONE");
+        nume = 0;
+        resto = 0;
+        sumado = 0;
+        saldo = 0;
     }
     
     public List<CPResumenPaymentDebtsReport> getPaymentsDebtsByUserClientIdAndDates(UUID id, long dateOne, long dateTwo) {

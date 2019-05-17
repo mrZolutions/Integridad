@@ -60,7 +60,7 @@ public class RetentionClientController {
 	List<RetentionClientReport> response = null;
 	try {
             response = service.getRetentionClientByUserClientIdAndDates(userClientId, dateOne, dateTwo);
-	} catch(BadRequestException e) {
+	} catch (BadRequestException e) {
             log.error("RetentionClientController getRetentionClientByUserClientIdAndDates Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}

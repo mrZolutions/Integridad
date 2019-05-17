@@ -49,6 +49,5 @@ public class WarehouseController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
 	return new ResponseEntity<Warehouse>(response, HttpStatus.CREATED);
-    }
-    
+    }   
 }

@@ -16,6 +16,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 @Qualifier(value = "DailybookCgRepository")
 public interface DailybookCgRepository extends CrudRepository<DailybookCg, UUID> {
-    @Query("SELECT db FROM DailybookCg db WHERE db.subsidiary.userClient.id = (:userClientId) AND db.active = true")
+    @Query("SELECT db FROM DailybookCg db WHERE db.subsidiary.userClient.id = (:userClientId)")
     Iterable<DailybookCg>findDailybookCgByUserClientId(@Param("userClientId") UUID id);
 }

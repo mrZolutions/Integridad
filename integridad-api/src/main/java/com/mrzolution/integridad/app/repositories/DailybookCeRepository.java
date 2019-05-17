@@ -19,15 +19,15 @@ import org.springframework.stereotype.Repository;
 public interface DailybookCeRepository extends CrudRepository<DailybookCe, UUID> {
     Iterable<DailybookCe> findByProvider(Provider provider);
     
-    @Query("SELECT d FROM DailybookCe d WHERE d.provider.id = (:id) AND d.active = true ORDER BY d.dailyCeSeq")
+    @Query("SELECT d FROM DailybookCe d WHERE d.provider.id = (:id) ORDER BY d.dailyCeSeq")
     Iterable<DailybookCe> findDailybookCeByProviderId(@Param("id") UUID id);
     
-    @Query("SELECT d FROM DailybookCe d WHERE d.subsidiary.userClient.id = (:userClientId) AND d.active = true AND d.provider.id = null")
+    @Query("SELECT d FROM DailybookCe d WHERE d.subsidiary.userClient.id = (:userClientId) AND d.provider.id = null")
     Iterable<DailybookCe> findDailybookCeByUserClientIdWithNoProvider(@Param("userClientId") UUID id);
     
-    @Query("SELECT d FROM DailybookCe d WHERE d.subsidiary.userClient.id = (:userClientId) AND d.active = true")
+    @Query("SELECT d FROM DailybookCe d WHERE d.subsidiary.userClient.id = (:userClientId)")
     Iterable<DailybookCe> findDailybookCeByUserClientId(@Param("userClientId") UUID id);
     
-    @Query("SELECT d FROM DailybookCe d WHERE d.subsidiary.userClient.id = (:userClientId) AND d.provider.id = (:providerId) AND d.billNumber = (:bill) AND d.active = true")
+    @Query("SELECT d FROM DailybookCe d WHERE d.subsidiary.userClient.id = (:userClientId) AND d.provider.id = (:providerId) AND d.billNumber = (:bill)")
     Iterable<DailybookCe> findDailybookCeByUserClientIdAndProvIdAndBillNumber(@Param("userClientId") UUID id, @Param("providerId") UUID provid, @Param("bill") String billNumber);
 }

@@ -63,7 +63,6 @@ public class Retention {
         retention.setProvider(Provider.newProviderTest());
         retention.setUserIntegridad(UserIntegridad.newUserIntegridadTest());
         retention.setSubsidiary(Subsidiary.newSubsidiaryTest());
-
         return retention;
     }
 

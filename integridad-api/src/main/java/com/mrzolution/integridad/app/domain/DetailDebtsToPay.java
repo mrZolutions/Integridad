@@ -41,5 +41,3 @@ public class DetailDebtsToPay implements Child {
         debtsToPay.setFatherListToNull();
     }
 }
-
-

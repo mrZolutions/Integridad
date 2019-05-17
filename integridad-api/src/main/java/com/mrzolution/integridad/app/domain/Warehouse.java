@@ -39,7 +39,6 @@ public class Warehouse implements Child {
     public static Warehouse newWarehouseTest() {
         Warehouse warehouse = new Warehouse();
         warehouse.setSubsidiary(Subsidiary.newSubsidiaryTest());
-
         return warehouse;
     }
 

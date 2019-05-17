@@ -90,6 +90,7 @@ public class DailybookCgServices {
         DailybookCg dailybookCgToDeactivate = dailybookCgRepository.findOne(dailybookCg.getId());
         dailybookCgToDeactivate.setListsNull();
         dailybookCgToDeactivate.setActive(false);
+        dailybookCgToDeactivate.setGeneralDetail("DIARIO DE CONTABILIDAD GENERAL ANULADO");
         dailybookCgRepository.save(dailybookCgToDeactivate);
         log.info("DailybookCgServices deactivateDailybookCg DONE id: {}", dailybookCgToDeactivate.getId());
         return dailybookCgToDeactivate;

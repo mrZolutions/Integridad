@@ -74,8 +74,7 @@ public class Subsidiary implements Child{
         subsidiary.setUserClient(UserClient.newUserClientTest());
         subsidiary.setUsers(new ArrayList<>());
         subsidiary.setCashiers(new ArrayList<>());
-        subsidiary.setWarehouses(new ArrayList<>());
-        
+        subsidiary.setWarehouses(new ArrayList<>());       
         return subsidiary;
     }
 

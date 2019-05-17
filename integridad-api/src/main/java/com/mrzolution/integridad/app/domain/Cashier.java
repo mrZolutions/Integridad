@@ -24,6 +24,7 @@ public class Cashier implements Child{
     private long billOfflineNumberSeq;
     private long dailyCgNumberSeq;
     private long dailyCeNumberSeq;
+    private long dailyCiNumberSeq;
     private long dailyCppNumberSeq;
     private long debtsNumberSeq;
     private long whNumberSeq;
@@ -51,7 +52,6 @@ public class Cashier implements Child{
     public static Cashier newCashierTest(){
         Cashier cashier = new Cashier();
         cashier.setSubsidiary(Subsidiary.newSubsidiaryTest());
-
         return cashier;
     }
 

@@ -21,75 +21,71 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @RequestMapping(value = "/integridad/v1/project")
 public class UserClientController {
+    @Autowired
+    UserClientServices service;	
 
-	@Autowired
-	UserClientServices service;
-	
-
-	@RequestMapping(method = RequestMethod.POST)
+    @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity create(@RequestBody UserClient userClient){
-		log.info("UserClientController create: {}", userClient);
-		UserClient response = null;
-		try {
-			response = service.create(userClient);
-		}catch(BadRequestException e) {
-			log.error("UserClientController create Exception thrown: {}", e.getMessage());	    
-	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-	    }
-		return new ResponseEntity<UserClient>(response, HttpStatus.CREATED);
+	log.info("UserClientController create: {}", userClient);
+	UserClient response = null;
+	try {
+            response = service.create(userClient);
+	} catch (BadRequestException e) {
+            log.error("UserClientController create Exception thrown: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
-	
-	@RequestMapping(method = RequestMethod.PUT)
-    public ResponseEntity update(@RequestBody UserClient userClient){
-		log.info("UserClientController update: {}", userClient);
-		UserClient response = null;
-		try {
-			response = service.update(userClient);
-		}catch(BadRequestException e) {
-			log.error("UserClientController create Exception thrown: {}", e.getMessage());	    
-	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-	    }
-		return new ResponseEntity<UserClient>(response, HttpStatus.CREATED);
-	}
-	
-	@RequestMapping(method = RequestMethod.GET, value="/lazy")
-    public ResponseEntity getLazy(){
-		log.info("UserClientController getLazy");
-		Iterable<UserClient> response = null;
-		try {
-			response = service.getAllActivesLazy();
-		}catch(BadRequestException e) {
-			log.error("UserClientController getLazy Exception thrown: {}", e.getMessage());	    
-	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-	    }
-		return new ResponseEntity<Iterable>(response, HttpStatus.CREATED);
-	}
-	
-	@RequestMapping(method = RequestMethod.GET, value="/clients_number/{userClientId}")
-    public ResponseEntity getNumberOfClients(@PathVariable(value = "userClientId") UUID userClientId){
-		log.info("UserClientController getNumberOfClients");
-		Integer response = null;
-		try {
-			response = service.getNumberOfClients(userClientId);
-		}catch(BadRequestException e) {
-			log.error("UserClientController getLazy Exception thrown: {}", e.getMessage());	    
-	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-	    }
-		return new ResponseEntity<Integer>(response, HttpStatus.CREATED);
-	}
-	
-	@RequestMapping(method = RequestMethod.GET, value = "/{userClientId}")
-    public ResponseEntity getById(
-            @PathVariable(value = "userClientId") UUID userClientId) {
-		UserClient response = null;
-		try {
-			response = service.getById(userClientId);
-		}catch(BadRequestException e) {
-			log.error("UserClientController getById Exception thrown: {}", e.getMessage());	    
-	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-	    }
-        return new ResponseEntity<UserClient>(response, HttpStatus.OK);
+	return new ResponseEntity<UserClient>(response, HttpStatus.CREATED);
     }
 	
+    @RequestMapping(method = RequestMethod.PUT)
+    public ResponseEntity update(@RequestBody UserClient userClient){
+	log.info("UserClientController update: {}", userClient);
+	UserClient response = null;
+	try {
+            response = service.update(userClient);
+	} catch (BadRequestException e) {
+            log.error("UserClientController create Exception thrown: {}", e.getMessage());	    
+	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+	}
+	return new ResponseEntity<UserClient>(response, HttpStatus.CREATED);
+    }
+	
+    @RequestMapping(method = RequestMethod.GET, value="/lazy")
+    public ResponseEntity getLazy(){
+	log.info("UserClientController getLazy");
+	Iterable<UserClient> response = null;
+	try {
+            response = service.getAllActivesLazy();
+	} catch (BadRequestException e) {
+            log.error("UserClientController getLazy Exception thrown: {}", e.getMessage());	    
+	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+	}
+	return new ResponseEntity<Iterable>(response, HttpStatus.CREATED);
+    }
+	
+    @RequestMapping(method = RequestMethod.GET, value="/clients_number/{userClientId}")
+    public ResponseEntity getNumberOfClients(@PathVariable(value = "userClientId") UUID userClientId){
+	log.info("UserClientController getNumberOfClients");
+	Integer response = null;
+	try {
+            response = service.getNumberOfClients(userClientId);
+	} catch (BadRequestException e) {
+            log.error("UserClientController getLazy Exception thrown: {}", e.getMessage());	    
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+	}
+	return new ResponseEntity<Integer>(response, HttpStatus.CREATED);
+    }
+	
+    @RequestMapping(method = RequestMethod.GET, value = "/{userClientId}")
+    public ResponseEntity getById(@PathVariable(value = "userClientId") UUID userClientId) {
+	UserClient response = null;
+	try {
+            response = service.getById(userClientId);
+	} catch (BadRequestException e) {
+            log.error("UserClientController getById Exception thrown: {}", e.getMessage());	    
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+	}
+        return new ResponseEntity<UserClient>(response, HttpStatus.OK);
+    }
 	
 }
