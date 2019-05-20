@@ -36,52 +36,55 @@ public class PaymentServices {
     @Autowired
     BillRepository billRepository;
     
-    private UUID idCredit;
-    private double nume = 0.0;
-    private double abono = 0.0;
-    private double resto = 0.0;
-    private String document = "";
+    private double nume = 0;
+    private double abono = 0;
+    private double resto = 0;
+    private String document = "--";
     private String saldo = "";
-    private double sumado = 0.0;
-    private String numCheque = "";
+    private double sumado = 0;
+    private String numCheque = "--";
     
     private UUID clientId;
-    private double sumTotalAbono = 0.0;
-    private double sumTotalReten = 0.0;
-    private double sumTotalNotac = 0.0;
-    private double totalAbono = 0.0;
-    private double totalReten = 0.0;
-    private double totalNotac = 0.0;
+    private double sumTotalAbono = 0;
+    private double sumTotalReten = 0;
+    private double sumTotalNotac = 0;
+    private double totalAbono = 0;
+    private double totalReten = 0;
+    private double totalNotac = 0;
+    
+    
+    public Iterable<Payment> getPaymentsByUserClientIdWithBankAndNroDocument(UUID userClientId, String banco, String nroduc) {
+	Iterable<Payment> payments = paymentRepository.findPaymentsByUserClientIdWithBankAndNroDocument(userClientId, banco, nroduc);
+	payments.forEach(payment -> {
+            payment.setFatherListToNull();
+            payment.setListsNull();
+        });
+	return payments;
+    }
     
     public Payment createPayment(Payment payment) {
         Payment saved = paymentRepository.save(payment);
         document = saved.getCredits().getPago().getBill().getId().toString();
         if (saved.getCredits().getId() != null) {
-            idCredit = saved.getCredits().getId();
             if ("PAC".equals(saved.getTypePayment())){
                 abono = saved.getValorAbono();
             } else {
                 abono = saved.getValorNotac();
             }
-            updateCredits(idCredit);
-            updateBill(payment, document);
+            updateCreditsAndBill(saved, document);
         }
         log.info("PaymentServices createPayment DONE id: {}", saved.getId());
 	return saved;
     }
     
-    public void updateCredits(UUID credits){
-        Credits cambio = creditsRepository.findOne(idCredit);
+    public void updateCreditsAndBill(Payment saved, String document){
+        Credits cambio = creditsRepository.findOne(saved.getCredits().getId());
         nume = cambio.getValor();
         resto = nume - abono;
         cambio.setValor(resto);
         creditsRepository.save(cambio);
-        resto = 0.0;
-        log.info("PaymentServices updateCredits DONE");
-    }
-    
-    public void updateBill(Payment payment, String document) {
-        Bill billed = billRepository.findOne(payment.getCredits().getPago().getBill().getId());
+        
+        Bill billed = billRepository.findOne(saved.getCredits().getPago().getBill().getId());
         String nbillId = billed.getId().toString();
         if (nbillId.equals(document)) {
             saldo = billed.getSaldo();
@@ -93,7 +96,11 @@ public class PaymentServices {
             billed.setSaldo(saldo);
             billRepository.save(billed);
         }
-        log.info("PaymentServices updateBill DONE");
+        log.info("PaymentServices updateCreditsAndBill DONE");
+        nume = 0;
+        resto = 0;
+        sumado = 0;
+        saldo = "";
     }
     
     public List<CCResumenReport> getPaymentsByUserClientIdAndDates(UUID id, long dateOne, long dateTwo) {

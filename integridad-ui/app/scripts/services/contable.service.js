@@ -1,6 +1,7 @@
 angular
     .module('app.services')
     .service('contableService', function(securityService) {
+        //Diario Contabilidad General
         this.createDailybookCg = function(dailybookCg) {
             return securityService.post('/contable/dailycg', dailybookCg).then(function successCallback(response) {
                 return response.data;
@@ -24,7 +25,7 @@ angular
                 return response.data;
             });
         };
-
+        //Comprobante de Egreso
         this.createDailybookCe = function(dailybookCe) {
             return securityService.post('/contable/dailyce', dailybookCe).then(function successCallback(response) {
                 return response.data;
@@ -66,7 +67,49 @@ angular
                 return response.data;
             });
         };
+        //Comprobante de Ingreso
+        this.createDailybookCi = function(dailybookCi) {
+            return securityService.post('/contable/dailyci', dailybookCi).then(function successCallback(response) {
+                return response.data;
+            });
+        };
 
+        this.getDailybookCiById = function(id) {
+            return securityService.get('/contable/dailyci/' + id).then(function successCallback(response) {
+                return response.data;
+            });
+        };
+
+        this.deactivateDailybookCi = function(dailybookCi) {
+            return securityService.put('/contable/dailyci', dailybookCi).then(function successCallback(response) {
+                return response.data;
+            });
+        };
+
+        this.getDailybookCiByProviderId = function(id) {
+            return securityService.get('/contable/dailyci/provider/' + id).then(function successCallback(response) {
+                return response.data;
+            });
+        };
+
+        this.getDailybookCiByUserClientId = function(userclientId) {
+            return securityService.get('/contable/dailyci/userclient/' + userclientId).then(function successCallback(response) {
+                return response.data;
+            });
+        };
+
+        this.getDailybookCiByUserClientIdWithNoProvider = function(userclientId) {
+            return securityService.get('/contable/dailyci/userclient/noprovider/' + userclientId).then(function successCallback(response) {
+                return response.data;
+            });
+        };
+
+        this.getDailybookCiByUserClientIdAndProvIdAndBillNumber = function(userClientId, provId, billNumber) {
+            return securityService.get('/contable/dailyci/userclient/' + userClientId + '/' + provId + '/' + billNumber).then(function successCallback(response) {
+                return response.data;
+            });
+        };
+        //Diario Cuentas por Pagar
         this.createDailybookCxP = function(dailybookCxP) {
             return securityService.post('/contable/dailycxp', dailybookCxP).then(function successCallback(response) {
                 return response.data;

@@ -1610,6 +1610,7 @@ angular.module('integridadUiApp')
         //Funciones que permiten hacer los Abonos y/o Pagos de los Creditos pendientes por pagar de las Cuentas por Pagar
         vm.createAbonoDebts = function(creditsDebts) {
             vm.loading = true;
+            vm.bankName = undefined;
             vm.creditsDebtsValue = (creditsDebts.valor).toFixed(2);
             vm.creditsDebtsId = creditsDebts.id;
             vm.paymentDebts = {
@@ -1633,7 +1634,7 @@ angular.module('integridadUiApp')
             } else if (vm.paymentDebts.typePayment == 'CEG') {
                 vm.valorReten = 0;
             };
-            vm.paymentDebts.datePayment = $('#pickerDateOfPayment').data("DateTimePicker").date().toDate().getTime();
+            vm.paymentDebts.datePayment = $('#pickerDateOfPaymentDebt').data("DateTimePicker").date().toDate().getTime();
             vm.paymentDebts.creditId = vm.creditsDebtsId;
             vm.paymentDebts.documentNumber = vm.debtsBillNumber;
             if (vm.paymentDebts.modePayment === 'CHQ' || vm.paymentDebts.modePayment === 'TRF' || vm.paymentDebts.modePayment === 'DEP') {
@@ -1658,8 +1659,8 @@ angular.module('integridadUiApp')
                     });
                 } else {
                     vm.error = 'El Nro. de Documento (Cheque, Transferencia y/o Depósito) Ya Existe y no puede repetirse';
+                    vm.loading = false;
                 };
-                vm.loading = false;
             }).catch(function(error) {
                 vm.loading = false;
                 vm.error = error.data;
@@ -1727,7 +1728,7 @@ angular.module('integridadUiApp')
             vm.dailybookCe.iva = parseFloat((vm.paymentDebtsCreated.valorAbono * 0.12).toFixed(2));
             vm.dailybookCe.subTotalDoce = parseFloat((vm.paymentDebtsCreated.valorAbono / 1.12).toFixed(2));
             vm.dailybookCe.subTotalCero = 0;
-            vm.dailybookCe.dateRecordBook = $('#pickerDateOfPayment').data("DateTimePicker").date().toDate().getTime();
+            vm.dailybookCe.dateRecordBook = $('#pickerDateOfPaymentDebt').data("DateTimePicker").date().toDate().getTime();
             
             contableService.createDailybookCe(vm.dailybookCe).then(function(response) {
                 $localStorage.user.cashier.dailyCeNumberSeq = vm.dailybookCe.dailyCeSeq;

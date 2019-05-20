@@ -960,14 +960,13 @@
                     <div class = "row">
                         <div class = "form-group col-md-6">
                             <label>Fecha de Pago: </label>
-                            <div class = "input-group date" id="pickerDateOfPayment">
+                            <div class = "input-group date" id="pickerDateOfPaymentDebt">
                                 <input type = "text" class="form-control input-group-addon"/>
                                 <span class = "input-group-addon"><span class = "glyphicon glyphicon-calendar"/></span>
                             </div>
                             <script>
-                                $('#pickerDateOfPayment').datetimepicker({
-                                    format: "DD/MM/YY",
-                                });
+                                var defaultDate = new Date();
+                                $('#pickerDateOfPaymentDebt').datetimepicker({format: "DD/MM/YY",});
                             </script>
                         </div>
                         <div class = "form-group col-md-6">
@@ -1006,7 +1005,6 @@
                             </div>
                             <div class = "row" ng-show = "vm.paymentDebts.modePayment === 'CHQ'">
                                 <div class="form-group col-md-12" ng-show="vm.ctaCtableBankList !== undefined">
-                                    <input ng-model="searchTextTaxes" class="form-control" placeholder="Buscar">
                                     <table class="table table-striped">
                                         <thead>
                                             <tr>
@@ -1023,8 +1021,8 @@
                                             </tr>
                                             <tr dir-paginate = "cuenta in vm.ctaCtableBankList | orderBy:'description' | filter:searchTextTaxes | itemsPerPage: 3" pagination-id = "taxesPagination">
                                                 <td>{{cuenta.code}}</td>
-                                                <td>{{cuenta.accountType}}</td>
                                                 <td>{{cuenta.description}}</td>
+                                                <td>{{cuenta.accountType}}</td>
                                                 <td>
                                                     <button type = "button" title = "Seleccionar" class = "btn btn-primary btn-sm"
                                                             ng-click = "vm.selectCtaCtableBank(cuenta)">
@@ -1036,32 +1034,31 @@
                                     </table>
                                     <dir-pagination-controls pagination-id = "taxesPagination"></dir-pagination-controls>
                                 </div>
-                                <div class = "form-group col-md-6">
+                                <div class = "form-group col-md-6" ng-show="vm.ctaCtableBankList === undefined">
                                     <label>Banco:</label><br/>
                                     <input type = "text" class = "form-control" ng-model = "vm.bankName"/>
                                 </div>
-                                <div class = "form-group col-md-6">
+                                <div class = "form-group col-md-6" ng-show="vm.ctaCtableBankList === undefined">
                                     <label>N&uacute;mero de Cheque:</label><br/>
                                     <input type = "text" class = "form-control" ng-model = "vm.paymentDebts.noDocument"/>
                                 </div>
-                                <div class = "form-group col-md-6">
+                                <div class = "form-group col-md-6" ng-show="vm.ctaCtableBankList === undefined">
                                     <label>Cuenta Bancaria:</label><br/>
                                     <input type = "text" class = "form-control" ng-model = "vm.paymentDebts.noAccount"/>
                                 </div>
-                                <div class="form-group col-md-6">
+                                <div class="form-group col-md-6" ng-show="vm.ctaCtableBankList === undefined">
                                     <label>Detalle:</label><br/>
                                     <select ng-options = "deta.name as deta.name for deta in [{code: 'APC' ,name:'ABONO PARCIAL DE CUOTA'}, {code: 'ACC', name:'ABONO COMPLEMENTARIO DE CUOTA'}, {code: 'PTC', name:'PAGO TOTAL DE CUOTA'}]"
                                             ng-model = "vm.paymentDebts.detail" class = "form-control">
                                     </select>
                                 </div>
-                                <div class = "form-group col-md-6">
+                                <div class = "form-group col-md-6" ng-show="vm.ctaCtableBankList === undefined">
                                     <label>Monto a Abonar:</label><br/>
                                     <input type = "text" class = "form-control" ng-model = "vm.paymentDebts.valorAbono" placeholder = "{{vm.creditsDebtsValue}}"/>
                                 </div>
                             </div>
                             <div class = "row" ng-show = "vm.paymentDebts.modePayment === 'TRF'">
                                 <div class="form-group col-md-12" ng-show="vm.ctaCtableBankList !== undefined">
-                                    <input ng-model="searchTextTaxes" class="form-control" placeholder="Buscar">
                                     <table class="table table-striped">
                                         <thead>
                                             <tr>
@@ -1078,8 +1075,8 @@
                                             </tr>
                                             <tr dir-paginate = "cuenta in vm.ctaCtableBankList | orderBy:'description' | filter:searchTextTaxes | itemsPerPage: 3" pagination-id = "taxesPagination">
                                                 <td>{{cuenta.code}}</td>
-                                                <td>{{cuenta.accountType}}</td>
                                                 <td>{{cuenta.description}}</td>
+                                                <td>{{cuenta.accountType}}</td>
                                                 <td>
                                                     <button type = "button" title = "Seleccionar" class = "btn btn-primary btn-sm"
                                                             ng-click = "vm.selectCtaCtableBank(cuenta)">
@@ -1091,25 +1088,25 @@
                                     </table>
                                     <dir-pagination-controls pagination-id = "taxesPagination"></dir-pagination-controls>
                                 </div>
-                                <div class = "form-group col-md-6">
+                                <div class = "form-group col-md-6" ng-show="vm.ctaCtableBankList === undefined">
                                     <label>Banco:</label><br/>
                                     <input type = "text" class = "form-control" ng-model = "vm.bankName"/>
                                 </div>
-                                <div class = "form-group col-md-6">
+                                <div class = "form-group col-md-6" ng-show="vm.ctaCtableBankList === undefined">
                                     <label>N&uacute;mero de Transferencia:</label><br/>
                                     <input type = "text" class = "form-control" ng-model = "vm.paymentDebts.noDocument"/>
                                 </div>
-                                <div class = "form-group col-md-6">
+                                <div class = "form-group col-md-6" ng-show="vm.ctaCtableBankList === undefined">
                                     <label>Cuenta Bancaria:</label><br/>
                                     <input type = "text" class = "form-control" ng-model = "vm.paymentDebts.noAccount"/>
                                 </div>
-                                <div class="form-group col-md-6">
+                                <div class="form-group col-md-6" ng-show="vm.ctaCtableBankList === undefined">
                                     <label>Detalle:</label><br/>
                                     <select ng-options = "deta.name as deta.name for deta in [{code: 'APC' ,name:'ABONO PARCIAL DE CUOTA'}, {code: 'ACC', name:'ABONO COMPLEMENTARIO DE CUOTA'}, {code: 'PTC', name:'PAGO TOTAL DE CUOTA'}]"
                                             ng-model = "vm.paymentDebts.detail" class = "form-control">
                                     </select>
                                 </div>
-                                <div class = "form-group col-md-6">
+                                <div class = "form-group col-md-6" ng-show="vm.ctaCtableBankList === undefined">
                                     <label>Monto a Abonar:</label><br/>
                                     <input type = "text" class = "form-control" ng-model = "vm.paymentDebts.valorAbono" placeholder = "{{vm.creditsDebtsValue}}"/>
                                 </div>
@@ -1118,6 +1115,17 @@
                                 <div class = "form-group col-md-6">
                                     <label>N&uacute;mero de Tarjeta:</label><br/>
                                     <input type = "text" class = "form-control" ng-model = "vm.paymentDebts.noDocument"/>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label>Tarjeta:</label><br/>
+                                    <select ng-options="card as card for card in vm.creditCardList"
+                                            ng-model="vm.paymentDebts.cardBrand" class="form-control">
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label>No. Lote:</label><br/>
+                                    <input type="text" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+                                           ng-model="vm.paymentDebts.numeroLote" class="form-control" maxlength="5">
                                 </div>
                                 <div class="form-group col-md-6">
                                     <label>Detalle:</label><br/>
@@ -1132,7 +1140,6 @@
                             </div>
                             <div class = "row" ng-show="vm.paymentDebts.modePayment === 'DEP'">
                                 <div class="form-group col-md-12" ng-show="vm.ctaCtableBankList !== undefined">
-                                    <input ng-model="searchTextTaxes" class="form-control" placeholder="Buscar">
                                     <table class="table table-striped">
                                         <thead>
                                             <tr>
@@ -1149,8 +1156,8 @@
                                             </tr>
                                             <tr dir-paginate = "cuenta in vm.ctaCtableBankList | orderBy:'description' | filter:searchTextTaxes | itemsPerPage: 3" pagination-id = "taxesPagination">
                                                 <td>{{cuenta.code}}</td>
-                                                <td>{{cuenta.accountType}}</td>
                                                 <td>{{cuenta.description}}</td>
+                                                <td>{{cuenta.accountType}}</td>
                                                 <td>
                                                     <button type = "button" title = "Seleccionar" class = "btn btn-primary btn-sm"
                                                             ng-click = "vm.selectCtaCtableBank(cuenta)">
@@ -1162,25 +1169,25 @@
                                     </table>
                                     <dir-pagination-controls pagination-id = "taxesPagination"></dir-pagination-controls>
                                 </div>
-                                <div class = "form-group col-md-6">
+                                <div class = "form-group col-md-6" ng-show="vm.ctaCtableBankList === undefined">
                                     <label>Banco:</label><br/>
                                     <input type = "text" class = "form-control" ng-model = "vm.bankName"/>
                                 </div>
-                                <div class = "form-group col-md-6">
+                                <div class = "form-group col-md-6" ng-show="vm.ctaCtableBankList === undefined">
                                     <label>N&uacute;mero de Depósito:</label><br/>
                                     <input type = "text" class = "form-control" ng-model = "vm.paymentDebts.noDocument"/>
                                 </div>
-                                <div class = "form-group col-md-6">
+                                <div class = "form-group col-md-6" ng-show="vm.ctaCtableBankList === undefined">
                                     <label>N&uacute;mero de Cuenta:</label><br/>
                                     <input type = "text" class = "form-control" ng-model = "vm.paymentDebts.noAccount"/>
                                 </div>
-                                <div class = "form-group col-md-6">
+                                <div class = "form-group col-md-6" ng-show="vm.ctaCtableBankList === undefined">
                                     <label>Detalle:</label><br/>
                                     <select ng-options = "deta.name as deta.code for deta in [{code: 'ABONO PARCIAL DE CUOTA' ,name:'ABONO PARCIAL DE CUOTA'}, {code: 'ABONO COMPLEMENTARIO DE CUOTA', name:'ABONO COMPLEMENTARIO DE CUOTA'}, {code: 'PAGO TOTAL DE CUOTA', name:'PAGO TOTAL DE CUOTA'}]"
                                             ng-model = "vm.paymentDebts.detail" class = "form-control">
                                     </select>
                                 </div>
-                                <div class = "form-group col-md-6">
+                                <div class = "form-group col-md-6" ng-show="vm.ctaCtableBankList === undefined">
                                     <label>Monto a Abonar:</label><br/>
                                     <input type = "text" class = "form-control" ng-model = "vm.paymentDebts.valorAbono" placeholder="{{vm.creditsDebtsValue}}"/>
                                 </div>
@@ -1307,8 +1314,8 @@
                                         </tr>
                                         <tr dir-paginate = "cuenta in vm.ctaCtableBankList | orderBy:'description' | filter:searchTextTaxes | itemsPerPage: 3" pagination-id = "taxesPagination">
                                             <td>{{cuenta.code}}</td>
-                                            <td>{{cuenta.accountType}}</td>
                                             <td>{{cuenta.description}}</td>
+                                            <td>{{cuenta.accountType}}</td>
                                             <td>
                                                 <button type = "button" title = "Seleccionar" class = "btn btn-primary btn-sm"
                                                         ng-click = "vm.selectCtaCtableBank(cuenta)">
@@ -1369,8 +1376,8 @@
                                         </tr>
                                         <tr dir-paginate = "cuenta in vm.ctaCtableBankList | orderBy:'description' | filter:searchTextTaxes | itemsPerPage: 3" pagination-id = "taxesPagination">
                                             <td>{{cuenta.code}}</td>
-                                            <td>{{cuenta.accountType}}</td>
                                             <td>{{cuenta.description}}</td>
+                                            <td>{{cuenta.accountType}}</td>
                                             <td>
                                                 <button type = "button" title = "Seleccionar" class = "btn btn-primary btn-sm"
                                                         ng-click = "vm.selectCtaCtableBank(cuenta)">
@@ -1431,8 +1438,8 @@
                                         </tr>
                                         <tr dir-paginate = "cuenta in vm.ctaCtableBankList | orderBy:'description' | filter:searchTextTaxes | itemsPerPage: 3" pagination-id = "taxesPagination">
                                             <td>{{cuenta.code}}</td>
-                                            <td>{{cuenta.accountType}}</td>
                                             <td>{{cuenta.description}}</td>
+                                            <td>{{cuenta.accountType}}</td>
                                             <td>
                                                 <button type = "button" title = "Seleccionar" class = "btn btn-primary btn-sm"
                                                         ng-click = "vm.selectCtaCtableBank(cuenta)">

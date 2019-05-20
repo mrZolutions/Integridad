@@ -88,14 +88,14 @@ public class RetentionClientServices {
                                   
         log.info("RetentionClientServices createRetentionClient DONE id: {}", saved.getId());
         saved.setDetailRetentionClient(details);
-        updateBill(retentionClient, document);
-        updateCreditsAndPayment(retentionClient, document);
+        updateBillCreditsAndPayment(saved, document);
         return saved;
     }
 
-    public void updateCreditsAndPayment(RetentionClient retentionClient, String document) {
+    public void updateBillCreditsAndPayment(RetentionClient saved, String document) {
         Credits docNumber = creditsRepository.findByBillId(document);
         doc = docNumber.getBillId();
+        
         if (doc.equals(document) && docNumber.getPayNumber() == numC) {
             valor = docNumber.getValor();
             docNumber.setValor(valor - sum);
@@ -103,10 +103,10 @@ public class RetentionClientServices {
             
             Payment specialPayment = new Payment();
             specialPayment.setCredits(spCretits);
-            specialPayment.setDatePayment(retentionClient.getDateToday());
-            specialPayment.setNoDocument(retentionClient.getRetentionNumber());
+            specialPayment.setDatePayment(saved.getDateToday());
+            specialPayment.setNoDocument(saved.getRetentionNumber());
             specialPayment.setNoAccount(null);
-            specialPayment.setDocumentNumber(retentionClient.getDocumentNumber());
+            specialPayment.setDocumentNumber(saved.getDocumentNumber());
             specialPayment.setTypePayment("RET");
             specialPayment.setDetail("ABONO POR RETENCION");
             specialPayment.setModePayment("RET");
@@ -115,13 +115,8 @@ public class RetentionClientServices {
             specialPayment.setValorNotac(0.0);
             paymentRepository.save(specialPayment);
         }
-        log.info("RetentionClientServices Credits and Payment UPDATED");
-        sum = 0.0;
-        valor = 0.0;
-    }
-    
-    public void updateBill(RetentionClient retentionClient, String document) {
-        Bill bill = billRepository.findOne(retentionClient.getBill().getId());
+        
+        Bill bill = billRepository.findOne(saved.getBill().getId());
         String nbillId = bill.getId().toString();
         if (nbillId.equals(document)) {
             saldo = bill.getSaldo();
@@ -133,7 +128,10 @@ public class RetentionClientServices {
             bill.setSaldo(saldo);
             billRepository.save(bill);
         }
-        log.info("RetentionClientServices Bill UPDATED");
+        log.info("RetentionClientServices Bill, Credits and Payment UPDATED");
+        sum = 0;
+        sumado = 0;
+        valor = 0;
     }
     
     public List<RetentionClientReport> getRetentionClientByUserClientIdAndDates(UUID userClientId, long dateOne, long dateTwo) {

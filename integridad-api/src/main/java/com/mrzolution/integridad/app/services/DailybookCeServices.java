@@ -111,7 +111,6 @@ public class DailybookCeServices {
         
         saved.setDetailDailybookContab(detailDailybookContab);
         log.info("DailybookCeServices createDailybookCe DONE id: {}", saved.getId());
-        //System.out.print(saved);
         return saved;
     }
     

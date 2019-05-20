@@ -146,7 +146,10 @@ angular.module('integridadUiApp')
             vm.retentionClientCreated = undefined;
             vm.clientList = [];
             vm.clientSelected = undefined;
-            clientService.getLazyByProjectId($localStorage.user.subsidiary.userClient.id).then(function(response) {
+            vm.ctaCtableBankList = undefined;
+            vm.bankName = undefined;
+            vm.usrCliId = $localStorage.user.subsidiary.userClient.id;
+            clientService.getLazyByProjectId(vm.usrCliId).then(function(response) {
                 vm.clientList = response;
                 vm.loading = false;
             }).catch(function(error) {
@@ -190,32 +193,62 @@ angular.module('integridadUiApp')
 
         vm.createAbono = function(credits) {
             vm.loading = true;
+            vm.bankName = undefined;
             vm.creditValue = (credits.valor).toFixed(2);
             vm.creditsId = credits.id;
             vm.payment = {
                 credits: credits
             };
-            vm.loading = false;
+            cuentaContableService.getCuentaContableByUserClientAndBank(vm.usrCliId).then(function(response) {
+                vm.ctaCtableBankList = response;
+                vm.loading = false;
+            }).catch(function(error) {
+                vm.loading = false;
+                vm.error = error.data;
+            });
+        };
+
+        vm.selectCtaCtableBank = function(cuenta) {
+            vm.ctaCtableBankList = undefined;
+            vm.ctaCtableBankCode = cuenta.code;
+            vm.bankName = cuenta.description;
         };
 
         vm.pAbono = function(payment) {
             vm.loading = true;
             if (vm.payment.typePayment == 'PAC') {
-                vm.valorReten = 0.00;
-                vm.valorNotac = 0.00;
+                vm.valorReten = 0;
+                vm.valorNotac = 0;
             } else if (vm.payment.typePayment == 'NTC') {
-                vm.valorAbono = 0.00;
-                vm.valorReten = 0.00;
+                vm.valorAbono = 0;
+                vm.valorReten = 0;
                 vm.payment.modePayment = 'NTC';
             };
             vm.payment.datePayment = $('#pickerDateOfPayment').data("DateTimePicker").date().toDate().getTime();
             vm.payment.creditId = vm.creditsId;
             vm.payment.documentNumber = vm.billNumber;
             vm.payment.valorReten = vm.valorReten;
-            paymentService.create(payment).then(function(response) {
-                vm.error = undefined;
-                vm.success = 'Abono realizado con exito';
-                vm.loading = false;
+            if (vm.payment.modePayment === 'CHQ' || vm.payment.modePayment === 'TRF' || vm.payment.modePayment === 'DEP') {
+                vm.payment.ctaCtableBanco = vm.ctaCtableBankCode;
+                vm.payment.banco = vm.bankName;
+            } else {
+                vm.payment.ctaCtableBanco = '--';
+                vm.payment.banco = '--';
+            };
+            paymentService.getPaymentsByUserClientIdWithBankAndNroDocument(vm.usrCliId, vm.payment.banco, vm.payment.noDocument).then(function(response) {
+                if (response.length === 0) {
+                    paymentService.create(payment).then(function(response) {
+                        vm.error = undefined;
+                        vm.success = 'Abono realizado con exito';
+                        vm.loading = false;
+                    }).catch(function(error) {
+                        vm.loading = false;
+                        vm.error = error.data;
+                    });
+                } else {
+                    vm.error = 'El Nro. de Documento (Cheque, Transferencia y/o Depósito) Ya Existe y no puede repetirse';
+                    vm.loading = false;
+                };
             }).catch(function(error) {
                 vm.loading = false;
                 vm.error = error.data;

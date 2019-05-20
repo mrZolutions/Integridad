@@ -82,6 +82,8 @@ angular.module('integridadUiApp')
 
         //Comprobante de Ingreso Ci
         vm.providerCiList = undefined;
+        vm.provRucCi = undefined;
+        vm.providerCiSelected = undefined;
         vm.dailybookCiNew = undefined;
         vm.dailyCiSeq = undefined;
         vm.dailyCiStringSeq = undefined;
@@ -94,10 +96,10 @@ angular.module('integridadUiApp')
         vm.dailybookCiCreated = undefined;
         vm.generalDetailCi = undefined;
         vm.activeCi = undefined
-        //vm.numCheque = undefined;
-        //vm.dailybookCiManual = false;
-        //vm.beneficiario = undefined;
-        //vm.dailybookCeManualCreatedList = undefined;
+        vm.numChequeCi = undefined;
+        vm.dailybookCiManual = false;
+        vm.beneficio = undefined;
+        vm.dailybookCiManualCreatedList = undefined;
         
         //Cuentas por Pagar Cpp
         vm.dailybookCxPNew = undefined;
@@ -767,18 +769,101 @@ angular.module('integridadUiApp')
 
     vm.dailybookCeDeactivate = function() {
         vm.loading = true;
-        var index = vm.dailybookCeList.indexOf(vm.deactivatedailybookCe);
-        var indexm = vm.dailybookCeManualCreatedList.indexOf(vm.deactivatedailybookCe);
-        contableService.deactivateDailybookCe(vm.deactivatedailybookCe).then(function(response) {
+        if (vm.dailybookCeList != null) {
             var index = vm.dailybookCeList.indexOf(vm.deactivatedailybookCe);
-            if (index > -1) {
-                vm.dailybookCeList.splice(index, 1);
-            };
+        } else if (vm.dailybookCeManualCreatedList != null) {
             var indexm = vm.dailybookCeManualCreatedList.indexOf(vm.deactivatedailybookCe);
-            if (indexm > -1) {
-                vm.dailybookCeManualCreatedList.splice(indexm, 1);
+        };
+        contableService.deactivateDailybookCe(vm.deactivatedailybookCe).then(function(response) {
+            if (vm.dailybookCeList != null) {
+                var index = vm.dailybookCeList.indexOf(vm.deactivatedailybookCe);
+                if (index > -1) {
+                    vm.dailybookCeList.splice(index, 1);
+                };
+            } else if (vm.dailybookCeManualCreatedList != null) {
+                var indexm = vm.dailybookCeManualCreatedList.indexOf(vm.deactivatedailybookCe);
+                if (indexm > -1) {
+                    vm.dailybookCeManualCreatedList.splice(indexm, 1);
+                };
             };
             vm.deactivatedailybookCe = undefined;
+            vm.loading = false;
+        }).catch(function(error) {
+            vm.loading = false;
+            vm.error = error.data;
+        });
+    };
+
+//Funciones para el Comprobante de Ingreso
+    vm.providerCiSelect = function(provider) {
+        vm.success = undefined;
+        vm.error = undefined;
+        vm.loading = true;
+        vm.providerCiSelected = provider;
+        vm.providerId = provider.id;
+        vm.providerName = provider.razonSocial;
+        vm.providerRuc = provider.ruc;
+        _getDailyCiSeqNumber();
+        _initializeDailybookCi();
+        vm.loading = false;
+        var today = new Date();
+        $('#pickerDateRecordBookCi').data("DateTimePicker").date(today);
+        vm.dailybookCiNew = true;
+    };
+
+    vm.consultDailybookCi = function(provider) {
+        vm.success = undefined;
+        vm.error = undefined;
+        vm.loading = true;
+        contableService.getDailybookCiByProviderId(provider.id).then(function(response) {
+            vm.dailybookCiList = response;
+            vm.loading = false;
+        }).catch(function(error) {
+            vm.loading = false;
+            vm.error = error.data;
+        });
+    };
+
+    vm.manualDailybookCi = function() {
+        vm.success = undefined;
+        vm.error = undefined;
+        vm.loading = true;
+        vm.dailybookCiNew = true;
+        vm.dailybookCiManual = true;
+        _getDailyCiSeqNumber();
+        _initializeDailybookCi();
+        var today = new Date();
+        $('#pickerDateRecordBookCi').data("DateTimePicker").date(today);
+        vm.loading = false;
+    };
+
+    vm.consultManualDailybookCi = function() {
+        vm.success = undefined;
+        vm.error = undefined;
+        vm.loading = true;
+        contableService.getDailybookCiByUserClientIdWithNoProvider(vm.usrCliId).then(function(response) {
+            vm.dailybookCiManualCreatedList = response;
+            vm.loading = false;
+        }).catch(function(error) {
+            vm.loading = false;
+            vm.error = error.data;
+        });
+    };
+
+    vm.dailybookCiDeactivate = function() {
+        vm.loading = true;
+        var index = vm.dailybookCiList.indexOf(vm.deactivatedailybookCi);
+        var indexm = vm.dailybookCiManualCreatedList.indexOf(vm.deactivatedailybookCi);
+        contableService.deactivateDailybookCi(vm.deactivatedailybookCi).then(function(response) {
+            var index = vm.dailybookCiList.indexOf(vm.deactivatedailybookCi);
+            if (index > -1) {
+                vm.dailybookCiList.splice(index, 1);
+            };
+            var indexm = vm.dailybookCiManualCreatedList.indexOf(vm.deactivatedailybookCi);
+            if (indexm > -1) {
+                vm.dailybookCiManualCreatedList.splice(indexm, 1);
+            };
+            vm.deactivatedailybookCi = undefined;
             vm.loading = false;
         }).catch(function(error) {
             vm.loading = false;

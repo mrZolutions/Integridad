@@ -638,17 +638,17 @@
                                 No hay Comprobantes de Egreso ingresados...
                             </td>
                         </tr>
-                        <tr ng-repeat="dailyCe in vm.dailybookCeManualCreatedList | orderBy:'dailyCeStringSeq':true">
-                            <td>{{dailyCe.dailyCeStringSeq}}</td>
-                            <td>{{dailyCe.dateRecordBook | date : "dd/MM/yyyy"}}</td>
-                            <td>{{dailyCe.generalDetail}}</td>
+                        <tr ng-repeat="dailyCeM in vm.dailybookCeManualCreatedList | orderBy:'dailyCeStringSeq':true">
+                            <td>{{dailyCeM.dailyCeStringSeq}}</td>
+                            <td>{{dailyCeM.dateRecordBook | date : "dd/MM/yyyy"}}</td>
+                            <td>{{dailyCeM.generalDetail}}</td>
                             <td>
                                 <button type = "button" title = "Ver Comprobante de Egreso" class = "btn btn-primary btn-sm" 
-                                        ng-click = "vm.dailybookCeSelected(dailyCe)">
+                                        ng-click = "vm.dailybookCeSelected(dailyCeM)">
                                         <span class = "glyphicon glyphicon-eye-open" aria-hidden = "true"></span>
                                 </button>
-                                <button type = "button" title = "Anular Comprobante de Egreso" 
-                                        class = "btn btn-warning btn-sm" ng-click = "vm.deactivatedailybookCe = dailyCe"
+                                <button type = "button" title = "Anular Comprobante de Egreso" ng-show = "dailyCeM.active !== false"
+                                        class = "btn btn-warning btn-sm" ng-click = "vm.deactivatedailybookCe = dailyCeM"
                                         data-toggle = "modal" data-target = "#modalAnularDailyBookCe">
                                         <span class = "glyphicon glyphicon-warning-sign" aria-hidden = "true"></span>
                                 </button>
@@ -1195,7 +1195,7 @@
 
     <!--DIARIO DE COMPROBANTE DE INGRESO-->
     <!--CARGA DE PROVEEDORES PARA DIARIO DE COMPROBANTE DE INGRESO-->
-    <div class="table-responsive" ng-show="vm.selectedTypeBook === '2' && vm.providerCiSelected === undefined && vm.dailybookCiCreated === undefinded && vm.dailybookCiList === undefined && vm.dailybookCiManualCreatedList === undefined && vm.dailybookCiManual === false">
+    <div class="table-responsive" ng-show="vm.selectedTypeBook === '3' && vm.providerCiSelected === undefined && vm.dailybookCiCreated === undefinded && vm.dailybookCiList === undefined && vm.dailybookCiManualCreatedList === undefined && vm.dailybookCiManual === false">
         <div class="panel panel-primary">
             <div class="panel-heading">
                 <b>DIARIO DE COMPROBANTE DE INGRESO</b>
@@ -1234,10 +1234,10 @@
                             <td>{{provider.name}}</td>
                             <td>{{provider.rucType}} - {{provider.ruc}}</td>
                             <td>
-                                <button type = "button" title = "Nuevo Comprobante de Ingreso" class = "btn btn-primary btn-sm" ng-click = "vm.providerCeSelect(provider)">
+                                <button type = "button" title = "Nuevo Comprobante de Ingreso" class = "btn btn-primary btn-sm" ng-click = "vm.providerCiSelect(provider)">
                                         <span class = "glyphicon glyphicon-book" aria-hidden = "true"></span>
                                 </button>
-                                <button type = "button" title = "Consultar Comprobante de Ingreso" class = "btn btn-primary btn-sm" ng-click = "vm.consultDailybookCe(provider)">
+                                <button type = "button" title = "Consultar Comprobante de Ingreso" class = "btn btn-primary btn-sm" ng-click = "vm.consultDailybookCi(provider)">
                                         <span class = "glyphicon glyphicon-search" aria-hidden = "true"></span>
                                 </button>
                             </td>
@@ -1250,6 +1250,655 @@
                         ng-click="vm.cancel()">
                         <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
                 </button>
+            </div>
+        </div>
+    </div>
+    <div class="table-responsive" ng-show="vm.dailybookCiList !== undefined">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <b>COMPROBANTES DE INGRESO POR PROVEEDOR</b>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="form-group col-md-11">
+                        <input ng-model="searchText" class="form-control" placeholder="Buscar">
+                    </div>
+                </div>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>N&uacute;mero</th>
+                            <th>Fecha</th>
+                            <th>Descripci&oacute;n</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-show="vm.dailybookCiList == 0">
+                            <td colspan="4">
+                                No hay Comprobantes de Ingreso ingresados...
+                            </td>
+                        </tr>
+                        <tr ng-repeat="dailyCi in vm.dailybookCiList | orderBy:'dailyCiStringSeq':true">
+                            <td>{{dailyCi.dailyCiStringSeq}}</td>
+                            <td>{{dailyCi.dateRecordBook | date : "dd/MM/yyyy"}}</td>
+                            <td>{{dailyCi.generalDetail}}</td>
+                            <td>
+                                <button type = "button" title = "Ver Comprobante de Ingreso" class = "btn btn-primary btn-sm" 
+                                        ng-click = "vm.dailybookCiSelected(dailyCi)">
+                                        <span class = "glyphicon glyphicon-eye-open" aria-hidden = "true"></span>
+                                </button>
+                                <button type = "button" title = "Anular Comprobante de Egreso" ng-show = "dailyCi.active !== false"
+                                        class = "btn btn-warning btn-sm" ng-click = "vm.deactivatedailybookCi = dailyCi"
+                                        data-toggle = "modal" data-target = "#modalAnularDailyBookCi">
+                                        <span class = "glyphicon glyphicon-warning-sign" aria-hidden = "true"></span>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="panel-footer">
+                <button type="button" title="Volver" class="btn btn-primary btn-sm"
+                        ng-click = "vm.dailybookCiList = undefined">
+                        <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!--ANULAR COMPROBANTE DE INGRESO-->
+    <div id="modalAnularDailyBookCi" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h3 class="modal-title">¡¡¡Advertencia!!!</h3>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12" >
+                            <p>¿Est&aacute; seguro que desea Anular el Comprobante de Ingreso <b>No. {{vm.deactivatedailybookCi.dailyCiStringSeq}}</b>?</p>
+                            <p>Recuerde que el Comprobante de Ingreso Anulado <b>NO puede ser Recuperado</b></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" title = "Salir" class="btn btn-primary btn-sm" data-dismiss="modal">
+                            <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
+                    </button>
+                    <button type="button" title="Anular Comprobante de Egreso" class="btn btn-danger btn-sm" ng-click="vm.dailybookCiDeactivate()" data-dismiss="modal">
+                            <span class = "glyphicon glyphicon-screenshot" aria-hidden = "true"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--COMPROBANTES DE INGRESO MANUAL-->
+    <div class="table-responsive" ng-show="vm.dailybookCiManualCreatedList !== undefined">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <b>COMPROBANTES DE INGRESO</b>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="form-group col-md-11">
+                        <input ng-model="searchText" class="form-control" placeholder="Buscar">
+                    </div>
+                </div>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>N&uacute;mero</th>
+                            <th>Fecha</th>
+                            <th>Descripci&oacute;n</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-show="vm.dailybookCiManualCreatedList == 0">
+                            <td colspan="4">
+                                No hay Comprobantes de Ingreso ingresados...
+                            </td>
+                        </tr>
+                        <tr ng-repeat="dailyCi in vm.dailybookCiManualCreatedList | orderBy:'dailyCiStringSeq':true">
+                            <td>{{dailyCi.dailyCiStringSeq}}</td>
+                            <td>{{dailyCi.dateRecordBook | date : "dd/MM/yyyy"}}</td>
+                            <td>{{dailyCi.generalDetail}}</td>
+                            <td>
+                                <button type = "button" title = "Ver Comprobante de Ingreso" class = "btn btn-primary btn-sm" 
+                                        ng-click = "vm.dailybookCiSelected(dailyCi)">
+                                        <span class = "glyphicon glyphicon-eye-open" aria-hidden = "true"></span>
+                                </button>
+                                <button type = "button" title = "Anular Comprobante de Ingreso" 
+                                        class = "btn btn-warning btn-sm" ng-click = "vm.deactivatedailybookCi = dailyCi"
+                                        data-toggle = "modal" data-target = "#modalAnularDailyBookCi">
+                                        <span class = "glyphicon glyphicon-warning-sign" aria-hidden = "true"></span>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="panel-footer">
+                <button type="button" title="Volver" class="btn btn-primary btn-sm"
+                        ng-click = "vm.dailybookCiManualCreatedList = undefined">
+                        <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!--INGRESO DE COMPROBANTES DE INGRESO-->
+    <div class="form-group col-md-12" ng-show="vm.providerCiSelected !== undefined || vm.dailybookCiManual === true">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h4>Comprobantes de Ingreso</h4>
+                <div>
+                    <b>Comprobante de Ingreso Nro: </b>{{vm.dailyCiStringSeq}}
+                </div>
+            </div>
+            <div class="panel-body">
+                <div class="row" ng-if="vm.dailybookCiManual === false">
+                    <div class="form-group col-md-5">
+                        <label>Proveedor: </label><br/>
+                        {{vm.dailybookCi.provider.razonSocial}}
+                    </div>
+                    <div class="form-group col-md-1">
+                        <br/>
+                        <button type = "button" title = "Buscar y Agregar Factura" class = "btn btn-primary btn-sm"
+                                ng-click = "vm.getDebtsToPayByProviderCe()" data-toggle = "modal" 
+                                data-target = "#modalShowDebtsToPayCe" ng-show = "vm.dailybookCe.billNumber == undefinded || vm.dailybookCe.billNumber == ''">
+                                <span class = "glyphicon glyphicon-search" aria-hidden = "true"></span>
+                        </button>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label>N&uacute;mero de Factura: </label><br/>
+                        <input type="text" ng-model="vm.dailybookCi.billNumber" class="form-control" maxlength="17"/>
+                    </div>
+                    <div class="form-group col-md-3">
+                            <label>Valor Total:</label>
+                            <input type="text" ng-model="vm.dailybookCi.total"
+                                   class="form-control" maxlength="20"/>
+                    </div>
+                </div>
+                <div class="row" ng-if="vm.dailybookCiManual === true">
+                    <div class="form-group col-md-6">
+                        <label>Beneficiario: </label><br/>
+                        <input type="text" ng-model="vm.beneficio" class="form-control"/>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label>RUC:</label>
+                        <input type="text" ng-model="vm.provRucCi"
+                               class="form-control" maxlength="13"/>
+                    </div>
+                    <div class="form-group col-md-3">
+                            <label>Valor Total:</label>
+                            <input type="text" ng-model="vm.dailybookCi.total"
+                                   class="form-control" maxlength="20"/>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-4">
+                        <label>Fecha: </label>
+                        <div class="input-group date" id="pickerDateRecordBookCi">
+                            <input type="text" class="form-control input-group-addon"/>
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"/></span>
+                        </div>
+                        <script>
+                            var defaultDate = new Date();
+                            $('#pickerDateRecordBookCi').datetimepicker({format: "DD/MM/YY",});
+                        </script>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label>N&uacute;mero de Referencia:</label><br/>
+                        <input type="text" ng-model="vm.dailybookCi.dailyCiStringUserSeq" 
+                               class="form-control" maxlength="20"/>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label>N&uacute;mero Cheque:</label><br/>
+                        <input type="text" class="form-control" ng-model="vm.numCheque"/>
+                    </div>
+                </div>
+                <div class="row" ng-if="vm.dailybookCiManual === false">
+                    <div class="form-group col-md-11">
+                        <b>DETALLE GENERAL:</b>
+                        <input type="text" ng-model="vm.generalDetailCi" class="form-control"/>
+                    </div>
+                    <div class="form-group col-md-1">
+                        <br/>
+                        <button type = "button" title = "Llenar Detalle General" class = "btn btn-primary btn-sm"
+                                ng-click = "vm.putGeneralDetailCe()" ng-show="vm.generalDetailCe == undefinded || vm.generalDetailCe == ''">
+                                <span class = "glyphicon glyphicon-ok" aria-hidden = "true"></span>
+                        </button>
+                    </div>
+                </div>
+                <div class="row" ng-if="vm.dailybookCiManual === true">
+                    <div class="form-group col-md-11">
+                        <b>DETALLE GENERAL:</b>
+                        <input type="text" ng-model="vm.generalDetailCi" class="form-control"/>
+                    </div>
+                </div>
+                <div class="row" ng-if="vm.dailybookCiManual === false">
+                    <div class="form-group col-md-4" ng-if="vm.dailybookCeNew">
+                        <label>Cuentas Banco: </label>
+                        <label class="radio-inline"><input type="checkbox" ng-model="vm.cuenta"
+                                ng-change="vm.getCuentasContablesBankCe()"></label>
+                    </div>
+                </div>
+                <div class="row" ng-if="vm.dailybookCiManual === true">
+                    <div class="form-group col-md-4">
+                        <label>Cuentas Contables: </label>
+                        <label class="radio-inline"><input type="checkbox" ng-model="vm.cuentaCtable"
+                               ng-change="vm.getCuentasContablesCe()"></label>
+                        </div>
+                    <div class="form-group col-md-4">
+                        <label>Cuentas Banco: </label>
+                        <label class="radio-inline"><input type="checkbox" ng-model="vm.cuenta"
+                               ng-change="vm.getCuentasContablesBankCe()"></label>
+                    </div>
+                </div>
+                <div class="row table-responsive" ng-show="vm.cuentaContableList !== undefined">
+                    <div class="form-group col-md-12">
+                        <input ng-model="searchTextTaxes" class="form-control" placeholder="Buscar"/>
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Tipo de Cuenta</th>
+                                    <th>Nombre G&eacute;nerico</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-show="vm.cuentaContableList == 0">
+                                    <td colspan="2">
+                                        No hay Fuente Seleccionada
+                                    </td>
+                                </tr>
+                                <tr dir-paginate = "cuenta in vm.cuentaContableList | orderBy:'type' | filter:searchTextTaxes | itemsPerPage: 5" pagination-id = "taxesPagination">
+                                    <td>{{cuenta.accountType}}</td>
+                                    <td>{{cuenta.name}}</td>
+                                    <td>
+                                        <button type = "button" title = "Seleccionar" class = "btn btn-primary btn-sm"
+                                                ng-click = "vm.selectCuentasCi(cuenta)" data-toggle = "modal" data-target = "#modalSelectedCuentasCi">
+                                                <span class = "glyphicon glyphicon-check" aria-hidden = "true"></span>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <dir-pagination-controls pagination-id = "taxesPagination"></dir-pagination-controls>
+                    </div>
+                </div>
+                <div class="row table-responsive" ng-show="vm.cuentaContableBankList !== undefined">
+                    <div class="form-group col-md-12">
+                        <input ng-model="searchTextTaxes" class="form-control" placeholder="Buscar"/>
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Tipo de Cuenta</th>
+                                    <th>Nombre G&eacute;nerico</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-show="vm.cuentaContableBankList == 0">
+                                    <td colspan="2">
+                                        No hay Fuente Seleccionada
+                                    </td>
+                                </tr>
+                                <tr dir-paginate = "cuenta in vm.cuentaContableBankList | orderBy:'type' | filter:searchTextTaxes | itemsPerPage: 5" pagination-id = "taxesPagination">
+                                    <td>{{cuenta.accountType}}</td>
+                                    <td>{{cuenta.name}}</td>
+                                    <td>
+                                        <button type = "button" title = "Seleccionar" class = "btn btn-primary btn-sm"
+                                                ng-click = "vm.selectCuentasBankCi(cuenta)" data-toggle = "modal" data-target = "#modalSelectedCuentasCi">
+                                                <span class = "glyphicon glyphicon-check" aria-hidden = "true"></span>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <dir-pagination-controls pagination-id = "taxesPagination"></dir-pagination-controls>
+                    </div>
+                </div>
+                <div class = "row table-responsive">
+                    <div class = "form-group col-md-12">
+                        <table class = "table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>CODIGO</th>
+                                    <th>CUENTA ASOCIADA</th>
+                                    <th>DESCRIPCION</th>
+                                    <th>TIPO</th>
+                                    <th>VALOR</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-show = "vm.dailybookCi.detailDailybookContab == 0">
+                                    <td colspan = "5">
+                                        No hay Fuente Seleccionada
+                                    </td>
+                                </tr>
+                                <tr ng-repeat = "detail in vm.dailybookCi.detailDailybookContab" >
+                                    <td>{{detail.codeConta}}</td>
+                                    <td>{{detail.descrip}}</td>
+                                    <td>{{detail.name}}</td>
+                                    <td>{{detail.tipo}}</td>
+                                    <td>{{detail.baseImponible}}</td>
+                                    <td>
+                                        <button type = "button" title = "Editar" class = "btn btn-primary btn-sm"
+                                                ng-click = "vm.editItemCi($index)" data-toggle = "modal" data-target = "#modalEditCuentasCi">
+                                                <span class = "glyphicon glyphicon-pencil" aria-hidden = "true"></span>
+                                        </button>
+                                        <button type = "button" title = "Eliminar" class = "btn btn-primary btn-sm"
+                                                ng-click = "vm.deleteItemCi($index)">
+                                                <span class = "glyphicon glyphicon-trash" aria-hidden = "true"></span>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td>DEBE: {{vm.getTotalDebitoCi()}}</td>
+                                    <td>HABER: {{vm.getTotalCreditoCi()}}</td>
+                                    <td><b>SALDO: {{vm.getTotalSaldoCi()}}</b></td>
+                                    <td></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div> 
+                </div>
+            </div>
+            <div class="panel-footer">
+                <button type="button" title="Guardar Diario" class="btn btn-primary btn-sm" ng-if="vm.dailybookCiNew"
+                        ng-click="vm.saveDailybookCi()" ng-disabled = "vm.dailybookCi.detailDailybookContab == 0 || vm.getTotalSaldoCi() != 0.00">
+                        <span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>
+                </button>
+                <button type="button" title="Volver" class="btn btn-primary btn-sm"
+                        ng-click="vm.cancel()">
+                        <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!--IMPRESIÓN DE COMPROBANTES DE INGRESO-->
+    <div class="table-responsive" ng-show="vm.dailybookCiCreated" id="printArea" print-section>
+        <div class="panel panel-primary">
+            <div class="panel-body">
+                <div class="row">
+                    <div class="form-group col-md-12 ">
+                        <table width="100%">
+                            <tr>
+                                <td width="40%" align="center"><img src="images/{{vm.userData.subsidiary.userClient.logo}}"><br></td>
+                                <td width="60%" rowspan="2">
+                                    <div style="padding:0px 15px;">
+                                        <div class="form-group col-md-12">
+                                            <h3>
+                                                <label>COMPROBANTE DE INGRESO</label>
+                                                <label>Nro: {{vm.dailybookCiCreated.dailyCiStringSeq}}</label>
+                                            </h3>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-12 ">
+                        <table width="100%">
+                            <tr>
+                                <td width="30%">
+                                    <div>
+                                        <label>BANCO: </label>
+                                        {{vm.dailybookCiCreated.nameBank}}
+                                    </div>
+                                </td>
+                                <td width="20%">
+                                    <div>
+                                        <label>FECHA: </label>
+                                        {{vm.dailybookCiCreated.dateRecordBook | date : "dd-MM-yyyy"}}
+                                    </div>
+                                </td>
+                                <td width="30%">
+                                    <div>
+                                        <label>CHEQUE: </label>
+                                        {{vm.dailybookCiCreated.numCheque}}
+                                    </div>
+                                </td>
+                                <td width="20%">
+                                    <div>
+                                        <label>VALOR: </label>
+                                        &#36;{{vm.dailybookCiCreated.total}}
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                        <table width="100%">
+                            <tr>
+                                <td width="50%">
+                                    <div>
+                                        <label>BENEFICIARIO: </label>
+                                        {{vm.dailybookCiCreated.clientProvName}}
+                                    </div>
+                                </td>
+                                <td width="20%">
+                                    <div>
+                                        <label>RUC: </label>
+                                        {{vm.dailybookCiCreated.ruc}}
+                                    </div>
+                                </td>
+                                <td width="30%">
+                                    <div>
+                                        <label>Nro REF.: </label>
+                                        {{vm.dailybookCiCreated.dailyCiStringUserSeq}}
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                        <table width="100%">
+                            <tr>
+                                <td width="30%">
+                                    <div>
+                                        <label>FACTURA: </label>
+                                        {{vm.dailybookCiCreated.billNumber}}
+                                    </div>
+                                </td>
+                                <td width="70%">
+                                    <div>
+                                        <label>DETALLE: </label>
+                                        {{vm.dailybookCiCreated.generalDetail}}
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-12">
+                        <table width="100%" border="1">
+                            <tr>
+                                <td><b>CUENTA</b></td>
+                                <td><b>NOMBRE CUENTA</b></td>
+                                <td><b>DESCRIPCIÓN</b></td>
+                                <td><b>DÉBITO</b></td>
+                                <td><b>CRÉDITO</b></td>
+                            </tr>
+                            <tr ng-repeat="detail in vm.dailybookCiCreated.detailDailybookContab">
+                                <td>{{detail.codeConta}}</td>
+                                <td>{{detail.descrip}}</td>
+                                <td>{{detail.name}}</td>
+                                <td>{{detail.deber}}</td>
+                                <td>{{detail.haber}}</td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td><b>TOTALES:</b></td>
+                                <td>{{vm.getTotalDebitoCiCreated()}}</td>
+                                <td>{{vm.getTotalCreditoCiCreated()}}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <table width="100%">
+                            <tr>
+                                <td width="50%" align="center">
+                                    <br/><br/>
+                                    _____________<br/>
+                                    AUTORIZADO
+                                </td>
+                                <td width="50%" align="center">
+                                    <br/><br/>
+                                    ___________<br/>
+                                    CONTADOR
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="row" print-remove>
+                    <div class="form-group col-md-12">
+                        <button print-btn type="button" title = "Imprimir Comprobante de Diario" class="btn btn-primary btn-sm"
+                                ng-show="vm.activeCi === true" ng-click="vm.cancelDailybookCiCreated()">
+                                <span class = "glyphicon glyphicon-print" aria-hidden = "true"></span>
+                        </button>
+                        <button type="button" title = "Salir" class="btn btn-primary btn-sm"
+                                ng-click="vm.cancelDailybookCiCreated()">
+                                <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--BUSQUEDA DE DEBTS TO PAY POR PROVEEDOR-->
+    <div id="modalShowDebtsToPayCi" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class = "modal-title">Facturas de Compra por Proveedor</h4>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Nro. Factura</th>
+                                <th>Fecha</th>
+                                <th>Valor</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-show="vm.debtsToPayList == 0">
+                                <td colspan="4">
+                                    No hay Facturas de Compra ingresadas para este Proveedor
+                                </td>
+                            </tr>
+                            <tr ng-repeat="debtsToPay in vm.debtsToPayList | orderBy:'dateCreated':true | filter:searchText">
+                                <td>{{debtsToPay.billNumber}}</td>
+                                <td>{{debtsToPay.fecha | date : "dd/MM/yyyy"}}</td>
+                                <td>{{debtsToPay.total}}</td>
+                                <td>
+                                    <button type="button" title="Seleccionar Factura" class="btn btn-primary btn-sm" ng-click="vm.debtsToPaySelectedCe(debtsToPay)"
+                                            data-dismiss="modal">
+                                            <span class = "glyphicon glyphicon-thumbs-up" aria-hidden = "true"></span>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" title = "Salir" class="btn btn-primary btn-sm" data-dismiss="modal">
+                            <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--SELECCION DE LAS CUENTAS CONTABLES PARA COMPROBANTE DE EGRESO-->
+    <div id="modalSelectedCuentasCi" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" ng-click="vm.impuesto=undefined">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="form-group col-md-2">
+                            <label>C&oacute;digo:</label>  
+                            <b>{{vm.itemb.codeConta}}</b>
+                        </div>
+                        <div class="form-group col-md-5">
+                            <label>Descripci&oacute;n:</label><br/>
+                            <input type="text" class="form-control" ng-model="vm.detailitemb"/>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label>Tipo de Cuenta:</label>
+                            <select ng-options="tip.name as tip.name for tip in [{code: 'DEB' ,name:'DEBITO (D)'}, {code: 'CRD', name:'CREDITO (C)'}]"
+                                    ng-model="vm.itemb.tipo" class="form-control">
+                            </select>
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label>Valor</label>
+                            <input type="text" onkeypress="return ((event.which >= 46 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+                                    class="form-control" maxlength="9" ng-model="vm.itemb.baseImponible" placeholder="{{vm.dailybookCi.total}}"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" title="Aceptar" class="btn btn-success btn-sm" data-dismiss="modal" ng-click="vm.addItemCi()">
+                            <span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span>
+                    </button>
+                    <button type="button" title="Salir" class="btn btn-primary btn-sm" data-dismiss="modal"
+                            ng-click="vm.item = undefined; vm.indexEdit = undefined;">
+                            <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="modalEditCuentasCi" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="form-group col-md-2">
+                            <label>C&oacute;digo:</label>  
+                            <b>{{vm.itemb.codeConta}}</b>
+                        </div>
+                        <div class="form-group col-md-5">
+                            <label>Descripci&oacute;n:</label><br/>
+                            <input type="text" class="form-control" ng-model="vm.itemb.name"/>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label>Tipo de Cuenta:</label>
+                            <select ng-options="tip.name as tip.name for tip in [{code: 'DEB' ,name:'DEBITO (D)'}, {code: 'CRD', name:'CREDITO (C)'}]"
+                                    ng-model="vm.itemb.tipo" class="form-control">
+                            </select>
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label>Valor</label>
+                            <input type="text" onkeypress="return ((event.which >= 46 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+                                   class="form-control" maxlength="9" ng-model="vm.itemb.baseImponible" placeholder="{{vm.dailybookCi.total}}"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" title="Aceptar" class="btn btn-success btn-sm" data-dismiss="modal" ng-click="vm.addItemCi()">
+                            <span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span>
+                    </button>
+                    <button type="button" title="Salir" class="btn btn-primary btn-sm" data-dismiss="modal"
+                            ng-click="vm.item = undefined; vm.indexEdit = undefined;">
+                            <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
+                    </button>
+                </div>
             </div>
         </div>
     </div>
