@@ -54,7 +54,7 @@ angular.module('integridadUiApp')
             };
             vm.medio={};
             vm.user = $localStorage.user;
-            clientService.getLazyByProjectId($localStorage.user.subsidiary.userClient.id).then(function(response) {
+            clientService.getLazyByUserClientId($localStorage.user.subsidiary.userClient.id).then(function(response) {
                 vm.clientList = response;
                 vm.loading = false;
             }).catch(function(error) {

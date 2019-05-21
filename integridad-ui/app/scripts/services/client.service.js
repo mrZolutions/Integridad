@@ -19,7 +19,7 @@ angular
             });
         };
 
-        this.getLazyByProjectId = function(id) {
+        this.getLazyByUserClientId = function(id) {
             return securityService.get('/client/lazy/' + id).then(function successCallback(response) {
                 return response.data;
             });

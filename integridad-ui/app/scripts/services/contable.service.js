@@ -86,8 +86,8 @@ angular
             });
         };
 
-        this.getDailybookCiByProviderId = function(id) {
-            return securityService.get('/contable/dailyci/provider/' + id).then(function successCallback(response) {
+        this.getDailybookCiByClientId = function(id) {
+            return securityService.get('/contable/dailyci/client/' + id).then(function successCallback(response) {
                 return response.data;
             });
         };
@@ -98,14 +98,14 @@ angular
             });
         };
 
-        this.getDailybookCiByUserClientIdWithNoProvider = function(userclientId) {
-            return securityService.get('/contable/dailyci/userclient/noprovider/' + userclientId).then(function successCallback(response) {
+        this.getDailybookCiByUserClientIdWithNoClient = function(userclientId) {
+            return securityService.get('/contable/dailyci/userclient/noclient/' + userclientId).then(function successCallback(response) {
                 return response.data;
             });
         };
 
-        this.getDailybookCiByUserClientIdAndProvIdAndBillNumber = function(userClientId, provId, billNumber) {
-            return securityService.get('/contable/dailyci/userclient/' + userClientId + '/' + provId + '/' + billNumber).then(function successCallback(response) {
+        this.getDailybookCiByUserClientIdAndClientIdAndBillNumber = function(userClientId, clientId, billNumber) {
+            return securityService.get('/contable/dailyci/userclient/' + userClientId + '/' + clientId + '/' + billNumber).then(function successCallback(response) {
                 return response.data;
             });
         };

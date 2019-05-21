@@ -24,7 +24,7 @@ angular.module('integridadUiApp')
                 vm.clientCreate();
             } else {
                 vm.loading = true;
-                clientService.getLazyByProjectId(vm.usrCliId).then(function(response) {
+                clientService.getLazyByUserClientId(vm.usrCliId).then(function(response) {
                     vm.clientList = response;
                     vm.loading = false;
                 }).catch(function(error) {

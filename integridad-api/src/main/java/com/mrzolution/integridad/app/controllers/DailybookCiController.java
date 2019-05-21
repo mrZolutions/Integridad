@@ -39,14 +39,14 @@ public class DailybookCiController {
         return new ResponseEntity<DailybookCi>(response, HttpStatus.ACCEPTED);
     }
     
-    @RequestMapping(method = RequestMethod.GET, value="/provider/{id}")
-    public ResponseEntity getDailybookCiByProviderId(@PathVariable("id") UUID id) {
-        log.info("DailybookCiController getDailybookCiByProviderId: {}", id);
+    @RequestMapping(method = RequestMethod.GET, value="/client/{id}")
+    public ResponseEntity getDailybookCiByClientId(@PathVariable("id") UUID id) {
+        log.info("DailybookCiController getDailybookCiByClientId: {}", id);
         Iterable<DailybookCi> response = null;
         try {
-            response = service.getDailybookCiByProviderId(id);
+            response = service.getDailybookCiByClientId(id);
         } catch (BadRequestException e) {
-            log.error("DailybookCiController getDailybookCiByProviderId Exception thrown: {}", e.getMessage());
+            log.error("DailybookCiController getDailybookCiByClientId Exception thrown: {}", e.getMessage());
 	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
         return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
@@ -65,12 +65,12 @@ public class DailybookCiController {
         return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
     }
     
-    @RequestMapping(method = RequestMethod.GET, value="/userclient/noprovider/{id}")
-    public ResponseEntity getDailybookCiByUserClientIdWithNoProvider(@PathVariable("id") UUID id) {
+    @RequestMapping(method = RequestMethod.GET, value="/userclient/noclient/{id}")
+    public ResponseEntity getDailybookCiByUserClientIdWithNoClient(@PathVariable("id") UUID id) {
         log.info("DailybookCiController getDailybookCiByUserClientIdWithNoProvider: {}", id);
         Iterable<DailybookCi> response = null;
         try {
-            response = service.getDailybookCiByUserClientIdWithNoProvider(id);
+            response = service.getDailybookCiByUserClientIdWithNoClient(id);
         } catch (BadRequestException e) {
             log.error("DailybookCiController getDailybookCiByUserClientIdWithNoProvider Exception thrown: {}", e.getMessage());
 	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
@@ -78,16 +78,16 @@ public class DailybookCiController {
         return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
     }
     
-    @RequestMapping(method = RequestMethod.GET, value="/userclient/{userClientId}/{provId}/{billNumber}")
-    public ResponseEntity getDailybookCiByUserClientIdAndProvIdAndBillNumber(@PathVariable("userClientId") UUID userClientId, @PathVariable("provId") UUID provId, @PathVariable("billNumber") String billNumber) {
+    @RequestMapping(method = RequestMethod.GET, value="/userclient/{userClientId}/{clientId}/{billNumber}")
+    public ResponseEntity getDailybookCiByUserClientIdAndClientIdAndBillNumber(@PathVariable("userClientId") UUID userClientId, @PathVariable("clientId") UUID clientId, @PathVariable("billNumber") String billNumber) {
         Iterable<DailybookCi> response = null;
         try {
-            response = service.getDailybookCiByUserClientIdAndProvIdAndBillNumber(userClientId, provId, billNumber);
+            response = service.getDailybookCiByUserClientIdAndClientIdAndBillNumber(userClientId, clientId, billNumber);
         } catch (BadRequestException e) {
-            log.error("DailybookCiController getDailybookCiByUserClientIdAndProvIdAndBillNumber Exception thrown: {}", e.getMessage());
+            log.error("DailybookCiController getDailybookCiByUserClientIdAndClientIdAndBillNumber Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
-        log.info("DailybookCiController getDailybookCiByUserClientIdAndProvIdAndBillNumber DONE");
+        log.info("DailybookCiController getDailybookCiByUserClientIdAndClientIdAndBillNumber DONE");
         return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
     }
     

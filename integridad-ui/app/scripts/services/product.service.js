@@ -31,7 +31,7 @@ angular
             });
         };
 
-        this.getLazyByProjectId = function(projectId) {
+        this.getLazyByUserClientId = function(projectId) {
             return securityService.get('/product/actives/user_client/' + projectId).then(function successCallback(response) {
                 return response.data;
             });

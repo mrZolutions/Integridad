@@ -433,7 +433,7 @@ angular.module('integridadUiApp')
         vm.warehouseName = warehouse.nameNumber;
         vm.warehouseSubsidiaryName = warehouse.subsidiary.name;
         vm.consumptionList = undefined;
-        clientService.getLazyByProjectId(vm.usrCliId).then(function(response) {
+        clientService.getLazyByUserClientId(vm.usrCliId).then(function(response) {
             vm.clientList = response;
             vm.loading = false;
         }).catch(function(error) {

@@ -91,7 +91,7 @@ angular.module('integridadUiApp')
             vm.medio = {};
             vm.pagosOffline = [];
             vm.user = $localStorage.user;
-            clientService.getLazyByProjectId(vm.user.subsidiary.userClient.id).then(function(response) {
+            clientService.getLazyByUserClientId(vm.user.subsidiary.userClient.id).then(function(response) {
                 vm.clientList = response;
                 vm.loading = false;
             }).catch(function(error) {

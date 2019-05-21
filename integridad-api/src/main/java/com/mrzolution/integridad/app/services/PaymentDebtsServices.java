@@ -9,7 +9,6 @@ import com.mrzolution.integridad.app.repositories.CreditsDebtsRepository;
 import com.mrzolution.integridad.app.repositories.DebtsToPayRepository;
 import com.mrzolution.integridad.app.repositories.PagoDebtsRepository;
 import com.mrzolution.integridad.app.repositories.PaymentDebtsRepository;
-import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -17,6 +16,7 @@ import java.util.List;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 /**
@@ -67,7 +67,7 @@ public class PaymentDebtsServices {
 	return paymentsDebts;
     }
     
-    //@Async("asyncExecutor")
+    @Async("asyncExecutor")
     public PaymentDebts createPaymentDebts(PaymentDebts paymentDebts) {
         PaymentDebts saved = paymentDebtsRepository.save(paymentDebts);
         document = saved.getCreditsDebts().getPagoDebts().getDebtsToPay().getId().toString();
@@ -90,24 +90,18 @@ public class PaymentDebtsServices {
         nume = cambio.getValor();
         resto = nume - abono;
         cambio.setValor(resto);
-        creditsDebtsRepository.save(cambio);
-        
-        DebtsToPay debts = debtsToPayRepository.findOne(saved.getCreditsDebts().getPagoDebts().getDebtsToPay().getId());
-        String debtsToPayId = debts.getId().toString();
-        if (debtsToPayId.equals(document)) {
-            saldo = debts.getSaldo();
-            sumado = saldo - abono;
-            BigDecimal vsumado = new BigDecimal(sumado);
-            vsumado = vsumado.setScale(4, BigDecimal.ROUND_HALF_UP);
-            saldo = vsumado.doubleValue();
-            debts.setSaldo(saldo);
-            debtsToPayRepository.save(debts);
+        CreditsDebts creditDebtsSaved = creditsDebtsRepository.save(cambio);
+        if (creditDebtsSaved != null) {
+            DebtsToPay debts = debtsToPayRepository.findOne(saved.getCreditsDebts().getPagoDebts().getDebtsToPay().getId());
+            String debtsToPayId = debts.getId().toString();
+            if (debtsToPayId.equals(document)) {
+                debts.setSaldo(creditDebtsSaved.getValor());
+                debtsToPayRepository.save(debts);
+            }
         }
         log.info("PaymentDebtsServices updateCreditsDebtsAndDebtsToPay DONE");
         nume = 0;
         resto = 0;
-        sumado = 0;
-        saldo = 0;
     }
     
     public List<CPResumenPaymentDebtsReport> getPaymentsDebtsByUserClientIdAndDates(UUID id, long dateOne, long dateTwo) {

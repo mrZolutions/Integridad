@@ -42,8 +42,8 @@ public class DailybookCi {
     private double total;
     
     @ManyToOne
-    @JoinColumn(name = "provider_id")
-    private Provider provider;
+    @JoinColumn(name = "client_id")
+    private Client client;
     
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -61,9 +61,9 @@ public class DailybookCi {
     }
     
     public void setFatherListToNull() {
-        if (provider != null) {
-            provider.setListsNull();
-            provider.setFatherListToNull();
+        if (client != null) {
+            client.setListsNull();
+            client.setFatherListToNull();
         }
         if (userIntegridad != null) {
             userIntegridad.setListsNull();

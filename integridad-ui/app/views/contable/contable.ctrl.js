@@ -8,12 +8,17 @@
  * Controller of the template contable.tpl.html
  */
 angular.module('integridadUiApp')
-    .controller('ContableCtrl', function(_, $localStorage, cuentaContableService, providerService, eretentionService,
-                                            utilSeqService, debtsToPayService, contableService, $location) {
+    .controller('ContableCtrl', function(_, $localStorage, cuentaContableService, providerService, eretentionService, billService,
+                                            utilSeqService, debtsToPayService, clientService, contableService, $location) {
     var vm = this;
     vm.error = undefined;
     vm.success = undefined;
     vm.loading = false;
+
+    vm.mrZolutions = '4907601b-6e54-4675-80a8-ab6503e1dfeb';
+    vm.laQuinta = '758dea84-74f5-4209-b218-9b84c10621fc';
+    vm.catedral = '1e2049c3-a3bc-4231-a0de-dded8020dc1b';
+    vm.ppe = '0a28cbbf-98d5-4ce3-be36-33a7a83bc29e';
     
     vm.aux = undefined;
     vm.userData = $localStorage.user;
@@ -81,9 +86,10 @@ angular.module('integridadUiApp')
         vm.activeCe = undefined
 
         //Comprobante de Ingreso Ci
-        vm.providerCiList = undefined;
-        vm.provRucCi = undefined;
-        vm.providerCiSelected = undefined;
+        vm.clientCiList = undefined;
+        vm.clientIdentification = undefined;
+        vm.clientCiSelected = undefined;
+        vm.clientName = undefined;
         vm.dailybookCiNew = undefined;
         vm.dailyCiSeq = undefined;
         vm.dailyCiStringSeq = undefined;
@@ -142,81 +148,6 @@ angular.module('integridadUiApp')
         vm.loading = false;
     };
 
-    function _getDailyCgSeqNumber() {
-        vm.numberAddedOne = parseInt($localStorage.user.cashier.dailyCgNumberSeq) + 1;
-        vm.dailyCgSeq = vm.numberAddedOne;
-        vm.dailyCgStringSeq = utilSeqService._pad_with_zeroes(vm.numberAddedOne, 6);
-    };
-
-    function _initializeDailybookCg() {
-        vm.dailybookCg = {
-            userIntegridad: $localStorage.user,
-            subsidiary: $localStorage.user.subsidiary,
-            subTotalDoce: 0,
-            iva: 0,
-            subTotalCero: 0,
-            total: 0,
-            detailDailybookContab: []
-        };
-    };
-
-    function _getDailyCeSeqNumber() {
-        vm.numberAddedOne = parseInt($localStorage.user.cashier.dailyCeNumberSeq) + 1;
-        vm.dailyCeSeq = vm.numberAddedOne;
-        vm.dailyCeStringSeq = utilSeqService._pad_with_zeroes(vm.numberAddedOne, 6);
-    };
-
-    function _initializeDailybookCe() {
-        vm.dailybookCe = {
-            provider: vm.providerCeSelected,
-            userIntegridad: $localStorage.user,
-            subsidiary: $localStorage.user.subsidiary,
-            subTotalDoce: 0,
-            iva: 0,
-            subTotalCero: 0,
-            total: 0,
-            detailDailybookContab: []
-        };
-    };
-
-    function _getDailyCiSeqNumber() {
-        vm.numberAddedOne = parseInt($localStorage.user.cashier.dailyCiNumberSeq) + 1;
-        vm.dailyCiSeq = vm.numberAddedOne;
-        vm.dailyCiStringSeq = utilSeqService._pad_with_zeroes(vm.numberAddedOne, 6);
-    };
-
-    function _initializeDailybookCi() {
-        vm.dailybookCe = {
-            provider: vm.providerCiSelected,
-            userIntegridad: $localStorage.user,
-            subsidiary: $localStorage.user.subsidiary,
-            subTotalDoce: 0,
-            iva: 0,
-            subTotalCero: 0,
-            total: 0,
-            detailDailybookContab: []
-        };
-    };
-
-    function _getDailyCxPSeqNumber() {
-        vm.numberAddedOne = parseInt($localStorage.user.cashier.dailyCppNumberSeq) + 1;
-        vm.dailyCxPSeq = vm.numberAddedOne;
-        vm.dailyCxPStringSeq = utilSeqService._pad_with_zeroes(vm.numberAddedOne, 6);
-    };
-
-    function _initializeDailybookCxP() {
-        vm.dailybookCxP = {
-            provider: vm.providerCxPSelected,
-            userIntegridad: $localStorage.user,
-            subsidiary: $localStorage.user.subsidiary,
-            subTotalDoce: 0,
-            iva: 0,
-            subTotalCero: 0,
-            total: 0,
-            detailDailybookContab: []
-        };
-    };
-
     vm.loadTypeDailybook = function() {
         switch (vm.dailybookType) {
             case '1':
@@ -244,8 +175,8 @@ angular.module('integridadUiApp')
             case '3':
                 vm.selectedTypeBook = vm.dailybookType;
                 vm.typeContab = 'COMPROBANTE DE INGRESO';
-                providerService.getLazyByUserClientId(vm.usrCliId).then(function(response) {
-                    vm.providerCiList = response;
+                clientService.getLazyByUserClientId(vm.usrCliId).then(function(response) {
+                    vm.clientCiList = response;
                     vm.loading = false;
                 }).catch(function(error) {
                     vm.loading = false;
@@ -271,6 +202,24 @@ angular.module('integridadUiApp')
     };
 
 // Funciones para el Diario de Contabilidad General
+    function _getDailyCgSeqNumber() {
+        vm.numberAddedOne = parseInt($localStorage.user.cashier.dailyCgNumberSeq) + 1;
+        vm.dailyCgSeq = vm.numberAddedOne;
+        vm.dailyCgStringSeq = utilSeqService._pad_with_zeroes(vm.numberAddedOne, 6);
+    };
+
+    function _initializeDailybookCg() {
+        vm.dailybookCg = {
+            userIntegridad: $localStorage.user,
+            subsidiary: $localStorage.user.subsidiary,
+            subTotalDoce: 0,
+            iva: 0,
+            subTotalCero: 0,
+            total: 0,
+            detailDailybookContab: []
+        };
+    };
+
     vm.addDailybookCg = function() {
         vm.error = undefined;
         vm.templateDailybookCg = false;
@@ -450,6 +399,25 @@ angular.module('integridadUiApp')
     };
 
 //Funciones para el Comprobante de Egreso
+    function _getDailyCeSeqNumber() {
+        vm.numberAddedOne = parseInt($localStorage.user.cashier.dailyCeNumberSeq) + 1;
+        vm.dailyCeSeq = vm.numberAddedOne;
+        vm.dailyCeStringSeq = utilSeqService._pad_with_zeroes(vm.numberAddedOne, 6);
+    };
+
+    function _initializeDailybookCe() {
+        vm.dailybookCe = {
+            provider: vm.providerCeSelected,
+            userIntegridad: $localStorage.user,
+            subsidiary: $localStorage.user.subsidiary,
+            subTotalDoce: 0,
+            iva: 0,
+            subTotalCero: 0,
+            total: 0,
+            detailDailybookContab: []
+        };
+    };
+
     vm.providerCeSelect = function(provider) {
         vm.success = undefined;
         vm.error = undefined;
@@ -525,11 +493,11 @@ angular.module('integridadUiApp')
         vm.dailybookCe.billNumber = vm.debtsBillNumber;
         vm.dailybookCe.total = vm.debtsTotal;
         //Selección de las Cuentas Contables por defecto dependiendo del Cliente
-        if (vm.usrCliId === '758dea84-74f5-4209-b218-9b84c10621fc') {
+        if (vm.usrCliId === vm.laQuinta) {
             vm.provContable = '2.01.03.01.001';
-        } else if (vm.usrCliId === '4907601b-6e54-4675-80a8-ab6503e1dfeb') {
+        } else if (vm.usrCliId === vm.mrZolutions) {
             vm.provContable = '2.01.03.01.001';
-        } else if (vm.usrCliId === '1e2049c3-a3bc-4231-a0de-dded8020dc1b') {
+        } else if (vm.usrCliId === vm.catedral) {
             vm.provContable = '2.12.10.101';
         } else {
             vm.provContable = '2.01.01.01';
@@ -552,11 +520,11 @@ angular.module('integridadUiApp')
         if (vm.generalDetailCe == null || vm.generalDetailCe == undefined || vm.generalDetailCe == '') {
             vm.generalDetailCe = vm.providerName + ' ' + 'Fc' + ' ' + vm.dailybookCe.billNumber;
             //Selección de las Cuentas Contables por defecto dependiendo del Cliente
-            if (vm.usrCliId === '758dea84-74f5-4209-b218-9b84c10621fc') {
+            if (vm.usrCliId === vm.laQuinta) {
                 vm.provContable = '2.01.03.01.001';
-            } else if (vm.usrCliId === '4907601b-6e54-4675-80a8-ab6503e1dfeb') {
+            } else if (vm.usrCliId === vm.mrZolutions) {
                 vm.provContable = '2.01.03.01.001';
-            } else if (vm.usrCliId === '1e2049c3-a3bc-4231-a0de-dded8020dc1b') {
+            } else if (vm.usrCliId === vm.catedral) {
                 vm.provContable = '2.12.10.101';
             } else {
                 vm.provContable = '2.01.01.01';
@@ -757,6 +725,7 @@ angular.module('integridadUiApp')
         contableService.createDailybookCe(vm.dailybookCe).then(function(response) {
             vm.dailybookCeNew = false;
             vm.dailybookCeManual = false;
+            vm.activeCe = true;
             vm.dailybookCeCreated = response;
             $localStorage.user.cashier.dailyCeNumberSeq = vm.dailybookCe.dailyCeSeq;
             vm.dailiedCe = true;
@@ -795,14 +764,33 @@ angular.module('integridadUiApp')
     };
 
 //Funciones para el Comprobante de Ingreso
-    vm.providerCiSelect = function(provider) {
+    function _getDailyCiSeqNumber() {
+        vm.numberAddedOne = parseInt($localStorage.user.cashier.dailyCiNumberSeq) + 1;
+        vm.dailyCiSeq = vm.numberAddedOne;
+        vm.dailyCiStringSeq = utilSeqService._pad_with_zeroes(vm.numberAddedOne, 6);
+    };
+
+    function _initializeDailybookCi() {
+        vm.dailybookCi = {
+            client: vm.clientCiSelected,
+            userIntegridad: $localStorage.user,
+            subsidiary: $localStorage.user.subsidiary,
+            subTotalDoce: 0,
+            iva: 0,
+            subTotalCero: 0,
+            total: 0,
+            detailDailybookContab: []
+        };
+    };
+
+    vm.clientCiSelect = function(client) {
         vm.success = undefined;
         vm.error = undefined;
         vm.loading = true;
-        vm.providerCiSelected = provider;
-        vm.providerId = provider.id;
-        vm.providerName = provider.razonSocial;
-        vm.providerRuc = provider.ruc;
+        vm.clientCiSelected = client;
+        vm.clientId = client.id;
+        vm.clientName = client.name;
+        vm.clientIdentification = client.idetification;
         _getDailyCiSeqNumber();
         _initializeDailybookCi();
         vm.loading = false;
@@ -811,11 +799,11 @@ angular.module('integridadUiApp')
         vm.dailybookCiNew = true;
     };
 
-    vm.consultDailybookCi = function(provider) {
+    vm.consultDailybookCi = function(client) {
         vm.success = undefined;
         vm.error = undefined;
         vm.loading = true;
-        contableService.getDailybookCiByProviderId(provider.id).then(function(response) {
+        contableService.getDailybookCiByClientId(client.id).then(function(response) {
             vm.dailybookCiList = response;
             vm.loading = false;
         }).catch(function(error) {
@@ -841,7 +829,7 @@ angular.module('integridadUiApp')
         vm.success = undefined;
         vm.error = undefined;
         vm.loading = true;
-        contableService.getDailybookCiByUserClientIdWithNoProvider(vm.usrCliId).then(function(response) {
+        contableService.getDailybookCiByUserClientIdWithNoClient(vm.usrCliId).then(function(response) {
             vm.dailybookCiManualCreatedList = response;
             vm.loading = false;
         }).catch(function(error) {
@@ -871,7 +859,43 @@ angular.module('integridadUiApp')
         });
     };
 
+    vm.getBillsByClientCi = function() {
+        vm.loading = true;
+        billService.getAllBillsByClientId(vm.clientId).then(function(response) {
+            vm.billList = response;
+            vm.loading = false;
+        }).catch(function(error) {
+            vm.loading = false;
+            vm.error = error.data;
+        });
+    };
+
+    vm.billSelectedCi = function(bill) {
+        vm.loading = true;
+        $('#modalShowBillsCi').modal('hide');
+
+    };
+
 //Funciones para el Diario de Cuentas por Pagar
+    function _getDailyCxPSeqNumber() {
+        vm.numberAddedOne = parseInt($localStorage.user.cashier.dailyCppNumberSeq) + 1;
+        vm.dailyCxPSeq = vm.numberAddedOne;
+        vm.dailyCxPStringSeq = utilSeqService._pad_with_zeroes(vm.numberAddedOne, 6);
+    };
+
+    function _initializeDailybookCxP() {
+        vm.dailybookCxP = {
+            provider: vm.providerCxPSelected,
+            userIntegridad: $localStorage.user,
+            subsidiary: $localStorage.user.subsidiary,
+            subTotalDoce: 0,
+            iva: 0,
+            subTotalCero: 0,
+            total: 0,
+            detailDailybookContab: []
+        };
+    };
+
     vm.providerCxPSelect = function(provider) {
         vm.success = undefined;
         vm.error = undefined;
@@ -1081,7 +1105,7 @@ angular.module('integridadUiApp')
     vm.addRetentionToDailybookCxP = function() {
         vm.retenSelected = true;
         // Usuario La Quinta
-        if (vm.usrCliId === '758dea84-74f5-4209-b218-9b84c10621fc') {
+        if (vm.usrCliId === vm.laQuinta) {
             if (vm.retenTaxTypeFuente == 'RETENCION EN LA FUENTE') {
                 switch(vm.retenCodeFuente) {
                     case '302':
@@ -1192,7 +1216,7 @@ angular.module('integridadUiApp')
                 };
             };
         // Usuario Mr. Zolutions
-        } else if (vm.usrCliId === '4907601b-6e54-4675-80a8-ab6503e1dfeb') {
+        } else if (vm.usrCliId === vm.mrZolutions) {
             if (vm.retenTaxTypeFuente == 'RETENCION EN LA FUENTE') {
                 switch(vm.retenCodeFuente) {
                     case '303':
@@ -1283,7 +1307,7 @@ angular.module('integridadUiApp')
                 };
             };
         // Usuario Catedral
-        } else if (vm.usrCliId === '1e2049c3-a3bc-4231-a0de-dded8020dc1b') {
+        } else if (vm.usrCliId === vm.catedral) {
             if (vm.retenTaxTypeFuente == 'RETENCION EN LA FUENTE') {
                 switch(vm.retenCodeFuente) {
                     case '302':
@@ -1423,11 +1447,11 @@ angular.module('integridadUiApp')
         };
 
         //Selección de las Cuentas Contables por defecto dependiendo del Cliente
-        if (vm.usrCliId === '758dea84-74f5-4209-b218-9b84c10621fc') {
+        if (vm.usrCliId === vm.laQuinta) {
             vm.ivaContable = '1.01.05.01.001'; vm.provContable = '2.01.03.01.001';
-        } else if (vm.usrCliId === '4907601b-6e54-4675-80a8-ab6503e1dfeb') {
+        } else if (vm.usrCliId === vm.mrZolutions) {
             vm.ivaContable = '1.01.05.02.001'; vm.provContable = '2.01.03.01.001';
-        } else if (vm.usrCliId === '1e2049c3-a3bc-4231-a0de-dded8020dc1b') {
+        } else if (vm.usrCliId === vm.catedral) {
             vm.ivaContable = '1.14.10.201'; vm.provContable = '2.12.10.101';
         } else {
             vm.ivaContable = '1.01.01.01';

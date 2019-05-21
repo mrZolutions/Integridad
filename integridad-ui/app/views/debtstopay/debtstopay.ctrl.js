@@ -15,6 +15,11 @@ angular.module('integridadUiApp')
         vm.success = undefined;
         vm.loading = false;
         vm.userData = $localStorage.user;
+        
+        vm.mrZolutions = '4907601b-6e54-4675-80a8-ab6503e1dfeb';
+        vm.laQuinta = '758dea84-74f5-4209-b218-9b84c10621fc';
+        vm.catedral = '1e2049c3-a3bc-4231-a0de-dded8020dc1b';
+        vm.ppe = '0a28cbbf-98d5-4ce3-be36-33a7a83bc29e';
 
         vm.seqNumber = undefined;
         vm.subIva = undefined;
@@ -767,7 +772,7 @@ angular.module('integridadUiApp')
             vm.debtsBillNumber = numOne + '-' + numTwo + '-' + parNum;
             vm.generalDetailCxP = vm.providerName + ' ' + 'Fc' + ' ' + vm.debtsBillNumber;
             // Usuario La Quinta
-            if (vm.usrCliId === '758dea84-74f5-4209-b218-9b84c10621fc') {
+            if (vm.usrCliId === vm.laQuinta) {
                 if (vm.retenTaxTypeFuente == 'RETENCION EN LA FUENTE') {
                     switch(vm.retenCodeFuente) {
                         case '302':
@@ -903,7 +908,7 @@ angular.module('integridadUiApp')
                     };
                 };
             // Usuario Mr. Zolutions
-            } else if (vm.usrCliId === '4907601b-6e54-4675-80a8-ab6503e1dfeb') {
+            } else if (vm.usrCliId === vm.mrZolutions) {
                 if (vm.retenTaxTypeFuente == 'RETENCION EN LA FUENTE') {
                     switch(vm.retenCodeFuente) {
                         case '303':
@@ -1014,7 +1019,7 @@ angular.module('integridadUiApp')
                     };
                 };
             // Usuario Catedral
-            } else if (vm.usrCliId === '1e2049c3-a3bc-4231-a0de-dded8020dc1b') {
+            } else if (vm.usrCliId === vm.catedral) {
                 if (vm.retenTaxTypeFuente == 'RETENCION EN LA FUENTE') {
                     switch(vm.retenCodeFuente) {
                         case '302':
@@ -1210,11 +1215,11 @@ angular.module('integridadUiApp')
             };
 
             //Selección de las Cuentas Contables por defecto dependiendo del Cliente
-            if (vm.usrCliId === '758dea84-74f5-4209-b218-9b84c10621fc') {
+            if (vm.usrCliId === vm.laQuinta) {
                 vm.ivaContable = '1.01.05.01.001'; vm.provContable = '2.01.03.01.001';
-            } else if (vm.usrCliId === '4907601b-6e54-4675-80a8-ab6503e1dfeb') {
+            } else if (vm.usrCliId === vm.mrZolutions) {
                 vm.ivaContable = '1.01.05.02.001'; vm.provContable = '2.01.03.01.001';
-            } else if (vm.usrCliId === '1e2049c3-a3bc-4231-a0de-dded8020dc1b') {
+            } else if (vm.usrCliId === vm.catedral) {
                 vm.ivaContable = '1.14.10.201'; vm.provContable = '2.12.10.101';
             } else {
                 vm.ivaContable = '1.01.01.01';
@@ -1531,28 +1536,28 @@ angular.module('integridadUiApp')
                             vm.error = error.data;
                         });
                     });
-                    _asientoComprobanteUnicoEgreso();
+                    _asientoComprobanteMultiEgreso();
                     _activate();
                 } else {
                     vm.error = 'El Nro. de Documento (Cheque, Transferencia y/o Depósito) Ya Existe y no puede repetirse';
+                    vm.loading = false;
                 };
-                vm.loading = false;
             }).catch(function(error) {
                 vm.loading = false;
                 vm.error = error.data;
             });
         };
 
-        function _asientoComprobanteUnicoEgreso() {
+        function _asientoComprobanteMultiEgreso() {
             _getDailyCeSeqNumber();
             vm.selectedTypeBook = '2';
             vm.typeContab = 'COMPROBANTE DE EGRESO';
             //Selección de las Cuentas Contables por defecto dependiendo del Cliente
-            if (vm.usrCliId === '758dea84-74f5-4209-b218-9b84c10621fc') {
+            if (vm.usrCliId === vm.laQuinta) {
                 vm.provContable = '2.01.03.01.001';
-            } else if (vm.usrCliId === '4907601b-6e54-4675-80a8-ab6503e1dfeb') {
+            } else if (vm.usrCliId === vm.mrZolutions) {
                 vm.provContable = '2.01.03.01.001';
-            } else if (vm.usrCliId === '1e2049c3-a3bc-4231-a0de-dded8020dc1b') {
+            } else if (vm.usrCliId === vm.catedral) {
                 vm.provContable = '2.12.10.101';
             } else {
                 vm.provContable = '2.01.01.01';
@@ -1679,11 +1684,11 @@ angular.module('integridadUiApp')
             vm.selectedTypeBook = '2';
             vm.typeContab = 'COMPROBANTE DE EGRESO';
             //Selección de las Cuentas Contables por defecto dependiendo del Cliente
-            if (vm.usrCliId === '758dea84-74f5-4209-b218-9b84c10621fc') {
+            if (vm.usrCliId === vm.laQuinta) {
                 vm.provContable = '2.01.03.01.001';
-            } else if (vm.usrCliId === '4907601b-6e54-4675-80a8-ab6503e1dfeb') {
+            } else if (vm.usrCliId === vm.mrZolutions) {
                 vm.provContable = '2.01.03.01.001';
-            } else if (vm.usrCliId === '1e2049c3-a3bc-4231-a0de-dded8020dc1b') {
+            } else if (vm.usrCliId === vm.catedral) {
                 vm.provContable = '2.12.10.101';
             } else {
                 vm.provContable = '2.01.01.01';

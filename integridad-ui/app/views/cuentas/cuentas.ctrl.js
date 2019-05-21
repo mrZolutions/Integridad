@@ -22,7 +22,8 @@ angular.module('integridadUiApp')
             {code: 'TKAE', name: 'TICKETS AEREOS'}, {code: 'ACTV', name: 'ACTIVOS'},
             {code: 'PASV', name: 'PASIVOS'}, {code: 'INGR', name: 'INGRESOS'},
             {code: 'EGRE', name: 'EGRESOS'}, {code: 'PATR', name: 'PATRIMONIOS'},
-            {code: 'BANC', name: 'DEFINIDA PARA BANCOS'}, {code: 'GADM', name: 'GASTOS ADMINISTRATIVOS'}
+            {code: 'BANC', name: 'DEFINIDA PARA BANCOS'}, {code: 'GADM', name: 'GASTOS ADMINISTRATIVOS'},
+            {code: 'GEMP', name: 'GASTOS DE EMPLEADOS'}
         ];
 
         function _activate() {

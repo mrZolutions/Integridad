@@ -14,7 +14,6 @@ import com.mrzolution.integridad.app.repositories.DetailRetentionClientChildRepo
 import com.mrzolution.integridad.app.repositories.DetailRetentionClientRepository;
 import com.mrzolution.integridad.app.repositories.PaymentRepository;
 import com.mrzolution.integridad.app.repositories.RetentionClientRepository;
-import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -22,6 +21,7 @@ import java.util.List;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 /**
@@ -45,10 +45,9 @@ public class RetentionClientServices {
     @Autowired
     BillRepository billRepository;
     
-    private double sum = 0.0;
-    private double sumado = 0.0;
+    private double sum = 0;
     private String document = "";
-    private double valor = 0.0;
+    private double valor = 0;
     private String doc = "";
     private int numC = 1;
     private String saldo = "";
@@ -92,6 +91,7 @@ public class RetentionClientServices {
         return saved;
     }
 
+    @Async("asyncExecutor")
     public void updateBillCreditsAndPayment(RetentionClient saved, String document) {
         Credits docNumber = creditsRepository.findByBillId(document);
         doc = docNumber.getBillId();
@@ -114,23 +114,19 @@ public class RetentionClientServices {
             specialPayment.setValorReten(sum);
             specialPayment.setValorNotac(0.0);
             paymentRepository.save(specialPayment);
-        }
-        
-        Bill bill = billRepository.findOne(saved.getBill().getId());
-        String nbillId = bill.getId().toString();
-        if (nbillId.equals(document)) {
-            saldo = bill.getSaldo();
-            valor = Double.parseDouble(saldo);
-            sumado = valor - sum;
-            BigDecimal vsumado = new BigDecimal(sumado);
-            vsumado = vsumado.setScale(2, BigDecimal.ROUND_HALF_UP);
-            saldo = String.valueOf(vsumado);
-            bill.setSaldo(saldo);
-            billRepository.save(bill);
+            
+            if (spCretits != null) {
+                Bill bill = billRepository.findOne(saved.getBill().getId());
+                String nbillId = bill.getId().toString();
+                if (nbillId.equals(document)) {
+                    saldo = String.valueOf(spCretits.getValor());
+                    bill.setSaldo(saldo);
+                    billRepository.save(bill);
+                }
+            }
         }
         log.info("RetentionClientServices Bill, Credits and Payment UPDATED");
         sum = 0;
-        sumado = 0;
         valor = 0;
     }
     

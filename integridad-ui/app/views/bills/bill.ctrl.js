@@ -94,7 +94,7 @@ angular.module('integridadUiApp')
             vm.medio = {};
             vm.pagos = [];
             vm.user = $localStorage.user;
-            clientService.getLazyByProjectId(vm.user.subsidiary.userClient.id).then(function(response) {
+            clientService.getLazyByUserClientId(vm.user.subsidiary.userClient.id).then(function(response) {
                 vm.clientList = response;
                 vm.loading = false;
             }).catch(function(error) {
@@ -693,7 +693,7 @@ angular.module('integridadUiApp')
                     if (vm.estado === 'PENDIENTE') {
                         vm.bill.saldo = (vm.bill.total).toString();
                     } else {
-                        vm.bill.saldo = '0.0';
+                        vm.bill.saldo = '0.00';
                     };
                     // 1 is typeDocument Bill **************!!!
                     billService.create(vm.bill, 1).then(function(respBill) {

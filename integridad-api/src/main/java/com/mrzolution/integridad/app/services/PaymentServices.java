@@ -9,7 +9,6 @@ import com.mrzolution.integridad.app.repositories.BillRepository;
 import com.mrzolution.integridad.app.repositories.CreditsRepository;
 import com.mrzolution.integridad.app.repositories.PagoRepository;
 import com.mrzolution.integridad.app.repositories.PaymentRepository;
-import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -17,6 +16,7 @@ import java.util.List;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 /**
@@ -41,7 +41,6 @@ public class PaymentServices {
     private double resto = 0;
     private String document = "--";
     private String saldo = "";
-    private double sumado = 0;
     private String numCheque = "--";
     
     private UUID clientId;
@@ -62,6 +61,7 @@ public class PaymentServices {
 	return payments;
     }
     
+    @Async("asyncExecutor")
     public Payment createPayment(Payment payment) {
         Payment saved = paymentRepository.save(payment);
         document = saved.getCredits().getPago().getBill().getId().toString();
@@ -82,24 +82,19 @@ public class PaymentServices {
         nume = cambio.getValor();
         resto = nume - abono;
         cambio.setValor(resto);
-        creditsRepository.save(cambio);
-        
-        Bill billed = billRepository.findOne(saved.getCredits().getPago().getBill().getId());
-        String nbillId = billed.getId().toString();
-        if (nbillId.equals(document)) {
-            saldo = billed.getSaldo();
-            nume = Double.parseDouble(saldo);
-            sumado = nume - abono;
-            BigDecimal vsumado = new BigDecimal(sumado);
-            vsumado = vsumado.setScale(2, BigDecimal.ROUND_HALF_UP);
-            saldo = String.valueOf(vsumado);
-            billed.setSaldo(saldo);
-            billRepository.save(billed);
+        Credits creditSaved = creditsRepository.save(cambio);
+        if (creditSaved != null) {
+            Bill billed = billRepository.findOne(saved.getCredits().getPago().getBill().getId());
+            String nbillId = billed.getId().toString();
+            if (nbillId.equals(document)) {
+                saldo = String.valueOf(creditSaved.getValor());
+                billed.setSaldo(saldo);
+                billRepository.save(billed);
+            }
         }
         log.info("PaymentServices updateCreditsAndBill DONE");
         nume = 0;
         resto = 0;
-        sumado = 0;
         saldo = "";
     }
     

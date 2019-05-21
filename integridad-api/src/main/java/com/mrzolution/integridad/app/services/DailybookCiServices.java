@@ -53,10 +53,10 @@ public class DailybookCiServices {
         return dailys;
     }
     
-    //Selecciona todos los COMPROBANTES DE INGRESO por UserClientId Sin Id de Provveedor
-    public Iterable<DailybookCi> getDailybookCiByUserClientIdWithNoProvider(UUID userClientId) {
-        log.info("DailybookCiServices getDailybookCiByUserClientIdWithNoProvider: {}", userClientId);
-        Iterable<DailybookCi> dailys = dailybookCiRepository.findDailybookCiByUserClientIdWithNoProvider(userClientId);
+    //Selecciona todos los COMPROBANTES DE INGRESO por UserClientId Sin Id de Cliente
+    public Iterable<DailybookCi> getDailybookCiByUserClientIdWithNoClient(UUID userClientId) {
+        log.info("DailybookCiServices getDailybookCiByUserClientIdWithNoClient: {}", userClientId);
+        Iterable<DailybookCi> dailys = dailybookCiRepository.findDailybookCiByUserClientIdWithNoClient(userClientId);
         dailys.forEach(daily -> {
             daily.setListsNull();
             daily.setFatherListToNull();
@@ -64,10 +64,10 @@ public class DailybookCiServices {
         return dailys;
     }
     
-    //Selecciona todos los COMPROBANTES DE INGRESO por ProviderId
-    public Iterable<DailybookCi> getDailybookCiByProviderId(UUID Id) {
-        log.info("DailybookCiServices getDailybookCiByProviderId: {}", Id);
-        Iterable<DailybookCi> dailys = dailybookCiRepository.findDailybookCiByProviderId(Id);
+    //Selecciona todos los COMPROBANTES DE INGRESO por Cliente
+    public Iterable<DailybookCi> getDailybookCiByClientId(UUID Id) {
+        log.info("DailybookCiServices getDailybookCiByClientId: {}", Id);
+        Iterable<DailybookCi> dailys = dailybookCiRepository.findDailybookCiByClientId(Id);
         dailys.forEach(daily -> {
             daily.setListsNull();
             daily.setFatherListToNull();
@@ -75,9 +75,9 @@ public class DailybookCiServices {
         return dailys;
     }
     
-    //Busca COMPROBANTES DE INGRESO por UserClient, Proveedor y Nro. Factura
-    public Iterable<DailybookCi> getDailybookCiByUserClientIdAndProvIdAndBillNumber(UUID userClientId, UUID provId, String billNumber) {
-        Iterable<DailybookCi> dailys = dailybookCiRepository.findDailybookCiByUserClientIdAndProvIdAndBillNumber(userClientId, provId, billNumber);
+    //Busca COMPROBANTES DE INGRESO por UserClient, Cliente y Nro. Factura
+    public Iterable<DailybookCi> getDailybookCiByUserClientIdAndClientIdAndBillNumber(UUID userClientId, UUID clientId, String billNumber) {
+        Iterable<DailybookCi> dailys = dailybookCiRepository.findDailybookCiByUserClientIdAndClientIdAndBillNumber(userClientId, clientId, billNumber);
         dailys.forEach(daily -> {
             daily.setFatherListToNull();
             daily.setListsNull();
