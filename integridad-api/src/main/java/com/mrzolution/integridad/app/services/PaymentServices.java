@@ -9,6 +9,7 @@ import com.mrzolution.integridad.app.repositories.BillRepository;
 import com.mrzolution.integridad.app.repositories.CreditsRepository;
 import com.mrzolution.integridad.app.repositories.PagoRepository;
 import com.mrzolution.integridad.app.repositories.PaymentRepository;
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -16,7 +17,6 @@ import java.util.List;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 /**
@@ -61,7 +61,7 @@ public class PaymentServices {
 	return payments;
     }
     
-    @Async("asyncExecutor")
+    //@Async("asyncExecutor")
     public Payment createPayment(Payment payment) {
         Payment saved = paymentRepository.save(payment);
         document = saved.getCredits().getPago().getBill().getId().toString();
@@ -81,13 +81,17 @@ public class PaymentServices {
         Credits cambio = creditsRepository.findOne(saved.getCredits().getId());
         nume = cambio.getValor();
         resto = nume - abono;
-        cambio.setValor(resto);
+        BigDecimal vrestado = new BigDecimal(resto);
+        vrestado = vrestado.setScale(2, BigDecimal.ROUND_HALF_UP);
+        cambio.setValor(vrestado.doubleValue());
         Credits creditSaved = creditsRepository.save(cambio);
         if (creditSaved != null) {
             Bill billed = billRepository.findOne(saved.getCredits().getPago().getBill().getId());
             String nbillId = billed.getId().toString();
             if (nbillId.equals(document)) {
-                saldo = String.valueOf(creditSaved.getValor());
+                BigDecimal vsumado = new BigDecimal(creditSaved.getValor());
+                vsumado = vsumado.setScale(2, BigDecimal.ROUND_HALF_UP);
+                saldo = String.valueOf(vsumado);
                 billed.setSaldo(saldo);
                 billRepository.save(billed);
             }

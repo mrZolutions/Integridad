@@ -9,6 +9,7 @@ import com.mrzolution.integridad.app.repositories.CreditsDebtsRepository;
 import com.mrzolution.integridad.app.repositories.DebtsToPayRepository;
 import com.mrzolution.integridad.app.repositories.PagoDebtsRepository;
 import com.mrzolution.integridad.app.repositories.PaymentDebtsRepository;
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -16,7 +17,6 @@ import java.util.List;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 /**
@@ -67,7 +67,7 @@ public class PaymentDebtsServices {
 	return paymentsDebts;
     }
     
-    @Async("asyncExecutor")
+    //@Async("asyncExecutor")
     public PaymentDebts createPaymentDebts(PaymentDebts paymentDebts) {
         PaymentDebts saved = paymentDebtsRepository.save(paymentDebts);
         document = saved.getCreditsDebts().getPagoDebts().getDebtsToPay().getId().toString();
@@ -89,13 +89,17 @@ public class PaymentDebtsServices {
         CreditsDebts cambio = creditsDebtsRepository.findOne(saved.getCreditsDebts().getId());
         nume = cambio.getValor();
         resto = nume - abono;
-        cambio.setValor(resto);
+        BigDecimal vrestado = new BigDecimal(resto);
+        vrestado = vrestado.setScale(2, BigDecimal.ROUND_HALF_UP);
+        cambio.setValor(vrestado.doubleValue());
         CreditsDebts creditDebtsSaved = creditsDebtsRepository.save(cambio);
         if (creditDebtsSaved != null) {
             DebtsToPay debts = debtsToPayRepository.findOne(saved.getCreditsDebts().getPagoDebts().getDebtsToPay().getId());
             String debtsToPayId = debts.getId().toString();
             if (debtsToPayId.equals(document)) {
-                debts.setSaldo(creditDebtsSaved.getValor());
+                BigDecimal vsumado = new BigDecimal(creditDebtsSaved.getValor());
+                vsumado = vsumado.setScale(2, BigDecimal.ROUND_HALF_UP);
+                debts.setSaldo(vsumado.doubleValue());
                 debtsToPayRepository.save(debts);
             }
         }

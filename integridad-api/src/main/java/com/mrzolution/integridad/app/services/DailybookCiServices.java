@@ -106,7 +106,7 @@ public class DailybookCiServices {
         detailDailybookContab.forEach(detail -> {
             detail.setDailybookCi(saved);
             detailDailybookContabRepository.save(detail);
-            detail.setDailybookCe(null);
+            detail.setDailybookCi(null);
         });
         
         saved.setDetailDailybookContab(detailDailybookContab);

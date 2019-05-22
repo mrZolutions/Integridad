@@ -187,6 +187,9 @@ angular.module('integridadUiApp')
             {code: 'TKAE', name: 'TIKETS AEREOS'}
         ];
 
+        vm.typeContab = 'CUENTA POR PAGAR CON RETENCIONES';
+        vm.typeContabCe = 'COMPROBANTE DE EGRESO';
+
         //Función de activación del módulo de Cuentas por Pagar
         function _activate() {
             vm.loading = true;
@@ -235,7 +238,6 @@ angular.module('integridadUiApp')
 
             //Comprobante de Egreso
             vm.selectedTypeBook = undefined;
-            vm.typeContab = undefined;
             vm.dailyCeSeq = undefined;
             vm.dailyCeStringSeq = undefined;
             vm.generalDetailCe_1 = undefined;
@@ -1380,7 +1382,6 @@ angular.module('integridadUiApp')
 
         function _asientoDiarioCxP() {
             vm.selectedTypeBook = '5';
-            vm.typeContab = 'CUENTA POR PAGAR CON RETENCIONES';
             vm.dailybookCxP.codeTypeContab = vm.selectedTypeBook;
             vm.dailybookCxP.billNumber = vm.responseDebtsToPay.billNumber;
             vm.dailybookCxP.typeContab = vm.typeContab;
@@ -1551,7 +1552,6 @@ angular.module('integridadUiApp')
         function _asientoComprobanteMultiEgreso() {
             _getDailyCeSeqNumber();
             vm.selectedTypeBook = '2';
-            vm.typeContab = 'COMPROBANTE DE EGRESO';
             //Selección de las Cuentas Contables por defecto dependiendo del Cliente
             if (vm.usrCliId === vm.laQuinta) {
                 vm.provContable = '2.01.03.01.001';
@@ -1564,7 +1564,7 @@ angular.module('integridadUiApp')
             };
             vm.generalDetailCe_1 = vm.providerName + ' ' + 'Fcs' + ' ' + vm.debtsBillsNumberPayed;
             vm.itema = {
-                typeContab: vm.typeContab,
+                typeContab: vm.typeContabCe,
                 codeConta: vm.provContable,
                 descrip: 'PROVEEDORES LOCALES',
                 tipo: 'DEBITO (D)',
@@ -1576,7 +1576,7 @@ angular.module('integridadUiApp')
             vm.dailybookCe.detailDailybookContab.push(vm.itema);
             vm.generalDetailCe_2 = vm.bankName + ' ' + 'Cancela Fcs' + ' ' + vm.debtsBillsNumberPayed;
             vm.itemb = {
-                typeContab: vm.typeContab,
+                typeContab: vm.typeContabCe,
                 codeConta: vm.ctaCtableBankCode,
                 descrip: vm.bankName,
                 tipo: 'CREDITO (C)',
@@ -1592,7 +1592,7 @@ angular.module('integridadUiApp')
             vm.dailybookCe.nameBank = vm.bankName;
             vm.dailybookCe.billNumber = vm.debtsBillsNumberPayed;
             vm.dailybookCe.numCheque = vm.noDocument;
-            vm.dailybookCe.typeContab = vm.typeContab;
+            vm.dailybookCe.typeContab = vm.typeContabCe;
             vm.dailybookCe.dailyCeSeq = vm.dailyCeSeq;
             vm.dailybookCe.dailyCeStringSeq = vm.dailyCeStringSeq;
             vm.dailybookCe.dailyCeStringUserSeq = 'PAGO GENERADO ' + vm.dailyCeStringSeq;
@@ -1682,7 +1682,6 @@ angular.module('integridadUiApp')
         function _asientoComprobanteEgreso() {
             _getDailyCeSeqNumber();
             vm.selectedTypeBook = '2';
-            vm.typeContab = 'COMPROBANTE DE EGRESO';
             //Selección de las Cuentas Contables por defecto dependiendo del Cliente
             if (vm.usrCliId === vm.laQuinta) {
                 vm.provContable = '2.01.03.01.001';
@@ -1695,7 +1694,7 @@ angular.module('integridadUiApp')
             };
             vm.generalDetailCe_1 = vm.providerName + ' ' + 'Fc' + ' ' + vm.paymentDebtsCreated.documentNumber;
             vm.itema = {
-                typeContab: vm.typeContab,
+                typeContab: vm.typeContabCe,
                 codeConta: vm.provContable,
                 descrip: 'PROVEEDORES LOCALES',
                 tipo: 'DEBITO (D)',
@@ -1707,7 +1706,7 @@ angular.module('integridadUiApp')
             vm.dailybookCe.detailDailybookContab.push(vm.itema);
             vm.generalDetailCe_2 = vm.paymentDebtsCreated.banco + ' ' + 'Cancela Fc' + ' ' + vm.paymentDebtsCreated.documentNumber;
             vm.itemb = {
-                typeContab: vm.typeContab,
+                typeContab: vm.typeContabCe,
                 codeConta: vm.paymentDebtsCreated.ctaCtableBanco,
                 descrip: vm.paymentDebtsCreated.banco,
                 tipo: 'CREDITO (C)',
@@ -1723,7 +1722,7 @@ angular.module('integridadUiApp')
             vm.dailybookCe.nameBank = vm.paymentDebtsCreated.banco;
             vm.dailybookCe.billNumber = vm.paymentDebtsCreated.documentNumber;
             vm.dailybookCe.numCheque = vm.paymentDebtsCreated.noDocument;
-            vm.dailybookCe.typeContab = vm.typeContab;
+            vm.dailybookCe.typeContab = vm.typeContabCe;
             vm.dailybookCe.dailyCeSeq = vm.dailyCeSeq;
             vm.dailybookCe.dailyCeStringSeq = vm.dailyCeStringSeq;
             vm.dailybookCe.dailyCeStringUserSeq = 'PAGO GENERADO ' + vm.dailyCeStringSeq;

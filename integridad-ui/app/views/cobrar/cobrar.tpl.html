@@ -34,7 +34,7 @@
     </div>
     
     <!--SECCIÓN DE CARGA DE LOS LOS CLIENTES-->
-    <div class="table-responsive" ng-show="vm.billList === undefined && vm.clientSelected === undefined && vm.multipleSelected === undefined">
+    <div class="table-responsive" ng-show="vm.billList === undefined && vm.clientSelected === undefined && vm.multipleCobroSelected === undefined">
         <div class="row">
             <div class="form-group col-md-12">
                 <input ng-model="searchText" class="form-control" placeholder="Buscar Clientes">
@@ -466,8 +466,8 @@
         </div>
     </div>
 
-    <!--SECCIÓN DE PAGOS MULTIPLES DE FACTURAS DE COMPRA-->
-    <div class="table-responsive" ng-show="vm.multipleSelected !== undefined">
+    <!--SECCIÓN DE PAGOS MULTIPLES DE FACTURAS DE VENTA-->
+    <div class="table-responsive" ng-show="vm.multipleCobroSelected !== undefined">
         <div class = "panel panel-primary">
             <div class = "panel-heading">
                 <h4 class = "modal-title">Pago Multiple de Facturas</h4>

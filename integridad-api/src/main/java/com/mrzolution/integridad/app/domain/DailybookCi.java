@@ -29,7 +29,7 @@ public class DailybookCi {
     private String nameBank;
     private String numCheque;
     private String clientProvName;
-    private String ruc;
+    private String identification;
     private String codeTypeContab;
     private String typeContab;
     private String generalDetail;
