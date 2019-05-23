@@ -385,6 +385,7 @@ angular.module('integridadUiApp')
             NUMERO_CUENTA: debt.debtNumber,
             NUMERO_FACTURA: debt.billNumber,
             NUMERO_AUTORIZACION: debt.authorizationNumber,
+            COD_SUSTENTO: debt.purchaseType,
             ESTADO: debt.status,
             BASE_DOCE: debt.status === 'ACTIVA' ? parseFloat(debt.subTotalDoce.toFixed(2)) : parseFloat(0),
             IVA: debt.status === 'ACTIVA' ? parseFloat(debt.iva.toFixed(2)) : parseFloat(0),

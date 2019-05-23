@@ -26,6 +26,8 @@ public class Payment implements Child {
     private String documentNumber;
     private String banco;
     private String ctaCtableBanco;
+    private String ctaCtableClient;
+    private String clientName;
     private String cardBrand;
     private String numeroLote;
     private double valorAbono;

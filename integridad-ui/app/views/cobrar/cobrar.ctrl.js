@@ -8,7 +8,7 @@
  * Controller of the integridadUiApp
  */
 angular.module('integridadUiApp')
-    .controller('CuentasCobrarCtrl', function(_, $localStorage, clientService, cuentaContableService, paymentService, dateService, 
+    .controller('CuentasCobrarCtrl', function(_, $localStorage, clientService, cuentaContableService, paymentService, dateService, utilSeqService,
                                               creditsbillService, $location, billService, eretentionClientService, contableService) {
         var vm = this;
         vm.error = undefined;
@@ -197,14 +197,14 @@ angular.module('integridadUiApp')
             vm.loading = true;
             vm.success = undefined;
             vm.clientSelected = client;
-            vm.clientId = client.identification;
+            vm.clientId = client.id;
             vm.clientName = client.name;
             vm.clientCodConta = client.codConta;
             vm.clientAddress = client.address;
             vm.clientPhone = client.cel_phone;
             vm.clientEmail = client.email;
             _initializeDailybookCi();
-            billService.getAllBillsByClientIdWithSaldo(client.id).then(function(response) {
+            billService.getAllBillsByClientIdWithSaldo(vm.clientId).then(function(response) {
                 vm.billList = response;
                 vm.loading = false;
             }).catch(function(error) {
@@ -248,7 +248,6 @@ angular.module('integridadUiApp')
         vm.selectCtaCtableBank = function(cuenta) {
             vm.ctaCtableBankList = undefined;
             vm.ctaCtableBankCode = cuenta.code;
-            vm.ctaCtableBankAccountType = 'DEBITO (D)';
             vm.bankName = cuenta.description;
         };
 
@@ -268,6 +267,8 @@ angular.module('integridadUiApp')
             vm.payment.valorReten = vm.valorReten;
             if (vm.payment.modePayment === 'CHQ' || vm.payment.modePayment === 'TRF' || vm.payment.modePayment === 'DEP') {
                 vm.payment.ctaCtableBanco = vm.ctaCtableBankCode;
+                vm.payment.ctaCtableClient = vm.clientCodConta;
+                vm.payment.clientName = vm.clientName;
                 vm.payment.banco = vm.bankName;
             } else {
                 vm.payment.ctaCtableBanco = '--';
@@ -277,10 +278,10 @@ angular.module('integridadUiApp')
                 if (response.length === 0) {
                     paymentService.createPayment(payment).then(function(response) {
                         vm.paymentCreated = response;
+                        if (vm.paymentCreated.modePayment === 'CHQ' || vm.paymentCreated.modePayment === 'TRF' || vm.paymentCreated.modePayment === 'DEP') {
+                            _asientoComprobanteIngreso();
+                        };
                         vm.success = 'Abono realizado con exito';
-                        //if (vm.paymentCreated.modePayment === 'CHQ' || vm.paymentCreated.modePayment === 'TRF' || vm.paymentCreated.modePayment === 'DEP') {
-                        //    _asientoComprobanteIngreso();
-                        //};
                         vm.loading = false;
                     }).catch(function(error) {
                         vm.loading = false;
@@ -300,14 +301,14 @@ angular.module('integridadUiApp')
         function _asientoComprobanteIngreso() {
             _getDailyCiSeqNumber();
             vm.selectedTypeBook = '2';
-            vm.generalDetailCi_1 = vm.clientName + ' ' + 'Cancela Fc' + ' ' + vm.paymentCreated.documentNumber;
+            vm.generalDetailCi_1 = vm.paymentCreated.clientName + ' ' + 'Cancela Fc' + ' ' + vm.paymentCreated.documentNumber;
             vm.itema = {
                 typeContab: vm.typeContabCi,
-                codeConta: vm.clientCodConta,
+                codeConta: vm.paymentCreated.ctaCtableClient,
                 descrip: 'CLIENTES NO RELACIONADOS',
                 tipo: 'CREDITO (C)',
                 baseImponible: parseFloat(vm.paymentCreated.valorAbono),
-                name: vm.generalDetailCe_1,
+                name: vm.generalDetailCi_1,
                 deber: parseFloat(vm.paymentCreated.valorAbono)
             };
             vm.itema.numCheque = vm.paymentCreated.noDocument;
@@ -319,29 +320,27 @@ angular.module('integridadUiApp')
                 descrip: vm.paymentCreated.banco,
                 tipo: 'DEBITO (D)',
                 baseImponible: parseFloat(vm.paymentCreated.valorAbono),
-                name: vm.generalDetailCe_2,
+                name: vm.generalDetailCi_2,
                 haber: parseFloat(vm.paymentCreated.valorAbono)
             };
             vm.itemb.numCheque = '--';
             vm.dailybookCi.detailDailybookContab.push(vm.itemb);
-            vm.clientSelected = undefined;
             
             vm.dailybookCi.codeTypeContab = vm.selectedTypeBook;
-            vm.dailybookCi.nameBank = vm.paymentDebtsCreated.banco;
-            vm.dailybookCi.billNumber = vm.paymentDebtsCreated.documentNumber;
-            vm.dailybookCi.numCheque = vm.paymentDebtsCreated.noDocument;
+            vm.dailybookCi.nameBank = vm.paymentCreated.banco;
+            vm.dailybookCi.billNumber = vm.paymentCreated.documentNumber;
+            vm.dailybookCi.numCheque = vm.paymentCreated.noDocument;
             vm.dailybookCi.typeContab = vm.typeContabCi;
             vm.dailybookCi.dailyCiSeq = vm.dailyCiSeq;
             vm.dailybookCi.dailyCiStringSeq = vm.dailyCiStringSeq;
             vm.dailybookCi.dailyCiStringUserSeq = 'PAGO GENERADO ' + vm.dailyCiStringSeq;
-            vm.dailybookCi.clientProvName = vm.clientName;
-            vm.dailybookCi.generalDetail = vm.generalDetailCe_1;
+            vm.dailybookCi.clientProvName = vm.paymentCreated.clientName;
+            vm.dailybookCi.generalDetail = vm.generalDetailCi_1;
             vm.dailybookCi.total = vm.paymentCreated.valorAbono;
             vm.dailybookCi.iva = parseFloat((vm.paymentCreated.valorAbono * 0.12).toFixed(2));
             vm.dailybookCi.subTotalDoce = parseFloat((vm.paymentCreated.valorAbono / 1.12).toFixed(2));
             vm.dailybookCi.subTotalCero = 0;
             vm.dailybookCi.dateRecordBook = $('#pickerDateOfPayment').data("DateTimePicker").date().toDate().getTime();
-            
             contableService.createDailybookCi(vm.dailybookCi).then(function(response) {
                 $localStorage.user.cashier.dailyCiNumberSeq = vm.dailybookCi.dailyCiSeq;
             }).catch(function(error) {
@@ -356,7 +355,7 @@ angular.module('integridadUiApp')
             vm.clientSelected = client;
             vm.multipleCobroSelected = vm.clientSelected;
             vm.clientName = client.name;
-            vm.clientIdentification = client.identification;
+            vm.clientCodConta = client.codConta;
             vm.clientId = client.id;
             _initializeDailybookCi();
             cuentaContableService.getCuentaContableByUserClientAndBank(vm.usrCliId).then(function(response) {
@@ -455,7 +454,7 @@ angular.module('integridadUiApp')
                             vm.valorNotac = 0;
                         };
                         vm.payment.datePayment = $('#pickerDateOfMultiplePayment').data("DateTimePicker").date().toDate().getTime();
-                        vm.payment.documentNumber = detail.bill_number;
+                        vm.payment.documentNumber = vm.billsNumberPayed;
                         vm.payment.modePayment = vm.modePayment;
                         vm.payment.detail = vm.details;
                         vm.payment.valorAbono = detail.bill_abono;
@@ -464,6 +463,8 @@ angular.module('integridadUiApp')
                         vm.payment.noAccount = vm.noAccount;
                         vm.payment.noDocument = vm.noDocument;
                         vm.payment.ctaCtableBanco = vm.ctaCtableBankCode;
+                        vm.payment.ctaCtableClient = vm.clientCodConta;
+                        vm.payment.clientName = vm.clientName;
                         vm.payment.banco = vm.bankName;
                         paymentService.createPayment(vm.payment).then(function(response) {
                             vm.paymentCreated = response;
@@ -489,14 +490,14 @@ angular.module('integridadUiApp')
         function _asientoComprobanteMultipleIngreso() {
             _getDailyCiSeqNumber();
             vm.selectedTypeBook = '2';
-            vm.generalDetailCi_1 = vm.clientName + ' ' + 'Cancela Fcs' + ' ' + vm.billsNumberPayed;
+            vm.generalDetailCi_1 = vm.paymentCreated.clientName + ' ' + 'Cancela Fcs' + ' ' + vm.paymentCreated.documentNumber;
             vm.itema = {
                 typeContab: vm.typeContabCi,
-                codeConta: vm.clientCodConta,
+                codeConta: vm.paymentCreated.ctaCtableClient,
                 descrip: 'CLIENTES NO RELACIONADOS',
                 tipo: 'CREDITO (C)',
                 baseImponible: parseFloat(vm.paymentCreated.valorAbono),
-                name: vm.generalDetailCe_1,
+                name: vm.generalDetailCi_1,
                 deber: parseFloat(vm.paymentCreated.valorAbono)
             };
             vm.itema.numCheque = vm.paymentCreated.noDocument;
@@ -508,29 +509,27 @@ angular.module('integridadUiApp')
                 descrip: vm.paymentCreated.banco,
                 tipo: 'DEBITO (D)',
                 baseImponible: parseFloat(vm.paymentCreated.valorAbono),
-                name: vm.generalDetailCe_2,
+                name: vm.generalDetailCi_2,
                 haber: parseFloat(vm.paymentCreated.valorAbono)
             };
             vm.itemb.numCheque = '--';
             vm.dailybookCi.detailDailybookContab.push(vm.itemb);
-            vm.clientSelected = undefined;
             
             vm.dailybookCi.codeTypeContab = vm.selectedTypeBook;
-            vm.dailybookCi.nameBank = vm.paymentDebtsCreated.banco;
-            vm.dailybookCi.billNumber = vm.paymentDebtsCreated.documentNumber;
-            vm.dailybookCi.numCheque = vm.paymentDebtsCreated.noDocument;
+            vm.dailybookCi.nameBank = vm.paymentCreated.banco;
+            vm.dailybookCi.billNumber = vm.paymentCreated.documentNumber;
+            vm.dailybookCi.numCheque = vm.paymentCreated.noDocument;
             vm.dailybookCi.typeContab = vm.typeContabCi;
             vm.dailybookCi.dailyCiSeq = vm.dailyCiSeq;
             vm.dailybookCi.dailyCiStringSeq = vm.dailyCiStringSeq;
             vm.dailybookCi.dailyCiStringUserSeq = 'PAGO GENERADO ' + vm.dailyCiStringSeq;
-            vm.dailybookCi.clientProvName = vm.clientName;
-            vm.dailybookCi.generalDetail = vm.generalDetailCe_1;
+            vm.dailybookCi.clientProvName = vm.paymentCreated.clientName;
+            vm.dailybookCi.generalDetail = vm.generalDetailCi_1;
             vm.dailybookCi.total = vm.paymentCreated.valorAbono;
             vm.dailybookCi.iva = parseFloat((vm.paymentCreated.valorAbono * 0.12).toFixed(2));
             vm.dailybookCi.subTotalDoce = parseFloat((vm.paymentCreated.valorAbono / 1.12).toFixed(2));
             vm.dailybookCi.subTotalCero = 0;
             vm.dailybookCi.dateRecordBook = $('#pickerDateOfMultiplePayment').data("DateTimePicker").date().toDate().getTime();
-            
             contableService.createDailybookCi(vm.dailybookCi).then(function(response) {
                 $localStorage.user.cashier.dailyCiNumberSeq = vm.dailybookCi.dailyCiSeq;
             }).catch(function(error) {
