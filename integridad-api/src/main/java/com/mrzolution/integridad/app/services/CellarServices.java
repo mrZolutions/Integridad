@@ -1,11 +1,13 @@
 package com.mrzolution.integridad.app.services;
 
+import com.google.common.collect.Lists;
 import com.mrzolution.integridad.app.domain.Cashier;
 import com.mrzolution.integridad.app.domain.Cellar;
 import com.mrzolution.integridad.app.domain.DetailCellar;
 import com.mrzolution.integridad.app.domain.Kardex;
 import com.mrzolution.integridad.app.domain.ProductBySubsidiary;
 import com.mrzolution.integridad.app.domain.UserIntegridad;
+import com.mrzolution.integridad.app.domain.report.CellarEntryReport;
 import com.mrzolution.integridad.app.exceptions.BadRequestException;
 import com.mrzolution.integridad.app.repositories.CashierRepository;
 import com.mrzolution.integridad.app.repositories.CellarRepository;
@@ -14,8 +16,12 @@ import com.mrzolution.integridad.app.repositories.DetailCellarRepository;
 import com.mrzolution.integridad.app.repositories.KardexRepository;
 import com.mrzolution.integridad.app.repositories.ProductBySubsidiairyRepository;
 import com.mrzolution.integridad.app.repositories.UserClientRepository;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -212,5 +218,38 @@ public class CellarServices {
             cellar.setListsNull();
         });
         return cellars;
+    }
+    
+    //Reporte de Ingreso a Bodega
+    public List<CellarEntryReport> getByUserClientIdAndDatesActives(UUID userClientId, long dateOne, long dateTwo) {
+        log.info("CellarServices getByUserClientIdAndDatesActives: {}, {}, {}", userClientId, dateOne, dateTwo);
+        Iterable<Cellar> cellars = cellarRepository.findByUserClientIdAndDatesActives(userClientId, dateOne, dateTwo);
+        Set<UUID> productIds = new HashSet<>();
+        cellars.forEach(cellar-> {
+            populateChildren(cellar);
+            for (DetailCellar detail: cellar.getDetailsCellar()) {
+                productIds.add(detail.getProduct().getId());
+            }
+        });	
+        return loadListItems(Lists.newArrayList(cellars), productIds);
+    }
+    
+    private List<CellarEntryReport> loadListItems(List<Cellar> cellars, Set<UUID> productIds) {
+        List<CellarEntryReport> reportList = new ArrayList<>();
+        for (UUID uuidCurrent: productIds) {
+            for (Cellar cellar: cellars) {
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd");
+                String fechaIngreso = dateFormat.format(new Date(cellar.getDateEnterCellar()));
+                for (DetailCellar detail: cellar.getDetailsCellar()) {
+                    if (uuidCurrent.equals(detail.getProduct().getId())) {
+                        CellarEntryReport item = new CellarEntryReport(fechaIngreso, cellar.getProvider().getRazonSocial(), cellar.getCellarSeq(),
+                                                                        cellar.getBillNumber(), detail.getProduct().getName(), detail.getQuantity(), detail.getCostEach(),
+                                                                        (detail.getTotal() * 0.12), (detail.getTotal() * 1.12));
+                        reportList.add(item);
+                    }
+                }
+            }
+        }
+        return reportList;
     }
 }

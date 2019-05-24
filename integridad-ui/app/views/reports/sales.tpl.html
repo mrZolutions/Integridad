@@ -126,12 +126,17 @@
           </button>
         </div>
         <div class="form-group col-md-6">
-          <p><b>Consumos</b></p>
+          <p><b>Rep. Bodega (Ingresos / Consumos)</b></p>
+          <button type="button" title="Seleccione Fecha Inicio - Fecha Fin" class="btn btn-primary btn-sm"
+                  ng-click="vm.getCellarEntryReport()">
+                  Ingresos
+          </button>
           <button type="button" title="Seleccione Fecha Inicio - Fecha Fin" class="btn btn-primary btn-sm"
                   ng-click="vm.getReportCsmProducts()">
-                  De Productos
+                  Consumos
           </button>
         </div>
+        
       </div>
       <div ng-show="vm.reportList.length === 0">
         <br/>
@@ -603,6 +608,38 @@
           <td>{{data.fechPago}}</td>
           <td>{{data.valorAbono.toFixed(2)}}</td>
           <td>{{data.valorReten.toFixed(2)}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  
+  <!--Reporte de Ingresos a Bodega-->
+  <div class="table-responsive" ng-if="vm.isProductReportList === '12' && vm.reportList !== undefined">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Fecha de Ingreso</th>
+          <th>Proveedor</th>
+          <th>Nro. Ingreso</th>
+          <th>N&uacute;mero Factura</th>
+          <th>Producto</th>
+          <th>Cantidad</th>
+          <th>Costo Unitario</th>
+          <th>IVA</th>
+          <th>Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="data in vm.reportList | orderBy:'nomCliente'" >
+          <td>{{data.fechaIngreso}}</td>
+          <td>{{data.razonSocial}}</td>
+          <td>{{data.cellarSeq}}</td>
+          <td>{{data.billNumber}}</td>
+          <td>{{data.prodName}}</td>
+          <td>{{data.prodQuantity}}</td>
+          <td>{{data.prodCostEach.toFixed(4)}}</td>
+          <td>{{data.prodIva.toFixed(4)}}</td>
+          <td>{{data.prodTotal.toFixed(2)}}</td>
         </tr>
       </tbody>
     </table>

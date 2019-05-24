@@ -55,14 +55,22 @@ public class Kardex implements Child {
     }
     
     public void setFatherListToNull() {
-        bill.setListsNull();
-        bill.setFatherListToNull();
-        cellar.setListsNull();
-        cellar.setFatherListToNull();
-        consumption.setListsNull();
-        consumption.setFatherListToNull();
-        product.setListsNull();
-        product.setFatherListToNull();
+        if (bill != null) {
+            bill.setListsNull();
+            bill.setFatherListToNull();
+        }
+        if (cellar != null) {
+            cellar.setListsNull();
+            cellar.setFatherListToNull();
+        }
+        if (consumption != null) {
+            consumption.setListsNull();
+            consumption.setFatherListToNull();
+        }
+        if (product != null) {
+            product.setListsNull();
+            product.setFatherListToNull();
+        }
         if (creditNote != null) {
             creditNote.setListsNull();
             creditNote.setFatherListToNull();

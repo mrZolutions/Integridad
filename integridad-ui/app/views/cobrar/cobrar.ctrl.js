@@ -278,11 +278,10 @@ angular.module('integridadUiApp')
                 if (response.length === 0) {
                     paymentService.createPayment(payment).then(function(response) {
                         vm.paymentCreated = response;
+                        vm.success = 'Abono realizado con exito';
                         if (vm.paymentCreated.modePayment === 'CHQ' || vm.paymentCreated.modePayment === 'TRF' || vm.paymentCreated.modePayment === 'DEP') {
                             _asientoComprobanteIngreso();
                         };
-                        vm.success = 'Abono realizado con exito';
-                        vm.loading = false;
                     }).catch(function(error) {
                         vm.loading = false;
                         vm.error = error.data;
@@ -341,8 +340,10 @@ angular.module('integridadUiApp')
             vm.dailybookCi.subTotalDoce = parseFloat((vm.paymentCreated.valorAbono / 1.12).toFixed(2));
             vm.dailybookCi.subTotalCero = 0;
             vm.dailybookCi.dateRecordBook = $('#pickerDateOfPayment').data("DateTimePicker").date().toDate().getTime();
+            
             contableService.createDailybookCi(vm.dailybookCi).then(function(response) {
                 $localStorage.user.cashier.dailyCiNumberSeq = vm.dailybookCi.dailyCiSeq;
+                vm.loading = false;
             }).catch(function(error) {
                 vm.loading = false;
                 vm.error = error.data;
@@ -449,17 +450,13 @@ angular.module('integridadUiApp')
                             credits: detail.credit_bill
                         };
                         vm.payment.typePayment = vm.typePayment;
-                        if (vm.payment.typePayment == 'PAC') {
-                            vm.valorReten = 0;
-                            vm.valorNotac = 0;
-                        };
                         vm.payment.datePayment = $('#pickerDateOfMultiplePayment').data("DateTimePicker").date().toDate().getTime();
-                        vm.payment.documentNumber = vm.billsNumberPayed;
+                        vm.payment.documentNumber = detail.bill_number;
                         vm.payment.modePayment = vm.modePayment;
                         vm.payment.detail = vm.details;
                         vm.payment.valorAbono = detail.bill_abono;
-                        vm.payment.valorNotac = vm.valorNotac;
-                        vm.payment.valorReten = vm.valorReten;
+                        vm.payment.valorNotac = 0;
+                        vm.payment.valorReten = 0;
                         vm.payment.noAccount = vm.noAccount;
                         vm.payment.noDocument = vm.noDocument;
                         vm.payment.ctaCtableBanco = vm.ctaCtableBankCode;

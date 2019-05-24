@@ -35,4 +35,10 @@ angular
                 return response.data;
             });
         };
+
+        this.getByUserClientIdAndDatesActives = function(userClientId, dateOne, dateTwo) {
+            return securityService.get('/cellar/rep/' + userClientId + '/' + dateOne + '/' + dateTwo).then(function successCallback(response) {
+                return response.data;
+            });
+        };
 });

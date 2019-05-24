@@ -8,7 +8,7 @@
  * Controller of the menu
  */
 angular.module('integridadUiApp')
-  .controller('ReportSalesCtrl', function(_, $localStorage, creditsbillService, billService, eretentionService, eretentionClientService,
+  .controller('ReportSalesCtrl', function(_, $localStorage, creditsbillService, billService, eretentionService, eretentionClientService, cellarService,
                                           paymentService, paymentDebtsService, creditsDebtsService, $location, debtsToPayService, consumptionService) {
     var vm = this;
     var today = new Date();
@@ -206,6 +206,24 @@ angular.module('integridadUiApp')
       var userCliId = $localStorage.user.subsidiary.userClient.id;
 
       paymentDebtsService.getPaymentsDebtsByUserClientIdAndDates(userCliId, dateOne, dateTwo).then(function(response) {
+        vm.reportList = response;
+        vm.loading = false;
+      }).catch(function(error) {
+        vm.loading = false;
+        vm.error = error.data;
+      });
+    };
+
+    vm.getCellarEntryReport = function() {
+      vm.isProductReportList = '12';
+      vm.reportList = undefined;
+      vm.loading = true;
+      var dateOne = $('#pickerBillDateOne').data("DateTimePicker").date().toDate().getTime();
+      var dateTwo = $('#pickerBillDateTwo').data("DateTimePicker").date().toDate().getTime();
+      dateTwo += 86399000;
+      var userCliId = $localStorage.user.subsidiary.userClient.id;
+
+      cellarService.getByUserClientIdAndDatesActives(userCliId, dateOne, dateTwo).then(function(response) {
         vm.reportList = response;
         vm.loading = false;
       }).catch(function(error) {
@@ -451,6 +469,22 @@ angular.module('integridadUiApp')
             FECHA_PAGO: ccresumenpdreport.fechPago !== null ? new Date(ccresumenpdreport.fechPago) : ccresumenpdreport.fechPago,
             VALOR_ABONO: parseFloat(ccresumenpdreport.valorAbono.toFixed(2)),
             VALOR_RETEN: parseFloat(ccresumenpdreport.valorReten.toFixed(2))
+          };
+
+          dataReport.push(data);
+        });
+      } else if (vm.isProductReportList === '12') {
+        _.each(vm.reportList, function(cellarReport) {
+          var data = {
+            FECHA_INGRESO: cellarReport.fechaIngreso !== null ? new Date(cellarReport.fechaIngreso) : cellarReport.fechaIngreso,
+            PROVEEDOR: cellarReport.razonSocial,
+            NRO_INGRESO: cellarReport.cellarSeq,
+            NRO_FACTURA: cellarReport.billNumber,
+            PRODUCTO: cellarReport.prodName,
+            CANTIDAD: cellarReport.prodQuantity,
+            COST_UNIT: parseFloat(cellarReport.prodCostEach.toFixed(4)),
+            IVA: parseFloat(cellarReport.prodIva.toFixed(4)),
+            TOTAL: parseFloat(cellarReport.prodTotal.toFixed(2))
           };
 
           dataReport.push(data);
