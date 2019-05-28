@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 /**
@@ -86,6 +87,7 @@ public class DailybookCiServices {
     }
     
     //Creación de los COMPROBANTES DE INGRESO
+    @Async("asyncExecutor")
     public DailybookCi createDailybookCi(DailybookCi dailybookCi) throws BadRequestException {
         List<DetailDailybookContab> detailDailybookContab = dailybookCi.getDetailDailybookContab();
         

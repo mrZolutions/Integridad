@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import com.mrzolution.integridad.app.repositories.DailybookCxPRepository;
 import com.mrzolution.integridad.app.repositories.DetailDailybookContabRepository;
+import org.springframework.scheduling.annotation.Async;
 
 /**
  *
@@ -75,6 +76,7 @@ public class DailybookCxPServices {
     }
     
     //Creación de los Diarios CxP
+    @Async("asyncExecutor")
     public DailybookCxP createDailybookCxP(DailybookCxP dailybookCxP) throws BadRequestException {
         List<DetailDailybookContab> detailDailybookContab = dailybookCxP.getDetailDailybookContab();
         
