@@ -472,7 +472,7 @@ angular.module('integridadUiApp')
                             vm.error = error.data;
                         });
                     });
-                    //_asientoComprobanteMultipleIngreso();
+                    _asientoComprobanteMultipleIngreso();
                     _activate();
                 } else {
                     vm.error = 'El Nro. de Documento (Cheque, Transferencia y/o Depósito) Ya Existe y no puede repetirse';
@@ -487,44 +487,43 @@ angular.module('integridadUiApp')
         function _asientoComprobanteMultipleIngreso() {
             _getDailyCiSeqNumber();
             vm.selectedTypeBook = '2';
-            vm.generalDetailCi_1 = vm.paymentCreated.clientName + ' ' + 'Cancela Fcs' + ' ' + vm.paymentCreated.documentNumber;
+            vm.generalDetailCi_1 = vm.clientName + ' ' + 'Cancela Fcs' + ' ' + vm.billsNumberPayed;
             vm.itema = {
                 typeContab: vm.typeContabCi,
-                codeConta: vm.paymentCreated.ctaCtableClient,
+                codeConta: vm.clientCodConta,
                 descrip: 'CLIENTES NO RELACIONADOS',
                 tipo: 'CREDITO (C)',
-                baseImponible: parseFloat(vm.paymentCreated.valorAbono),
+                baseImponible: parseFloat(vm.valorDocumento),
                 name: vm.generalDetailCi_1,
-                deber: parseFloat(vm.paymentCreated.valorAbono)
+                deber: parseFloat(vm.valorDocumento)
             };
-            vm.itema.numCheque = vm.paymentCreated.noDocument;
+            vm.itema.numCheque = vm.noDocument;
             vm.dailybookCi.detailDailybookContab.push(vm.itema);
-            vm.generalDetailCi_2 = vm.paymentCreated.banco;
+            vm.generalDetailCi_2 = vm.bankName;
             vm.itemb = {
                 typeContab: vm.typeContabCi,
-                codeConta: vm.paymentCreated.ctaCtableBanco,
-                descrip: vm.paymentCreated.banco,
+                codeConta: vm.ctaCtableBankCode,
+                descrip: vm.bankName,
                 tipo: 'DEBITO (D)',
-                baseImponible: parseFloat(vm.paymentCreated.valorAbono),
+                baseImponible: parseFloat(vm.valorDocumento),
                 name: vm.generalDetailCi_2,
-                haber: parseFloat(vm.paymentCreated.valorAbono)
+                haber: parseFloat(vm.valorDocumento)
             };
             vm.itemb.numCheque = '--';
             vm.dailybookCi.detailDailybookContab.push(vm.itemb);
-            
             vm.dailybookCi.codeTypeContab = vm.selectedTypeBook;
-            vm.dailybookCi.nameBank = vm.paymentCreated.banco;
-            vm.dailybookCi.billNumber = vm.paymentCreated.documentNumber;
-            vm.dailybookCi.numCheque = vm.paymentCreated.noDocument;
+            vm.dailybookCi.nameBank = vm.bankName;
+            vm.dailybookCi.billNumber = vm.billsNumberPayed;
+            vm.dailybookCi.numCheque = vm.noDocument;
             vm.dailybookCi.typeContab = vm.typeContabCi;
             vm.dailybookCi.dailyCiSeq = vm.dailyCiSeq;
             vm.dailybookCi.dailyCiStringSeq = vm.dailyCiStringSeq;
             vm.dailybookCi.dailyCiStringUserSeq = 'PAGO GENERADO ' + vm.dailyCiStringSeq;
-            vm.dailybookCi.clientProvName = vm.paymentCreated.clientName;
+            vm.dailybookCi.clientProvName = vm.clientName;
             vm.dailybookCi.generalDetail = vm.generalDetailCi_1;
-            vm.dailybookCi.total = vm.paymentCreated.valorAbono;
-            vm.dailybookCi.iva = parseFloat((vm.paymentCreated.valorAbono * 0.12).toFixed(2));
-            vm.dailybookCi.subTotalDoce = parseFloat((vm.paymentCreated.valorAbono / 1.12).toFixed(2));
+            vm.dailybookCi.total = vm.valorDocumento;
+            vm.dailybookCi.iva = parseFloat((vm.valorDocumento * 0.12).toFixed(2));
+            vm.dailybookCi.subTotalDoce = parseFloat((vm.valorDocumento / 1.12).toFixed(2));
             vm.dailybookCi.subTotalCero = 0;
             vm.dailybookCi.dateRecordBook = $('#pickerDateOfMultiplePayment').data("DateTimePicker").date().toDate().getTime();
             contableService.createDailybookCi(vm.dailybookCi).then(function(response) {
