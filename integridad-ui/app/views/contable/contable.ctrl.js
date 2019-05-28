@@ -843,16 +843,22 @@ angular.module('integridadUiApp')
 
         vm.dailybookCiDeactivate = function() {
             vm.loading = true;
-            var index = vm.dailybookCiList.indexOf(vm.deactivatedailybookCi);
-            var indexm = vm.dailybookCiManualCreatedList.indexOf(vm.deactivatedailybookCi);
-            contableService.deactivateDailybookCi(vm.deactivatedailybookCi).then(function(response) {
+            if (vm.dailybookCiList != null) {
                 var index = vm.dailybookCiList.indexOf(vm.deactivatedailybookCi);
-                if (index > -1) {
-                    vm.dailybookCiList.splice(index, 1);
-                };
+            } else if (vm.dailybookCiManualCreatedList != null) {
                 var indexm = vm.dailybookCiManualCreatedList.indexOf(vm.deactivatedailybookCi);
-                if (indexm > -1) {
-                    vm.dailybookCiManualCreatedList.splice(indexm, 1);
+            };
+            contableService.deactivateDailybookCi(vm.deactivatedailybookCi).then(function(response) {
+                if (vm.dailybookCiList != null) {
+                    var index = vm.dailybookCiList.indexOf(vm.deactivatedailybookCi);
+                    if (index > -1) {
+                        vm.dailybookCiList.splice(index, 1);
+                    };
+                } else if (vm.dailybookCiManualCreatedList != null) {
+                    var indexm = vm.dailybookCiManualCreatedList.indexOf(vm.deactivatedailybookCi);
+                    if (indexm > -1) {
+                        vm.dailybookCiManualCreatedList.splice(indexm, 1);
+                    };
                 };
                 vm.deactivatedailybookCi = undefined;
                 vm.loading = false;
