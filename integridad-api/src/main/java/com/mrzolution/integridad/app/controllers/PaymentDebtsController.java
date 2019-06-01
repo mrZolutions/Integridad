@@ -2,6 +2,7 @@ package com.mrzolution.integridad.app.controllers;
 
 import com.mrzolution.integridad.app.domain.PaymentDebts;
 import com.mrzolution.integridad.app.domain.report.CPResumenPaymentDebtsReport;
+import com.mrzolution.integridad.app.domain.report.StatementProviderReport;
 import com.mrzolution.integridad.app.exceptions.BadRequestException;
 import com.mrzolution.integridad.app.services.PaymentDebtsServices;
 import java.util.List;
@@ -49,6 +50,19 @@ public class PaymentDebtsController {
             response = service.getPaymentsDebtsByUserClientIdAndDates(userClientId, dateOne, dateTwo);
 	} catch (BadRequestException e) {
             log.error("PaymentDebtsController getPaymentsDebtsByUserClientIdAndDates Exception thrown: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+	}
+        return new ResponseEntity<List>(response, HttpStatus.ACCEPTED);
+    }
+    
+    @RequestMapping(method = RequestMethod.GET, value="/rep/statement/{id}/{dateTwo}")
+    public ResponseEntity getStatementProviderReport(@PathVariable("id") UUID id, @PathVariable("dateTwo") long dateTwo) {
+        log.info("PaymentDebtsController getStatementProviderReport: {}", id);
+        List<StatementProviderReport> response = null;
+        try {
+            response = service.getStatementProviderReport(id, dateTwo);
+	} catch (BadRequestException e) {
+            log.error("PaymentDebtsController getStatementProviderReport Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
         return new ResponseEntity<List>(response, HttpStatus.ACCEPTED);

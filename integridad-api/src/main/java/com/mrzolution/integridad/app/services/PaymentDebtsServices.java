@@ -5,6 +5,7 @@ import com.mrzolution.integridad.app.domain.CreditsDebts;
 import com.mrzolution.integridad.app.domain.DebtsToPay;
 import com.mrzolution.integridad.app.domain.PaymentDebts;
 import com.mrzolution.integridad.app.domain.report.CPResumenPaymentDebtsReport;
+import com.mrzolution.integridad.app.domain.report.StatementProviderReport;
 import com.mrzolution.integridad.app.repositories.CreditsDebtsRepository;
 import com.mrzolution.integridad.app.repositories.DebtsToPayRepository;
 import com.mrzolution.integridad.app.repositories.PagoDebtsRepository;
@@ -41,21 +42,22 @@ public class PaymentDebtsServices {
     private double resto = 0;
     private String document = "--";
     private double saldo = 0;
-    private double sumado = 0;
-    
-    private String numCheque = "--";
     
     private String ruc = "--";
     private String nameProv = "--";
     private String debtsNumber = "--";
     private String billNumber = "--";
+    private String retenNumber = "--";
+    private String numCheque = "--";
+    private String detalle = "--";
+    private String observa = "--";
     
     private UUID providerId;
     private double sumTotalAbono = 0;
     private double sumTotalReten = 0;
-    
     private double totalAbono = 0;
     private double totalReten = 0;
+    private double totalTotal = 0;
     
     
     public Iterable<PaymentDebts> getPaymentsDebtsByUserClientIdWithBankAndNroDocument(UUID userClientId, String banco, String nroduc) {
@@ -67,7 +69,6 @@ public class PaymentDebtsServices {
 	return paymentsDebts;
     }
     
-    //@Async("asyncExecutor")
     public PaymentDebts createPaymentDebts(PaymentDebts paymentDebts) {
         PaymentDebts saved = paymentDebtsRepository.save(paymentDebts);
         document = saved.getCreditsDebts().getPagoDebts().getDebtsToPay().getId().toString();
@@ -150,7 +151,7 @@ public class PaymentDebtsServices {
             billNumber = paymentDebt.getCreditsDebts().getPagoDebts().getDebtsToPay().getBillNumber();
             
             CPResumenPaymentDebtsReport resumenPaymentDebtsReport = new CPResumenPaymentDebtsReport(ruc, nameProv, debtsNumber, billNumber, paymentDebt.getCreditsDebts().getPagoDebts().getDebtsToPay().getTotal(),
-                                                                paymentDebt.getTypePayment(), paymentDebt.getModePayment(), numCheque, fechaPago, paymentDebt.getValorAbono(), paymentDebt.getValorReten());
+                                                                        paymentDebt.getTypePayment(), paymentDebt.getModePayment(), numCheque, fechaPago, paymentDebt.getValorAbono(), paymentDebt.getValorReten());
             cpResumenPaymentDebtsReportList.add(resumenPaymentDebtsReport);
             
             totalAbono = Double.sum(totalAbono, paymentDebt.getValorAbono());
@@ -164,5 +165,59 @@ public class PaymentDebtsServices {
         
         return cpResumenPaymentDebtsReportList;
     }
-
+    
+    public List<StatementProviderReport> getStatementProviderReport(UUID id, long dateTwo) {
+        totalAbono = 0;
+        totalReten = 0;
+        saldo = 0;
+        
+        log.info("PaymentServices getStatementProviderReport: {}", id);
+        Iterable<PaymentDebts> paymentsDebts = paymentDebtsRepository.findStatementProviderReport(id, dateTwo);
+        List<StatementProviderReport> statementProviderReportList = new ArrayList<>();
+        
+        paymentsDebts.forEach(paymentDebt -> {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd");
+            String fechaPago = dateFormat.format(new Date(paymentDebt.getDatePayment()));
+            String fechaCompra = dateFormat.format(new Date(paymentDebt.getCreditsDebts().getPagoDebts().getDebtsToPay().getFecha()));
+            String fechaVence = dateFormat.format(new Date(paymentDebt.getCreditsDebts().getFecha()));
+                       
+            if ("CHQ".equals(paymentDebt.getModePayment())) {
+                numCheque = paymentDebt.getNoDocument();
+            } else if ("TRF".equals(paymentDebt.getModePayment())) {
+                numCheque = paymentDebt.getNoDocument();
+            } else if ("DEP".equals(paymentDebt.getModePayment())) {
+                numCheque = paymentDebt.getNoDocument();
+            } else {
+                numCheque = "--";
+            }
+            
+            ruc = paymentDebt.getCreditsDebts().getPagoDebts().getDebtsToPay().getProvider().getRuc();
+            nameProv = paymentDebt.getCreditsDebts().getPagoDebts().getDebtsToPay().getProvider().getName();
+            debtsNumber = paymentDebt.getCreditsDebts().getPagoDebts().getDebtsToPay().getDebtsSeq();
+            billNumber = paymentDebt.getCreditsDebts().getPagoDebts().getDebtsToPay().getBillNumber();
+            observa = paymentDebt.getCreditsDebts().getPagoDebts().getDebtsToPay().getObservacion();
+            detalle = paymentDebt.getDetail();
+            totalTotal = paymentDebt.getCreditsDebts().getPagoDebts().getDebtsToPay().getTotal();
+            saldo = totalTotal - (paymentDebt.getValorAbono() + paymentDebt.getValorReten());
+            
+            if ("RET".equals(paymentDebt.getTypePayment())) {
+                retenNumber = paymentDebt.getNoDocument();
+                totalTotal = 0;
+            } else {
+                retenNumber = "--";
+            }
+            
+            StatementProviderReport statementProviderReport = new StatementProviderReport(ruc, nameProv, fechaCompra, fechaVence, fechaPago, billNumber, debtsNumber, 
+                                                                        retenNumber, detalle, observa, paymentDebt.getModePayment(), numCheque, totalTotal,
+                                                                        paymentDebt.getValorAbono(), paymentDebt.getValorReten(), saldo);
+            statementProviderReportList.add(statementProviderReport);
+            
+            totalAbono = Double.sum(totalAbono, paymentDebt.getValorAbono());
+            totalReten = Double.sum(totalReten, paymentDebt.getValorReten());
+        });
+        //StatementProviderReport statementProviderReport = new StatementProviderReport("TOTAL ", null, null, null, null, null, null, null, null, sumTotal, sumTotalAbono, sumTotalReten, sumTotalValor);
+        //statementProviderReportList.add(statementProviderReport);
+        
+        return statementProviderReportList;
+    }
 }

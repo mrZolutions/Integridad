@@ -8,7 +8,8 @@
  * Controller of the menu
  */
 angular.module('integridadUiApp')
-    .controller('ProvidersCtrl', function(_, $localStorage, $location, providerService, utilStringService, dateService, eretentionService, utilSeqService, validatorService) {
+    .controller('ProvidersCtrl', function(_, $localStorage, $location, providerService, utilStringService, dateService, eretentionService,
+                                            utilSeqService, paymentDebtsService, validatorService) {
         var vm = this;
         vm.error = undefined;
         vm.success = undefined;
@@ -199,7 +200,10 @@ angular.module('integridadUiApp')
             vm.today = new Date();
             vm.success = undefined;
             vm.provider = undefined;
+            vm.providerId = undefined;
+            vm.providerName = undefined;
             vm.providerToUse = undefined;
+            vm.reportStatementProviderSelected = undefined;
             vm.usrCliId = $localStorage.user.subsidiary.userClient.id;
             vm.providerList = [];
             providerService.getLazyByUserClientId(vm.userData.subsidiary.userClient.id).then(function(response) {
@@ -353,6 +357,66 @@ angular.module('integridadUiApp')
             });
         };
 
+        vm.statementProvider = function(provider) {
+            vm.loading = true;
+            vm.reportStatementProviderSelected = provider;
+            vm.providerName = provider.name;
+            vm.providerId = provider.id;
+            vm.loading = false;
+        };
+
+        vm.getStatementProviderReport = function() {
+            vm.loading = true;
+            vm.isProductReportList = '1';
+            vm.reportList = undefined;
+            var dateTwo = $('#pickerStatePDateTwo').data("DateTimePicker").date().toDate().getTime();
+            dateTwo += 86399000;
+
+            paymentDebtsService.getStatementProviderReport(vm.providerId, dateTwo).then(function(response) {
+                vm.reportList = response;
+                vm.loading = false;
+            }).catch(function(error) {
+                vm.loading = false;
+                vm.error = error.data;
+            });
+        };
+
+        vm.exportExcel = function() {
+            var dataReport = [];
+            if (vm.isProductReportList === '1') {
+                _.each(vm.reportList, function(statementReport) {
+                    var data = {
+                        RUC: statementReport.ruc,
+                        PROVEEDOR: statementReport.providerName,
+                        FACTURA: statementReport.billNumber,
+                        FECHA_COMPRA: statementReport.fechCompra !== null ? new Date(statementReport.fechCompra) : statementReport.fechCompra,
+                        FECHA_VENCE: statementReport.fechVence !== null ? new Date(statementReport.fechVence) : statementReport.fechVence,
+                        FECHA_PAGO: statementReport.fechPago !== null ? new Date(statementReport.fechPago) : statementReport.fechPago,
+                        DOC_INTR: statementReport.debtsSeq,
+                        RET_NRO: statementReport.retenNumber,
+                        DETALLE: statementReport.detalle,
+                        OBSERV: statementReport.observacion,
+                        MOD_PGO: statementReport.modePayment,
+                        CHQ_NRO: statementReport.numCheque,
+                        TOTAL: parseFloat(statementReport.total.toFixed(2)),
+                        V_ABONO: parseFloat(statementReport.valorAbono.toFixed(2)),
+                        V_RETEN: parseFloat(statementReport.valorReten.toFixed(2)),
+                        SALDO: parseFloat(statementReport.saldo.toFixed(2))
+                    };
+        
+                    dataReport.push(data);
+                });
+            };
+      
+            var ws = XLSX.utils.json_to_sheet(dataReport);
+            /* add to workbook */
+            var wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "Estado de Cuenta");
+      
+            /* write workbook and force a download */
+            XLSX.writeFile(wb, "EstadoCtaProveedor.xlsx");
+        };
+
         vm.getPercentageTable = function() {
             vm.tablePercentage = undefined;
             if (vm.retention.typeRetention === '2') {
@@ -490,8 +554,8 @@ angular.module('integridadUiApp')
             vm.loading = true;
             var eRet = eretentionService.createERetention(vm.retention, $localStorage.user);
             eretentionService.getClaveDeAcceso(eRet, $localStorage.user.subsidiary.userClient.id).then(function(resp) {
-                var obj = JSON.parse(resp.data);
-                //var obj = {clave_acceso: '1234560', id:'id12345'};
+                //var obj = JSON.parse(resp.data);
+                var obj = {clave_acceso: '1234560', id:'id12345'};
                 if (obj.errors === undefined) {
                     vm.retention.claveDeAcceso = obj.clave_acceso;
                     vm.retention.idSri = obj.id;

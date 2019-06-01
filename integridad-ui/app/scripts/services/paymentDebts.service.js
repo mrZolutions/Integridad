@@ -7,14 +7,20 @@ angular
             });
         };
 
+        this.getPaymentsDebtsByUserClientIdWithBankAndNroDocument = function(userClientId, banco, nrodoc) {
+            return securityService.get('/paymentdebts/userclient/' + userClientId + '/' + banco + '/' + nrodoc).then(function successCallback(response) {
+                return response.data;
+            });
+        };
+
         this.getPaymentsDebtsByUserClientIdAndDates = function(userClientId, dateOne, dateTwo) {
             return securityService.get('/paymentdebts/rep/ccrespdreport/' + userClientId + '/' + dateOne + '/' + dateTwo).then(function successCallback(response) {
                 return response.data;
             });
         };
 
-        this.getPaymentsDebtsByUserClientIdWithBankAndNroDocument = function(userClientId, banco, nrodoc) {
-            return securityService.get('/paymentdebts/userclient/' + userClientId + '/' + banco + '/' + nrodoc).then(function successCallback(response) {
+        this.getStatementProviderReport = function(id, dateTwo) {
+            return securityService.get('/paymentdebts/rep/statement/' + id + '/' + dateTwo).then(function successCallback(response) {
                 return response.data;
             });
         };

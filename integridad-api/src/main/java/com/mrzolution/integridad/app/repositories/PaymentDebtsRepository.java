@@ -27,6 +27,9 @@ public interface PaymentDebtsRepository extends CrudRepository<PaymentDebts, UUI
     @Query("SELECT p FROM PaymentDebts p JOIN p.creditsDebts c JOIN c.pagoDebts pd JOIN pd.debtsToPay d JOIN d.provider pr WHERE pr.userClient.id = (:id) AND p.datePayment >= (:dateOne) AND p.datePayment <= (:dateTwo) ORDER BY pr.name, p.datePayment")
     Iterable<PaymentDebts> findPaymentsDebtsByUserClientIdAndDates(@Param("id") UUID id, @Param("dateOne") long dateOne, @Param("dateTwo") long dateTwo);
     
+    @Query("SELECT p FROM PaymentDebts p JOIN p.creditsDebts c JOIN c.pagoDebts pd JOIN pd.debtsToPay d JOIN d.provider pr WHERE pr.id = (:id) AND p.datePayment <= (:dateTwo) ORDER BY pr.name, p.datePayment")
+    Iterable<PaymentDebts> findStatementProviderReport(@Param("id") UUID id, @Param("dateTwo") long dateTwo);
+    
     @Query("SELECT p FROM PaymentDebts p JOIN p.creditsDebts c JOIN c.pagoDebts pd JOIN pd.debtsToPay d JOIN d.provider pr WHERE pr.userClient.id = (:id) AND p.banco = (:banco) AND p.noDocument = (:nrodoc)")
     Iterable<PaymentDebts> findPaymentsDebtsByUserClientIdWithBankAndNroDocument(@Param("id") UUID id, @Param("banco") String banco, @Param("nrodoc") String nrodoc);
 }
