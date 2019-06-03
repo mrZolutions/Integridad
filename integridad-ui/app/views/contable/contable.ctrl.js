@@ -579,7 +579,7 @@ angular.module('integridadUiApp')
             vm.itemb = {
                 typeContab: vm.typeContab,
                 codeConta: cuenta.code,
-                tipo: cuenta.accountType,
+                tipo: 'CREDITO (C)',
                 descrip: cuenta.description,
                 name: vm.detailitemb
             };
@@ -595,7 +595,7 @@ angular.module('integridadUiApp')
             vm.itemb = {
                 typeContab: vm.typeContab,
                 codeConta: cuenta.code,
-                tipo: cuenta.accountType,
+                tipo: 'DEBITO (D)',
                 descrip: cuenta.description,
                 name: vm.detailitemb
             };
@@ -909,9 +909,9 @@ angular.module('integridadUiApp')
                     codeConta: vm.clientContable,
                     descrip: 'CLIENTES NO RELACIONADOS',
                     tipo: 'CREDITO (C)',
-                    baseImponible: parseFloat((vm.dailybookCi.total).toFixed(2)),
-                    name: vm.generalDetailCe,
-                    haber: parseFloat((vm.dailybookCi.total).toFixed(2))
+                    baseImponible: parseFloat(vm.dailybookCi.total),
+                    name: vm.generalDetailCi,
+                    haber: parseFloat(vm.dailybookCi.total)
                 };
                 vm.itemClient.numCheque = vm.numChequeCi;
                 vm.dailybookCi.detailDailybookContab.push(vm.itemClient);
@@ -952,7 +952,7 @@ angular.module('integridadUiApp')
             vm.itemCib = {
                 typeContab: vm.typeContab,
                 codeConta: cuenta.code,
-                tipo: cuenta.accountType,
+                tipo: 'DEBITO (D)',
                 descrip: cuenta.description,
                 name: vm.detailitemCib
             };
@@ -968,7 +968,7 @@ angular.module('integridadUiApp')
             vm.itemCib = {
                 typeContab: vm.typeContab,
                 codeConta: cuenta.code,
-                tipo: cuenta.accountType,
+                tipo: 'CREDITO (C)',
                 descrip: cuenta.description,
                 name: vm.detailitemCib
             };

@@ -308,7 +308,7 @@ angular.module('integridadUiApp')
                 tipo: 'CREDITO (C)',
                 baseImponible: parseFloat(vm.paymentCreated.valorAbono),
                 name: vm.generalDetailCi_1,
-                deber: parseFloat(vm.paymentCreated.valorAbono)
+                haber: parseFloat(vm.paymentCreated.valorAbono)
             };
             vm.itema.numCheque = vm.paymentCreated.noDocument;
             vm.dailybookCi.detailDailybookContab.push(vm.itema);
@@ -320,7 +320,7 @@ angular.module('integridadUiApp')
                 tipo: 'DEBITO (D)',
                 baseImponible: parseFloat(vm.paymentCreated.valorAbono),
                 name: vm.generalDetailCi_2,
-                haber: parseFloat(vm.paymentCreated.valorAbono)
+                deber: parseFloat(vm.paymentCreated.valorAbono)
             };
             vm.itemb.numCheque = '--';
             vm.dailybookCi.detailDailybookContab.push(vm.itemb);
@@ -495,7 +495,7 @@ angular.module('integridadUiApp')
                 tipo: 'CREDITO (C)',
                 baseImponible: parseFloat(vm.valorDocumento),
                 name: vm.generalDetailCi_1,
-                deber: parseFloat(vm.valorDocumento)
+                haber: parseFloat(vm.valorDocumento)
             };
             vm.itema.numCheque = vm.noDocument;
             vm.dailybookCi.detailDailybookContab.push(vm.itema);
@@ -507,7 +507,7 @@ angular.module('integridadUiApp')
                 tipo: 'DEBITO (D)',
                 baseImponible: parseFloat(vm.valorDocumento),
                 name: vm.generalDetailCi_2,
-                haber: parseFloat(vm.valorDocumento)
+                deber: parseFloat(vm.valorDocumento)
             };
             vm.itemb.numCheque = '--';
             vm.dailybookCi.detailDailybookContab.push(vm.itemb);

@@ -240,9 +240,10 @@ public class CellarServices {
             for (Cellar cellar: cellars) {
                 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd");
                 String fechaIngreso = dateFormat.format(new Date(cellar.getDateEnterCellar()));
+                String fechaBill = dateFormat.format(new Date(cellar.getDateBill()));
                 for (DetailCellar detail: cellar.getDetailsCellar()) {
                     if (uuidCurrent.equals(detail.getProduct().getId())) {
-                        CellarEntryReport item = new CellarEntryReport(fechaIngreso, cellar.getProvider().getRazonSocial(), cellar.getCellarSeq(),
+                        CellarEntryReport item = new CellarEntryReport(fechaIngreso, cellar.getWhNumberSeq(), cellar.getProvider().getRazonSocial(), fechaBill,
                                                                         cellar.getBillNumber(), detail.getProduct().getName(), detail.getQuantity(), detail.getCostEach(),
                                                                         (detail.getTotal() * 0.12), (detail.getTotal() * 1.12));
                         reportList.add(item);

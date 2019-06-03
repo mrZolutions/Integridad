@@ -618,8 +618,9 @@
             <thead>
                 <tr>
                     <th>Fecha de Ingreso</th>
-                    <th>Proveedor</th>
                     <th>Nro. Ingreso</th>
+                    <th>Proveedor</th>
+                    <th>Fecha de Factura</th>
                     <th>N&uacute;mero Factura</th>
                     <th>Producto</th>
                     <th>Cantidad</th>
@@ -631,8 +632,9 @@
             <tbody>
                 <tr ng-repeat="data in vm.reportList | orderBy:'nomCliente'" >
                     <td>{{data.fechaIngreso}}</td>
+                    <td>{{data.whNumberSeq}}</td>
                     <td>{{data.razonSocial}}</td>
-                    <td>{{data.cellarSeq}}</td>
+                    <td>{{data.fechaBill}}</td>
                     <td>{{data.billNumber}}</td>
                     <td>{{data.prodName}}</td>
                     <td>{{data.prodQuantity}}</td>

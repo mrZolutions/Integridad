@@ -477,8 +477,9 @@ angular.module('integridadUiApp')
         _.each(vm.reportList, function(cellarReport) {
           var data = {
             FECHA_INGRESO: cellarReport.fechaIngreso !== null ? new Date(cellarReport.fechaIngreso) : cellarReport.fechaIngreso,
+            NRO_INGRESO: cellarReport.whNumberSeq,
             PROVEEDOR: cellarReport.razonSocial,
-            NRO_INGRESO: cellarReport.cellarSeq,
+            FECHA_FACTURA: cellarReport.fechaBill !== null ? new Date(cellarReport.fechaBill) : cellarReport.fechaBill,
             NRO_FACTURA: cellarReport.billNumber,
             PRODUCTO: cellarReport.prodName,
             CANTIDAD: cellarReport.prodQuantity,

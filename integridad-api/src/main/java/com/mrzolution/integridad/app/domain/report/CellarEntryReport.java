@@ -10,8 +10,9 @@ import lombok.Data;
 @Data
 public class CellarEntryReport {
     private String fechaIngreso;
+    private String whNumberSeq;
     private String razonSocial;
-    private String cellarSeq;
+    private String fechaBill;
     private String billNumber;
     private String prodName;
     private long prodQuantity;
@@ -19,10 +20,11 @@ public class CellarEntryReport {
     private double prodIva;
     private double prodTotal;
     
-    public CellarEntryReport(String fechaIngreso, String razonSocial, String cellarSeq, String billNumber, String prodName, long prodQuantity, Double prodCostEach, Double prodIva, Double prodTotal) {
+    public CellarEntryReport(String fechaIngreso, String whNumberSeq, String razonSocial, String fechaBill, String billNumber, String prodName, long prodQuantity, Double prodCostEach, Double prodIva, Double prodTotal) {
         this.fechaIngreso = fechaIngreso;
+        this.whNumberSeq = whNumberSeq;
         this.razonSocial = razonSocial;
-        this.cellarSeq = cellarSeq;
+        this.fechaBill = fechaBill;
         this.billNumber = billNumber;
         this.prodName = prodName;
         this.prodQuantity = prodQuantity;
