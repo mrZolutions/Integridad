@@ -90,7 +90,11 @@ public class PaymentServices {
             String nbillId = billed.getId().toString();
             if (nbillId.equals(document)) {
                 BigDecimal vsumado = new BigDecimal(creditSaved.getValor());
-                vsumado = vsumado.setScale(2, BigDecimal.ROUND_HALF_UP);
+                if (creditSaved.getValor() == 0) {
+                    vsumado = vsumado.setScale(0, BigDecimal.ROUND_HALF_UP);
+                } else {
+                    vsumado = vsumado.setScale(2, BigDecimal.ROUND_HALF_UP);
+                }
                 saldo = String.valueOf(vsumado);
                 billed.setSaldo(saldo);
                 billRepository.save(billed);

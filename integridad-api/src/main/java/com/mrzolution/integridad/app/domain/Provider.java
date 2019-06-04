@@ -38,9 +38,6 @@ public class Provider {
     @JoinColumn(name = "user_client_id")
     private UserClient userClient;
     
-//    @OneToMany(mappedBy = "userClient", cascade = CascadeType.ALL)
-//    private List<Subsidiary> subsidiaries;
-    
     public void setListsNull(){
         userClient.setListsNull();
         userClient.setFatherListToNull();

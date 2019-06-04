@@ -693,7 +693,7 @@ angular.module('integridadUiApp')
                     if (vm.estado === 'PENDIENTE') {
                         vm.bill.saldo = (vm.bill.total).toString();
                     } else {
-                        vm.bill.saldo = '0.00';
+                        vm.bill.saldo = '0';
                     };
                     // 1 is typeDocument Bill **************!!!
                     billService.create(vm.bill, 1).then(function(respBill) {

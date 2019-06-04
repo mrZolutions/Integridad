@@ -59,17 +59,7 @@ public class ProviderServices {
 	}
 	return retrieved;
     }
-//
-//	public Iterable<Client> getAll(){
-//		log.info("ClientServices getAll");
-//		Iterable<Client> clients = clientRepository.findAll();
-//		for (Client client : clients) {
-//			populateChildren(client);
-//		}
-//		log.info("ClientServices getAll size retrieved: {}", Iterables.size(clients));
-//		return clients;
-//	}
-//
+
     public Iterable<Provider> getAllLazy() {
 	log.info("ProviderServices getAllLazy");
 	Iterable<Provider> providers = providerRepository.findByActive(true);
@@ -78,7 +68,7 @@ public class ProviderServices {
             provider.setFatherListToNull();
 	}
 	log.info("ProviderServices getAllLazy size retrieved: {}", Iterables.size(providers));
-	return providers;
+        return providers;
     }
 
     public Iterable<Provider> getLazyByUserClient(UUID id) {
@@ -91,33 +81,5 @@ public class ProviderServices {
 	log.info("ProviderServices getLazyByUserClient size retrieved: {}", Iterables.size(providers));
 	return providers;
     }
-//
-//	public Iterable<Client> getAllLazyByUserClientid(UUID userClientId){
-//		log.info("ClientServices getAllLazyByUserClientid id: {}", userClientId);
-//		Iterable<Client> clients = clientRepository.findActivesByUserClientId(userClientId);
-//		for (Client client : clients) {
-//			client.setListsNull();
-//			client.setFatherListToNull();
-//		}
-//		log.info("ClientServices getAllLazyByUserClientid size retrieved: {}", Iterables.size(clients));
-//		return clients;
-//	}
-//
-//	private void populateChildren(Client client) {
-//		log.info("ClientServices populateChildren clientId: {}", client.getId());
-//		List<Bill> billList = new ArrayList<>();
-//		Iterable<Bill> bills= billRepository.findByClient(client);
-//
-//		for (Bill bill : bills) {
-//			bill.setFatherListToNull();
-//			bill.setListsNull();
-//			bill.setClient(null);
-//
-//			billList.add(bill);
-//		}
-//
-//		client.setBills(billList);
-//		log.info("ClientServices populateChildren FINISHED clientId: {}", client.getId());
-//	}
 
 }

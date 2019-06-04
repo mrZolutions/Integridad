@@ -1221,6 +1221,10 @@
                                     <label>Nro. Comprobante Egreso:</label><br/>
                                     <input type="text" class="form-control" ng-model="vm.paymentDebts.noDocument" maxlength="17"/>
                                 </div>
+                                <div class = "form-group col-md-6">
+                                    <label>N&uacute;mero de CHQ/DEP/TRF:</label><br/>
+                                    <input type = "text" class = "form-control" ng-model = "vm.paymentDebts.noDocument"/>
+                                </div>
                                 <div class="form-group col-md-6">
                                     <label>Detalle:</label><br/>
                                     <select ng-options="deta.name as deta.code for deta in [{code: 'ABONO POR COMP. EGRESO' ,name:'ABONO POR COMP. EGRESO'}]"

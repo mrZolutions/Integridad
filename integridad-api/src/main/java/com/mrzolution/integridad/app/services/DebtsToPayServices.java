@@ -92,8 +92,8 @@ public class DebtsToPayServices {
     }
     
     //Selección de Debts con Saldo (Crédito) por Id de Proveedor
-    public Iterable<DebtsToPay> getDebtsToPayWithSaldoByProviderId(UUID id) {
-        Iterable<DebtsToPay> debts = debtsToPayRepository.findDebtsToPayWithSaldoByProviderId(id);
+    public Iterable<DebtsToPay> getDebtsToPayByProviderIdWithSaldo(UUID id) {
+        Iterable<DebtsToPay> debts = debtsToPayRepository.findDebtsToPayByProviderIdWithSaldo(id);
         debts.forEach(debt -> {
             debt.setListsNull();
             debt.setFatherListToNull();
