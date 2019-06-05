@@ -255,7 +255,7 @@ angular.module('integridadUiApp')
                 };
                 var costEachCalculated = vm.getCost(detail.product[vm.priceType.cod], detail.product.averageCost);
                 detail.costEach = costEachCalculated;
-                detail.total = parseFloat((parseFloat(detail.quantity) * parseFloat(detail.costEach)).toFixed(4));
+                detail.total = parseFloat((parseFloat(detail.quantity) * (parseFloat(detail.costEach) - (parseFloat(detail.costEach) * parseFloat(detail.discount / 100)))).toFixed(4));
             });
             _getTotalSubtotal();
         };
