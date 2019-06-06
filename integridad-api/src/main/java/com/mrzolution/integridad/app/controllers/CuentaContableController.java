@@ -20,7 +20,6 @@ public class CuentaContableController {
 
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity createCuentaContable(@RequestBody CuentaContable cuentaContable) {
-	log.info("CuentaContableController create");
 	CuentaContable response = null;
 	try {
             response = service.createCuentaContable(cuentaContable);
@@ -33,7 +32,6 @@ public class CuentaContableController {
     
     @RequestMapping(method = RequestMethod.PUT)
     public ResponseEntity updateCuentaContable(@RequestBody CuentaContable cuentaContable) {
-        log.info("CuentaContableController updateCuentaContable: {}", cuentaContable);
         CuentaContable response = null;
         try {
             service.updateCuentaContable(cuentaContable);
@@ -46,7 +44,6 @@ public class CuentaContableController {
     
     @RequestMapping(method = RequestMethod.GET, value="/userclient/{id}")
     public ResponseEntity getCuentaContableByUserClient(@PathVariable("id") UUID id) {
-	log.info("CuentaContableController getCuentaContableByUserClient");
 	Iterable<CuentaContable> response = null;
 	try {
             response = service.getCuentaContableByUserClient(id);
@@ -59,7 +56,6 @@ public class CuentaContableController {
     
     @RequestMapping(method = RequestMethod.GET, value="/userclient/nobank/{id}")
     public ResponseEntity getCuentaContableByUserClientNoBank(@PathVariable("id") UUID id) {
-	log.info("CuentaContableController getCuentaContableByUserClientNoBank");
 	Iterable<CuentaContable> response = null;
 	try {
             response = service.getCuentaContableByUserClientNoBank(id);
@@ -72,7 +68,6 @@ public class CuentaContableController {
     
     @RequestMapping(method = RequestMethod.GET, value="/userclient/bank/{id}")
     public ResponseEntity getCuentaContableByUserClientAndBank(@PathVariable("id") UUID id) {
-	log.info("CuentaContableController getCuentaContableByUserClientAndBank");
 	Iterable<CuentaContable> response = null;
 	try {
             response = service.getCuentaContableByUserClientAndBank(id);
@@ -85,7 +80,6 @@ public class CuentaContableController {
     
     @RequestMapping(method = RequestMethod.GET, value="/type/{id}/{typ}")
     public ResponseEntity getCuentaContableByType(@PathVariable("id") UUID id, @PathVariable("typ") String typ) {
-        log.info("CuentaContableController getCuentaContableByType");
         Iterable<CuentaContable> response = null;
         try {
             response = service.getCuentaContableByType(id, typ);
@@ -98,7 +92,6 @@ public class CuentaContableController {
     
     @RequestMapping(method = RequestMethod.GET, value="/cuenta/typeacc/{typ}/{atyp}")
     public ResponseEntity getCuentaContableByTypeAndAccountType(@PathVariable("typ") String typ, @PathVariable("atyp") String atyp) {
-        log.info("CuentaContableController getCuentaContableByTypeAndAccountType");
         Iterable<CuentaContable> response = null;
         try {
             response = service.getCuentaContableByTypeAndAccountType(typ, atyp);

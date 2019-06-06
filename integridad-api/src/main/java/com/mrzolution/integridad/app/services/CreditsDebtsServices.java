@@ -45,12 +45,12 @@ public class CreditsDebtsServices {
     private String numCheque = "";
     
     public Iterable<CreditsDebts> getCreditsDebtsOfDebtsToPayByDebtsToPayId(UUID id) {
-        log.info("CreditsDebtsServices getCreditsDebtsOfDebtsToPayByDebtsToPayId: {}", id);
         Iterable<CreditsDebts> creditsDebts = creditsDebtsRepository.findCreditsDebtsOfDebtsToPayByDebtsToPayId(id);
         creditsDebts.forEach(creditDebt -> {
             creditDebt.setListsNull();
             creditDebt.setFatherListToNull();
         });
+        log.info("CreditsDebtsServices getCreditsDebtsOfDebtsToPayByDebtsToPayId DONE: {}", id);
         return creditsDebts;
     }
     

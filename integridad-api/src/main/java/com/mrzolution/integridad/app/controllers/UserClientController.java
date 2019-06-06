@@ -26,7 +26,6 @@ public class UserClientController {
 
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity create(@RequestBody UserClient userClient){
-	log.info("UserClientController create: {}", userClient);
 	UserClient response = null;
 	try {
             response = service.create(userClient);
@@ -39,7 +38,6 @@ public class UserClientController {
 	
     @RequestMapping(method = RequestMethod.PUT)
     public ResponseEntity update(@RequestBody UserClient userClient){
-	log.info("UserClientController update: {}", userClient);
 	UserClient response = null;
 	try {
             response = service.update(userClient);
@@ -52,7 +50,6 @@ public class UserClientController {
 	
     @RequestMapping(method = RequestMethod.GET, value="/lazy")
     public ResponseEntity getLazy(){
-	log.info("UserClientController getLazy");
 	Iterable<UserClient> response = null;
 	try {
             response = service.getAllActivesLazy();
@@ -65,7 +62,6 @@ public class UserClientController {
 	
     @RequestMapping(method = RequestMethod.GET, value="/clients_number/{userClientId}")
     public ResponseEntity getNumberOfClients(@PathVariable(value = "userClientId") UUID userClientId){
-	log.info("UserClientController getNumberOfClients");
 	Integer response = null;
 	try {
             response = service.getNumberOfClients(userClientId);

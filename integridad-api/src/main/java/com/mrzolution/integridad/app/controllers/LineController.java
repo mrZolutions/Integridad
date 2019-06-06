@@ -20,7 +20,6 @@ public class LineController {
 
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity createLine(@RequestBody Line line) {
-	log.info("LineController createLine: {}", line);
 	Line response = null;
 	try {
             response = service.createLine(line);
@@ -33,7 +32,6 @@ public class LineController {
 	
     @RequestMapping(method = RequestMethod.PUT)
     public ResponseEntity updateLine(@RequestBody Line line) {
-	log.info("LineController updateLine: {}", line);
 	try {
             service.updateLine(line);
 	} catch (BadRequestException e) {
@@ -45,7 +43,6 @@ public class LineController {
 	
     @RequestMapping(method = RequestMethod.DELETE, value = "/{lineId}")
     public ResponseEntity deleteLine(@PathVariable("lineId") UUID lineId) {
-	log.info("LineController delete: {}", lineId);
 	Line response = null;
 	try {
             response = service.deleteLine(lineId);
@@ -59,7 +56,6 @@ public class LineController {
 	
     @RequestMapping(method = RequestMethod.GET, value="/actives/{projectId}")
     public ResponseEntity getAllActivesByProjectId(@PathVariable("projectId") UUID projectId) {
-	log.info("LineController getAllActivesByProjectId: {}", projectId);
 	Iterable<Line> response = null;
 	try {
             response = service.getAllActivesByUserClientId(projectId);
@@ -72,7 +68,6 @@ public class LineController {
 
     @RequestMapping(method = RequestMethod.GET, value="/actives_lazy/{projectId}")
     public ResponseEntity getAllActivesByProjectIdLazy(@PathVariable("projectId") UUID projectId) {
-	log.info("LineController getAllActivesByProjectIdLazy: {}", projectId);
 	Iterable<Line> response = null;
 	try {
             response = service.getAllActivesByUserClientIdLazy(projectId);

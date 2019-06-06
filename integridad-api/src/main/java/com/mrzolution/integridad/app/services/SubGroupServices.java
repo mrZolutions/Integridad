@@ -21,10 +21,10 @@ public class SubGroupServices {
     ProductRepository productRepository;
 	
     public SubGroup createSubGroup(SubGroup subGroup) {
-	log.info("SubGroupervices createSubGroup");
 	subGroup.setActive(true);
 	SubGroup saved = subGroupRepository.save(subGroup);
 	saved.setListsNull();
+        log.info("SubGroupervices createSubGroup DONE");
 	return saved;
     }
 	
@@ -36,35 +36,35 @@ public class SubGroupServices {
     }
 
     public SubGroup deleteSubGroup(UUID subgroupId) {
-	log.info("SubGroupervices deleteSubGroup: {}", subgroupId);
 	SubGroup findOne = subGroupRepository.findOne(subgroupId);
 	findOne.setListsNull();
 	findOne.setActive(false);
 	updateSubGroup(findOne);
+        log.info("SubGroupervices deleteSubGroup DONE: {}", subgroupId);
 	return findOne;
     }
 
     public Iterable<SubGroup> getAllActivesByGroupLineId(UUID groupLineId) {
-	log.info("SubGroupervices getAllActivesByGroupLineId");
 	Iterable<SubGroup> actives = subGroupRepository.findByGroupLineIdAndActive(groupLineId);
 	actives.forEach(this::populateChildren);
+        log.info("SubGroupervices getAllActivesByGroupLineId DONE");
 	return actives;
     }
 
     public Iterable<SubGroup> getAllActivesByGroupLineIdLazy(UUID groupLineId) {
-	log.info("SubGroupervices getAllActivesByGroupLineIdLazy");
 	Iterable<SubGroup> actives = subGroupRepository.findByGroupLineIdAndActive(groupLineId);
 	actives.forEach(subGroup -> {
             subGroup.setListsNull();
             subGroup.setFatherListToNull();
 	});
+        log.info("SubGroupervices getAllActivesByGroupLineIdLazy DONE");
 	return actives;
     }
 
     public SubGroup getSubGroupById(UUID id) {
-	log.info("SubGroupervices getSubGroupById: {}", id);
 	SubGroup findOne = subGroupRepository.findOne(id);
 	populateChildren(findOne);
+        log.info("SubGroupervices getSubGroupById DONE: {}", id);
 	return findOne;
     }
 

@@ -19,7 +19,6 @@ public class DetailCellarServices {
     DetailCellarRepository detailCellarRepository;
     
     public Iterable<DetailCellar> getDetailsOfCellarsByUserClientId(UUID userClientId) {
-        log.info("DetailCellarServices getDetailByUserClientId: {}", userClientId);
         Iterable<DetailCellar> details = detailCellarRepository.findDetailsOfCellarsByUserClientId(userClientId);
         details.forEach(detail -> {
             detail.setListsNull();
@@ -29,6 +28,7 @@ public class DetailCellarServices {
             detail.getCellar().setFatherListToNull();
             detail.getCellar().setListsNull();
         });
+        log.info("DetailCellarServices getDetailByUserClientId DONE: {}", userClientId);
         return details;
     }
 }

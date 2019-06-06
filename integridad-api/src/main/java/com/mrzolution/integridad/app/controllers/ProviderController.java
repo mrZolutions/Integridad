@@ -21,7 +21,6 @@ public class ProviderController {
 
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity createProvider(@RequestBody Provider provider) {
-	log.info("ProviderController createProvider");
 	Provider response = null;
 	try {
             response = service.createProvider(provider);
@@ -34,7 +33,6 @@ public class ProviderController {
 
     @RequestMapping(method = RequestMethod.PUT)
     public ResponseEntity updateProvider(@RequestBody Provider provider) {
-	log.info("ProviderController updateProvider: {}", provider);
 	Provider response = null;
 	try {
             service.updateProvider(provider);
@@ -47,7 +45,6 @@ public class ProviderController {
 
     @RequestMapping(method = RequestMethod.GET, value="/lazy/client/{id}")
     public ResponseEntity getLazyByUserClient(@PathVariable("id") UUID id) {
-	log.info("ProviderController getLazyByUserClient");
 	Iterable<Provider> response = null;
 	try {
             response = service.getLazyByUserClient(id);
@@ -60,7 +57,6 @@ public class ProviderController {
 
     @RequestMapping(method = RequestMethod.GET, value="/lazy")
     public ResponseEntity getLazy() {
-	log.info("ProviderController getLazy");
 	Iterable<Provider> response = null;
 	try {
             response = service.getAllLazy();
@@ -73,8 +69,7 @@ public class ProviderController {
 
     @RequestMapping(method = RequestMethod.GET, value="/{id}")
     public ResponseEntity getProviderById(@PathVariable("id") UUID id) {
-        log.info("ProviderController getProviderById:{}", id);
-	Provider response = null;
+        Provider response = null;
 	try {
             response = service.getProviderById(id);
 	} catch (BadRequestException e) {

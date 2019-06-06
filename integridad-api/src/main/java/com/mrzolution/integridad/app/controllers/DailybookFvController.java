@@ -1,8 +1,8 @@
 package com.mrzolution.integridad.app.controllers;
 
-import com.mrzolution.integridad.app.domain.DailybookCi;
+import com.mrzolution.integridad.app.domain.DailybookFv;
 import com.mrzolution.integridad.app.exceptions.BadRequestException;
-import com.mrzolution.integridad.app.services.DailybookCiServices;
+import com.mrzolution.integridad.app.services.DailybookFvServices;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,89 +21,89 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
-@RequestMapping(value = "/integridad/v1/contable/dailyci")
-public class DailybookCiController {
+@RequestMapping(value = "/integridad/v1/contable/dailyfv")
+public class DailybookFvController {
     @Autowired
-    DailybookCiServices service;
+    DailybookFvServices service;
     
     @RequestMapping(method = RequestMethod.GET, value="/{id}")
-    public ResponseEntity getDailybookCiById(@PathVariable("id") UUID id) {
-        DailybookCi response = null;
+    public ResponseEntity getDailybookFvById(@PathVariable("id") UUID id) {
+        DailybookFv response = null;
 	try {
-            response = service.getDailybookCiById(id);
+            response = service.getDailybookFvById(id);
 	} catch (BadRequestException e) {
-            log.error("DailybookCiController getDailybookCiById Exception thrown: {}", e.getMessage());
+            log.error("DailybookFvController getDailybookFvById Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
-        return new ResponseEntity<DailybookCi>(response, HttpStatus.ACCEPTED);
+        return new ResponseEntity<DailybookFv>(response, HttpStatus.ACCEPTED);
     }
     
     @RequestMapping(method = RequestMethod.GET, value="/client/{id}")
-    public ResponseEntity getDailybookCiByClientId(@PathVariable("id") UUID id) {
-        Iterable<DailybookCi> response = null;
+    public ResponseEntity getDailybookFvByClientId(@PathVariable("id") UUID id) {
+        Iterable<DailybookFv> response = null;
         try {
-            response = service.getDailybookCiByClientId(id);
+            response = service.getDailybookFvByClientId(id);
         } catch (BadRequestException e) {
-            log.error("DailybookCiController getDailybookCiByClientId Exception thrown: {}", e.getMessage());
+            log.error("DailybookFvController getDailybookFvByClientId Exception thrown: {}", e.getMessage());
 	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
         return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
     }
     
     @RequestMapping(method = RequestMethod.GET, value="/userclient/{id}")
-    public ResponseEntity getDailybookCiByUserClientId(@PathVariable("id") UUID id) {
-        Iterable<DailybookCi> response = null;
+    public ResponseEntity getDailybookFvByUserClientId(@PathVariable("id") UUID id) {
+        Iterable<DailybookFv> response = null;
         try {
-            response = service.getDailybookCiByUserClientId(id);
+            response = service.getDailybookFvByUserClientId(id);
         } catch (BadRequestException e) {
-            log.error("DailybookCiController getDailybookCiByUserClientId Exception thrown: {}", e.getMessage());
+            log.error("DailybookFvController getDailybookFvByUserClientId Exception thrown: {}", e.getMessage());
 	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
         return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
     }
     
     @RequestMapping(method = RequestMethod.GET, value="/userclient/noclient/{id}")
-    public ResponseEntity getDailybookCiByUserClientIdWithNoClient(@PathVariable("id") UUID id) {
-        Iterable<DailybookCi> response = null;
+    public ResponseEntity getDailybookFvByUserClientIdWithNoClient(@PathVariable("id") UUID id) {
+        Iterable<DailybookFv> response = null;
         try {
-            response = service.getDailybookCiByUserClientIdWithNoClient(id);
+            response = service.getDailybookFvByUserClientIdWithNoClient(id);
         } catch (BadRequestException e) {
-            log.error("DailybookCiController getDailybookCiByUserClientIdWithNoProvider Exception thrown: {}", e.getMessage());
+            log.error("DailybookFvController getDailybookFvByUserClientIdWithNoProvider Exception thrown: {}", e.getMessage());
 	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
         return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
     }
     
     @RequestMapping(method = RequestMethod.GET, value="/userclient/{userClientId}/{clientId}/{billNumber}")
-    public ResponseEntity getDailybookCiByUserClientIdAndClientIdAndBillNumber(@PathVariable("userClientId") UUID userClientId, @PathVariable("clientId") UUID clientId, @PathVariable("billNumber") String billNumber) {
-        Iterable<DailybookCi> response = null;
+    public ResponseEntity getDailybookFvByUserClientIdAndClientIdAndBillNumber(@PathVariable("userClientId") UUID userClientId, @PathVariable("clientId") UUID clientId, @PathVariable("billNumber") String billNumber) {
+        Iterable<DailybookFv> response = null;
         try {
-            response = service.getDailybookCiByUserClientIdAndClientIdAndBillNumber(userClientId, clientId, billNumber);
+            response = service.getDailybookFvByUserClientIdAndClientIdAndBillNumber(userClientId, clientId, billNumber);
         } catch (BadRequestException e) {
-            log.error("DailybookCiController getDailybookCiByUserClientIdAndClientIdAndBillNumber Exception thrown: {}", e.getMessage());
+            log.error("DailybookFvController getDailybookFvByUserClientIdAndClientIdAndBillNumber Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
         return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
     }
     
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity createDailybookCi(@RequestBody DailybookCi dailybookCi) {
-	DailybookCi response = null;
+    public ResponseEntity createDailybookFv(@RequestBody DailybookFv dailybookFv) {
+	DailybookFv response = null;
 	try {
-            response = service.createDailybookCi(dailybookCi);
+            response = service.createDailybookFv(dailybookFv);
 	} catch (BadRequestException e) {
-            log.error("DailybookCiController createDailybookCi Exception thrown: {}", e.getMessage());
+            log.error("DailybookFvController createDailybookFv Exception thrown: {}", e.getMessage());
 	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
-        return new ResponseEntity<DailybookCi>(response, HttpStatus.CREATED);
+        return new ResponseEntity<DailybookFv>(response, HttpStatus.CREATED);
     }
     
     @RequestMapping(method = RequestMethod.PUT)
-    public ResponseEntity deactivateDailybookCi(@RequestBody DailybookCi dailybookCi) {
+    public ResponseEntity deactivateDailybookFv(@RequestBody DailybookFv dailybookFv) {
         try {
-            service.deactivateDailybookCi(dailybookCi);
+            service.deactivateDailybookFv(dailybookFv);
         } catch (BadRequestException e) {
-            log.error("DailybookCiController deactivateDailybookCi Exception thrown: {}", e.getMessage());
+            log.error("DailybookFvController deactivateDailybookFv Exception thrown: {}", e.getMessage());
 	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
         return new ResponseEntity<Void>(HttpStatus.ACCEPTED);

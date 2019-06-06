@@ -20,7 +20,6 @@ public class GroupLineController {
 
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity createGroupLine(@RequestBody GroupLine groupLine) {
-	log.info("GroupLineController create: {}", groupLine);
 	GroupLine response = null;
 	try {
             response = service.createGroupLine(groupLine);
@@ -33,7 +32,6 @@ public class GroupLineController {
 	
     @RequestMapping(method = RequestMethod.PUT)
     public ResponseEntity updateGroupLine(@RequestBody GroupLine groupLine) {
-	log.info("GroupLineController update: {}", groupLine);
 	try {
             service.updateGroupLine(groupLine);
 	} catch (BadRequestException e) {
@@ -45,7 +43,6 @@ public class GroupLineController {
 	
     @RequestMapping(method = RequestMethod.DELETE, value = "/{grouplineId}")
     public ResponseEntity deleteGroupLine(@PathVariable("groupLineId") UUID groupLineId) {
-	log.info("GroupLineController deleteGroupLine: {}", groupLineId);
 	GroupLine response = null;
 	try {
             response = service.deleteGroupLine(groupLineId);
@@ -59,7 +56,6 @@ public class GroupLineController {
 	
     @RequestMapping(method = RequestMethod.GET, value="/actives/{lineId}")
     public ResponseEntity getAllActivesByLineId(@PathVariable("lineId") UUID lineId) {
-	log.info("GroupLineController getAllActivesByLineId: {}", lineId);
 	Iterable<GroupLine> response = null;
 	try {
             response = service.getAllActivesByLineId(lineId);
@@ -72,7 +68,6 @@ public class GroupLineController {
 
     @RequestMapping(method = RequestMethod.GET, value="/actives_lazy/{lineId}")
     public ResponseEntity getAllActivesByProjectIdLazy(@PathVariable("lineId") UUID lineId) {
-	log.info("GroupLineController getAllActivesByLineIdLazy: {}", lineId);
 	Iterable<GroupLine> response = null;
 	try {
             response = service.getAllActivesByLineIdLazy(lineId);

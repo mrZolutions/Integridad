@@ -1,6 +1,5 @@
 package com.mrzolution.integridad.app.services;
 
-import com.google.common.collect.Iterables;
 import com.mrzolution.integridad.app.domain.CuentaContable;
 import com.mrzolution.integridad.app.exceptions.BadRequestException;
 import com.mrzolution.integridad.app.repositories.CuentaContableRepository;
@@ -44,32 +43,32 @@ public class CuentaContableServices {
     }
 
     public Iterable<CuentaContable> getCuentaContableByUserClient(UUID id) {
-	log.info("CuentaContableServices getCuentaContableByUserClient");
 	Iterable<CuentaContable> cuentas = cuentaContableRepository.findByUserClientId(id);
 	for (CuentaContable cuenta : cuentas) {
             cuenta.setListsNull();
             cuenta.setFatherListToNull();
 	}
+        log.info("CuentaContableServices getCuentaContableByUserClient DONE");
 	return cuentas;
     }
     
     public Iterable<CuentaContable> getCuentaContableByUserClientNoBank(UUID id) {
-	log.info("CuentaContableServices getCuentaContableByUserClientNoBank");
 	Iterable<CuentaContable> cuentas = cuentaContableRepository.findByUserClientIdNoBank(id);
 	for (CuentaContable cuenta : cuentas) {
             cuenta.setListsNull();
             cuenta.setFatherListToNull();
 	}
+        log.info("CuentaContableServices getCuentaContableByUserClientNoBank DONE");
 	return cuentas;
     }
     
     public Iterable<CuentaContable> getCuentaContableByUserClientAndBank(UUID id) {
-	log.info("CuentaContableServices getCuentaContableByUserClient");
 	Iterable<CuentaContable> cuentas = cuentaContableRepository.findByUserClientIdAndBank(id);
 	for (CuentaContable cuenta : cuentas) {
             cuenta.setListsNull();
             cuenta.setFatherListToNull();
 	}
+        log.info("CuentaContableServices getCuentaContableByUserClient DONE");
 	return cuentas;
     }
     
@@ -80,7 +79,8 @@ public class CuentaContableServices {
             ctasType.setListsNull();
             ctasType.setFatherListToNull();
         });
-        return cuentasType;
+        log.info("CuentaContableServices getCuentaContableByType DONE");
+	return cuentasType;
     }
     
     // Selecciona Ctas Contables por Type y por AccountType
@@ -90,6 +90,7 @@ public class CuentaContableServices {
             ctasTypAcc.setListsNull();
             ctasTypAcc.setFatherListToNull();
         });
+        log.info("CuentaContableServices getCuentaContableByTypeAndAccountType DONE");
         return ctasTypeAccType;
     }
     

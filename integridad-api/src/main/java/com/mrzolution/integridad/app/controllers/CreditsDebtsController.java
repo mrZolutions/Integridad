@@ -29,7 +29,6 @@ public class CreditsDebtsController {
     
     @RequestMapping(method = RequestMethod.GET, value="/creditsdebts/debts/{id}")
     public ResponseEntity getCreditsDebtsOfDebtsToPayByDebtsToPayId(@PathVariable("id") UUID id) {
-        log.info("CreditsDebtsController getCreditsDebtsOfDebtsToPayByDebtsToPayId: {}", id);
         Iterable<CreditsDebts> response = null;
         try {
             response = service.getCreditsDebtsOfDebtsToPayByDebtsToPayId(id);
@@ -42,7 +41,6 @@ public class CreditsDebtsController {
     
     @RequestMapping(method = RequestMethod.GET, value="/rep/pendingreport/{userClientId}/{dateTwo}")
     public ResponseEntity getCreditsDebtsPendingOfDebtsToPayByUserClientId(@PathVariable("userClientId") UUID userClientId, @PathVariable("dateTwo") long dateTwo) {
-        log.info("CreditsDebtsController getCreditsDebtsPendingOfDebtsToPayByUserClientId: {}", userClientId);
         List<CreditsDebtsReport> response = null;
         try {
             response = service.getCreditsDebtsPendingOfDebtsToPayByUserClientId(userClientId, dateTwo);

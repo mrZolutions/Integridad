@@ -30,7 +30,6 @@ public class ConsumptionController {
     
     @RequestMapping(method = RequestMethod.GET, value="/{id}")
     public ResponseEntity getAllConsumptionById(@PathVariable("id") UUID id) {
-        log.info("ConsumptionController getAllConsumptionById: {}", id);
         Consumption response = null;
         try {
             response = service.getConsumptionById(id);
@@ -67,7 +66,6 @@ public class ConsumptionController {
     
     @RequestMapping(method = RequestMethod.GET, value="/rep/{userClientId}/{dateOne}/{dateTwo}")
     public ResponseEntity getByUserClientIdAndDatesActives(@PathVariable("userClientId") UUID userClientId, @PathVariable("dateOne") long dateOne, @PathVariable("dateTwo") long dateTwo) {
-        log.info("ConsumptionController getByUserClientIdAndDatesActives: {}, {}, {}", userClientId, dateOne, dateTwo);
         List<CsmItemReport> response = null;
         try {
             response = service.getByUserClientIdAndDatesActives(userClientId, dateOne, dateTwo);

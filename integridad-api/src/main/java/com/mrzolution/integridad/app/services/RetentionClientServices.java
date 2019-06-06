@@ -53,7 +53,6 @@ public class RetentionClientServices {
     private String saldo = "";
  
     public RetentionClient getRetentionClientById(UUID id) {
-	log.info("RetentionClientServices getRetentionClientById: {}", id);
 	RetentionClient retrieved = retentionClientRepository.findOne(id);
 	if (retrieved != null) {
             log.info("RetentionClientServices retrieved id: {}", retrieved.getId());
@@ -61,7 +60,8 @@ public class RetentionClientServices {
             log.info("RetentionClientServices retrieved id NULL: {}", id);
 	}
 	populateChildren(retrieved);
-        return retrieved;
+        log.info("RetentionClientServices getRetentionClientById DONE: {}", id);
+	return retrieved;
     }
     
     public RetentionClient createRetentionClient(RetentionClient retentionClient) throws BadRequestException {   
@@ -85,9 +85,9 @@ public class RetentionClientServices {
             detail.setRetentionClient(null);
         });
                                   
-        log.info("RetentionClientServices createRetentionClient DONE id: {}", saved.getId());
         saved.setDetailRetentionClient(details);
         updateBillCreditsAndPayment(saved, document);
+        log.info("RetentionClientServices createRetentionClient DONE: {}, {}", saved.getId(), saved.getRetentionNumber());
         return saved;
     }
 

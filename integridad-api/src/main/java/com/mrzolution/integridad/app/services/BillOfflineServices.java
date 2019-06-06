@@ -47,50 +47,49 @@ public class BillOfflineServices {
     UserClientRepository userClientRepository;
     
     public Iterable<BillOffline> getBillsOfflineByTypeDocument(int value) {
-        log.info("BillOfflineServices getBillsOfflineByTypeDocument: {}", value);
         Iterable<BillOffline> billsOffline = billOfflineRepository.findBillsOfflineByTypeDocument(value);
         billsOffline.forEach(billOffline -> {
             billOffline.setListsNull();
             billOffline.setFatherListToNull();
         });
+        log.info("BillOfflineServices getBillsOfflineByTypeDocument DONE: {}", value);
         return billsOffline;
     }
     
     //Buscar todas las BillOffline por ID de UserIntegridad
     public Iterable<BillOffline> getBillsOfflineByUserIntegridad(UserIntegridad user) {
-        log.info("BillOfflineServices getBillsOfflineByUserIntegridad: {}", user.getId());
         Iterable<BillOffline> billsOffline = billOfflineRepository.findBillsOfflineByUserIntegridad(user);
         billsOffline.forEach(billOffline -> {
             billOffline.setListsNull();
             billOffline.setFatherListToNull();
         });
+        log.info("BillOfflineServices getBillsOfflineByUserIntegridad DONE: {}", user.getId());
         return billsOffline;
     }
     
     public Iterable<BillOffline> getBillsOfflineByStringSeqAndSubId(String stringSeq, UUID subId) {
-        log.info("BillOfflineServices getByStringSeq : {}, {}", stringSeq, subId);
         Iterable<BillOffline> billsOffline = billOfflineRepository.findBillsOfflineByStringSeqAndSubsidiaryId(stringSeq, subId);
         billsOffline.forEach(billOffline -> {
             billOffline.setFatherListToNull();
             billOffline.setListsNull();
         });
+        log.info("BillOfflineServices getByStringSeq DONE : {}, {}", stringSeq, subId);
         return billsOffline;
     }
     
     //Buscar todas las BillOffline por ID de Cliente
     public Iterable<BillOffline> getBillsOfflineByClientId(UUID id, int type) {
-        log.info("BillOfflineServices getBillsOfflineByClientId: {}", id);
         Iterable<BillOffline> billsOffline = billOfflineRepository.findBillsOfflineByClientId(id, type);
         billsOffline.forEach(billOffline -> {
             billOffline.setListsNull();
             billOffline.setFatherListToNull();
         });
+        log.info("BillOfflineServices getBillsOfflineByClientId DONE: {}", id);
         return billsOffline;
     }
     
     //Bucar BillsOffline por ID        
     public BillOffline getBillOfflineById(UUID id) {
-        log.info("BillOfflineServices getBillOfflineById: {}", id);
         BillOffline retrieved = billOfflineRepository.findOne(id);
         if (retrieved != null) {
             log.info("BillOfflineServices retrieved id: {}", retrieved.getId());
@@ -98,6 +97,7 @@ public class BillOfflineServices {
             log.info("BillOfflineServices retrieved id NULL: {}", id);
         }		
         populateChildren(retrieved);
+        log.info("BillOfflineServices getBillOfflineById DONE: {}", id);
         return retrieved;
     }
     
@@ -161,7 +161,7 @@ public class BillOfflineServices {
         savePagosOfflineOfBillOffline(saved, pagosOffline);
         updateProductBySubsidiary(billOffline, typeDocument, detailsOffline);
         
-        log.info("BillOfflineServices createBillOffline DONE: {}", saved.getId());
+        log.info("BillOfflineServices createBillOffline DONE: {}, {}", saved.getId(), saved.getStringSeq());
         return saved;
     }
     

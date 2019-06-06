@@ -27,8 +27,7 @@ public class WarehouseController {
     
     @RequestMapping(method = RequestMethod.GET, value="/userclient/{id}")
     public ResponseEntity getAllWarehouseByUserClientId(@PathVariable("id") UUID id) {
-        log.info("WarehouseController getAllWarehouseByUserClientId");
-	Iterable<Warehouse> response = null;
+        Iterable<Warehouse> response = null;
 	try {
             response = service.getWarehouseByUserClient(id);
 	} catch (BadRequestException e) {
@@ -40,8 +39,7 @@ public class WarehouseController {
     
     @RequestMapping(method = RequestMethod.GET, value="/{id}")
     public ResponseEntity getAllWarehouseById(@PathVariable("id") UUID id) {
-        log.info("WarehouseController getAllWarehouseById:{}", id);
-	Warehouse response = null;
+        Warehouse response = null;
 	try {
             response = service.getWarehouseById(id);
 	} catch (BadRequestException e) {

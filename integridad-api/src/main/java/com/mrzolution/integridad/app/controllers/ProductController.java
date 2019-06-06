@@ -25,7 +25,6 @@ public class ProductController {
 
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity createProduct(@RequestBody Product product) {
-	log.info("ProductController createProduct: {}", product.getName());
 	Product response = null;
 	try {
             response = service.createProduct(product);
@@ -38,7 +37,6 @@ public class ProductController {
 	
     @RequestMapping(method = RequestMethod.PUT)
     public ResponseEntity updateProduct(@RequestBody Product product) {
-	log.info("ProductController updateProduct");
 	try {
             service.updateProduct(product);
 	} catch (BadRequestException e) {
@@ -50,7 +48,6 @@ public class ProductController {
 	
     @RequestMapping(method = RequestMethod.DELETE, value = "/{productId}")
     public ResponseEntity deleteProduct(@PathVariable("productId") UUID productId) {
-	log.info("ProductController deleteProduct: {}", productId);
 	Product response = null;
 	try {
             response = service.deleteProduct(productId);
@@ -63,7 +60,6 @@ public class ProductController {
 	
     @RequestMapping(method = RequestMethod.GET, value="/{productId}")
     public ResponseEntity getAllProductById(@PathVariable(value = "productId") UUID productId) {
-	log.info("ProductController getAllProductById");
 	Product response = null;
 	try {
             response = service.getProductById(productId);
@@ -76,7 +72,6 @@ public class ProductController {
 	
     @RequestMapping(method = RequestMethod.GET, value="/actives")
     public ResponseEntity getAllActives() {
-	log.info("ProductController getAllActives");
 	Iterable<Product> response = null;
 	try {
             response = service.getAllActives();
@@ -89,7 +84,6 @@ public class ProductController {
 	
     @RequestMapping(method = RequestMethod.GET, value="/actives/user_client/{userClientId}")
     public ResponseEntity getAllActivesByUserClientId(@PathVariable("userClientId") UUID userClientId) {
-	log.info("ProductController getAllActivesByUserClientId: {}", userClientId);
 	Iterable<Product> response = null;
 	try {
             response = service.getAllActivesByUserClientIdAndActive(userClientId);
@@ -102,7 +96,6 @@ public class ProductController {
         
     @RequestMapping(method = RequestMethod.GET, value="/actives/subsidiary/{subsidiaryId}/{page}")
     public ResponseEntity getAllActivesBySubsidiaryId(@PathVariable("subsidiaryId") UUID subsidiaryId, @PathVariable("page") int page, @RequestParam(required = false, name = "var") String variable) {
-	log.info("ProductController getAllActivesBySubsidiaryId: {}", subsidiaryId);
 	Page<Product> response = null;
 	try {
             response = service.getAllActivesBySubsidiaryIdAndActive(subsidiaryId, variable, new PageRequest(page, 50, Sort.Direction.ASC, "product"));

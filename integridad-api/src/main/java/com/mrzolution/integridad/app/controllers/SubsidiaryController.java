@@ -25,7 +25,6 @@ public class SubsidiaryController {
 
     @RequestMapping(method = RequestMethod.GET, value="/user_client/{id}")
     public ResponseEntity getByUserClientId(@PathVariable("id") UUID userClientId) {
-	log.info("SubsidiaryController getByUserClientId: {}", userClientId);
 	Iterable<Subsidiary> response = null;
 	try {
             response = service.getAllActivesByUserClientId(userClientId);
@@ -38,7 +37,6 @@ public class SubsidiaryController {
 
     @RequestMapping(method = RequestMethod.GET, value="/{id}")
     public ResponseEntity getSubsidiaryById(@PathVariable("id") UUID id) {
-	log.info("SubsidiaryController getSubsidiaryById: {}", id);
 	Subsidiary response = null;
 	try {
             response = service.getSubsidiaryById(id);

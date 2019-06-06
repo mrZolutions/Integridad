@@ -60,7 +60,6 @@ public class DebtsToPayServices {
     
     //Selecciona Debts por Id
     public DebtsToPay getDebtsToPayById(UUID id) {
-        log.info("DebtsToPayServices getDebtsToPayById: {}", id);
         DebtsToPay retrieved = debtsToPayRepository.findOne(id);
         if (retrieved != null) {
             log.info("DebtsToPayServices retrieved id: {}", retrieved.getId());
@@ -68,6 +67,7 @@ public class DebtsToPayServices {
             log.info("DebtsToPayServices retrieved id NULL: {}", id);
 	}
         populateChildren(retrieved);
+        log.info("DebtsToPayServices getDebtsToPayById DONE: {}", id);
         return retrieved;
     }
     
@@ -78,6 +78,7 @@ public class DebtsToPayServices {
             debt.setListsNull();
             debt.setFatherListToNull();
         });
+        log.info("DebtsToPayServices getDebtsToPayByProviderId DONE: {}", id);
         return debts;
     }
     
@@ -88,6 +89,7 @@ public class DebtsToPayServices {
             debt.setListsNull();
             debt.setFatherListToNull();
         });
+        log.info("DebtsToPayServices getDebtsToPayByUserClientId DONE: {}", id);
         return debts;
     }
     
@@ -98,6 +100,7 @@ public class DebtsToPayServices {
             debt.setListsNull();
             debt.setFatherListToNull();
         });
+        log.info("DebtsToPayServices getDebtsToPayByProviderIdWithSaldo DONE: {}", id);
         return debts;
     }
     
@@ -108,6 +111,7 @@ public class DebtsToPayServices {
             debt.setFatherListToNull();
             debt.setListsNull();
         });
+        log.info("DebtsToPayServices getDebtsToPayByDebtsSeqAndSubId DONE: {}, {}", stringSeq, subId);
         return debts;
     }
     
@@ -118,6 +122,7 @@ public class DebtsToPayServices {
             debt.setFatherListToNull();
             debt.setListsNull();
         });
+        log.info("DebtsToPayServices getDebtsToPayByBillNumberAndAuthoNumber DONE");
         return debts;
     }
     
@@ -149,7 +154,7 @@ public class DebtsToPayServices {
         
         savePagosAndCreditsOfDebts(saved, pagos);
         saved.setDetailDebtsToPay(detailDebtsToPay);
-        log.info("DebtsToPayServices createDebtsToPay DONE id: {}", saved.getId());
+        log.info("DebtsToPayServices createDebtsToPay DONE: {}, {}", saved.getId(), saved.getDebtsSeq());
         return saved;
     }
     

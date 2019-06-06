@@ -29,8 +29,7 @@ public class RetentionController {
             log.error("RetentionController getDatil Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
-        log.info("RetentionController getDatil DONE");
-	return new ResponseEntity<String>(response, HttpStatus.ACCEPTED);
+        return new ResponseEntity<String>(response, HttpStatus.ACCEPTED);
     }
 
     @RequestMapping(method = RequestMethod.GET, value="/{id}")
@@ -42,8 +41,7 @@ public class RetentionController {
             log.error("RetentionController getRetentionById Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
-        log.info("RetentionController getRetentionById DONE: {}", id);
-	return new ResponseEntity<Retention>(response, HttpStatus.ACCEPTED);
+        return new ResponseEntity<Retention>(response, HttpStatus.ACCEPTED);
     }
     
     @RequestMapping(method = RequestMethod.GET, value="/retention/provider/{id}")
@@ -55,7 +53,6 @@ public class RetentionController {
             log.error("RetentionController getAllRetentionsByProviderId Exception thrown: {}", e.getMessage());
 	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
-        log.info("RetentionController getAllRetentionsByProviderId DONE: {}", id);
         return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
     }
     
@@ -68,7 +65,6 @@ public class RetentionController {
             log.error("RetentionController getRetentionByProviderIdAndDocumentNumber Exception thrown: {}", e.getMessage());
 	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
-        log.info("RetentionController getRetentionByProviderIdAndDocumentNumber DONE");
         return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
     }
 
@@ -81,13 +77,11 @@ public class RetentionController {
             log.error("RetentionController createRetention Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
-        log.info("RetentionController createRetention DONE: {}", retention.getStringSeq());
-	return new ResponseEntity<Retention>(response, HttpStatus.CREATED);
+        return new ResponseEntity<Retention>(response, HttpStatus.CREATED);
     }
 
     @RequestMapping(method = RequestMethod.GET, value="/rep/retentions/{userClientId}/{dateOne}/{dateTwo}")
     public ResponseEntity getAllByUserClientIdAndDatesActives(@PathVariable("userClientId") UUID userClientId, @PathVariable("dateOne") long dateOne, @PathVariable("dateTwo") long dateTwo) {
-	log.info("RetentionController getAllByUserClientIdAndDatesActives: {}, {}, {}", userClientId, dateOne, dateTwo);
 	List<RetentionReport> response = null;
 	try {
             response = service.getAllByUserClientIdAndDates(userClientId, dateOne, dateTwo);
@@ -106,7 +100,6 @@ public class RetentionController {
             log.error("RetentionController deactivateRetention Exception thrown: {}", e.getMessage());
 	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
-        log.info("RetentionController deactivateRetention DONE: {}", retention.getId());
         return new ResponseEntity<Void>(HttpStatus.ACCEPTED);
     }
 }

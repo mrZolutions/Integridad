@@ -19,7 +19,6 @@ public class ClientController {
 	
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity createClient(@RequestBody Client client) {
-	log.info("ClientController createClient: {}", client);
 	Client response = null;
 	try {
             response = service.createClient(client);
@@ -32,7 +31,6 @@ public class ClientController {
 	
     @RequestMapping(method = RequestMethod.PUT)
     public ResponseEntity updateClient(@RequestBody Client client) {
-	log.info("ClientController updateClient: {}", client);
 	Client response = null;
 	try {
             service.updateClient(client);
@@ -45,7 +43,6 @@ public class ClientController {
 	
     @RequestMapping(method = RequestMethod.GET, value="/lazy")
     public ResponseEntity getAllClientActives() {
-	log.info("ClientController getAllClientActives");
 	Iterable<Client> response = null;
 	try {
             response = service.getAllClientActives();
@@ -58,7 +55,6 @@ public class ClientController {
 
     @RequestMapping(method = RequestMethod.GET, value="/lazy/{id}")
     public ResponseEntity getLazyByUserClient(@PathVariable("id") UUID userClientId){
-	log.info("ClientController getLazyByUserClient id:{}", userClientId);
 	Iterable<Client> response = null;
 	try {
             response = service.getAllLazyByUserClientid(userClientId);

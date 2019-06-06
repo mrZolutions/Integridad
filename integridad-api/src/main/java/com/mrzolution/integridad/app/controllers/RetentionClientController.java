@@ -30,8 +30,7 @@ public class RetentionClientController {
     
     @RequestMapping(method = RequestMethod.GET, value="/{id}")
     public ResponseEntity getById(@PathVariable("id") UUID id) {
-        log.info("RetentionClientController getId: {}", id);
-	RetentionClient response = null;
+        RetentionClient response = null;
 	try {
             response = service.getRetentionClientById(id);
 	} catch (BadRequestException e) {
@@ -43,7 +42,6 @@ public class RetentionClientController {
     
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity createRetentionClient(@RequestBody RetentionClient retentionClient) {
-	log.info("RetentionClientController createRetentionClient: {}", retentionClient.getDocumentNumber());
 	RetentionClient response = null;
 	try {
             response = service.createRetentionClient(retentionClient);
@@ -56,7 +54,6 @@ public class RetentionClientController {
     
     @RequestMapping(method = RequestMethod.GET, value="/rep/retenclient/{userClientId}/{dateOne}/{dateTwo}")
     public ResponseEntity getRetentionClientByUserClientIdAndDates(@PathVariable("userClientId") UUID userClientId, @PathVariable("dateOne") long dateOne, @PathVariable("dateTwo") long dateTwo) {
-	log.info("RetentionClientController getRetentionClientByUserClientIdAndDates: {}, {}, {}", userClientId, dateOne, dateTwo);
 	List<RetentionClientReport> response = null;
 	try {
             response = service.getRetentionClientByUserClientIdAndDates(userClientId, dateOne, dateTwo);

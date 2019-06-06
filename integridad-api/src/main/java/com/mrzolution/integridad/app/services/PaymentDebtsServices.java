@@ -66,6 +66,7 @@ public class PaymentDebtsServices {
             paymentsDebt.setFatherListToNull();
             paymentsDebt.setListsNull();
         });
+        log.info("PaymentDebtsServices getPaymentsDebtsByUserClientIdWithBankAndNroDocument DONE: {}, {}, {}", userClientId, banco, nroduc);
 	return paymentsDebts;
     }
     

@@ -21,7 +21,6 @@ public class ProductTypeController {
 
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity createProductType(@RequestBody ProductType productType) {
-	log.info("ProductTypeController createProductType: {}", productType);
 	ProductType response = null;
 	try {
             response = service.createProductType(productType);
@@ -34,7 +33,6 @@ public class ProductTypeController {
 	
     @RequestMapping(method = RequestMethod.PUT)
     public ResponseEntity updateProductType(@RequestBody ProductType productType) {
-	log.info("ProductTypeController updateProductType: {}", productType);
 	try {
             service.updateProductType(productType);
 	} catch (BadRequestException e) {
@@ -46,8 +44,7 @@ public class ProductTypeController {
 	
     @RequestMapping(method = RequestMethod.DELETE, value = "/{productTypeId}")
     public ResponseEntity deleteProductType(@PathVariable("productTypeId") UUID productTypeId) {
-    	log.info("ProductTypeController deleteProductType: {}", productTypeId);
-	ProductType response = null;
+    	ProductType response = null;
 	try {
             response = service.deleteProductType(productTypeId);
 	} catch(BadRequestException e) {
@@ -60,7 +57,6 @@ public class ProductTypeController {
 	
     @RequestMapping(method = RequestMethod.GET, value="/actives")
     public ResponseEntity getAllActives() {
-	log.info("ProductTypeController getAllActives");
 	Iterable<ProductType> response = null;
 	try {
             response = service.getAllActives();
@@ -73,7 +69,6 @@ public class ProductTypeController {
 
     @RequestMapping(method = RequestMethod.GET, value="/actives_lazy")
     public ResponseEntity getAllActivesLazy() {
-	log.info("ProductTypeController getAllActivesLazy");
 	Iterable<ProductType> response = null;
 	try {
             response = service.getAllActivesLazy();

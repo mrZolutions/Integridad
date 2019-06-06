@@ -28,8 +28,7 @@ public class DailybookCxPController {
     
     @RequestMapping(method = RequestMethod.GET, value="/{id}")
     public ResponseEntity getDailybookCxPById(@PathVariable("id") UUID id) {
-        log.info("DailybookCxPController getDailybookCxPById: {}", id);
-	DailybookCxP response = null;
+        DailybookCxP response = null;
 	try {
             response = service.getDailybookCxPById(id);
 	} catch (BadRequestException e) {
@@ -41,7 +40,6 @@ public class DailybookCxPController {
     
     @RequestMapping(method = RequestMethod.GET, value="/provider/{id}")
     public ResponseEntity getDailybookCxPByProviderId(@PathVariable("id") UUID id) {
-        log.info("DailybookCxPController getDailybookCxPByProviderId: {}", id);
         Iterable<DailybookCxP> response = null;
         try {
             response = service.getDailybookCxPByProviderId(id);
@@ -54,7 +52,6 @@ public class DailybookCxPController {
     
     @RequestMapping(method = RequestMethod.GET, value="/userclient/{id}")
     public ResponseEntity getDailybookCxPByUserClientId(@PathVariable("id") UUID id) {
-        log.info("DailybookCxPController getDailybookCxPByUserClientId: {}", id);
         Iterable<DailybookCxP> response = null;
         try {
             response = service.getDailybookCxPByUserClientId(id);
@@ -74,7 +71,6 @@ public class DailybookCxPController {
             log.error("DailybookCxPController getDailybookCxPByUserClientIdAndProvIdAndBillNumber Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
-        log.info("DailybookCxPController getDailybookCxPByUserClientIdAndProvIdAndBillNumber DONE");
         return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
     }
     
@@ -98,7 +94,6 @@ public class DailybookCxPController {
             log.error("DailybookCxPController deactivateDailybookCxP Exception thrown: {}", e.getMessage());
 	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
-        log.info("DailybookCxPController deactivateDailybookCxP DONE: {}", dailybookCxP.getId());
         return new ResponseEntity<Void>(HttpStatus.ACCEPTED);
     }
 }

@@ -19,11 +19,10 @@ public class CashierController {
     CashierServices service;
 
     @RequestMapping(method = RequestMethod.GET, value="/subsidiary/{id}")
-    public ResponseEntity getAllBySubsiduaryActivesLazy(@PathVariable("id") UUID subsidiaryId) {
-	log.info("CashierController getAllBySubsiduaryActivesLazy id: {}", subsidiaryId);
+    public ResponseEntity getAllBySubsidiaryActivesLazy(@PathVariable("id") UUID subsidiaryId) {
 	Iterable<Cashier> response = null;
 	try {
-            response = service.getAllBySubsiduaryActivesLazy(subsidiaryId);
+            response = service.getAllBySubsidiaryActivesLazy(subsidiaryId);
 	} catch (BadRequestException e) {
             log.info("SubsidiaryController getByUserClientId Exception thrown: {}", e.getMessage());	    
 	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
@@ -33,7 +32,6 @@ public class CashierController {
 
     @RequestMapping(method = RequestMethod.PUT)
     public ResponseEntity updateCashier(@RequestBody Cashier cashier) {
-	log.info("CashierController update");
 	try {
             service.updateCashier(cashier);
 	} catch (BadRequestException e) {

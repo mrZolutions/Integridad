@@ -21,10 +21,10 @@ public class GroupLineServices {
     SubGroupRepository subGroupRepository;
 	
     public GroupLine createGroupLine(GroupLine groupLine) {
-	log.info("GroupLineServices createGroupLine");
 	groupLine.setActive(true);
 	GroupLine saved = groupLineRepository.save(groupLine);
 	saved.setListsNull();
+        log.info("GroupLineServices createGroupLine DONE");
 	return saved;
     }
 	
@@ -36,35 +36,35 @@ public class GroupLineServices {
     }
 
     public GroupLine deleteGroupLine(UUID groupLineId) {
-	log.info("GroupLineServices deleteGroupLine: {}", groupLineId);
 	GroupLine findOne = groupLineRepository.findOne(groupLineId);
 	findOne.setListsNull();
 	findOne.setActive(false);
 	updateGroupLine(findOne);
+        log.info("GroupLineServices deleteGroupLine DONE: {}", groupLineId);
 	return findOne;
     }
 
     public Iterable<GroupLine> getAllActivesByLineId(UUID lineId) {
-	log.info("GroupLineServices getAllActivesByLineId");
 	Iterable<GroupLine> actives = groupLineRepository.findByLineIdAndActive(lineId);
 	actives.forEach(this::populateChildren);
+        log.info("GroupLineServices getAllActivesByLineId DONE");
 	return actives;
     }
 
     public Iterable<GroupLine> getAllActivesByLineIdLazy(UUID lineId) {
-	log.info("GroupLineServices getAllActivesByLineIdLazy");
 	Iterable<GroupLine> actives = groupLineRepository.findByLineIdAndActive(lineId);
 	actives.forEach(line -> {
             line.setListsNull();
             line.setFatherListToNull();
 	});
+        log.info("GroupLineServices getAllActivesByLineIdLazy DONE");
 	return actives;
     }
 
     public GroupLine getGroupLineById(UUID id) {
-	log.info("GroupLineServices getGroupLineById: {}", id);
 	GroupLine findOne = groupLineRepository.findOne(id);
 	populateChildren(findOne);
+        log.info("GroupLineServices getGroupLineById DONE: {}", id);
 	return findOne;
     }
 

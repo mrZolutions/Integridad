@@ -34,7 +34,6 @@ public class SubsidiaryServices {
     UserIntegridadRepository userIntegridadRepository;
 
     public Subsidiary createSubsidiary(Subsidiary subsidiary) {
-	log.info("SubsidiaryServices createSubsidiary: {}", subsidiary.getName());
 	subsidiary.setDateCreated(new Date().getTime());
 	subsidiary.setActive(true);
 
@@ -58,27 +57,25 @@ public class SubsidiaryServices {
             warehouseRepository.save(warehouse);
             warehouse.setSubsidiary(null);
 	});
-	log.info("SubsidiaryServices created: {}", saved.getId());
+	log.info("SubsidiaryServices createSubsidiary DONE: {}", saved.getId());
 	saved.setCashiers(cashierList);
 	return saved;
     }
 	
     public Iterable<Subsidiary> getAllActivesByUserClientId(UUID userClientId) {
-	log.info("SubsidiaryServices getAllActivesByUserClientId: {}", userClientId);
 	Iterable<Subsidiary> subsidiaries = subsidiaryRepository.findByUserClientIdAndActive(userClientId, true);
 	subsidiaries.forEach(subsidiary -> {
             populateChildren(subsidiary);
 	});
-	log.info("SubsidiaryServices getAllActivesByUserClientId size retrieved: {}", Iterables.size(subsidiaries));
+	log.info("SubsidiaryServices getAllActivesByUserClientId DONE");
 	return subsidiaries;
     }
 
     public Subsidiary getSubsidiaryById(UUID id) {
-	log.info("SubsidiaryServices getSubsidiaryById: {}", id);
 	Subsidiary subsidiary = subsidiaryRepository.findOne(id);
 	subsidiary.setFatherListToNull();
 	subsidiary.setListsNull();
-
+        log.info("SubsidiaryServices getSubsidiaryById DONE: {}", id);
 	return subsidiary;
     }
 

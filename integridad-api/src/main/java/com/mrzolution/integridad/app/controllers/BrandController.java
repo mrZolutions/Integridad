@@ -1,10 +1,8 @@
 package com.mrzolution.integridad.app.controllers;
 
 import com.mrzolution.integridad.app.domain.Brand;
-import com.mrzolution.integridad.app.domain.ProductType;
 import com.mrzolution.integridad.app.exceptions.BadRequestException;
 import com.mrzolution.integridad.app.services.BrandServices;
-import com.mrzolution.integridad.app.services.ProductTypeServices;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,7 +20,6 @@ public class BrandController {
 
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity createBrand(@RequestBody Brand brand) {
-	log.info("BrandController createBrand: {}", brand);
 	Brand response = null;
 	try {
             response = service.createBrand(brand);
@@ -35,7 +32,6 @@ public class BrandController {
 	
     @RequestMapping(method = RequestMethod.PUT)
     public ResponseEntity updateBrand(@RequestBody Brand brand) {
-	log.info("BrandController updateBrand: {}", brand);
 	try {
             service.updateBrand(brand);
 	} catch (BadRequestException e) {
@@ -47,7 +43,6 @@ public class BrandController {
 	
     @RequestMapping(method = RequestMethod.DELETE, value = "/{brandId}")
     public ResponseEntity deleteBrand(@PathVariable("brandId") UUID brandId) {
-	log.info("BrandController deleteBrand: {}", brandId);
 	Brand response = null;
 	try {
             response = service.deleteBrand(brandId);
@@ -58,10 +53,8 @@ public class BrandController {
 	return new ResponseEntity<Brand>(response, HttpStatus.ACCEPTED);
     }
 
-	
     @RequestMapping(method = RequestMethod.GET, value="/actives")
     public ResponseEntity getAllActives() {
-	log.info("BrandController getAllActives");
 	Iterable<Brand> response = null;
 	try {
             response = service.getAllActives();
@@ -74,7 +67,6 @@ public class BrandController {
 
     @RequestMapping(method = RequestMethod.GET, value="/actives_lazy/{projectId}")
     public ResponseEntity getAllActivesByProjectIdLazy(@PathVariable("projectId") UUID projectId) {
-	log.info("BrandController getAllActivesByProjectIdLazy");
 	Iterable<Brand> response = null;
 	try {
             response = service.getAllActivesLazy(projectId);

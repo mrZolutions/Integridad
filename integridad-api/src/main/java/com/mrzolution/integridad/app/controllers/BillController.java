@@ -33,7 +33,6 @@ public class BillController {
             log.error("BillController getDatil Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
-        log.info("BillController getDatil DONE");
         return new ResponseEntity<String>(response, HttpStatus.ACCEPTED);
     }
 
@@ -46,7 +45,6 @@ public class BillController {
             log.error("BillController getByTypeDocument Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
-        log.info("BillController getByTypeDocument DONE");
         return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
     }
         
@@ -60,7 +58,6 @@ public class BillController {
             log.error("BillController getAllBillByClientId Exception thrown: {}", e.getMessage());
 	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
-        log.info("BillController getAllBillByClientId DONE: {}", id);
         return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
     }
     
@@ -74,7 +71,6 @@ public class BillController {
             log.error("BillController getAllBillByClientIdWithSaldo Exception thrown: {}", e.getMessage());
 	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
-        log.info("BillController getAllBillByClientIdWithSaldo DONE: {}", id);
         return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
     }
         
@@ -87,7 +83,6 @@ public class BillController {
             log.error("BillController getQuotationByClientId Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
-        log.info("BillController getQuotationByClientId DONE: {}", id);
         return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
     }
 
@@ -100,13 +95,11 @@ public class BillController {
             log.error("BillController getBillByStringSeq Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
-        log.info("BillController getBillByStringSeq DONE: {}, {}", stringSeq, subId);
         return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
     }
 
     @RequestMapping(method = RequestMethod.GET, value="/rep/{userClientId}/{dateOne}/{dateTwo}")
     public ResponseEntity getByUserClientIdAndDatesActives(@PathVariable("userClientId") UUID userClientId, @PathVariable("dateOne") long dateOne, @PathVariable("dateTwo") long dateTwo) {
-        log.info("BillController getByUserClientIdAndDatesActives: {}, {}, {}", userClientId, dateOne, dateTwo);
         List<ItemReport> response = null;
         try {
             response = service.getBySubIdAndDatesActives(userClientId, dateOne, dateTwo);
@@ -120,7 +113,6 @@ public class BillController {
     //Reporte de Ventas
     @RequestMapping(method = RequestMethod.GET, value="/rep/sales/{userClientId}/{dateOne}/{dateTwo}")
     public ResponseEntity getAllByUserClientIdAndDates(@PathVariable("userClientId") UUID userClientId, @PathVariable("dateOne") long dateOne, @PathVariable("dateTwo") long dateTwo) {
-        log.info("BillController getAllByUserClientIdAndDates: {}, {}, {}", userClientId, dateOne, dateTwo);
         List<SalesReport> response = null;
         try {
             response = service.getAllBySubIdAndDates(userClientId, dateOne, dateTwo);
@@ -140,7 +132,6 @@ public class BillController {
             log.error("BillController getBillById Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
-        log.info("BillController getBillById DONE: {}", id);
         return new ResponseEntity<Bill>(response, HttpStatus.ACCEPTED);
     }
 
@@ -153,7 +144,6 @@ public class BillController {
             log.error("BillController createBill Exception thrown: {}", e.getMessage());
 	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
-        log.info("BillController createBill DONE: {} , quotation: {}", bill.getBillSeq(), bill.getQuotationSeq());
         return new ResponseEntity<Bill>(response, HttpStatus.CREATED);
     }
 
@@ -165,14 +155,12 @@ public class BillController {
             log.error("BillController deactivateBill Exception thrown: {}", e.getMessage());
 	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
-        log.info("BillController deactivateBill DONE: {}", bill.getId());
         return new ResponseEntity<Void>(HttpStatus.ACCEPTED);
     }
     
     //Reporte de Cierre de Caja
     @RequestMapping(method = RequestMethod.GET, value="/rep/closure/{userClientId}/{dateOne}/{dateTwo}")
     public ResponseEntity getForCashClosureReportAndDate(@PathVariable("userClientId") UUID userClientId, @PathVariable("dateOne") long dateOne, @PathVariable("dateTwo") long dateTwo) {
-        log.info("BillController getForCashClosureReportAndDate: {}, {}, {}", userClientId, dateOne, dateTwo);
         List<CashClosureReport> response = null;
         try {
             response = service.getForCashClosureReport(userClientId, dateOne, dateTwo);

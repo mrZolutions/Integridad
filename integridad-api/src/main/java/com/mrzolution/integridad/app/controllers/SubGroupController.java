@@ -20,7 +20,6 @@ public class SubGroupController {
 
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity createSubGroup(@RequestBody SubGroup subGroup) {
-	log.info("SubGroupController createSubGroup: {}", subGroup);
 	SubGroup response = null;
 	try {
             response = service.createSubGroup(subGroup);
@@ -33,7 +32,6 @@ public class SubGroupController {
 	
     @RequestMapping(method = RequestMethod.PUT)
     public ResponseEntity updateSubGroup(@RequestBody SubGroup subGroup) {
-	log.info("SubGroupController updateSubGroup: {}", subGroup);
 	try {
             service.updateSubGroup(subGroup);
 	} catch (BadRequestException e) {
@@ -45,7 +43,6 @@ public class SubGroupController {
 	
     @RequestMapping(method = RequestMethod.DELETE, value = "/{subGrouplineId}")
     public ResponseEntity deleteSubGroup(@PathVariable("subGroupLineId") UUID subGroupId) {
-	log.info("SubGroupController deleteSubGroup: {}", subGroupId);
 	SubGroup response = null;
 	try {
             response = service.deleteSubGroup(subGroupId);
@@ -58,7 +55,6 @@ public class SubGroupController {
 
     @RequestMapping(method = RequestMethod.GET, value="/actives/{groupLineId}")
     public ResponseEntity getAllActivesByGroupLineId(@PathVariable("groupLineId") UUID groupLindeId) {
-	log.info("SubGroupController getAllActivesByLineGroupId: {}", groupLindeId);
 	Iterable<SubGroup> response = null;
 	try {
             response = service.getAllActivesByGroupLineId(groupLindeId);
@@ -71,8 +67,7 @@ public class SubGroupController {
 
     @RequestMapping(method = RequestMethod.GET, value="/actives_lazy/{lineId}")
     public ResponseEntity getAllActivesByGroupLineIdLazy(@PathVariable("lineId") UUID groupLlineId) {
-        log.info("SubGroupController getAllActivesByGroupLineIdLazy: {}", groupLlineId);
-	Iterable<SubGroup> response = null;
+        Iterable<SubGroup> response = null;
 	try {
             response = service.getAllActivesByGroupLineIdLazy(groupLlineId);
 	} catch (BadRequestException e) {

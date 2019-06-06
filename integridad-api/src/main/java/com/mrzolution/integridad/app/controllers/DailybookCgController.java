@@ -28,7 +28,6 @@ public class DailybookCgController {
     
     @RequestMapping(method = RequestMethod.GET, value="/{id}")
     public ResponseEntity getDailybookCgById(@PathVariable("id") UUID id) {
-        log.info("DailybookCgController getDailybookCgById: {}", id);
 	DailybookCg response = null;
 	try {
             response = service.getDailybookCgById(id);
@@ -41,7 +40,6 @@ public class DailybookCgController {
     
     @RequestMapping(method = RequestMethod.GET, value="/userclient/{id}")
     public ResponseEntity getDailybookCgByUserClientId(@PathVariable("id") UUID id) {
-        log.info("DailybookCgController getDailybookCgByUserClientId: {}", id);
         Iterable<DailybookCg> response = null;
         try {
             response = service.getDailybookCgByUserClientId(id);
@@ -72,7 +70,6 @@ public class DailybookCgController {
             log.error("DailybookCgController deactivateDailybookCg Exception thrown: {}", e.getMessage());
 	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
-        log.info("DailybookCgController deactivateDailybookCg DONE: {}", dailybookCg.getId());
         return new ResponseEntity<Void>(HttpStatus.ACCEPTED);
     }
 }

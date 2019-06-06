@@ -45,12 +45,12 @@ public class CreditsServices {
     private double totalValor = 0.0;
     
     public Iterable<Credits> getCreditsOfBillByBillId(UUID id) {
-        log.info("CreditsServices getCreditsOfBillByBillId: {}", id);
         Iterable<Credits> credits = creditsRepository.findCreditsOfBillByBillId(id);
         credits.forEach(credit -> {
             credit.setListsNull();
             credit.setFatherListToNull();
         });
+        log.info("CreditsServices getCreditsOfBillByBillId DONE: {}", id);
         return credits;
     }
     

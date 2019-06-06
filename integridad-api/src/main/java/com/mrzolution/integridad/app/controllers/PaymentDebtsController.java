@@ -31,7 +31,6 @@ public class PaymentDebtsController {
     
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity createPaymentDebts(@RequestBody PaymentDebts paymentDebts) {
-        log.info("PaymentDebtsController createPaymentDebts");
         PaymentDebts response = null;
         try {
             response = service.createPaymentDebts(paymentDebts);
@@ -44,7 +43,6 @@ public class PaymentDebtsController {
     
     @RequestMapping(method = RequestMethod.GET, value="/rep/ccrespdreport/{userClientId}/{dateOne}/{dateTwo}")
     public ResponseEntity getPaymentsDebtsByUserClientIdAndDates(@PathVariable("userClientId") UUID userClientId, @PathVariable("dateOne") long dateOne, @PathVariable("dateTwo") long dateTwo) {
-        log.info("PaymentDebtsController getPaymentsDebtsByUserClientIdAndDates: {}", userClientId);
         List<CPResumenPaymentDebtsReport> response = null;
         try {
             response = service.getPaymentsDebtsByUserClientIdAndDates(userClientId, dateOne, dateTwo);
@@ -57,7 +55,6 @@ public class PaymentDebtsController {
     
     @RequestMapping(method = RequestMethod.GET, value="/rep/statement/{id}/{dateTwo}")
     public ResponseEntity getStatementProviderReport(@PathVariable("id") UUID id, @PathVariable("dateTwo") long dateTwo) {
-        log.info("PaymentDebtsController getStatementProviderReport: {}", id);
         List<StatementProviderReport> response = null;
         try {
             response = service.getStatementProviderReport(id, dateTwo);

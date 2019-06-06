@@ -30,7 +30,6 @@ public class PaymentController {
     
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity createPayment(@RequestBody Payment payment) {
-        log.info("PaymentController create");
         Payment response = null;
         try {
             response = service.createPayment(payment);
@@ -43,7 +42,6 @@ public class PaymentController {
     
     @RequestMapping(method = RequestMethod.GET, value="/rep/ccresreport/{userClientId}/{dateOne}/{dateTwo}")
     public ResponseEntity getAllPaymentsByUserClientIdAndDates(@PathVariable("userClientId") UUID userClientId, @PathVariable("dateOne") long dateOne, @PathVariable("dateTwo") long dateTwo) {
-        log.info("PaymentController getAllPaymentsByUserClientId: {}", userClientId);
         List<CCResumenReport> response = null;
         try {
             response = service.getPaymentsByUserClientIdAndDates(userClientId, dateOne, dateTwo);

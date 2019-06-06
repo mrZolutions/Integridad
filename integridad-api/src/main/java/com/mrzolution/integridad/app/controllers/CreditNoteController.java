@@ -13,19 +13,18 @@ import java.util.UUID;
 
 @Slf4j
 @RestController
-@RequestMapping(value = "/integridad/v1/credit")
-public class CreditController {
+@RequestMapping(value = "/integridad/v1/creditnote")
+public class CreditNoteController {
     @Autowired
     CreditNoteServices service;
 
     @RequestMapping(method = RequestMethod.POST, value="/clave_acceso/{id}")
     public ResponseEntity getDatil(@RequestBody com.mrzolution.integridad.app.domain.ecreditNote.CreditNote requirement, @PathVariable("id") UUID userClientId) {
-	log.info("CreditController getAllDatil");
 	String response = null;
 	try {
             response = service.getDatil(requirement, userClientId);
 	} catch (Exception e) {
-            log.error("CreditController getDatil Exception thrown: {}", e.getMessage());
+            log.error("CreditNoteController getDatil Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
 	return new ResponseEntity<String>(response, HttpStatus.ACCEPTED);
@@ -33,12 +32,11 @@ public class CreditController {
 
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity createCreditNote(@RequestBody CreditNote creditNote) {
-	log.info("CreditController createCreditNote: {}", creditNote.getCreditSeq());
 	CreditNote response = null;
 	try {
             response = service.createCreditNote(creditNote);
 	} catch (BadRequestException e) {
-            log.error("CreditController createCreditNote Exception thrown: {}", e.getMessage());
+            log.error("CreditNoteController createCreditNote Exception thrown: {}", e.getMessage());
 	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
 	return new ResponseEntity<CreditNote>(response, HttpStatus.CREATED);

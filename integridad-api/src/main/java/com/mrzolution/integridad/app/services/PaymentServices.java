@@ -58,6 +58,7 @@ public class PaymentServices {
             payment.setFatherListToNull();
             payment.setListsNull();
         });
+        log.info("PaymentServices getPaymentsByUserClientIdWithBankAndNroDocument DONE: {}, {}, {}", userClientId, banco, nroduc);
 	return payments;
     }
     

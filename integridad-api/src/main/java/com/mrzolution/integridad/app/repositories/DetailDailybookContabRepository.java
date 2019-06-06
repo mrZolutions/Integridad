@@ -4,6 +4,7 @@ import com.mrzolution.integridad.app.domain.DailybookCe;
 import com.mrzolution.integridad.app.domain.DailybookCg;
 import com.mrzolution.integridad.app.domain.DailybookCi;
 import com.mrzolution.integridad.app.domain.DailybookCxP;
+import com.mrzolution.integridad.app.domain.DailybookFv;
 import com.mrzolution.integridad.app.domain.DetailDailybookContab;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -25,4 +26,6 @@ public interface DetailDailybookContabRepository extends CrudRepository<DetailDa
     Iterable<DetailDailybookContab> findByDailybookCi(DailybookCi dailybookCi);
     
     Iterable<DetailDailybookContab> findByDailybookCxP(DailybookCxP dailybookCxP);
+    
+    Iterable<DetailDailybookContab> findByDailybookFv(DailybookFv dailybookFv);
 }

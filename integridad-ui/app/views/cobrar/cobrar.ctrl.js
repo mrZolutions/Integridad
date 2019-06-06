@@ -299,7 +299,7 @@ angular.module('integridadUiApp')
 
         function _asientoComprobanteIngreso() {
             _getDailyCiSeqNumber();
-            vm.selectedTypeBook = '2';
+            vm.selectedTypeBook = '3';
             vm.generalDetailCi_1 = vm.paymentCreated.clientName + ' ' + 'Cancela Fc' + ' ' + vm.paymentCreated.documentNumber;
             vm.itema = {
                 typeContab: vm.typeContabCi,
@@ -486,7 +486,7 @@ angular.module('integridadUiApp')
 
         function _asientoComprobanteMultipleIngreso() {
             _getDailyCiSeqNumber();
-            vm.selectedTypeBook = '2';
+            vm.selectedTypeBook = '3';
             vm.generalDetailCi_1 = vm.clientName + ' ' + 'Cancela Fcs' + ' ' + vm.billsNumberPayed;
             vm.itema = {
                 typeContab: vm.typeContabCi,

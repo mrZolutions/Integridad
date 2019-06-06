@@ -1,6 +1,6 @@
 angular
     .module('app.services')
-    .service('creditService', function(dateService, securityService) {
+    .service('creditNoteService', function(dateService, securityService) {
         function getTipyCode(code) {
             tipyIdCode = {
                 RUC: '04',
@@ -70,13 +70,13 @@ angular
         };
 
         this.getClaveDeAcceso = function(req, id) {
-            return securityService.post('/credit/clave_acceso/' + id, req).then(function successCallback(response) {
+            return securityService.post('/creditnote/clave_acceso/' + id, req).then(function successCallback(response) {
                 return response;
             });
         };
 
         this.create = function(bill) {
-            return securityService.post('/credit', bill).then(function successCallback(response) {
+            return securityService.post('/creditnote', bill).then(function successCallback(response) {
                 return response.data;
             });
         };

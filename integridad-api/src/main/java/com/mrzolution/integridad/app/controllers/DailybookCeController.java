@@ -28,8 +28,7 @@ public class DailybookCeController {
     
     @RequestMapping(method = RequestMethod.GET, value="/{id}")
     public ResponseEntity getDailybookCeById(@PathVariable("id") UUID id) {
-        log.info("DailybookCeController getDailybookCeById: {}", id);
-	DailybookCe response = null;
+        DailybookCe response = null;
 	try {
             response = service.getDailybookCeById(id);
 	} catch (BadRequestException e) {
@@ -41,7 +40,6 @@ public class DailybookCeController {
     
     @RequestMapping(method = RequestMethod.GET, value="/provider/{id}")
     public ResponseEntity getDailybookCeByProviderId(@PathVariable("id") UUID id) {
-        log.info("DailybookCeController getDailybookCeByProviderId: {}", id);
         Iterable<DailybookCe> response = null;
         try {
             response = service.getDailybookCeByProviderId(id);
@@ -54,7 +52,6 @@ public class DailybookCeController {
     
     @RequestMapping(method = RequestMethod.GET, value="/userclient/{id}")
     public ResponseEntity getDailybookCeByUserClientId(@PathVariable("id") UUID id) {
-        log.info("DailybookCeController getDailybookCeByUserClientId: {}", id);
         Iterable<DailybookCe> response = null;
         try {
             response = service.getDailybookCeByUserClientId(id);
@@ -67,7 +64,6 @@ public class DailybookCeController {
     
     @RequestMapping(method = RequestMethod.GET, value="/userclient/noprovider/{id}")
     public ResponseEntity getDailybookCeByUserClientIdWithNoProvider(@PathVariable("id") UUID id) {
-        log.info("DailybookCeController getDailybookCeByUserClientIdWithNoProvider: {}", id);
         Iterable<DailybookCe> response = null;
         try {
             response = service.getDailybookCeByUserClientIdWithNoProvider(id);
@@ -87,7 +83,6 @@ public class DailybookCeController {
             log.error("DailybookCeController getDailybookCeByUserClientIdAndProvIdAndBillNumber Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
-        log.info("DailybookCeController getDailybookCeByUserClientIdAndProvIdAndBillNumber DONE");
         return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
     }
     
@@ -111,7 +106,6 @@ public class DailybookCeController {
             log.error("DailybookCeController deactivateDailybookCe Exception thrown: {}", e.getMessage());
 	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
-        log.info("DailybookCeController deactivateDailybookCe DONE: {}", dailybookCe.getId());
         return new ResponseEntity<Void>(HttpStatus.ACCEPTED);
     }
 }

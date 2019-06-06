@@ -34,7 +34,6 @@ public class DetailCellarController {
             log.error("DetailCellarController getDetailsOfCellarsByUserClientId Exception thrown: {}", e.getMessage());
 	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
-        log.info("DetailCellarController getDetailsOfCellarsByUserClientId DONE");
         return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
     }
 }

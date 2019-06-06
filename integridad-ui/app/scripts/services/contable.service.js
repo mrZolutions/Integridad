@@ -145,4 +145,47 @@ angular
                 return response.data;
             });
         };
+
+        //Comprobante de Factura-Venta
+        this.createDailybookFv = function(dailybookFv) {
+            return securityService.post('/contable/dailyfv', dailybookFv).then(function successCallback(response) {
+                return response.data;
+            });
+        };
+
+        this.getDailybookFvById = function(id) {
+            return securityService.get('/contable/dailyfv/' + id).then(function successCallback(response) {
+                return response.data;
+            });
+        };
+
+        this.deactivateDailybookFv = function(dailybookFv) {
+            return securityService.put('/contable/dailyfv', dailybookFv).then(function successCallback(response) {
+                return response.data;
+            });
+        };
+
+        this.getDailybookFvByClientId = function(id) {
+            return securityService.get('/contable/dailyfv/client/' + id).then(function successCallback(response) {
+                return response.data;
+            });
+        };
+
+        this.getDailybookFvByUserClientId = function(userclientId) {
+            return securityService.get('/contable/dailyfv/userclient/' + userclientId).then(function successCallback(response) {
+                return response.data;
+            });
+        };
+
+        this.getDailybookFvByUserClientIdWithNoClient = function(userclientId) {
+            return securityService.get('/contable/dailyfv/userclient/noclient/' + userclientId).then(function successCallback(response) {
+                return response.data;
+            });
+        };
+
+        this.getDailybookFvByUserClientIdAndClientIdAndBillNumber = function(userClientId, clientId, billNumber) {
+            return securityService.get('/contable/dailyfv/userclient/' + userClientId + '/' + clientId + '/' + billNumber).then(function successCallback(response) {
+                return response.data;
+            });
+        };
 });
