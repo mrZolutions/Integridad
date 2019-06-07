@@ -1763,7 +1763,11 @@ angular.module('integridadUiApp')
                     paymentDebtsService.createPaymentsDebts(paymentDebts).then(function(response) {
                         vm.paymentDebtsCreated = response;
                         vm.success = 'Abono realizado con exito';
-                        if (vm.paymentDebtsCreated.modePayment === 'CHQ' || vm.paymentDebtsCreated.modePayment === 'TRF' || vm.paymentDebtsCreated.modePayment === 'DEP') {
+                        if (vm.paymentDebtsCreated.modePayment === 'CHQ') {
+                            _asientoComprobanteEgreso();
+                        } else if (vm.paymentDebtsCreated.modePayment === 'TRF') {
+                            _asientoComprobanteEgreso();
+                        } else if (vm.paymentDebtsCreated.modePayment === 'DEP') {
                             _asientoComprobanteEgreso();
                         };
                         vm.loading = false;

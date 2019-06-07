@@ -455,7 +455,9 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" title = "Aceptar" class="btn btn-success btn-sm" ng-click="vm.pAbono(vm.payment)" data-dismiss="modal">
+                    <button type="button" title = "Aceptar" class="btn btn-success btn-sm" 
+                            ng-disabled = "vm.payment.valorAbono == 0 || vm.payment.valorAbono == '' || vm.payment.valorAbono == null"
+                            ng-click="vm.pAbono(vm.payment)" data-dismiss="modal">
                             <span class = "glyphicon glyphicon-thumbs-up" aria-hidden = "true"></span>
                     </button>
                     <button type="button" title = "Salir" class="btn btn-primary btn-sm" ng-click="vm.cancel()" data-dismiss="modal">

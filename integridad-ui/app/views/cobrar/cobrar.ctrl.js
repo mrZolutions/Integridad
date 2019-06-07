@@ -279,7 +279,11 @@ angular.module('integridadUiApp')
                     paymentService.createPayment(payment).then(function(response) {
                         vm.paymentCreated = response;
                         vm.success = 'Abono realizado con exito';
-                        if (vm.paymentCreated.modePayment === 'CHQ' || vm.paymentCreated.modePayment === 'TRF' || vm.paymentCreated.modePayment === 'DEP') {
+                        if (vm.paymentCreated.modePayment === 'CHQ') {
+                            _asientoComprobanteIngreso();
+                        } else if (vm.paymentCreated.modePayment === 'TRF') {
+                            _asientoComprobanteIngreso();
+                        } else if (vm.paymentCreated.modePayment === 'DEP') {
                             _asientoComprobanteIngreso();
                         };
                     }).catch(function(error) {
@@ -287,7 +291,7 @@ angular.module('integridadUiApp')
                         vm.error = error.data;
                     });
                 } else {
-                    vm.error = 'El Nro. de Documento (Cheque, Transferencia y/o Depósito) Ya Existe y no puede repetirse';
+                    vm.error = 'El Nro. de Cheque, Transferencia y/o Depósito Ya Existe y no puede repetirse';
                     vm.loading = false;
                 };
             }).catch(function(error) {
@@ -475,7 +479,7 @@ angular.module('integridadUiApp')
                     _asientoComprobanteMultipleIngreso();
                     _activate();
                 } else {
-                    vm.error = 'El Nro. de Documento (Cheque, Transferencia y/o Depósito) Ya Existe y no puede repetirse';
+                    vm.error = 'El Nro. de Cheque, Transferencia y/o Depósito Ya Existe y no puede repetirse';
                     vm.loading = false;
                 };
             }).catch(function(error) {

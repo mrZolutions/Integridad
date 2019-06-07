@@ -1240,7 +1240,9 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type = "button" title = "Aceptar" class = "btn btn-success btn-sm" ng-click = "vm.pAbonoDebts(vm.paymentDebts)" data-dismiss = "modal">
+                    <button type = "button" title = "Aceptar" class = "btn btn-success btn-sm"
+                            ng-disabled = "vm.paymentDebts.valorAbono == 0 || vm.paymentDebts.valorAbono == '' || vm.paymentDebts.valorAbono == null"
+                            ng-click = "vm.pAbonoDebts(vm.paymentDebts)" data-dismiss = "modal">
                             <span class = "glyphicon glyphicon-thumbs-up" aria-hidden = "true"></span>
                     </button>
                     <button type = "button" title = "Salir" class = "btn btn-primary btn-sm" ng-click = "vm.cancel()" data-dismiss = "modal">
