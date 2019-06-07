@@ -265,7 +265,17 @@ angular.module('integridadUiApp')
             vm.payment.creditId = vm.creditsId;
             vm.payment.documentNumber = vm.billNumber;
             vm.payment.valorReten = vm.valorReten;
-            if (vm.payment.modePayment === 'CHQ' || vm.payment.modePayment === 'TRF' || vm.payment.modePayment === 'DEP') {
+            if (vm.paymentCreated.modePayment === 'CHQ') {
+                vm.payment.ctaCtableBanco = vm.ctaCtableBankCode;
+                vm.payment.ctaCtableClient = vm.clientCodConta;
+                vm.payment.clientName = vm.clientName;
+                vm.payment.banco = vm.bankName;
+            } else if (vm.paymentCreated.modePayment === 'TRF') {
+                vm.payment.ctaCtableBanco = vm.ctaCtableBankCode;
+                vm.payment.ctaCtableClient = vm.clientCodConta;
+                vm.payment.clientName = vm.clientName;
+                vm.payment.banco = vm.bankName;
+            } else if (vm.paymentCreated.modePayment === 'DEP') {
                 vm.payment.ctaCtableBanco = vm.ctaCtableBankCode;
                 vm.payment.ctaCtableClient = vm.clientCodConta;
                 vm.payment.clientName = vm.clientName;

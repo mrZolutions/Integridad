@@ -1751,9 +1751,21 @@ angular.module('integridadUiApp')
             vm.paymentDebts.datePayment = $('#pickerDateOfPaymentDebt').data("DateTimePicker").date().toDate().getTime();
             vm.paymentDebts.creditId = vm.creditsDebtsId;
             vm.paymentDebts.documentNumber = vm.debtsBillNumber;
-            if (vm.paymentDebts.modePayment === 'CHQ' || vm.paymentDebts.modePayment === 'TRF' || vm.paymentDebts.modePayment === 'DEP') {
+            if (vm.paymentDebts.modePayment === 'CHQ') {
                 vm.paymentDebts.ctaCtableBanco = vm.ctaCtableBankCode;
                 vm.paymentDebts.banco = vm.bankName;
+                vm.paymentDebts.ctaCtableProvider = vm.provContable;
+                vm.paymentDebts.providerName = vm.providerName;
+            } else if (vm.paymentDebts.modePayment === 'TRF') {
+                vm.paymentDebts.ctaCtableBanco = vm.ctaCtableBankCode;
+                vm.paymentDebts.banco = vm.bankName;
+                vm.paymentDebts.ctaCtableProvider = vm.provContable;
+                vm.paymentDebts.providerName = vm.providerName;
+            } else if (vm.paymentDebts.modePayment === 'DEP') {
+                vm.paymentDebts.ctaCtableBanco = vm.ctaCtableBankCode;
+                vm.paymentDebts.banco = vm.bankName;
+                vm.paymentDebts.ctaCtableProvider = vm.provContable;
+                vm.paymentDebts.providerName = vm.providerName;
             } else {
                 vm.paymentDebts.ctaCtableBanco = '--';
                 vm.paymentDebts.banco = '--';
@@ -1807,10 +1819,10 @@ angular.module('integridadUiApp')
             } else {
                 vm.provContable = '2.01.01.01';
             };
-            vm.generalDetailCe_1 = vm.providerName + ' ' + 'Fc' + ' ' + vm.paymentDebtsCreated.documentNumber;
+            vm.generalDetailCe_1 = vm.paymentDebtsCreated.providerName + ' ' + 'Fc' + ' ' + vm.paymentDebtsCreated.documentNumber;
             vm.itema = {
                 typeContab: vm.typeContabCe,
-                codeConta: vm.provContable,
+                codeConta: vm.paymentDebtsCreated.ctaCtableProvider,
                 descrip: 'PROVEEDORES LOCALES',
                 tipo: 'DEBITO (D)',
                 baseImponible: parseFloat(vm.paymentDebtsCreated.valorAbono),
