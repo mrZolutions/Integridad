@@ -32,6 +32,7 @@ public class PaymentDebts implements Child {
     private String numeroLote;
     private double valorAbono;
     private double valorReten;
+    private boolean active;
     
     @ManyToOne
     @JoinColumn(name = "credit_id")

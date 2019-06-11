@@ -5,6 +5,7 @@ import com.mrzolution.integridad.app.domain.Bill;
 import com.mrzolution.integridad.app.domain.Credits;
 import com.mrzolution.integridad.app.domain.Payment;
 import com.mrzolution.integridad.app.domain.report.CCResumenReport;
+import com.mrzolution.integridad.app.exceptions.BadRequestException;
 import com.mrzolution.integridad.app.repositories.BillRepository;
 import com.mrzolution.integridad.app.repositories.CreditsRepository;
 import com.mrzolution.integridad.app.repositories.PagoRepository;
@@ -40,6 +41,7 @@ public class PaymentServices {
     private double abono = 0;
     private double resto = 0;
     private String document = "--";
+    private String documentDeactivated = "--";
     private String saldo = "";
     private String numCheque = "--";
     
@@ -62,8 +64,21 @@ public class PaymentServices {
 	return payments;
     }
     
+    public Iterable<Payment> getPaymentsByClientId(UUID id) {
+        Iterable<Payment> payments = paymentRepository.findPaymentsByClientId(id);
+        payments.forEach(payment -> {
+            payment.setFatherListToNull();
+            payment.setListsNull();
+        });
+        log.info("PaymentServices getPaymentsByClientId DONE: {}", id);
+	return payments;
+    }
+    
     //@Async("asyncExecutor")
     public Payment createPayment(Payment payment) {
+        payment.setActive(true);
+        payment.setFatherListToNull();
+        payment.setListsNull();
         Payment saved = paymentRepository.save(payment);
         document = saved.getCredits().getPago().getBill().getId().toString();
         if (saved.getCredits().getId() != null) {
@@ -163,5 +178,45 @@ public class PaymentServices {
         ccResumenReportList.add(totResumenReport);
         
         return ccResumenReportList;
+    }
+    
+    public Payment deactivatePayment(Payment payment) throws BadRequestException {
+        if (payment.getId() == null) {
+            throw new BadRequestException("Invalid Payment");
+        }
+        Payment paymentToDeactivate = paymentRepository.findOne(payment.getId());
+        paymentToDeactivate.setListsNull();
+        paymentToDeactivate.setActive(false);
+        Payment deactivated = paymentRepository.save(paymentToDeactivate);
+        documentDeactivated = deactivated.getCredits().getPago().getBill().getId().toString();
+        abono = deactivated.getValorAbono();
+        updateCreditsAndBillOfPaymentDeactivated(deactivated, documentDeactivated);
+        log.info("PaymentServices deactivatePayment DONE id: {}", paymentToDeactivate.getId());
+        return paymentToDeactivate;
+    }
+    
+    public void updateCreditsAndBillOfPaymentDeactivated(Payment deactivated, String document){
+        Credits cambio = creditsRepository.findOne(deactivated.getCredits().getId());
+        nume = cambio.getValor();
+        resto = nume + abono;
+        BigDecimal vrestado = new BigDecimal(resto);
+        vrestado = vrestado.setScale(2, BigDecimal.ROUND_HALF_UP);
+        cambio.setValor(vrestado.doubleValue());
+        Credits creditSaved = creditsRepository.save(cambio);
+        if (creditSaved != null) {
+            Bill billed = billRepository.findOne(deactivated.getCredits().getPago().getBill().getId());
+            String nbillId = billed.getId().toString();
+            if (nbillId.equals(document)) {
+                BigDecimal vsumado = new BigDecimal(creditSaved.getValor());
+                vsumado = vsumado.setScale(2, BigDecimal.ROUND_HALF_UP);
+                saldo = String.valueOf(vsumado);
+                billed.setSaldo(saldo);
+                billRepository.save(billed);
+            }
+        }
+        log.info("PaymentServices updateCreditsAndBillOfPaymentDeactivated DONE");
+        nume = 0;
+        resto = 0;
+        saldo = "";
     }
 }

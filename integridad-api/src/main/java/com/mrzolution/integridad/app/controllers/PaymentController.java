@@ -63,4 +63,27 @@ public class PaymentController {
         }
         return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
     }
+    
+    @RequestMapping(method = RequestMethod.GET, value="/client/{id}")
+    public ResponseEntity getPaymentsByClientId(@PathVariable("id") UUID id) {
+        Iterable<Payment> response = null;
+        try {
+            response = service.getPaymentsByClientId(id);
+        } catch (BadRequestException e) {
+            log.error("PaymentController getPaymentsByClientId Exception thrown: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+        return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
+    }
+    
+    @RequestMapping(method = RequestMethod.PUT)
+    public ResponseEntity deactivatePayment(@RequestBody Payment payment) {
+        try {
+            service.deactivatePayment(payment);
+        } catch (BadRequestException e) {
+            log.error("PaymentController deactivatePayment Exception thrown: {}", e.getMessage());
+    	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+        return new ResponseEntity<Void>(HttpStatus.ACCEPTED);
+    }
 }

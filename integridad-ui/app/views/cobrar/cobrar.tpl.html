@@ -34,7 +34,7 @@
     </div>
     
     <!--SECCIÓN DE CARGA DE LOS LOS CLIENTES-->
-    <div class="table-responsive" ng-show="vm.billList === undefined && vm.clientSelected === undefined && vm.multipleCobroSelected === undefined">
+    <div class="table-responsive" ng-show="vm.billList === undefined && vm.clientSelected === undefined && vm.multipleCobroSelected === undefined && vm.paymentList === undefined">
         <div class="row">
             <div class="form-group col-md-12">
                 <input ng-model="searchText" class="form-control" placeholder="Buscar Clientes">
@@ -64,7 +64,10 @@
                                 <span class = "glyphicon glyphicon-check" aria-hidden = "true"></span>
                         </button>
                         <button type = "button" title = "Pago Múltiple de Facturas" class = "btn btn-success btn-sm" ng-click = "vm.clientMultiplePayment(client)">
-                                <span class = "glyphicon glyphicon-usd" aria-hidden = "true"></span>
+                                <span class = "glyphicon glyphicon-credit-card" aria-hidden = "true"></span>
+                        </button>
+                        <button type = "button" title = "Consultar Cobros por Cliente" class = "btn btn-primary btn-sm" ng-click = "vm.paymentsByClient(client)">
+                            <span class = "glyphicon glyphicon-eye-open" aria-hidden = "true"></span>
                         </button>
                     </td>
                 </tr>
@@ -106,7 +109,7 @@
                         <tr ng-repeat="bill in vm.billList">
                             <td>{{bill.stringSeq}}</td>
                             <td>{{bill.dateCreated | date : "dd/MM/yyyy"}}</td>
-                            <td>{{bill.total}}</td>
+                            <td>{{bill.total.toFixed(2)}}</td>
                             <td>{{bill.saldo}}</td>
                             <td>
                                 <button type="button" title = "Pago Individual de Factura" class="btn btn-primary btn-sm" 
@@ -156,7 +159,7 @@
                             <tr ng-repeat="credits in vm.creditsbillList | orderBy:'payNumber':true">
                                 <td>{{credits.fecha | date : "dd/MM/yyyy"}}</td>
                                 <td>{{credits.payNumber}}</td>
-                                <td>{{(credits.valor).toFixed(2)}}</td>
+                                <td>{{credits.valor.toFixed(2)}}</td>
                                 <td>
                                     <button type="button" title = "Abonar Pago" class="btn btn-primary btn-sm" ng-click="vm.createAbono(credits)"
                                             data-dismiss="modal" data-toggle="modal" data-target="#modalAbonar">
@@ -192,7 +195,7 @@
                         </div>
                         <div class="form-group col-md-6">
                             <label>Identificaci&oacute;n del Cliente:</label><br/>
-                            <b>{{vm.clientId}}</b><br/>
+                            <b>{{vm.clientIdentification}}</b><br/>
                             <b>{{vm.clientCodConta}}</b>
                         </div>
                     </div>
@@ -716,9 +719,9 @@
                                 </tr>
                                 <tr ng-repeat="mp in vm.itemsMultiplePayments">
                                     <td>{{mp.bill_number}}</td>
-                                    <td>{{mp.bill_total}}</td>
-                                    <td>{{mp.bill_pending}}</td>
-                                    <td>{{mp.bill_abono}}</td>
+                                    <td>{{mp.bill_total.toFixed(2)}}</td>
+                                    <td>{{mp.bill_pending.toFixed(2)}}</td>
+                                    <td>{{mp.bill_abono.toFixed(2)}}</td>
                                     <td>
                                         <button type = "button" title = "Eliminar Abono" class = "btn btn-primary btn-sm" 
                                                 ng-click = "vm.eliminaAbono($index)">
@@ -777,7 +780,7 @@
                                     <tr ng-repeat = "bills in vm.billMultipleList">
                                         <td>{{bills.stringSeq}}</td>
                                         <td>{{bills.dateCreated | date : "dd/MM/yyyy"}}</td>
-                                        <td>{{bills.total}}</td>
+                                        <td>{{bills.total.toFixed(2)}}</td>
                                         <td>
                                             <button type = "button" title = "Consultar Créditos Pendientes" class = "btn btn-primary btn-sm" 
                                                     ng-click = "vm.creditsMultiByBills(bills)">
@@ -812,7 +815,7 @@
                                     <tr ng-repeat = "credits in vm.creditsMultiBillsList | orderBy : 'payNumber' : true">
                                         <td>{{credits.fecha | date : "dd/MM/yyyy"}}</td>
                                         <td>{{credits.payNumber}}</td>
-                                        <td>{{(credits.valor).toFixed(2)}}</td>
+                                        <td>{{credits.valor.toFixed(2)}}</td>
                                         <td>
                                             <button type = "button" title = "Seleccionar Factura" class = "btn btn-primary btn-sm" ng-click = "vm.multipleAbonoBills(credits)">
                                                     <span class = "glyphicon glyphicon-ok" aria-hidden = "true"></span>
@@ -851,6 +854,86 @@
                             </div>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--CONSULTA DE COBROS REALIZADOS POR CLIENTE-->
+    <div class="table-responsive" ng-show="vm.paymentList !== undefined">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <b>Listado de Cobros de Facturas Pertenecientes a: {{vm.clientName}}</b>
+            </div>
+            <div class="panel-body">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>N&uacute;mero Factura</th>
+                            <th>Fecha</th>
+                            <th>Detalle de Cobro</th>
+                            <th>Total</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-show="vm.paymentList == 0">
+                            <td colspan="4">
+                                El Cliente <b>No Presenta</b> Facturas con Cobros realizados...
+                            </td>
+                        </tr>
+                        <tr ng-repeat="payment in vm.paymentList">
+                            <td>{{payment.documentNumber}}</td>
+                            <td>{{payment.datePayment | date : "dd/MM/yyyy"}}</td>
+                            <td>{{payment.detail}}</td>
+                            <td>{{payment.valorAbono.toFixed(2)}}</td>
+                            <td>
+                                <button type="button" title = "Anular Cobro de Factura" class="btn btn-warning btn-sm" 
+                                        ng-click="vm.deactivatePayment = payment" data-toggle="modal" data-target="#modalAnularPayment">
+                                        <span class = "glyphicon glyphicon-warning-sign" aria-hidden = "true"></span>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="panel-footer">
+                <button type="button" title = "Salir" class="btn btn-primary btn-sm" ng-click="vm.cancel()">
+                        <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!--ANULAR COBRO DE FACTURA-->
+    <div id="modalAnularPayment" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h3 class="modal-title">¡¡¡Advertencia!!!</h3>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12" >
+                            <p>¿Est&aacute; seguro que desea Anular el Cobro de la Factura <b>No. {{vm.deactivatePayment.documentNumber}}</b>?</p>
+                            <p>Recuerde que el Cobro de Factura Anulada <b>NO puede ser Recuperado</b>.</p>
+                        </div>
+                        <br/>
+                        <div class="col-md-12" >
+                            <p>Le recordamos que debe dirigirse al módulo de <b>Contabilidad</b> para proceder a anular</p>
+                            <p>el Comprobante de Ingreso en la opci&oacute;n <b>"Anular Comprobante de Ingreso"</b>,</p>
+                            <p>una vez anulado este Cobro.</p>   
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" title="Anular Cobro de Factura" class="btn btn-danger btn-sm" ng-click="vm.paymentDeactivate()" data-dismiss="modal">
+                            <span class = "glyphicon glyphicon-screenshot" aria-hidden = "true"></span>
+                    </button>
+                    <button type="button" title = "Salir" class="btn btn-primary btn-sm" data-dismiss="modal">
+                            <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
+                    </button>
                 </div>
             </div>
         </div>
@@ -965,9 +1048,9 @@
                                         <span ng-if="i.codigo === 2">RETENCION EN EL IVA</span>
                                     </td>
                                     <td>{{i.codigo_porcentaje}}</td>
-                                    <td>{{i.base_imponible}}</td>
+                                    <td>{{i.base_imponible.toFixed(2)}}</td>
                                     <td>{{i.porcentaje}}</td>
-                                    <td>{{i.valor_retenido}}</td>
+                                    <td>{{i.valor_retenido.toFixed(2)}}</td>
                                     <td>
                                         <button type="button" title = "Editar" class="btn btn-primary btn-sm"
                                                 ng-click="vm.editItem($index)" data-toggle="modal" data-target="#modalBImponible">
@@ -1026,7 +1109,7 @@
                             <td>
                                 <div style="padding:0px 20px;">
                                     <b>NOMBRE DEL CLIENTE: {{vm.clientName}}</b><br/>
-                                    <b>IDENTIFICACIÓN: {{vm.clientId}}</b><br/><br/>
+                                    <b>IDENTIFICACIÓN: {{vm.clientIdentification}}</b><br/><br/>
                                     <b>Nro. DE RETENCIÓN: {{vm.retentionClient.retentionNumber}}</b><br/>
                                     <b>FECHA: {{vm.retentionClient.documentDate | date : "dd-MM-yyyy"}}</b><br/>
                                     <b>EJERCICIO FISCAL: {{vm.retentionClient.ejercicioFiscal}}</b><br/>
@@ -1051,9 +1134,9 @@
                                 <td>{{vm.retentionClient.ejercicioFiscal}}</td>
                                 <td>{{detail.taxType}}</td>
                                 <td>{{detail.code}}</td>
-                                <td>{{detail.baseImponible}}</td>
+                                <td>{{detail.baseImponible.toFixed(2)}}</td>
                                 <td>{{detail.percentage}}</td>
-                                <td>{{detail.total}}</td>
+                                <td>{{detail.total.toFixed(2)}}</td>
                             </tr>
                             <tr>
                                 <td></td>
@@ -1061,7 +1144,7 @@
                                 <td></td>
                                 <td></td>
                                 <td><b>TOTAL</b></td>
-                                <td>{{vm.totalRetention}}</td>
+                                <td>{{vm.totalRetention.toFixed(2)}}</td>
                             </tr>
                         </table>
                     </div>
@@ -1094,7 +1177,7 @@
                                         <td>
                                             <div style="padding:0px 20px;">
                                                 <b>NOMBRE DEL CLIENTE: {{vm.clientName}}</b><br/>
-                                                <b>IDENTIFICACIÓN: {{vm.clientId}}</b><br/><br/>
+                                                <b>IDENTIFICACIÓN: {{vm.clientIdentification}}</b><br/><br/>
                                                 <b>Nro. DE RETENCIÓN: {{vm.retentionClient.retentionNumber}}</b><br/>
                                                 <b>FECHA: {{vm.retentionClient.documentDate | date : "dd-MM-yyyy"}}</b><br/>
                                                 <b>EJERCICIO FISCAL: {{vm.retentionClient.ejercicio}}</b><br/>
@@ -1119,9 +1202,9 @@
                                         <td>{{vm.retentionClient.ejercicioFiscal}}</td>
                                         <td>{{detail.taxType}}</td>
                                         <td>{{detail.code}}</td>
-                                        <td>{{detail.baseImponible}}</td>
+                                        <td>{{detail.baseImponible.toFixed(2)}}</td>
                                         <td>{{detail.percentage}}</td>
-                                        <td>{{detail.total}}</td>
+                                        <td>{{detail.total.toFixed(2)}}</td>
                                     </tr>
                                     <tr>
                                         <td></td>
@@ -1129,7 +1212,7 @@
                                         <td></td>
                                         <td></td>
                                         <td><b>TOTAL</b></td>
-                                        <td>{{vm.totalRetention}}</td>
+                                        <td>{{vm.totalRetention.toFixed(2)}}</td>
                                     </tr>
                                 </table>
                             </div>

@@ -199,6 +199,7 @@ angular.module('integridadUiApp')
             vm.update = undefined;
             vm.ejercicio = undefined;
             vm.debtsToPayList = undefined;
+            vm.paymentDebtsList = undefined;
             vm.allDebtsToPayList = undefined;
             vm.multipleSelected = undefined;
             vm.creditsDebtsSelected = undefined;
@@ -414,6 +415,20 @@ angular.module('integridadUiApp')
             _initializeDailybookCe();
             debtsToPayService.getDebtsToPayWithSaldoByProviderId(provider.id).then(function(response) {
                 vm.debtsToPayList = response;
+                vm.loading = false;
+            }).catch(function(error) {
+                vm.loading = false;
+                vm.error = error.data;
+            });
+        };
+
+        vm.paymentDebtsByProvider = function(provider) {
+            vm.loading = true;
+            vm.success = undefined;
+            vm.providerName = provider.name;
+            vm.providerId = provider.id;
+            paymentDebtsService.getPaymentDebtsByProviderId(vm.providerId).then(function(response) {
+                vm.paymentDebtsList = response;
                 vm.loading = false;
             }).catch(function(error) {
                 vm.loading = false;
@@ -1616,8 +1631,19 @@ angular.module('integridadUiApp')
 
         vm.pagoMultiAbonoDebts = function() {
             vm.loading = true;
+            if (vm.usrCliId === vm.laQuinta) {
+                vm.provContable = '2.01.03.01.001';
+            } else if (vm.usrCliId === vm.mrZolutions) {
+                vm.provContable = '2.01.03.01.001';
+            } else if (vm.usrCliId === vm.catedral) {
+                vm.provContable = '2.12.10.101';
+            } else if (vm.usrCliId === vm.ppe) {
+                vm.provContable = '2.01.03.01.01';
+            } else {
+                vm.provContable = '2.01.01.01';
+            };
             vm.debtsBillsNumberPayed = vm.getDebtsBillNumberPayed();
-            paymentDebtsService.getPaymentsDebtsByUserClientIdWithBankAndNroDocument(vm.usrCliId, vm.bankName, vm.noDocument).then(function(response) {
+            paymentDebtsService.getPaymentDebtsByUserClientIdWithBankAndNroDocument(vm.usrCliId, vm.bankName, vm.noDocument).then(function(response) {
                 if (response.length === 0) {
                     _.each(vm.itemsMultiplePayments, function(detail) { 
                         vm.paymentDebts = {
@@ -1636,7 +1662,7 @@ angular.module('integridadUiApp')
                         vm.paymentDebts.noDocument = vm.noDocument;
                         vm.paymentDebts.ctaCtableBanco = vm.ctaCtableBankCode;
                         vm.paymentDebts.banco = vm.bankName;
-                        paymentDebtsService.createPaymentsDebts(vm.paymentDebts).then(function(response) {
+                        paymentDebtsService.createPaymentDebts(vm.paymentDebts).then(function(response) {
                             vm.paymentDebtsCreated = response;
                             vm.success = 'Abono realizado con exito';
                             vm.loading = false;
@@ -1748,20 +1774,21 @@ angular.module('integridadUiApp')
             } else if (vm.paymentDebts.typePayment == 'CEG') {
                 vm.valorReten = 0;
             };
+            if (vm.usrCliId === vm.laQuinta) {
+                vm.provContable = '2.01.03.01.001';
+            } else if (vm.usrCliId === vm.mrZolutions) {
+                vm.provContable = '2.01.03.01.001';
+            } else if (vm.usrCliId === vm.catedral) {
+                vm.provContable = '2.12.10.101';
+            } else if (vm.usrCliId === vm.ppe) {
+                vm.provContable = '2.01.03.01.01';
+            } else {
+                vm.provContable = '2.01.01.01';
+            };
             vm.paymentDebts.datePayment = $('#pickerDateOfPaymentDebt').data("DateTimePicker").date().toDate().getTime();
             vm.paymentDebts.creditId = vm.creditsDebtsId;
             vm.paymentDebts.documentNumber = vm.debtsBillNumber;
-            if (vm.paymentDebts.modePayment === 'CHQ') {
-                vm.paymentDebts.ctaCtableBanco = vm.ctaCtableBankCode;
-                vm.paymentDebts.banco = vm.bankName;
-                vm.paymentDebts.ctaCtableProvider = vm.provContable;
-                vm.paymentDebts.providerName = vm.providerName;
-            } else if (vm.paymentDebts.modePayment === 'TRF') {
-                vm.paymentDebts.ctaCtableBanco = vm.ctaCtableBankCode;
-                vm.paymentDebts.banco = vm.bankName;
-                vm.paymentDebts.ctaCtableProvider = vm.provContable;
-                vm.paymentDebts.providerName = vm.providerName;
-            } else if (vm.paymentDebts.modePayment === 'DEP') {
+            if (vm.paymentDebts.modePayment === 'CHQ' || vm.paymentDebts.modePayment === 'TRF' || vm.paymentDebts.modePayment === 'DEP') {
                 vm.paymentDebts.ctaCtableBanco = vm.ctaCtableBankCode;
                 vm.paymentDebts.banco = vm.bankName;
                 vm.paymentDebts.ctaCtableProvider = vm.provContable;
@@ -1769,17 +1796,15 @@ angular.module('integridadUiApp')
             } else {
                 vm.paymentDebts.ctaCtableBanco = '--';
                 vm.paymentDebts.banco = '--';
+                vm.paymentDebts.ctaCtableProvider = '--';
+                vm.paymentDebts.providerName = '--';
             };
-            paymentDebtsService.getPaymentsDebtsByUserClientIdWithBankAndNroDocument(vm.usrCliId, vm.paymentDebts.banco, vm.paymentDebts.noDocument).then(function(response) {
+            paymentDebtsService.getPaymentDebtsByUserClientIdWithBankAndNroDocument(vm.usrCliId, vm.paymentDebts.banco, vm.paymentDebts.noDocument).then(function(response) {
                 if (response.length === 0) {
-                    paymentDebtsService.createPaymentsDebts(paymentDebts).then(function(response) {
+                    paymentDebtsService.createPaymentDebts(paymentDebts).then(function(response) {
                         vm.paymentDebtsCreated = response;
                         vm.success = 'Abono realizado con exito';
-                        if (vm.paymentDebtsCreated.modePayment === 'CHQ') {
-                            _asientoComprobanteEgreso();
-                        } else if (vm.paymentDebtsCreated.modePayment === 'TRF') {
-                            _asientoComprobanteEgreso();
-                        } else if (vm.paymentDebtsCreated.modePayment === 'DEP') {
+                        if (vm.paymentDebtsCreated.modePayment === 'CHQ' || vm.paymentDebtsCreated.modePayment === 'TRF' || vm.paymentDebtsCreated.modePayment === 'DEP') {
                             _asientoComprobanteEgreso();
                         };
                         vm.loading = false;
@@ -1852,7 +1877,7 @@ angular.module('integridadUiApp')
             vm.dailybookCe.dailyCeSeq = vm.dailyCeSeq;
             vm.dailybookCe.dailyCeStringSeq = vm.dailyCeStringSeq;
             vm.dailybookCe.dailyCeStringUserSeq = 'PAGO GENERADO ' + vm.dailyCeStringSeq;
-            vm.dailybookCe.clientProvName = vm.providerName;
+            vm.dailybookCe.clientProvName = vm.paymentDebtsCreated.providerName;
             vm.dailybookCe.generalDetail = vm.generalDetailCe_1;
             vm.dailybookCe.total = vm.paymentDebtsCreated.valorAbono;
             vm.dailybookCe.iva = parseFloat((vm.paymentDebtsCreated.valorAbono * 0.12).toFixed(2));
@@ -1862,6 +1887,23 @@ angular.module('integridadUiApp')
             
             contableService.createDailybookCe(vm.dailybookCe).then(function(response) {
                 $localStorage.user.cashier.dailyCeNumberSeq = vm.dailybookCe.dailyCeSeq;
+            }).catch(function(error) {
+                vm.loading = false;
+                vm.error = error.data;
+            });
+        };
+
+        vm.paymentDebtsDeactivate = function() {
+            vm.loading = true;
+            var index = vm.paymentDebtsList.indexOf(vm.deactivatePaymentDebts);
+            paymentDebtsService.deactivatePaymentDebts(vm.deactivatePaymentDebts).then(function(response) {
+                var index = vm.paymentDebtsList.indexOf(vm.deactivatePaymentDebts);
+                if (index > -1) {
+                    vm.paymentDebtsList.splice(index, 1);
+                };
+                vm.deactivatePaymentDebts = undefined;
+                vm.success = 'Pago anulado con exito';
+                vm.loading = false;
             }).catch(function(error) {
                 vm.loading = false;
                 vm.error = error.data;

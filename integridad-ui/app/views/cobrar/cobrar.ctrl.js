@@ -156,6 +156,7 @@ angular.module('integridadUiApp')
             vm.clientSelected = undefined;
             vm.clientCodConta = undefined;
             vm.ctaCtableBankList = undefined;
+            vm.paymentList = undefined;
             vm.bankName = undefined;
             vm.modePayment = undefined;
             vm.noDocument = undefined;
@@ -198,6 +199,7 @@ angular.module('integridadUiApp')
             vm.success = undefined;
             vm.clientSelected = client;
             vm.clientId = client.id;
+            vm.clientIdentification = client.identification;
             vm.clientName = client.name;
             vm.clientCodConta = client.codConta;
             vm.clientAddress = client.address;
@@ -206,6 +208,22 @@ angular.module('integridadUiApp')
             _initializeDailybookCi();
             billService.getAllBillsByClientIdWithSaldo(vm.clientId).then(function(response) {
                 vm.billList = response;
+                vm.loading = false;
+            }).catch(function(error) {
+                vm.loading = false;
+                vm.error = error.data;
+            });
+        };
+
+        vm.paymentsByClient = function(client) {
+            vm.loading = true;
+            vm.success = undefined;
+            vm.clientSelected = client;
+            vm.clientId = client.id;
+            vm.clientIdentification = client.identification;
+            vm.clientName = client.name;
+            paymentService.getPaymentsByClientId(vm.clientId).then(function(response) {
+                vm.paymentList = response;
                 vm.loading = false;
             }).catch(function(error) {
                 vm.loading = false;
@@ -265,17 +283,7 @@ angular.module('integridadUiApp')
             vm.payment.creditId = vm.creditsId;
             vm.payment.documentNumber = vm.billNumber;
             vm.payment.valorReten = vm.valorReten;
-            if (vm.paymentCreated.modePayment === 'CHQ') {
-                vm.payment.ctaCtableBanco = vm.ctaCtableBankCode;
-                vm.payment.ctaCtableClient = vm.clientCodConta;
-                vm.payment.clientName = vm.clientName;
-                vm.payment.banco = vm.bankName;
-            } else if (vm.paymentCreated.modePayment === 'TRF') {
-                vm.payment.ctaCtableBanco = vm.ctaCtableBankCode;
-                vm.payment.ctaCtableClient = vm.clientCodConta;
-                vm.payment.clientName = vm.clientName;
-                vm.payment.banco = vm.bankName;
-            } else if (vm.paymentCreated.modePayment === 'DEP') {
+            if (vm.payment.modePayment === 'CHQ' || vm.payment.modePayment === 'TRF' || vm.payment.modePayment === 'DEP') {
                 vm.payment.ctaCtableBanco = vm.ctaCtableBankCode;
                 vm.payment.ctaCtableClient = vm.clientCodConta;
                 vm.payment.clientName = vm.clientName;
@@ -289,11 +297,7 @@ angular.module('integridadUiApp')
                     paymentService.createPayment(payment).then(function(response) {
                         vm.paymentCreated = response;
                         vm.success = 'Abono realizado con exito';
-                        if (vm.paymentCreated.modePayment === 'CHQ') {
-                            _asientoComprobanteIngreso();
-                        } else if (vm.paymentCreated.modePayment === 'TRF') {
-                            _asientoComprobanteIngreso();
-                        } else if (vm.paymentCreated.modePayment === 'DEP') {
+                        if (vm.paymentCreated.modePayment === 'CHQ' || vm.paymentCreated.modePayment === 'TRF' || vm.paymentCreated.modePayment === 'DEP') {
                             _asientoComprobanteIngreso();
                         };
                     }).catch(function(error) {
@@ -364,6 +368,23 @@ angular.module('integridadUiApp')
             });
         };
 
+        vm.paymentDeactivate = function() {
+            vm.loading = true;
+            var index = vm.paymentList.indexOf(vm.deactivatePayment);
+            paymentService.deactivatePayment(vm.deactivatePayment).then(function(response) {
+                var index = vm.paymentList.indexOf(vm.deactivatePayment);
+                if (index > -1) {
+                    vm.paymentList.splice(index, 1);
+                };
+                vm.deactivatePayment = undefined;
+                vm.success = 'Cobro anulado con exito';
+                vm.loading = false;
+            }).catch(function(error) {
+                vm.loading = false;
+                vm.error = error.data;
+            });
+        };
+
         vm.clientMultiplePayment = function(client) {
             vm.loading = true;
             vm.success = undefined;
@@ -372,6 +393,7 @@ angular.module('integridadUiApp')
             vm.clientName = client.name;
             vm.clientCodConta = client.codConta;
             vm.clientId = client.id;
+            vm.clientIdentification = client.identification;
             _initializeDailybookCi();
             cuentaContableService.getCuentaContableByUserClientAndBank(vm.usrCliId).then(function(response) {
                 vm.ctaCtableBankList = response;

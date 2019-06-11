@@ -205,7 +205,7 @@ angular.module('integridadUiApp')
       dateTwo += 86399000;
       var userCliId = $localStorage.user.subsidiary.userClient.id;
 
-      paymentDebtsService.getPaymentsDebtsByUserClientIdAndDates(userCliId, dateOne, dateTwo).then(function(response) {
+      paymentDebtsService.getPaymentDebtsByUserClientIdAndDates(userCliId, dateOne, dateTwo).then(function(response) {
         vm.reportList = response;
         vm.loading = false;
       }).catch(function(error) {
