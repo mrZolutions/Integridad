@@ -296,10 +296,18 @@ angular.module('integridadUiApp')
                 if (response.length === 0) {
                     paymentService.createPayment(payment).then(function(response) {
                         vm.paymentCreated = response;
-                        vm.success = 'Abono realizado con exito';
-                        if (vm.paymentCreated.modePayment === 'CHQ' || vm.paymentCreated.modePayment === 'TRF' || vm.paymentCreated.modePayment === 'DEP') {
-                            _asientoComprobanteIngreso();
+                        switch (vm.paymentCreated.modePayment) {
+                            case 'CHQ':
+                                _asientoComprobanteIngreso();
+                            break;
+                            case 'TRF':
+                                _asientoComprobanteIngreso();
+                            break;
+                            case 'DEP':
+                                _asientoComprobanteIngreso();
+                            break;
                         };
+                        vm.success = 'Abono realizado con exito';
                     }).catch(function(error) {
                         vm.loading = false;
                         vm.error = error.data;

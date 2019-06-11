@@ -1803,10 +1803,18 @@ angular.module('integridadUiApp')
                 if (response.length === 0) {
                     paymentDebtsService.createPaymentDebts(paymentDebts).then(function(response) {
                         vm.paymentDebtsCreated = response;
-                        vm.success = 'Abono realizado con exito';
-                        if (vm.paymentDebtsCreated.modePayment === 'CHQ' || vm.paymentDebtsCreated.modePayment === 'TRF' || vm.paymentDebtsCreated.modePayment === 'DEP') {
-                            _asientoComprobanteEgreso();
+                        switch (vm.paymentDebtsCreated.modePayment) {
+                            case 'CHQ':
+                                _asientoComprobanteEgreso();
+                            break;
+                            case 'TRF':
+                                _asientoComprobanteEgreso();
+                            break;
+                            case 'DEP':
+                                _asientoComprobanteEgreso();
+                            break;
                         };
+                        vm.success = 'Abono realizado con exito';
                         vm.loading = false;
                     }).catch(function(error) {
                         vm.loading = false;
