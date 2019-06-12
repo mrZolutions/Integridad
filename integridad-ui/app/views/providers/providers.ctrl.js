@@ -486,15 +486,7 @@ angular.module('integridadUiApp')
             vm.retention.documentNumber = vm.retention.documentNumber;
             vm.totalRetention = 0;
             _.each(vm.retention.items, function(item) {
-                var detail = {
-                    taxType: item.codigo === 1 ? 'RETENCION EN LA FUENTE' : 'RETENCION EN EL IVA',
-                    code: item.codigo_porcentaje_integridad,
-                    baseImponible: item.base_imponible,
-                    percentage: item.porcentaje,
-                    total: item.valor_retenido
-                };
-                vm.totalRetention = (parseFloat(vm.totalRetention) + parseFloat(detail.total)).toFixed(2);
-                vm.retention.detailRetentions.push(detail);
+                vm.totalRetention = parseFloat(vm.totalRetention + item.valor_retenido);
             });
         };
 
@@ -581,7 +573,7 @@ angular.module('integridadUiApp')
                         vm.retention = respRetention;
                         vm.totalRetention = 0;
                         _.each(vm.retention.detailRetentions, function(detail) {
-                            vm.totalRetention = parseFloat((vm.totalRetention + detail.total).toFixed(2));
+                            vm.totalRetention = parseFloat(vm.totalRetention + detail.total);
                         });
                         vm.retentionCreated = true;
                         $localStorage.user.cashier.retentionNumberSeq = parseInt($localStorage.user.cashier.retentionNumberSeq) + 1;

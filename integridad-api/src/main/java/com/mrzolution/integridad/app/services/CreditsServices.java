@@ -93,7 +93,7 @@ public class CreditsServices {
             Double qPlazo = Double.valueOf(0);
             
             for (Payment payments : credit.getPayments()) {
-                if (payments.getDatePayment() <= dateTwo) {
+                if (payments.getDatePayment() <= dateTwo && payments.isActive()) {
                     sumAbono = Double.sum(sumAbono, payments.getValorAbono());
                     sumReten = Double.sum(sumReten, payments.getValorReten());
                     sumNotac = Double.sum(sumNotac, payments.getValorNotac());

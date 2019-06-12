@@ -816,13 +816,13 @@
                                         <td><b>RETENCIONES % </b></td>
                                         <td><b>VALOR </b></td>
                                     </tr>
-                                    <tr ng-repeat="detail in vm.retention.detailRetentions">
+                                    <tr ng-repeat="detail in vm.retention.items">
                                         <td>{{vm.retention.ejercicioFiscal}}</td>
-                                        <td>{{detail.taxType}}</td>
-                                        <td>{{detail.code}}</td>
-                                        <td>{{detail.baseImponible}}</td>
-                                        <td>{{detail.percentage}}</td>
-                                        <td>{{detail.total}}</td>
+                                        <td>{{detail.codigo}}</td>
+                                        <td>{{detail.codigo_porcentaje_integridad}}</td>
+                                        <td>{{detail.base_imponible}}</td>
+                                        <td>{{detail.porcentaje}}</td>
+                                        <td>{{detail.valor_retenido}}</td>
                                     </tr>
                                     <tr>
                                         <td></td>

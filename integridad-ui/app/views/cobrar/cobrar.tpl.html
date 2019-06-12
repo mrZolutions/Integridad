@@ -1048,9 +1048,9 @@
                                         <span ng-if="i.codigo === 2">RETENCION EN EL IVA</span>
                                     </td>
                                     <td>{{i.codigo_porcentaje}}</td>
-                                    <td>{{i.base_imponible.toFixed(2)}}</td>
+                                    <td>{{i.base_imponible}}</td>
                                     <td>{{i.porcentaje}}</td>
-                                    <td>{{i.valor_retenido.toFixed(2)}}</td>
+                                    <td>{{i.valor_retenido}}</td>
                                     <td>
                                         <button type="button" title = "Editar" class="btn btn-primary btn-sm"
                                                 ng-click="vm.editItem($index)" data-toggle="modal" data-target="#modalBImponible">
@@ -1067,7 +1067,7 @@
                                     <td></td>
                                     <td></td>
                                     <td><b>TOTAL</b></td>
-                                    <td>{{vm.getTotalRetencionesClient()}}</td>
+                                    <td>{{vm.getTotalRetentionClient()}}</td>
                                     <td></td>
                                 </tr>
                             </tbody>
@@ -1198,13 +1198,13 @@
                                         <td><b>RETENCIONES % </b></td>
                                         <td><b>VALOR </b></td>
                                     </tr>
-                                    <tr ng-repeat="detail in vm.retentionClient.detailRetentionClient">
+                                    <tr ng-repeat="detail in vm.retentionClient.items">
                                         <td>{{vm.retentionClient.ejercicioFiscal}}</td>
-                                        <td>{{detail.taxType}}</td>
-                                        <td>{{detail.code}}</td>
-                                        <td>{{detail.baseImponible.toFixed(2)}}</td>
-                                        <td>{{detail.percentage}}</td>
-                                        <td>{{detail.total.toFixed(2)}}</td>
+                                        <td>{{detail.codigo}}</td>
+                                        <td>{{detail.codigo_porcentaje_integridad}}</td>
+                                        <td>{{detail.base_imponible}}</td>
+                                        <td>{{detail.porcentaje}}</td>
+                                        <td>{{detail.valor_retenido}}</td>
                                     </tr>
                                     <tr>
                                         <td></td>
@@ -1212,7 +1212,7 @@
                                         <td></td>
                                         <td></td>
                                         <td><b>TOTAL</b></td>
-                                        <td>{{vm.totalRetention.toFixed(2)}}</td>
+                                        <td>{{vm.getTotalRetentionClient()}}</td>
                                     </tr>
                                 </table>
                             </div>

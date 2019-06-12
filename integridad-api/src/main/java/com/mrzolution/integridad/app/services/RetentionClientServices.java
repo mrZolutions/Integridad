@@ -1,6 +1,5 @@
 package com.mrzolution.integridad.app.services;
 
-import com.google.common.collect.Iterables;
 import com.mrzolution.integridad.app.domain.Bill;
 import com.mrzolution.integridad.app.domain.Credits;
 import com.mrzolution.integridad.app.domain.DetailRetentionClient;
@@ -14,6 +13,7 @@ import com.mrzolution.integridad.app.repositories.DetailRetentionClientChildRepo
 import com.mrzolution.integridad.app.repositories.DetailRetentionClientRepository;
 import com.mrzolution.integridad.app.repositories.PaymentRepository;
 import com.mrzolution.integridad.app.repositories.RetentionClientRepository;
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -49,7 +49,6 @@ public class RetentionClientServices {
     private String document = "";
     private double valor = 0;
     private String doc = "";
-    private int numC = 1;
     private String saldo = "";
  
     public RetentionClient getRetentionClientById(UUID id) {
@@ -64,13 +63,17 @@ public class RetentionClientServices {
 	return retrieved;
     }
     
+    public Iterable<RetentionClient>getRetentionClientByBillIdAndDocumentNumber(UUID id, String docnumber) {
+        Iterable<RetentionClient> retenCli = retentionClientRepository.findRetentionClientByBillIdAndDocumentNumber(id, docnumber);
+        retenCli.forEach(retention -> {
+            retention.setListsNull();
+            retention.setFatherListToNull();
+        });
+        log.info("RetentionClientServices getRetentionClientByBillIdAndDocumentNumber DONE: {}, {}", id, docnumber);
+        return retenCli;
+    }
+    
     public RetentionClient createRetentionClient(RetentionClient retentionClient) throws BadRequestException {   
-        Iterable<RetentionClient> retenCli = retentionClientRepository.findByDocumentNumberAndBillId(retentionClient.getDocumentNumber(), retentionClient.getBill().getId());
-        
-        if (Iterables.size(retenCli) > 0) {
-            throw new BadRequestException("Retención Ya Existe");
-        }
-        
 	List<DetailRetentionClient> details = retentionClient.getDetailRetentionClient();
         document = retentionClient.getBill().getId().toString();
         retentionClient.setDocumentDate(new Date().getTime());
@@ -84,7 +87,6 @@ public class RetentionClientServices {
             detailRetentionClientRepository.save(detail);
             detail.setRetentionClient(null);
         });
-                                  
         saved.setDetailRetentionClient(details);
         updateBillCreditsAndPayment(saved, document);
         log.info("RetentionClientServices createRetentionClient DONE: {}, {}", saved.getId(), saved.getRetentionNumber());
@@ -96,7 +98,7 @@ public class RetentionClientServices {
         Credits docNumber = creditsRepository.findByBillId(document);
         doc = docNumber.getBillId();
         
-        if (doc.equals(document) && docNumber.getPayNumber() == numC) {
+        if (doc.equals(document) && docNumber.getPayNumber() == 1) {
             valor = docNumber.getValor();
             docNumber.setValor(valor - sum);
             Credits spCretits =  creditsRepository.save(docNumber);
@@ -113,13 +115,19 @@ public class RetentionClientServices {
             specialPayment.setValorAbono(0.0);
             specialPayment.setValorReten(sum);
             specialPayment.setValorNotac(0.0);
+            specialPayment.setActive(true);
             paymentRepository.save(specialPayment);
-            
             if (spCretits != null) {
                 Bill bill = billRepository.findOne(saved.getBill().getId());
                 String nbillId = bill.getId().toString();
                 if (nbillId.equals(document)) {
-                    saldo = String.valueOf(spCretits.getValor());
+                    BigDecimal vsaldo = new BigDecimal(spCretits.getValor());
+                    if (spCretits.getValor() == 0) {
+                        vsaldo = vsaldo.setScale(0, BigDecimal.ROUND_HALF_UP);
+                    } else {
+                        vsaldo = vsaldo.setScale(2, BigDecimal.ROUND_HALF_UP);
+                    }
+                    saldo = String.valueOf(vsaldo);
                     bill.setSaldo(saldo);
                     billRepository.save(bill);
                 }

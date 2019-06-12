@@ -29,12 +29,12 @@ public class RetentionClientController {
     RetentionClientServices service;
     
     @RequestMapping(method = RequestMethod.GET, value="/{id}")
-    public ResponseEntity getById(@PathVariable("id") UUID id) {
+    public ResponseEntity getRetentionClientById(@PathVariable("id") UUID id) {
         RetentionClient response = null;
 	try {
             response = service.getRetentionClientById(id);
 	} catch (BadRequestException e) {
-            log.error("RetentionClientController getId Exception thrown: {}", e.getMessage());
+            log.error("RetentionClientController getRetentionClientById Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
 	return new ResponseEntity<RetentionClient>(response, HttpStatus.ACCEPTED);
@@ -62,5 +62,17 @@ public class RetentionClientController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
 	return new ResponseEntity<List>(response, HttpStatus.ACCEPTED);
+    }
+    
+    @RequestMapping(method = RequestMethod.GET, value="/retcli/{id}/{docnumber}")
+    public ResponseEntity getRetentionClientByBillIdAndDocumentNumber(@PathVariable("id") UUID id, @PathVariable("docnumber") String docnumber) {
+        Iterable<RetentionClient> response = null;
+        try {
+            response = service.getRetentionClientByBillIdAndDocumentNumber(id, docnumber);
+        } catch (BadRequestException e) {
+            log.error("RetentionClientController getRetCliByDocumentNumberAndBillId Exception thrown: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+        return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
     }
 }

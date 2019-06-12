@@ -176,7 +176,6 @@ public class DebtsToPayServices {
                     if (saved.getRetentionId() != null) {
                         PaymentDebts paymentDebt = new PaymentDebts();
                         paymentDebt.setCreditsDebts(savedCreditDebt);
-                        
                         paymentDebt.setDatePayment(saved.getFecha());
                         paymentDebt.setNoDocument(saved.getRetentionNumber());
                         paymentDebt.setNoAccount("--");
@@ -189,7 +188,7 @@ public class DebtsToPayServices {
                         paymentDebt.setNumeroLote("--");
                         paymentDebt.setValorAbono(0.0);
                         paymentDebt.setValorReten(saved.getRetentionTotal());
-                        
+                        paymentDebt.setActive(true);
                         paymentDebtsRepository.save(paymentDebt);
                         log.info("DebtsToPayServices saveRetentionInPaymentDebts DONE");
                     }

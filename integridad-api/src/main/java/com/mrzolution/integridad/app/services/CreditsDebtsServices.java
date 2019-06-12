@@ -85,7 +85,7 @@ public class CreditsDebtsServices {
             Double sumReten = Double.valueOf(0);
             
             for (PaymentDebts payments : creditD.getPaymentDebts()) {
-                if (payments.getDatePayment() <= dateTwo) {
+                if (payments.getDatePayment() <= dateTwo && payments.isActive()) {
                     sumAbono = Double.sum(sumAbono, payments.getValorAbono());
                     sumReten = Double.sum(sumReten, payments.getValorReten());
                 }

@@ -141,6 +141,7 @@ public class CreditNoteServices {
             specialPayment.setValorAbono(0.0);
             specialPayment.setValorReten(0.0);
             specialPayment.setValorNotac(saved.getTotal());
+            specialPayment.setActive(true);
             paymentRepository.save(specialPayment);
         }
         log.info("CreditNoteServices updateCreditsAndPayment DONE");
