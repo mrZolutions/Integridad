@@ -7,8 +7,20 @@ angular
             });
         };
 
+        this.deactivateRetentionClient = function(retentionClient) {
+            return securityService.put('/retenclient', retentionClient).then(function successCallback(response) {
+                return response.data;
+            });
+        };
+
         this.getRetentionClientById = function(id) {
             return securityService.get('/retenclient/' + id).then(function successCallback(response) {
+                return response.data;
+            });
+        };
+
+        this.getRetentionClientByBillId = function(id) {
+            return securityService.get('/retenclient/bill/' + id).then(function successCallback(response) {
                 return response.data;
             });
         };

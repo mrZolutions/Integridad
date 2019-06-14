@@ -31,6 +31,7 @@ public class RetentionClient {
     private long dateToday;
     private long documentDate;
     private double total;
+    private boolean active;
     
     @OneToOne
     @JoinColumn(name = "bill_id")

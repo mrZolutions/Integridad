@@ -34,7 +34,7 @@
     </div>
     
     <!--SECCIÓN DE CARGA DE LOS LOS CLIENTES-->
-    <div class="table-responsive" ng-show="vm.billList === undefined && vm.clientSelected === undefined && vm.multipleCobroSelected === undefined && vm.paymentList === undefined">
+    <div class="table-responsive" ng-show="vm.billList === undefined && vm.clientSelected === undefined && vm.multipleCobroSelected === undefined && vm.paymentList === undefined && vm.retentionClientList === undefined">
         <div class="row">
             <div class="form-group col-md-12">
                 <input ng-model="searchText" class="form-control" placeholder="Buscar Clientes">
@@ -67,7 +67,7 @@
                                 <span class = "glyphicon glyphicon-credit-card" aria-hidden = "true"></span>
                         </button>
                         <button type = "button" title = "Consultar Cobros por Cliente" class = "btn btn-primary btn-sm" ng-click = "vm.paymentsByClient(client)">
-                            <span class = "glyphicon glyphicon-eye-open" aria-hidden = "true"></span>
+                                <span class = "glyphicon glyphicon-eye-open" aria-hidden = "true"></span>
                         </button>
                     </td>
                 </tr>
@@ -84,7 +84,7 @@
     </div>
     
     <!--SECCIÓN DE CARGA DE LAS FACTURAS DE LOS CLIENTES-->
-    <div class="table-responsive" ng-show="vm.billList !== undefined && vm.retentionClient === undefined">
+    <div class="table-responsive" ng-show="vm.billList !== undefined && vm.retentionClient === undefined && vm.retentionClientList === undefined">
         <div class="panel panel-primary">
             <div class="panel-heading">
                 <b>Listado de Facturas Pertenecientes a: {{vm.clientName}}</b>
@@ -119,6 +119,9 @@
                                 <button type="button" title = "Nueva Retención" class="btn btn-success btn-sm" ng-click="vm.createRetentionClient(bill)">
                                         <span class = "glyphicon glyphicon-tasks" aria-hidden = "true"></span>
                                 </button>
+                                <button type="button" title = "Consultar Retención" class="btn btn-primary btn-sm" ng-click="vm.consultRetentionClient(bill)">
+                                        <span class = "glyphicon glyphicon-search" aria-hidden = "true"></span>
+                                </button>
                             </td>
                         </tr>
                     </tbody>
@@ -131,7 +134,142 @@
             </div>
         </div>
     </div>
-    
+
+    <div class="table-responsive" ng-show="vm.retentionClientList !== undefined">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <b>Retenci&oacute;n Perteneciente a la Factura Nro: {{vm.billNumber}}</b>
+            </div>
+            <div class="panel-body">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Nro. Retenci&oacute;n</th>
+                            <th>Fecha</th>
+                            <th>valor</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-show="vm.retentionClientList == 0">
+                            <td colspan="4">
+                                <b>No existen</b> Retenciones para esta Factura...
+                            </td>
+                        </tr>
+                        <tr ng-repeat="retenCli in vm.retentionClientList">
+                            <td>{{retenCli.retentionNumber}}</td>
+                            <td>{{retenCli.documentDate | date : "dd/MM/yyyy"}}</td>
+                            <td>{{retenCli.total.toFixed(2)}}</td>
+                            <td>
+                                <button type="button" title = "Ver Retención" class="btn btn-primary btn-sm" ng-click="vm.retentionClientSelected(retenCli)"
+                                        data-toggle="modal" data-target="#modalShowRetentionClient">
+                                        <span class = "glyphicon glyphicon-eye-open" aria-hidden = "true"></span>
+                                </button>
+                                <button type="button" title = "Anular Retención" class="btn btn-warning btn-sm" ng-click="vm.deactivateRetentionClient = retenCli"
+                                        data-toggle="modal" data-target="#modalAnularRetentionClient">
+                                        <span class = "glyphicon glyphicon-warning-sign" aria-hidden = "true"></span>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="panel-footer">
+                <button type="button" title = "Salir" class="btn btn-primary btn-sm" ng-click="vm.cancel()">
+                        <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="modalShowRetentionClient" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4>Retención de Factura No. {{vm.billNumber}}</h4>
+                </div>
+                <div class="panel panel-primary">
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="form-group col-md-12">
+                                <table width="100%">
+                                    <tr>
+                                        <td>
+                                            <div style="padding:0px 20px;">
+                                                <b>Nro. DE RETENCIÓN: {{vm.retentionClientToShow.retentionNumber}}</b><br/>
+                                                <b>FECHA: {{vm.retentionClientToShow.documentDate | date : "dd-MM-yyyy"}}</b><br/>
+                                                <b>EJERCICIO FISCAL: {{vm.retentionClientToShow.ejercicio}}</b><br/>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-md-12">
+                                <table width="100%" border="1">
+                                    <tr>
+                                        <td><b>EJERCICIO FISCAL </b></td>
+                                        <td><b>TIPO IMPUESTO </b></td>
+                                        <td><b>CODIGO </b></td>
+                                        <td><b>BASE IMPONIBLE </b></td>
+                                        <td><b>RETENCIONES % </b></td>
+                                        <td><b>VALOR </b></td>
+                                    </tr>
+                                    <tr ng-repeat="detail in vm.retentionClientToShow.detailRetentionClient">
+                                        <td>{{vm.retentionClientToShow.ejercicioFiscal}}</td>
+                                        <td>{{detail.taxType}}</td>
+                                        <td>{{detail.code}}</td>
+                                        <td>{{detail.baseImponible}}</td>
+                                        <td>{{detail.percentage}}</td>
+                                        <td>{{detail.total}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td><b>TOTAL</b></td>
+                                        <td>{{vm.getTotalRetentionClientToShow()}}</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--ANULAR RETENCIÓN-->
+    <div id="modalAnularRetentionClient" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" ng-click="vm.client=undefined">&times;</button>
+                    <h3 class="modal-title">¡¡¡Advertencia!!!</h3>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12" >
+                            <p>¿Est&aacute; seguro que desea Anular la Retenci&oacute;n <b>No. {{vm.deactivateRetentionClient.retentionNumber}}</b>?</p>
+                            <p>Recuerde que la Retenci&oacute;n Anulada <b>NO puede ser Recuperada</b></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" title="Anular Retención" class="btn btn-danger btn-sm" ng-click="vm.retentionClientDeactivate()" data-dismiss="modal">
+                            <span class = "glyphicon glyphicon-screenshot" aria-hidden = "true"></span>
+                    </button>
+                    <button type="button" title = "Salir" class="btn btn-primary btn-sm" data-dismiss="modal">
+                            <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!--SECCIÓN DE CARGA DE LOS CRÉDITOS POR FACTURA-->
     <div id="modalCuotas" class="modal fade" role="dialog">
         <div class="modal-dialog">
@@ -752,10 +890,10 @@
         </div>
     </div>
 
-    <div id = "modalFindBills" class="modal fade" role="dialog">
-        <div class = "modal-dialog">
-            <div class = "modal-content">
-                <div class = "modal-header">
+    <div id="modalFindBills" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
                     <div>
                         <b>Facturas Pertenecientes a: {{vm.clientName}}</b>
                     </div>

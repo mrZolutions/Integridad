@@ -146,6 +146,7 @@ angular.module('integridadUiApp')
             vm.creditsbillList = undefined;
             vm.retentionClient = undefined;
             vm.retentionClientCreated = undefined;
+            vm.retentionClientList = undefined;
             vm.clientList = [];
             vm.itemsMultiplePayments = [];
             vm.creditsBillsSelected = undefined;
@@ -614,6 +615,19 @@ angular.module('integridadUiApp')
             });
         };
 
+        vm.consultRetentionClient = function(bill) {
+            vm.loading = true;
+            vm.error = undefined;
+            vm.billNumber = bill.stringSeq;
+            eretentionClientService.getRetentionClientByBillId(bill.id).then(function(response) {
+                vm.retentionClientList = response;
+                vm.loading = false;
+            }).catch(function(error) {
+                vm.loading = false;
+                vm.error = error.data;
+            });
+        };
+
         vm.getPercentageTable = function() {
             vm.tablePercentage = undefined;
             if (vm.retentionClient.typeRetention === '2') {
@@ -708,6 +722,46 @@ angular.module('integridadUiApp')
                     vm.totalRetention = parseFloat(vm.totalRetention + detail.total);
                 });
                 vm.retentionClientCreated = true;
+                vm.loading = false;
+            }).catch(function(error) {
+                vm.loading = false;
+                vm.error = error.data;
+            });
+        };
+
+        vm.retentionClientSelected = function(retentionClient) {
+            vm.loading = true;
+            vm.error = undefined;
+            eretentionClientService.getRetentionClientById(retentionClient.id).then(function(response) {
+                vm.retentionClientToShow = response;
+                vm.loading = false;
+            }).catch(function(error) {
+                vm.loading = false;
+                vm.error = error.data;
+            });
+        };
+
+        vm.getTotalRetentionClientToShow = function() {
+            var totalRetorno = 0;
+            if (vm.retentionClientToShow) {
+                _.each(vm.retentionClientToShow.detailRetentionClient, function(detail) {
+                    totalRetorno = (parseFloat(totalRetorno) + parseFloat(detail.total)).toFixed(2);
+                });
+            };
+            return totalRetorno;
+        };
+
+        vm.retentionClientDeactivate = function() {
+            vm.loading = true;
+            vm.error = undefined;
+            var index = vm.retentionClientList.indexOf(vm.deactivateRetentionClient);
+            eretentionClientService.deactivateRetentionClient(vm.deactivateRetentionClient).then(function(response) {
+                var index = vm.retentionClientList.indexOf(vm.deactivateRetentionClient);
+                if (index > -1) {
+                    vm.retentionClientList.splice(index, 1);
+                };
+                vm.deactivateRetentionClient = undefined;
+                vm.success = 'Registro eliminado con exito';
                 vm.loading = false;
             }).catch(function(error) {
                 vm.loading = false;

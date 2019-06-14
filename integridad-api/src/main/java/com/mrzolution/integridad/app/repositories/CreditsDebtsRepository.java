@@ -22,7 +22,7 @@ public interface CreditsDebtsRepository extends CrudRepository<CreditsDebts, UUI
     CreditsDebts findByDebtsToPayId(String debtsToPayId);
     
     @Query("SELECT c FROM CreditsDebts c JOIN c.pagoDebts p JOIN p.debtsToPay d WHERE d.id = :id AND c.estadoCredits = 'PENDIENTE'")
-    Iterable<CreditsDebts> findCreditsDebtsOfDebtsToPayByDebtsToPayId(@Param("id") UUID id);
+    Iterable<CreditsDebts> findCreditsDebtsByDebtsToPayId(@Param("id") UUID id);
     
     @Query("SELECT c FROM CreditsDebts c WHERE c.id = :id")
     Iterable<CreditsDebts> findCreditsDebtsById(@Param("id") UUID id);

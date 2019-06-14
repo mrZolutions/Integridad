@@ -18,6 +18,9 @@ public interface PaymentRepository extends CrudRepository<Payment, UUID> {
     
     Iterable<Payment> findByDocumentNumber(String documentNumber);
     
+    @Query("SELECT py FROM Payment py WHERE py.credits.id = (:id)")
+    Iterable<Payment> findPaymentByCreditsId(@Param("id") UUID id);
+    
     @Query("SELECT py FROM Payment py JOIN py.credits c JOIN c.pago p JOIN p.bill b JOIN b.client cl WHERE cl.userClient.id = (:id) AND py.datePayment >= (:dateOne) AND py.datePayment <= (:dateTwo) AND py.active = true ORDER BY cl.name, py.datePayment")
     Iterable<Payment> findAllPaymentsByUserClientIdAndDates(@Param("id") UUID id, @Param("dateOne") long dateOne, @Param("dateTwo") long dateTwo);
     

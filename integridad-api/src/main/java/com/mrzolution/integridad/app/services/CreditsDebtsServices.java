@@ -44,13 +44,13 @@ public class CreditsDebtsServices {
     private String retenNumber = "";
     private String numCheque = "";
     
-    public Iterable<CreditsDebts> getCreditsDebtsOfDebtsToPayByDebtsToPayId(UUID id) {
-        Iterable<CreditsDebts> creditsDebts = creditsDebtsRepository.findCreditsDebtsOfDebtsToPayByDebtsToPayId(id);
+    public Iterable<CreditsDebts> getCreditsDebtsByDebtsToPayId(UUID id) {
+        Iterable<CreditsDebts> creditsDebts = creditsDebtsRepository.findCreditsDebtsByDebtsToPayId(id);
         creditsDebts.forEach(creditDebt -> {
             creditDebt.setListsNull();
             creditDebt.setFatherListToNull();
         });
-        log.info("CreditsDebtsServices getCreditsDebtsOfDebtsToPayByDebtsToPayId DONE: {}", id);
+        log.info("CreditsDebtsServices getCreditsDebtsByDebtsToPayId DONE: {}", id);
         return creditsDebts;
     }
     

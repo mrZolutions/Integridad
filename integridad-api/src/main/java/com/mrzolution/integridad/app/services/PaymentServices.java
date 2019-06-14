@@ -187,6 +187,7 @@ public class PaymentServices {
         Payment paymentToDeactivate = paymentRepository.findOne(payment.getId());
         paymentToDeactivate.setListsNull();
         paymentToDeactivate.setActive(false);
+        paymentToDeactivate.setDetail("ABONO ANULADO");
         Payment deactivated = paymentRepository.save(paymentToDeactivate);
         documentDeactivated = deactivated.getCredits().getPago().getBill().getId().toString();
         abono = deactivated.getValorAbono();

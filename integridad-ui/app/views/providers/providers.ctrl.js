@@ -492,6 +492,7 @@ angular.module('integridadUiApp')
 
         vm.retentionSelected = function(retention) {
             vm.loading = true;
+            vm.error = undefined;
             vm.retentionList = undefined;
             eretentionService.getRetentionById(retention.id).then(function(response) {
                 vm.retentionCreated = true;
@@ -509,13 +510,14 @@ angular.module('integridadUiApp')
 
         vm.retentionDeactivate = function() {
             vm.loading = true;
+            vm.error = undefined;
             var index = vm.retentionList.indexOf(vm.deactivateRetention);
             eretentionService.cancelRetention(vm.deactivateRetention).then(function(response) {
                 var index = vm.retentionList.indexOf(vm.deactivateRetention);
                 if (index > -1) {
                     vm.retentionList.splice(index, 1);
                 };
-                vm.deactivateRetention = undefined
+                vm.deactivateRetention = undefined;
                 vm.loading = false;
             }).catch(function(error) {
                 vm.loading = false;

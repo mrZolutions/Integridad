@@ -28,10 +28,10 @@ public class CreditsController {
     CreditsServices service;
     
     @RequestMapping(method = RequestMethod.GET, value="/credits/bill/{id}")
-    public ResponseEntity getCreditsOfBillById(@PathVariable("id") UUID id) {
+    public ResponseEntity getCreditsByBillId(@PathVariable("id") UUID id) {
         Iterable<Credits> response = null;
         try {
-            response = service.getCreditsOfBillByBillId(id);
+            response = service.getCreditsByBillId(id);
         } catch (BadRequestException e) {
             log.error("CreditsControler getCreditsByBillById Exception thrown: {}", e.getMessage());
 	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());

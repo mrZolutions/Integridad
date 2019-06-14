@@ -44,13 +44,13 @@ public class CreditsServices {
     private double totalNotac = 0.0;
     private double totalValor = 0.0;
     
-    public Iterable<Credits> getCreditsOfBillByBillId(UUID id) {
-        Iterable<Credits> credits = creditsRepository.findCreditsOfBillByBillId(id);
+    public Iterable<Credits> getCreditsByBillId(UUID id) {
+        Iterable<Credits> credits = creditsRepository.findCreditsByBillId(id);
         credits.forEach(credit -> {
             credit.setListsNull();
             credit.setFatherListToNull();
         });
-        log.info("CreditsServices getCreditsOfBillByBillId DONE: {}", id);
+        log.info("CreditsServices getCreditsByBillId DONE: {}", id);
         return credits;
     }
     

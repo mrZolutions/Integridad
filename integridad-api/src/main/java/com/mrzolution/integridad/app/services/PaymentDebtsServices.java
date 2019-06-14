@@ -243,6 +243,7 @@ public class PaymentDebtsServices {
         }
         PaymentDebts paymentDebtsToDeactivate = paymentDebtsRepository.findOne(payment.getId());
         paymentDebtsToDeactivate.setListsNull();
+        paymentDebtsToDeactivate.setDetail("ABONO ANULADO");
         paymentDebtsToDeactivate.setActive(false);
         PaymentDebts deactivated = paymentDebtsRepository.save(paymentDebtsToDeactivate);
         documentDeactivated = deactivated.getCreditsDebts().getPagoDebts().getDebtsToPay().getId().toString();
