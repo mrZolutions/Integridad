@@ -112,5 +112,18 @@ public class ProductController {
         }
         return new ResponseEntity<Page>(response, HttpStatus.CREATED);
     }
+
+    @RequestMapping(method = RequestMethod.GET, value="/actives/subsidiary/bill/{subsidiaryId}/{page}")
+    public ResponseEntity getAllActivesBySubsidiaryIdForBill(@PathVariable("subsidiaryId") UUID subsidiaryId, @PathVariable("page") int page, @RequestParam(required = false, name = "var") String variable) {
+        log.info("ProductController getAllActivesBySubsidiaryId: {}", subsidiaryId);
+        Page<Product> response = null;
+        try {
+            response = service.getAllActivesBySubsidiaryIdForBill(subsidiaryId, variable, new PageRequest(page, 50, Sort.Direction.ASC, "product"));
+        } catch (BadRequestException e) {
+            log.error("ProductController getAllActivesBySubsidiaryId Exception thrown: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+        return new ResponseEntity<Page>(response, HttpStatus.CREATED);
+    }
 	
 }

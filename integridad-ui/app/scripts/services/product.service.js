@@ -43,6 +43,12 @@ angular
             });
         };
 
+        this.getLazyBySusidiaryIdForBill = function(subsidiaryId, page, variable) {
+            return securityService.get('/product/actives/subsidiary/bill/' + subsidiaryId + '/' + page + '?var=' + variable).then(function successCallback(response) {
+                return response.data;
+            });
+        };
+
         this.getProductsBySusidiaryId = function(userClientId) {
             return securityService.get('/product/allproducts/' + userClientId).then(function successCallback(response) {
                 return response.data;

@@ -267,7 +267,7 @@ angular.module('integridadUiApp')
         function _filterProduct() {
             vm.totalPages = 0;
             var variable = vm.searchText? vm.searchText : null;
-            productService.getLazyBySusidiaryId($localStorage.user.subsidiary.id, vm.page, variable).then(function(response) {
+            productService.getLazyBySusidiaryIdForBill($localStorage.user.subsidiary.id, vm.page, variable).then(function(response) {
                 vm.loading = false;
                 vm.totalPages = response.totalPages;
                 vm.productList = [];
@@ -623,7 +623,7 @@ angular.module('integridadUiApp')
                 var detaAdic = {
                     "det": det.adicional
                 };
-                
+
                 if (det.product.iva) {
                     impuesto.base_imponible = parseFloat(((parseFloat(det.costEach) - (parseFloat(det.costEach) * parseFloat((vm.bill.discountPercentage / 100)))) * parseFloat(det.quantity)).toFixed(4));
                     impuesto.valor = parseFloat((parseFloat(impuesto.base_imponible) * 0.12).toFixed(4));
@@ -677,7 +677,7 @@ angular.module('integridadUiApp')
             });
 
             var req = requirementService.createRequirement(vm.clientSelected, vm.bill, $localStorage.user, vm.impuestosTotales, vm.items, vm.pagos);
-            
+
             billService.getClaveDeAcceso(req, vm.companyData.userClient.id).then(function(resp) {
                 vm.bill.pagos = vm.pagos;
                 if (vm.bill.discountPercentage === undefined) {

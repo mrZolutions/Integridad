@@ -3,6 +3,7 @@ package com.mrzolution.integridad.app.domain;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -24,7 +25,13 @@ public class CuentaContable {
     @JoinColumn(name = "user_client_id")
     private UserClient userClient;
 
+    @OneToMany(mappedBy = "cuentaContable", cascade = CascadeType.ALL)
+    private List<CuentaContableByProduct> cuentaContableByProducts;
+
     public void setListsNull(){
+        if(cuentaContableByProducts != null){
+            cuentaContableByProducts = null;
+        }
     }
 
     public void setFatherListToNull(){
