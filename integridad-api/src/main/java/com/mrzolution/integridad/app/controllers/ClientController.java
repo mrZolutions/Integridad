@@ -26,42 +26,46 @@ public class ClientController {
             log.error("ClientController createClient Exception thrown: {}", e.getMessage());	    
 	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
+        log.info("ClientController createClient DONE");
 	return new ResponseEntity<Client>(response, HttpStatus.CREATED);
     }
 	
     @RequestMapping(method = RequestMethod.PUT)
     public ResponseEntity updateClient(@RequestBody Client client) {
-	Client response = null;
+        Client response = null;
 	try {
             service.updateClient(client);
 	} catch (BadRequestException e) {
             log.error("ClientController updateClient Exception thrown: {}", e.getMessage());	    
 	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
+        log.info("ClientController updateClient DONE");
 	return new ResponseEntity<Void>(HttpStatus.CREATED);
     }
 	
     @RequestMapping(method = RequestMethod.GET, value="/lazy")
     public ResponseEntity getAllClientActives() {
-	Iterable<Client> response = null;
+        Iterable<Client> response = null;
 	try {
             response = service.getAllClientActives();
 	} catch (BadRequestException e) {
             log.error("ClientController getAllClientActives Exception thrown: {}", e.getMessage());	    
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
+        log.info("ClientController getAllClientActives DONE");
 	return new ResponseEntity<Iterable>(response, HttpStatus.CREATED);
     }
 
     @RequestMapping(method = RequestMethod.GET, value="/lazy/{id}")
     public ResponseEntity getLazyByUserClient(@PathVariable("id") UUID userClientId){
-	Iterable<Client> response = null;
+        Iterable<Client> response = null;
 	try {
             response = service.getAllLazyByUserClientid(userClientId);
 	} catch (BadRequestException e) {
             log.error("ClientController getLazyByUserClient Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
+        log.info("ClientController getLazyByUserClient DONE");
 	return new ResponseEntity<Iterable>(response, HttpStatus.CREATED);
     }
     
@@ -74,6 +78,7 @@ public class ClientController {
             log.error("ClientController getClientByUserClientAndIdentification Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
+        log.info("ClientController getClientByUserClientAndIdentification DONE");
         return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
     }
 }

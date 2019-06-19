@@ -36,6 +36,7 @@ public class CreditsController {
             log.error("CreditsControler getCreditsByBillById Exception thrown: {}", e.getMessage());
 	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
+        log.info("CreditsControler getCreditsByBillById DONE");
         return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
     }
     
@@ -48,6 +49,7 @@ public class CreditsController {
             log.error("CreditsControler getCreditsOfBillByUserClientId Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
+        log.info("CreditsControler getCreditsPendingOfBillByUserClientId DONE");
 	return new ResponseEntity<List>(response, HttpStatus.ACCEPTED);
     }
     

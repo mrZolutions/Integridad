@@ -35,6 +35,7 @@ public class BillOfflineController {
             log.error("BillOfflineController createBillOffline Exception thrown: {}", e.getMessage());
 	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
+        log.info("BillOfflineController createBillOffline DONE");
         return new ResponseEntity<BillOffline>(response, HttpStatus.CREATED);
     }
     
@@ -47,6 +48,7 @@ public class BillOfflineController {
             log.error("BillOfflineController getBillOfflineById Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
+        log.info("BillOfflineController getBillOfflineById DONE");
         return new ResponseEntity<BillOffline>(response, HttpStatus.ACCEPTED);
     }
     
@@ -59,6 +61,7 @@ public class BillOfflineController {
             log.error("BillOfflineController getBillsOfflineByStringSeq Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
+        log.info("BillOfflineController getBillsOfflineByStringSeqAndSubId DONE");
         return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
     }
     
@@ -72,6 +75,7 @@ public class BillOfflineController {
             log.error("BillOfflineController getBillsOfflineByClientId Exception thrown: {}", e.getMessage());
 	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
+        log.info("BillOfflineController getBillsOfflineByClientId DONE");
         return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
     }
     
@@ -84,6 +88,7 @@ public class BillOfflineController {
             log.error("BillOfflineController getBillsOfflineByTypeDocument Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
+        log.info("BillOfflineController getBillsOfflineByTypeDocument DONE");
         return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
     }
     
@@ -95,6 +100,7 @@ public class BillOfflineController {
             log.error("BillOfflineController deactivateBillOffline Exception thrown: {}", e.getMessage());
 	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
+        log.info("BillOfflineController deactivateBillOffline DONE");
         return new ResponseEntity<Void>(HttpStatus.ACCEPTED);
     }
 }

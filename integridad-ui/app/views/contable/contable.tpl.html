@@ -1764,6 +1764,7 @@
                                 <th>Nro. Factura</th>
                                 <th>Fecha</th>
                                 <th>Valor</th>
+                                <th>Saldo</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -1776,6 +1777,7 @@
                                 <td>{{bill.stringSeq}}</td>
                                 <td>{{bill.dateCreated | date : "dd/MM/yyyy"}}</td>
                                 <td>{{bill.total}}</td>
+                                <td>{{bill.saldo}}</td>
                                 <td>
                                     <button type="button" title="Seleccionar Factura" class="btn btn-primary btn-sm" ng-click="vm.billSelectedCi(bill)"
                                             data-dismiss="modal">

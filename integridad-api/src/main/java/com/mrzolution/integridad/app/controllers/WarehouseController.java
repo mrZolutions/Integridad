@@ -34,6 +34,7 @@ public class WarehouseController {
             log.error("WarehouseController getAllWarehouseByUserClientId Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
+        log.info("WarehouseController getAllWarehouseByUserClientId DONE");
 	return new ResponseEntity<Iterable>(response, HttpStatus.CREATED);
     }
     
@@ -46,6 +47,7 @@ public class WarehouseController {
             log.error("WarehouseController getAllWarehouseById Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
+        log.info("WarehouseController getAllWarehouseById DONE");
 	return new ResponseEntity<Warehouse>(response, HttpStatus.CREATED);
     }   
 }

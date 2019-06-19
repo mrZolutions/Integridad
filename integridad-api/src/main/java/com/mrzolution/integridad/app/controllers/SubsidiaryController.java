@@ -32,6 +32,7 @@ public class SubsidiaryController {
             log.info("SubsidiaryController getByUserClientId Exception thrown: {}", e.getMessage());	    
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
+        log.info("SubsidiaryController getByUserClientId DONE");
 	return new ResponseEntity<Iterable>(response, HttpStatus.OK);
     }
 
@@ -44,6 +45,7 @@ public class SubsidiaryController {
             log.info("SubsidiaryController getSubsidiaryById Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
+        log.info("SubsidiaryController getSubsidiaryById DONE");
 	return new ResponseEntity<Subsidiary>(response, HttpStatus.OK);
     }
 }

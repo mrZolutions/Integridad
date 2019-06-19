@@ -20,13 +20,14 @@ public class CreditNoteController {
 
     @RequestMapping(method = RequestMethod.POST, value="/clave_acceso/{id}")
     public ResponseEntity getDatil(@RequestBody com.mrzolution.integridad.app.domain.ecreditNote.CreditNote requirement, @PathVariable("id") UUID userClientId) {
-	String response = null;
+        String response = null;
 	try {
             response = service.getDatil(requirement, userClientId);
 	} catch (Exception e) {
             log.error("CreditNoteController getDatil Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
+        log.info("CreditNoteController getDatil DONE");
 	return new ResponseEntity<String>(response, HttpStatus.ACCEPTED);
     }
 
@@ -39,6 +40,7 @@ public class CreditNoteController {
             log.error("CreditNoteController createCreditNote Exception thrown: {}", e.getMessage());
 	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
+        log.info("CreditNoteController createCreditNote DONE");
 	return new ResponseEntity<CreditNote>(response, HttpStatus.CREATED);
     }
 

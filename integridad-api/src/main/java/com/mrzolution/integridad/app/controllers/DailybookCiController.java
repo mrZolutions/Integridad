@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
-@RequestMapping(value = "/integridad/v1/contable/dailyci")
+@RequestMapping(value = "/integridad/v1/dailyci")
 public class DailybookCiController {
     @Autowired
     DailybookCiServices service;
@@ -35,6 +35,7 @@ public class DailybookCiController {
             log.error("DailybookCiController getDailybookCiById Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
+        log.info("DailybookCiController getDailybookCiById DONE");
         return new ResponseEntity<DailybookCi>(response, HttpStatus.ACCEPTED);
     }
     
@@ -47,6 +48,7 @@ public class DailybookCiController {
             log.error("DailybookCiController getDailybookCiByClientId Exception thrown: {}", e.getMessage());
 	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
+        log.info("DailybookCiController getDailybookCiByClientId DONE");
         return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
     }
     
@@ -59,6 +61,7 @@ public class DailybookCiController {
             log.error("DailybookCiController getDailybookCiByUserClientId Exception thrown: {}", e.getMessage());
 	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
+        log.info("DailybookCiController getDailybookCiByUserClientId DONE");
         return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
     }
     
@@ -71,6 +74,7 @@ public class DailybookCiController {
             log.error("DailybookCiController getDailybookCiByUserClientIdWithNoProvider Exception thrown: {}", e.getMessage());
 	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
+        log.info("DailybookCiController getDailybookCiByUserClientIdWithNoClient DONE");
         return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
     }
     
@@ -83,18 +87,20 @@ public class DailybookCiController {
             log.error("DailybookCiController getDailybookCiByUserClientIdAndClientIdAndBillNumber Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
+        log.info("DailybookCiController getDailybookCiByUserClientIdAndClientIdAndBillNumber DONE");
         return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
     }
     
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity createDailybookCi(@RequestBody DailybookCi dailybookCi) {
-	DailybookCi response = null;
+        DailybookCi response = null;
 	try {
             response = service.createDailybookCi(dailybookCi);
 	} catch (BadRequestException e) {
             log.error("DailybookCiController createDailybookCi Exception thrown: {}", e.getMessage());
 	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
+        log.info("DailybookCiController createDailybookCi DONE");
         return new ResponseEntity<DailybookCi>(response, HttpStatus.CREATED);
     }
     
@@ -106,6 +112,7 @@ public class DailybookCiController {
             log.error("DailybookCiController deactivateDailybookCi Exception thrown: {}", e.getMessage());
 	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
+        log.info("DailybookCiController deactivateDailybookCi DONE");
         return new ResponseEntity<Void>(HttpStatus.ACCEPTED);
     }
 }

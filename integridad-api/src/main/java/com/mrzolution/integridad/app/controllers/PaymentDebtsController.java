@@ -38,6 +38,7 @@ public class PaymentDebtsController {
             log.error("PaymentDebtsController createPaymentDebts Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
+        log.info("PaymentDebtsController createPaymentDebts DONE");
         return new ResponseEntity<PaymentDebts>(response, HttpStatus.CREATED);
     }
     
@@ -50,6 +51,7 @@ public class PaymentDebtsController {
             log.error("PaymentDebtsController getPaymentDebtsByUserClientIdAndDates Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
+        log.info("PaymentDebtsController getPaymentDebtsByUserClientIdAndDates DONE");
         return new ResponseEntity<List>(response, HttpStatus.ACCEPTED);
     }
     
@@ -62,6 +64,7 @@ public class PaymentDebtsController {
             log.error("PaymentDebtsController getStatementProviderReport Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
+        log.info("PaymentDebtsController getStatementProviderReport");
         return new ResponseEntity<List>(response, HttpStatus.ACCEPTED);
     }
     
@@ -74,6 +77,7 @@ public class PaymentDebtsController {
             log.error("PaymentDebtsController getPaymentDebtsByUserClientIdWithBankAndNroDocument Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
+        log.info("PaymentDebtsController getPaymentDebtsByUserClientIdWithBankAndNroDocument DONE");
         return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
     }
     
@@ -86,6 +90,7 @@ public class PaymentDebtsController {
             log.error("PaymentDebtsController getPaymentDebtsByProviderId Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
+        log.info("PaymentDebtsController getPaymentsDebtsByProviderId DONE");
         return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
     }
     
@@ -97,6 +102,7 @@ public class PaymentDebtsController {
             log.error("PaymentDebtsController deactivatePaymentDebts Exception thrown: {}", e.getMessage());
     	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
+        log.info("PaymentDebtsController deactivatePaymentDebts DONE");
         return new ResponseEntity<Void>(HttpStatus.ACCEPTED);
     }
 }

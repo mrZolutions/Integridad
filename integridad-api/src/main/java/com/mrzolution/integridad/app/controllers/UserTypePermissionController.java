@@ -23,7 +23,6 @@ public class UserTypePermissionController {
 
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity createUserTypePermissions(@RequestBody UserTypePermissions userTypePermission) {
-        log.info("UserTypePermissionController createUserTypePermissions: {}", userTypePermission);
 	UserTypePermissions response = null;
 	try {
             response = service.createUserTypePermissions(userTypePermission);
@@ -31,12 +30,12 @@ public class UserTypePermissionController {
             log.error("UserTypePermissionController createUserTypePermissions Exception thrown: {}", e.getMessage());    
 	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
+        log.info("UserTypePermissionController createUserTypePermissions DONE");
 	return new ResponseEntity<UserTypePermissions>(response, HttpStatus.CREATED);
     }
 	
     @RequestMapping(method = RequestMethod.POST, value="/user_type")
     public ResponseEntity getByUserType(@RequestBody UserType userType) {
-	log.info("UserTypePermissionController getByUserType");
 	Iterable<UserTypePermissions> response = null;
 	try {
             response = service.getByUserType(userType);
@@ -44,6 +43,7 @@ public class UserTypePermissionController {
             log.info("UserTypePermissionController getByUserType Exception thrown: {}", e.getMessage());	    
 	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
+        log.info("UserTypePermissionController getByUserType DONE");
 	return new ResponseEntity<Iterable>(response, HttpStatus.OK);
     }
 }

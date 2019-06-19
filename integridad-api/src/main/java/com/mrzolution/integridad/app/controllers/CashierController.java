@@ -19,25 +19,27 @@ public class CashierController {
     CashierServices service;
 
     @RequestMapping(method = RequestMethod.GET, value="/subsidiary/{id}")
-    public ResponseEntity getAllBySubsidiaryActivesLazy(@PathVariable("id") UUID subsidiaryId) {
-	Iterable<Cashier> response = null;
+    public ResponseEntity getBySubsidiaryActivesLazy(@PathVariable("id") UUID subsidiaryId) {
+        Iterable<Cashier> response = null;
 	try {
             response = service.getAllBySubsidiaryActivesLazy(subsidiaryId);
 	} catch (BadRequestException e) {
-            log.info("SubsidiaryController getByUserClientId Exception thrown: {}", e.getMessage());	    
+            log.info("CashierController getBySubsidiaryActivesLazy Exception thrown: {}", e.getMessage());	    
 	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
+        log.info("CashierController getBySubsidiaryActivesLazy DONE");
 	return new ResponseEntity<Iterable>(response, HttpStatus.OK);
     }
 
     @RequestMapping(method = RequestMethod.PUT)
     public ResponseEntity updateCashier(@RequestBody Cashier cashier) {
-	try {
+        try {
             service.updateCashier(cashier);
 	} catch (BadRequestException e) {
-            log.error("CashierController update Exception thrown: {}", e.getMessage());
+            log.error("CashierController updateCashier Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
+        log.info("CashierController updateCashier DONE");
 	return new ResponseEntity<Void>(HttpStatus.ACCEPTED);
     }
 

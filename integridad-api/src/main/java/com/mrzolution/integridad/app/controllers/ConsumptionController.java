@@ -37,6 +37,7 @@ public class ConsumptionController {
             log.error("ConsumptionController getAllConsumptionById Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
+        log.info("ConsumptionController getAllConsumptionById DONE");
         return new ResponseEntity<Consumption>(response, HttpStatus.ACCEPTED);
     }
     
@@ -49,6 +50,7 @@ public class ConsumptionController {
             log.error("ConsumptionController createConsumption Exception thrown: {}", e.getMessage());
 	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
+        log.info("ConsumptionController createConsumption DONE");
         return new ResponseEntity<Consumption>(response, HttpStatus.ACCEPTED);
     }
     
@@ -61,6 +63,7 @@ public class ConsumptionController {
             log.error("ConsumptionController getAllConsumptionByClientId Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
+        log.info("ConsumptionController getAllConsumptionByClientId DONE");
         return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
     }
     
@@ -73,6 +76,7 @@ public class ConsumptionController {
             log.error("ConsumptionController getByUserClientIdAndDatesActives Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
+        log.info("ConsumptionController getByUserClientIdAndDatesActives DONE");
         return new ResponseEntity<List>(response, HttpStatus.ACCEPTED);
     }
 }

@@ -74,50 +74,43 @@ public class PaymentServices {
 	return payments;
     }
     
-    //@Async("asyncExecutor")
     public Payment createPayment(Payment payment) {
         payment.setActive(true);
         payment.setFatherListToNull();
         payment.setListsNull();
         Payment saved = paymentRepository.save(payment);
-        document = saved.getCredits().getPago().getBill().getId().toString();
         if (saved.getCredits().getId() != null) {
             if ("PAC".equals(saved.getTypePayment())){
                 abono = saved.getValorAbono();
             } else {
                 abono = saved.getValorNotac();
             }
-            updateCreditsAndBill(saved, document);
+            updateCreditsAndBill(saved);
         }
-        log.info("PaymentServices createPayment DONE id: {}", saved.getId());
+        log.info("PaymentServices createPayment DONE: {}, {}", saved.getId(), saved.getDocumentNumber());
 	return saved;
     }
     
-    public void updateCreditsAndBill(Payment saved, String document){
-        Credits cambio = creditsRepository.findOne(saved.getCredits().getId());
-        nume = cambio.getValor();
-        resto = nume - abono;
-        BigDecimal vrestado = new BigDecimal(resto);
-        vrestado = vrestado.setScale(2, BigDecimal.ROUND_HALF_UP);
-        cambio.setValor(vrestado.doubleValue());
-        Credits creditSaved = creditsRepository.save(cambio);
-        if (creditSaved != null) {
-            Bill billed = billRepository.findOne(saved.getCredits().getPago().getBill().getId());
-            String nbillId = billed.getId().toString();
-            if (nbillId.equals(document)) {
-                BigDecimal vsumado = new BigDecimal(creditSaved.getValor());
-                if (creditSaved.getValor() == 0) {
-                    vsumado = vsumado.setScale(0, BigDecimal.ROUND_HALF_UP);
+    public void updateCreditsAndBill(Payment saved){
+        Iterable<Credits> credits = creditsRepository.findCreditsById(saved.getCredits().getId());
+        credits.forEach(credit -> {
+            credit.setValor(credit.getValor() - saved.getValorAbono());
+            Credits Valor = creditsRepository.save(credit);
+            Iterable<Bill> bills = billRepository.findBillById(Valor.getPago().getBill().getId());
+            bills.forEach(bill -> {
+                resto = Valor.getValor();
+                BigDecimal vresto = new BigDecimal(resto);
+                if (Valor.getValor() == 0) {
+                    vresto = vresto.setScale(0, BigDecimal.ROUND_HALF_UP);
                 } else {
-                    vsumado = vsumado.setScale(2, BigDecimal.ROUND_HALF_UP);
+                    vresto = vresto.setScale(2, BigDecimal.ROUND_HALF_UP);
                 }
-                saldo = String.valueOf(vsumado);
-                billed.setSaldo(saldo);
-                billRepository.save(billed);
-            }
-        }
+                saldo = String.valueOf(vresto);
+                bill.setSaldo(saldo);
+                billRepository.save(bill);
+            });
+        });
         log.info("PaymentServices updateCreditsAndBill DONE");
-        nume = 0;
         resto = 0;
         saldo = "";
     }

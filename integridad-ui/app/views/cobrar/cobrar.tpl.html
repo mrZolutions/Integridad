@@ -857,9 +857,9 @@
                                 </tr>
                                 <tr ng-repeat="mp in vm.itemsMultiplePayments">
                                     <td>{{mp.bill_number}}</td>
-                                    <td>{{mp.bill_total.toFixed(2)}}</td>
+                                    <td>{{mp.bill_total}}</td>
                                     <td>{{mp.bill_pending.toFixed(2)}}</td>
-                                    <td>{{mp.bill_abono.toFixed(2)}}</td>
+                                    <td>{{mp.bill_abono}}</td>
                                     <td>
                                         <button type = "button" title = "Eliminar Abono" class = "btn btn-primary btn-sm" 
                                                 ng-click = "vm.eliminaAbono($index)">

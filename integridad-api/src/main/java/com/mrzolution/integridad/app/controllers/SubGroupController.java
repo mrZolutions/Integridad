@@ -27,17 +27,19 @@ public class SubGroupController {
             log.error("SubGroupController createSubGroup Exception thrown: {}", e.getMessage());
 	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
+        log.info("SubGroupController createSubGroup DONE");
 	return new ResponseEntity<SubGroup>(response, HttpStatus.CREATED);
     }
 	
     @RequestMapping(method = RequestMethod.PUT)
     public ResponseEntity updateSubGroup(@RequestBody SubGroup subGroup) {
-	try {
+        try {
             service.updateSubGroup(subGroup);
 	} catch (BadRequestException e) {
             log.error("SubGroupController updateSubGroup Exception thrown: {}", e.getMessage());
 	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
+        log.info("SubGroupController updateSubGroup DONE");
 	return new ResponseEntity<Void>(HttpStatus.ACCEPTED);
     }
 	
@@ -50,18 +52,20 @@ public class SubGroupController {
             log.error("SubGroupController deleteSubGroup Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
+        log.info("SubGroupController deleteSubGroup DONE");
 	return new ResponseEntity<SubGroup>(response, HttpStatus.ACCEPTED);
     }
 
     @RequestMapping(method = RequestMethod.GET, value="/actives/{groupLineId}")
     public ResponseEntity getAllActivesByGroupLineId(@PathVariable("groupLineId") UUID groupLindeId) {
-	Iterable<SubGroup> response = null;
+        Iterable<SubGroup> response = null;
 	try {
             response = service.getAllActivesByGroupLineId(groupLindeId);
 	} catch (BadRequestException e) {
             log.error("SubGroupController getAllActivesByLineId Exception thrown: {}", e.getMessage());
 	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
+        log.info("SubGroupController getAllActivesByGroupLineId DONE");
 	return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
     }
 
@@ -74,7 +78,7 @@ public class SubGroupController {
             log.error("SubGroupController getAllActivesByGroupLineIdLazy Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
+        log.info("SubGroupController getAllActivesByGroupLineIdLazy DONE");
 	return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
     }
-
 }

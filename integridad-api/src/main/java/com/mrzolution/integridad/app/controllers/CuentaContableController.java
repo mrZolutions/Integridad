@@ -20,61 +20,65 @@ public class CuentaContableController {
 
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity createCuentaContable(@RequestBody CuentaContable cuentaContable) {
-	CuentaContable response = null;
+        CuentaContable response = null;
 	try {
             response = service.createCuentaContable(cuentaContable);
 	} catch(BadRequestException e) {
-            log.error("CuentaContableController create Exception thrown: {}", e.getMessage());
+            log.error("CuentaContableController createCuentaContable Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
+        log.info("CuentaContableController createCuentaContable DONE");
 	return new ResponseEntity<CuentaContable>(response, HttpStatus.CREATED);
     }
     
     @RequestMapping(method = RequestMethod.PUT)
     public ResponseEntity updateCuentaContable(@RequestBody CuentaContable cuentaContable) {
-        CuentaContable response = null;
         try {
             service.updateCuentaContable(cuentaContable);
         } catch (BadRequestException e) {
             log.error("CuentaContableController updateCuentaContable Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
+        log.info("CuentaContableController updateCuentaContable DONE");
         return new ResponseEntity<Void>(HttpStatus.CREATED);
     }
     
     @RequestMapping(method = RequestMethod.GET, value="/userclient/{id}")
     public ResponseEntity getCuentaContableByUserClient(@PathVariable("id") UUID id) {
-	Iterable<CuentaContable> response = null;
+        Iterable<CuentaContable> response = null;
 	try {
             response = service.getCuentaContableByUserClient(id);
 	} catch (BadRequestException e) {
             log.error("CuentaContableController getCuentaContableByUserClient Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
+        log.info("CuentaContableController getCuentaContableByUserClient DONE");
 	return new ResponseEntity<Iterable>(response, HttpStatus.CREATED);
     }
     
     @RequestMapping(method = RequestMethod.GET, value="/userclient/nobank/{id}")
     public ResponseEntity getCuentaContableByUserClientNoBank(@PathVariable("id") UUID id) {
-	Iterable<CuentaContable> response = null;
+        Iterable<CuentaContable> response = null;
 	try {
             response = service.getCuentaContableByUserClientNoBank(id);
 	} catch (BadRequestException e) {
             log.error("CuentaContableController getCuentaContableByUserClientNoBank Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
+        log.info("CuentaContableController getCuentaContableByUserClientNoBank DONE");
 	return new ResponseEntity<Iterable>(response, HttpStatus.CREATED);
     }
     
     @RequestMapping(method = RequestMethod.GET, value="/userclient/bank/{id}")
     public ResponseEntity getCuentaContableByUserClientAndBank(@PathVariable("id") UUID id) {
-	Iterable<CuentaContable> response = null;
+        Iterable<CuentaContable> response = null;
 	try {
             response = service.getCuentaContableByUserClientAndBank(id);
 	} catch (BadRequestException e) {
             log.error("CuentaContableController getCuentaContableByUserClientAndBank Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
+        log.info("CuentaContableController getCuentaContableByUserClientAndBank DONE");
 	return new ResponseEntity<Iterable>(response, HttpStatus.CREATED);
     }
     
@@ -87,6 +91,7 @@ public class CuentaContableController {
             log.error("CuentaContableController getCuentaContableByType Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
+        log.info("CuentaContableController getCuentaContableByType DONE");
         return new ResponseEntity<Iterable>(response, HttpStatus.CREATED);
     }
     
@@ -99,6 +104,7 @@ public class CuentaContableController {
             log.error("CuentaContableController getCuentaContableByTypeAndAccountType Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
+        log.info("CuentaContableController getCuentaContableByTypeAndAccountType DONE");
         return new ResponseEntity<Iterable>(response, HttpStatus.CREATED);
     }
 }

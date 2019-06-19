@@ -36,6 +36,7 @@ public class CreditsDebtsController {
             log.error("CreditsDebtsController getCreditsDebtsByDebtsToPayId Exception thrown: {}", e.getMessage());
 	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
+        log.info("CreditsDebtsController getCreditsDebtsByDebtsToPayId DONE");
         return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
     }
     
@@ -48,6 +49,7 @@ public class CreditsDebtsController {
             log.error("CreditsDebtsController getCreditsDebtsPendingOfDebtsToPayByUserClientId Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
+        log.info("CreditsDebtsController getCreditsDebtsPendingOfDebtsToPayByUserClientId DONE");
 	return new ResponseEntity<List>(response, HttpStatus.ACCEPTED);
     }
     

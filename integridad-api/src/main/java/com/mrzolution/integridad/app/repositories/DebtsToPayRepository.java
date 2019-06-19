@@ -22,6 +22,9 @@ public interface DebtsToPayRepository extends CrudRepository<DebtsToPay, UUID> {
     @Query("SELECT dp FROM DebtsToPay dp WHERE dp.provider.id = (:id) AND dp.active = true ORDER BY dp.billNumber")
     Iterable<DebtsToPay> findDebtsToPayByProviderId(@Param("id") UUID id);
     
+    @Query("SELECT dp FROM DebtsToPay dp WHERE dp.id = (:id) AND dp.active = true")
+    Iterable<DebtsToPay> findDebtsToPayById(@Param("id") UUID id);
+    
     @Query("SELECT dp FROM DebtsToPay dp WHERE dp.provider.id = (:id) AND dp.saldo > 0 AND dp.estado = 'PENDIENTE' AND dp.active = true ORDER BY dp.billNumber")
     Iterable<DebtsToPay> findDebtsToPayByProviderIdWithSaldo(@Param("id") UUID id);
     

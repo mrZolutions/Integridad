@@ -37,6 +37,7 @@ public class RetentionClientController {
             log.error("RetentionClientController getRetentionClientById Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
+        log.info("RetentionClientController getRetentionClientById DONE");
 	return new ResponseEntity<RetentionClient>(response, HttpStatus.ACCEPTED);
     }
     
@@ -49,30 +50,33 @@ public class RetentionClientController {
             log.error("RetentionClientController getRetentionClientByBillId Exception thrown: {}", e.getMessage());
 	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
+        log.info("RetentionClientController getRetentionClientByBillId DONE");
         return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
     }
     
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity createRetentionClient(@RequestBody RetentionClient retentionClient) {
-	RetentionClient response = null;
+        RetentionClient response = null;
 	try {
             response = service.createRetentionClient(retentionClient);
 	} catch (BadRequestException e) {
             log.error("RetentionClientController createRetentionClient Exception thrown: {}", e.getMessage());
 	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
+        log.info("RetentionClientController createRetentionClient DONE");
         return new ResponseEntity<RetentionClient>(response, HttpStatus.CREATED);
     }
     
     @RequestMapping(method = RequestMethod.GET, value="/rep/retenclient/{userClientId}/{dateOne}/{dateTwo}")
     public ResponseEntity getRetentionClientByUserClientIdAndDates(@PathVariable("userClientId") UUID userClientId, @PathVariable("dateOne") long dateOne, @PathVariable("dateTwo") long dateTwo) {
-	List<RetentionClientReport> response = null;
+        List<RetentionClientReport> response = null;
 	try {
             response = service.getRetentionClientByUserClientIdAndDates(userClientId, dateOne, dateTwo);
 	} catch (BadRequestException e) {
             log.error("RetentionClientController getRetentionClientByUserClientIdAndDates Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
+        log.info("RetentionClientController getRetentionClientByUserClientIdAndDates DONE");
 	return new ResponseEntity<List>(response, HttpStatus.ACCEPTED);
     }
     
@@ -85,6 +89,7 @@ public class RetentionClientController {
             log.error("RetentionClientController getRetCliByDocumentNumberAndBillId Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
+        log.info("RetentionClientController getRetentionClientByBillIdAndDocumentNumber DONE");
         return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
     }
     
@@ -96,6 +101,7 @@ public class RetentionClientController {
             log.error("RetentionClientController deactivateRetentionClient Exception thrown: {}", e.getMessage());
 	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
+        log.info("RetentionClientController deactivateRetentionClient DONE");
         return new ResponseEntity<Void>(HttpStatus.ACCEPTED);
     }
 }

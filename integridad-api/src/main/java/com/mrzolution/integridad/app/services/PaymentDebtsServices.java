@@ -96,30 +96,26 @@ public class PaymentDebtsServices {
             } else {
                 abono = saved.getValorReten();
             }
-            updateCreditsDebtsAndDebtsToPay(saved, document);
+            updateCreditsDebtsAndDebtsToPay(saved);
         }
-        log.info("PaymentDebtsServices createPaymentDebts DONE id: {}", saved.getId());
+        log.info("PaymentDebtsServices createPaymentDebts DONE: {}, {}", saved.getId(), saved.getDocumentNumber());
         return saved;
     }
     
-    public void updateCreditsDebtsAndDebtsToPay(PaymentDebts saved, String document) {
-        CreditsDebts cambio = creditsDebtsRepository.findOne(saved.getCreditsDebts().getId());
-        nume = cambio.getValor();
-        resto = nume - abono;
-        BigDecimal vrestado = new BigDecimal(resto);
-        vrestado = vrestado.setScale(2, BigDecimal.ROUND_HALF_UP);
-        cambio.setValor(vrestado.doubleValue());
-        CreditsDebts creditDebtsSaved = creditsDebtsRepository.save(cambio);
-        if (creditDebtsSaved != null) {
-            DebtsToPay debts = debtsToPayRepository.findOne(saved.getCreditsDebts().getPagoDebts().getDebtsToPay().getId());
-            String debtsToPayId = debts.getId().toString();
-            if (debtsToPayId.equals(document)) {
-                BigDecimal vsumado = new BigDecimal(creditDebtsSaved.getValor());
-                vsumado = vsumado.setScale(2, BigDecimal.ROUND_HALF_UP);
-                debts.setSaldo(vsumado.doubleValue());
-                debtsToPayRepository.save(debts);
-            }
-        }
+    public void updateCreditsDebtsAndDebtsToPay(PaymentDebts saved) {
+        Iterable<CreditsDebts> creditsDebts = creditsDebtsRepository.findCreditsDebtsById(saved.getCreditsDebts().getId());
+        creditsDebts.forEach(creditDebt -> {
+            creditDebt.setValor(creditDebt.getValor() - saved.getValorAbono());
+            CreditsDebts Valor = creditsDebtsRepository.save(creditDebt);
+            Iterable<DebtsToPay> debts = debtsToPayRepository.findDebtsToPayById(Valor.getPagoDebts().getDebtsToPay().getId());
+            debts.forEach(debt -> {
+                resto = Valor.getValor();
+                BigDecimal vresto = new BigDecimal(resto);
+                vresto = vresto.setScale(2, BigDecimal.ROUND_HALF_UP);
+                debt.setSaldo(vresto.doubleValue());
+                debtsToPayRepository.save(debt);
+            });
+        });
         log.info("PaymentDebtsServices updateCreditsDebtsAndDebtsToPay DONE");
         nume = 0;
         resto = 0;

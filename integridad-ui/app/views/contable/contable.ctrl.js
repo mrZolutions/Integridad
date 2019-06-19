@@ -916,10 +916,10 @@ angular.module('integridadUiApp')
             vm.loading = true;
             $('#modalShowBillsCi').modal('hide');
             vm.billNumber = bill.stringSeq;
-            vm.billTotal = bill.total;
+            vm.billSaldo = bill.saldo;
             vm.generalDetailCi = vm.clientName + ' ' + 'Cancela Fc' + ' ' + vm.billNumber;
             vm.dailybookCi.billNumber = vm.billNumber;
-            vm.dailybookCi.total = (vm.billTotal).toFixed(2);
+            vm.dailybookCi.total = vm.billSaldo;
             vm.itemClient = {
                 typeContab: vm.typeContab,
                 codeConta: vm.clientContable,

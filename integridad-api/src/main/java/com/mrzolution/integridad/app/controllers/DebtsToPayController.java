@@ -37,6 +37,7 @@ public class DebtsToPayController {
             log.error("DebtsToPayController getDebtsToPayById Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
+        log.info("DebtsToPayController getDebtsToPayById DONE");
         return new ResponseEntity<DebtsToPay>(response, HttpStatus.ACCEPTED);
     }
     
@@ -49,6 +50,7 @@ public class DebtsToPayController {
             log.error("DebtsToPayController getDebtsToPayByDebtsSeqAndSubId Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
+        log.info("DebtsToPayController getDebtsToPayByDebtsSeqAndSubId DONE");
         return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
     }
     
@@ -61,6 +63,7 @@ public class DebtsToPayController {
             log.error("DebtsToPayController getDebtsToPayByBillNumberAndAuthoNumber Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
+        log.info("DebtsToPayController getDebtsToPayByBillNumberAndAuthoNumber DONE");
         return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
     }
     
@@ -73,6 +76,7 @@ public class DebtsToPayController {
             log.error("DebtsToPayController getDebtsByProviderId Exception thrown: {}", e.getMessage());
 	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
+        log.info("DebtsToPayController getDebtsToPayByProviderId DONE");
         return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
     }
     
@@ -85,6 +89,7 @@ public class DebtsToPayController {
             log.error("DebtsToPayController getDebtsToPayByUserClientId Exception thrown: {}", e.getMessage());
 	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
+        log.info("DebtsToPayController getDebtsToPayByUserClientId DONE");
         return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
     }
     
@@ -97,18 +102,20 @@ public class DebtsToPayController {
             log.error("DebtsToPayController getDebtsToPayByProviderIdWithSaldo Exception thrown: {}", e.getMessage());
 	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
+        log.info("DebtsToPayController getDebtsToPayByProviderIdWithSaldo DONE");
         return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
     }
     
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity createDebtsToPay(@RequestBody DebtsToPay debtsToPay) {
-	DebtsToPay response = null;
+        DebtsToPay response = null;
 	try {
             response = service.createDebtsToPay(debtsToPay);
 	} catch (BadRequestException e) {
             log.error("DebtsToPayController createDebtsToPay Exception thrown: {}", e.getMessage());
 	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
+        log.info("DebtsToPayController createDebtsToPay DONE");
         return new ResponseEntity<DebtsToPay>(response, HttpStatus.CREATED);
     }
     
@@ -120,6 +127,7 @@ public class DebtsToPayController {
             log.error("DebtsToPayController deactivateDebtsToPay Exception thrown: {}", e.getMessage());
     	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
+        log.info("DebtsToPayController deactivateDebtsToPay DONE");
         return new ResponseEntity<Void>(HttpStatus.ACCEPTED);
     }
     
@@ -133,6 +141,7 @@ public class DebtsToPayController {
             log.error("DebtsToPayController getDebtsToPayByUserClientIdAndDatesActives Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
+        log.info("DebtsToPayController getDebtsToPayByUserClientIdAndDates DONE");
         return new ResponseEntity<List>(response, HttpStatus.ACCEPTED);
     }
 }

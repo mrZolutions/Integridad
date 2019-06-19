@@ -21,20 +21,21 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
-@RequestMapping(value = "/integridad/v1/contable/dailycg")
+@RequestMapping(value = "/integridad/v1/dailycg")
 public class DailybookCgController {
     @Autowired
     DailybookCgServices service;
     
     @RequestMapping(method = RequestMethod.GET, value="/{id}")
     public ResponseEntity getDailybookCgById(@PathVariable("id") UUID id) {
-	DailybookCg response = null;
+        DailybookCg response = null;
 	try {
             response = service.getDailybookCgById(id);
 	} catch (BadRequestException e) {
             log.error("DailybookCgController getDailybookCgById Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
+        log.info("DailybookCgController getDailybookCgById DONE");
         return new ResponseEntity<DailybookCg>(response, HttpStatus.ACCEPTED);
     }
     
@@ -47,18 +48,20 @@ public class DailybookCgController {
             log.error("DailybookCgController getDailybookCgByUserClientId Exception thrown: {}", e.getMessage());
 	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
+        log.info("DailybookCgController getDailybookCgByUserClientId DONE");
         return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
     }
     
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity createDailybookCg(@RequestBody DailybookCg dailybookCg) {
-	DailybookCg response = null;
+        DailybookCg response = null;
 	try {
             response = service.createDailybookCg(dailybookCg);
 	} catch (BadRequestException e) {
             log.error("DailybookCgController createDailybookCg Exception thrown: {}", e.getMessage());
 	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
+        log.info("DailybookCgController createDailybookCg DONE");
         return new ResponseEntity<DailybookCg>(response, HttpStatus.CREATED);
     }
     
@@ -70,6 +73,7 @@ public class DailybookCgController {
             log.error("DailybookCgController deactivateDailybookCg Exception thrown: {}", e.getMessage());
 	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
+        log.info("DailybookCgController deactivateDailybookCg DONE");
         return new ResponseEntity<Void>(HttpStatus.ACCEPTED);
     }
 }
