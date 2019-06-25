@@ -884,7 +884,21 @@ angular.module('integridadUiApp')
         vm.providerList = undefined;
     };
 
+    vm.cancelProvider = function() {
+        vm.error = undefined;
+        vm.success = undefined;
+        vm.provider = undefined;
+        providerService.getLazyByUserClientId(vm.usrCliId).then(function(response) {
+            vm.providerList = response;
+            vm.loading = false;
+        }).catch(function(error) {
+            vm.loading = false;
+            vm.error = error.data;
+        });
+    };
+
     function createProvider() {
+      console.log(vm.usrCliId, ' == ', vm.provider.ruc);
         providerService.getProviderByUserClientIdAndRuc(vm.usrCliId, vm.provider.ruc).then(function(response) {
             if (response.length === 0) {
                 providerService.create(vm.provider).then(function(responseProv) {
@@ -908,7 +922,7 @@ angular.module('integridadUiApp')
             vm.loading = false;
             vm.error = error.data;
         });
-    };
+      };
 
     vm.registerProvider = function() {
         var idValid = true;
@@ -1000,6 +1014,12 @@ angular.module('integridadUiApp')
         userClient: $localStorage.user.subsidiary.userClient,
         productBySubsidiaries: []
       };
+    };
+
+    vm.cancelProduct = function() {
+      vm.success = undefined;
+      vm.error = undefined
+      vm.wizard = undefined;
     };
 
     vm.wiz2 = function() {
