@@ -188,13 +188,22 @@ public class ConsumptionServices {
             Double subTotalTotal = new Double(0);
             Double ivaTotal = new Double(0);
             Double totalTotal = new Double(0);
+            Double iva = new Double(0);
+            Double total = new Double(0);
             String code = "";
             String desc = "";
             for (Consumption consumption: consumptions) {
                 for (DetailConsumption detail: consumption.getDetailsConsumption()) {
                     if (uuidCurrent.equals(detail.getProduct().getId())) {
+                        if (detail.getProduct().isIva()) {
+                            iva = 0.12;
+                            total = 1.12;
+                        } else {
+                            iva = 0.0;
+                            total = 1.0;
+                        }
                         CsmItemReport item = new CsmItemReport(detail.getProduct().getId(),"", consumption.getCsmNumberSeq(), detail.getProduct().getCodeIntegridad(), detail.getProduct().getName(),Double.valueOf(detail.getQuantity()),
-                                                                detail.getCostEach(), detail.getTotal(), (detail.getTotal() * 0.12), (detail.getTotal() * 1.12), consumption.getClientName());
+                                                                detail.getCostEach(), detail.getTotal(), (detail.getTotal() * iva), (detail.getTotal() * total), consumption.getClientName());
                         quantityTotal += item.getQuantity();
                         subTotalTotal += item.getSubTotal();
                         ivaTotal += item.getIva();

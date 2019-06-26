@@ -241,11 +241,20 @@ public class CellarServices {
                 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd");
                 String fechaIngreso = dateFormat.format(new Date(cellar.getDateEnterCellar()));
                 String fechaBill = dateFormat.format(new Date(cellar.getDateBill()));
+                Double iva = new Double(0);
+                Double total = new Double(0);
                 for (DetailCellar detail: cellar.getDetailsCellar()) {
                     if (uuidCurrent.equals(detail.getProduct().getId())) {
+                        if (detail.getProduct().isIva()) {
+                            iva = 0.12;
+                            total = 1.12;
+                        } else {
+                            iva = 0.0;
+                            total = 1.0;
+                        }
                         CellarEntryReport item = new CellarEntryReport(fechaIngreso, cellar.getWhNumberSeq(), cellar.getProvider().getRazonSocial(), fechaBill,
                                                                         cellar.getBillNumber(), detail.getProduct().getName(), detail.getQuantity(), detail.getCostEach(),
-                                                                        (detail.getTotal() * 0.12), (detail.getTotal() * 1.12));
+                                                                        (detail.getTotal() * iva), (detail.getTotal() * total));
                         reportList.add(item);
                     }
                 }

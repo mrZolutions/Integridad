@@ -302,14 +302,23 @@ public class BillServices {
             Double discountTotal = new Double(0);
             Double ivaTotal = new Double(0);
             Double totalTotal = new Double(0);
+            Double iva = new Double(0);
+            Double total = new Double(0);
             String code = "";
             String desc = "";
             for (Bill bill: bills) {
                 for (Detail detail: bill.getDetails()) {
                     if (uuidCurrent.equals(detail.getProduct().getId())) {
+                        if (detail.getProduct().isIva()) {
+                            iva = 0.12;
+                            total = 1.12;
+                        } else {
+                            iva = 0.0;
+                            total = 1.0;
+                        }
                         Double discount = Double.valueOf(Double.valueOf(bill.getDiscountPercentage())/100) * detail.getTotal();
                         ItemReport item = new ItemReport(detail.getProduct().getId(),"", bill.getStringSeq(), detail.getProduct().getCodeIntegridad(),
-					detail.getProduct().getName(),Double.valueOf(detail.getQuantity()), detail.getCostEach(), detail.getTotal(), discount, ((detail.getTotal()-discount) * 0.12), ((detail.getTotal()-discount) * 1.12));
+					detail.getProduct().getName(),Double.valueOf(detail.getQuantity()), detail.getCostEach(), detail.getTotal(), discount, ((detail.getTotal()- discount) * iva), ((detail.getTotal()- discount) * total));
                         quantityTotal += item.getQuantity();
                         subTotalTotal += item.getSubTotal();
                         discountTotal += item.getDiscount();
