@@ -898,17 +898,18 @@ angular.module('integridadUiApp')
     };
 
     function createProvider() {
-      console.log(vm.usrCliId, ' == ', vm.provider.ruc);
         providerService.getProviderByUserClientIdAndRuc(vm.usrCliId, vm.provider.ruc).then(function(response) {
             if (response.length === 0) {
                 providerService.create(vm.provider).then(function(responseProv) {
                   providerService.getLazyByUserClientId(vm.usrCliId).then(function(response) {
+                      vm.provider = undefined;
                       vm.providerList = response;
                       vm.loading = false;
                   }).catch(function(error) {
                       vm.loading = false;
                       vm.error = error.data;
                   });
+                    vm.error = undefined;
                     vm.success = 'Registro realizado con exito';
                 }).catch(function(error) {
                     vm.loading = false;
