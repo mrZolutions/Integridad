@@ -21,15 +21,15 @@ public interface CreditsDebtsRepository extends CrudRepository<CreditsDebts, UUI
     
     CreditsDebts findByDebtsToPayId(String debtsToPayId);
     
-    @Query("SELECT c FROM CreditsDebts c JOIN c.pagoDebts p JOIN p.debtsToPay d WHERE d.id = :id AND c.estadoCredits = 'PENDIENTE'")
+    @Query("SELECT c FROM CreditsDebts c JOIN c.pagoDebts p JOIN p.debtsToPay d WHERE d.id = (:id) AND d.active = true AND c.estadoCredits = 'PENDIENTE'")
     Iterable<CreditsDebts> findCreditsDebtsByDebtsToPayId(@Param("id") UUID id);
     
-    @Query("SELECT c FROM CreditsDebts c WHERE c.id = :id")
+    @Query("SELECT c FROM CreditsDebts c WHERE c.id = (:id)")
     Iterable<CreditsDebts> findCreditsDebtsById(@Param("id") UUID id);
     
-    @Query("SELECT c FROM CreditsDebts c WHERE c.pagoDebts.id = :id")
+    @Query("SELECT c FROM CreditsDebts c WHERE c.pagoDebts.id = (:id)")
     Iterable<CreditsDebts> findCreditsDebtsByPagoDebtsId(@Param("id") UUID id);
     
-    @Query("SELECT c FROM CreditsDebts c JOIN c.pagoDebts p JOIN p.debtsToPay d JOIN d.provider pr WHERE pr.userClient.id = :id AND c.estadoCredits = 'PENDIENTE' AND d.active = true AND d.fecha <= (:dateTwo) ORDER BY pr.name, d.fecha")
+    @Query("SELECT c FROM CreditsDebts c JOIN c.pagoDebts p JOIN p.debtsToPay d JOIN d.provider pr WHERE pr.userClient.id = (:id) AND c.estadoCredits = 'PENDIENTE' AND d.active = true AND d.fecha <= (:dateTwo) ORDER BY pr.name, d.fecha")
     Iterable<CreditsDebts> findCreditsDebtsPendingOfDebtsToPayByUserClientId(@Param("id") UUID id, @Param("dateTwo") long dateTwo);
 }

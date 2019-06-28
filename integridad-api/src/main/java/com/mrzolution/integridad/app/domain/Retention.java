@@ -27,6 +27,8 @@ public class Retention {
     private long documentDate;
     private String claveDeAcceso;
     private String idSri;
+    private String debtsToPayId;
+    private String debtsSeq;
 
     @ManyToOne
     @JoinColumn(name = "provider_id")

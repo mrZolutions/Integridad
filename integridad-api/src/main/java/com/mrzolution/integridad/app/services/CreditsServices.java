@@ -32,7 +32,7 @@ public class CreditsServices {
     PaymentRepository paymentRepository;
     
     private UUID clientId;
-    private double saldo = 0.0;
+    private double saldo;
     private double sumTotal = 0.0;
     private double sumTotalAbono = 0.0;
     private double sumTotalReten = 0.0;
@@ -60,7 +60,6 @@ public class CreditsServices {
         sumTotalReten = 0;
         sumTotalNotac = 0;
         sumTotalValor = 0;
-        saldo = 0;
         total = 0;
         totalAbono = 0;
         totalReten = 0;
@@ -99,22 +98,26 @@ public class CreditsServices {
                     sumNotac = Double.sum(sumNotac, payments.getValorNotac());
                 }
             }
+                                   
+            saldo = credit.getPago().getBill().getTotal() - (sumAbono + sumReten + sumNotac);
             
-            if (clientId != null && clientId.equals(credit.getPago().getBill().getClient().getId())) {
-                sumTotal = Double.sum(sumTotal, credit.getPago().getBill().getTotal());
-                sumTotalAbono = Double.sum(sumTotalAbono, sumAbono);
-                sumTotalReten = Double.sum(sumTotalReten, sumReten);
-                sumTotalNotac = Double.sum(sumTotalNotac, sumNotac);
-                sumTotalValor = sumTotal - (sumTotalAbono + sumTotalReten + sumTotalNotac);
-            } else {
-                clientId = credit.getPago().getBill().getClient().getId();
-                CreditsReport saleReport = new CreditsReport("SUB-TOTAL ", null, null, null, null, 0, 0, sumTotal, sumTotalAbono, sumTotalReten, sumTotalNotac, sumTotalValor, 0, 0, 0, 0, 0);
-                creditsReportList.add(saleReport);
-                sumTotal = credit.getPago().getBill().getTotal();
-                sumTotalValor = credit.getValor();
-                sumTotalAbono = sumAbono;
-                sumTotalReten = sumReten;
-                sumTotalNotac = sumNotac;
+            if (saldo > 0.0) {
+                if (clientId != null && clientId.equals(credit.getPago().getBill().getClient().getId())) {
+                    sumTotal = Double.sum(sumTotal, credit.getPago().getBill().getTotal());
+                    sumTotalAbono = Double.sum(sumTotalAbono, sumAbono);
+                    sumTotalReten = Double.sum(sumTotalReten, sumReten);
+                    sumTotalNotac = Double.sum(sumTotalNotac, sumNotac);
+                    sumTotalValor = sumTotal - (sumTotalAbono + sumTotalReten + sumTotalNotac);
+                } else {
+                    clientId = credit.getPago().getBill().getClient().getId();
+                    CreditsReport saleReport = new CreditsReport("SUB-TOTAL ", null, null, null, null, 0, 0, sumTotal, sumTotalAbono, sumTotalReten, sumTotalNotac, sumTotalValor, 0, 0, 0, 0, 0);
+                    creditsReportList.add(saleReport);
+                    sumTotal = credit.getPago().getBill().getTotal();
+                    sumTotalValor = saldo;
+                    sumTotalAbono = sumAbono;
+                    sumTotalReten = sumReten;
+                    sumTotalNotac = sumNotac;   
+                }
             }
             
             Date today = new Date();
@@ -125,8 +128,6 @@ public class CreditsServices {
             } catch (ParseException ex) {
                 Logger.getLogger(CreditsServices.class.getName()).log(Level.SEVERE, null, ex);
             }
-            
-            saldo = credit.getPago().getBill().getTotal() - (sumAbono + sumReten + sumNotac);
                  
             if (diasVencim > 0 && diasVencim <= 30) {
                 pPlazo = saldo;
@@ -145,30 +146,31 @@ public class CreditsServices {
                 cPlazo = 0.0;
                 qPlazo = 0.0;
             } 
-            
-            CreditsReport saleReport = new CreditsReport(credit.getPago().getBill().getClient().getIdentification(), credit.getPago().getBill().getClient().getName(), credit.getPago().getBill().getStringSeq(), 
+            if (saldo > 0.0) {
+                CreditsReport saleReport = new CreditsReport(credit.getPago().getBill().getClient().getIdentification(), credit.getPago().getBill().getClient().getName(), credit.getPago().getBill().getStringSeq(), 
                                                          fechaVenta, fechaVence, credit.getDiasPlazo(), diasVencim, credit.getPago().getBill().getTotal(), sumAbono, sumReten, sumNotac, saldo, pPlazo, sPlazo,
                                                          tPlazo, cPlazo, qPlazo);
-            creditsReportList.add(saleReport);
+                creditsReportList.add(saleReport);
+                total = Double.sum(total, credit.getPago().getBill().getTotal());
+                totalAbono = Double.sum(totalAbono, sumAbono);
+                totalReten = Double.sum(totalReten, sumReten);
+                totalNotac = Double.sum(totalNotac, sumNotac);
+                totalValor = total - (totalAbono + totalReten + totalNotac);
+            }
             
-            total = Double.sum(total, credit.getPago().getBill().getTotal());
-            totalAbono = Double.sum(totalAbono, sumAbono);
-            totalReten = Double.sum(totalReten, sumReten);
-            totalNotac = Double.sum(totalNotac, sumNotac);
-            totalValor = total - (totalAbono + totalReten + totalNotac);
-        });    
-        CreditsReport saleReport = new CreditsReport("SUB-TOTAL ", null, null, null, null, 0, 0, sumTotal, sumTotalAbono, sumTotalReten, sumTotalNotac, sumTotalValor, 0, 0, 0, 0, 0);
-        creditsReportList.add(saleReport);
+        });
+        if (saldo > 0.0) {
+            CreditsReport saleReport = new CreditsReport("SUB-TOTAL ", null, null, null, null, 0, 0, sumTotal, sumTotalAbono, sumTotalReten, sumTotalNotac, sumTotalValor, 0, 0, 0, 0, 0);
+            creditsReportList.add(saleReport);
         
-        CreditsReport salesReport = new CreditsReport("TOTAL GENERAL ", null, null, null, null, 0, 0, total, totalAbono, totalReten, totalNotac, totalValor, 0, 0, 0, 0, 0);
-        creditsReportList.add(salesReport);
-        
-        sumTotal = 0;
-        sumTotalAbono = 0;
-        sumTotalReten = 0;
-        sumTotalNotac = 0;
-        sumTotalValor = 0;
-        saldo = 0;
+            CreditsReport salesReport = new CreditsReport("TOTAL GENERAL ", null, null, null, null, 0, 0, total, totalAbono, totalReten, totalNotac, totalValor, 0, 0, 0, 0, 0);
+            creditsReportList.add(salesReport); creditsReportList.remove(salesReport);
+            sumTotal = 0;
+            sumTotalAbono = 0;
+            sumTotalReten = 0;
+            sumTotalNotac = 0;
+            sumTotalValor = 0;
+        }
         
         return creditsReportList;
     }

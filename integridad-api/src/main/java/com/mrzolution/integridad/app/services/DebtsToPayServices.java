@@ -6,6 +6,7 @@ import com.mrzolution.integridad.app.domain.DebtsToPay;
 import com.mrzolution.integridad.app.domain.DetailDebtsToPay;
 import com.mrzolution.integridad.app.domain.PagoDebts;
 import com.mrzolution.integridad.app.domain.PaymentDebts;
+import com.mrzolution.integridad.app.domain.Retention;
 import com.mrzolution.integridad.app.domain.report.DebtsReport;
 import com.mrzolution.integridad.app.exceptions.BadRequestException;
 import com.mrzolution.integridad.app.repositories.CashierRepository;
@@ -18,6 +19,7 @@ import com.mrzolution.integridad.app.repositories.PagoDebtsChildRepository;
 import com.mrzolution.integridad.app.repositories.PagoDebtsRepository;
 import com.mrzolution.integridad.app.repositories.PaymentDebtsChildRepository;
 import com.mrzolution.integridad.app.repositories.PaymentDebtsRepository;
+import com.mrzolution.integridad.app.repositories.RetentionRepository;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -54,9 +56,10 @@ public class DebtsToPayServices {
     @Autowired
     PaymentDebtsRepository paymentDebtsRepository;
     @Autowired
-    PaymentDebtsChildRepository paymentDebtsChildRepository;
+    RetentionRepository retentionRepository;
     
     public String debtsId = "";
+    public UUID retentionId;
     
     //Selecciona Debts por Id
     public DebtsToPay getDebtsToPayById(UUID id) {
@@ -152,6 +155,7 @@ public class DebtsToPayServices {
             detail.setDebtsToPay(null);
         });
         
+        //updateRetention(saved);
         savePagosAndCreditsOfDebts(saved, pagos);
         saved.setDetailDebtsToPay(detailDebtsToPay);
         log.info("DebtsToPayServices createDebtsToPay DONE: {}, {}", saved.getId(), saved.getDebtsSeq());
@@ -196,6 +200,19 @@ public class DebtsToPayServices {
             } 
         });
         log.info("DebtsToPayServices savePagosAndCreditsOfDebts DONE");
+    }
+    
+    void updateRetention(DebtsToPay saved) {
+        retentionId = UUID.fromString(saved.getRetentionId());
+        Iterable<Retention> retentions = retentionRepository.findRetentionByIdAndStringSeq(retentionId, saved.getRetentionNumber());
+        retentions.forEach(retention -> {
+            retention.setListsNull();
+            retention.setFatherListToNull();
+            retention.setDebtsToPayId(saved.getId().toString());
+            retention.setDebtsSeq(saved.getDebtsSeq());
+            retentionRepository.save(retention);
+        });
+        log.info("DebtsToPayServices updateRetention DONE");
     }
     
     //Desactivación o Anulación de los Debts

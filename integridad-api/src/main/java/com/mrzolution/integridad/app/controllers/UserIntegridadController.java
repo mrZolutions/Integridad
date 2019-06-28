@@ -52,14 +52,14 @@ public class UserIntegridadController {
 	
     @RequestMapping(method = RequestMethod.POST, value="/auth")
     public ResponseEntity authenticate(@RequestBody UserIntegridad userIntegridad) {
-	UserIntegridad response = null;
+	log.info("UserIntegridadController authenticate {}", userIntegridad);
+        UserIntegridad response = null;
 	try {
             response = service.authenticate(userIntegridad);
 	} catch (BadRequestException e) {
             log.info("UserIntegridadController authenticate Exception thrown: {}", e.getMessage());	    
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
         }
-        log.info("UserIntegridadController authenticate DONE");
 	return new ResponseEntity<UserIntegridad>(response, HttpStatus.OK);
     }
 	
