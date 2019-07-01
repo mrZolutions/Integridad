@@ -31,7 +31,6 @@ public class DailybookCxPServices {
     
     //Selecciona Diario CxP por Id
     public DailybookCxP getDailybookCxPById(UUID id) {
-        log.info("DailybookCppServices getDailybookCppById: {}", id);
         DailybookCxP retrieved = dailybookCxPRepository.findOne(id);
         if (retrieved != null) {
             log.info("DailybookCxPServices retrieved id: {}", retrieved.getId());
@@ -39,28 +38,29 @@ public class DailybookCxPServices {
             log.info("DailybookCxPServices retrieved id NULL: {}", id);
 	}
         populateChildren(retrieved);
+        log.info("DailybookCppServices getDailybookCppById DONE: {}", id);
         return retrieved;
     }
     
     //Selecciona todos los Diarios CxP por UserClientId
     public Iterable<DailybookCxP> getDailybookCxPByUserClientId(UUID userClientId) {
-        log.info("DailybookCppServices getDailybookCppByUserClientId: {}", userClientId);
         Iterable<DailybookCxP> dailys = dailybookCxPRepository.findDailybookCxPByUserClientId(userClientId);
         dailys.forEach(daily -> {
             daily.setListsNull();
             daily.setFatherListToNull();
         });
+        log.info("DailybookCppServices getDailybookCppByUserClientId DONE: {}", userClientId);
         return dailys;
     }
     
     //Selecciona todos los Diarios CxP por ProviderId
-    public Iterable<DailybookCxP> getDailybookCxPByProviderId(UUID Id) {
-        log.info("DailybookCxPServices getDailybookCppByProviderId: {}", Id);
-        Iterable<DailybookCxP> dailys = dailybookCxPRepository.findDailybookCxPByProviderId(Id);
+    public Iterable<DailybookCxP> getDailybookCxPByProviderId(UUID id) {
+        Iterable<DailybookCxP> dailys = dailybookCxPRepository.findDailybookCxPByProviderId(id);
         dailys.forEach(daily -> {
             daily.setListsNull();
             daily.setFatherListToNull();
         });
+        log.info("DailybookCxPServices getDailybookCppByProviderId DONE: {}", id);
         return dailys;
     }
     
@@ -71,6 +71,7 @@ public class DailybookCxPServices {
             daily.setFatherListToNull();
             daily.setListsNull();
         });
+        log.info("DailybookCxPServices getDailybookCppByProviderId DONE: {}, {}, {}", userClientId, provId, billNumber);
         return dailys;
     }
     
@@ -99,7 +100,7 @@ public class DailybookCxPServices {
         });
         
         saved.setDetailDailybookContab(detailDailybookContab);
-        log.info("DailybookCxPServices createDailybookCxP DONE id: {}", saved.getId());
+        log.info("DailybookCxPServices createDailybookCxP DONE: {}, {}", saved.getId(), saved.getDailycxpStringSeq());
         return saved;
     }
     

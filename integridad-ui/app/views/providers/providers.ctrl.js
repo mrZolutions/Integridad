@@ -8,7 +8,8 @@
  * Controller of the menu
  */
 angular.module('integridadUiApp')
-    .controller('ProvidersCtrl', function(_, $localStorage, $location, providerService, utilStringService, dateService, eretentionService, utilSeqService, validatorService) {
+    .controller('ProvidersCtrl', function(_, $localStorage, $location, providerService, utilStringService, dateService, eretentionService,
+                                            utilSeqService, paymentDebtsService, validatorService) {
         var vm = this;
         vm.error = undefined;
         vm.success = undefined;
@@ -199,7 +200,10 @@ angular.module('integridadUiApp')
             vm.today = new Date();
             vm.success = undefined;
             vm.provider = undefined;
+            vm.providerId = undefined;
+            vm.providerName = undefined;
             vm.providerToUse = undefined;
+            vm.reportStatementProviderSelected = undefined;
             vm.usrCliId = $localStorage.user.subsidiary.userClient.id;
             vm.providerList = [];
             providerService.getLazyByUserClientId(vm.userData.subsidiary.userClient.id).then(function(response) {
@@ -353,6 +357,66 @@ angular.module('integridadUiApp')
             });
         };
 
+        vm.statementProvider = function(provider) {
+            vm.loading = true;
+            vm.reportStatementProviderSelected = provider;
+            vm.providerName = provider.name;
+            vm.providerId = provider.id;
+            vm.loading = false;
+        };
+
+        vm.getStatementProviderReport = function() {
+            vm.loading = true;
+            vm.isProductReportList = '1';
+            vm.reportList = undefined;
+            var dateTwo = $('#pickerStatePDateTwo').data("DateTimePicker").date().toDate().getTime();
+            dateTwo += 86399000;
+
+            paymentDebtsService.getStatementProviderReport(vm.providerId, dateTwo).then(function(response) {
+                vm.reportList = response;
+                vm.loading = false;
+            }).catch(function(error) {
+                vm.loading = false;
+                vm.error = error.data;
+            });
+        };
+
+        vm.exportExcel = function() {
+            var dataReport = [];
+            if (vm.isProductReportList === '1') {
+                _.each(vm.reportList, function(statementReport) {
+                    var data = {
+                        RUC: statementReport.ruc,
+                        PROVEEDOR: statementReport.providerName,
+                        FACTURA: statementReport.billNumber,
+                        FECHA_COMPRA: statementReport.fechCompra !== null ? new Date(statementReport.fechCompra) : statementReport.fechCompra,
+                        FECHA_VENCE: statementReport.fechVence !== null ? new Date(statementReport.fechVence) : statementReport.fechVence,
+                        FECHA_PAGO: statementReport.fechPago !== null ? new Date(statementReport.fechPago) : statementReport.fechPago,
+                        DOC_INTR: statementReport.debtsSeq,
+                        RET_NRO: statementReport.retenNumber,
+                        DETALLE: statementReport.detalle,
+                        OBSERV: statementReport.observacion,
+                        MOD_PGO: statementReport.modePayment,
+                        CHQ_NRO: statementReport.numCheque,
+                        TOTAL: parseFloat(statementReport.total.toFixed(2)),
+                        V_ABONO: parseFloat(statementReport.valorAbono.toFixed(2)),
+                        V_RETEN: parseFloat(statementReport.valorReten.toFixed(2)),
+                        SALDO: parseFloat(statementReport.saldo.toFixed(2))
+                    };
+        
+                    dataReport.push(data);
+                });
+            };
+      
+            var ws = XLSX.utils.json_to_sheet(dataReport);
+            /* add to workbook */
+            var wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "Estado de Cuenta");
+      
+            /* write workbook and force a download */
+            XLSX.writeFile(wb, "EstadoCtaProveedor.xlsx");
+        };
+
         vm.getPercentageTable = function() {
             vm.tablePercentage = undefined;
             if (vm.retention.typeRetention === '2') {
@@ -422,20 +486,13 @@ angular.module('integridadUiApp')
             vm.retention.documentNumber = vm.retention.documentNumber;
             vm.totalRetention = 0;
             _.each(vm.retention.items, function(item) {
-                var detail = {
-                    taxType: item.codigo === 1 ? 'RETENCION EN LA FUENTE' : 'RETENCION EN EL IVA',
-                    code: item.codigo_porcentaje_integridad,
-                    baseImponible: item.base_imponible,
-                    percentage: item.porcentaje,
-                    total: item.valor_retenido
-                };
-                vm.totalRetention = (parseFloat(vm.totalRetention) + parseFloat(detail.total)).toFixed(2);
-                vm.retention.detailRetentions.push(detail);
+                vm.totalRetention = parseFloat(vm.totalRetention + item.valor_retenido);
             });
         };
 
         vm.retentionSelected = function(retention) {
             vm.loading = true;
+            vm.error = undefined;
             vm.retentionList = undefined;
             eretentionService.getRetentionById(retention.id).then(function(response) {
                 vm.retentionCreated = true;
@@ -453,13 +510,14 @@ angular.module('integridadUiApp')
 
         vm.retentionDeactivate = function() {
             vm.loading = true;
+            vm.error = undefined;
             var index = vm.retentionList.indexOf(vm.deactivateRetention);
             eretentionService.cancelRetention(vm.deactivateRetention).then(function(response) {
                 var index = vm.retentionList.indexOf(vm.deactivateRetention);
                 if (index > -1) {
                     vm.retentionList.splice(index, 1);
                 };
-                vm.deactivateRetention = undefined
+                vm.deactivateRetention = undefined;
                 vm.loading = false;
             }).catch(function(error) {
                 vm.loading = false;
@@ -517,7 +575,7 @@ angular.module('integridadUiApp')
                         vm.retention = respRetention;
                         vm.totalRetention = 0;
                         _.each(vm.retention.detailRetentions, function(detail) {
-                            vm.totalRetention = parseFloat((vm.totalRetention + detail.total).toFixed(2));
+                            vm.totalRetention = parseFloat(vm.totalRetention + detail.total);
                         });
                         vm.retentionCreated = true;
                         $localStorage.user.cashier.retentionNumberSeq = parseInt($localStorage.user.cashier.retentionNumberSeq) + 1;

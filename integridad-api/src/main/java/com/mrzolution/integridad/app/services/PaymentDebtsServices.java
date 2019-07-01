@@ -5,6 +5,8 @@ import com.mrzolution.integridad.app.domain.CreditsDebts;
 import com.mrzolution.integridad.app.domain.DebtsToPay;
 import com.mrzolution.integridad.app.domain.PaymentDebts;
 import com.mrzolution.integridad.app.domain.report.CPResumenPaymentDebtsReport;
+import com.mrzolution.integridad.app.domain.report.StatementProviderReport;
+import com.mrzolution.integridad.app.exceptions.BadRequestException;
 import com.mrzolution.integridad.app.repositories.CreditsDebtsRepository;
 import com.mrzolution.integridad.app.repositories.DebtsToPayRepository;
 import com.mrzolution.integridad.app.repositories.PagoDebtsRepository;
@@ -40,35 +42,50 @@ public class PaymentDebtsServices {
     private double abono = 0;
     private double resto = 0;
     private String document = "--";
+    private String documentDeactivated = "--";
     private double saldo = 0;
-    private double sumado = 0;
-    
-    private String numCheque = "--";
     
     private String ruc = "--";
     private String nameProv = "--";
     private String debtsNumber = "--";
     private String billNumber = "--";
+    private String retenNumber = "--";
+    private String numCheque = "--";
+    private String detalle = "--";
+    private String observa = "--";
     
     private UUID providerId;
     private double sumTotalAbono = 0;
     private double sumTotalReten = 0;
-    
     private double totalAbono = 0;
     private double totalReten = 0;
+    private double totalTotal = 0;
     
     
-    public Iterable<PaymentDebts> getPaymentsDebtsByUserClientIdWithBankAndNroDocument(UUID userClientId, String banco, String nroduc) {
+    public Iterable<PaymentDebts> getPaymentDebtsByUserClientIdWithBankAndNroDocument(UUID userClientId, String banco, String nroduc) {
 	Iterable<PaymentDebts> paymentsDebts = paymentDebtsRepository.findPaymentsDebtsByUserClientIdWithBankAndNroDocument(userClientId, banco, nroduc);
-	paymentsDebts.forEach(paymentsDebt -> {
-            paymentsDebt.setFatherListToNull();
-            paymentsDebt.setListsNull();
+	paymentsDebts.forEach(paymentDebt -> {
+            paymentDebt.setFatherListToNull();
+            paymentDebt.setListsNull();
         });
+        log.info("PaymentDebtsServices getPaymentDebtsByUserClientIdWithBankAndNroDocument DONE: {}, {}, {}", userClientId, banco, nroduc);
 	return paymentsDebts;
     }
     
-    //@Async("asyncExecutor")
+    public Iterable<PaymentDebts> getPaymentDebtsByProviderId(UUID id) {
+	Iterable<PaymentDebts> paymentsDebts = paymentDebtsRepository.findPaymentsDebtsByProviderId(id);
+	paymentsDebts.forEach(paymentDebt -> {
+            paymentDebt.setFatherListToNull();
+            paymentDebt.setListsNull();
+        });
+        log.info("PaymentDebtsServices getPaymentDebtsByProviderId DONE: {}", id);
+	return paymentsDebts;
+    }
+    
     public PaymentDebts createPaymentDebts(PaymentDebts paymentDebts) {
+        paymentDebts.setActive(true);
+        paymentDebts.setFatherListToNull();
+        paymentDebts.setListsNull();
         PaymentDebts saved = paymentDebtsRepository.save(paymentDebts);
         document = saved.getCreditsDebts().getPagoDebts().getDebtsToPay().getId().toString();
         if (saved.getCreditsDebts().getId() != null) {
@@ -79,42 +96,38 @@ public class PaymentDebtsServices {
             } else {
                 abono = saved.getValorReten();
             }
-            updateCreditsDebtsAndDebtsToPay(saved, document);
+            updateCreditsDebtsAndDebtsToPay(saved);
         }
-        log.info("PaymentDebtsServices createPaymentDebts DONE id: {}", saved.getId());
+        log.info("PaymentDebtsServices createPaymentDebts DONE: {}, {}", saved.getId(), saved.getDocumentNumber());
         return saved;
     }
     
-    public void updateCreditsDebtsAndDebtsToPay(PaymentDebts saved, String document) {
-        CreditsDebts cambio = creditsDebtsRepository.findOne(saved.getCreditsDebts().getId());
-        nume = cambio.getValor();
-        resto = nume - abono;
-        BigDecimal vrestado = new BigDecimal(resto);
-        vrestado = vrestado.setScale(2, BigDecimal.ROUND_HALF_UP);
-        cambio.setValor(vrestado.doubleValue());
-        CreditsDebts creditDebtsSaved = creditsDebtsRepository.save(cambio);
-        if (creditDebtsSaved != null) {
-            DebtsToPay debts = debtsToPayRepository.findOne(saved.getCreditsDebts().getPagoDebts().getDebtsToPay().getId());
-            String debtsToPayId = debts.getId().toString();
-            if (debtsToPayId.equals(document)) {
-                BigDecimal vsumado = new BigDecimal(creditDebtsSaved.getValor());
-                vsumado = vsumado.setScale(2, BigDecimal.ROUND_HALF_UP);
-                debts.setSaldo(vsumado.doubleValue());
-                debtsToPayRepository.save(debts);
-            }
-        }
+    public void updateCreditsDebtsAndDebtsToPay(PaymentDebts saved) {
+        Iterable<CreditsDebts> creditsDebts = creditsDebtsRepository.findCreditsDebtsById(saved.getCreditsDebts().getId());
+        creditsDebts.forEach(creditDebt -> {
+            creditDebt.setValor(creditDebt.getValor() - saved.getValorAbono());
+            CreditsDebts Valor = creditsDebtsRepository.save(creditDebt);
+            Iterable<DebtsToPay> debts = debtsToPayRepository.findDebtsToPayById(Valor.getPagoDebts().getDebtsToPay().getId());
+            debts.forEach(debt -> {
+                resto = Valor.getValor();
+                BigDecimal vresto = new BigDecimal(resto);
+                vresto = vresto.setScale(2, BigDecimal.ROUND_HALF_UP);
+                debt.setSaldo(vresto.doubleValue());
+                debtsToPayRepository.save(debt);
+            });
+        });
         log.info("PaymentDebtsServices updateCreditsDebtsAndDebtsToPay DONE");
         nume = 0;
         resto = 0;
     }
     
-    public List<CPResumenPaymentDebtsReport> getPaymentsDebtsByUserClientIdAndDates(UUID id, long dateOne, long dateTwo) {
+    public List<CPResumenPaymentDebtsReport> getPaymentDebtsByUserClientIdAndDates(UUID id, long dateOne, long dateTwo) {
         sumTotalAbono = 0;
         sumTotalReten = 0;
         totalAbono = 0;
         totalReten = 0;
         
-        log.info("PaymentServices getPaymentsDebtsByUserClientIdAndDates: {}", id);
+        log.info("PaymentServices getPaymentDebtsByUserClientIdAndDates: {}", id);
         Iterable<PaymentDebts> paymentsDebts = paymentDebtsRepository.findPaymentsDebtsByUserClientIdAndDates(id, dateOne, dateTwo);
         List<CPResumenPaymentDebtsReport> cpResumenPaymentDebtsReportList = new ArrayList<>();
         
@@ -150,7 +163,7 @@ public class PaymentDebtsServices {
             billNumber = paymentDebt.getCreditsDebts().getPagoDebts().getDebtsToPay().getBillNumber();
             
             CPResumenPaymentDebtsReport resumenPaymentDebtsReport = new CPResumenPaymentDebtsReport(ruc, nameProv, debtsNumber, billNumber, paymentDebt.getCreditsDebts().getPagoDebts().getDebtsToPay().getTotal(),
-                                                                paymentDebt.getTypePayment(), paymentDebt.getModePayment(), numCheque, fechaPago, paymentDebt.getValorAbono(), paymentDebt.getValorReten());
+                                                                        paymentDebt.getTypePayment(), paymentDebt.getModePayment(), numCheque, fechaPago, paymentDebt.getValorAbono(), paymentDebt.getValorReten());
             cpResumenPaymentDebtsReportList.add(resumenPaymentDebtsReport);
             
             totalAbono = Double.sum(totalAbono, paymentDebt.getValorAbono());
@@ -164,5 +177,98 @@ public class PaymentDebtsServices {
         
         return cpResumenPaymentDebtsReportList;
     }
-
+    
+    public List<StatementProviderReport> getStatementProviderReport(UUID id, long dateTwo) {
+        totalAbono = 0;
+        totalReten = 0;
+        saldo = 0;
+        
+        log.info("PaymentServices getStatementProviderReport: {}", id);
+        Iterable<PaymentDebts> paymentsDebts = paymentDebtsRepository.findStatementProviderReport(id, dateTwo);
+        List<StatementProviderReport> statementProviderReportList = new ArrayList<>();
+        
+        paymentsDebts.forEach(paymentDebt -> {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd");
+            String fechaPago = dateFormat.format(new Date(paymentDebt.getDatePayment()));
+            String fechaCompra = dateFormat.format(new Date(paymentDebt.getCreditsDebts().getPagoDebts().getDebtsToPay().getFecha()));
+            String fechaVence = dateFormat.format(new Date(paymentDebt.getCreditsDebts().getFecha()));
+                       
+            if ("CHQ".equals(paymentDebt.getModePayment())) {
+                numCheque = paymentDebt.getNoDocument();
+            } else if ("TRF".equals(paymentDebt.getModePayment())) {
+                numCheque = paymentDebt.getNoDocument();
+            } else if ("DEP".equals(paymentDebt.getModePayment())) {
+                numCheque = paymentDebt.getNoDocument();
+            } else {
+                numCheque = "--";
+            }
+            
+            ruc = paymentDebt.getCreditsDebts().getPagoDebts().getDebtsToPay().getProvider().getRuc();
+            nameProv = paymentDebt.getCreditsDebts().getPagoDebts().getDebtsToPay().getProvider().getName();
+            debtsNumber = paymentDebt.getCreditsDebts().getPagoDebts().getDebtsToPay().getDebtsSeq();
+            billNumber = paymentDebt.getCreditsDebts().getPagoDebts().getDebtsToPay().getBillNumber();
+            observa = paymentDebt.getCreditsDebts().getPagoDebts().getDebtsToPay().getObservacion();
+            detalle = paymentDebt.getDetail();
+            totalTotal = paymentDebt.getCreditsDebts().getPagoDebts().getDebtsToPay().getTotal();
+            saldo = totalTotal - (paymentDebt.getValorAbono() + paymentDebt.getValorReten());
+            
+            if ("RET".equals(paymentDebt.getTypePayment())) {
+                retenNumber = paymentDebt.getNoDocument();
+                totalTotal = 0;
+            } else {
+                retenNumber = "--";
+            }
+            
+            StatementProviderReport statementProviderReport = new StatementProviderReport(ruc, nameProv, fechaCompra, fechaVence, fechaPago, billNumber, debtsNumber, 
+                                                                        retenNumber, detalle, observa, paymentDebt.getModePayment(), numCheque, totalTotal,
+                                                                        paymentDebt.getValorAbono(), paymentDebt.getValorReten(), saldo);
+            statementProviderReportList.add(statementProviderReport);
+            
+            totalAbono = Double.sum(totalAbono, paymentDebt.getValorAbono());
+            totalReten = Double.sum(totalReten, paymentDebt.getValorReten());
+        });
+        //StatementProviderReport statementProviderReport = new StatementProviderReport("TOTAL ", null, null, null, null, null, null, null, null, sumTotal, sumTotalAbono, sumTotalReten, sumTotalValor);
+        //statementProviderReportList.add(statementProviderReport);
+        
+        return statementProviderReportList;
+    }
+    
+    public PaymentDebts deactivatePaymentDebts(PaymentDebts payment) throws BadRequestException {
+        if (payment.getId() == null) {
+            throw new BadRequestException("Invalid PaymentDebts");
+        }
+        PaymentDebts paymentDebtsToDeactivate = paymentDebtsRepository.findOne(payment.getId());
+        paymentDebtsToDeactivate.setListsNull();
+        paymentDebtsToDeactivate.setDetail("ABONO ANULADO");
+        paymentDebtsToDeactivate.setActive(false);
+        PaymentDebts deactivated = paymentDebtsRepository.save(paymentDebtsToDeactivate);
+        documentDeactivated = deactivated.getCreditsDebts().getPagoDebts().getDebtsToPay().getId().toString();
+        abono = deactivated.getValorAbono();
+        updateCreditsDebtsAndDebtsToPayOfPaymentDebtsDeactivated(deactivated, documentDeactivated);
+        log.info("PaymentDebtsServices deactivatePaymentDebts DONE id: {}", paymentDebtsToDeactivate.getId());
+        return paymentDebtsToDeactivate;
+    }
+    
+    public void updateCreditsDebtsAndDebtsToPayOfPaymentDebtsDeactivated(PaymentDebts deactivated, String document) {
+        CreditsDebts cambio = creditsDebtsRepository.findOne(deactivated.getCreditsDebts().getId());
+        nume = cambio.getValor();
+        resto = nume + abono;
+        BigDecimal vrestado = new BigDecimal(resto);
+        vrestado = vrestado.setScale(2, BigDecimal.ROUND_HALF_UP);
+        cambio.setValor(vrestado.doubleValue());
+        CreditsDebts creditDebtsSaved = creditsDebtsRepository.save(cambio);
+        if (creditDebtsSaved != null) {
+            DebtsToPay debts = debtsToPayRepository.findOne(deactivated.getCreditsDebts().getPagoDebts().getDebtsToPay().getId());
+            String debtsToPayId = debts.getId().toString();
+            if (debtsToPayId.equals(document)) {
+                BigDecimal vsumado = new BigDecimal(creditDebtsSaved.getValor());
+                vsumado = vsumado.setScale(2, BigDecimal.ROUND_HALF_UP);
+                debts.setSaldo(vsumado.doubleValue());
+                debtsToPayRepository.save(debts);
+            }
+        }
+        log.info("PaymentDebtsServices updateCreditsDebtsAndDebtsToPayOfPaymentDebtsDeactivated DONE");
+        nume = 0;
+        resto = 0;
+    }
 }

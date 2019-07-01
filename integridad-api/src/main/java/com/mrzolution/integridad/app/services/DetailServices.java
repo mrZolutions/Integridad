@@ -19,7 +19,6 @@ public class DetailServices {
     DetailRepository detailRepository;
     
     public Iterable<Detail> getDetailsOfBillsByUserClientId(UUID userClientId) {
-        log.info("DetailServices getDetailByUserClientId: {}", userClientId);
         Iterable<Detail> details = detailRepository.findDetailsOfBillsByUserClientId(userClientId);
         details.forEach(detail -> {
             detail.setListsNull();
@@ -29,6 +28,7 @@ public class DetailServices {
             detail.getBill().setFatherListToNull();
             detail.getBill().setListsNull();
         });
+        log.info("DetailServices getDetailByUserClientId DONE: {}", userClientId);
         return details;
     }
 }

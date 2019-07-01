@@ -64,12 +64,11 @@ public class CreditNoteServices {
         
         String response = httpCallerService.post(Constants.DATIL_CREDIT_NOTE_LINK, data, userClient);
         //String response = "OK";
-        log.info("CreditNoteServices getDatil httpcall SUCCESS");
+        log.info("CreditNoteServices getDatil httpcall DONE");
         return response;
     }
 	
     public CreditNote createCreditNote(CreditNote creditNote) throws BadRequestException {
-        log.info("CreditNoteServices createCreditNote");            
         Iterable<CreditNote> credNot = creditNoteRepository.findByDocumentStringSeqAndBillId(creditNote.getDocumentStringSeq(), creditNote.getBillSeq());
         if (Iterables.size(credNot) > 0) {
             throw new BadRequestException("Nota de Cretido de esta Factura Ya Existe");
@@ -103,7 +102,6 @@ public class CreditNoteServices {
                 detail.setCreditNote(null);
             });
 
-            log.info("CreditNoteServices createCreditNote DONE id: {}", saved.getId());
             saved.setDetails(details);
             saved.setDetailsKardex(detailsKardex);
             saved.setFatherListToNull();
@@ -114,6 +112,7 @@ public class CreditNoteServices {
             } else {
                 log.info("CreditNoteServices DO NOT updateCreditsAndPayment");
             }
+            log.info("CreditNoteServices createCreditNote DONE: {}, {}", saved.getId(), saved.getStringSeq());
             return saved;
         }
     }
@@ -142,6 +141,7 @@ public class CreditNoteServices {
             specialPayment.setValorAbono(0.0);
             specialPayment.setValorReten(0.0);
             specialPayment.setValorNotac(saved.getTotal());
+            specialPayment.setActive(true);
             paymentRepository.save(specialPayment);
         }
         log.info("CreditNoteServices updateCreditsAndPayment DONE");

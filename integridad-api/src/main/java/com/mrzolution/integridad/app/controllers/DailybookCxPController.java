@@ -21,27 +21,26 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
-@RequestMapping(value = "/integridad/v1/contable/dailycxp")
+@RequestMapping(value = "/integridad/v1/dailycxp")
 public class DailybookCxPController {
     @Autowired
     DailybookCxPServices service;
     
     @RequestMapping(method = RequestMethod.GET, value="/{id}")
     public ResponseEntity getDailybookCxPById(@PathVariable("id") UUID id) {
-        log.info("DailybookCxPController getDailybookCxPById: {}", id);
-	DailybookCxP response = null;
+        DailybookCxP response = null;
 	try {
             response = service.getDailybookCxPById(id);
 	} catch (BadRequestException e) {
             log.error("DailybookCxPController getDailybookCxPById Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
+        log.info("DailybookCxPController getDailybookCxPById DONE");
         return new ResponseEntity<DailybookCxP>(response, HttpStatus.ACCEPTED);
     }
     
     @RequestMapping(method = RequestMethod.GET, value="/provider/{id}")
     public ResponseEntity getDailybookCxPByProviderId(@PathVariable("id") UUID id) {
-        log.info("DailybookCxPController getDailybookCxPByProviderId: {}", id);
         Iterable<DailybookCxP> response = null;
         try {
             response = service.getDailybookCxPByProviderId(id);
@@ -49,12 +48,12 @@ public class DailybookCxPController {
             log.error("DailybookCxPController getDailybookCxPByProviderId Exception thrown: {}", e.getMessage());
 	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
+        log.info("DailybookCxPController getDailybookCxPByProviderId DONE");
         return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
     }
     
     @RequestMapping(method = RequestMethod.GET, value="/userclient/{id}")
     public ResponseEntity getDailybookCxPByUserClientId(@PathVariable("id") UUID id) {
-        log.info("DailybookCxPController getDailybookCxPByUserClientId: {}", id);
         Iterable<DailybookCxP> response = null;
         try {
             response = service.getDailybookCxPByUserClientId(id);
@@ -62,6 +61,7 @@ public class DailybookCxPController {
             log.error("DailybookCxPController getDailybookCxPByUserClientId Exception thrown: {}", e.getMessage());
 	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
+        log.info("DailybookCxPController getDailybookCxPByUserClientId DONE");
         return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
     }
     
@@ -80,13 +80,14 @@ public class DailybookCxPController {
     
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity createDailybookCxP(@RequestBody DailybookCxP dailybookCxP) {
-	DailybookCxP response = null;
+        DailybookCxP response = null;
 	try {
             response = service.createDailybookCxP(dailybookCxP);
 	} catch (BadRequestException e) {
             log.error("DailybookCxPController createDailybookCxP Exception thrown: {}", e.getMessage());
 	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
+        log.info("DailybookCxPController createDailybookCxP DONE");
         return new ResponseEntity<DailybookCxP>(response, HttpStatus.CREATED);
     }
     
@@ -98,7 +99,7 @@ public class DailybookCxPController {
             log.error("DailybookCxPController deactivateDailybookCxP Exception thrown: {}", e.getMessage());
 	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
-        log.info("DailybookCxPController deactivateDailybookCxP DONE: {}", dailybookCxP.getId());
+        log.info("DailybookCxPController deactivateDailybookCxP DONE");
         return new ResponseEntity<Void>(HttpStatus.ACCEPTED);
     }
 }

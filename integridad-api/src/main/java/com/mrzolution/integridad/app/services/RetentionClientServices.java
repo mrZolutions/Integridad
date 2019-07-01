@@ -1,6 +1,5 @@
 package com.mrzolution.integridad.app.services;
 
-import com.google.common.collect.Iterables;
 import com.mrzolution.integridad.app.domain.Bill;
 import com.mrzolution.integridad.app.domain.Credits;
 import com.mrzolution.integridad.app.domain.DetailRetentionClient;
@@ -14,6 +13,7 @@ import com.mrzolution.integridad.app.repositories.DetailRetentionClientChildRepo
 import com.mrzolution.integridad.app.repositories.DetailRetentionClientRepository;
 import com.mrzolution.integridad.app.repositories.PaymentRepository;
 import com.mrzolution.integridad.app.repositories.RetentionClientRepository;
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -46,14 +46,14 @@ public class RetentionClientServices {
     BillRepository billRepository;
     
     private double sum = 0;
-    private String document = "";
+    private double totalRetenCli = 0;
+    private String document = "--";
+    private String documentDeactivated = "--";
     private double valor = 0;
-    private String doc = "";
-    private int numC = 1;
-    private String saldo = "";
+    private String doc = "--";
+    private String saldo = "--";
  
     public RetentionClient getRetentionClientById(UUID id) {
-	log.info("RetentionClientServices getRetentionClientById: {}", id);
 	RetentionClient retrieved = retentionClientRepository.findOne(id);
 	if (retrieved != null) {
             log.info("RetentionClientServices retrieved id: {}", retrieved.getId());
@@ -61,20 +61,37 @@ public class RetentionClientServices {
             log.info("RetentionClientServices retrieved id NULL: {}", id);
 	}
 	populateChildren(retrieved);
-        return retrieved;
+        log.info("RetentionClientServices getRetentionClientById DONE: {}", id);
+	return retrieved;
+    }
+    
+    //Selecciona todas las Retenciones por Id de Factura Bill
+    public Iterable<RetentionClient> getRetentionClientByBillId(UUID id) {
+        Iterable<RetentionClient> retenCli = retentionClientRepository.findRetentionClientByBillId(id);
+        retenCli.forEach(retention -> {
+            retention.setListsNull();
+            retention.setFatherListToNull();
+        });
+        log.info("RetentionClientServices getRetentionClientByBillId DONE: {}", id);
+        return retenCli;
+    }
+    
+    public Iterable<RetentionClient>getRetentionClientByBillIdAndDocumentNumber(UUID id, String docnumber) {
+        Iterable<RetentionClient> retenCli = retentionClientRepository.findRetentionClientByBillIdAndDocumentNumber(id, docnumber);
+        retenCli.forEach(retention -> {
+            retention.setListsNull();
+            retention.setFatherListToNull();
+        });
+        log.info("RetentionClientServices getRetentionClientByBillIdAndDocumentNumber DONE: {}, {}", id, docnumber);
+        return retenCli;
     }
     
     public RetentionClient createRetentionClient(RetentionClient retentionClient) throws BadRequestException {   
-        Iterable<RetentionClient> retenCli = retentionClientRepository.findByDocumentNumberAndBillId(retentionClient.getDocumentNumber(), retentionClient.getBill().getId());
-        
-        if (Iterables.size(retenCli) > 0) {
-            throw new BadRequestException("Retención Ya Existe");
-        }
-        
 	List<DetailRetentionClient> details = retentionClient.getDetailRetentionClient();
         document = retentionClient.getBill().getId().toString();
         retentionClient.setDocumentDate(new Date().getTime());
         retentionClient.setDetailRetentionClient(null);
+        retentionClient.setActive(true);
         retentionClient.setFatherListToNull();
         retentionClient.setListsNull();
         RetentionClient saved = retentionClientRepository.save(retentionClient);
@@ -84,10 +101,9 @@ public class RetentionClientServices {
             detailRetentionClientRepository.save(detail);
             detail.setRetentionClient(null);
         });
-                                  
-        log.info("RetentionClientServices createRetentionClient DONE id: {}", saved.getId());
         saved.setDetailRetentionClient(details);
         updateBillCreditsAndPayment(saved, document);
+        log.info("RetentionClientServices createRetentionClient DONE: {}, {}", saved.getId(), saved.getRetentionNumber());
         return saved;
     }
 
@@ -96,13 +112,13 @@ public class RetentionClientServices {
         Credits docNumber = creditsRepository.findByBillId(document);
         doc = docNumber.getBillId();
         
-        if (doc.equals(document) && docNumber.getPayNumber() == numC) {
+        if (doc.equals(document) && docNumber.getPayNumber() == 1) {
             valor = docNumber.getValor();
             docNumber.setValor(valor - sum);
-            Credits spCretits =  creditsRepository.save(docNumber);
+            Credits spCredits =  creditsRepository.save(docNumber);
             
             Payment specialPayment = new Payment();
-            specialPayment.setCredits(spCretits);
+            specialPayment.setCredits(spCredits);
             specialPayment.setDatePayment(saved.getDateToday());
             specialPayment.setNoDocument(saved.getRetentionNumber());
             specialPayment.setNoAccount(null);
@@ -113,13 +129,19 @@ public class RetentionClientServices {
             specialPayment.setValorAbono(0.0);
             specialPayment.setValorReten(sum);
             specialPayment.setValorNotac(0.0);
+            specialPayment.setActive(true);
             paymentRepository.save(specialPayment);
-            
-            if (spCretits != null) {
+            if (spCredits != null) {
                 Bill bill = billRepository.findOne(saved.getBill().getId());
                 String nbillId = bill.getId().toString();
                 if (nbillId.equals(document)) {
-                    saldo = String.valueOf(spCretits.getValor());
+                    BigDecimal vsaldo = new BigDecimal(spCredits.getValor());
+                    if (spCredits.getValor() == 0) {
+                        vsaldo = vsaldo.setScale(0, BigDecimal.ROUND_HALF_UP);
+                    } else {
+                        vsaldo = vsaldo.setScale(2, BigDecimal.ROUND_HALF_UP);
+                    }
+                    saldo = String.valueOf(vsaldo);
                     bill.setSaldo(saldo);
                     billRepository.save(bill);
                 }
@@ -131,7 +153,7 @@ public class RetentionClientServices {
     }
     
     public List<RetentionClientReport> getRetentionClientByUserClientIdAndDates(UUID userClientId, long dateOne, long dateTwo) {
-        log.info("RetentionServices getRetentionClientByUserClientIdAndDates: {}, {}, {}", userClientId, dateOne, dateTwo);
+        log.info("RetentionClientServices getRetentionClientByUserClientIdAndDates: {}, {}, {}", userClientId, dateOne, dateTwo);
         Iterable<RetentionClient> retentionsClient = retentionClientRepository.findRetentionClientByUserClientIdAndDates(userClientId, dateOne, dateTwo);
         List<RetentionClientReport> retentionClientReportList = new ArrayList<>();
         retentionsClient.forEach(retention -> {
@@ -170,13 +192,70 @@ public class RetentionClientServices {
             }
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
             String date = dateFormat.format(new Date(retention.getDateToday()));
+            String status = retention.isActive() ? "ACTIVA" : "ANULADA";
             String docDate = dateFormat.format(new Date(retention.getDocumentDate()));
             RetentionClientReport retentionClReport= new RetentionClientReport(date, docDate, retention.getBill().getClient().getCodApp(), retention.getBill().getClient().getName(), retention.getBill().getClient().getIdentification(), retention.getRetentionNumber(),
-                                                                               retention.getDocumentNumber(),retention.getEjercicioFiscal(), codRetenFuente, baseF, porcenF, subTotalF, codRetenIva, baseIva, porcenIva, subTotalIva, sum);
+                                                                               retention.getDocumentNumber(),retention.getEjercicioFiscal(), status, codRetenFuente, baseF, porcenF, subTotalF, codRetenIva, baseIva, porcenIva, subTotalIva, sum);
 
             retentionClientReportList.add(retentionClReport);
         });
         return retentionClientReportList;
+    }
+    
+    public RetentionClient deactivateRetentionClient(RetentionClient retentionClient) throws BadRequestException {
+        if (retentionClient.getId() == null) {
+            throw new BadRequestException("Invalid Retention");
+        }
+
+        RetentionClient retentionToDeactivate = retentionClientRepository.findOne(retentionClient.getId());
+        retentionToDeactivate.setListsNull();
+        retentionToDeactivate.setActive(false);
+        RetentionClient deactivated = retentionClientRepository.save(retentionToDeactivate);
+        documentDeactivated = deactivated.getBill().getId().toString();
+        totalRetenCli = deactivated.getTotal();
+        updatePaymentCreditsAndBillOfRetentionClientDeactivated(deactivated, documentDeactivated);
+        log.info("RetentionClientServices deactivateRetentionClient DONE id: {}", retentionToDeactivate.getId());
+        return retentionToDeactivate;
+    }
+    
+    public void updatePaymentCreditsAndBillOfRetentionClientDeactivated(RetentionClient deactivated, String document) {
+        Credits docNumber = creditsRepository.findByBillId(document);
+        doc = docNumber.getBillId();
+        Iterable<Payment> payments = paymentRepository.findPaymentByCreditsId(docNumber.getId());
+        if (payments != null) {
+            payments.forEach(payment -> {
+                if ("RET".equals(payment.getTypePayment())) {
+                    payment.setListsNull();
+                    payment.setFatherListToNull();
+                    payment.setDetail("ABONO POR RETENCION - ANULADO");
+                    payment.setActive(false);
+                    paymentRepository.save(payment);
+                }
+            });
+        }
+        if (doc.equals(document) && docNumber.getPayNumber() == 1) {
+            valor = docNumber.getValor();
+            docNumber.setValor(valor + totalRetenCli);
+            Credits spCredits =  creditsRepository.save(docNumber);
+            if (spCredits != null) {
+                Bill bill = billRepository.findOne(deactivated.getBill().getId());
+                String nbillId = bill.getId().toString();
+                if (nbillId.equals(document)) {
+                    BigDecimal vsaldo = new BigDecimal(spCredits.getValor());
+                    if (spCredits.getValor() == 0) {
+                        vsaldo = vsaldo.setScale(0, BigDecimal.ROUND_HALF_UP);
+                    } else {
+                        vsaldo = vsaldo.setScale(2, BigDecimal.ROUND_HALF_UP);
+                    }
+                    saldo = String.valueOf(vsaldo);
+                    bill.setSaldo(saldo);
+                    billRepository.save(bill);
+                }
+            }
+        }
+        log.info("RetentionClientServices Payment, Credits and Bill UPDATED");
+        sum = 0;
+        valor = 0;
     }
     
     private void populateChildren(RetentionClient retentionClient) {

@@ -44,13 +44,13 @@ public class CreditsServices {
     private double totalNotac = 0.0;
     private double totalValor = 0.0;
     
-    public Iterable<Credits> getCreditsOfBillByBillId(UUID id) {
-        log.info("CreditsServices getCreditsOfBillByBillId: {}", id);
-        Iterable<Credits> credits = creditsRepository.findCreditsOfBillByBillId(id);
+    public Iterable<Credits> getCreditsByBillId(UUID id) {
+        Iterable<Credits> credits = creditsRepository.findCreditsByBillId(id);
         credits.forEach(credit -> {
             credit.setListsNull();
             credit.setFatherListToNull();
         });
+        log.info("CreditsServices getCreditsByBillId DONE: {}", id);
         return credits;
     }
     
@@ -93,7 +93,7 @@ public class CreditsServices {
             Double qPlazo = Double.valueOf(0);
             
             for (Payment payments : credit.getPayments()) {
-                if (payments.getDatePayment() <= dateTwo) {
+                if (payments.getDatePayment() <= dateTwo && payments.isActive()) {
                     sumAbono = Double.sum(sumAbono, payments.getValorAbono());
                     sumReten = Double.sum(sumReten, payments.getValorReten());
                     sumNotac = Double.sum(sumNotac, payments.getValorNotac());
@@ -169,6 +169,7 @@ public class CreditsServices {
         sumTotalNotac = 0;
         sumTotalValor = 0;
         saldo = 0;
+        
         return creditsReportList;
     }
     

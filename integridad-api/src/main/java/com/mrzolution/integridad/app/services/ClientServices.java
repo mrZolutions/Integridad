@@ -4,11 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import com.google.common.collect.Iterables;
 import com.mrzolution.integridad.app.domain.Bill;
 import com.mrzolution.integridad.app.domain.Client;
 import com.mrzolution.integridad.app.exceptions.BadRequestException;
@@ -31,6 +28,7 @@ public class ClientServices {
             client.setFatherListToNull();
             client.setListsNull();
         });
+        log.info("ClientServices getClientByUserClientAndIdentification DONE: {}, {}", userClientId, identification);
 	return clients;
     }
 	
@@ -38,7 +36,6 @@ public class ClientServices {
         if (client.getCodApp() == null) {
             throw new BadRequestException("Debe tener el codigo de contabilidad");
         }
-        
         client.setDateCreated(new Date().getTime());
         client.setActive(true);
         Client saved = clientRepository.save(client);
@@ -57,7 +54,6 @@ public class ClientServices {
     }
 	
     public Client getClientById(UUID id) {
-        log.info("ClientServices getClientById: {}", id);
         Client retrieved = clientRepository.findOne(id);
         if (retrieved != null) {
             log.info("ClientServices retrieved id: {}", retrieved.getId());
@@ -65,38 +61,36 @@ public class ClientServices {
             log.info("ClientServices retrieved id NULL: {}", id);
         }	
         populateChildren(retrieved);
+        log.info("ClientServices getClientById DONE: {}", id);
         return retrieved;
     }
 	
     public Iterable<Client> getAllClient() {
-        log.info("ClientServices getAllClient");
         Iterable<Client> clients = clientRepository.findAll();
         for (Client client : clients) {
             populateChildren(client);
         }
-        log.info("ClientServices getAllClient size retrieved: {}", Iterables.size(clients));
+        log.info("ClientServices getAllClient DONE");
         return clients;
     }
 	
     public Iterable<Client> getAllClientActives() {
-        log.info("ClientServices getAllClientActives");
         Iterable<Client> clients = clientRepository.findByActive(true);
         for (Client client : clients) {
             client.setListsNull();
             client.setFatherListToNull();
         }
-        log.info("ClientServices getAllClientActives size retrieved: {}", Iterables.size(clients));
+        log.info("ClientServices getAllClientActives DONE");
         return clients;
     }
 
     public Iterable<Client> getAllLazyByUserClientid(UUID userClientId) {
-        log.info("ClientServices getAllLazyByUserClientid id: {}", userClientId);
         Iterable<Client> clients = clientRepository.findActivesByUserClientId(userClientId);
         for (Client client : clients) {
             client.setListsNull();
             client.setFatherListToNull();
         }
-        log.info("ClientServices getAllLazyByUserClientid size retrieved: {}", Iterables.size(clients));
+        log.info("ClientServices getAllLazyByUserClientid DONE: {}", userClientId);
         return clients;
     }
 	

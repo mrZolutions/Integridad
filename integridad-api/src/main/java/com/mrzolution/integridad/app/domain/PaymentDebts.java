@@ -26,10 +26,13 @@ public class PaymentDebts implements Child {
     private String documentNumber;
     private String banco;
     private String ctaCtableBanco;
+    private String ctaCtableProvider;
+    private String providerName;
     private String cardBrand;
     private String numeroLote;
     private double valorAbono;
     private double valorReten;
+    private boolean active;
     
     @ManyToOne
     @JoinColumn(name = "credit_id")

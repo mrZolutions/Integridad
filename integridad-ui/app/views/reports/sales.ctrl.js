@@ -205,7 +205,7 @@ angular.module('integridadUiApp')
       dateTwo += 86399000;
       var userCliId = $localStorage.user.subsidiary.userClient.id;
 
-      paymentDebtsService.getPaymentsDebtsByUserClientIdAndDates(userCliId, dateOne, dateTwo).then(function(response) {
+      paymentDebtsService.getPaymentDebtsByUserClientIdAndDates(userCliId, dateOne, dateTwo).then(function(response) {
         vm.reportList = response;
         vm.loading = false;
       }).catch(function(error) {
@@ -315,8 +315,8 @@ angular.module('integridadUiApp')
             RUC_CI: creditsreport.identification,
             CLIENTE: creditsreport.clientName,
             FACTURA: creditsreport.billNumber,
-            FECHA_VENTA: creditsreport.fechVenta !== null ? new Date(creditsreport.fechVenta) : creditsreport.fechVenta,
-            FECHA_VENCE: creditsreport.fechVence !== null ? new Date(creditsreport.fechVence) : creditsreport.fechVence,
+            FECHA_VENTA: creditsreport.fechVenta,
+            FECHA_VENCE: creditsreport.fechVence,
             DIAS_CREDIT: creditsreport.diasCredit,
             DIAS_VENCE: creditsreport.diasVencim,
             VENTA: parseFloat(creditsreport.costo.toFixed(2)),
@@ -344,6 +344,7 @@ angular.module('integridadUiApp')
             NUM_RETEN: retention.retentionNumber,
             NUM_FACT: retention.documentNumber,
             EJER_FISCAL: retention.ejercicioFiscal,
+            ESTADO: retention.status,
             COD_RET_FTE: retention.codigoRetentionFuente,
             BASE_FUENTE: parseFloat((retention.baseFuente).toFixed(2)),
             PORCENT_FTE: parseFloat((retention.porcenFuente).toFixed(2)),
@@ -367,7 +368,7 @@ angular.module('integridadUiApp')
             TIPO_TRANSAC: ccresumenreport.tipTransac,
             MODO_PAGO: ccresumenreport.formPago,
             NUME_CHQ: ccresumenreport.numCheque,
-            FECHA_PAGO: ccresumenreport.fechPago !== null ? new Date(ccresumenreport.fechPago) : ccresumenreport.fechPago,
+            FECHA_PAGO: ccresumenreport.fechPago,
             VALOR_ABONO: parseFloat(ccresumenreport.valorAbono.toFixed(2)),
             VALOR_RETEN: parseFloat(ccresumenreport.valorReten.toFixed(2)),
             VALOR_NC: parseFloat(ccresumenreport.valorNotac.toFixed(2))
@@ -381,8 +382,8 @@ angular.module('integridadUiApp')
             RUC: creditsdebtsreport.ruc,
             PROVEEDOR: creditsdebtsreport.providerName,
             FACTURA: creditsdebtsreport.billNumber,
-            FECHA_VENTA: creditsdebtsreport.fechVenta !== null ? new Date(creditsdebtsreport.fechVenta) : creditsdebtsreport.fechVenta,
-            FECHA_VENCE: creditsdebtsreport.fechVence !== null ? new Date(creditsdebtsreport.fechVence) : creditsdebtsreport.fechVence,
+            FECHA_VENTA: creditsdebtsreport.fechVenta,
+            FECHA_VENCE: creditsdebtsreport.fechVence,
             DIAS_CREDIT: creditsdebtsreport.diasCredit,
             DIAS_VENCE: creditsdebtsreport.diasVencim,
             VENTA: parseFloat(creditsdebtsreport.total.toFixed(2)),
@@ -466,7 +467,7 @@ angular.module('integridadUiApp')
             TIPO_TRANSAC: ccresumenpdreport.tipTransac,
             MODO_PAGO: ccresumenpdreport.formPago,
             NUME_CHQ: ccresumenpdreport.numCheque,
-            FECHA_PAGO: ccresumenpdreport.fechPago !== null ? new Date(ccresumenpdreport.fechPago) : ccresumenpdreport.fechPago,
+            FECHA_PAGO: ccresumenpdreport.fechPago,
             VALOR_ABONO: parseFloat(ccresumenpdreport.valorAbono.toFixed(2)),
             VALOR_RETEN: parseFloat(ccresumenpdreport.valorReten.toFixed(2))
           };
@@ -476,9 +477,10 @@ angular.module('integridadUiApp')
       } else if (vm.isProductReportList === '12') {
         _.each(vm.reportList, function(cellarReport) {
           var data = {
-            FECHA_INGRESO: cellarReport.fechaIngreso !== null ? new Date(cellarReport.fechaIngreso) : cellarReport.fechaIngreso,
+            FECHA_INGRESO: cellarReport.fechaIngreso,
+            NRO_INGRESO: cellarReport.whNumberSeq,
             PROVEEDOR: cellarReport.razonSocial,
-            NRO_INGRESO: cellarReport.cellarSeq,
+            FECHA_FACTURA: cellarReport.fechaBill,
             NRO_FACTURA: cellarReport.billNumber,
             PRODUCTO: cellarReport.prodName,
             CANTIDAD: cellarReport.prodQuantity,

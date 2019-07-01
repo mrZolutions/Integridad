@@ -22,7 +22,7 @@ public class RetentionController {
 
     @RequestMapping(method = RequestMethod.POST, value="/clave_acceso/{id}")
     public ResponseEntity getDatil(@RequestBody com.mrzolution.integridad.app.domain.eretention.Retention requirement, @PathVariable("id") UUID userClientId) {
-	String response = null;
+        String response = null;
 	try {
             response = service.getDatil(requirement, userClientId);
 	} catch(Exception e) {
@@ -30,7 +30,7 @@ public class RetentionController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
         log.info("RetentionController getDatil DONE");
-	return new ResponseEntity<String>(response, HttpStatus.ACCEPTED);
+        return new ResponseEntity<String>(response, HttpStatus.ACCEPTED);
     }
 
     @RequestMapping(method = RequestMethod.GET, value="/{id}")
@@ -42,8 +42,8 @@ public class RetentionController {
             log.error("RetentionController getRetentionById Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
-        log.info("RetentionController getRetentionById DONE: {}", id);
-	return new ResponseEntity<Retention>(response, HttpStatus.ACCEPTED);
+        log.info("RetentionController getRetentionById DONE");
+        return new ResponseEntity<Retention>(response, HttpStatus.ACCEPTED);
     }
     
     @RequestMapping(method = RequestMethod.GET, value="/retention/provider/{id}")
@@ -55,7 +55,7 @@ public class RetentionController {
             log.error("RetentionController getAllRetentionsByProviderId Exception thrown: {}", e.getMessage());
 	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
-        log.info("RetentionController getAllRetentionsByProviderId DONE: {}", id);
+        log.info("RetentionController getAllRetentionsByProviderId DONE");
         return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
     }
     
@@ -81,20 +81,20 @@ public class RetentionController {
             log.error("RetentionController createRetention Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
-        log.info("RetentionController createRetention DONE: {}", retention.getStringSeq());
-	return new ResponseEntity<Retention>(response, HttpStatus.CREATED);
+        log.info("RetentionController createRetention DONE");
+        return new ResponseEntity<Retention>(response, HttpStatus.CREATED);
     }
 
     @RequestMapping(method = RequestMethod.GET, value="/rep/retentions/{userClientId}/{dateOne}/{dateTwo}")
     public ResponseEntity getAllByUserClientIdAndDatesActives(@PathVariable("userClientId") UUID userClientId, @PathVariable("dateOne") long dateOne, @PathVariable("dateTwo") long dateTwo) {
-	log.info("RetentionController getAllByUserClientIdAndDatesActives: {}, {}, {}", userClientId, dateOne, dateTwo);
-	List<RetentionReport> response = null;
+        List<RetentionReport> response = null;
 	try {
             response = service.getAllByUserClientIdAndDates(userClientId, dateOne, dateTwo);
 	} catch(BadRequestException e) {
             log.error("RetentionController getAllByUserClientIdAndDatesActives Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
+        log.info("RetentionController getAllByUserClientIdAndDatesActives DONE");
 	return new ResponseEntity<List>(response, HttpStatus.ACCEPTED);
     }
     
@@ -106,7 +106,7 @@ public class RetentionController {
             log.error("RetentionController deactivateRetention Exception thrown: {}", e.getMessage());
 	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
-        log.info("RetentionController deactivateRetention DONE: {}", retention.getId());
+        log.info("RetentionController deactivateRetention DONE");
         return new ResponseEntity<Void>(HttpStatus.ACCEPTED);
     }
 }

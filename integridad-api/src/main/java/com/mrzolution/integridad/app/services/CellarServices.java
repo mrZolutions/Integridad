@@ -45,17 +45,16 @@ public class CellarServices {
     ProductRepository productRepository;
     
     public Iterable<Cellar> getByUserLazy(UserIntegridad user) {
-        log.info("CellarServices getByUserLazy: {}", user.getId());
         Iterable<Cellar> cellars = cellarRepository.findCellarByUserIntegridad(user);
         cellars.forEach(cellar-> {
             cellar.setListsNull();
             cellar.setFatherListToNull();
         });
+        log.info("CellarServices getByUserLazy DONE: {}", user.getId());
         return cellars;
     }
     
     public Cellar getCellarById(UUID id) {
-        log.info("CellarServices getById: {}", id);
         Cellar retrieved = cellarRepository.findOne(id);
         if (retrieved != null) {
             log.info("CellarServices retrieved id: {}", retrieved.getId());
@@ -63,6 +62,7 @@ public class CellarServices {
             log.info("CellarServices retrieved id NULL: {}", id);
         }		
         populateChildren(retrieved);
+        log.info("CellarServices getById DONE: {}", id);
         return retrieved;
     }
        
@@ -138,7 +138,7 @@ public class CellarServices {
         if ("INGRESADO".equals(saved.getStatusIngreso())) {
             updateProductBySubsidiary(saved, detailsCellar);
         }
-        log.info("CellarServices createCellar DONE id: {}", saved.getId());
+        log.info("CellarServices createCellar DONE: {}, {}", saved.getId(), saved.getWhNumberSeq());
         return saved;
     }
     
@@ -163,7 +163,7 @@ public class CellarServices {
     }
 
     public void updateProductBySubsidiary(Cellar cellar, List<DetailCellar> detailsCellar) {
-        detailsCellar.forEach(detail-> {
+        detailsCellar.forEach(detail -> {
             if (!detail.getProduct().getProductType().getCode().equals("SER")) {
                 ProductBySubsidiary ps = productBySubsidiairyRepository.findBySubsidiaryIdAndProductId(cellar.getSubsidiary().getId(), detail.getProduct().getId());
                 if(ps != null){
@@ -176,42 +176,42 @@ public class CellarServices {
     }
     
     public Iterable<Cellar> getCellarsByProviderId(UUID id) {
-        log.info("CellarServices getCellarByProviderId: {}", id);
         Iterable<Cellar> cellars = cellarRepository.findCellarsByProviderId(id);
         cellars.forEach(cellar -> {
             cellar.setListsNull();
             cellar.setFatherListToNull();
         });
+        log.info("CellarServices getCellarByProviderId DONE: {}", id);
         return cellars;
     }
     
     public Iterable<Cellar> getCellarPendingOfWarehouse(UUID id) {
-        log.info("CellarServices getCellarsPendingByProviderId {}", id);
         Iterable<Cellar> cellars = cellarRepository.findCellarPendingOfWarehouse(id);
         cellars.forEach(cellar -> {
             cellar.setListsNull();
             cellar.setFatherListToNull();
         });
+        log.info("CellarServices getCellarsPendingByProviderId DONE: {}", id);
         return cellars;
     }
     
     public Iterable<Cellar> getActivesCellarByWhNumberSeqAndSubsidiaryId(String whNumberSeq, UUID subId) {
-        log.info("CellarServices getActivesCellarByWhNumberSeqAndSubsidiaryId: {}, {}", whNumberSeq, subId);
         Iterable<Cellar> cellars = cellarRepository.findCellarByWhNumberSeqAndSubsidiaryId(whNumberSeq, subId);
         cellars.forEach(cellar -> {
             cellar.setFatherListToNull();
             cellar.setListsNull();
         });
+        log.info("CellarServices getActivesCellarByWhNumberSeqAndSubsidiaryId DONE: {}, {}", whNumberSeq, subId);
         return cellars;
     }
     
     public Iterable<Cellar> getActivesCellarByWhNumberSeqAndUserClientId(String whNumberSeq, UUID userClientId) {
-        log.info("CellarServices getActivesCellarByWhNumberSeqAndUserClientId: {}, {}", whNumberSeq, userClientId);
         Iterable<Cellar> cellars = cellarRepository.findCellarByWhNumberSeqAndUserClientId(whNumberSeq, userClientId);
         cellars.forEach(cellar -> {
             cellar.setFatherListToNull();
             cellar.setListsNull();
         });
+        log.info("CellarServices getActivesCellarByWhNumberSeqAndUserClientId DONE: {}, {}", whNumberSeq, userClientId);
         return cellars;
     }
     
@@ -235,11 +235,21 @@ public class CellarServices {
             for (Cellar cellar: cellars) {
                 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd");
                 String fechaIngreso = dateFormat.format(new Date(cellar.getDateEnterCellar()));
+                String fechaBill = dateFormat.format(new Date(cellar.getDateBill()));
+                Double iva = new Double(0);
+                Double total = new Double(0);
                 for (DetailCellar detail: cellar.getDetailsCellar()) {
                     if (uuidCurrent.equals(detail.getProduct().getId())) {
-                        CellarEntryReport item = new CellarEntryReport(fechaIngreso, cellar.getProvider().getRazonSocial(), cellar.getCellarSeq(),
+                        if (detail.getProduct().isIva()) {
+                            iva = 0.12;
+                            total = 1.12;
+                        } else {
+                            iva = 0.0;
+                            total = 1.0;
+                        }
+                        CellarEntryReport item = new CellarEntryReport(fechaIngreso, cellar.getWhNumberSeq(), cellar.getProvider().getRazonSocial(), fechaBill,
                                                                         cellar.getBillNumber(), detail.getProduct().getName(), detail.getQuantity(), detail.getCostEach(),
-                                                                        (detail.getTotal() * 0.12), (detail.getTotal() * 1.12));
+                                                                        (detail.getTotal() * iva), (detail.getTotal() * total));
                         reportList.add(item);
                     }
                 }

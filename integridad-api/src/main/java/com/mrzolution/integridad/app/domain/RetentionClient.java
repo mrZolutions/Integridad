@@ -30,6 +30,8 @@ public class RetentionClient {
     private String documentNumber;
     private long dateToday;
     private long documentDate;
+    private double total;
+    private boolean active;
     
     @OneToOne
     @JoinColumn(name = "bill_id")

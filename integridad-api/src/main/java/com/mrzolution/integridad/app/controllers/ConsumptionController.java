@@ -30,7 +30,6 @@ public class ConsumptionController {
     
     @RequestMapping(method = RequestMethod.GET, value="/{id}")
     public ResponseEntity getAllConsumptionById(@PathVariable("id") UUID id) {
-        log.info("ConsumptionController getAllConsumptionById: {}", id);
         Consumption response = null;
         try {
             response = service.getConsumptionById(id);
@@ -38,6 +37,7 @@ public class ConsumptionController {
             log.error("ConsumptionController getAllConsumptionById Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
+        log.info("ConsumptionController getAllConsumptionById DONE");
         return new ResponseEntity<Consumption>(response, HttpStatus.ACCEPTED);
     }
     
@@ -50,6 +50,7 @@ public class ConsumptionController {
             log.error("ConsumptionController createConsumption Exception thrown: {}", e.getMessage());
 	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
+        log.info("ConsumptionController createConsumption DONE");
         return new ResponseEntity<Consumption>(response, HttpStatus.ACCEPTED);
     }
     
@@ -62,12 +63,12 @@ public class ConsumptionController {
             log.error("ConsumptionController getAllConsumptionByClientId Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
+        log.info("ConsumptionController getAllConsumptionByClientId DONE");
         return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
     }
     
     @RequestMapping(method = RequestMethod.GET, value="/rep/{userClientId}/{dateOne}/{dateTwo}")
     public ResponseEntity getByUserClientIdAndDatesActives(@PathVariable("userClientId") UUID userClientId, @PathVariable("dateOne") long dateOne, @PathVariable("dateTwo") long dateTwo) {
-        log.info("ConsumptionController getByUserClientIdAndDatesActives: {}, {}, {}", userClientId, dateOne, dateTwo);
         List<CsmItemReport> response = null;
         try {
             response = service.getByUserClientIdAndDatesActives(userClientId, dateOne, dateTwo);
@@ -75,6 +76,7 @@ public class ConsumptionController {
             log.error("ConsumptionController getByUserClientIdAndDatesActives Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
+        log.info("ConsumptionController getByUserClientIdAndDatesActives DONE");
         return new ResponseEntity<List>(response, HttpStatus.ACCEPTED);
     }
 }

@@ -21,27 +21,26 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
-@RequestMapping(value = "/integridad/v1/contable/dailyce")
+@RequestMapping(value = "/integridad/v1/dailyce")
 public class DailybookCeController {
     @Autowired
     DailybookCeServices service;
     
     @RequestMapping(method = RequestMethod.GET, value="/{id}")
     public ResponseEntity getDailybookCeById(@PathVariable("id") UUID id) {
-        log.info("DailybookCeController getDailybookCeById: {}", id);
-	DailybookCe response = null;
+        DailybookCe response = null;
 	try {
             response = service.getDailybookCeById(id);
 	} catch (BadRequestException e) {
             log.error("DailybookCeController getDailybookCeById Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
+        log.info("DailybookCeController getDailybookCeById DONE");
         return new ResponseEntity<DailybookCe>(response, HttpStatus.ACCEPTED);
     }
     
     @RequestMapping(method = RequestMethod.GET, value="/provider/{id}")
     public ResponseEntity getDailybookCeByProviderId(@PathVariable("id") UUID id) {
-        log.info("DailybookCeController getDailybookCeByProviderId: {}", id);
         Iterable<DailybookCe> response = null;
         try {
             response = service.getDailybookCeByProviderId(id);
@@ -49,12 +48,12 @@ public class DailybookCeController {
             log.error("DailybookCeController getDailybookCeByProviderId Exception thrown: {}", e.getMessage());
 	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
+        log.info("DailybookCeController getDailybookCeByProviderId DONE");
         return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
     }
     
     @RequestMapping(method = RequestMethod.GET, value="/userclient/{id}")
     public ResponseEntity getDailybookCeByUserClientId(@PathVariable("id") UUID id) {
-        log.info("DailybookCeController getDailybookCeByUserClientId: {}", id);
         Iterable<DailybookCe> response = null;
         try {
             response = service.getDailybookCeByUserClientId(id);
@@ -62,12 +61,12 @@ public class DailybookCeController {
             log.error("DailybookCeController getDailybookCeByUserClientId Exception thrown: {}", e.getMessage());
 	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
+        log.info("DailybookCeController getDailybookCeByUserClientId DONE");
         return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
     }
     
     @RequestMapping(method = RequestMethod.GET, value="/userclient/noprovider/{id}")
     public ResponseEntity getDailybookCeByUserClientIdWithNoProvider(@PathVariable("id") UUID id) {
-        log.info("DailybookCeController getDailybookCeByUserClientIdWithNoProvider: {}", id);
         Iterable<DailybookCe> response = null;
         try {
             response = service.getDailybookCeByUserClientIdWithNoProvider(id);
@@ -75,6 +74,7 @@ public class DailybookCeController {
             log.error("DailybookCeController getDailybookCeByUserClientIdWithNoProvider Exception thrown: {}", e.getMessage());
 	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
+        log.info("DailybookCeController getDailybookCeByUserClientIdWithNoProvider DONE");
         return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
     }
     
@@ -93,13 +93,14 @@ public class DailybookCeController {
     
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity createDailybookCe(@RequestBody DailybookCe dailybookCe) {
-	DailybookCe response = null;
+        DailybookCe response = null;
 	try {
             response = service.createDailybookCe(dailybookCe);
 	} catch (BadRequestException e) {
             log.error("DailybookCeController createDailybookCe Exception thrown: {}", e.getMessage());
 	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
+        log.info("DailybookCeController createDailybookCe DONE");
         return new ResponseEntity<DailybookCe>(response, HttpStatus.CREATED);
     }
     
@@ -111,7 +112,7 @@ public class DailybookCeController {
             log.error("DailybookCeController deactivateDailybookCe Exception thrown: {}", e.getMessage());
 	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
-        log.info("DailybookCeController deactivateDailybookCe DONE: {}", dailybookCe.getId());
+        log.info("DailybookCeController deactivateDailybookCe DONE");
         return new ResponseEntity<Void>(HttpStatus.ACCEPTED);
     }
 }

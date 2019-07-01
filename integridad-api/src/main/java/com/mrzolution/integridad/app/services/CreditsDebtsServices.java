@@ -37,14 +37,20 @@ public class CreditsDebtsServices {
     private double sumTotalAbono = 0;
     private double sumTotalReten = 0;
     private double sumTotalValor = 0;
+    private double total = 0.0;
+    private double totalAbono = 0.0;
+    private double totalReten = 0.0;
+    private double totalValor = 0.0;
+    private String retenNumber = "";
+    private String numCheque = "";
     
-    public Iterable<CreditsDebts> getCreditsDebtsOfDebtsToPayByDebtsToPayId(UUID id) {
-        log.info("CreditsDebtsServices getCreditsDebtsOfDebtsToPayByDebtsToPayId: {}", id);
-        Iterable<CreditsDebts> creditsDebts = creditsDebtsRepository.findCreditsDebtsOfDebtsToPayByDebtsToPayId(id);
+    public Iterable<CreditsDebts> getCreditsDebtsByDebtsToPayId(UUID id) {
+        Iterable<CreditsDebts> creditsDebts = creditsDebtsRepository.findCreditsDebtsByDebtsToPayId(id);
         creditsDebts.forEach(creditDebt -> {
             creditDebt.setListsNull();
             creditDebt.setFatherListToNull();
         });
+        log.info("CreditsDebtsServices getCreditsDebtsByDebtsToPayId DONE: {}", id);
         return creditsDebts;
     }
     
@@ -54,6 +60,11 @@ public class CreditsDebtsServices {
         sumTotalReten = 0;
         sumTotalValor = 0;
         saldo = 0;
+        total = 0;
+        totalAbono = 0;
+        totalReten = 0;
+        totalValor = 0;
+        
         log.info("CreditsDebtsServices getCreditsDebtsPendingOfDebtsToPayByUserClientId: {}", id);
         Iterable<CreditsDebts> creditsDebts = creditsDebtsRepository.findCreditsDebtsPendingOfDebtsToPayByUserClientId(id, dateTwo);
         List<CreditsDebtsReport> creditsDebtsReportList = new ArrayList<>();
@@ -74,7 +85,7 @@ public class CreditsDebtsServices {
             Double sumReten = Double.valueOf(0);
             
             for (PaymentDebts payments : creditD.getPaymentDebts()) {
-                if (payments.getDatePayment() <= dateTwo) {
+                if (payments.getDatePayment() <= dateTwo && payments.isActive()) {
                     sumAbono = Double.sum(sumAbono, payments.getValorAbono());
                     sumReten = Double.sum(sumReten, payments.getValorReten());
                 }
@@ -110,9 +121,17 @@ public class CreditsDebtsServices {
                                                                          fechaVenta, fechaVence, creditD.getDiasPlazo(), diasVencim, creditD.getPagoDebts().getDebtsToPay().getTotal(),
                                                                          sumAbono, sumReten, saldo);
             creditsDebtsReportList.add(creditDebtReport);
+            
+            total = Double.sum(total, creditD.getPagoDebts().getDebtsToPay().getTotal());
+            totalAbono = Double.sum(totalAbono, sumAbono);
+            totalReten = Double.sum(totalReten, sumReten);
+            totalValor = total - (totalAbono + totalReten);
         });
         CreditsDebtsReport creditDebtReport = new CreditsDebtsReport("SUB-TOTAL ", null, null, null, null, 0, 0, sumTotal, sumTotalAbono, sumTotalReten, sumTotalValor);
         creditsDebtsReportList.add(creditDebtReport);
+        
+        CreditsDebtsReport creditDebtsReport = new CreditsDebtsReport("TOTAL GENERAL ", null, null, null, null, 0, 0, total, totalAbono, totalReten, totalValor);
+        creditsDebtsReportList.add(creditDebtsReport);
         
         sumTotal = 0;
         sumTotalAbono = 0;

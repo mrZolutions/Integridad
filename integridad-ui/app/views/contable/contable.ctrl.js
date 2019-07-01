@@ -123,6 +123,28 @@ angular.module('integridadUiApp')
             vm.providerCxPSelected = undefined;
             vm.providerCxPList = undefined;
             vm.activeCxP = undefined
+
+            //Comprobante de Factura-Venta
+            vm.clientFvList = undefined;
+            vm.clientFvIdentification = undefined;
+            vm.clientFvSelected = undefined;
+            vm.clientFvName = undefined;
+            vm.clientFvContable = undefined;
+            vm.dailybookFvNew = undefined;
+            vm.dailyFvSeq = undefined;
+            vm.dailyFvStringSeq = undefined;
+            vm.dailiedFv = false;
+            vm.subIvaFv = undefined;
+            vm.subTotalDoceFv = undefined;
+            vm.subTotalCeroFv = undefined;
+            vm.totalFv = undefined;
+            vm.dailybookFvList = undefined;
+            vm.dailybookFvCreated = undefined;
+            vm.generalDetailFv = undefined;
+            vm.activeFv = undefined
+            vm.dailybookFvManual = false;
+            vm.beneficioFv = undefined;
+            vm.dailybookFvManualCreatedList = undefined;
             
             vm.contable = undefined;
             vm.debtsToPayList = undefined;
@@ -189,6 +211,17 @@ angular.module('integridadUiApp')
                     vm.typeContab = 'CUENTA POR PAGAR CON RETENCIONES';
                     providerService.getLazyByUserClientId(vm.usrCliId).then(function(response) {
                         vm.providerCxPList = response;
+                        vm.loading = false;
+                    }).catch(function(error) {
+                        vm.loading = false;
+                        vm.error = error.data;
+                    });
+                break;
+                case '6':
+                    vm.selectedTypeBook = vm.dailybookType;
+                    vm.typeContab = 'COMPROBANTE DE FACTURACIÓN-VENTA';
+                    clientService.getLazyByUserClientId(vm.usrCliId).then(function(response) {
+                        vm.clientFvList = response;
                         vm.loading = false;
                     }).catch(function(error) {
                         vm.loading = false;
@@ -579,7 +612,7 @@ angular.module('integridadUiApp')
             vm.itemb = {
                 typeContab: vm.typeContab,
                 codeConta: cuenta.code,
-                tipo: cuenta.accountType,
+                tipo: 'CREDITO (C)',
                 descrip: cuenta.description,
                 name: vm.detailitemb
             };
@@ -595,7 +628,7 @@ angular.module('integridadUiApp')
             vm.itemb = {
                 typeContab: vm.typeContab,
                 codeConta: cuenta.code,
-                tipo: cuenta.accountType,
+                tipo: 'DEBITO (D)',
                 descrip: cuenta.description,
                 name: vm.detailitemb
             };
@@ -843,16 +876,22 @@ angular.module('integridadUiApp')
 
         vm.dailybookCiDeactivate = function() {
             vm.loading = true;
-            var index = vm.dailybookCiList.indexOf(vm.deactivatedailybookCi);
-            var indexm = vm.dailybookCiManualCreatedList.indexOf(vm.deactivatedailybookCi);
-            contableService.deactivateDailybookCi(vm.deactivatedailybookCi).then(function(response) {
+            if (vm.dailybookCiList != null) {
                 var index = vm.dailybookCiList.indexOf(vm.deactivatedailybookCi);
-                if (index > -1) {
-                    vm.dailybookCiList.splice(index, 1);
-                };
+            } else if (vm.dailybookCiManualCreatedList != null) {
                 var indexm = vm.dailybookCiManualCreatedList.indexOf(vm.deactivatedailybookCi);
-                if (indexm > -1) {
-                    vm.dailybookCiManualCreatedList.splice(indexm, 1);
+            };
+            contableService.deactivateDailybookCi(vm.deactivatedailybookCi).then(function(response) {
+                if (vm.dailybookCiList != null) {
+                    var index = vm.dailybookCiList.indexOf(vm.deactivatedailybookCi);
+                    if (index > -1) {
+                        vm.dailybookCiList.splice(index, 1);
+                    };
+                } else if (vm.dailybookCiManualCreatedList != null) {
+                    var indexm = vm.dailybookCiManualCreatedList.indexOf(vm.deactivatedailybookCi);
+                    if (indexm > -1) {
+                        vm.dailybookCiManualCreatedList.splice(indexm, 1);
+                    };
                 };
                 vm.deactivatedailybookCi = undefined;
                 vm.loading = false;
@@ -877,10 +916,10 @@ angular.module('integridadUiApp')
             vm.loading = true;
             $('#modalShowBillsCi').modal('hide');
             vm.billNumber = bill.stringSeq;
-            vm.billTotal = bill.total;
+            vm.billSaldo = bill.saldo;
             vm.generalDetailCi = vm.clientName + ' ' + 'Cancela Fc' + ' ' + vm.billNumber;
             vm.dailybookCi.billNumber = vm.billNumber;
-            vm.dailybookCi.total = (vm.billTotal).toFixed(2);
+            vm.dailybookCi.total = vm.billSaldo;
             vm.itemClient = {
                 typeContab: vm.typeContab,
                 codeConta: vm.clientContable,
@@ -903,9 +942,9 @@ angular.module('integridadUiApp')
                     codeConta: vm.clientContable,
                     descrip: 'CLIENTES NO RELACIONADOS',
                     tipo: 'CREDITO (C)',
-                    baseImponible: parseFloat((vm.dailybookCi.total).toFixed(2)),
-                    name: vm.generalDetailCe,
-                    haber: parseFloat((vm.dailybookCi.total).toFixed(2))
+                    baseImponible: parseFloat(vm.dailybookCi.total),
+                    name: vm.generalDetailCi,
+                    haber: parseFloat(vm.dailybookCi.total)
                 };
                 vm.itemClient.numCheque = vm.numChequeCi;
                 vm.dailybookCi.detailDailybookContab.push(vm.itemClient);
@@ -946,7 +985,7 @@ angular.module('integridadUiApp')
             vm.itemCib = {
                 typeContab: vm.typeContab,
                 codeConta: cuenta.code,
-                tipo: cuenta.accountType,
+                tipo: 'DEBITO (D)',
                 descrip: cuenta.description,
                 name: vm.detailitemCib
             };
@@ -962,7 +1001,7 @@ angular.module('integridadUiApp')
             vm.itemCib = {
                 typeContab: vm.typeContab,
                 codeConta: cuenta.code,
-                tipo: cuenta.accountType,
+                tipo: 'CREDITO (C)',
                 descrip: cuenta.description,
                 name: vm.detailitemCib
             };
@@ -1258,7 +1297,6 @@ angular.module('integridadUiApp')
             vm.subTotalDoceCxP = parseFloat((vm.dailybookCxP.total / 1.12).toFixed(2));
         };
 
-        //Obtiene la Base Imponible para el tipo de IVA 12
         vm.getBaseImponibleCodigo_1 = function() {
             var totalDebito = vm.subTotalDoceCxP;
             if (vm.dailybookCxP) {
@@ -1919,6 +1957,82 @@ angular.module('integridadUiApp')
                     vm.dailybookCxPList.splice(index, 1);
                 };
                 vm.deactivatedailybookCxP = undefined;
+                vm.loading = false;
+            }).catch(function(error) {
+                vm.loading = false;
+                vm.error = error.data;
+            });
+        };
+
+    // Funciones para el Diario Comprobante de Facturación - Venta
+        function _getDailyFvSeqNumber() {
+            vm.numberAddedOne = parseInt($localStorage.user.cashier.dailyFvNumberSeq) + 1;
+            vm.dailyFvSeq = vm.numberAddedOne;
+            vm.dailyFvStringSeq = utilSeqService._pad_with_zeroes(vm.numberAddedOne, 6);
+        };
+
+        function _initializeDailybookFv() {
+            vm.dailybookFv = {
+                client: vm.clientFvSelected,
+                userIntegridad: $localStorage.user,
+                subsidiary: $localStorage.user.subsidiary,
+                subTotalDoce: 0,
+                iva: 0,
+                subTotalCero: 0,
+                total: 0,
+                detailDailybookContab: []
+            };
+        };
+
+        vm.clientFvSelect = function(client) {
+            vm.success = undefined;
+            vm.error = undefined;
+            vm.loading = true;
+            vm.clientFvSelected = client;
+            vm.clientFvId = client.id;
+            vm.clientFvName = client.name;
+            vm.clientFvIdentification = client.identification;
+            vm.clientFvContable = client.codConta;
+            _getDailyFvSeqNumber();
+            _initializeDailybookFv();
+            vm.loading = false;
+            var today = new Date();
+            $('#pickerDateRecordBookFv').data("DateTimePicker").date(today);
+            vm.dailybookFvNew = true;
+        };
+
+        vm.consultDailybookFv = function(client) {
+            vm.success = undefined;
+            vm.error = undefined;
+            vm.loading = true;
+            contableService.getDailybookFvByClientId(client.id).then(function(response) {
+                vm.dailybookFvList = response;
+                vm.loading = false;
+            }).catch(function(error) {
+                vm.loading = false;
+                vm.error = error.data;
+            });
+        };
+
+        vm.manualDailybookFv = function() {
+            vm.success = undefined;
+            vm.error = undefined;
+            vm.loading = true;
+            vm.dailybookFvNew = true;
+            vm.dailybookFvManual = true;
+            _getDailyFvSeqNumber();
+            _initializeDailybookFv();
+            var today = new Date();
+            $('#pickerDateRecordBookFv').data("DateTimePicker").date(today);
+            vm.loading = false;
+        };
+
+        vm.consultManualDailybookFv = function() {
+            vm.success = undefined;
+            vm.error = undefined;
+            vm.loading = true;
+            contableService.getDailybookFvByUserClientIdWithNoClient(vm.usrCliId).then(function(response) {
+                vm.dailybookFvManualCreatedList = response;
                 vm.loading = false;
             }).catch(function(error) {
                 vm.loading = false;

@@ -136,14 +136,17 @@ angular.module('integridadUiApp')
 
         function _activate() {
             vm.loading = true;
+            vm.error = undefined;
             vm.today = new Date();
             vm.clientBill = undefined;
             vm.success = undefined;
+            vm.totalTotal = undefined;
             vm.billList = undefined;
             vm.billMultipleList = undefined;
             vm.creditsbillList = undefined;
             vm.retentionClient = undefined;
             vm.retentionClientCreated = undefined;
+            vm.retentionClientList = undefined;
             vm.clientList = [];
             vm.itemsMultiplePayments = [];
             vm.creditsBillsSelected = undefined;
@@ -156,6 +159,7 @@ angular.module('integridadUiApp')
             vm.clientSelected = undefined;
             vm.clientCodConta = undefined;
             vm.ctaCtableBankList = undefined;
+            vm.paymentList = undefined;
             vm.bankName = undefined;
             vm.modePayment = undefined;
             vm.noDocument = undefined;
@@ -198,6 +202,7 @@ angular.module('integridadUiApp')
             vm.success = undefined;
             vm.clientSelected = client;
             vm.clientId = client.id;
+            vm.clientIdentification = client.identification;
             vm.clientName = client.name;
             vm.clientCodConta = client.codConta;
             vm.clientAddress = client.address;
@@ -206,6 +211,22 @@ angular.module('integridadUiApp')
             _initializeDailybookCi();
             billService.getAllBillsByClientIdWithSaldo(vm.clientId).then(function(response) {
                 vm.billList = response;
+                vm.loading = false;
+            }).catch(function(error) {
+                vm.loading = false;
+                vm.error = error.data;
+            });
+        };
+
+        vm.paymentsByClient = function(client) {
+            vm.loading = true;
+            vm.success = undefined;
+            vm.clientSelected = client;
+            vm.clientId = client.id;
+            vm.clientIdentification = client.identification;
+            vm.clientName = client.name;
+            paymentService.getPaymentsByClientId(vm.clientId).then(function(response) {
+                vm.paymentList = response;
                 vm.loading = false;
             }).catch(function(error) {
                 vm.loading = false;
@@ -278,16 +299,24 @@ angular.module('integridadUiApp')
                 if (response.length === 0) {
                     paymentService.createPayment(payment).then(function(response) {
                         vm.paymentCreated = response;
-                        vm.success = 'Abono realizado con exito';
-                        if (vm.paymentCreated.modePayment === 'CHQ' || vm.paymentCreated.modePayment === 'TRF' || vm.paymentCreated.modePayment === 'DEP') {
-                            _asientoComprobanteIngreso();
+                        switch (vm.paymentCreated.modePayment) {
+                            case 'CHQ':
+                                _asientoComprobanteIngreso();
+                            break;
+                            case 'TRF':
+                                _asientoComprobanteIngreso();
+                            break;
+                            case 'DEP':
+                                _asientoComprobanteIngreso();
+                            break;
                         };
+                        vm.success = 'Abono realizado con exito';
                     }).catch(function(error) {
                         vm.loading = false;
                         vm.error = error.data;
                     });
                 } else {
-                    vm.error = 'El Nro. de Documento (Cheque, Transferencia y/o Depósito) Ya Existe y no puede repetirse';
+                    vm.error = 'El Nro. de Cheque, Transferencia y/o Depósito Ya Existe y no puede repetirse';
                     vm.loading = false;
                 };
             }).catch(function(error) {
@@ -299,7 +328,7 @@ angular.module('integridadUiApp')
 
         function _asientoComprobanteIngreso() {
             _getDailyCiSeqNumber();
-            vm.selectedTypeBook = '2';
+            vm.selectedTypeBook = '3';
             vm.generalDetailCi_1 = vm.paymentCreated.clientName + ' ' + 'Cancela Fc' + ' ' + vm.paymentCreated.documentNumber;
             vm.itema = {
                 typeContab: vm.typeContabCi,
@@ -308,7 +337,7 @@ angular.module('integridadUiApp')
                 tipo: 'CREDITO (C)',
                 baseImponible: parseFloat(vm.paymentCreated.valorAbono),
                 name: vm.generalDetailCi_1,
-                deber: parseFloat(vm.paymentCreated.valorAbono)
+                haber: parseFloat(vm.paymentCreated.valorAbono)
             };
             vm.itema.numCheque = vm.paymentCreated.noDocument;
             vm.dailybookCi.detailDailybookContab.push(vm.itema);
@@ -320,7 +349,7 @@ angular.module('integridadUiApp')
                 tipo: 'DEBITO (D)',
                 baseImponible: parseFloat(vm.paymentCreated.valorAbono),
                 name: vm.generalDetailCi_2,
-                haber: parseFloat(vm.paymentCreated.valorAbono)
+                deber: parseFloat(vm.paymentCreated.valorAbono)
             };
             vm.itemb.numCheque = '--';
             vm.dailybookCi.detailDailybookContab.push(vm.itemb);
@@ -350,6 +379,23 @@ angular.module('integridadUiApp')
             });
         };
 
+        vm.paymentDeactivate = function() {
+            vm.loading = true;
+            var index = vm.paymentList.indexOf(vm.deactivatePayment);
+            paymentService.deactivatePayment(vm.deactivatePayment).then(function(response) {
+                var index = vm.paymentList.indexOf(vm.deactivatePayment);
+                if (index > -1) {
+                    vm.paymentList.splice(index, 1);
+                };
+                vm.deactivatePayment = undefined;
+                vm.success = 'Cobro anulado con exito';
+                vm.loading = false;
+            }).catch(function(error) {
+                vm.loading = false;
+                vm.error = error.data;
+            });
+        };
+
         vm.clientMultiplePayment = function(client) {
             vm.loading = true;
             vm.success = undefined;
@@ -358,6 +404,7 @@ angular.module('integridadUiApp')
             vm.clientName = client.name;
             vm.clientCodConta = client.codConta;
             vm.clientId = client.id;
+            vm.clientIdentification = client.identification;
             _initializeDailybookCi();
             cuentaContableService.getCuentaContableByUserClientAndBank(vm.usrCliId).then(function(response) {
                 vm.ctaCtableBankList = response;
@@ -472,10 +519,10 @@ angular.module('integridadUiApp')
                             vm.error = error.data;
                         });
                     });
-                    //_asientoComprobanteMultipleIngreso();
+                    _asientoComprobanteMultipleIngreso();
                     _activate();
                 } else {
-                    vm.error = 'El Nro. de Documento (Cheque, Transferencia y/o Depósito) Ya Existe y no puede repetirse';
+                    vm.error = 'El Nro. de Cheque, Transferencia y/o Depósito Ya Existe y no puede repetirse';
                     vm.loading = false;
                 };
             }).catch(function(error) {
@@ -486,45 +533,44 @@ angular.module('integridadUiApp')
 
         function _asientoComprobanteMultipleIngreso() {
             _getDailyCiSeqNumber();
-            vm.selectedTypeBook = '2';
-            vm.generalDetailCi_1 = vm.paymentCreated.clientName + ' ' + 'Cancela Fcs' + ' ' + vm.paymentCreated.documentNumber;
+            vm.selectedTypeBook = '3';
+            vm.generalDetailCi_1 = vm.clientName + ' ' + 'Cancela Fcs' + ' ' + vm.billsNumberPayed;
             vm.itema = {
                 typeContab: vm.typeContabCi,
-                codeConta: vm.paymentCreated.ctaCtableClient,
+                codeConta: vm.clientCodConta,
                 descrip: 'CLIENTES NO RELACIONADOS',
                 tipo: 'CREDITO (C)',
-                baseImponible: parseFloat(vm.paymentCreated.valorAbono),
+                baseImponible: parseFloat(vm.valorDocumento),
                 name: vm.generalDetailCi_1,
-                deber: parseFloat(vm.paymentCreated.valorAbono)
+                haber: parseFloat(vm.valorDocumento)
             };
-            vm.itema.numCheque = vm.paymentCreated.noDocument;
+            vm.itema.numCheque = vm.noDocument;
             vm.dailybookCi.detailDailybookContab.push(vm.itema);
-            vm.generalDetailCi_2 = vm.paymentCreated.banco;
+            vm.generalDetailCi_2 = vm.bankName;
             vm.itemb = {
                 typeContab: vm.typeContabCi,
-                codeConta: vm.paymentCreated.ctaCtableBanco,
-                descrip: vm.paymentCreated.banco,
+                codeConta: vm.ctaCtableBankCode,
+                descrip: vm.bankName,
                 tipo: 'DEBITO (D)',
-                baseImponible: parseFloat(vm.paymentCreated.valorAbono),
+                baseImponible: parseFloat(vm.valorDocumento),
                 name: vm.generalDetailCi_2,
-                haber: parseFloat(vm.paymentCreated.valorAbono)
+                deber: parseFloat(vm.valorDocumento)
             };
             vm.itemb.numCheque = '--';
             vm.dailybookCi.detailDailybookContab.push(vm.itemb);
-            
             vm.dailybookCi.codeTypeContab = vm.selectedTypeBook;
-            vm.dailybookCi.nameBank = vm.paymentCreated.banco;
-            vm.dailybookCi.billNumber = vm.paymentCreated.documentNumber;
-            vm.dailybookCi.numCheque = vm.paymentCreated.noDocument;
+            vm.dailybookCi.nameBank = vm.bankName;
+            vm.dailybookCi.billNumber = vm.billsNumberPayed;
+            vm.dailybookCi.numCheque = vm.noDocument;
             vm.dailybookCi.typeContab = vm.typeContabCi;
             vm.dailybookCi.dailyCiSeq = vm.dailyCiSeq;
             vm.dailybookCi.dailyCiStringSeq = vm.dailyCiStringSeq;
             vm.dailybookCi.dailyCiStringUserSeq = 'PAGO GENERADO ' + vm.dailyCiStringSeq;
-            vm.dailybookCi.clientProvName = vm.paymentCreated.clientName;
+            vm.dailybookCi.clientProvName = vm.clientName;
             vm.dailybookCi.generalDetail = vm.generalDetailCi_1;
-            vm.dailybookCi.total = vm.paymentCreated.valorAbono;
-            vm.dailybookCi.iva = parseFloat((vm.paymentCreated.valorAbono * 0.12).toFixed(2));
-            vm.dailybookCi.subTotalDoce = parseFloat((vm.paymentCreated.valorAbono / 1.12).toFixed(2));
+            vm.dailybookCi.total = vm.valorDocumento;
+            vm.dailybookCi.iva = parseFloat((vm.valorDocumento * 0.12).toFixed(2));
+            vm.dailybookCi.subTotalDoce = parseFloat((vm.valorDocumento / 1.12).toFixed(2));
             vm.dailybookCi.subTotalCero = 0;
             vm.dailybookCi.dateRecordBook = $('#pickerDateOfMultiplePayment').data("DateTimePicker").date().toDate().getTime();
             contableService.createDailybookCi(vm.dailybookCi).then(function(response) {
@@ -539,22 +585,46 @@ angular.module('integridadUiApp')
         vm.createRetentionClient = function(bill) {
             var today = new Date();
             vm.success = undefined;
-            vm.retentionClientCreated = false;
+            vm.error = undefined;
             vm.billNumber = bill.stringSeq;
-            vm.creditValue = bill.total;
-            vm.creditValueSubtotal = bill.subTotal;
-            vm.creditValueIva = bill.iva;
             vm.BillId = bill.id;
-            vm.retentionClient = {
-                bill: bill,
-                typeRetention: undefined,
-                items: [],
-                ejercicio: ('0' + (today.getMonth() + 1)).slice(-2) + '/' + today.getFullYear()
-            };
-            $('#pickerDateToday').data("DateTimePicker").date(today);
-            $('#pickerDateRetention').data("DateTimePicker").date(today);
-            $('#pickerDateRetention').on("dp.change", function (data) {
-                vm.retentionClient.ejercicio = ('0' + ($('#pickerDateRetention').data("DateTimePicker").date().toDate().getMonth() + 1)).slice(-2) + '/' + $('#pickerDateRetention').data("DateTimePicker").date().toDate().getFullYear();
+            eretentionClientService.getRetentionClientByBillIdAndDocumentNumber(vm.BillId, vm.billNumber).then(function(response) {
+                if (response.length === 0) {
+                    vm.creditValue = bill.total;
+                    vm.creditValueSubtotal = bill.subTotal;
+                    vm.creditValueIva = bill.iva;
+                    vm.retentionClientCreated = false;
+                    vm.retentionClient = {
+                        bill: bill,
+                        typeRetention: undefined,
+                        items: [],
+                        ejercicio: ('0' + (today.getMonth() + 1)).slice(-2) + '/' + today.getFullYear()
+                    };
+                    $('#pickerDateToday').data("DateTimePicker").date(today);
+                    $('#pickerDateRetention').data("DateTimePicker").date(today);
+                    $('#pickerDateRetention').on("dp.change", function (data) {
+                        vm.retentionClient.ejercicio = ('0' + ($('#pickerDateRetention').data("DateTimePicker").date().toDate().getMonth() + 1)).slice(-2) + '/' + $('#pickerDateRetention').data("DateTimePicker").date().toDate().getFullYear();
+                    });
+                } else {
+                    vm.error = 'Ya existe una Retención ingresada para esta Factura';
+                    vm.loading = false;
+                };
+            }).catch(function(error) {
+                vm.loading = false;
+                vm.error = error.data;
+            });
+        };
+
+        vm.consultRetentionClient = function(bill) {
+            vm.loading = true;
+            vm.error = undefined;
+            vm.billNumber = bill.stringSeq;
+            eretentionClientService.getRetentionClientByBillId(bill.id).then(function(response) {
+                vm.retentionClientList = response;
+                vm.loading = false;
+            }).catch(function(error) {
+                vm.loading = false;
+                vm.error = error.data;
             });
         };
 
@@ -603,35 +673,25 @@ angular.module('integridadUiApp')
             vm.retentionClient.items.splice(index, 1);
         };
 
-        vm.getTotalRetencionesClient = function(){
+        vm.getTotalRetentionClient = function() {
             var totalRetorno = 0;
             if (vm.retentionClient) {
                 _.each(vm.retentionClient.items, function(detail) {
-                    totalRetorno = (parseFloat(totalRetorno) +parseFloat(detail.valor_retenido)).toFixed(2);
+                    totalRetorno = (parseFloat(totalRetorno) + parseFloat(detail.valor_retenido)).toFixed(2);
                 });
             };
+            vm.totalTotal = totalRetorno;
             return totalRetorno;
         };
 
         vm.previewRetentionClient = function() {
+            vm.loading = true;
             vm.retentionClient.documentDate = $('#pickerDateRetention').data("DateTimePicker").date().toDate().getTime();
             vm.retentionClient.ejercicioFiscal = vm.retentionClient.ejercicio;
             vm.retentionClient.documentNumber = vm.billNumber;
             vm.retentionClient.retentionNumber = vm.retentionClient.numero;
             vm.retentionClient.BillId = vm.BillId;
-            vm.retentionClient.detailRetentionClient = [];
-            vm.totalRetention = 0;
-            _.each(vm.retentionClient.items, function(item) {
-                var detail = {
-                    taxType: item.codigo === 1 ? 'RETENCION EN LA FUENTE' : 'RETENCION EN EL IVA',
-                    code: item.codigo_porcentaje_integridad,
-                    baseImponible: item.base_imponible,
-                    percentage: item.porcentaje,
-                    total: item.valor_retenido
-                };
-                vm.totalRetention = (parseFloat(vm.totalRetention) + parseFloat(detail.total)).toFixed(2);
-                vm.retentionClient.detailRetentionClient.push(detail);
-            });
+            vm.loading = false;
         };
 
         vm.saveRetentionClient = function(retentionClient) {
@@ -643,6 +703,7 @@ angular.module('integridadUiApp')
             vm.retentionClient.dateToday = $('#pickerDateToday').data("DateTimePicker").date().toDate().getTime();
             vm.retentionClient.documentDate = $('#pickerDateRetention').data("DateTimePicker").date().toDate().getTime();
             vm.retentionClient.BillId = vm.BillId;
+            vm.retentionClient.total = vm.totalTotal;
             vm.retentionClient.detailRetentionClient = [];
             _.each(vm.retentionClient.items, function(item) {
                 var detail = {
@@ -654,13 +715,53 @@ angular.module('integridadUiApp')
                 };
                 vm.retentionClient.detailRetentionClient.push(detail);
             });
-            eretentionClientService.create(retentionClient).then(function(respRetentionClient) {
+            eretentionClientService.createRetentionClient(retentionClient).then(function(respRetentionClient) {
                 vm.totalRetention = 0;
                 vm.retentionClient = respRetentionClient;
                 _.each(vm.retentionClient.detailRetentionClient, function(detail) {
-                    vm.totalRetention = (parseFloat(vm.totalRetention) + parseFloat(detail.total)).toFixed(2);
+                    vm.totalRetention = parseFloat(vm.totalRetention + detail.total);
                 });
                 vm.retentionClientCreated = true;
+                vm.loading = false;
+            }).catch(function(error) {
+                vm.loading = false;
+                vm.error = error.data;
+            });
+        };
+
+        vm.retentionClientSelected = function(retentionClient) {
+            vm.loading = true;
+            vm.error = undefined;
+            eretentionClientService.getRetentionClientById(retentionClient.id).then(function(response) {
+                vm.retentionClientToShow = response;
+                vm.loading = false;
+            }).catch(function(error) {
+                vm.loading = false;
+                vm.error = error.data;
+            });
+        };
+
+        vm.getTotalRetentionClientToShow = function() {
+            var totalRetorno = 0;
+            if (vm.retentionClientToShow) {
+                _.each(vm.retentionClientToShow.detailRetentionClient, function(detail) {
+                    totalRetorno = (parseFloat(totalRetorno) + parseFloat(detail.total)).toFixed(2);
+                });
+            };
+            return totalRetorno;
+        };
+
+        vm.retentionClientDeactivate = function() {
+            vm.loading = true;
+            vm.error = undefined;
+            var index = vm.retentionClientList.indexOf(vm.deactivateRetentionClient);
+            eretentionClientService.deactivateRetentionClient(vm.deactivateRetentionClient).then(function(response) {
+                var index = vm.retentionClientList.indexOf(vm.deactivateRetentionClient);
+                if (index > -1) {
+                    vm.retentionClientList.splice(index, 1);
+                };
+                vm.deactivateRetentionClient = undefined;
+                vm.success = 'Registro eliminado con exito';
                 vm.loading = false;
             }).catch(function(error) {
                 vm.loading = false;

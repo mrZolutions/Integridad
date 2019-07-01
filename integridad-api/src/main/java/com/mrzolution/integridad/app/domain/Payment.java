@@ -33,6 +33,7 @@ public class Payment implements Child {
     private double valorAbono;
     private double valorReten;
     private double valorNotac;
+    private boolean active;
 
     @ManyToOne
     @JoinColumn(name = "credit_id")

@@ -17,6 +17,7 @@ public class RetentionClientReport {
     private String retentionNumber;
     private String documentNumber;
     private String ejercicioFiscal;
+    private String status;
     private String codigoRetentionFuente;
     private Double baseFuente;
     private Double porcenFuente;
@@ -27,7 +28,7 @@ public class RetentionClientReport {
     private Double subTotalIva;
     private Double total;
     
-    public RetentionClientReport(String date, String documentDate, String clientCode, String clientName, String identification, String retentionNumber, String documentNumber, String ejercicioFiscal, String codigoRetentionFuente, Double baseFuente, Double porcenFuente, Double subTotalFuente, String codigoRetentionIva, Double baseIva, Double porcenIva, Double subTotalIva, Double total) {
+    public RetentionClientReport(String date, String documentDate, String clientCode, String clientName, String identification, String retentionNumber, String documentNumber, String ejercicioFiscal, String status, String codigoRetentionFuente, Double baseFuente, Double porcenFuente, Double subTotalFuente, String codigoRetentionIva, Double baseIva, Double porcenIva, Double subTotalIva, Double total) {
         this.date = date;
         this.documentDate = documentDate;
         this.clientCode = clientCode;
@@ -36,6 +37,7 @@ public class RetentionClientReport {
         this.retentionNumber = retentionNumber;
         this.documentNumber = documentNumber;
         this.ejercicioFiscal = ejercicioFiscal;
+        this.status = status;
         this.codigoRetentionFuente = codigoRetentionFuente;
         this.baseFuente = baseFuente;
         this.porcenFuente = porcenFuente;

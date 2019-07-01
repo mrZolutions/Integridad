@@ -57,7 +57,7 @@ function routes($routeProvider) {
       controller: 'ReportSalesCtrl',
       controllerAs: 'vm'
     }).when('/note/credit', {
-      templateUrl: 'views/note/credit.tpl.html',
+      templateUrl: 'views/note/creditNote.tpl.html',
       controller: 'CreditNoteCtrl',
       controllerAs: 'vm'
     }).when('/quotation/quotation', {

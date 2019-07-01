@@ -21,10 +21,10 @@ public class ProductTypeServices {
     ProductRepository productRepository;
 	
     public ProductType createProductType(ProductType productType) {
-        log.info("ProductTypeServices createProductType");
-	productType.setActive(true);
+        productType.setActive(true);
 	ProductType saved = productTypeRepository.save(productType);
 	saved.setListsNull();
+        log.info("ProductTypeServices createProductType DONE");
 	return saved;
     }
 	
@@ -35,78 +35,38 @@ public class ProductTypeServices {
 	log.info("ProductTypeServices updateProductType DONE id: {}", updated.getId());
     }
 
-	public ProductType deleteProductType(UUID productTypeId) {
-		log.info("ProductServices deleteProductType: {}", productTypeId);
-		ProductType findOne = productTypeRepository.findOne(productTypeId);
-		findOne.setListsNull();
-		findOne.setActive(false);
-		updateProductType(findOne);
-		return findOne;
-	}
+    public ProductType deleteProductType(UUID productTypeId) {
+        ProductType findOne = productTypeRepository.findOne(productTypeId);
+        findOne.setListsNull();
+        findOne.setActive(false);
+        updateProductType(findOne);
+        log.info("ProductServices deleteProductType DONE: {}", productTypeId);
+        return findOne;
+    }
 
-	public Iterable<ProductType> getAllActives(){
-		log.info("ProductTypeServices getAllActives");
-		Iterable<ProductType> actives = productTypeRepository.findByActive(true);
-		actives.forEach(this::populateChildren);
-		return actives;
+    public Iterable<ProductType> getAllActives(){
+        Iterable<ProductType> actives = productTypeRepository.findByActive(true);
+        actives.forEach(this::populateChildren);
+        log.info("ProductTypeServices getAllActives DONE");
+        return actives;
+    }
 
-	}
+    public Iterable<ProductType> getAllActivesLazy(){
+        Iterable<ProductType> actives = productTypeRepository.findByActive(true);
+        actives.forEach(productType -> {productType.setListsNull();});
+        log.info("ProductTypeServices getAllActivesLazy DONE");
+        return actives;
+    }
 
-	public Iterable<ProductType> getAllActivesLazy(){
-		log.info("ProductTypeServices getAllActivesLazy");
-		Iterable<ProductType> actives = productTypeRepository.findByActive(true);
-		actives.forEach(productType -> {productType.setListsNull();});
-		return actives;
-
-	}
-//
-//	public Product getById(UUID id){
-//		log.info("ProductServices getById: {}", id);
-//		Product findOne = productRepository.findOne(id);
-//		populateChildren(findOne);
-//		return findOne;
-//	}
-//
-//
-//
-//
-//	public Iterable<Product> getAllActivesByUserClientIdAndActive(UUID userClientId) {
-//		log.info("ProductServices getAllActivesByUserClientIdAndActive");
-//		Iterable<Product> actives = productRepository.findByUserClientIdAndActive(userClientId);
-//		actives.forEach(prodcut -> {
-//			prodcut.setFatherListToNull();
-//		});
-//		return actives;
-//	}
-//
-//	public Iterable<Product> getAllActivesBySubsidiaryIdAndActive(UUID subsidiaryId) {
-//		log.info("ProductServices getAllActivesBySubsidiaryIdAndActive");
-//		Iterable<UUID> productIdList = productBySubsidiairyRepository.findBySubsidiaryIdAndProductActive(subsidiaryId);
-//		List<Product> listReturn = new ArrayList<>();
-//		productIdList.forEach(id ->{
-//			listReturn.add(getById(id));
-//			Product productType = getById(id);
-//		});
-//
-////		Iterable<Product> actives = productRepository.findBySubsidiaryIdAndActive(subsidiaryId);
-////		actives.forEach(prodcut -> {
-////			prodcut.setFatherListToNull();
-////		});
-//		return listReturn;
-//	}
-//
-	private void populateChildren(ProductType productType) {
-		List<Product> productList = new ArrayList<>();
-		Iterable<Product> products = productRepository.findByProductTypeIdAndActive(productType.getId());
-
-		products.forEach(productConsumer -> {
-			productConsumer.setListsNull();
-			productConsumer.setFatherListToNull();
-			productConsumer.setProductType(null);
-
-			productList.add(productConsumer);
-		});
-
-		productType.setProducts(productList);
-	}
+    private void populateChildren(ProductType productType) {
+        List<Product> productList = new ArrayList<>();
+	Iterable<Product> products = productRepository.findByProductTypeIdAndActive(productType.getId());
+        products.forEach(productConsumer -> {
+            productConsumer.setListsNull();
+            productConsumer.setFatherListToNull();
+            productConsumer.setProductType(null);
+            productList.add(productConsumer);
+	});
+        productType.setProducts(productList);
+    }
 }

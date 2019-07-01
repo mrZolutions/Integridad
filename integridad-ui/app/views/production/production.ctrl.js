@@ -187,7 +187,6 @@ angular.module('integridadUiApp')
 
     vm.getDetailsOfCellars = function() {
         vm.loading = true;
-        vm.providerList = undefined;
         cellarService.getDetailsOfCellarsByUserClientId(vm.usrCliId).then(function(response) {
             vm.detailCellarList = response;
             vm.loading = false;

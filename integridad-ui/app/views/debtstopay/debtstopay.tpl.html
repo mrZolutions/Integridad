@@ -34,7 +34,7 @@
     </div>
 
     <!--SECCIÓN DE CARGA DE PROVEEDORES POR USERCLIENT-->
-    <div class="table-responsive" ng-show="vm.providerSelected === undefined && vm.debtsToPayList === undefined && vm.providerDebtsList === undefined && vm.debtsProviderSelected === undefined && vm.debtsToPaySelectedToUpdate === undefined && vm.allDebtsToPayList === undefined && vm.multipleSelected === undefined">
+    <div class="table-responsive" ng-show="vm.providerSelected === undefined && vm.debtsToPayList === undefined && vm.providerDebtsList === undefined && vm.debtsProviderSelected === undefined && vm.debtsToPaySelectedToUpdate === undefined && vm.allDebtsToPayList === undefined && vm.multipleSelected === undefined && vm.paymentDebtsList === undefined">
         <div class="row">
             <div class="form-group col-md-12">
                 <input ng-model="searchText" class="form-control" placeholder="Buscar Proveedores">
@@ -67,14 +67,17 @@
                         <button type = "button" title = "Ingreso de Factura de Compra" class = "btn btn-primary btn-sm" ng-click = "vm.providerSelect(provider)">
                                 <span class = "glyphicon glyphicon-file" aria-hidden = "true"></span>
                         </button>
-                        <button type = "button" title = "Consultar Facturas de Compra" class = "btn btn-primary btn-sm" ng-click = "vm.consultProviderDebts(provider)">
-                                <span class = "glyphicon glyphicon-search" aria-hidden = "true"></span>
-                        </button>
                         <button type = "button" title = "Pago Individual de Factura" class = "btn btn-primary btn-sm" ng-click = "vm.providerDebts(provider)">
                                 <span class = "glyphicon glyphicon-usd" aria-hidden = "true"></span>
                         </button>
+                        <button type = "button" title = "Consultar Facturas de Compra" class = "btn btn-primary btn-sm" ng-click = "vm.consultProviderDebts(provider)">
+                                <span class = "glyphicon glyphicon-search" aria-hidden = "true"></span>
+                        </button>
                         <button type = "button" title = "Pago Múltiple de Facturas" class = "btn btn-success btn-sm" ng-click = "vm.providerMultipleDebts(provider)">
-                                <span class = "glyphicon glyphicon-usd" aria-hidden = "true"></span>
+                                <span class = "glyphicon glyphicon-credit-card" aria-hidden = "true"></span>
+                        </button>
+                        <button type = "button" title = "Consultar Pagos por Proveedor" class = "btn btn-primary btn-sm" ng-click = "vm.paymentDebtsByProvider(provider)">
+                                <span class = "glyphicon glyphicon-eye-open" aria-hidden = "true"></span>
                         </button>
                     </td>
                 </tr>
@@ -82,7 +85,7 @@
         </table>
         <div class="row">
             <div class="form-group col-md-12">
-                <button type="button" title="Salir" class="btn btn-danger btn-sm"
+                <button type="button" title="Volver a Inicio" class="btn btn-danger btn-sm"
                         ng-click="vm.exit()">
                         <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
                 </button>
@@ -114,7 +117,7 @@
                             <td>{{debts.retentionNumber}}</td>
                             <td>{{debts.observacion}}</td>
                             <td>{{debts.fecha | date : "dd/MM/yyyy"}}</td>
-                            <td>{{debts.total}}</td>
+                            <td>{{debts.total.toFixed(2)}}</td>
                             <td>
                                 <button type = "button" title = "Ver Cuenta por Pagar" 
                                         class = "btn btn-primary btn-sm" ng-click = "vm.debtsToPayToPrint(debts)">
@@ -871,8 +874,8 @@
                             <td>{{debts.debtsSeq}}</td>
                             <td>{{debts.billNumber}}</td>
                             <td>{{debts.fecha | date : "dd/MM/yyyy"}}</td>
-                            <td>{{debts.total}}</td>
-                            <td>{{debts.saldo}}</td>
+                            <td>{{debts.total.toFixed(2)}}</td>
+                            <td>{{debts.saldo.toFixed(2)}}</td>
                             <td>
                                 <button type = "button" title = "Buscar Cuotas" class = "btn btn-primary btn-sm" 
                                         ng-click = "vm.creditsByDebts(debts)" data-toggle = "modal" data-target = "#modalCuotasDebts">
@@ -918,7 +921,7 @@
                             <tr ng-repeat = "creditsDebts in vm.creditsDebtsList | orderBy : 'payNumber' : true">
                                 <td>{{creditsDebts.fecha | date : "dd/MM/yyyy"}}</td>
                                 <td>{{creditsDebts.payNumber}}</td>
-                                <td>{{(creditsDebts.valor).toFixed(2)}}</td>
+                                <td>{{creditsDebts.valor.toFixed(2)}}</td>
                                 <td>
                                     <button type = "button" title = "Abonar Pago" class = "btn btn-primary btn-sm" ng-click = "vm.createAbonoDebts(creditsDebts)"
                                             data-dismiss = "modal" data-toggle = "modal" data-target = "#modalAbonarDebts">
@@ -1221,6 +1224,10 @@
                                     <label>Nro. Comprobante Egreso:</label><br/>
                                     <input type="text" class="form-control" ng-model="vm.paymentDebts.noDocument" maxlength="17"/>
                                 </div>
+                                <div class = "form-group col-md-6">
+                                    <label>N&uacute;mero de CHQ/DEP/TRF:</label><br/>
+                                    <input type = "text" class = "form-control" ng-model = "vm.paymentDebts.noDocument"/>
+                                </div>
                                 <div class="form-group col-md-6">
                                     <label>Detalle:</label><br/>
                                     <select ng-options="deta.name as deta.code for deta in [{code: 'ABONO POR COMP. EGRESO' ,name:'ABONO POR COMP. EGRESO'}]"
@@ -1236,10 +1243,92 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type = "button" title = "Aceptar" class = "btn btn-success btn-sm" ng-click = "vm.pAbonoDebts(vm.paymentDebts)" data-dismiss = "modal">
+                    <button type = "button" title = "Aceptar" class = "btn btn-success btn-sm"
+                            ng-disabled = "vm.paymentDebts.valorAbono == 0 || vm.paymentDebts.valorAbono == '' || vm.paymentDebts.valorAbono == null"
+                            ng-click = "vm.pAbonoDebts(vm.paymentDebts)" data-dismiss = "modal">
                             <span class = "glyphicon glyphicon-thumbs-up" aria-hidden = "true"></span>
                     </button>
                     <button type = "button" title = "Salir" class = "btn btn-primary btn-sm" ng-click = "vm.cancel()" data-dismiss = "modal">
+                            <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--CONSULTA DE PAGOS REALIZADOS POR PROVEEDOR-->
+    <div class="table-responsive" ng-show="vm.paymentDebtsList !== undefined">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <b>Listado de Pagos de Facturas Pertenecientes a: {{vm.providerName}}</b>
+            </div>
+            <div class="panel-body">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>N&uacute;mero Factura</th>
+                            <th>Fecha</th>
+                            <th>Detalle de Cobro</th>
+                            <th>Total</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-show="vm.paymentDebtsList == 0">
+                            <td colspan="4">
+                                El Peoveedor <b>No Presenta</b> Facturas con Pagos realizados...
+                            </td>
+                        </tr>
+                        <tr ng-repeat="paymentDebts in vm.paymentDebtsList">
+                            <td>{{paymentDebts.documentNumber}}</td>
+                            <td>{{paymentDebts.datePayment | date : "dd/MM/yyyy"}}</td>
+                            <td>{{paymentDebts.detail}}</td>
+                            <td>{{paymentDebts.valorAbono.toFixed(2)}}</td>
+                            <td>
+                                <button type="button" title = "Anular Cobro de Factura" class="btn btn-warning btn-sm" 
+                                        ng-click="vm.deactivatePaymentDebts = paymentDebts" data-toggle="modal" data-target="#modalAnularPaymentDebts">
+                                        <span class = "glyphicon glyphicon-warning-sign" aria-hidden = "true"></span>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="panel-footer">
+                <button type="button" title = "Salir" class="btn btn-primary btn-sm" ng-click="vm.cancel()">
+                        <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!--ANULAR COBRO DE FACTURA-->
+    <div id="modalAnularPaymentDebts" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h3 class="modal-title">¡¡¡Advertencia!!!</h3>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12" >
+                            <p>¿Est&aacute; seguro que desea Anular el Pago de la Factura <b>No. {{vm.deactivatePaymentDebts.documentNumber}}</b>?</p>
+                            <p>Recuerde que el Pago de Factura Anulada <b>NO puede ser Recuperado</b>.</p>
+                        </div>
+                        <br/>
+                        <div class="col-md-12" >
+                            <p>Le recordamos que debe dirigirse al módulo de <b>Contabilidad</b> para proceder a anular</p>
+                            <p>el Comprobante de Egreso en la opci&oacute;n <b>"Anular Comprobante de Egreso"</b>,</p>
+                            <p>una vez anulado este Pago.</p>   
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" title="Anular Cobro de Factura" class="btn btn-danger btn-sm" ng-click="vm.paymentDebtsDeactivate()" data-dismiss="modal">
+                            <span class = "glyphicon glyphicon-screenshot" aria-hidden = "true"></span>
+                    </button>
+                    <button type="button" title = "Salir" class="btn btn-primary btn-sm" data-dismiss="modal">
                             <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
                     </button>
                 </div>
@@ -1679,7 +1768,7 @@
                             <td>{{debts.billNumber}}</td>
                             <td>{{debts.observacion}}</td>
                             <td>{{debts.fecha | date : "dd/MM/yyyy"}}</td>
-                            <td>{{debts.total}}</td>
+                            <td>{{debts.total.toFixed(2)}}</td>
                             <td>
                                 <button type = "button" title = "Ver Cuenta por Pagar" 
                                         class = "btn btn-primary btn-sm" ng-click = "vm.debtsToPayToPrint(debts)">
@@ -1714,16 +1803,21 @@
                     <div class="row">
                         <div class="col-md-12" >
                             <p>¿Est&aacute; seguro que desea Anular la Factura de Compra <b>No. {{vm.deactivateDebtsToPay.billNumber}}</b>?</p>
-                            <p>Recuerde que la Factura de Compra Anulada <b>NO puede ser Recuperada</b></p>
+                            <p>Recuerde que la Factura de Compra Anulada <b>NO puede ser Recuperada</b>.</p>
+                        </div>
+                        <div class="col-md-12" >
+                            <p>Le recordamos que debe dirigirse al módulo de <b>Contabilidad</b> para proceder a anular</p>
+                            <p>el Diario de Cuenta por Pagar en la opci&oacute;n <b>"Anular Diario de Cuenta por Pagar"</b>,</p>
+                            <p>una vez anulada esta Factura de Compra.</p>   
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" title = "Salir" class="btn btn-primary btn-sm" data-dismiss="modal">
-                            <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
-                    </button>
                     <button type="button" title="Anular Cuenta por Pagar" class="btn btn-danger btn-sm" ng-click="vm.debtsToPayDeactivate()" data-dismiss="modal">
                             <span class = "glyphicon glyphicon-screenshot" aria-hidden = "true"></span>
+                    </button>
+                    <button type="button" title = "Salir" class="btn btn-primary btn-sm" data-dismiss="modal">
+                            <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
                     </button>
                 </div>
             </div>

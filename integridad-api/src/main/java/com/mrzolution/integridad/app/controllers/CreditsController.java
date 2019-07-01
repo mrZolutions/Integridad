@@ -23,33 +23,33 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RestController
 @RequestMapping(value = "/integridad/v1/creditsbybill")
-public class CreditsBillController {
+public class CreditsController {
     @Autowired
     CreditsServices service;
     
     @RequestMapping(method = RequestMethod.GET, value="/credits/bill/{id}")
-    public ResponseEntity getCreditsOfBillById(@PathVariable("id") UUID id) {
-        log.info("CreditsBillControler getCreditsByBillById: {}", id);
+    public ResponseEntity getCreditsByBillId(@PathVariable("id") UUID id) {
         Iterable<Credits> response = null;
         try {
-            response = service.getCreditsOfBillByBillId(id);
+            response = service.getCreditsByBillId(id);
         } catch (BadRequestException e) {
-            log.error("CreditsBillControler getCreditsByBillById Exception thrown: {}", e.getMessage());
+            log.error("CreditsControler getCreditsByBillById Exception thrown: {}", e.getMessage());
 	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
+        log.info("CreditsControler getCreditsByBillById DONE");
         return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
     }
     
     @RequestMapping(method = RequestMethod.GET, value="/rep/pendingreport/{userClientId}/{dateTwo}")
     public ResponseEntity getCreditsPendingOfBillByUserClientId(@PathVariable("userClientId") UUID userClientId, @PathVariable("dateTwo") long dateTwo) {
-        log.info("CreditsBillControler getCreditsPendingOfBillByUserClientId: {}", userClientId);
         List<CreditsReport> response = null;
         try {
             response = service.getCreditsPendingOfBillByUserClientId(userClientId, dateTwo);
 	} catch (BadRequestException e) {
-            log.error("CreditsBillControler getCreditsOfBillByUserClientId Exception thrown: {}", e.getMessage());
+            log.error("CreditsControler getCreditsOfBillByUserClientId Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
+        log.info("CreditsControler getCreditsPendingOfBillByUserClientId DONE");
 	return new ResponseEntity<List>(response, HttpStatus.ACCEPTED);
     }
     

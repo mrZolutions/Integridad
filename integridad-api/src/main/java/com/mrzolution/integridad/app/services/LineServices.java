@@ -21,10 +21,10 @@ public class LineServices {
     GroupLineRepository groupLineRepository;
 	
     public Line createLine(Line line) {
-	log.info("LineServices createLine");
 	line.setActive(true);
 	Line saved = lineRepository.save(line);
 	saved.setListsNull();
+        log.info("LineServices createLine DONE");
 	return saved;
     }
 	
@@ -36,35 +36,35 @@ public class LineServices {
     }
 
     public Line deleteLine(UUID lineId) {
-	log.info("LineServices deleteLine: {}", lineId);
 	Line findOne = lineRepository.findOne(lineId);
 	findOne.setListsNull();
 	findOne.setActive(false);
 	updateLine(findOne);
+        log.info("LineServices deleteLine DONE: {}", lineId);
 	return findOne;
     }
 
     public Iterable<Line> getAllActivesByUserClientId(UUID userClientId) {
-	log.info("LineServices getAllActivesByUserClientId");
 	Iterable<Line> actives = lineRepository.findByUserClienteIdAndActive(userClientId);
 	actives.forEach(this::populateChildren);
+        log.info("LineServices getAllActivesByUserClientId DONE");
 	return actives;
     }
 
     public Iterable<Line> getAllActivesByUserClientIdLazy(UUID userClientId) {
-	log.info("LineServices getAllActivesByUserClientIdLazy");
 	Iterable<Line> actives = lineRepository.findByUserClienteIdAndActive(userClientId);
 	actives.forEach(line -> {
             line.setListsNull();
             line.setFatherListToNull();
 	});
+        log.info("LineServices getAllActivesByUserClientIdLazy DONE");
 	return actives;
     }
 
     public Line getLineById(UUID id) {
-	log.info("LineServices getLineById: {}", id);
 	Line findOne = lineRepository.findOne(id);
 	populateChildren(findOne);
+        log.info("LineServices getLineById DONE: {}", id);
 	return findOne;
     }
 

@@ -23,13 +23,16 @@ public interface BillRepository extends CrudRepository<Bill, UUID> {
 	@Query("SELECT b FROM Bill b WHERE b.typeDocument = (:value) AND b.active = true")
 	Iterable<Bill> findBillsByTypeDocument(@Param("value") int value);
 
-	@Query("SELECT b FROM Bill b WHERE b.client.id = (:id) AND b.typeDocument = (:type) AND (b.saldo != '0.00' OR b.saldo != '0.0') AND b.active = true ORDER BY b.stringSeq")
+	@Query("SELECT b FROM Bill b WHERE b.client.id = (:id) AND b.typeDocument = (:type) AND b.saldo != '0' AND b.active = true ORDER BY b.stringSeq")
 	Iterable<Bill> findBillByClientIdWithSaldo(@Param("id") UUID id, @Param("type") int type);
         
         @Query("SELECT b FROM Bill b WHERE b.client.id = (:id) AND b.typeDocument = (:type) AND b.active = true ORDER BY b.stringSeq")
 	Iterable<Bill> findBillByClientId(@Param("id") UUID id, @Param("type") int type);
         
 	Iterable<Bill> findByStringSeq(String stringSeq);
+        
+        @Query("SELECT b FROM Bill b WHERE b.id = (:id) AND b.active = true")
+        Iterable<Bill> findBillById(@Param("id") UUID id);
 
 	@Query("SELECT b FROM Bill b WHERE b.subsidiary.id = (:subId) AND b.stringSeq = (:seq) AND b.typeDocument = 1 AND b.active = true")
 	Iterable<Bill> findByStringSeqAndSubsidiaryId(@Param("seq") String stringSeq, @Param("subId") UUID id);

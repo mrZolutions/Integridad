@@ -27,7 +27,6 @@ public class UserTypeController {
 
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity create(@RequestBody UserType userType){
-	log.info("UserTypeController create: {}", userType);
 	UserType response = null;
 	try {
             response = service.create(userType);
@@ -35,13 +34,12 @@ public class UserTypeController {
             log.error("UserTypeController create Exception thrown: {}", e.getMessage());	    
 	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
+        log.info("UserTypeController create DONE");
 	return new ResponseEntity<UserType>(response, HttpStatus.CREATED);
     }
-	
-	
+		
     @RequestMapping(method = RequestMethod.PUT)
     public ResponseEntity update(@RequestBody UserType userType){
-	log.info("UserTypeController update");
 	UserType response = null;
 	try {
             response = service.update(userType);
@@ -49,12 +47,12 @@ public class UserTypeController {
             log.info("UserTypeController update Exception thrown: {}", e.getMessage());	    
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
+        log.info("UserTypeController update DONE");
 	return new ResponseEntity<UserType>(response, HttpStatus.OK);
     }
 	
     @RequestMapping(method = RequestMethod.GET, value="/{id}")
     public ResponseEntity getById(@PathVariable("id") UUID id){
-	log.info("UserTypeController getById: {}", id);
 	UserType response = null;
 	try {
             response = service.getById(id);
@@ -62,12 +60,12 @@ public class UserTypeController {
             log.info("UserTypeController getById Exception thrown: {}", e.getMessage());	    
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
+        log.info("UserTypeController getById DONE");
 	return new ResponseEntity<UserType>(response, HttpStatus.OK);
     }
 	
     @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity getAll(){
-	log.info("UserTypeController getAll");
 	Iterable<UserType>  response = null;
 	try {
             response = service.getAll();
@@ -75,12 +73,12 @@ public class UserTypeController {
             log.info("UserTypeController getAll Exception thrown: {}", e.getMessage());	    
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
+        log.info("UserTypeController getAll DONE");
 	return new ResponseEntity<Iterable<UserType>>(response, HttpStatus.OK);
     }
 	
     @RequestMapping(method = RequestMethod.GET, value="/lazy")
     public ResponseEntity getAllLazy(){
-	log.info("UserTypeController getAllLazy");
 	Iterable<UserType>  response = null;
 	try {
             response = service.getAllLazy();
@@ -88,6 +86,7 @@ public class UserTypeController {
             log.info("UserTypeController getAll Exception thrown: {}", e.getMessage());	    
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
+        log.info("UserTypeController getAllLazy DONE");
 	return new ResponseEntity<Iterable<UserType>>(response, HttpStatus.OK);
     }
 }

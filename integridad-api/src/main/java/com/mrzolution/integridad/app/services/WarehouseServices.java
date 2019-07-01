@@ -26,6 +26,7 @@ public class WarehouseServices {
 	} else {
             log.info("WarehouseServices retrieved id NULL: {}", id);
 	}
+        log.info("WarehouseServices getWarehouseById DONE: {}", id);
 	return retrieved;
     }
       
@@ -35,7 +36,7 @@ public class WarehouseServices {
             warehouse.setListsNull();
             warehouse.setFatherListToNull();
 	}
-	log.info("WarehouseServices getWarehouseByUserClient size retrieved: {}", Iterables.size(warehouses));
+	log.info("WarehouseServices getWarehouseByUserClient DONE");
 	return warehouses;
     }
     

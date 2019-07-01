@@ -25,6 +25,7 @@ public class Cashier implements Child{
     private long dailyCgNumberSeq;
     private long dailyCeNumberSeq;
     private long dailyCiNumberSeq;
+    private long dailyFvNumberSeq;
     private long dailyCppNumberSeq;
     private long debtsNumberSeq;
     private long whNumberSeq;

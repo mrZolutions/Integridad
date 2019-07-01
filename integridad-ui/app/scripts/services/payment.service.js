@@ -6,6 +6,12 @@ angular
                 return response.data;
             });
         };
+
+        this.deactivatePayment = function(payment) {
+            return securityService.put('/payment', payment).then(function successCallback(response) {
+                return response.data;
+            });
+        };
         
         this.getAllPaymentsByUserClientIdAndDates = function(userClientId, dateOne, dateTwo) {
             return securityService.get('/payment/rep/ccresreport/' + userClientId + '/' + dateOne + '/' + dateTwo).then(function successCallback(response) {
@@ -15,6 +21,12 @@ angular
 
         this.getPaymentsByUserClientIdWithBankAndNroDocument = function(userClientId, banco, nrodoc) {
             return securityService.get('/payment/userclient/' + userClientId + '/' + banco + '/' + nrodoc).then(function successCallback(response) {
+                return response.data;
+            });
+        };
+
+        this.getPaymentsByClientId = function(id) {
+            return securityService.get('/payment/client/' + id).then(function successCallback(response) {
                 return response.data;
             });
         };

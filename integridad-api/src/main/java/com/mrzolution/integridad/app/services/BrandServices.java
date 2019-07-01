@@ -21,10 +21,10 @@ public class BrandServices {
     ProductRepository productRepository;
 	
     public Brand createBrand(Brand brand){
-	log.info("BrandServices createBrand");
 	brand.setActive(true);
 	Brand saved = brandRepository.save(brand);
 	saved.setListsNull();
+        log.info("BrandServices createBrand DONE");
 	return saved;
     }
 	
@@ -36,35 +36,35 @@ public class BrandServices {
     }
 
     public Brand deleteBrand(UUID brandId) {
-	log.info("BrandServices deleteBrand: {}", brandId);
 	Brand findOne = brandRepository.findOne(brandId);
 	findOne.setListsNull();
 	findOne.setActive(false);
 	updateBrand(findOne);
+        log.info("BrandServices deleteBrand DONE: {}", brandId);
 	return findOne;
     }
 
     public Iterable<Brand> getAllActives(){
-	log.info("BrandServices getAllActives");
 	Iterable<Brand> actives = brandRepository.findByActive(true);
 	actives.forEach(this::populateChildren);
+        log.info("BrandServices getAllActives DONE");
 	return actives;
     }
 
     public Iterable<Brand> getAllActivesLazy(UUID projectId){
-	log.info("BrandServices getAllActivesLazy");
 	Iterable<Brand> actives = brandRepository.findByUserClienteIdAndActive(projectId);
 	actives.forEach(brand -> {
             brand.setFatherListToNull();
             brand.setListsNull();
 	});
+        log.info("BrandServices getAllActivesLazy DONE");
 	return actives;
     }
 
     public Brand getBrandById(UUID id){
-	log.info("BrandServices getBrandById: {}", id);
 	Brand findOne = brandRepository.findOne(id);
 	populateChildren(findOne);
+        log.info("BrandServices getBrandById DONE: {}", id);
 	return findOne;
     }
 

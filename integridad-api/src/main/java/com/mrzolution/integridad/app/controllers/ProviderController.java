@@ -18,10 +18,8 @@ public class ProviderController {
     @Autowired
     ProviderServices service;
 
-
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity createProvider(@RequestBody Provider provider) {
-	log.info("ProviderController createProvider");
 	Provider response = null;
 	try {
             response = service.createProvider(provider);
@@ -29,58 +27,58 @@ public class ProviderController {
             log.error("ProviderController createProvider Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
+        log.info("ProviderController createProvider DONE");
 	return new ResponseEntity<Provider>(response, HttpStatus.CREATED);
     }
 
     @RequestMapping(method = RequestMethod.PUT)
     public ResponseEntity updateProvider(@RequestBody Provider provider) {
-	log.info("ProviderController updateProvider: {}", provider);
-	Provider response = null;
 	try {
             service.updateProvider(provider);
 	}catch (BadRequestException e) {
             log.error("ProviderController updateProvider Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
+        log.info("ProviderController updateProvider DONE");
         return new ResponseEntity<Void>(HttpStatus.CREATED);
     }
 
     @RequestMapping(method = RequestMethod.GET, value="/lazy/client/{id}")
     public ResponseEntity getLazyByUserClient(@PathVariable("id") UUID id) {
-	log.info("ProviderController getLazyByUserClient");
-	Iterable<Provider> response = null;
+        Iterable<Provider> response = null;
 	try {
             response = service.getLazyByUserClient(id);
 	} catch (BadRequestException e) {
             log.error("ProviderController getLazy Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
+        log.info("ProviderController getLazyByUserClient DONE");
 	return new ResponseEntity<Iterable>(response, HttpStatus.CREATED);
     }
 
     @RequestMapping(method = RequestMethod.GET, value="/lazy")
     public ResponseEntity getLazy() {
-	log.info("ProviderController getLazy");
-	Iterable<Provider> response = null;
+        Iterable<Provider> response = null;
 	try {
             response = service.getAllLazy();
 	} catch (BadRequestException e) {
             log.error("ProviderController getLazy Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
+        log.info("ProviderController getLazy DONE");
 	return new ResponseEntity<Iterable>(response, HttpStatus.CREATED);
     }
 
     @RequestMapping(method = RequestMethod.GET, value="/{id}")
     public ResponseEntity getProviderById(@PathVariable("id") UUID id) {
-        log.info("ProviderController getProviderById:{}", id);
-	Provider response = null;
+        Provider response = null;
 	try {
             response = service.getProviderById(id);
 	} catch (BadRequestException e) {
             log.error("ProviderController getProviderById Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
+        log.info("ProviderController getProviderById DONE");
 	return new ResponseEntity<Provider>(response, HttpStatus.CREATED);
     }
     
@@ -93,6 +91,7 @@ public class ProviderController {
             log.error("ProviderController getProviderByUserClientIdAndRuc Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
+        log.info("ProviderController getProviderByUserClientIdAndRuc DONE");
         return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
     }
 }

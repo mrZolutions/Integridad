@@ -46,6 +46,12 @@
                     <span class = "glyphicon glyphicon-ok" aria-hidden = "true"></span>
             </button>
         </div>
+        <div class="form-group col-md-12">
+            <button type="button" title="Volver a Inicio" class="btn btn-danger btn-sm"
+                    ng-click="vm.exit()">
+                    <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
+            </button>
+        </div>
     </div>
     <!--FIN SELECCIÓN DE TIPO DE DIARIO-->
     
@@ -125,11 +131,11 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" title = "Salir" class="btn btn-primary btn-sm" data-dismiss="modal">
-                            <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
-                    </button>
                     <button type="button" title="Anular Diario de Contabilidad General" class="btn btn-danger btn-sm" ng-click="vm.dailybookCgDeactivate()" data-dismiss="modal">
                             <span class = "glyphicon glyphicon-screenshot" aria-hidden = "true"></span>
+                    </button>
+                    <button type="button" title = "Salir" class="btn btn-primary btn-sm" data-dismiss="modal">
+                            <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
                     </button>
                 </div>
             </div>
@@ -596,16 +602,22 @@
                     <div class="row">
                         <div class="col-md-12" >
                             <p>¿Est&aacute; seguro que desea Anular el Comprobante de Egreso <b>No. {{vm.deactivatedailybookCe.dailyCeStringSeq}}</b>?</p>
-                            <p>Recuerde que el Comprobante de Egreso Anulado <b>NO puede ser Recuperado</b></p>
+                            <p>Recuerde que el Comprobante de Egreso Anulado <b>NO puede ser Recuperado</b>.</p>
+                        </div>
+                        <br/>
+                        <div class="col-md-12" >
+                            <p>Le recordamos que debe dirigirse al módulo de <b>Cuentas por Pagar</b> para proceder a anular</p>
+                            <p>los Pagos realizados a las Facturas Nro <b>{{vm.deactivatedailybookCe.billNumber}}</b>,</p>
+                            <p>en la opci&oacute;n <b>"Consulta de Pagos por Proveedor"</b> una vez anulado este Comprobante.</p>   
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" title = "Salir" class="btn btn-primary btn-sm" data-dismiss="modal">
-                            <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
-                    </button>
                     <button type="button" title="Anular Comprobante de Egreso" class="btn btn-danger btn-sm" ng-click="vm.dailybookCeDeactivate()" data-dismiss="modal">
                             <span class = "glyphicon glyphicon-screenshot" aria-hidden = "true"></span>
+                    </button>
+                    <button type="button" title = "Salir" class="btn btn-primary btn-sm" data-dismiss="modal">
+                            <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
                     </button>
                 </div>
             </div>
@@ -733,7 +745,7 @@
                                class="form-control" maxlength="20"/>
                     </div>
                     <div class="form-group col-md-4">
-                        <label>N&uacute;mero Cheque:</label><br/>
+                        <label>N&uacute;mero CHQ/TRF/DEP:</label><br/>
                         <input type="text" class="form-control" ng-model="vm.numCheque"/>
                     </div>
                 </div>
@@ -812,7 +824,6 @@
                         <table class="table table-striped">
                             <thead>
                                 <tr>
-                                    <th>Tipo de Cuenta</th>
                                     <th>Nombre G&eacute;nerico</th>
                                 </tr>
                             </thead>
@@ -823,7 +834,6 @@
                                     </td>
                                 </tr>
                                 <tr dir-paginate = "cuenta in vm.cuentaContableBankList | orderBy:'type' | filter:searchTextTaxes | itemsPerPage: 5" pagination-id = "taxesPagination">
-                                    <td>{{cuenta.accountType}}</td>
                                     <td>{{cuenta.name}}</td>
                                     <td>
                                         <button type = "button" title = "Seleccionar" class = "btn btn-primary btn-sm"
@@ -938,7 +948,7 @@
                                 </td>
                                 <td width="30%">
                                     <div>
-                                        <label>CHEQUE: </label>
+                                        <label>CHQ/TRF/DEP: </label>
                                         {{vm.dailybookCeCreated.numCheque}}
                                     </div>
                                 </td>
@@ -1125,12 +1135,6 @@
                             <label>Descripci&oacute;n:</label><br/>
                             <input type="text" class="form-control" ng-model="vm.detailitemb"/>
                         </div>
-                        <div class="form-group col-md-3">
-                            <label>Tipo de Cuenta:</label>
-                            <select ng-options="tip.name as tip.name for tip in [{code: 'DEB' ,name:'DEBITO (D)'}, {code: 'CRD', name:'CREDITO (C)'}]"
-                                    ng-model="vm.itemb.tipo" class="form-control">
-                            </select>
-                        </div>
                         <div class="form-group col-md-2">
                             <label>Valor</label>
                             <input type="text" onkeypress="return ((event.which >= 46 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
@@ -1165,12 +1169,6 @@
                         <div class="form-group col-md-5">
                             <label>Descripci&oacute;n:</label><br/>
                             <input type="text" class="form-control" ng-model="vm.itemb.name"/>
-                        </div>
-                        <div class="form-group col-md-3">
-                            <label>Tipo de Cuenta:</label>
-                            <select ng-options="tip.name as tip.name for tip in [{code: 'DEB' ,name:'DEBITO (D)'}, {code: 'CRD', name:'CREDITO (C)'}]"
-                                    ng-model="vm.itemb.tipo" class="form-control">
-                            </select>
                         </div>
                         <div class="form-group col-md-2">
                             <label>Valor</label>
@@ -1318,16 +1316,22 @@
                     <div class="row">
                         <div class="col-md-12" >
                             <p>¿Est&aacute; seguro que desea Anular el Comprobante de Ingreso <b>No. {{vm.deactivatedailybookCi.dailyCiStringSeq}}</b>?</p>
-                            <p>Recuerde que el Comprobante de Ingreso Anulado <b>NO puede ser Recuperado</b></p>
+                            <p>Recuerde que el Comprobante de Ingreso Anulado <b>NO puede ser Recuperado</b>.</p>
+                        </div>
+                        <br/>
+                        <div class="col-md-12" >
+                            <p>Le recordamos que debe dirigirse al módulo de <b>Cuentas por Cobrar</b> para proceder a anular</p>
+                            <p>los Cobros realizados a las Facturas Nro <b>{{vm.deactivatedailybookCi.billNumber}}</b>,</p>
+                            <p>en la opci&oacute;n <b>"Consulta de Cobros por Cliente"</b> una vez anulado este Comprobante.</p>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" title = "Salir" class="btn btn-primary btn-sm" data-dismiss="modal">
-                            <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
-                    </button>
                     <button type="button" title="Anular Comprobante de Egreso" class="btn btn-danger btn-sm" ng-click="vm.dailybookCiDeactivate()" data-dismiss="modal">
                             <span class = "glyphicon glyphicon-screenshot" aria-hidden = "true"></span>
+                    </button>
+                    <button type="button" title = "Salir" class="btn btn-primary btn-sm" data-dismiss="modal">
+                            <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
                     </button>
                 </div>
             </div>
@@ -1455,7 +1459,7 @@
                                class="form-control" maxlength="20"/>
                     </div>
                     <div class="form-group col-md-4">
-                        <label>N&uacute;mero Cheque:</label><br/>
+                        <label>N&uacute;mero CHQ/TRF/DEP:</label><br/>
                         <input type="text" class="form-control" ng-model="vm.numChequeCi"/>
                     </div>
                 </div>
@@ -1534,7 +1538,6 @@
                         <table class="table table-striped">
                             <thead>
                                 <tr>
-                                    <th>Tipo de Cuenta</th>
                                     <th>Nombre G&eacute;nerico</th>
                                 </tr>
                             </thead>
@@ -1545,7 +1548,6 @@
                                     </td>
                                 </tr>
                                 <tr dir-paginate = "cuenta in vm.cuentaContableBankList | orderBy:'type' | filter:searchTextTaxes | itemsPerPage: 5" pagination-id = "taxesPagination">
-                                    <td>{{cuenta.accountType}}</td>
                                     <td>{{cuenta.name}}</td>
                                     <td>
                                         <button type = "button" title = "Seleccionar" class = "btn btn-primary btn-sm"
@@ -1705,7 +1707,7 @@
                             </tr>
                             <tr>
                                 <td></td>
-                                <td>{{vm.dailybookCiCreated.generalDetail}}</td>
+                                <td></td>
                                 <td><b>TOTALES:</b></td>
                                 <td>{{vm.getTotalDebitoCiCreated()}}</td>
                                 <td>{{vm.getTotalCreditoCiCreated()}}</td>
@@ -1762,6 +1764,7 @@
                                 <th>Nro. Factura</th>
                                 <th>Fecha</th>
                                 <th>Valor</th>
+                                <th>Saldo</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -1774,6 +1777,7 @@
                                 <td>{{bill.stringSeq}}</td>
                                 <td>{{bill.dateCreated | date : "dd/MM/yyyy"}}</td>
                                 <td>{{bill.total}}</td>
+                                <td>{{bill.saldo}}</td>
                                 <td>
                                     <button type="button" title="Seleccionar Factura" class="btn btn-primary btn-sm" ng-click="vm.billSelectedCi(bill)"
                                             data-dismiss="modal">
@@ -1810,12 +1814,6 @@
                             <label>Descripci&oacute;n:</label><br/>
                             <input type="text" class="form-control" ng-model="vm.detailitemCib"/>
                         </div>
-                        <div class="form-group col-md-3">
-                            <label>Tipo de Cuenta:</label>
-                            <select ng-options="tip.name as tip.name for tip in [{code: 'DEB' ,name:'DEBITO (D)'}, {code: 'CRD', name:'CREDITO (C)'}]"
-                                    ng-model="vm.itemCib.tipo" class="form-control">
-                            </select>
-                        </div>
                         <div class="form-group col-md-2">
                             <label>Valor</label>
                             <input type="text" onkeypress="return ((event.which >= 46 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
@@ -1850,12 +1848,6 @@
                         <div class="form-group col-md-5">
                             <label>Descripci&oacute;n:</label><br/>
                             <input type="text" class="form-control" ng-model="vm.itemCib.name"/>
-                        </div>
-                        <div class="form-group col-md-3">
-                            <label>Tipo de Cuenta:</label>
-                            <select ng-options="tip.name as tip.name for tip in [{code: 'DEB' ,name:'DEBITO (D)'}, {code: 'CRD', name:'CREDITO (C)'}]"
-                                    ng-model="vm.itemCib.tipo" class="form-control">
-                            </select>
                         </div>
                         <div class="form-group col-md-2">
                             <label>Valor</label>
@@ -1994,17 +1986,23 @@
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-md-12" >
-                            <p>¿Est&aacute; seguro que desea Anular el Diario de Cuentas por Pagar <b>No. {{vm.deactivatedailybookCxP.dailyCxPStringSeq}}</b>?</p>
-                            <p>Recuerde que el Diario de Cuentas por Pagar Anulado <b>NO puede ser Recuperado</b></p>
+                            <p>¿Est&aacute; seguro que desea Anular el Diario de Cuentas por Pagar <b>No. {{vm.deactivatedailybookCxP.dailycxpStringSeq}}</b>?</p>
+                            <p>Recuerde que el Diario de Cuentas por Pagar Anulado <b>NO puede ser Recuperado</b>.</p>
+                        </div>
+                        <br/>
+                        <div class="col-md-12" >
+                            <p>Le recordamos que debe dirigirse al módulo de <b>Cuentas por Pagar</b> para proceder a anular</p>
+                            <p>la Factura de Compra Nro. <b>{{vm.deactivatedailybookCxP.billNumber}}</b>,</p>
+                            <p>en la opci&oacute;n <b>"Anular Cuenta por Pagar"</b> una vez anulado este Diario.</p>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" title = "Salir" class="btn btn-primary btn-sm" data-dismiss="modal">
-                            <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
-                    </button>
                     <button type="button" title="Anular Diario de Cuentas por Pagar" class="btn btn-danger btn-sm" ng-click="vm.dailybookCxPDeactivate()" data-dismiss="modal">
                             <span class = "glyphicon glyphicon-screenshot" aria-hidden = "true"></span>
+                    </button>
+                    <button type="button" title = "Salir" class="btn btn-primary btn-sm" data-dismiss="modal">
+                            <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
                     </button>
                 </div>
             </div>
@@ -2644,4 +2642,65 @@
         </div>
     </div>
     <!--FIN DE DIARIO CXP-->
+
+    <!--DIARIO DE COMPROBANTE DE FACTURACIÓN-VENTA-->
+    <!--CARGA DE CLIENTES PARA DIARIO DE COMPROBANTE DE FACTURACIÓN-VENTA-->
+    <div class="table-responsive" ng-show="vm.selectedTypeBook === '6' && vm.clientFvSelected === undefined && vm.dailybookFvCreated === undefinded && vm.dailybookFvList === undefined && vm.dailybookFvManualCreatedList === undefined && vm.dailybookFvManual === false">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <b>DIARIO DE COMPROBANTE DE FACTURACIÓN-VENTA</b>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="form-group col-md-10">
+                        <input ng-model="searchText" class="form-control" placeholder="Buscar Clientes">
+                    </div>
+                    <div class="form-group col-md-2">
+                        <button type = "button" title = "Comprobante de Factura-Venta Manual" class = "btn btn-success btn-sm" ng-click = "">
+                                <span class = "glyphicon glyphicon-book" aria-hidden = "true"></span>
+                        </button>
+                        <button type = "button" title = "Consultar Comprobante de Factura-Venta Manual" class = "btn btn-success btn-sm" ng-click = "">
+                                <span class = "glyphicon glyphicon-search" aria-hidden = "true"></span>
+                        </button>
+                    </div>
+                </div>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>C&oacute;digo</th>
+                            <th>Nombre</th>
+                            <th>No. Identidad</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-show="vm.clientFvList == 0">
+                            <td colspan="4">
+                                No hay Clientes ingresados
+                            </td>
+                        </tr>
+                        <tr ng-repeat="client in vm.clientFvList | orderBy:'name' | filter:searchText">
+                            <td>{{client.codApp}}</td>
+                            <td>{{client.name}}</td>
+                            <td>{{client.typeId}} - {{client.identification}}</td>
+                            <td>
+                                <button type = "button" title = "Nuevo Comprobante de Factura-Venta" class = "btn btn-primary btn-sm" ng-click = "">
+                                        <span class = "glyphicon glyphicon-book" aria-hidden = "true"></span>
+                                </button>
+                                <button type = "button" title = "Consultar Comprobante de Factura-Venta" class = "btn btn-primary btn-sm" ng-click = "">
+                                        <span class = "glyphicon glyphicon-search" aria-hidden = "true"></span>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="panel-footer">
+                <button type="button" title="Volver" class="btn btn-primary btn-sm"
+                        ng-click="vm.cancel()">
+                        <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
+                </button>
+            </div>
+        </div>
+    </div>
 </div>

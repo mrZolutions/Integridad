@@ -27,27 +27,27 @@ public class WarehouseController {
     
     @RequestMapping(method = RequestMethod.GET, value="/userclient/{id}")
     public ResponseEntity getAllWarehouseByUserClientId(@PathVariable("id") UUID id) {
-        log.info("WarehouseController getAllWarehouseByUserClientId");
-	Iterable<Warehouse> response = null;
+        Iterable<Warehouse> response = null;
 	try {
             response = service.getWarehouseByUserClient(id);
 	} catch (BadRequestException e) {
             log.error("WarehouseController getAllWarehouseByUserClientId Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
+        log.info("WarehouseController getAllWarehouseByUserClientId DONE");
 	return new ResponseEntity<Iterable>(response, HttpStatus.CREATED);
     }
     
     @RequestMapping(method = RequestMethod.GET, value="/{id}")
     public ResponseEntity getAllWarehouseById(@PathVariable("id") UUID id) {
-        log.info("WarehouseController getAllWarehouseById:{}", id);
-	Warehouse response = null;
+        Warehouse response = null;
 	try {
             response = service.getWarehouseById(id);
 	} catch (BadRequestException e) {
             log.error("WarehouseController getAllWarehouseById Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
+        log.info("WarehouseController getAllWarehouseById DONE");
 	return new ResponseEntity<Warehouse>(response, HttpStatus.CREATED);
     }   
 }

@@ -31,7 +31,6 @@ public class DailybookCgServices {
     
     //Selecciona Diario CG por Id
     public DailybookCg getDailybookCgById(UUID id) {
-        log.info("DailybookCgServices getDailybookCgById: {}", id);
         DailybookCg retrieved = dailybookCgRepository.findOne(id);
         if (retrieved != null) {
             log.info("DailybookCgServices retrieved id: {}", retrieved.getId());
@@ -39,17 +38,18 @@ public class DailybookCgServices {
             log.info("DailybookCgServices retrieved id NULL: {}", id);
 	}
         populateChildren(retrieved);
+        log.info("DailybookCgServices getDailybookCgById DONE: {}", id);
         return retrieved;
     }
     
     //Selecciona todos los Diarios CG por UserClientId
     public Iterable<DailybookCg> getDailybookCgByUserClientId(UUID userClientId) {
-        log.info("DailybookCgServices getDailybookCgByUserClientId: {}", userClientId);
         Iterable<DailybookCg> dailys = dailybookCgRepository.findDailybookCgByUserClientId(userClientId);
         dailys.forEach(daily -> {
             daily.setListsNull();
             daily.setFatherListToNull();
         });
+        log.info("DailybookCgServices getDailybookCgByUserClientId DONE: {}", userClientId);
         return dailys;
     }
     
@@ -78,7 +78,7 @@ public class DailybookCgServices {
         });
         
         saved.setDetailDailybookContab(detailDailybookContab);
-        log.info("DailybookCgServices createDailybookCg DONE id: {}", saved.getId());
+        log.info("DailybookCgServices createDailybookCg DONE: {}, {}", saved.getId(), saved.getDailyCgStringSeq());
         return saved;
     }
     

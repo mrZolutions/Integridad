@@ -30,7 +30,6 @@ public class PaymentController {
     
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity createPayment(@RequestBody Payment payment) {
-        log.info("PaymentController create");
         Payment response = null;
         try {
             response = service.createPayment(payment);
@@ -38,19 +37,20 @@ public class PaymentController {
             log.error("PaymentController createPayment Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
+        log.info("PaymentController createPayment DONE");
         return new ResponseEntity<Payment>(response, HttpStatus.CREATED);
     }
     
     @RequestMapping(method = RequestMethod.GET, value="/rep/ccresreport/{userClientId}/{dateOne}/{dateTwo}")
-    public ResponseEntity getAllPaymentsByUserClientIdAndDates(@PathVariable("userClientId") UUID userClientId, @PathVariable("dateOne") long dateOne, @PathVariable("dateTwo") long dateTwo) {
-        log.info("PaymentController getAllPaymentsByUserClientId: {}", userClientId);
+    public ResponseEntity getPaymentsByUserClientIdAndDates(@PathVariable("userClientId") UUID userClientId, @PathVariable("dateOne") long dateOne, @PathVariable("dateTwo") long dateTwo) {
         List<CCResumenReport> response = null;
         try {
             response = service.getPaymentsByUserClientIdAndDates(userClientId, dateOne, dateTwo);
 	} catch (BadRequestException e) {
-            log.error("PaymentController getAllPaymentsByUserClientId Exception thrown: {}", e.getMessage());
+            log.error("PaymentController getPaymentsByUserClientId Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
+        log.info("PaymentController getPaymentsByUserClientIdAndDates DONE");
         return new ResponseEntity<List>(response, HttpStatus.ACCEPTED);
     }
     
@@ -63,6 +63,32 @@ public class PaymentController {
             log.error("PaymentController getPaymentsByUserClientIdWithBankAndNroDocument Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
+        log.info("PaymentController getPaymentsByUserClientIdWithBankAndNroDocument DONE");
         return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
+    }
+    
+    @RequestMapping(method = RequestMethod.GET, value="/client/{id}")
+    public ResponseEntity getPaymentsByClientId(@PathVariable("id") UUID id) {
+        Iterable<Payment> response = null;
+        try {
+            response = service.getPaymentsByClientId(id);
+        } catch (BadRequestException e) {
+            log.error("PaymentController getPaymentsByClientId Exception thrown: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+        log.info("PaymentController getPaymentsByClientId DONE");
+        return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
+    }
+    
+    @RequestMapping(method = RequestMethod.PUT)
+    public ResponseEntity deactivatePayment(@RequestBody Payment payment) {
+        try {
+            service.deactivatePayment(payment);
+        } catch (BadRequestException e) {
+            log.error("PaymentController deactivatePayment Exception thrown: {}", e.getMessage());
+    	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+        log.info("PaymentController deactivatePayment DONE");
+        return new ResponseEntity<Void>(HttpStatus.ACCEPTED);
     }
 }

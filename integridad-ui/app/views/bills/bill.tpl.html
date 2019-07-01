@@ -80,7 +80,7 @@
         </table>
         <div class="row">
             <div class="form-group col-md-12">
-                <button type="button" title="Salir" class="btn btn-danger btn-sm"
+                <button type="button" title="Volver a Inicio" class="btn btn-danger btn-sm"
                         ng-click="vm.exit()">
                         <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
                 </button>
@@ -394,7 +394,7 @@
                                     <td></td>
                                     <td></td>
                                     <td><b>SUBTOTAL: </b></td>
-                                    <td>{{(vm.bill.subTotal).toFixed(4)}}</td>
+                                    <td>{{(vm.bill.subTotal).toFixed(2)}}</td>
                                     <td></td>
                                 </tr>
                                 <tr>
@@ -405,7 +405,7 @@
                                     <td></td>
                                     <td></td>
                                     <td><b>DESCUENTO: </b></td>
-                                    <td>{{(vm.bill.discount).toFixed(4)}}</td>
+                                    <td>{{(vm.bill.discount).toFixed(2)}}</td>
                                     <td></td>
                                 </tr>
                                 <tr>
@@ -416,7 +416,7 @@
                                     <td></td>
                                     <td></td>
                                     <td><b>BASE 0%: </b></td>
-                                    <td>{{(vm.bill.baseNoTaxes).toFixed(4)}}</td>
+                                    <td>{{(vm.bill.baseNoTaxes).toFixed(2)}}</td>
                                     <td></td>
                                 </tr>
                                 <tr>
@@ -427,7 +427,7 @@
                                     <td></td>
                                     <td></td>
                                     <td><b>BASE 12%: </b></td>
-                                    <td>{{(vm.bill.baseTaxes).toFixed(4)}}</td>
+                                    <td>{{(vm.bill.baseTaxes).toFixed(2)}}</td>
                                     <td></td>
                                 </tr>
                                 <tr>
@@ -438,7 +438,7 @@
                                     <td></td>
                                     <td></td>
                                     <td><b>IVA: </b></td>
-                                    <td>{{(vm.bill.iva).toFixed(4)}}</td>
+                                    <td>{{(vm.bill.iva).toFixed(2)}}</td>
                                     <td></td>
                                 </tr>
                                 <tr>
@@ -1077,11 +1077,11 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" title = "Salir" class="btn btn-primary btn-sm" data-dismiss="modal">
-                            <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
-                    </button>
                     <button type="button" title="Anular Factura" class="btn btn-danger btn-sm" ng-click="vm.billDeactivate()" data-dismiss="modal">
                             <span class = "glyphicon glyphicon-screenshot" aria-hidden = "true"></span>
+                    </button>
+                    <button type="button" title = "Salir" class="btn btn-primary btn-sm" data-dismiss="modal">
+                            <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
                     </button>
                 </div>
             </div>

@@ -6,7 +6,6 @@ import com.mrzolution.integridad.app.repositories.CashierRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import java.util.UUID;
 
 @Slf4j
@@ -15,13 +14,13 @@ public class CashierServices {
     @Autowired
     CashierRepository cashierRepository;
 
-    public Iterable<Cashier> getAllBySubsiduaryActivesLazy(UUID subId) {
-	log.info("CashierServices getAllBySubsiduaryActivesLazy");
+    public Iterable<Cashier> getAllBySubsidiaryActivesLazy(UUID subId) {
 	Iterable<Cashier> actives = cashierRepository.findBySubsidiaryId(subId);
 	actives.forEach(cashier -> {
             cashier.setFatherListToNull();
             cashier.setListsNull();
 	});
+        log.info("CashierServices getAllBySubsiduaryActivesLazy DONE: {}", subId);
 	return actives;
     }
 
@@ -32,7 +31,7 @@ public class CashierServices {
 	log.info("CashierServices updateCashier: {}", cashier.getId());
 	cashier.setListsNull();
 	Cashier updated = cashierRepository.save(cashier);
-	log.info("CashierServices updateCashier id: {}", updated.getId());
+	log.info("CashierServices updateCashier DONE id: {}", updated.getId());
 	return updated;
     }
 }

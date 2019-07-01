@@ -31,7 +31,6 @@ public class DailybookCeServices {
     
     //Selecciona COMPROBANTE DE EGRESO por Id
     public DailybookCe getDailybookCeById(UUID id) {
-        log.info("DailybookCeServices getDailybookCeById: {}", id);
         DailybookCe retrieved = dailybookCeRepository.findOne(id);
         if (retrieved != null) {
             log.info("DailybookCeServices retrieved id: {}", retrieved.getId());
@@ -39,39 +38,40 @@ public class DailybookCeServices {
             log.info("DailybookCeServices retrieved id NULL: {}", id);
 	}
         populateChildren(retrieved);
+        log.info("DailybookCeServices getDailybookCeById DONE: {}", id);
         return retrieved;
     }
     
     //Selecciona todos los COMPROBANTES DE EGRESO por UserClientId
     public Iterable<DailybookCe> getDailybookCeByUserClientId(UUID userClientId) {
-        log.info("DailybookCeServices getDailybookCeByUserClientId: {}", userClientId);
         Iterable<DailybookCe> dailys = dailybookCeRepository.findDailybookCeByUserClientId(userClientId);
         dailys.forEach(daily -> {
             daily.setListsNull();
             daily.setFatherListToNull();
         });
+        log.info("DailybookCeServices getDailybookCeByUserClientId DONE: {}", userClientId);
         return dailys;
     }
     
     //Selecciona todos los COMPROBANTES DE EGRESO por UserClientId Sin Id de Provveedor
     public Iterable<DailybookCe> getDailybookCeByUserClientIdWithNoProvider(UUID userClientId) {
-        log.info("DailybookCeServices getDailybookCeByUserClientIdWithNoProvider: {}", userClientId);
         Iterable<DailybookCe> dailys = dailybookCeRepository.findDailybookCeByUserClientIdWithNoProvider(userClientId);
         dailys.forEach(daily -> {
             daily.setListsNull();
             daily.setFatherListToNull();
         });
+        log.info("DailybookCeServices getDailybookCeByUserClientIdWithNoProvider DONE: {}", userClientId);
         return dailys;
     }
     
     //Selecciona todos los COMPROBANTES DE EGRESO por ProviderId
-    public Iterable<DailybookCe> getDailybookCeByProviderId(UUID Id) {
-        log.info("DailybookCeServices getDailybookCeByProviderId: {}", Id);
-        Iterable<DailybookCe> dailys = dailybookCeRepository.findDailybookCeByProviderId(Id);
+    public Iterable<DailybookCe> getDailybookCeByProviderId(UUID id) {
+        Iterable<DailybookCe> dailys = dailybookCeRepository.findDailybookCeByProviderId(id);
         dailys.forEach(daily -> {
             daily.setListsNull();
             daily.setFatherListToNull();
         });
+        log.info("DailybookCeServices getDailybookCeByProviderId DONE: {}", id);
         return dailys;
     }
     
@@ -82,6 +82,7 @@ public class DailybookCeServices {
             daily.setFatherListToNull();
             daily.setListsNull();
         });
+        log.info("DailybookCeServices getDailybookCeByUserClientIdAndProvIdAndBillNumber DONE");
         return dailys;
     }
     
@@ -110,7 +111,7 @@ public class DailybookCeServices {
         });
         
         saved.setDetailDailybookContab(detailDailybookContab);
-        log.info("DailybookCeServices createDailybookCe DONE id: {}", saved.getId());
+        log.info("DailybookCeServices createDailybookCe DONE: {}, {}", saved.getId(), saved.getDailyCeStringSeq());
         return saved;
     }
     

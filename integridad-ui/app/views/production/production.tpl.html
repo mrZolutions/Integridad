@@ -75,7 +75,7 @@
         </table>
         <div class="row">
             <div class="form-group col-md-12">
-                <button type="button" title="Salir" class="btn btn-danger btn-sm"
+                <button type="button" title="Volver a Inicio" class="btn btn-danger btn-sm"
                         ng-click="vm.exit()">
                         <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
                 </button>
@@ -84,7 +84,7 @@
     </div>
 
     <!--CARGA DE PROVEEDORES POR WAREHOUSE PARA INGRESO A BODEGA-->
-    <div class="table-responsive" ng-show="vm.warehouseSelected !== undefined && vm.providerList !== undefined">
+    <div class="table-responsive" ng-show="vm.warehouseSelected !== undefined && vm.providerList !== undefined && vm.detailCellarList === undefined">
         <div class="row">
             <div class="form-group col-md-12">
                 <h4><b>Ingreso a Bodega</b></h4>
@@ -149,6 +149,13 @@
     <!--FIN DE CARGA DE PROVEEDORES POR WAREHOUSE PARA INGRESO A BODEGA-->
 
     <div class="table-responsive" ng-show="vm.detailCellarList !== undefined">
+        <div class="row">
+            <div class="form-group col-md-12">
+                <h4><b>Ingreso a Bodega</b></h4>
+                <h4>Sucursal: {{vm.warehouseSubsidiaryName}}</h4>
+                <h5>Bodega: {{vm.warehouseName}}</h5>
+            </div>
+        </div>
         <div class="panel panel-primary">
             <div class="panel-heading">
                 <b>BUSQUEDA DE DETALLES POR FACTURAS</b>
@@ -959,6 +966,7 @@
             </div>
         </div>
     </div>
+
     <!--SECCIÓN DE CONSULTA DE CONSUMOS POR CLIENTE-->
     <div class="table-responsive" ng-show="vm.consumptionList !== undefined">
         <div class="row">

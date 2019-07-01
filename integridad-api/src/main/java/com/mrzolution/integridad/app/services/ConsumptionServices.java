@@ -47,27 +47,26 @@ public class ConsumptionServices {
     KardexRepository kardexRepository;
     
     public Iterable<Consumption> getByUserLazy(UserIntegridad user) {
-        log.info("ConsumptionServices getByUserLazy: {}", user.getId());
         Iterable<Consumption> consumptions = consumptionRepository.findConsumptionByUserIntegridad(user);
         consumptions.forEach(consump -> {
             consump.setListsNull();
             consump.setFatherListToNull();
         });
+        log.info("ConsumptionServices getByUserLazy DONE: {}", user.getId());
         return consumptions;
     }
     
     public Iterable<Consumption> getConsumptionByClientId(UUID id) {
-        log.info("ConsumptionServices getConsumptionByClientId" );
         Iterable<Consumption> consumptions = consumptionRepository.findConsumptionByClientId(id);
         consumptions.forEach(consump -> {
             consump.setListsNull();
             consump.setFatherListToNull();
         });
+        log.info("ConsumptionServices getConsumptionByClientId DONE: {}", id );
         return consumptions;
     }
     
     public Consumption getConsumptionById(UUID id) {
-        log.info("ConsumptionServices getConsumptionById: {}", id);
         Consumption retrieved = consumptionRepository.findOne(id);
         if (retrieved != null) {
             log.info("ConsumptionServices retrieved id: {}", retrieved.getId());
@@ -75,6 +74,7 @@ public class ConsumptionServices {
             log.info("ConsumptionServices retrieved id NULL: {}", id);
         }		
         populateChildren(retrieved);
+        log.info("ConsumptionServices getConsumptionById DONE: {}", id);
         return retrieved;
     }
     
@@ -132,7 +132,7 @@ public class ConsumptionServices {
         saveDetailsConsumption(saved, detailsConsumption);
         saveKardex(saved, detailsKardex);
         updateProductBySubsidiary(consumption, detailsConsumption);
-        log.info("ConsumptionServices createConsumption DONE id: {}", saved.getId());
+        log.info("ConsumptionServices createConsumption DONE: {}, {}", saved.getId(), saved.getCsmNumberSeq());
         return saved;
     }
     
@@ -188,13 +188,22 @@ public class ConsumptionServices {
             Double subTotalTotal = new Double(0);
             Double ivaTotal = new Double(0);
             Double totalTotal = new Double(0);
+            Double iva = new Double(0);
+            Double total = new Double(0);
             String code = "";
             String desc = "";
             for (Consumption consumption: consumptions) {
                 for (DetailConsumption detail: consumption.getDetailsConsumption()) {
                     if (uuidCurrent.equals(detail.getProduct().getId())) {
+                        if (detail.getProduct().isIva()) {
+                            iva = 0.12;
+                            total = 1.12;
+                        } else {
+                            iva = 0.0;
+                            total = 1.0;
+                        }
                         CsmItemReport item = new CsmItemReport(detail.getProduct().getId(),"", consumption.getCsmNumberSeq(), detail.getProduct().getCodeIntegridad(), detail.getProduct().getName(),Double.valueOf(detail.getQuantity()),
-                                                                detail.getCostEach(), detail.getTotal(), (detail.getTotal() * 0.12), (detail.getTotal() * 1.12), consumption.getClientName());
+                                                                detail.getCostEach(), detail.getTotal(), (detail.getTotal() * iva), (detail.getTotal() * total), consumption.getClientName());
                         quantityTotal += item.getQuantity();
                         subTotalTotal += item.getSubTotal();
                         ivaTotal += item.getIva();

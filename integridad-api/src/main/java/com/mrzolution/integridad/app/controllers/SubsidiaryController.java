@@ -25,7 +25,6 @@ public class SubsidiaryController {
 
     @RequestMapping(method = RequestMethod.GET, value="/user_client/{id}")
     public ResponseEntity getByUserClientId(@PathVariable("id") UUID userClientId) {
-	log.info("SubsidiaryController getByUserClientId: {}", userClientId);
 	Iterable<Subsidiary> response = null;
 	try {
             response = service.getAllActivesByUserClientId(userClientId);
@@ -33,12 +32,12 @@ public class SubsidiaryController {
             log.info("SubsidiaryController getByUserClientId Exception thrown: {}", e.getMessage());	    
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
+        log.info("SubsidiaryController getByUserClientId DONE");
 	return new ResponseEntity<Iterable>(response, HttpStatus.OK);
     }
 
     @RequestMapping(method = RequestMethod.GET, value="/{id}")
     public ResponseEntity getSubsidiaryById(@PathVariable("id") UUID id) {
-	log.info("SubsidiaryController getSubsidiaryById: {}", id);
 	Subsidiary response = null;
 	try {
             response = service.getSubsidiaryById(id);
@@ -46,6 +45,7 @@ public class SubsidiaryController {
             log.info("SubsidiaryController getSubsidiaryById Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
+        log.info("SubsidiaryController getSubsidiaryById DONE");
 	return new ResponseEntity<Subsidiary>(response, HttpStatus.OK);
     }
 }

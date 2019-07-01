@@ -69,7 +69,7 @@ public class BillServices {
                         
         String response = httpCallerService.post(Constants.DATIL_LINK, data, userClient);
         //String response = "OK";
-        log.info("BillServices getDatil httpcall SUCCESS");
+        log.info("BillServices getDatil httpcall DONE");
         return response;
     }
 
@@ -84,40 +84,39 @@ public class BillServices {
     }
 	
     public Iterable<Bill> getByUserLazy(UserIntegridad user) {
-        log.info("BillServices getByUserLazy: {}", user.getId());
         Iterable<Bill> bills = billRepository.findByUserIntegridad(user);
         bills.forEach(bill -> {
             bill.setListsNull();
             bill.setFatherListToNull();
         });
+        log.info("BillServices getByUserLazy DONE: {}", user.getId());
         return bills;
     }
 
     //Selecciona todas las Facturas del Cliente
     public Iterable<Bill> getBillByClientId(UUID id, int type) {
-        log.info("BillServices getBillByClientId: {}", id);
         Iterable<Bill> bills = billRepository.findBillByClientId(id, type);
         bills.forEach(bill -> {
             bill.setListsNull();
             bill.setFatherListToNull();
         });
+        log.info("BillServices getBillByClientId DONE: {}", id);
         return bills;
     }
     
     //Selecciona todas las Facturas del Cliente con Saldo != '0.00'
     public Iterable<Bill> getBillByClientIdWithSaldo(UUID id, int type) {
-        log.info("BillServices getBillByClientIdWithSaldo: {}", id);
         Iterable<Bill> bills = billRepository.findBillByClientIdWithSaldo(id, type);
         bills.forEach(bill -> {
             bill.setListsNull();
             bill.setFatherListToNull();
         });
+        log.info("BillServices getBillByClientIdWithSaldo DONE: {}", id);
         return bills;
     }
 
     //Bucar Bills por ID        
     public Bill getBillById(UUID id) {
-        log.info("BillServices getBillById: {}", id);
         Bill retrieved = billRepository.findOne(id);
         if (retrieved != null) {
             log.info("BillServices retrieved id: {}", retrieved.getId());
@@ -125,6 +124,7 @@ public class BillServices {
             log.info("BillServices retrieved id NULL: {}", id);
         }		
         populateChildren(retrieved);
+        log.info("BillServices getBillById DONE: {}", id);
         return retrieved;
     }
 
@@ -172,7 +172,7 @@ public class BillServices {
             cashierRepository.save(cashier);
             saveDetailsQuotation(saved, details);
         }
-        log.info("BillServices createBill DONE id: {}", saved.getId());
+        log.info("BillServices createBill DONE: {}, {}", saved.getId(), saved.getStringSeq());
         return saved;
     }
     
@@ -302,14 +302,23 @@ public class BillServices {
             Double discountTotal = new Double(0);
             Double ivaTotal = new Double(0);
             Double totalTotal = new Double(0);
+            Double iva = new Double(0);
+            Double total = new Double(0);
             String code = "";
             String desc = "";
             for (Bill bill: bills) {
                 for (Detail detail: bill.getDetails()) {
                     if (uuidCurrent.equals(detail.getProduct().getId())) {
+                        if (detail.getProduct().isIva()) {
+                            iva = 0.12;
+                            total = 1.12;
+                        } else {
+                            iva = 0.0;
+                            total = 1.0;
+                        }
                         Double discount = Double.valueOf(Double.valueOf(bill.getDiscountPercentage())/100) * detail.getTotal();
                         ItemReport item = new ItemReport(detail.getProduct().getId(),"", bill.getStringSeq(), detail.getProduct().getCodeIntegridad(),
-					detail.getProduct().getName(),Double.valueOf(detail.getQuantity()), detail.getCostEach(), detail.getTotal(), discount, ((detail.getTotal()-discount) * 0.12), ((detail.getTotal()-discount) * 1.12));
+					detail.getProduct().getName(),Double.valueOf(detail.getQuantity()), detail.getCostEach(), detail.getTotal(), discount, ((detail.getTotal()- discount) * iva), ((detail.getTotal()- discount) * total));
                         quantityTotal += item.getQuantity();
                         subTotalTotal += item.getSubTotal();
                         discountTotal += item.getDiscount();

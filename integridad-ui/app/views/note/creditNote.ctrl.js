@@ -9,7 +9,7 @@
  */
 angular.module('integridadUiApp')
     .controller('CreditNoteCtrl', function( _, $rootScope, $location, utilStringService, $localStorage,
-                                            clientService, billService, creditService, utilSeqService) {
+                                            clientService, billService, creditNoteService, utilSeqService) {
 
         var vm = this;
         vm.error = undefined;
@@ -214,9 +214,9 @@ angular.module('integridadUiApp')
                 vm.items.push(item);
             });
 
-            var req = creditService.createRequirement(vm.clientSelected, vm.bill, $localStorage.user, vm.impuestosTotales, vm.items);
+            var req = creditNoteService.createRequirement(vm.clientSelected, vm.bill, $localStorage.user, vm.impuestosTotales, vm.items);
             
-            creditService.getClaveDeAcceso(req, vm.companyData.userClient.id).then(function(resp) {
+            creditNoteService.getClaveDeAcceso(req, vm.companyData.userClient.id).then(function(resp) {
                 var obj = JSON.parse(resp.data);
                 //var obj = {clave_acceso: '1234560', id:'id12345'};
                 if (obj.errors === undefined) {
@@ -225,7 +225,7 @@ angular.module('integridadUiApp')
                     vm.bill.idSri = obj.id;
                     vm.bill.stringSeq = vm.seqNumber;
                     vm.bill.billSeq = vm.idBill;
-                    creditService.create(vm.bill).then(function(respBill) {
+                    creditNoteService.create(vm.bill).then(function(respBill) {
                         vm.billed = true;
                         $localStorage.user.cashier.creditNoteNumberSeq = vm.bill.creditSeq;
                         vm.success = 'Nota de Crédito creada';

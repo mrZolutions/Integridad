@@ -28,21 +28,20 @@ public class CreditsDebtsController {
     CreditsDebtsServices service;
     
     @RequestMapping(method = RequestMethod.GET, value="/creditsdebts/debts/{id}")
-    public ResponseEntity getCreditsDebtsOfDebtsToPayByDebtsToPayId(@PathVariable("id") UUID id) {
-        log.info("CreditsDebtsController getCreditsDebtsOfDebtsToPayByDebtsToPayId: {}", id);
+    public ResponseEntity getCreditsDebtsByDebtsToPayId(@PathVariable("id") UUID id) {
         Iterable<CreditsDebts> response = null;
         try {
-            response = service.getCreditsDebtsOfDebtsToPayByDebtsToPayId(id);
+            response = service.getCreditsDebtsByDebtsToPayId(id);
         } catch (BadRequestException e) {
-            log.error("CreditsDebtsController getCreditsDebtsOfDebtsToPayByDebtsToPayId Exception thrown: {}", e.getMessage());
+            log.error("CreditsDebtsController getCreditsDebtsByDebtsToPayId Exception thrown: {}", e.getMessage());
 	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
+        log.info("CreditsDebtsController getCreditsDebtsByDebtsToPayId DONE");
         return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
     }
     
     @RequestMapping(method = RequestMethod.GET, value="/rep/pendingreport/{userClientId}/{dateTwo}")
     public ResponseEntity getCreditsDebtsPendingOfDebtsToPayByUserClientId(@PathVariable("userClientId") UUID userClientId, @PathVariable("dateTwo") long dateTwo) {
-        log.info("CreditsDebtsController getCreditsDebtsPendingOfDebtsToPayByUserClientId: {}", userClientId);
         List<CreditsDebtsReport> response = null;
         try {
             response = service.getCreditsDebtsPendingOfDebtsToPayByUserClientId(userClientId, dateTwo);
@@ -50,6 +49,7 @@ public class CreditsDebtsController {
             log.error("CreditsDebtsController getCreditsDebtsPendingOfDebtsToPayByUserClientId Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
+        log.info("CreditsDebtsController getCreditsDebtsPendingOfDebtsToPayByUserClientId DONE");
 	return new ResponseEntity<List>(response, HttpStatus.ACCEPTED);
     }
     

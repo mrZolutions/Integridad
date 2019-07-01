@@ -255,7 +255,7 @@ angular.module('integridadUiApp')
                 };
                 var costEachCalculated = vm.getCost(detail.product[vm.priceType.cod], detail.product.averageCost);
                 detail.costEach = costEachCalculated;
-                detail.total = parseFloat((parseFloat(detail.quantity) * parseFloat(detail.costEach)).toFixed(4));
+                detail.total = parseFloat((parseFloat(detail.quantity) * (parseFloat(detail.costEach) - (parseFloat(detail.costEach) * parseFloat(detail.discount / 100)))).toFixed(4));
             });
             _getTotalSubtotal();
         };
@@ -693,7 +693,7 @@ angular.module('integridadUiApp')
                     if (vm.estado === 'PENDIENTE') {
                         vm.bill.saldo = (vm.bill.total).toString();
                     } else {
-                        vm.bill.saldo = '0.00';
+                        vm.bill.saldo = '0';
                     };
                     // 1 is typeDocument Bill **************!!!
                     billService.create(vm.bill, 1).then(function(respBill) {
