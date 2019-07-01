@@ -16,14 +16,14 @@ angular.module('integridadUiApp')
         vm.cuetaSelected = undefined;
 
         vm.tipoCtaCtable = [
-            {code: 'GENE' ,name: 'GENERAL'}, {code: 'BIEN' ,name: 'BIENES'}, 
+            {code: 'GENE' ,name: 'GENERAL'}, {code: 'BIEN' ,name: 'BIENES'},
             {code: 'SERV', name: 'SERVICIOS'}, {code: 'MATP', name: 'MATERIA PRIMA'},
             {code: 'CONS', name: 'CONSUMIBLES'}, {code: 'RMBG', name: 'REEMBOLSO GASTOS'},
             {code: 'TKAE', name: 'TICKETS AEREOS'}, {code: 'ACTV', name: 'ACTIVOS'},
             {code: 'PASV', name: 'PASIVOS'}, {code: 'INGR', name: 'INGRESOS'},
             {code: 'EGRE', name: 'EGRESOS'}, {code: 'PATR', name: 'PATRIMONIOS'},
             {code: 'BANC', name: 'DEFINIDA PARA BANCOS'}, {code: 'GADM', name: 'GASTOS ADMINISTRATIVOS'},
-            {code: 'GEMP', name: 'GASTOS DE EMPLEADOS'}
+            {code: 'GEMP', name: 'GASTOS DE EMPLEADOS'}, {code: 'INVT', name: 'INVENTARIOS'}
         ];
 
         function _activate() {

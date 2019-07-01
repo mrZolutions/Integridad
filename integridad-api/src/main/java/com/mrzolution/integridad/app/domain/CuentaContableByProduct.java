@@ -11,6 +11,7 @@ public class CuentaContableByProduct {
     @Id
     @GeneratedValue
     private UUID id;
+    private String type;
 
     @ManyToOne
     @JoinColumn(name = "product_id")

@@ -100,7 +100,7 @@ angular.module('integridadUiApp')
           vm.loading = false;
           vm.error = error.data;
         });
-        cuentaContableService.getCuentaContableByUserClient($localStorage.user.subsidiary.userClient.id).then(function(response) {
+        cuentaContableService.getCuentaContableByType($localStorage.user.subsidiary.userClient.id, 'INVT').then(function(response) {
             vm.cuentaContableList = response;
             vm.loading = false;
         }).catch(function(error) {
@@ -983,9 +983,31 @@ angular.module('integridadUiApp')
       vm.productBySubsidiaries.push(productBySubsidiary);
       vm.product.productBySubsidiaries = vm.productBySubsidiaries;
       vm.product.cuentaContableByProducts = [];
-      _.each(vm.cuentasContablesForProduct, function (cc){
+      _.each(vm.cuentasContablesForProductSale, function (cc){
         var cuentaContableByProduct = {
-          cuentaContable: cc
+          cuentaContable: cc,
+          type: 'VENTA'
+        };
+        vm.product.cuentaContableByProducts.push(cuentaContableByProduct);
+      });
+      _.each(vm.cuentasContablesForProductConsume, function (cc){
+        var cuentaContableByProduct = {
+          cuentaContable: cc,
+          type: 'CONSUMO'
+        };
+        vm.product.cuentaContableByProducts.push(cuentaContableByProduct);
+      });
+      _.each(vm.cuentasContablesForProductFinished, function (cc){
+        var cuentaContableByProduct = {
+          cuentaContable: cc,
+          type: 'PRODUCTO_TERMINADO'
+        };
+        vm.product.cuentaContableByProducts.push(cuentaContableByProduct);
+      });
+      _.each(vm.cuentasContablesForProductCost, function (cc){
+        var cuentaContableByProduct = {
+          cuentaContable: cc,
+          type: 'COSTO_DE_VENTA'
         };
         vm.product.cuentaContableByProducts.push(cuentaContableByProduct);
       });
@@ -1009,7 +1031,10 @@ angular.module('integridadUiApp')
       vm.success = undefined;
       vm.error = undefined
       vm.productBySubsidiaries = [];
-      vm.cuentasContablesForProduct = [];
+      vm.cuentasContablesForProductSale = [];
+      vm.cuentasContablesForProductConsume = [];
+      vm.cuentasContablesForProductFinished = [];
+      vm.cuentasContablesForProductCost = [];
       vm.wizard = 1;
       vm.product = {
         userClient: $localStorage.user.subsidiary.userClient,
@@ -1049,12 +1074,40 @@ angular.module('integridadUiApp')
       vm.wizard = 3;
     };
 
-    vm.addCuentaContable = function(){
-      vm.cuentasContablesForProduct.push(vm.cuentaContable);
+    vm.addCuentaContableSale = function(){
+      if(vm.cuentaContableSale !== undefined && vm.cuentaContableSale.id !== undefined)
+        vm.cuentasContablesForProductSale.push(vm.cuentaContableSale);
     };
 
-    vm.removeCC = function(cc){
-      vm.cuentasContablesForProduct = _.filter(vm.cuentasContablesForProduct, function(cuenta){return cuenta.name !== cc.name})
+    vm.removeCCSale = function(cc){
+      vm.cuentasContablesForProductSale = _.filter(vm.cuentasContablesForProductSale, function(cuenta){return cuenta.name !== cc.name})
+    };
+
+    vm.addCuentaContableConsume = function(){
+      if(vm.cuentaContableConsume !== undefined && vm.cuentaContableConsume.id !== undefined)
+        vm.cuentasContablesForProductConsume.push(vm.cuentaContableConsume);
+    };
+
+    vm.removeCCConsume = function(cc){
+      vm.cuentasContablesForProductConsume = _.filter(vm.cuentasContablesForProductConsume, function(cuenta){return cuenta.name !== cc.name})
+    };
+
+    vm.addCuentaContableFinished = function(){
+      if(vm.cuentaContableFinished !== undefined && vm.cuentaContableFinished.id !== undefined)
+        vm.cuentasContablesForProductFinished.push(vm.cuentaContableFinished);
+    };
+
+    vm.removeCCFinished = function(cc){
+      vm.cuentasContablesForProductFinished = _.filter(vm.cuentasContablesForProductFinished, function(cuenta){return cuenta.name !== cc.name})
+    };
+
+    vm.addCuentaContableCost = function(){
+      if(vm.cuentaContableCost !== undefined && vm.cuentaContableCost.id !== undefined)
+        vm.cuentasContablesForProductCost.push(vm.cuentaContableCost);
+    };
+
+    vm.removeCCCost = function(cc){
+      vm.cuentasContablesForProductCost = _.filter(vm.cuentasContablesForProductCost, function(cuenta){return cuenta.name !== cc.name})
     };
 
     vm.getGroups = function() {
