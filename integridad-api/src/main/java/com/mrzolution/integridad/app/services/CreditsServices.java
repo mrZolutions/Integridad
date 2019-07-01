@@ -6,6 +6,7 @@ import com.mrzolution.integridad.app.domain.Payment;
 import com.mrzolution.integridad.app.domain.report.CreditsReport;
 import com.mrzolution.integridad.app.repositories.CreditsRepository;
 import com.mrzolution.integridad.app.repositories.PaymentRepository;
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -78,7 +79,7 @@ public class CreditsServices {
         credits.forEach(credit -> {
             populateChildren(credit);
             
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd");
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
             String fechaVenta = dateFormat.format(new Date(credit.getPago().getBill().getDateCreated()));
             String fechaVence = dateFormat.format(new Date(credit.getFecha()));
             
@@ -101,7 +102,18 @@ public class CreditsServices {
                                    
             saldo = credit.getPago().getBill().getTotal() - (sumAbono + sumReten + sumNotac);
             
-            if (saldo > 0.0) {
+            BigDecimal vsaldo = new BigDecimal(saldo);
+            if (saldo == 0) {
+                vsaldo = vsaldo.setScale(0, BigDecimal.ROUND_HALF_UP);
+            } else if (saldo < 0) {
+                vsaldo = vsaldo.setScale(0, BigDecimal.ROUND_HALF_UP);
+            } else {
+                vsaldo = vsaldo.setScale(2, BigDecimal.ROUND_HALF_UP);
+            }
+            
+            saldo = vsaldo.doubleValue();
+            
+            if (saldo > 0) {
                 if (clientId != null && clientId.equals(credit.getPago().getBill().getClient().getId())) {
                     sumTotal = Double.sum(sumTotal, credit.getPago().getBill().getTotal());
                     sumTotalAbono = Double.sum(sumTotalAbono, sumAbono);
@@ -145,8 +157,9 @@ public class CreditsServices {
                 tPlazo = 0.0;
                 cPlazo = 0.0;
                 qPlazo = 0.0;
-            } 
-            if (saldo > 0.0) {
+            }
+            
+            if (saldo > 0) {
                 CreditsReport saleReport = new CreditsReport(credit.getPago().getBill().getClient().getIdentification(), credit.getPago().getBill().getClient().getName(), credit.getPago().getBill().getStringSeq(), 
                                                          fechaVenta, fechaVence, credit.getDiasPlazo(), diasVencim, credit.getPago().getBill().getTotal(), sumAbono, sumReten, sumNotac, saldo, pPlazo, sPlazo,
                                                          tPlazo, cPlazo, qPlazo);
@@ -159,12 +172,13 @@ public class CreditsServices {
             }
             
         });
-        if (saldo > 0.0) {
+        
+        if (saldo >= 0) {
             CreditsReport saleReport = new CreditsReport("SUB-TOTAL ", null, null, null, null, 0, 0, sumTotal, sumTotalAbono, sumTotalReten, sumTotalNotac, sumTotalValor, 0, 0, 0, 0, 0);
             creditsReportList.add(saleReport);
         
             CreditsReport salesReport = new CreditsReport("TOTAL GENERAL ", null, null, null, null, 0, 0, total, totalAbono, totalReten, totalNotac, totalValor, 0, 0, 0, 0, 0);
-            creditsReportList.add(salesReport); creditsReportList.remove(salesReport);
+            creditsReportList.add(salesReport);
             sumTotal = 0;
             sumTotalAbono = 0;
             sumTotalReten = 0;

@@ -6,6 +6,7 @@ import com.mrzolution.integridad.app.domain.PaymentDebts;
 import com.mrzolution.integridad.app.domain.report.CreditsDebtsReport;
 import com.mrzolution.integridad.app.repositories.CreditsDebtsRepository;
 import com.mrzolution.integridad.app.repositories.PaymentDebtsRepository;
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -32,7 +33,7 @@ public class CreditsDebtsServices {
     PaymentDebtsRepository paymentDebtsRepository;
     
     private UUID providerId;
-    private double saldo = 0;
+    private double saldos;
     private double sumTotal = 0;
     private double sumTotalAbono = 0;
     private double sumTotalReten = 0;
@@ -59,7 +60,6 @@ public class CreditsDebtsServices {
         sumTotalAbono = 0;
         sumTotalReten = 0;
         sumTotalValor = 0;
-        saldo = 0;
         total = 0;
         totalAbono = 0;
         totalReten = 0;
@@ -77,7 +77,7 @@ public class CreditsDebtsServices {
         creditsDebts.forEach(creditD -> {
             populateChildren(creditD);
             
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd");
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
             String fechaVenta = dateFormat.format(new Date(creditD.getPagoDebts().getDebtsToPay().getFecha()));
             String fechaVence = dateFormat.format(new Date(creditD.getFecha()));
             
@@ -91,19 +91,34 @@ public class CreditsDebtsServices {
                 }
             }
             
-            if (providerId != null && providerId.equals(creditD.getPagoDebts().getDebtsToPay().getProvider().getId())) {
-                sumTotal = Double.sum(sumTotal, creditD.getPagoDebts().getDebtsToPay().getTotal());
-                sumTotalAbono = Double.sum(sumTotalAbono, sumAbono);
-                sumTotalReten = Double.sum(sumTotalReten, sumReten);
-                sumTotalValor = sumTotal - (sumTotalAbono + sumTotalReten);
+            saldos = creditD.getPagoDebts().getDebtsToPay().getTotal() - (sumAbono + sumReten);
+
+            BigDecimal vsaldo = new BigDecimal(saldos);
+            if (saldos == 0) {
+                vsaldo = vsaldo.setScale(0, BigDecimal.ROUND_HALF_UP);
+            } else if (saldos < 0) {
+                vsaldo = vsaldo.setScale(0, BigDecimal.ROUND_HALF_UP);
             } else {
-                providerId = creditD.getPagoDebts().getDebtsToPay().getProvider().getId();
-                CreditsDebtsReport creditDebtReport = new CreditsDebtsReport("SUB-TOTAL ", null, null, null, null, 0, 0, sumTotal, sumTotalAbono, sumTotalReten, sumTotalValor);
-                creditsDebtsReportList.add(creditDebtReport);
-                sumTotal = creditD.getPagoDebts().getDebtsToPay().getTotal();
-                sumTotalValor = creditD.getValor();
-                sumTotalAbono = sumAbono;
-                sumTotalReten = sumReten;
+                vsaldo = vsaldo.setScale(2, BigDecimal.ROUND_HALF_UP);
+            }
+            
+            saldos = vsaldo.doubleValue();
+            
+            if (saldos > 0) {
+                if (providerId != null && providerId.equals(creditD.getPagoDebts().getDebtsToPay().getProvider().getId())) {
+                    sumTotal = Double.sum(sumTotal, creditD.getPagoDebts().getDebtsToPay().getTotal());
+                    sumTotalAbono = Double.sum(sumTotalAbono, sumAbono);
+                    sumTotalReten = Double.sum(sumTotalReten, sumReten);
+                    sumTotalValor = sumTotal - (sumTotalAbono + sumTotalReten);
+                } else {
+                    providerId = creditD.getPagoDebts().getDebtsToPay().getProvider().getId();
+                    CreditsDebtsReport creditDebtReport = new CreditsDebtsReport("SUB-TOTAL ", null, null, null, null, 0, 0, sumTotal, sumTotalAbono, sumTotalReten, sumTotalValor);
+                    creditsDebtsReportList.add(creditDebtReport);
+                    sumTotal = creditD.getPagoDebts().getDebtsToPay().getTotal();
+                    sumTotalValor = saldos;
+                    sumTotalAbono = sumAbono;
+                    sumTotalReten = sumReten;
+                }
             }
             
             Date today = new Date();
@@ -115,29 +130,29 @@ public class CreditsDebtsServices {
                 Logger.getLogger(CreditsDebtsServices.class.getName()).log(Level.SEVERE, null, ex);
             }
             
-            saldo = creditD.getPagoDebts().getDebtsToPay().getTotal() - (sumAbono + sumReten);
-            
-            CreditsDebtsReport creditDebtReport = new CreditsDebtsReport(creditD.getPagoDebts().getDebtsToPay().getProvider().getRuc(), creditD.getPagoDebts().getDebtsToPay().getProvider().getName(), creditD.getPagoDebts().getDebtsToPay().getBillNumber(), 
-                                                                         fechaVenta, fechaVence, creditD.getDiasPlazo(), diasVencim, creditD.getPagoDebts().getDebtsToPay().getTotal(),
-                                                                         sumAbono, sumReten, saldo);
-            creditsDebtsReportList.add(creditDebtReport);
-            
-            total = Double.sum(total, creditD.getPagoDebts().getDebtsToPay().getTotal());
-            totalAbono = Double.sum(totalAbono, sumAbono);
-            totalReten = Double.sum(totalReten, sumReten);
-            totalValor = total - (totalAbono + totalReten);
+            if (saldos > 0) {
+                CreditsDebtsReport creditDebtReport = new CreditsDebtsReport(creditD.getPagoDebts().getDebtsToPay().getProvider().getRuc(), creditD.getPagoDebts().getDebtsToPay().getProvider().getName(), creditD.getPagoDebts().getDebtsToPay().getBillNumber(), 
+                                                                             fechaVenta, fechaVence, creditD.getDiasPlazo(), diasVencim, creditD.getPagoDebts().getDebtsToPay().getTotal(),
+                                                                             sumAbono, sumReten, saldos);
+                creditsDebtsReportList.add(creditDebtReport);
+                total = Double.sum(total, creditD.getPagoDebts().getDebtsToPay().getTotal());
+                totalAbono = Double.sum(totalAbono, sumAbono);
+                totalReten = Double.sum(totalReten, sumReten);
+                totalValor = total - (totalAbono + totalReten);
+            }
         });
-        CreditsDebtsReport creditDebtReport = new CreditsDebtsReport("SUB-TOTAL ", null, null, null, null, 0, 0, sumTotal, sumTotalAbono, sumTotalReten, sumTotalValor);
-        creditsDebtsReportList.add(creditDebtReport);
-        
-        CreditsDebtsReport creditDebtsReport = new CreditsDebtsReport("TOTAL GENERAL ", null, null, null, null, 0, 0, total, totalAbono, totalReten, totalValor);
-        creditsDebtsReportList.add(creditDebtsReport);
-        
-        sumTotal = 0;
-        sumTotalAbono = 0;
-        sumTotalReten = 0;
-        sumTotalValor = 0;
-        saldo = 0;
+
+        if (saldos >= 0) {
+            CreditsDebtsReport creditDebtReport = new CreditsDebtsReport("SUB-TOTAL ", null, null, null, null, 0, 0, sumTotal, sumTotalAbono, sumTotalReten, sumTotalValor);
+            creditsDebtsReportList.add(creditDebtReport);
+
+            CreditsDebtsReport creditDebtsReport = new CreditsDebtsReport("TOTAL GENERAL ", null, null, null, null, 0, 0, total, totalAbono, totalReten, totalValor);
+            creditsDebtsReportList.add(creditDebtsReport);
+            sumTotal = 0;
+            sumTotalAbono = 0;
+            sumTotalReten = 0;
+            sumTotalValor = 0;
+        }
         
         return creditsDebtsReportList;
     }
