@@ -50,8 +50,8 @@ public class RetentionServices {
         String data = mapper.writeValueAsString(requirement);
         log.info("RetentionServices getDatil MAPPER creado");
 	
-        //String response = httpCallerService.post(Constants.DATIL_RETENTION_LINK, data, userClient);
-        String response = "OK";
+        String response = httpCallerService.post(Constants.DATIL_RETENTION_LINK, data, userClient);
+        //String response = "OK";
         log.info("RetentionServices getDatil httpcall DONE");
         return response;
     }
@@ -199,7 +199,7 @@ public class RetentionServices {
             String status = retention.isActive() ? "ACTIVA" : "ANULADA";
             String docDate = dateFormat.format(new Date(retention.getDocumentDate()));
             RetentionReport saleReport= new RetentionReport(date, docDate, retention.getProvider().getCodeIntegridad(), retention.getProvider().getName(), retention.getProvider().getRuc(), retention.getStringSeq(), retention.getClaveDeAcceso(),
-                                                            retention.getDocumentNumber(),retention.getEjercicioFiscal(), status, codRetenFuente, baseF, porcenF, subTotalF, codRetenIva, baseIva, porcenIva, subTotalIva, sum, retention.getSubsidiary().getName(),
+                                                            retention.getDocumentNumber(),retention.getEjercicioFiscal(), retention.getDebtsSeq(), status, codRetenFuente, baseF, porcenF, subTotalF, codRetenIva, baseIva, porcenIva, subTotalIva, sum, retention.getSubsidiary().getName(),
                                                             retention.getUserIntegridad().getFirstName());
 
             retentionReportList.add(saleReport);

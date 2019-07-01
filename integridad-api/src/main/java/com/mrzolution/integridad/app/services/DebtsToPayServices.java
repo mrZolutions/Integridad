@@ -17,7 +17,6 @@ import com.mrzolution.integridad.app.repositories.DetailDebtsToPayChildRepositor
 import com.mrzolution.integridad.app.repositories.DetailDebtsToPayRepository;
 import com.mrzolution.integridad.app.repositories.PagoDebtsChildRepository;
 import com.mrzolution.integridad.app.repositories.PagoDebtsRepository;
-import com.mrzolution.integridad.app.repositories.PaymentDebtsChildRepository;
 import com.mrzolution.integridad.app.repositories.PaymentDebtsRepository;
 import com.mrzolution.integridad.app.repositories.RetentionRepository;
 import java.text.SimpleDateFormat;
@@ -155,8 +154,10 @@ public class DebtsToPayServices {
             detail.setDebtsToPay(null);
         });
         
-        //updateRetention(saved);
         savePagosAndCreditsOfDebts(saved, pagos);
+        if (saved.getRetentionId() != null) {
+            updateRetention(saved);
+        }
         saved.setDetailDebtsToPay(detailDebtsToPay);
         log.info("DebtsToPayServices createDebtsToPay DONE: {}, {}", saved.getId(), saved.getDebtsSeq());
         return saved;

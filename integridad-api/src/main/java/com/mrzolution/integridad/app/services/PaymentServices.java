@@ -133,7 +133,7 @@ public class PaymentServices {
         }
         
         payments.forEach(payment -> {
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd");
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
             String fechaPago = dateFormat.format(new Date(payment.getDatePayment()));
             
             if (clientId != null && clientId.equals(payment.getCredits().getPago().getBill().getClient().getId())) {

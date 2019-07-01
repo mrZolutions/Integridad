@@ -137,7 +137,7 @@ public class PaymentDebtsServices {
         }
         
         paymentsDebts.forEach(paymentDebt -> {
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd");
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
             String fechaPago = dateFormat.format(new Date(paymentDebt.getDatePayment()));
             
             if (providerId != null && providerId.equals(paymentDebt.getCreditsDebts().getPagoDebts().getDebtsToPay().getProvider().getId())) {

@@ -203,6 +203,7 @@ angular.module('integridadUiApp')
             vm.providerId = undefined;
             vm.providerName = undefined;
             vm.providerToUse = undefined;
+            vm.totalTotal = undefined;
             vm.reportStatementProviderSelected = undefined;
             vm.usrCliId = $localStorage.user.subsidiary.userClient.id;
             vm.providerList = [];
@@ -475,6 +476,7 @@ angular.module('integridadUiApp')
                     totalRetorno = (parseFloat(totalRetorno) + parseFloat(detail.valor_retenido)).toFixed(2);
                 });
             };
+            vm.totalTotal = totalRetorno;
             return totalRetorno;
         };
 
@@ -548,8 +550,8 @@ angular.module('integridadUiApp')
             vm.loading = true;
             var eRet = eretentionService.createERetention(vm.retention, $localStorage.user);
             eretentionService.getClaveDeAcceso(eRet, $localStorage.user.subsidiary.userClient.id).then(function(resp) {
-                //var obj = JSON.parse(resp.data);
-                var obj = {clave_acceso: '1234560', id:'id12345'};
+                var obj = JSON.parse(resp.data);
+                //var obj = {clave_acceso: '1234560', id:'id12345'};
                 if (obj.errors === undefined) {
                     vm.retention.claveDeAcceso = obj.clave_acceso;
                     vm.retention.idSri = obj.id;
@@ -560,6 +562,7 @@ angular.module('integridadUiApp')
                     vm.retention.documentDate = $('#pickerBillDateDocumentRetention').data("DateTimePicker").date().toDate().getTime();
                     vm.retention.userIntegridad = $localStorage.user;
                     vm.retention.subsidiary = $localStorage.user.subsidiary;
+                    vm.retention.total = vm.totalTotal;
                     vm.retention.detailRetentions = [];
                     _.each(vm.retention.items, function(item) {
                         var detail = {

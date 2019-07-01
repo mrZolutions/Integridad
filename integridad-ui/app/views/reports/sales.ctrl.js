@@ -293,6 +293,7 @@ angular.module('integridadUiApp')
             NUM_AUTOR: retention.authorizationNumber,
             NUM_FACT: retention.documentNumber,
             EJER_FISCAL: retention.ejercicioFiscal,
+            NUM_CXP: retention.debtsSeq,
             ESTADO: retention.status,
             COD_RET_FTE: retention.codigoRetentionFuente,
             BASE_FTE: parseFloat((retention.baseFuente).toFixed(2)),

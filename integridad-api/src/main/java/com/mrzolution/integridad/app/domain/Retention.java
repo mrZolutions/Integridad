@@ -29,6 +29,7 @@ public class Retention {
     private String idSri;
     private String debtsToPayId;
     private String debtsSeq;
+    private double total;
 
     @ManyToOne
     @JoinColumn(name = "provider_id")
