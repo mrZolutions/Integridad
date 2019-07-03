@@ -89,7 +89,7 @@ public class BillServices {
             bill.setListsNull();
             bill.setFatherListToNull();
         });
-        log.info("BillServices getByUserLazy DONE: {}", user.getId());
+        log.info("BillServices getByUserLazy: {}", user.getId());
         return bills;
     }
 
@@ -100,7 +100,7 @@ public class BillServices {
             bill.setListsNull();
             bill.setFatherListToNull();
         });
-        log.info("BillServices getBillByClientId DONE: {}", id);
+        log.info("BillServices getBillByClientId: {}", id);
         return bills;
     }
     
@@ -111,7 +111,7 @@ public class BillServices {
             bill.setListsNull();
             bill.setFatherListToNull();
         });
-        log.info("BillServices getBillByClientIdWithSaldo DONE: {}", id);
+        log.info("BillServices getBillByClientIdWithSaldo: {}", id);
         return bills;
     }
 
@@ -124,7 +124,7 @@ public class BillServices {
             log.info("BillServices retrieved id NULL: {}", id);
         }		
         populateChildren(retrieved);
-        log.info("BillServices getBillById DONE: {}", id);
+        log.info("BillServices getBillById: {}", id);
         return retrieved;
     }
 
@@ -172,7 +172,7 @@ public class BillServices {
             cashierRepository.save(cashier);
             saveDetailsQuotation(saved, details);
         }
-        log.info("BillServices createBill DONE: {}, {}", saved.getId(), saved.getStringSeq());
+        log.info("BillServices createBill: {}, {}", saved.getId(), saved.getStringSeq());
         return saved;
     }
     
@@ -184,7 +184,7 @@ public class BillServices {
             detail.setBill(null);
         });
         saved.setDetails(details);
-        log.info("BillServices saveDetailsBill DONE");
+        log.info("BillServices saveDetailsBill");
     }
     
     //Almacena los Detalles en Kardex
@@ -195,7 +195,7 @@ public class BillServices {
             detailk.setBill(null);
         });
         saved.setDetailsKardex(detailsKardex);
-        log.info("BillServices saveKardex DONE");
+        log.info("BillServices saveKardex");
     }
     
     //Almacena los Detalles de la Cotización
@@ -206,7 +206,7 @@ public class BillServices {
             detail.setBill(null);
         });
         saved.setDetails(details);
-        log.info("BillServices saveDetailsQuotation DONE");
+        log.info("BillServices saveDetailsQuotation");
     }
     
     //Guarda el tipo de Pago y Credits
@@ -224,7 +224,7 @@ public class BillServices {
                 });
             }    
         });
-        log.info("BillServices savePagosAndCreditsBill DONE");
+        log.info("BillServices savePagosAndCreditsBill");
     }
     
     //Actualiza la cantidad de Productos (Existencia)
@@ -236,7 +236,7 @@ public class BillServices {
                 productBySubsidiairyRepository.save(ps);
             }
         });
-        log.info("BillServices updateProductBySubsidiary DONE");
+        log.info("BillServices updateProductBySubsidiary");
     }
     //Fin de Creación de las Bills
 
@@ -249,7 +249,7 @@ public class BillServices {
         billToDeactivate.setListsNull();
         billToDeactivate.setActive(false);
         billRepository.save(billToDeactivate);
-        log.info("BillServices deactivateBill DONE id: {}", bill.getId());
+        log.info("BillServices deactivateBill id: {}", bill.getId());
         return billToDeactivate;
     }
 
@@ -265,7 +265,7 @@ public class BillServices {
         log.info("BillServices CHILDREN updated: {}", bill.getId());
         bill.setListsNull();
         Bill updated = billRepository.save(bill);
-        log.info("BillServices updateBill DONE id: {}", updated.getId());
+        log.info("BillServices updateBill id: {}", updated.getId());
         return updated;
     }
 

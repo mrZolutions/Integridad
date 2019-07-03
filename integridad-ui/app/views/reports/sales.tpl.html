@@ -286,7 +286,7 @@
         </table>
     </div>
 
-    <!--Reporte de Ctas Pendientes-->
+    <!--Reporte de Ctas Pendientes CxC-->
     <div class="table-responsive" ng-if="vm.isProductReportList === '4' && vm.reportList !== undefined">
         <table class="table table-striped">
             <thead>
@@ -311,7 +311,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="data in vm.reportList | orderBy:'clientName'" >
+                <tr ng-repeat="data in vm.reportList" >
                     <td>{{data.identification}}</td>
                     <td>{{data.clientName}}</td>
                     <td>{{data.billNumber}}</td>
@@ -384,7 +384,7 @@
         </table>
     </div>
 
-    <!--Reporte de Pagos y Abonos-->
+    <!--Reporte de Pagos y Abonos CxC-->
     <div class="table-responsive" ng-if="vm.isProductReportList === '6' && vm.reportList !== undefined">
         <table class="table table-striped">
             <thead>
@@ -395,7 +395,7 @@
                     <th>Valor Factura</th>
                     <th>Tipo Transacci&oacute;n</th>
                     <th>Forma de Pago</th>
-                    <th>N&uacute;mero Cheque</th>
+                    <th>Nro. Transacci&oacute;n</th>
                     <th>Fecha de Pago</th>
                     <th>Abonos</th>
                     <th>Retenciones</th>
@@ -403,7 +403,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="data in vm.reportList | orderBy:'nameClient'" >
+                <tr ng-repeat="data in vm.reportList" >
                     <td>{{data.identification}}</td>
                     <td>{{data.nameClient}}</td>
                     <td>{{data.billNumber}}</td>
@@ -420,7 +420,7 @@
         </table>
     </div>
 
-    <!--Reporte de Ctas Pendientes DebtsToPay-->
+    <!--Reporte de Ctas Pendientes CxP-->
     <div class="table-responsive" ng-if="vm.isProductReportList === '7' && vm.reportList !== undefined">
         <table class="table table-striped">
             <thead>
@@ -439,7 +439,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="data in vm.reportList | orderBy:'providerName'" >
+                <tr ng-repeat="data in vm.reportList" >
                     <td>{{data.ruc}}</td>
                     <td>{{data.providerName}}</td>
                     <td>{{data.billNumber}}</td>
@@ -456,7 +456,7 @@
         </table>
     </div>
 
-    <!--Reporte de Compras DebtsToPay-->
+    <!--Reporte de Compras CxP-->
     <div class="table-responsive" ng-if="vm.isProductReportList === '8' && vm.reportList !== undefined">
         <table class="table table-striped">
             <thead>
@@ -580,7 +580,7 @@
         </table>
     </div>
 
-    <!--Reporte de Pagos y Abonos-->
+    <!--Reporte de Pagos y Abonos CxP-->
     <div class="table-responsive" ng-if="vm.isProductReportList === '11' && vm.reportList !== undefined">
         <table class="table table-striped">
             <thead>
@@ -592,14 +592,14 @@
                     <th>Valor CxP</th>
                     <th>Tipo Transacci&oacute;n</th>
                     <th>Forma de Pago</th>
-                    <th>N&uacute;mero Cheque</th>
+                    <th>Nro. Transacci&oacute;n</th>
                     <th>Fecha de Pago</th>
                     <th>Abonos</th>
                     <th>Retenciones</th>
                 </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="data in vm.reportList | orderBy:'nomCliente'" >
+                <tr ng-repeat="data in vm.reportList" >
                     <td>{{data.ruc}}</td>
                     <td>{{data.nameProv}}</td>
                     <td>{{data.debtsNumber}}</td>

@@ -52,7 +52,7 @@ public class BillOfflineServices {
             billOffline.setListsNull();
             billOffline.setFatherListToNull();
         });
-        log.info("BillOfflineServices getBillsOfflineByTypeDocument DONE: {}", value);
+        log.info("BillOfflineServices getBillsOfflineByTypeDocument: {}", value);
         return billsOffline;
     }
     
@@ -63,7 +63,7 @@ public class BillOfflineServices {
             billOffline.setListsNull();
             billOffline.setFatherListToNull();
         });
-        log.info("BillOfflineServices getBillsOfflineByUserIntegridad DONE: {}", user.getId());
+        log.info("BillOfflineServices getBillsOfflineByUserIntegridad: {}", user.getId());
         return billsOffline;
     }
     
@@ -73,7 +73,7 @@ public class BillOfflineServices {
             billOffline.setFatherListToNull();
             billOffline.setListsNull();
         });
-        log.info("BillOfflineServices getByStringSeq DONE : {}, {}", stringSeq, subId);
+        log.info("BillOfflineServices getByStringSeq: {}, {}", stringSeq, subId);
         return billsOffline;
     }
     
@@ -84,7 +84,7 @@ public class BillOfflineServices {
             billOffline.setListsNull();
             billOffline.setFatherListToNull();
         });
-        log.info("BillOfflineServices getBillsOfflineByClientId DONE: {}", id);
+        log.info("BillOfflineServices getBillsOfflineByClientId: {}", id);
         return billsOffline;
     }
     
@@ -97,7 +97,7 @@ public class BillOfflineServices {
             log.info("BillOfflineServices retrieved id NULL: {}", id);
         }		
         populateChildren(retrieved);
-        log.info("BillOfflineServices getBillOfflineById DONE: {}", id);
+        log.info("BillOfflineServices getBillOfflineById: {}", id);
         return retrieved;
     }
     
@@ -161,7 +161,7 @@ public class BillOfflineServices {
         savePagosOfflineOfBillOffline(saved, pagosOffline);
         updateProductBySubsidiary(billOffline, typeDocument, detailsOffline);
         
-        log.info("BillOfflineServices createBillOffline DONE: {}, {}", saved.getId(), saved.getStringSeq());
+        log.info("BillOfflineServices createBillOffline: {}, {}", saved.getId(), saved.getStringSeq());
         return saved;
     }
     
@@ -173,7 +173,7 @@ public class BillOfflineServices {
             detailOffline.setBillOffline(null);
         });
         saved.setDetailsOffline(detailsOffline);
-        log.info("BillOfflineServices saveDetailsOfflineOfBillOffline DONE");
+        log.info("BillOfflineServices saveDetailsOfflineOfBillOffline");
     }
     
     //Guarda el tipo de Pago y Credits
@@ -182,7 +182,7 @@ public class BillOfflineServices {
             pagoOffline.setBillOffline(saved);
             PagoOffline pagoSaved = pagoOfflineRepository.save(pagoOffline);		
         });
-        log.info("BillOfflineServices savePagosOfflineOfBillOffline DONE");
+        log.info("BillOfflineServices savePagosOfflineOfBillOffline");
     }
     
     //Actualiza la cantidad de Productos (Existencia)
@@ -194,7 +194,7 @@ public class BillOfflineServices {
                 productBySubsidiairyRepository.save(ps);
             }
         });
-        log.info("BillOfflineServices updateProductBySubsidiary DONE");
+        log.info("BillOfflineServices updateProductBySubsidiary");
     }
     //Fin de Creación de las BillsOffline
     
@@ -207,7 +207,7 @@ public class BillOfflineServices {
         billToDeactivate.setListsNull();
         billToDeactivate.setActive(false);
         billOfflineRepository.save(billToDeactivate);
-        log.info("BillOfflineServices deactivateBillOffline DONE id: {}", billOffline.getId());
+        log.info("BillOfflineServices deactivateBillOffline id: {}", billOffline.getId());
         return billToDeactivate;
     }
 }
