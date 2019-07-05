@@ -4,7 +4,6 @@ import lombok.Data;
 
 @Data
 public class RetentionReport {
-    private String date;
     private String documentDate;
     private String providerCode;
     private String providerName;
@@ -27,8 +26,7 @@ public class RetentionReport {
     private String subsidiary;
     private String userName;
 
-    public RetentionReport(String date, String documentDate, String providerCode, String providerName, String ruc, String retentionNumber, String authorizationNumber, String documentNumber, String ejercicioFiscal, String debtsSeq, String status, String codigoRetentionFuente, Double baseFuente, Double porcenFuente, Double subTotalFuente, String codigoRetentionIva, Double baseIva, Double porcenIva, Double subTotalIva, Double total, String subsidiary, String userName) {
-        this.date = date;
+    public RetentionReport(String documentDate, String providerCode, String providerName, String ruc, String retentionNumber, String authorizationNumber, String documentNumber, String ejercicioFiscal, String debtsSeq, String status, String codigoRetentionFuente, Double baseFuente, Double porcenFuente, Double subTotalFuente, String codigoRetentionIva, Double baseIva, Double porcenIva, Double subTotalIva, Double total, String subsidiary, String userName) {
         this.documentDate = documentDate;
         this.providerCode = providerCode;
         this.providerName = providerName;

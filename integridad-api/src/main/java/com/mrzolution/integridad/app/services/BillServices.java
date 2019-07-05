@@ -155,8 +155,12 @@ public class BillServices {
             Cashier cashier = cashierRepository.findOne(bill.getUserIntegridad().getCashier().getId());
             cashier.setBillNumberSeq(cashier.getBillNumberSeq() + 1);
             cashierRepository.save(cashier);
-            // (2) Excepción Ferretería Lozada No actualiza Kardex
-            if ("A-2".equals(bill.getClient().getUserClient().getEspTemp())) {
+            // (2) Excepción PPE y Ferretería Lozada NO actualiza Kardex
+            if ("A-1".equals(bill.getClient().getUserClient().getEspTemp())) {
+                saveDetailsBill(saved, details);
+                savePagosAndCreditsBill(saved, pagos);
+                updateProductBySubsidiary(bill, typeDocument, details);
+            } else if ("A-2".equals(bill.getClient().getUserClient().getEspTemp())) {
                 saveDetailsBill(saved, details);
                 savePagosAndCreditsBill(saved, pagos);
                 updateProductBySubsidiary(bill, typeDocument, details);

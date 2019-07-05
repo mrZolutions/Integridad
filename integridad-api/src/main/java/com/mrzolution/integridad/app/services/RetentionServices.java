@@ -198,8 +198,8 @@ public class RetentionServices {
             String date = dateFormat.format(new Date(retention.getDateCreated()));
             String status = retention.isActive() ? "ACTIVA" : "ANULADA";
             String docDate = dateFormat.format(new Date(retention.getDocumentDate()));
-            RetentionReport saleReport= new RetentionReport(date, docDate, retention.getProvider().getCodeIntegridad(), retention.getProvider().getName(), retention.getProvider().getRuc(), retention.getStringSeq(), retention.getClaveDeAcceso(),
-                                                            retention.getDocumentNumber(),retention.getEjercicioFiscal(), retention.getDebtsSeq(), status, codRetenFuente, baseF, porcenF, subTotalF, codRetenIva, baseIva, porcenIva, subTotalIva, sum, retention.getSubsidiary().getName(),
+            RetentionReport saleReport= new RetentionReport(docDate, retention.getProvider().getCodeIntegridad(), retention.getProvider().getName(), retention.getProvider().getRuc(), retention.getStringSeq(), retention.getClaveDeAcceso(), retention.getDocumentNumber(),
+                                                            retention.getEjercicioFiscal(), retention.getDebtsSeq(), status, codRetenFuente, baseF, porcenF, subTotalF, codRetenIva, baseIva, porcenIva, subTotalIva, sum, retention.getSubsidiary().getName(),
                                                             retention.getUserIntegridad().getFirstName());
 
             retentionReportList.add(saleReport);

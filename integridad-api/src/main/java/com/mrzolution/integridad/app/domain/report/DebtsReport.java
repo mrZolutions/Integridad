@@ -18,6 +18,7 @@ public class DebtsReport {
     private String authorizationNumber;
     private String purchaseType;
     private String status;
+    private String observacion;
     private Double subTotalDoce;
     private Double iva;
     private Double subTotalCero;
@@ -28,7 +29,7 @@ public class DebtsReport {
     private String subsidiary;
     private String userName;
     
-    public DebtsReport(String date, String providerCode, String providerName, String ruc, String debtNumber, String billNumber, String authorizationNumber, String purchaseType, String status, Double subTotalDoce, Double iva, Double subTotalCero, Double total, String endDate, String cashier, String warehouse, String subsidiary, String userName) {
+    public DebtsReport(String date, String providerCode, String providerName, String ruc, String debtNumber, String billNumber, String authorizationNumber, String purchaseType, String status, String observacion, Double subTotalDoce, Double iva, Double subTotalCero, Double total, String endDate, String cashier, String warehouse, String subsidiary, String userName) {
         this.date = date;
         this.providerCode = providerCode;
         this.providerName = providerName;
@@ -38,6 +39,7 @@ public class DebtsReport {
         this.authorizationNumber = authorizationNumber;
         this.purchaseType = purchaseType;
         this.status = status;
+        this.observacion = observacion;
         this.subTotalDoce = subTotalDoce;
         this.iva = iva;
         this.subTotalCero = subTotalCero;

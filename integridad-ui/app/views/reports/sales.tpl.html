@@ -233,7 +233,6 @@
         <table class="table table-striped">
             <thead>
                 <tr>
-                    <th>Fecha de Retenci&oacute;n</th>
                     <th>Fecha de Factura</th>
                     <th>C&oacute;digo-Proveedor</th>
                     <th>Proveedor</th>
@@ -259,7 +258,6 @@
             </thead>
             <tbody>
                 <tr ng-repeat="data in vm.reportList | orderBy:'date'" >
-                    <td>{{data.date}}</td>
                     <td>{{data.documentDate}}</td>
                     <td>{{data.providerCode}}</td>
                     <td>{{data.providerName}}</td>
@@ -470,6 +468,7 @@
                     <th>No. Autorizaci&oacute;n</th>
                     <th>C&oacute;digo Sustento</th>
                     <th>Estado</th>
+                    <th>Descripci&oacute;n</th>
                     <th>Sub Total 12%</th>
                     <th>Iva</th>
                     <th>Sub Total 0%</th>
@@ -492,6 +491,7 @@
                     <td>{{data.authorizationNumber}}</td>
                     <td>{{data.purchaseType}}</td>
                     <td>{{data.status}}</td>
+                    <td>{{data.observacion}}</td>
                     <td>{{data.subTotalDoce.toFixed(2)}}</td>
                     <td>{{data.iva.toFixed(2)}}</td>
                     <td>{{data.subTotalCero.toFixed(2)}}</td>

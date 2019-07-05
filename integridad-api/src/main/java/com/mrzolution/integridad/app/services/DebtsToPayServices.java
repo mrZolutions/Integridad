@@ -253,7 +253,7 @@ public class DebtsToPayServices {
             String endDate = dateFormat.format(new Date(endDateLong));
             
             DebtsReport debtsReport = new DebtsReport(date, debt.getProvider().getCodeIntegridad(), debt.getProvider().getRazonSocial(), debt.getProvider().getRuc(), debt.getDebtsSeq(), debt.getBillNumber(), debt.getAuthorizationNumber(), debt.getPurchaseType(),
-                                          status, debt.getSubTotalDoce(), debt.getIva(), debt.getSubTotalCero(), debt.getTotal(), endDate, debt.getUserIntegridad().getCashier().getNameNumber(), null, debt.getSubsidiary().getName(),
+                                          status, debt.getObservacion(), debt.getSubTotalDoce(), debt.getIva(), debt.getSubTotalCero(), debt.getTotal(), endDate, debt.getUserIntegridad().getCashier().getNameNumber(), null, debt.getSubsidiary().getName(),
                                           debt.getUserIntegridad().getFirstName() + " " + debt.getUserIntegridad().getLastName());
             
             debtsReportList.add(debtsReport);

@@ -188,7 +188,7 @@ public class PaymentDebtsServices {
         List<StatementProviderReport> statementProviderReportList = new ArrayList<>();
         
         paymentsDebts.forEach(paymentDebt -> {
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd");
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
             String fechaPago = dateFormat.format(new Date(paymentDebt.getDatePayment()));
             String fechaCompra = dateFormat.format(new Date(paymentDebt.getCreditsDebts().getPagoDebts().getDebtsToPay().getFecha()));
             String fechaVence = dateFormat.format(new Date(paymentDebt.getCreditsDebts().getFecha()));

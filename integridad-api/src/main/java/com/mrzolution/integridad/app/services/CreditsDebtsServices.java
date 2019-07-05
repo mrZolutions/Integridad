@@ -94,6 +94,7 @@ public class CreditsDebtsServices {
             saldos = creditD.getPagoDebts().getDebtsToPay().getTotal() - (sumAbono + sumReten);
 
             BigDecimal vsaldo = new BigDecimal(saldos);
+            
             if (saldos == 0) {
                 vsaldo = vsaldo.setScale(0, BigDecimal.ROUND_HALF_UP);
             } else if (saldos < 0) {
