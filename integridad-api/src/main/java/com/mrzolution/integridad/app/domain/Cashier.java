@@ -11,7 +11,7 @@ import java.util.UUID;
  */
 @Entity
 @Data
-public class Cashier implements Child{
+public class Cashier implements Child {
 
     @Id
     @GeneratedValue
@@ -33,6 +33,7 @@ public class Cashier implements Child{
     private long quotationNumberSeq;
     private long retentionNumberSeq;
     private long creditNoteNumberSeq;
+    private long comprobanteCobroNumberSeq;
     private long dateCreated;
     private boolean active;
     private boolean specialPrint;
@@ -42,15 +43,16 @@ public class Cashier implements Child{
     private Subsidiary subsidiary;
 
     
-    public void setListsNull(){ }
+    public void setListsNull() {
+    }
     
-    public void setFatherListToNull(){
+    public void setFatherListToNull() {
         subsidiary.setListsNull();
         subsidiary.setFatherListToNull();
     }
 
     @Transient
-    public static Cashier newCashierTest(){
+    public static Cashier newCashierTest() {
         Cashier cashier = new Cashier();
         cashier.setSubsidiary(Subsidiary.newSubsidiaryTest());
         return cashier;

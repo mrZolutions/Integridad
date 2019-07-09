@@ -22,7 +22,7 @@ public class CuentaContableServices {
 	}
 	cuentaContable.setActive(true);
 	CuentaContable saved = cuentaContableRepository.save(cuentaContable);
-	log.info("CuentaContableServices createCuentaContable DONE id: {}", saved.getId());
+	log.info("CuentaContableServices createCuentaContable: {}", saved.getId());
 	return saved;
     }
     
@@ -33,7 +33,7 @@ public class CuentaContableServices {
         log.info("CuentaContableServices updateCuentaContable: {}", cuentaContable.getDescription());
         cuentaContable.setListsNull();
         CuentaContable updated = cuentaContableRepository.save(cuentaContable);
-        log.info("CuentaContableServices updateCuentaContable DONE id: {}", updated.getId());
+        log.info("CuentaContableServices updateCuentaContable: {}", updated.getId());
     }
   
     public Iterable<CuentaContable> getAll() {
@@ -48,7 +48,7 @@ public class CuentaContableServices {
             cuenta.setListsNull();
             cuenta.setFatherListToNull();
 	}
-        log.info("CuentaContableServices getCuentaContableByUserClient DONE");
+        log.info("CuentaContableServices getCuentaContableByUserClient");
 	return cuentas;
     }
     
@@ -58,7 +58,7 @@ public class CuentaContableServices {
             cuenta.setListsNull();
             cuenta.setFatherListToNull();
 	}
-        log.info("CuentaContableServices getCuentaContableByUserClientNoBank DONE");
+        log.info("CuentaContableServices getCuentaContableByUserClientNoBank");
 	return cuentas;
     }
     
@@ -68,7 +68,7 @@ public class CuentaContableServices {
             cuenta.setListsNull();
             cuenta.setFatherListToNull();
 	}
-        log.info("CuentaContableServices getCuentaContableByUserClient DONE");
+        log.info("CuentaContableServices getCuentaContableByUserClient");
 	return cuentas;
     }
     
@@ -79,7 +79,7 @@ public class CuentaContableServices {
             ctasType.setListsNull();
             ctasType.setFatherListToNull();
         });
-        log.info("CuentaContableServices getCuentaContableByType DONE");
+        log.info("CuentaContableServices getCuentaContableByType");
 	return cuentasType;
     }
     
@@ -90,7 +90,7 @@ public class CuentaContableServices {
             ctasTypAcc.setListsNull();
             ctasTypAcc.setFatherListToNull();
         });
-        log.info("CuentaContableServices getCuentaContableByTypeAndAccountType DONE");
+        log.info("CuentaContableServices getCuentaContableByTypeAndAccountType");
         return ctasTypeAccType;
     }
     

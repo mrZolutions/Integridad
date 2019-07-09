@@ -38,7 +38,7 @@ public class DailybookFvServices {
             log.info("DailybookFvServices retrieved id NULL: {}", id);
 	}
         populateChildren(retrieved);
-        log.info("DailybookFvServices getDailybookFvById DONE: {}", id);
+        log.info("DailybookFvServices getDailybookFvById: {}", id);
         return retrieved;
     }
     
@@ -49,7 +49,7 @@ public class DailybookFvServices {
             daily.setListsNull();
             daily.setFatherListToNull();
         });
-        log.info("DailybookFvServices getDailybookFvByUserClientId DONE: {}", userClientId);
+        log.info("DailybookFvServices getDailybookFvByUserClientId: {}", userClientId);
         return dailys;
     }
     
@@ -60,7 +60,7 @@ public class DailybookFvServices {
             daily.setListsNull();
             daily.setFatherListToNull();
         });
-        log.info("DailybookFvServices getDailybookFvByUserClientIdWithNoClient DONE: {}", userClientId);
+        log.info("DailybookFvServices getDailybookFvByUserClientIdWithNoClient: {}", userClientId);
         return dailys;
     }
     
@@ -71,7 +71,7 @@ public class DailybookFvServices {
             daily.setListsNull();
             daily.setFatherListToNull();
         });
-        log.info("DailybookFvServices getDailybookFvByClientId DONE: {}", id);
+        log.info("DailybookFvServices getDailybookFvByClientId: {}", id);
         return dailys;
     }
     
@@ -82,7 +82,7 @@ public class DailybookFvServices {
             daily.setFatherListToNull();
             daily.setListsNull();
         });
-        log.info("DailybookFvServices getDailybookFvByUserClientIdAndClientIdAndBillNumber DONE: {}, {}, {}", userClientId, clientId, billNumber);
+        log.info("DailybookFvServices getDailybookFvByUserClientIdAndClientIdAndBillNumber: {}, {}, {}", userClientId, clientId, billNumber);
         return dailys;
     }
     
@@ -109,21 +109,21 @@ public class DailybookFvServices {
         });
         
         saved.setDetailDailybookContab(detailDailybookContab);
-        log.info("DailybookFvServices createDailybookFv DONE: {}, {}", saved.getId(), saved.getDailyFvStringSeq());
+        log.info("DailybookFvServices createDailybookFv: {}, {}", saved.getId(), saved.getDailyFvStringSeq());
         return saved;
     }
     
     //Desactivación o Anulación de los COMPROBANTE DE FACTURACIÓN-VENTA
     public DailybookFv deactivateDailybookFv(DailybookFv dailybookFv) throws BadRequestException {
         if (dailybookFv.getId() == null) {
-            throw new BadRequestException("Invalid DailybookFv");
+            throw new BadRequestException("Invalid COMPROBANTE DE FACTURACIÓN-VENTA");
         }
         DailybookFv dailybookFvToDeactivate = dailybookFvRepository.findOne(dailybookFv.getId());
         dailybookFvToDeactivate.setListsNull();
         dailybookFvToDeactivate.setActive(false);
         dailybookFvToDeactivate.setGeneralDetail("COMPROBANTE DE FACTURACIÓN-VENTA ANULADO");
         dailybookFvRepository.save(dailybookFvToDeactivate);
-        log.info("DailybookFvServices deactivateDailybookFv DONE id: {}", dailybookFvToDeactivate.getId());
+        log.info("DailybookFvServices deactivateDailybookFv: {}", dailybookFvToDeactivate.getId());
         return dailybookFvToDeactivate;
     }
     

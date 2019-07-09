@@ -57,7 +57,7 @@ public class CellarServices {
             cellar.setListsNull();
             cellar.setFatherListToNull();
         });
-        log.info("CellarServices getByUserLazy DONE: {}", user.getId());
+        log.info("CellarServices getByUserLazy: {}", user.getId());
         return cellars;
     }
     
@@ -69,7 +69,7 @@ public class CellarServices {
             log.info("CellarServices retrieved id NULL: {}", id);
         }		
         populateChildren(retrieved);
-        log.info("CellarServices getById DONE: {}", id);
+        log.info("CellarServices getById: {}", id);
         return retrieved;
     }
        
@@ -145,7 +145,7 @@ public class CellarServices {
         if ("INGRESADO".equals(saved.getStatusIngreso())) {
             updateProductBySubsidiary(cellar, detailsCellar);
         }
-        log.info("CellarServices createCellar DONE: {}, {}", saved.getId(), saved.getWhNumberSeq());
+        log.info("CellarServices createCellar: {}, {}", saved.getId(), saved.getWhNumberSeq());
         return saved;
     }
     
@@ -186,7 +186,7 @@ public class CellarServices {
             cellar.setListsNull();
             cellar.setFatherListToNull();
         });
-        log.info("CellarServices getCellarByProviderId DONE: {}", id);
+        log.info("CellarServices getCellarByProviderId: {}", id);
         return cellars;
     }
     
@@ -196,7 +196,7 @@ public class CellarServices {
             cellar.setListsNull();
             cellar.setFatherListToNull();
         });
-        log.info("CellarServices getCellarsPendingByProviderId DONE: {}", id);
+        log.info("CellarServices getCellarsPendingByProviderId: {}", id);
         return cellars;
     }
     
@@ -206,7 +206,7 @@ public class CellarServices {
             cellar.setFatherListToNull();
             cellar.setListsNull();
         });
-        log.info("CellarServices getActivesCellarByWhNumberSeqAndSubsidiaryId DONE: {}, {}", whNumberSeq, subId);
+        log.info("CellarServices getActivesCellarByWhNumberSeqAndSubsidiaryId: {}, {}", whNumberSeq, subId);
         return cellars;
     }
     
@@ -216,7 +216,7 @@ public class CellarServices {
             cellar.setFatherListToNull();
             cellar.setListsNull();
         });
-        log.info("CellarServices getActivesCellarByWhNumberSeqAndUserClientId DONE: {}, {}", whNumberSeq, userClientId);
+        log.info("CellarServices getActivesCellarByWhNumberSeqAndUserClientId: {}, {}", whNumberSeq, userClientId);
         return cellars;
     }
     
@@ -238,7 +238,7 @@ public class CellarServices {
         List<CellarEntryReport> reportList = new ArrayList<>();
         for (UUID uuidCurrent: productIds) {
             for (Cellar cellar: cellars) {
-                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd");
+                SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
                 String fechaIngreso = dateFormat.format(new Date(cellar.getDateEnterCellar()));
                 String fechaBill = dateFormat.format(new Date(cellar.getDateBill()));
                 Double iva = new Double(0);

@@ -67,8 +67,8 @@ public class BillServices {
         String data = mapper.writeValueAsString(requirement);
         log.info("BillServices getDatil MAPPER creado");
                         
-        String response = httpCallerService.post(Constants.DATIL_LINK, data, userClient);
-        //String response = "OK";
+        //String response = httpCallerService.post(Constants.DATIL_LINK, data, userClient);
+        String response = "OK";
         log.info("BillServices getDatil httpcall DONE");
         return response;
     }
@@ -155,12 +155,8 @@ public class BillServices {
             Cashier cashier = cashierRepository.findOne(bill.getUserIntegridad().getCashier().getId());
             cashier.setBillNumberSeq(cashier.getBillNumberSeq() + 1);
             cashierRepository.save(cashier);
-            // (2) Excepción PPE y Ferretería Lozada NO actualiza Kardex
-            if ("A-1".equals(bill.getClient().getUserClient().getEspTemp())) {
-                saveDetailsBill(saved, details);
-                savePagosAndCreditsBill(saved, pagos);
-                updateProductBySubsidiary(bill, typeDocument, details);
-            } else if ("A-2".equals(bill.getClient().getUserClient().getEspTemp())) {
+            // Excepción PPE, Dental y Ferretería Lozada NO actualizan Kardex
+            if ("A-1".equals(bill.getClient().getUserClient().getEspTemp()) || "A-2".equals(bill.getClient().getUserClient().getEspTemp()) || "A-N".equals(bill.getClient().getUserClient().getEspTemp())) {
                 saveDetailsBill(saved, details);
                 savePagosAndCreditsBill(saved, pagos);
                 updateProductBySubsidiary(bill, typeDocument, details);

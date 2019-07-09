@@ -69,7 +69,7 @@ public class DebtsToPayServices {
             log.info("DebtsToPayServices retrieved id NULL: {}", id);
 	}
         populateChildren(retrieved);
-        log.info("DebtsToPayServices getDebtsToPayById DONE: {}", id);
+        log.info("DebtsToPayServices getDebtsToPayById: {}", id);
         return retrieved;
     }
     
@@ -80,7 +80,7 @@ public class DebtsToPayServices {
             debt.setListsNull();
             debt.setFatherListToNull();
         });
-        log.info("DebtsToPayServices getDebtsToPayByProviderId DONE: {}", id);
+        log.info("DebtsToPayServices getDebtsToPayByProviderId: {}", id);
         return debts;
     }
     
@@ -91,7 +91,7 @@ public class DebtsToPayServices {
             debt.setListsNull();
             debt.setFatherListToNull();
         });
-        log.info("DebtsToPayServices getDebtsToPayByUserClientId DONE: {}", id);
+        log.info("DebtsToPayServices getDebtsToPayByUserClientId: {}", id);
         return debts;
     }
     
@@ -102,7 +102,7 @@ public class DebtsToPayServices {
             debt.setListsNull();
             debt.setFatherListToNull();
         });
-        log.info("DebtsToPayServices getDebtsToPayByProviderIdWithSaldo DONE: {}", id);
+        log.info("DebtsToPayServices getDebtsToPayByProviderIdWithSaldo: {}", id);
         return debts;
     }
     
@@ -113,7 +113,7 @@ public class DebtsToPayServices {
             debt.setFatherListToNull();
             debt.setListsNull();
         });
-        log.info("DebtsToPayServices getDebtsToPayByDebtsSeqAndSubId DONE: {}, {}", stringSeq, subId);
+        log.info("DebtsToPayServices getDebtsToPayByDebtsSeqAndSubId: {}, {}", stringSeq, subId);
         return debts;
     }
     
@@ -159,7 +159,7 @@ public class DebtsToPayServices {
             updateRetention(saved);
         }
         saved.setDetailDebtsToPay(detailDebtsToPay);
-        log.info("DebtsToPayServices createDebtsToPay DONE: {}, {}", saved.getId(), saved.getDebtsSeq());
+        log.info("DebtsToPayServices createDebtsToPay: {}, {}", saved.getId(), saved.getDebtsSeq());
         return saved;
     }
     
@@ -225,7 +225,7 @@ public class DebtsToPayServices {
         debtsToPayToDeactivate.setListsNull();
         debtsToPayToDeactivate.setActive(false);
         debtsToPayRepository.save(debtsToPayToDeactivate);
-        log.info("DebtsToPayServices deactivateDebtsToPay DONE id: {}", debtsToPayToDeactivate.getId());
+        log.info("DebtsToPayServices deactivateDebtsToPay: {}", debtsToPayToDeactivate.getId());
         return debtsToPayToDeactivate;
     }
     

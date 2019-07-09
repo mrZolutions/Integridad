@@ -24,7 +24,7 @@ public class ProductTypeServices {
         productType.setActive(true);
 	ProductType saved = productTypeRepository.save(productType);
 	saved.setListsNull();
-        log.info("ProductTypeServices createProductType DONE");
+        log.info("ProductTypeServices createProductType: {}, {}", saved.getId(), saved.getName());
 	return saved;
     }
 	
@@ -32,7 +32,7 @@ public class ProductTypeServices {
     	log.info("ProductTypeServices updateProductType: {}", productType.getId());
 	productType.setListsNull();
 	ProductType updated = productTypeRepository.save(productType);
-	log.info("ProductTypeServices updateProductType DONE id: {}", updated.getId());
+	log.info("ProductTypeServices updateProductType: {}", updated.getId());
     }
 
     public ProductType deleteProductType(UUID productTypeId) {
@@ -40,21 +40,21 @@ public class ProductTypeServices {
         findOne.setListsNull();
         findOne.setActive(false);
         updateProductType(findOne);
-        log.info("ProductServices deleteProductType DONE: {}", productTypeId);
+        log.info("ProductServices deleteProductType: {}", productTypeId);
         return findOne;
     }
 
     public Iterable<ProductType> getAllActives(){
         Iterable<ProductType> actives = productTypeRepository.findByActive(true);
         actives.forEach(this::populateChildren);
-        log.info("ProductTypeServices getAllActives DONE");
+        log.info("ProductTypeServices getAllActives");
         return actives;
     }
 
     public Iterable<ProductType> getAllActivesLazy(){
         Iterable<ProductType> actives = productTypeRepository.findByActive(true);
         actives.forEach(productType -> {productType.setListsNull();});
-        log.info("ProductTypeServices getAllActivesLazy DONE");
+        log.info("ProductTypeServices getAllActivesLazy");
         return actives;
     }
 

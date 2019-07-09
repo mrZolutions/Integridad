@@ -71,32 +71,32 @@ angular.module('integridadUiApp')
             var iva = 0.0;
             var total = 0.0;
             _.each(vm.bill.details, function(detail) {
-                subtotal = parseFloat((subtotal + (detail.quantity * detail.costEach)).toFixed(4));
+                subtotal = subtotal + (detail.quantity * detail.costEach);
                 if (detail.product.iva) {
-                    baseDoce = parseFloat((baseDoce + (detail.quantity * detail.costEach)).toFixed(4));
+                    baseDoce = baseDoce + (detail.quantity * detail.costEach);
                 } else {
-                    baseZero = parseFloat((baseZero + (detail.quantity * detail.costEach)).toFixed(4));
+                    baseZero = baseZero + (detail.quantity * detail.costEach);
                 };
             });
 
             descuento = parseFloat(((vm.bill.discount * subtotal)/100).toFixed(4));
             baseDoce = baseDoce - descuento;
-            iva = baseDoce * parseFloat(0.12);
+            iva = baseDoce * 0.12;
 
-            total = parseFloat((baseDoce + baseZero + iva).toFixed(4));
+            total = baseDoce + baseZero + iva;
 
-            vm.bill.subTotal = parseFloat((subtotal).toFixed(4));
-            vm.bill.discount = parseFloat((descuento).toFixed(4));
-            vm.bill.baseNoTaxes = parseFloat((baseZero).toFixed(4));
-            vm.bill.baseTaxes = parseFloat((baseDoce).toFixed(4));
-            vm.bill.iva = parseFloat((iva).toFixed(4));
-            vm.bill.total = parseFloat((total).toFixed(4));
+            vm.bill.subTotal = subtotal;
+            vm.bill.discount = descuento;
+            vm.bill.baseNoTaxes = baseZero;
+            vm.bill.baseTaxes = baseDoce;
+            vm.bill.iva = iva;
+            vm.bill.total = total;
 
-            vm.impuestoICE.base_imponible = parseFloat((vm.bill.subTotal).toFixed(4));
-            vm.impuestoIVA.base_imponible = parseFloat((vm.bill.baseTaxes).toFixed(4));
-            vm.impuestoIVAZero.base_imponible = parseFloat((vm.bill.baseNoTaxes).toFixed(4));
+            vm.impuestoICE.base_imponible = vm.bill.subTotal
+            vm.impuestoIVA.base_imponible = vm.bill.baseTaxes
+            vm.impuestoIVAZero.base_imponible = vm.bill.baseNoTaxes
             vm.impuestoICE.valor = vm.bill.ice;
-            vm.impuestoIVA.valor = vm.bill.iva;
+            vm.impuestoIVA.valor = vm.bill.iva
             vm.impuestoIVAZero.valor = 0.0;
         };
 
@@ -155,6 +155,18 @@ angular.module('integridadUiApp')
 
         vm.saveCreditNote = function() {
             vm.loading = true;
+            vm.impuestoIVA = {
+                "base_imponible": vm.bill.baseTaxes,
+                "valor": vm.bill.iva,
+                "codigo": "2",
+                "codigo_porcentaje": "2"
+            };
+            vm.impuestoIVAZero = {
+                "base_imponible": vm.bill.baseNoTaxes,
+                "valor": 0.0,
+                "codigo": "2",
+                "codigo_porcentaje": "0"
+            };
             vm.impuestosTotales = [];
             if (vm.bill.baseTaxes > 0) {
                 vm.impuestosTotales.push(vm.impuestoIVA);
@@ -217,8 +229,8 @@ angular.module('integridadUiApp')
             var req = creditNoteService.createRequirement(vm.clientSelected, vm.bill, $localStorage.user, vm.impuestosTotales, vm.items);
             
             creditNoteService.getClaveDeAcceso(req, vm.companyData.userClient.id).then(function(resp) {
-                var obj = JSON.parse(resp.data);
-                //var obj = {clave_acceso: '1234560', id:'id12345'};
+                //var obj = JSON.parse(resp.data);
+                var obj = {clave_acceso: '1234560', id:'id12345'};
                 if (obj.errors === undefined) {
                     vm.claveDeAcceso = obj.clave_acceso;
                     vm.bill.claveDeAcceso = obj.clave_acceso;

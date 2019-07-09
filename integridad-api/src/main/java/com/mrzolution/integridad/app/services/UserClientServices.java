@@ -87,14 +87,14 @@ public class UserClientServices {
             log.info("UserClientServices retrieved id NULL: {}", id);
 	}	
 	populateChildren(retrieved);
-        log.info("UserClientServices getById DONE: {}", id);
+        log.info("UserClientServices getById: {}", id);
 	return retrieved;
     }
 	
     public Integer getNumberOfClients(UUID userClientId) {
 	UserClient userClient = userClientRepository.findOne(userClientId);
 	Iterable<UUID> ids = clientChildRepository.findByFather(userClient);
-        log.info("UserClientServices getNumberOfClients DONE: {}", userClientId);
+        log.info("UserClientServices getNumberOfClients: {}", userClientId);
 	return Iterables.size(ids);
     }
 

@@ -9,7 +9,7 @@
  */
 angular.module('integridadUiApp')
     .controller('CuentasCobrarCtrl', function(_, $localStorage, clientService, cuentaContableService, paymentService, dateService, utilSeqService,
-                                              creditsbillService, $location, billService, eretentionClientService, contableService) {
+                                              creditsbillService, $location, billService, eretentionClientService, contableService, comprobanteService) {
         var vm = this;
         vm.error = undefined;
         vm.success = undefined;
@@ -299,6 +299,7 @@ angular.module('integridadUiApp')
                 if (response.length === 0) {
                     paymentService.createPayment(payment).then(function(response) {
                         vm.paymentCreated = response;
+                        vm.success = 'Abono realizado con exito';
                         switch (vm.paymentCreated.modePayment) {
                             case 'CHQ':
                                 _asientoComprobanteIngreso();
@@ -310,7 +311,6 @@ angular.module('integridadUiApp')
                                 _asientoComprobanteIngreso();
                             break;
                         };
-                        vm.success = 'Abono realizado con exito';
                     }).catch(function(error) {
                         vm.loading = false;
                         vm.error = error.data;
@@ -444,7 +444,7 @@ angular.module('integridadUiApp')
             });
         };
 
-        vm.multipleAbonoBills = function(credits) {
+        vm.multipleAbono = function(credits) {
             vm.loading = true;
             vm.creditsMultiBillsList = undefined;
             vm.creditsBillsSelected = credits;
@@ -487,7 +487,7 @@ angular.module('integridadUiApp')
             return billNumberPayed;
         };
 
-        vm.pagoMultiAbonoBills = function() {
+        vm.pagoMultiAbono = function() {
             vm.loading = true;
             vm.billsNumberPayed = vm.getBillNumberPayed();
             paymentService.getPaymentsByUserClientIdWithBankAndNroDocument(vm.usrCliId, vm.bankName, vm.noDocument).then(function(response) {
@@ -512,13 +512,13 @@ angular.module('integridadUiApp')
                         vm.payment.banco = vm.bankName;
                         paymentService.createPayment(vm.payment).then(function(response) {
                             vm.paymentCreated = response;
-                            vm.success = 'Abono realizado con exito';
                             vm.loading = false;
                         }).catch(function(error) {
                             vm.loading = false;
                             vm.error = error.data;
                         });
                     });
+                    vm.success = 'Abono realizado con exito';
                     _asientoComprobanteMultipleIngreso();
                     _activate();
                 } else {

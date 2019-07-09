@@ -52,7 +52,7 @@ public class ConsumptionServices {
             consump.setListsNull();
             consump.setFatherListToNull();
         });
-        log.info("ConsumptionServices getByUserLazy DONE: {}", user.getId());
+        log.info("ConsumptionServices getByUserLazy: {}", user.getId());
         return consumptions;
     }
     
@@ -62,7 +62,7 @@ public class ConsumptionServices {
             consump.setListsNull();
             consump.setFatherListToNull();
         });
-        log.info("ConsumptionServices getConsumptionByClientId DONE: {}", id );
+        log.info("ConsumptionServices getConsumptionByClientId: {}", id );
         return consumptions;
     }
     
@@ -74,7 +74,7 @@ public class ConsumptionServices {
             log.info("ConsumptionServices retrieved id NULL: {}", id);
         }		
         populateChildren(retrieved);
-        log.info("ConsumptionServices getConsumptionById DONE: {}", id);
+        log.info("ConsumptionServices getConsumptionById: {}", id);
         return retrieved;
     }
     
@@ -132,7 +132,7 @@ public class ConsumptionServices {
         saveDetailsConsumption(saved, detailsConsumption);
         saveKardex(saved, detailsKardex);
         updateProductBySubsidiary(consumption, detailsConsumption);
-        log.info("ConsumptionServices createConsumption DONE: {}, {}", saved.getId(), saved.getCsmNumberSeq());
+        log.info("ConsumptionServices createConsumption: {}, {}", saved.getId(), saved.getCsmNumberSeq());
         return saved;
     }
     

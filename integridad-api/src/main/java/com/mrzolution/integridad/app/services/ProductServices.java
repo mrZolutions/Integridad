@@ -45,7 +45,7 @@ public class ProductServices {
             productBySubsidiary.setFatherListToNull();
             productBySubsidiairyRepository.save(productBySubsidiary);
         });
-        log.info("ProductServices createProduct DONE id: {}", saved.getId());
+        log.info("ProductServices createProduct: {}", saved.getId());
         return saved;
     }
 	
@@ -61,13 +61,13 @@ public class ProductServices {
 	product.setListsNull();
 	product.setFatherListToNull();
 	Product updated = productRepository.save(product);
-	log.info("ProductServices updateProduct DONE id: {}", updated.getId());
+	log.info("ProductServices updateProduct: {}", updated.getId());
     }
 	
     public Product getProductById(UUID id) {
 	Product findOne = productRepository.findOne(id);
 	populateChildren(findOne);
-        log.info("ProductServices getProductById DONE: {}", id);
+        log.info("ProductServices getProductById: {}", id);
 	return findOne;
     }
 	
@@ -76,14 +76,14 @@ public class ProductServices {
 	findOne.setListsNull();
 	findOne.setActive(false);
 	updateProduct(findOne);
-        log.info("ProductServices deleteProduct DONE: {}", productId);
+        log.info("ProductServices deleteProduct: {}", productId);
 	return findOne;
     }
 	
     public Iterable<Product> getAllActives() {
 	Iterable<Product> actives = productRepository.findByActive(true);
 	actives.forEach(this::populateChildren);
-        log.info("ProductServices getAllActives DONE");
+        log.info("ProductServices getAllActives");
 	return actives;
     }
 	
@@ -93,7 +93,7 @@ public class ProductServices {
             product.setFatherListToNull();
             populateChildren(product);
 	});
-        log.info("ProductServices getAllActivesByUserClientIdAndActive DONE");
+        log.info("ProductServices getAllActivesByUserClientIdAndActive");
 	return actives;
     }
         

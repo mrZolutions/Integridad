@@ -22,7 +22,7 @@ public class ProviderServices {
             provider.setFatherListToNull();
             provider.setListsNull();
         });
-        log.info("ProviderServices getProviderByUserClientIdAndRuc DONE: {}, {}", userClientId, ruc);
+        log.info("ProviderServices getProviderByUserClientIdAndRuc: {}, {}", userClientId, ruc);
 	return providers;
     }
 
@@ -35,7 +35,7 @@ public class ProviderServices {
 	provider.setDateCreated(new Date().getTime());
 	provider.setActive(true);
 	Provider saved = providerRepository.save(provider);
-	log.info("ProviderServices createProvider DONE id: {}", saved.getId());
+	log.info("ProviderServices createProvider: {}", saved.getId());
 	return saved;
     }
 
@@ -46,7 +46,7 @@ public class ProviderServices {
 	log.info("ProviderServices update: {}", provider.getName());
 	provider.setListsNull();
 	Provider updated = providerRepository.save(provider);
-	log.info("ProviderServices updateProvider DONE id: {}", updated.getId());
+	log.info("ProviderServices updateProvider: {}", updated.getId());
     }
 
     public Provider getProviderById(UUID id) {
@@ -56,7 +56,7 @@ public class ProviderServices {
 	} else {
             log.info("ProviderServices retrieved id NULL: {}", id);
 	}
-        log.info("ProviderServices getProviderById DONE: {}", id);
+        log.info("ProviderServices getProviderById: {}", id);
 	return retrieved;
     }
 
@@ -66,7 +66,7 @@ public class ProviderServices {
             provider.setListsNull();
             provider.setFatherListToNull();
 	}
-	log.info("ProviderServices getAllLazy DONE");
+	log.info("ProviderServices getAllLazy");
         return providers;
     }
 
@@ -76,7 +76,7 @@ public class ProviderServices {
             provider.setListsNull();
             provider.setFatherListToNull();
 	}
-	log.info("ProviderServices getLazyByUserClient DONE");
+	log.info("ProviderServices getLazyByUserClient: {}", id);
 	return providers;
     }
     

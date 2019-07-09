@@ -13,8 +13,6 @@ import com.mrzolution.integridad.app.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.google.common.collect.Iterables;
-
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -57,7 +55,7 @@ public class SubsidiaryServices {
             warehouseRepository.save(warehouse);
             warehouse.setSubsidiary(null);
 	});
-	log.info("SubsidiaryServices createSubsidiary DONE: {}", saved.getId());
+	log.info("SubsidiaryServices createSubsidiary: {}", saved.getId());
 	saved.setCashiers(cashierList);
 	return saved;
     }
@@ -67,7 +65,7 @@ public class SubsidiaryServices {
 	subsidiaries.forEach(subsidiary -> {
             populateChildren(subsidiary);
 	});
-	log.info("SubsidiaryServices getAllActivesByUserClientId DONE");
+	log.info("SubsidiaryServices getAllActivesByUserClientId: {}", userClientId);
 	return subsidiaries;
     }
 
@@ -75,7 +73,7 @@ public class SubsidiaryServices {
 	Subsidiary subsidiary = subsidiaryRepository.findOne(id);
 	subsidiary.setFatherListToNull();
 	subsidiary.setListsNull();
-        log.info("SubsidiaryServices getSubsidiaryById DONE: {}", id);
+        log.info("SubsidiaryServices getSubsidiaryById: {}", id);
 	return subsidiary;
     }
 
@@ -96,7 +94,7 @@ public class SubsidiaryServices {
 
 	subsidiary.setListsNull();
 	Subsidiary updated = subsidiaryRepository.save(subsidiary);
-	log.info("SubsidiaryServices updated id: {}", updated.getId());
+	log.info("SubsidiaryServices updated: {}", updated.getId());
 	return updated;
     }
 

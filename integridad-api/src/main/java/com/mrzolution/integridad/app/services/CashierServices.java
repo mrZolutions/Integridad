@@ -20,7 +20,7 @@ public class CashierServices {
             cashier.setFatherListToNull();
             cashier.setListsNull();
 	});
-        log.info("CashierServices getAllBySubsiduaryActivesLazy DONE: {}", subId);
+        log.info("CashierServices getAllBySubsiduaryActivesLazy: {}", subId);
 	return actives;
     }
 
@@ -31,7 +31,7 @@ public class CashierServices {
 	log.info("CashierServices updateCashier: {}", cashier.getId());
 	cashier.setListsNull();
 	Cashier updated = cashierRepository.save(cashier);
-	log.info("CashierServices updateCashier DONE id: {}", updated.getId());
+	log.info("CashierServices updateCashier id: {}", updated.getId());
 	return updated;
     }
 }

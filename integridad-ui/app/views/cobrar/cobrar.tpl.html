@@ -879,7 +879,7 @@
                 </div>
             </div>
             <div class = "panel-footer">
-                <button type = "button" title = "Aceptar" class = "btn btn-success btn-sm" ng-click = "vm.pagoMultiAbonoBills()"
+                <button type = "button" title = "Aceptar" class = "btn btn-success btn-sm" ng-click = "vm.pagoMultiAbono()"
                         ng-disabled ="vm.getTotalMultiAbonos() != vm.valorDocumento">
                         <span class = "glyphicon glyphicon-thumbs-up" aria-hidden = "true"></span>
                 </button>
@@ -955,7 +955,7 @@
                                         <td>{{credits.payNumber}}</td>
                                         <td>{{credits.valor.toFixed(2)}}</td>
                                         <td>
-                                            <button type = "button" title = "Seleccionar Factura" class = "btn btn-primary btn-sm" ng-click = "vm.multipleAbonoBills(credits)">
+                                            <button type = "button" title = "Seleccionar Factura" class = "btn btn-primary btn-sm" ng-click = "vm.multipleAbono(credits)">
                                                     <span class = "glyphicon glyphicon-ok" aria-hidden = "true"></span>
                                             </button>
                                         </td>

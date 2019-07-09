@@ -51,7 +51,7 @@ public class CreditsDebtsServices {
             creditDebt.setListsNull();
             creditDebt.setFatherListToNull();
         });
-        log.info("CreditsDebtsServices getCreditsDebtsByDebtsToPayId DONE: {}", id);
+        log.info("CreditsDebtsServices getCreditsDebtsByDebtsToPayId: {}", id);
         return creditsDebts;
     }
     

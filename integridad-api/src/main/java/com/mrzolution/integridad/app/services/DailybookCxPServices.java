@@ -38,7 +38,7 @@ public class DailybookCxPServices {
             log.info("DailybookCxPServices retrieved id NULL: {}", id);
 	}
         populateChildren(retrieved);
-        log.info("DailybookCppServices getDailybookCppById DONE: {}", id);
+        log.info("DailybookCppServices getDailybookCppById: {}", id);
         return retrieved;
     }
     
@@ -49,7 +49,7 @@ public class DailybookCxPServices {
             daily.setListsNull();
             daily.setFatherListToNull();
         });
-        log.info("DailybookCppServices getDailybookCppByUserClientId DONE: {}", userClientId);
+        log.info("DailybookCppServices getDailybookCppByUserClientId: {}", userClientId);
         return dailys;
     }
     
@@ -60,7 +60,7 @@ public class DailybookCxPServices {
             daily.setListsNull();
             daily.setFatherListToNull();
         });
-        log.info("DailybookCxPServices getDailybookCppByProviderId DONE: {}", id);
+        log.info("DailybookCxPServices getDailybookCppByProviderId: {}", id);
         return dailys;
     }
     
@@ -71,7 +71,7 @@ public class DailybookCxPServices {
             daily.setFatherListToNull();
             daily.setListsNull();
         });
-        log.info("DailybookCxPServices getDailybookCppByProviderId DONE: {}, {}, {}", userClientId, provId, billNumber);
+        log.info("DailybookCxPServices getDailybookCppByProviderId: {}, {}, {}", userClientId, provId, billNumber);
         return dailys;
     }
     
@@ -100,21 +100,21 @@ public class DailybookCxPServices {
         });
         
         saved.setDetailDailybookContab(detailDailybookContab);
-        log.info("DailybookCxPServices createDailybookCxP DONE: {}, {}", saved.getId(), saved.getDailycxpStringSeq());
+        log.info("DailybookCxPServices createDailybookCxP: {}, {}", saved.getId(), saved.getDailycxpStringSeq());
         return saved;
     }
     
     //Desactivación o Anulación de los Diarios CxP
     public DailybookCxP deactivateDailybookCxP(DailybookCxP dailybookCxP) throws BadRequestException {
         if (dailybookCxP.getId() == null) {
-            throw new BadRequestException("Invalid DailybookCxP");
+            throw new BadRequestException("Invalid DIARIO DE CUENTAS POR PAGAR");
         }
         DailybookCxP dailybookCxPToDeactivate = dailybookCxPRepository.findOne(dailybookCxP.getId());
         dailybookCxPToDeactivate.setListsNull();
         dailybookCxPToDeactivate.setActive(false);
         dailybookCxPToDeactivate.setGeneralDetail("DIARIO DE CUENTAS POR PAGAR ANULADO");
         dailybookCxPRepository.save(dailybookCxPToDeactivate);
-        log.info("DailybookCxPServices deactivateDailybookCxP DONE id: {}", dailybookCxPToDeactivate.getId());
+        log.info("DailybookCxPServices deactivateDailybookCxP: {}", dailybookCxPToDeactivate.getId());
         return dailybookCxPToDeactivate;
     }
     

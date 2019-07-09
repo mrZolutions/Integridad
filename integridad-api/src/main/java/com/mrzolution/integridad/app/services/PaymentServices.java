@@ -60,7 +60,7 @@ public class PaymentServices {
             payment.setFatherListToNull();
             payment.setListsNull();
         });
-        log.info("PaymentServices getPaymentsByUserClientIdWithBankAndNroDocument DONE: {}, {}, {}", userClientId, banco, nroduc);
+        log.info("PaymentServices getPaymentsByUserClientIdWithBankAndNroDocument: {}, {}, {}", userClientId, banco, nroduc);
 	return payments;
     }
     
@@ -70,7 +70,7 @@ public class PaymentServices {
             payment.setFatherListToNull();
             payment.setListsNull();
         });
-        log.info("PaymentServices getPaymentsByClientId DONE: {}", id);
+        log.info("PaymentServices getPaymentsByClientId: {}", id);
 	return payments;
     }
     
@@ -87,7 +87,7 @@ public class PaymentServices {
             }
             updateCreditsAndBill(saved);
         }
-        log.info("PaymentServices createPayment DONE: {}, {}", saved.getId(), saved.getDocumentNumber());
+        log.info("PaymentServices createPayment: {}, {}", saved.getId(), saved.getDocumentNumber());
 	return saved;
     }
     
@@ -123,7 +123,7 @@ public class PaymentServices {
         totalReten = 0;
         totalNotac = 0;
         
-        log.info("PaymentServices getPaymentsByUserClientId: {}", id);
+        log.info("PaymentServices getPaymentsByUserClientId: {}, {}", id, dateTwo);
         Iterable<Payment> payments = paymentRepository.findAllPaymentsByUserClientIdAndDates(id, dateOne, dateTwo);
         List<CCResumenReport> ccResumenReportList = new ArrayList<>();
         
@@ -185,7 +185,7 @@ public class PaymentServices {
         documentDeactivated = deactivated.getCredits().getPago().getBill().getId().toString();
         abono = deactivated.getValorAbono();
         updateCreditsAndBillOfPaymentDeactivated(deactivated, documentDeactivated);
-        log.info("PaymentServices deactivatePayment DONE id: {}", paymentToDeactivate.getId());
+        log.info("PaymentServices deactivatePayment: {}", paymentToDeactivate.getId());
         return paymentToDeactivate;
     }
     

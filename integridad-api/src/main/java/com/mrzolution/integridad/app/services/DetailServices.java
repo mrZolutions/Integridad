@@ -28,7 +28,7 @@ public class DetailServices {
             detail.getBill().setFatherListToNull();
             detail.getBill().setListsNull();
         });
-        log.info("DetailServices getDetailByUserClientId DONE: {}", userClientId);
+        log.info("DetailServices getDetailByUserClientId: {}", userClientId);
         return details;
     }
 }

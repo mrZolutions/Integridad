@@ -50,8 +50,8 @@ public class RetentionServices {
         String data = mapper.writeValueAsString(requirement);
         log.info("RetentionServices getDatil MAPPER creado");
 	
-        String response = httpCallerService.post(Constants.DATIL_RETENTION_LINK, data, userClient);
-        //String response = "OK";
+        //String response = httpCallerService.post(Constants.DATIL_RETENTION_LINK, data, userClient);
+        String response = "OK";
         log.info("RetentionServices getDatil httpcall DONE");
         return response;
     }
@@ -62,7 +62,7 @@ public class RetentionServices {
             retention.setListsNull();
             retention.setFatherListToNull();
         });
-        log.info("RetentionServices getByUserLazy DONE: {}", user.getId());
+        log.info("RetentionServices getByUserLazy: {}", user.getId());
         return retentions;
     }
 
@@ -74,7 +74,7 @@ public class RetentionServices {
             log.info("RetentionServices retrieved id NULL: {}", id);
         }
         populateChildren(retrieved);
-        log.info("RetentionServices getRetentionById DONE: {}", id);
+        log.info("RetentionServices getRetentionById: {}", id);
         return retrieved;
     }
     
@@ -85,7 +85,7 @@ public class RetentionServices {
             retention.setListsNull();
             retention.setFatherListToNull();
         });
-        log.info("RetentionServices getRetentionByProviderId DONE: {}", id);
+        log.info("RetentionServices getRetentionByProviderId: {}", id);
         return retentions;
     }
     
@@ -96,7 +96,7 @@ public class RetentionServices {
             retention.setListsNull();
             retention.setFatherListToNull();
         });
-        log.info("RetentionServices getRetentionByProviderIdAndDocumentNumber DONE: {}, {}", id, documentNumber);
+        log.info("RetentionServices getRetentionByProviderIdAndDocumentNumber: {}, {}", id, documentNumber);
         return retentions;
     }
 
@@ -122,7 +122,7 @@ public class RetentionServices {
             detail.setRetention(null);
         });
             
-        log.info("RetentionServices createRetention DONE: {}, {}", saved.getId(), saved.getStringSeq());
+        log.info("RetentionServices createRetention: {}, {}", saved.getId(), saved.getStringSeq());
         saved.setDetailRetentions(details);
         return saved;
     }
@@ -138,7 +138,7 @@ public class RetentionServices {
         log.info("RetentionServices CHILDREN updated: {}", retention.getId());
         retention.setListsNull();
         Retention updated = retentionRepository.save(retention);
-        log.info("RetentionServices updateRetention DONE id: {}", updated.getId());
+        log.info("RetentionServices updateRetention: {}", updated.getId());
         return updated;
     }
     
@@ -152,7 +152,7 @@ public class RetentionServices {
         retentionToDeactivate.setListsNull();
         retentionToDeactivate.setActive(false);
         retentionRepository.save(retentionToDeactivate);
-        log.info("RetentionServices deactivateRetention DONE id: {}", retention.getId());
+        log.info("RetentionServices deactivateRetention: {}", retention.getId());
         return retentionToDeactivate;
     }
 

@@ -24,7 +24,7 @@ public class BrandServices {
 	brand.setActive(true);
 	Brand saved = brandRepository.save(brand);
 	saved.setListsNull();
-        log.info("BrandServices createBrand DONE");
+        log.info("BrandServices createBrand: {}, {}", saved.getId(), saved.getName());
 	return saved;
     }
 	
@@ -40,14 +40,14 @@ public class BrandServices {
 	findOne.setListsNull();
 	findOne.setActive(false);
 	updateBrand(findOne);
-        log.info("BrandServices deleteBrand DONE: {}", brandId);
+        log.info("BrandServices deleteBrand: {}", brandId);
 	return findOne;
     }
 
     public Iterable<Brand> getAllActives(){
 	Iterable<Brand> actives = brandRepository.findByActive(true);
 	actives.forEach(this::populateChildren);
-        log.info("BrandServices getAllActives DONE");
+        log.info("BrandServices getAllActives");
 	return actives;
     }
 
@@ -57,14 +57,14 @@ public class BrandServices {
             brand.setFatherListToNull();
             brand.setListsNull();
 	});
-        log.info("BrandServices getAllActivesLazy DONE");
+        log.info("BrandServices getAllActivesLazy");
 	return actives;
     }
 
     public Brand getBrandById(UUID id){
 	Brand findOne = brandRepository.findOne(id);
 	populateChildren(findOne);
-        log.info("BrandServices getBrandById DONE: {}", id);
+        log.info("BrandServices getBrandById: {}", id);
 	return findOne;
     }
 

@@ -61,7 +61,7 @@ public class RetentionClientServices {
             log.info("RetentionClientServices retrieved id NULL: {}", id);
 	}
 	populateChildren(retrieved);
-        log.info("RetentionClientServices getRetentionClientById DONE: {}", id);
+        log.info("RetentionClientServices getRetentionClientById: {}", id);
 	return retrieved;
     }
     
@@ -72,7 +72,7 @@ public class RetentionClientServices {
             retention.setListsNull();
             retention.setFatherListToNull();
         });
-        log.info("RetentionClientServices getRetentionClientByBillId DONE: {}", id);
+        log.info("RetentionClientServices getRetentionClientByBillId: {}", id);
         return retenCli;
     }
     
@@ -82,7 +82,7 @@ public class RetentionClientServices {
             retention.setListsNull();
             retention.setFatherListToNull();
         });
-        log.info("RetentionClientServices getRetentionClientByBillIdAndDocumentNumber DONE: {}, {}", id, docnumber);
+        log.info("RetentionClientServices getRetentionClientByBillIdAndDocumentNumber: {}, {}", id, docnumber);
         return retenCli;
     }
     
@@ -103,7 +103,7 @@ public class RetentionClientServices {
         });
         saved.setDetailRetentionClient(details);
         updateBillCreditsAndPayment(saved, document);
-        log.info("RetentionClientServices createRetentionClient DONE: {}, {}", saved.getId(), saved.getRetentionNumber());
+        log.info("RetentionClientServices createRetentionClient: {}, {}", saved.getId(), saved.getRetentionNumber());
         return saved;
     }
 
@@ -214,7 +214,7 @@ public class RetentionClientServices {
         documentDeactivated = deactivated.getBill().getId().toString();
         totalRetenCli = deactivated.getTotal();
         updatePaymentCreditsAndBillOfRetentionClientDeactivated(deactivated, documentDeactivated);
-        log.info("RetentionClientServices deactivateRetentionClient DONE id: {}", retentionToDeactivate.getId());
+        log.info("RetentionClientServices deactivateRetentionClient: {}", retentionToDeactivate.getId());
         return retentionToDeactivate;
     }
     

@@ -37,19 +37,6 @@ public class BillController {
         return new ResponseEntity<String>(response, HttpStatus.ACCEPTED);
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = "/type_document/{value}")
-    public ResponseEntity getByTypeDocument(@PathVariable("value") int value) {
-        Iterable<Bill> response =null;
-        try {
-            response = service.getByTypeDocument(value);
-        } catch (BadRequestException e) {
-            log.error("BillController getByTypeDocument Exception thrown: {}", e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-        }
-        log.info("BillController getByTypeDocument DONE");
-        return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
-    }
-        
     //Selecciona todas las Facturas del Cliente
     @RequestMapping(method = RequestMethod.GET, value="/bill/client/{id}")
     public ResponseEntity getBillByClientId(@PathVariable("id") UUID id) {

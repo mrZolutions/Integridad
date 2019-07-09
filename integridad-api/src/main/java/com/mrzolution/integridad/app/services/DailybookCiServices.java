@@ -38,7 +38,7 @@ public class DailybookCiServices {
             log.info("DailybookCiServices retrieved id NULL: {}", id);
 	}
         populateChildren(retrieved);
-        log.info("DailybookCiServices getDailybookCiById DONE: {}", id);
+        log.info("DailybookCiServices getDailybookCiById: {}", id);
         return retrieved;
     }
     
@@ -49,7 +49,7 @@ public class DailybookCiServices {
             daily.setListsNull();
             daily.setFatherListToNull();
         });
-        log.info("DailybookCiServices getDailybookCiByUserClientId DONE: {}", userClientId);
+        log.info("DailybookCiServices getDailybookCiByUserClientId: {}", userClientId);
         return dailys;
     }
     
@@ -60,7 +60,7 @@ public class DailybookCiServices {
             daily.setListsNull();
             daily.setFatherListToNull();
         });
-        log.info("DailybookCiServices getDailybookCiByUserClientIdWithNoClient DONE: {}", userClientId);
+        log.info("DailybookCiServices getDailybookCiByUserClientIdWithNoClient: {}", userClientId);
         return dailys;
     }
     
@@ -71,7 +71,7 @@ public class DailybookCiServices {
             daily.setListsNull();
             daily.setFatherListToNull();
         });
-        log.info("DailybookCiServices getDailybookCiByClientId DONE: {}", id);
+        log.info("DailybookCiServices getDailybookCiByClientId: {}", id);
         return dailys;
     }
     
@@ -82,7 +82,7 @@ public class DailybookCiServices {
             daily.setFatherListToNull();
             daily.setListsNull();
         });
-        log.info("DailybookCiServices getDailybookCiByUserClientIdAndClientIdAndBillNumber DONE: {}, {}, {}", userClientId, clientId, billNumber);
+        log.info("DailybookCiServices getDailybookCiByUserClientIdAndClientIdAndBillNumber: {}, {}, {}", userClientId, clientId, billNumber);
         return dailys;
     }
     
@@ -111,7 +111,7 @@ public class DailybookCiServices {
         });
         
         saved.setDetailDailybookContab(detailDailybookContab);
-        log.info("DailybookCiServices createDailybookCi DONE: {}, {}", saved.getId(), saved.getDailyCiStringSeq());
+        log.info("DailybookCiServices createDailybookCi: {}, {}", saved.getId(), saved.getDailyCiStringSeq());
         return saved;
     }
     
@@ -125,7 +125,7 @@ public class DailybookCiServices {
         dailybookCiToDeactivate.setActive(false);
         dailybookCiToDeactivate.setGeneralDetail("COMPROBANTE DE INGRESO ANULADO");
         dailybookCiRepository.save(dailybookCiToDeactivate);
-        log.info("DailybookCiServices deactivateDailybookCi DONE id: {}", dailybookCiToDeactivate.getId());
+        log.info("DailybookCiServices deactivateDailybookCi: {}", dailybookCiToDeactivate.getId());
         return dailybookCiToDeactivate;
     }
     
@@ -136,7 +136,7 @@ public class DailybookCiServices {
         dailybookContabsDetail.forEach(detail -> {
             detail.setListsNull();
             detail.setFatherListToNull();
-            detail.setDailybookCe(null);
+            detail.setDailybookCi(null);
             detailDailybookContabList.add(detail);
 	});
 	dailybookCi.setDetailDailybookContab(detailDailybookContabList);

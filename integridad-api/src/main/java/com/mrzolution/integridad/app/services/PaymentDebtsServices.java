@@ -68,7 +68,7 @@ public class PaymentDebtsServices {
             paymentDebt.setFatherListToNull();
             paymentDebt.setListsNull();
         });
-        log.info("PaymentDebtsServices getPaymentDebtsByUserClientIdWithBankAndNroDocument DONE: {}, {}, {}", userClientId, banco, nroduc);
+        log.info("PaymentDebtsServices getPaymentDebtsByUserClientIdWithBankAndNroDocument: {}, {}, {}", userClientId, banco, nroduc);
 	return paymentsDebts;
     }
     
@@ -78,7 +78,7 @@ public class PaymentDebtsServices {
             paymentDebt.setFatherListToNull();
             paymentDebt.setListsNull();
         });
-        log.info("PaymentDebtsServices getPaymentDebtsByProviderId DONE: {}", id);
+        log.info("PaymentDebtsServices getPaymentDebtsByProviderId: {}", id);
 	return paymentsDebts;
     }
     
@@ -98,7 +98,7 @@ public class PaymentDebtsServices {
             }
             updateCreditsDebtsAndDebtsToPay(saved);
         }
-        log.info("PaymentDebtsServices createPaymentDebts DONE: {}, {}", saved.getId(), saved.getDocumentNumber());
+        log.info("PaymentDebtsServices createPaymentDebts: {}, {}", saved.getId(), saved.getDocumentNumber());
         return saved;
     }
     
@@ -127,7 +127,7 @@ public class PaymentDebtsServices {
         totalAbono = 0;
         totalReten = 0;
         
-        log.info("PaymentServices getPaymentDebtsByUserClientIdAndDates: {}", id);
+        log.info("PaymentServices getPaymentDebtsByUserClientIdAndDates: {}, {}", id, dateTwo);
         Iterable<PaymentDebts> paymentsDebts = paymentDebtsRepository.findPaymentsDebtsByUserClientIdAndDates(id, dateOne, dateTwo);
         List<CPResumenPaymentDebtsReport> cpResumenPaymentDebtsReportList = new ArrayList<>();
         
@@ -183,7 +183,7 @@ public class PaymentDebtsServices {
         totalReten = 0;
         saldo = 0;
         
-        log.info("PaymentServices getStatementProviderReport: {}", id);
+        log.info("PaymentServices getStatementProviderReport: {}, {}", id, dateTwo);
         Iterable<PaymentDebts> paymentsDebts = paymentDebtsRepository.findStatementProviderReport(id, dateTwo);
         List<StatementProviderReport> statementProviderReportList = new ArrayList<>();
         
@@ -245,7 +245,7 @@ public class PaymentDebtsServices {
         documentDeactivated = deactivated.getCreditsDebts().getPagoDebts().getDebtsToPay().getId().toString();
         abono = deactivated.getValorAbono();
         updateCreditsDebtsAndDebtsToPayOfPaymentDebtsDeactivated(deactivated, documentDeactivated);
-        log.info("PaymentDebtsServices deactivatePaymentDebts DONE id: {}", paymentDebtsToDeactivate.getId());
+        log.info("PaymentDebtsServices deactivatePaymentDebts: {}", paymentDebtsToDeactivate.getId());
         return paymentDebtsToDeactivate;
     }
     

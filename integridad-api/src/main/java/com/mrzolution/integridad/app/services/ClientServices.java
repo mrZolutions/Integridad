@@ -28,7 +28,7 @@ public class ClientServices {
             client.setFatherListToNull();
             client.setListsNull();
         });
-        log.info("ClientServices getClientByUserClientAndIdentification DONE: {}, {}", userClientId, identification);
+        log.info("ClientServices getClientByUserClientAndIdentification: {}, {}", userClientId, identification);
 	return clients;
     }
 	
@@ -39,7 +39,7 @@ public class ClientServices {
         client.setDateCreated(new Date().getTime());
         client.setActive(true);
         Client saved = clientRepository.save(client);
-        log.info("ClientServices createClient DONE id: {}", saved.getId());
+        log.info("ClientServices createClient: {}", saved.getId());
         return saved;
     }
 	
@@ -50,7 +50,7 @@ public class ClientServices {
         log.info("ClientServices updateClient: {}", client.getName());
         client.setListsNull();
         Client updated = clientRepository.save(client);
-        log.info("ClientServices updateClient DONE id: {}", updated.getId());
+        log.info("ClientServices updateClient: {}", updated.getId());
     }
 	
     public Client getClientById(UUID id) {
@@ -61,7 +61,7 @@ public class ClientServices {
             log.info("ClientServices retrieved id NULL: {}", id);
         }	
         populateChildren(retrieved);
-        log.info("ClientServices getClientById DONE: {}", id);
+        log.info("ClientServices getClientById: {}", id);
         return retrieved;
     }
 	
@@ -70,7 +70,7 @@ public class ClientServices {
         for (Client client : clients) {
             populateChildren(client);
         }
-        log.info("ClientServices getAllClient DONE");
+        log.info("ClientServices getAllClient");
         return clients;
     }
 	
@@ -80,7 +80,7 @@ public class ClientServices {
             client.setListsNull();
             client.setFatherListToNull();
         }
-        log.info("ClientServices getAllClientActives DONE");
+        log.info("ClientServices getAllClientActives");
         return clients;
     }
 
@@ -90,7 +90,7 @@ public class ClientServices {
             client.setListsNull();
             client.setFatherListToNull();
         }
-        log.info("ClientServices getAllLazyByUserClientid DONE: {}", userClientId);
+        log.info("ClientServices getAllLazyByUserClientid: {}", userClientId);
         return clients;
     }
 	

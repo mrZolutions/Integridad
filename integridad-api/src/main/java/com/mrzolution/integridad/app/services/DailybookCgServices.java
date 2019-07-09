@@ -38,7 +38,7 @@ public class DailybookCgServices {
             log.info("DailybookCgServices retrieved id NULL: {}", id);
 	}
         populateChildren(retrieved);
-        log.info("DailybookCgServices getDailybookCgById DONE: {}", id);
+        log.info("DailybookCgServices getDailybookCgById: {}", id);
         return retrieved;
     }
     
@@ -49,7 +49,7 @@ public class DailybookCgServices {
             daily.setListsNull();
             daily.setFatherListToNull();
         });
-        log.info("DailybookCgServices getDailybookCgByUserClientId DONE: {}", userClientId);
+        log.info("DailybookCgServices getDailybookCgByUserClientId: {}", userClientId);
         return dailys;
     }
     
@@ -78,21 +78,21 @@ public class DailybookCgServices {
         });
         
         saved.setDetailDailybookContab(detailDailybookContab);
-        log.info("DailybookCgServices createDailybookCg DONE: {}, {}", saved.getId(), saved.getDailyCgStringSeq());
+        log.info("DailybookCgServices createDailybookCg: {}, {}", saved.getId(), saved.getDailyCgStringSeq());
         return saved;
     }
     
     //Desactivación o Anulación de los Diarios CG
     public DailybookCg deactivateDailybookCg(DailybookCg dailybookCg) throws BadRequestException {
         if (dailybookCg.getId() == null) {
-            throw new BadRequestException("Invalid DailybookCg");
+            throw new BadRequestException("Invalid DIARIO DE CONTABILIDAD GENERAL");
         }
         DailybookCg dailybookCgToDeactivate = dailybookCgRepository.findOne(dailybookCg.getId());
         dailybookCgToDeactivate.setListsNull();
         dailybookCgToDeactivate.setActive(false);
         dailybookCgToDeactivate.setGeneralDetail("DIARIO DE CONTABILIDAD GENERAL ANULADO");
         dailybookCgRepository.save(dailybookCgToDeactivate);
-        log.info("DailybookCgServices deactivateDailybookCg DONE id: {}", dailybookCgToDeactivate.getId());
+        log.info("DailybookCgServices deactivateDailybookCg: {}", dailybookCgToDeactivate.getId());
         return dailybookCgToDeactivate;
     }
     

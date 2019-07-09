@@ -28,7 +28,7 @@ public class DetailCellarServices {
             detail.getCellar().setFatherListToNull();
             detail.getCellar().setListsNull();
         });
-        log.info("DetailCellarServices getDetailByUserClientId DONE: {}", userClientId);
+        log.info("DetailCellarServices getDetailByUserClientId: {}", userClientId);
         return details;
     }
 }

@@ -25,6 +25,7 @@ angular
                 return response.data;
             });
         };
+
         //Comprobante de Egreso
         this.createDailybookCe = function(dailybookCe) {
             return securityService.post('/dailyce', dailybookCe).then(function successCallback(response) {
@@ -67,6 +68,7 @@ angular
                 return response.data;
             });
         };
+
         //Comprobante de Ingreso
         this.createDailybookCi = function(dailybookCi) {
             return securityService.post('/dailyci', dailybookCi).then(function successCallback(response) {
@@ -109,6 +111,7 @@ angular
                 return response.data;
             });
         };
+        
         //Diario Cuentas por Pagar
         this.createDailybookCxP = function(dailybookCxP) {
             return securityService.post('/dailycxp', dailybookCxP).then(function successCallback(response) {
