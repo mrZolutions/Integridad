@@ -34,7 +34,7 @@
     </div>
     
     <!--SECCIÓN DE CARGA DE LOS LOS CLIENTES-->
-    <div class="table-responsive" ng-show="vm.billList === undefined && vm.clientSelected === undefined && vm.multipleCobroSelected === undefined && vm.paymentList === undefined && vm.retentionClientList === undefined">
+    <div class="table-responsive" ng-show="vm.billList === undefined && vm.clientSelected === undefined && vm.multipleCobroSelected === undefined && vm.paymentList === undefined && vm.retentionClientList === undefined && vm.comprobanteCobroList === undefined">
         <div class="row">
             <div class="form-group col-md-12">
                 <input ng-model="searchText" class="form-control" placeholder="Buscar Clientes">
@@ -63,11 +63,14 @@
                         <button type = "button" title = "Seleccionar Cliente" class = "btn btn-primary btn-sm" ng-click = "vm.clientConsult(client)">
                                 <span class = "glyphicon glyphicon-check" aria-hidden = "true"></span>
                         </button>
+                        <button type = "button" title = "Consultar Comprobantes de Cobros" class = "btn btn-primary btn-sm" ng-click = "vm.comprobanteCobroByClient(client)">
+                                <span class = "glyphicon glyphicon-search" aria-hidden = "true"></span>
+                        </button>
                         <button type = "button" title = "Pago Múltiple de Facturas" class = "btn btn-success btn-sm" ng-click = "vm.clientMultiplePayment(client)">
                                 <span class = "glyphicon glyphicon-credit-card" aria-hidden = "true"></span>
                         </button>
                         <button type = "button" title = "Consultar Cobros por Cliente" class = "btn btn-primary btn-sm" ng-click = "vm.paymentsByClient(client)">
-                                <span class = "glyphicon glyphicon-eye-open" aria-hidden = "true"></span>
+                                <span class = "glyphicon glyphicon-zoom-in" aria-hidden = "true"></span>
                         </button>
                     </td>
                 </tr>
@@ -1076,7 +1079,215 @@
             </div>
         </div>
     </div>
-    
+
+    <!--CONSULTA DE COMPROBANTES DE COBROS REALIZADOS POR CLIENTE-->
+    <div class="table-responsive" ng-show="vm.comprobanteCobroList !== undefined">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <b>Listado de Comprobantes de Cobros Pertenecientes a: {{vm.clientName}}</b>
+            </div>
+            <div class="panel-body">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Nro. Comprobante</th>
+                            <th>Nro. Factura</th>
+                            <th>Fecha</th>
+                            <th>Estado</th>
+                            <th>Total</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-show="vm.comprobanteCobroList == 0">
+                            <td colspan="4">
+                                El Cliente <b>No Presenta</b> Comprobantes de Cobros realizados...
+                            </td>
+                        </tr>
+                        <tr ng-repeat="comprobanteCobro in vm.comprobanteCobroList">
+                            <td>{{comprobanteCobro.comprobanteStringSeq}}</td>
+                            <td>{{comprobanteCobro.billNumber}}</td>
+                            <td>{{comprobanteCobro.dateComprobante | date : "dd/MM/yyyy"}}</td>
+                            <td>{{comprobanteCobro.comprobanteEstado}}</td>
+                            <td>{{comprobanteCobro.total.toFixed(2)}}</td>
+                            <td>
+                                <button type="button" title = "Ver Comprobante de Cobro" class="btn btn-primary btn-sm" 
+                                        ng-click="vm.comprobanteCobroSelected(comprobanteCobro)">
+                                        <span class = "glyphicon glyphicon-eye-open" aria-hidden = "true"></span>
+                                </button>
+                                <button type="button" title = "Anular Comprobante de Cobro" class="btn btn-warning btn-sm" 
+                                        ng-click="vm.deactivateComprobanteCobro = comprobanteCobro" data-toggle="modal" data-target="#modalAnularComprobanteCobro">
+                                        <span class = "glyphicon glyphicon-warning-sign" aria-hidden = "true"></span>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="panel-footer">
+                <button type="button" title = "Salir" class="btn btn-primary btn-sm" ng-click="vm.cancel()">
+                        <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="table-responsive" ng-show="vm.comprobanteCobroCreated" id="printArea" print-section>
+        <div class="panel panel-primary">
+            <div class="panel-heading" print-remove>
+                <b>Comprobante de Cobro</b>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="form-group col-md-12">
+                        <table width="100%">
+                            <tr>
+                                <td align="center">
+                                    <div>
+                                        <h4>
+                                            <b>{{vm.userData.subsidiary.userClient.name}}</b>
+                                        </h4>
+                                    </div>
+                                    <div>
+                                        <h5>
+                                            <label>COMPROBANTE DE COBRO Nro: </label>
+                                            {{vm.comprobanteCobroCreated.comprobanteStringSeq}}
+                                        </h5>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                        <table width="100%">
+                            <tr>
+                                <td>
+                                    <div>
+                                        <label>RECIBIMOS DE: </label>
+                                        {{vm.comprobanteCobroCreated.client.name}}
+                                    </div>
+                                </td>
+                                <td>
+                                    <div>
+                                        <label>RUC: </label>
+                                        {{vm.comprobanteCobroCreated.client.identification}}
+                                    </div>
+                                </td>
+                                <td>
+                                    <div>
+                                        <label>TELÉFONO: </label>
+                                        {{vm.comprobanteCobroCreated.client.phone}} - {{vm.comprobanteCobroCreated.client.celPhone}}
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                        <table width="100%">
+                            <tr>
+                                <td>
+                                    <div>
+                                        <label>DIRECCIÓN: </label>
+                                        {{vm.comprobanteCobroCreated.client.address}}
+                                    </div>
+                                </td>
+                                <td>
+                                    <div>
+                                        <label>LA CANTIDAD DE: </label>
+                                        {{vm.comprobanteCobroCreated.total}} &#36;
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                        <table width="100%">
+                            <tr>
+                                <td>
+                                    <div>
+                                        <label>FECHA-EMISIÓN: </label>
+                                        {{vm.comprobanteCobroCreated.dateComprobante | date : "dd-MM-yyyy"}}
+                                    </div>
+                                </td>
+                                <td>
+                                    <div>
+                                        <label>POR CONCEPTO DE: </label>
+                                        {{vm.comprobanteCobroCreated.comprobanteConcep}}
+                                    </div>
+                                </td>
+                                <td>
+                                    <div>
+                                        <label>ESTADO: </label>
+                                        {{vm.comprobanteCobroCreated.comprobanteEstado}}
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-12">
+                        <table width="100%">
+                            <tr>
+                                <td><b>FACTURA</b></td>
+                                <td><b>ABONO</b></td>
+                                <td><b>TIPO ABONO</b></td>
+                                <td><b>BANCO</b></td>
+                                <td><b>NRO. CUENTA</b></td>
+                                <td><b>NRO. TRANSACCIÓN</b></td>
+                            </tr>
+                            <tr ng-repeat="detail in vm.comprobanteCobroCreated.detailComprobanteCobro">
+                                <td>{{detail.billNumber}}</td>
+                                <td>{{detail.totalAbono.toFixed(2)}}</td>
+                                <td>{{detail.tipoAbono}}</td>
+                                <td>{{detail.banco}}</td>
+                                <td>{{detail.cuenta}}</td>
+                                <td>{{detail.numCheque}}</td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td><b>TOTAL:</b></td>
+                                <td><b>{{vm.getTotalComprobanteCobroCreated()}} &#36;</b></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <table width="100%">
+                            <tr>
+                                <td width="33%" align="center">
+                                    <br/><br/>
+                                    _____________<br/>
+                                    RECAUDADO POR
+                                </td>
+                                <td width="33%" align="center">
+                                    <br/><br/>
+                                    _____________<br/>
+                                    REVISADO POR
+                                </td>
+                                <td width="33%" align="center">
+                                    <br/><br/>
+                                    _____________<br/>
+                                    PAGADO POR
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="row" print-remove>
+                    <div class="form-group col-md-12">
+                        <button print-btn type="button" title = "Imprimir Comprobante" class="btn btn-primary btn-sm"
+                                ng-show="vm.activecmpC === true" ng-click="vm.cancel()">
+                                <span class = "glyphicon glyphicon-print" aria-hidden = "true"></span>
+                        </button>
+                        <button type="button" title = "Salir" class="btn btn-primary btn-sm"
+                                ng-click="vm.cancel()">
+                                <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!--RETENCIONES DE FACTURAS DE CLIENTES-->
     <div class="table-responsive" ng-show="vm.retentionClient !== undefined && !vm.retentionClientCreated">
         <div class="panel panel-primary">

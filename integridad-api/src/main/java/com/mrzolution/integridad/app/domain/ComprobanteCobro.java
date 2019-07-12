@@ -31,6 +31,7 @@ public class ComprobanteCobro {
     private String comprobanteStringSeq;
     private String comprobanteConcep;
     private String comprobanteEstado;
+    private String billNumber;
     private String paymentId;
     private double subTotalDoce;
     private double iva;

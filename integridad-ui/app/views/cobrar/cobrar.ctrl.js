@@ -15,6 +15,7 @@ angular.module('integridadUiApp')
         vm.success = undefined;
 
         vm.loading = false;
+        vm.userData = $localStorage.user;
         
         vm.documentType = [
             {code: '01', name: 'Factura'},
@@ -160,6 +161,8 @@ angular.module('integridadUiApp')
             vm.clientCodConta = undefined;
             vm.ctaCtableBankList = undefined;
             vm.paymentList = undefined;
+            vm.comprobanteCobroList = undefined;
+            vm.comprobanteCobroCreated = undefined;
             vm.bankName = undefined;
             vm.modePayment = undefined;
             vm.noDocument = undefined;
@@ -176,7 +179,7 @@ angular.module('integridadUiApp')
             });
         };
 
-        //Sección de Comprobante de Egreso para el Asiento Automático
+        //Sección de Comprobante de Ingreso para el Asiento Automático
         function _getDailyCiSeqNumber() {
             vm.numberAddedOne = parseInt($localStorage.user.cashier.dailyCiNumberSeq) + 1;
             vm.dailyCiSeq = vm.numberAddedOne;
@@ -188,11 +191,34 @@ angular.module('integridadUiApp')
                 client: vm.clientSelected,
                 userIntegridad: $localStorage.user,
                 subsidiary: $localStorage.user.subsidiary,
+                clientProvName: vm.clientSelected.name,
                 subTotalDoce: 0,
                 iva: 0,
                 subTotalCero: 0,
                 total: 0,
                 detailDailybookContab: []
+            };
+        };
+        //Fin de Sección
+
+        //Sección de Comprobante de Cobro para el Asiento Automático
+        function _getComprobanteCobroSeqNumber() {
+            vm.numberBAddedOne = parseInt($localStorage.user.cashier.comprobanteCobroNumberSeq) + 1;
+            vm.comprobanteCobroSeq = vm.numberBAddedOne;
+            vm.comprobanteCobroStringSeq = utilSeqService._pad_with_zeroes(vm.numberBAddedOne, 6);
+        };
+
+        function _initializeComprobanteCobro() {
+            vm.comprobanteCobro = {
+                client: vm.clientSelected,
+                userIntegridad: $localStorage.user,
+                subsidiary: $localStorage.user.subsidiary,
+                clientName: vm.clientSelected.name,
+                clientRuc: vm.clientSelected.identification,
+                subTotalDoce: 0,
+                iva: 0,
+                total: 0,
+                detailComprobanteCobro: []
             };
         };
         //Fin de Sección
@@ -209,6 +235,7 @@ angular.module('integridadUiApp')
             vm.clientPhone = client.cel_phone;
             vm.clientEmail = client.email;
             _initializeDailybookCi();
+            _initializeComprobanteCobro();
             billService.getAllBillsByClientIdWithSaldo(vm.clientId).then(function(response) {
                 vm.billList = response;
                 vm.loading = false;
@@ -216,6 +243,45 @@ angular.module('integridadUiApp')
                 vm.loading = false;
                 vm.error = error.data;
             });
+        };
+
+        vm.comprobanteCobroByClient = function(client) {
+            vm.loading = true;
+            vm.success = undefined;
+            vm.clientSelected = client;
+            vm.clientId = client.id;
+            vm.clientIdentification = client.identification;
+            vm.clientName = client.name;
+            comprobanteService.getComprobanteCobroByClientId(vm.clientId).then(function(response) {
+                vm.comprobanteCobroList = response;
+                vm.loading = false;
+            }).catch(function(error) {
+                vm.loading = false;
+                vm.error = error.data;
+            });
+        };
+
+        vm.comprobanteCobroSelected = function(comprobanteCobro) {
+            vm.loading = true;
+            vm.comprobanteCobroList = undefined;
+            vm.activecmpC = comprobanteCobro.active;
+            comprobanteService.getComprobanteCobroById(comprobanteCobro.id).then(function(response) {
+                vm.comprobanteCobroCreated = response;
+                vm.loading = false;
+            }).catch(function(error) {
+                vm.loading = false;
+                vm.error = error.data;
+            });
+        };
+
+        vm.getTotalComprobanteCobroCreated = function() {
+            var totalComprobanteCobro = 0;
+            if (vm.comprobanteCobroCreated) {
+                _.each(vm.comprobanteCobroCreated.detailComprobanteCobro, function(detail) {
+                    totalComprobanteCobro = (parseFloat(totalComprobanteCobro) + parseFloat(detail.totalAbono)).toFixed(2);
+                });
+            };
+            return totalComprobanteCobro;
         };
 
         vm.paymentsByClient = function(client) {
@@ -299,18 +365,11 @@ angular.module('integridadUiApp')
                 if (response.length === 0) {
                     paymentService.createPayment(payment).then(function(response) {
                         vm.paymentCreated = response;
-                        vm.success = 'Abono realizado con exito';
-                        switch (vm.paymentCreated.modePayment) {
-                            case 'CHQ':
-                                _asientoComprobanteIngreso();
-                            break;
-                            case 'TRF':
-                                _asientoComprobanteIngreso();
-                            break;
-                            case 'DEP':
-                                _asientoComprobanteIngreso();
-                            break;
+                        if (vm.paymentCreated.modePayment === 'CHQ' || vm.paymentCreated.modePayment === 'TRF' || vm.paymentCreated.modePayment === 'DEP') {
+                            _asientoComprobanteCobro();
+                            _asientoComprobanteIngreso();
                         };
+                        vm.success = 'Abono realizado con exito';
                     }).catch(function(error) {
                         vm.loading = false;
                         vm.error = error.data;
@@ -324,6 +383,37 @@ angular.module('integridadUiApp')
                 vm.error = error.data;
             });
             _activate();
+        };
+
+        function _asientoComprobanteCobro() {
+            _getComprobanteCobroSeqNumber();
+            vm.itemBill = {};
+            vm.itemBill = {
+                numCheque: vm.paymentCreated.noDocument,
+                cuenta: vm.paymentCreated.noAccount,
+                banco: vm.paymentCreated.banco,
+                tipoAbono: vm.paymentCreated.modePayment,
+                totalAbono: vm.paymentCreated.valorAbono,
+                billNumber: vm.paymentCreated.documentNumber
+            };
+            vm.comprobanteCobro.detailComprobanteCobro.push(vm.itemBill);
+            vm.comprobanteCobro.billNumber = vm.paymentCreated.documentNumber;
+            vm.comprobanteCobro.dateComprobante = $('#pickerDateOfPayment').data("DateTimePicker").date().toDate().getTime();
+            vm.comprobanteCobro.comprobanteSeq = vm.comprobanteCobroSeq;
+            vm.comprobanteCobro.comprobanteStringSeq = vm.comprobanteCobroStringSeq;
+            vm.comprobanteCobro.comprobanteConcep = 'Cancela Fc' + ' ' + vm.paymentCreated.documentNumber;
+            vm.comprobanteCobro.comprobanteEstado = 'PROCESADO';
+            vm.comprobanteCobro.total = vm.paymentCreated.valorAbono;
+            vm.comprobanteCobro.subTotalDoce = parseFloat((vm.paymentCreated.valorAbono / 1.12).toFixed(2));
+            vm.comprobanteCobro.iva = parseFloat((vm.paymentCreated.valorAbono * 0.12).toFixed(2));
+            vm.comprobanteCobro.paymentId = vm.paymentCreated.id;
+            
+            comprobanteService.createComprobanteCobro(vm.comprobanteCobro).then(function(response) {
+                $localStorage.user.cashier.comprobanteCobroNumberSeq = vm.comprobanteCobro.comprobanteSeq;
+            }).catch(function(error) {
+                vm.loading = false;
+                vm.error = error.data;
+            });
         };
 
         function _asientoComprobanteIngreso() {
@@ -353,7 +443,6 @@ angular.module('integridadUiApp')
             };
             vm.itemb.numCheque = '--';
             vm.dailybookCi.detailDailybookContab.push(vm.itemb);
-            
             vm.dailybookCi.codeTypeContab = vm.selectedTypeBook;
             vm.dailybookCi.nameBank = vm.paymentCreated.banco;
             vm.dailybookCi.billNumber = vm.paymentCreated.documentNumber;
@@ -362,7 +451,6 @@ angular.module('integridadUiApp')
             vm.dailybookCi.dailyCiSeq = vm.dailyCiSeq;
             vm.dailybookCi.dailyCiStringSeq = vm.dailyCiStringSeq;
             vm.dailybookCi.dailyCiStringUserSeq = 'PAGO GENERADO ' + vm.dailyCiStringSeq;
-            vm.dailybookCi.clientProvName = vm.paymentCreated.clientName;
             vm.dailybookCi.generalDetail = vm.generalDetailCi_1;
             vm.dailybookCi.total = vm.paymentCreated.valorAbono;
             vm.dailybookCi.iva = parseFloat((vm.paymentCreated.valorAbono * 0.12).toFixed(2));
@@ -406,6 +494,7 @@ angular.module('integridadUiApp')
             vm.clientId = client.id;
             vm.clientIdentification = client.identification;
             _initializeDailybookCi();
+            _initializeComprobanteCobro();
             cuentaContableService.getCuentaContableByUserClientAndBank(vm.usrCliId).then(function(response) {
                 vm.ctaCtableBankList = response;
                 vm.loading = false;
@@ -512,19 +601,50 @@ angular.module('integridadUiApp')
                         vm.payment.banco = vm.bankName;
                         paymentService.createPayment(vm.payment).then(function(response) {
                             vm.paymentCreated = response;
-                            vm.loading = false;
+                            vm.itemaBill = {};
+                            vm.itemaBill = {
+                                numCheque: vm.paymentCreated.noDocument,
+                                cuenta: vm.paymentCreated.noAccount,
+                                banco: vm.paymentCreated.banco,
+                                tipoAbono: vm.paymentCreated.modePayment,
+                                totalAbono: vm.paymentCreated.valorAbono,
+                                billNumber: vm.paymentCreated.documentNumber
+                            };
+                            vm.comprobanteCobro.detailComprobanteCobro.push(vm.itemaBill);
                         }).catch(function(error) {
                             vm.loading = false;
                             vm.error = error.data;
                         });
+                        vm.success = 'Abono realizado con exito';
                     });
-                    vm.success = 'Abono realizado con exito';
+                    _asientoComprobanteMultipleCobro();
                     _asientoComprobanteMultipleIngreso();
                     _activate();
                 } else {
                     vm.error = 'El Nro. de Cheque, Transferencia y/o Depósito Ya Existe y no puede repetirse';
                     vm.loading = false;
                 };
+            }).catch(function(error) {
+                vm.loading = false;
+                vm.error = error.data;
+            });
+        };
+
+        function _asientoComprobanteMultipleCobro() {
+            _getComprobanteCobroSeqNumber();
+            vm.comprobanteCobro.billNumber = vm.billsNumberPayed;
+            vm.comprobanteCobro.dateComprobante = $('#pickerDateOfMultiplePayment').data("DateTimePicker").date().toDate().getTime();
+            vm.comprobanteCobro.comprobanteSeq = vm.comprobanteCobroSeq;
+            vm.comprobanteCobro.comprobanteStringSeq = vm.comprobanteCobroStringSeq;
+            vm.comprobanteCobro.comprobanteConcep = 'Cancela Fcs' + ' ' + vm.billsNumberPayed;
+            vm.comprobanteCobro.comprobanteEstado = 'PROCESADO';
+            vm.comprobanteCobro.total = vm.valorDocumento;
+            vm.comprobanteCobro.subTotalDoce = parseFloat((vm.valorDocumento / 1.12).toFixed(2));
+            vm.comprobanteCobro.iva = parseFloat((vm.valorDocumento * 0.12).toFixed(2));
+            //vm.comprobanteCobro.paymentId = vm.paymentCreated.id;
+            
+            comprobanteService.createComprobanteCobro(vm.comprobanteCobro).then(function(response) {
+                $localStorage.user.cashier.comprobanteCobroNumberSeq = vm.comprobanteCobro.comprobanteSeq;
             }).catch(function(error) {
                 vm.loading = false;
                 vm.error = error.data;
@@ -575,6 +695,7 @@ angular.module('integridadUiApp')
             vm.dailybookCi.dateRecordBook = $('#pickerDateOfMultiplePayment').data("DateTimePicker").date().toDate().getTime();
             contableService.createDailybookCi(vm.dailybookCi).then(function(response) {
                 $localStorage.user.cashier.dailyCiNumberSeq = vm.dailybookCi.dailyCiSeq;
+                vm.loading = false;
             }).catch(function(error) {
                 vm.loading = false;
                 vm.error = error.data;

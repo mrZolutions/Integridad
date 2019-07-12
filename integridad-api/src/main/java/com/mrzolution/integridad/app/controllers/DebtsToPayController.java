@@ -132,7 +132,7 @@ public class DebtsToPayController {
     }
     
     //Reporte de Compras
-    @RequestMapping(method = RequestMethod.GET, value="/rep/purchases/{userClientId}/{dateOne}/{dateTwo}")
+    @RequestMapping(method = RequestMethod.GET, value="/rep/compras/{userClientId}/{dateOne}/{dateTwo}")
     public ResponseEntity getDebtsToPayByUserClientIdAndDates(@PathVariable("userClientId") UUID userClientId, @PathVariable("dateOne") long dateOne, @PathVariable("dateTwo") long dateTwo) {
         List<DebtsReport> response = null;
         try {

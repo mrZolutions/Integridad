@@ -26,7 +26,6 @@ public class DetailComprobanteCobro implements Child {
     private String banco;
     private String tipoAbono;
     private double totalAbono;
-    private long dateBill;
     private String billNumber;
     
     @ManyToOne

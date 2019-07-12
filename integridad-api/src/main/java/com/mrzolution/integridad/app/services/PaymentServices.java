@@ -100,7 +100,7 @@ public class PaymentServices {
             bills.forEach(bill -> {
                 resto = Valor.getValor();
                 BigDecimal vresto = new BigDecimal(resto);
-                if (Valor.getValor() == 0) {
+                if (Valor.getValor() <= 0) {
                     vresto = vresto.setScale(0, BigDecimal.ROUND_HALF_UP);
                 } else {
                     vresto = vresto.setScale(2, BigDecimal.ROUND_HALF_UP);
