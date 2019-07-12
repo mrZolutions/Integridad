@@ -305,6 +305,7 @@ angular.module('integridadUiApp')
             vm.success = undefined;
             vm.error = undefined;
             vm.billNumber = bill.stringSeq;
+            vm.billDate = bill.dateCreated;
             vm.billValue = (bill.total).toFixed(2);
             creditsbillService.getAllCreditsOfBillById(bill.id).then(function(response) {
                 vm.creditsbillList = response;
@@ -394,7 +395,8 @@ angular.module('integridadUiApp')
                 banco: vm.paymentCreated.banco,
                 tipoAbono: vm.paymentCreated.modePayment,
                 totalAbono: vm.paymentCreated.valorAbono,
-                billNumber: vm.paymentCreated.documentNumber
+                billNumber: vm.paymentCreated.documentNumber,
+                dateBill: vm.billDate
             };
             vm.comprobanteCobro.detailComprobanteCobro.push(vm.itemBill);
             vm.comprobanteCobro.billNumber = vm.paymentCreated.documentNumber;
