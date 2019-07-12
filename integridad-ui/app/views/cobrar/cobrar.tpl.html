@@ -1224,14 +1224,16 @@
                         <table width="100%">
                             <tr>
                                 <td><b>FACTURA</b></td>
+                                <td><b>FECHA</b></td>
                                 <td><b>ABONO</b></td>
                                 <td><b>TIPO ABONO</b></td>
                                 <td><b>BANCO</b></td>
                                 <td><b>NRO. CUENTA</b></td>
-                                <td><b>NRO. TRANSACCIÓN</b></td>
+                                <td><b>NRO. TRANS.</b></td>
                             </tr>
                             <tr ng-repeat="detail in vm.comprobanteCobroCreated.detailComprobanteCobro">
                                 <td>{{detail.billNumber}}</td>
+                                <td>{{detail.dateBill | date : "dd-MM-yyyy"}}</td>
                                 <td>{{detail.totalAbono.toFixed(2)}}</td>
                                 <td>{{detail.tipoAbono}}</td>
                                 <td>{{detail.banco}}</td>
@@ -1239,6 +1241,7 @@
                                 <td>{{detail.numCheque}}</td>
                             </tr>
                             <tr>
+                                <td></td>
                                 <td></td>
                                 <td></td>
                                 <td></td>

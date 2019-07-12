@@ -27,6 +27,7 @@ public class DetailComprobanteCobro implements Child {
     private String tipoAbono;
     private double totalAbono;
     private String billNumber;
+    private long dateBill;
     
     @ManyToOne
     @JoinColumn(name = "comprobanteCobro_id")

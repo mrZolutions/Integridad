@@ -150,8 +150,8 @@ angular.module('integridadUiApp')
             vm.retentionClientList = undefined;
             vm.clientList = [];
             vm.itemsMultiplePayments = [];
+            vm.itemsMultipleCobros = [];
             vm.creditsBillsSelected = undefined;
-            vm.creditsMultipleBillsSelected = [];
             vm.multipleCobroSelected = undefined;
             vm.clientName = undefined;
             vm.typePayment = undefined;
@@ -522,6 +522,7 @@ angular.module('integridadUiApp')
             vm.success = undefined;
             vm.error = undefined;
             vm.billNumber = bills.stringSeq;
+            vm.billDate = bills.dateCreated;
             vm.billValue = (bills.total).toFixed(2);
             vm.billPending = parseFloat(bills.saldo);
             creditsbillService.getAllCreditsOfBillById(bills.id).then(function(response) {
@@ -543,21 +544,31 @@ angular.module('integridadUiApp')
                 bill_total: vm.billValue,
                 bill_pending: vm.billPending
             };
+            vm.itemCobroBill = {
+                banco: vm.bankName,
+                billNumber: vm.billNumber,
+                dateBill: vm.billDate,
+                cuenta: vm.noAccount,
+                numCheque: vm.noDocument,
+                tipoAbono: vm.modePayment,
+            };
             vm.loading = false;
         };
 
         vm.aceptaAbono = function() {
             vm.loading = true;
             $('#modalFindBills').modal('hide');
-            vm.creditsMultipleBillsSelected.push(vm.creditsBillsSelected);
             vm.creditsBillsSelected = undefined;
             vm.itemBillsMulti.bill_abono = vm.valorAbono;
             vm.itemsMultiplePayments.push(vm.itemBillsMulti);
+            vm.itemCobroBill.totalAbono = vm.valorAbono;
+            vm.itemsMultipleCobros.push(vm.itemCobroBill);
             vm.loading = false;
         };
 
         vm.eliminaAbono = function(index) {
             vm.itemsMultiplePayments.splice(index, 1);
+            vm.itemsMultipleCobros.splice(index, 1);
         };
 
         vm.getTotalMultiAbonos = function() {
@@ -601,16 +612,6 @@ angular.module('integridadUiApp')
                         vm.payment.banco = vm.bankName;
                         paymentService.createPayment(vm.payment).then(function(response) {
                             vm.paymentCreated = response;
-                            vm.itemaBill = {};
-                            vm.itemaBill = {
-                                numCheque: vm.paymentCreated.noDocument,
-                                cuenta: vm.paymentCreated.noAccount,
-                                banco: vm.paymentCreated.banco,
-                                tipoAbono: vm.paymentCreated.modePayment,
-                                totalAbono: vm.paymentCreated.valorAbono,
-                                billNumber: vm.paymentCreated.documentNumber
-                            };
-                            vm.comprobanteCobro.detailComprobanteCobro.push(vm.itemaBill);
                         }).catch(function(error) {
                             vm.loading = false;
                             vm.error = error.data;
@@ -641,8 +642,8 @@ angular.module('integridadUiApp')
             vm.comprobanteCobro.total = vm.valorDocumento;
             vm.comprobanteCobro.subTotalDoce = parseFloat((vm.valorDocumento / 1.12).toFixed(2));
             vm.comprobanteCobro.iva = parseFloat((vm.valorDocumento * 0.12).toFixed(2));
-            //vm.comprobanteCobro.paymentId = vm.paymentCreated.id;
-            
+            vm.comprobanteCobro.detailComprobanteCobro = [];
+            vm.comprobanteCobro.detailComprobanteCobro = vm.itemsMultipleCobros;
             comprobanteService.createComprobanteCobro(vm.comprobanteCobro).then(function(response) {
                 $localStorage.user.cashier.comprobanteCobroNumberSeq = vm.comprobanteCobro.comprobanteSeq;
             }).catch(function(error) {
