@@ -288,12 +288,12 @@ angular.module('integridadUiApp')
                     _.each(vm.reportList, function(retention) {
                         var data = {
                             FECHA_FACT: retention.documentDate,
-                            COD_PROV: retention.providerCode,
+                            NUM_FACT: retention.documentNumber,
                             PROVEEDOR: retention.providerName,
                             RUC: retention.ruc,
+                            FECHA_RET: retention.dateCreated,
                             NUM_RET: retention.retentionNumber,
                             NUM_AUTOR: retention.authorizationNumber,
-                            NUM_FACT: retention.documentNumber,
                             EJER_FISCAL: retention.ejercicioFiscal,
                             NUM_CXP: retention.debtsSeq,
                             ESTADO: retention.status,

@@ -234,12 +234,12 @@
             <thead>
                 <tr>
                     <th>Fecha de Factura</th>
-                    <th>C&oacute;digo-Proveedor</th>
+                    <th>No. Factura</th>
                     <th>Proveedor</th>
                     <th>RUC</th>
+                    <th>Fecha Retenci&oacute;n</th>
                     <th>No. Retenci&oacute;n</th>
                     <th>No. Autorizaci&oacute;n</th>
-                    <th>No. Factura</th>
                     <th>Ejercicio Fiscal</th>
                     <th>No. CxP</th>
                     <th>Estado</th>
@@ -259,12 +259,12 @@
             <tbody>
                 <tr ng-repeat="data in vm.reportList | orderBy:'date'" >
                     <td>{{data.documentDate}}</td>
-                    <td>{{data.providerCode}}</td>
+                    <td>{{data.documentNumber}}</td>
                     <td>{{data.providerName}}</td>
                     <td>{{data.ruc}}</td>
+                    <td>{{data.dateCreated}}</td>
                     <td>{{data.retentionNumber}}</td>
                     <td>{{data.authorizationNumber}}</td>
-                    <td>{{data.documentNumber}}</td>
                     <td>{{data.ejercicioFiscal}}</td>
                     <td>{{data.debtsSeq}}</td>
                     <td>{{data.status}}</td>

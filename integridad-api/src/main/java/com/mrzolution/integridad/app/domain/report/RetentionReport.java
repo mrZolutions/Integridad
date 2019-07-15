@@ -5,12 +5,12 @@ import lombok.Data;
 @Data
 public class RetentionReport {
     private String documentDate;
-    private String providerCode;
+    private String documentNumber;
     private String providerName;
     private String ruc;
+    private String dateCreated;
     private String retentionNumber;
     private String authorizationNumber;
-    private String documentNumber;
     private String ejercicioFiscal;
     private String debtsSeq;
     private String status;
@@ -26,14 +26,14 @@ public class RetentionReport {
     private String subsidiary;
     private String userName;
 
-    public RetentionReport(String documentDate, String providerCode, String providerName, String ruc, String retentionNumber, String authorizationNumber, String documentNumber, String ejercicioFiscal, String debtsSeq, String status, String codigoRetentionFuente, Double baseFuente, Double porcenFuente, Double subTotalFuente, String codigoRetentionIva, Double baseIva, Double porcenIva, Double subTotalIva, Double total, String subsidiary, String userName) {
+    public RetentionReport(String documentDate, String documentNumber, String providerName, String ruc, String dateCreated, String retentionNumber, String authorizationNumber, String ejercicioFiscal, String debtsSeq, String status, String codigoRetentionFuente, Double baseFuente, Double porcenFuente, Double subTotalFuente, String codigoRetentionIva, Double baseIva, Double porcenIva, Double subTotalIva, Double total, String subsidiary, String userName) {
         this.documentDate = documentDate;
-        this.providerCode = providerCode;
+        this.documentNumber = documentNumber;
         this.providerName = providerName;
         this.ruc = ruc;
+        this.dateCreated = dateCreated;
         this.retentionNumber = retentionNumber;
         this.authorizationNumber = authorizationNumber;
-        this.documentNumber = documentNumber;
         this.ejercicioFiscal = ejercicioFiscal;
         this.debtsSeq = debtsSeq;
         this.status = status;
