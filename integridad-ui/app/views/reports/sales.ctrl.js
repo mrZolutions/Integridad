@@ -415,13 +415,13 @@ angular.module('integridadUiApp')
                             COD_SUSTENTO: debt.purchaseType,
                             ESTADO: debt.status,
                             DESCRIPCION: debt.observacion,
+                            NRO_RETEN: debt.retentionNumber,
                             BASE_DOCE: debt.status === 'ACTIVA' ? parseFloat(debt.subTotalDoce.toFixed(2)) : parseFloat(0),
                             IVA: debt.status === 'ACTIVA' ? parseFloat(debt.iva.toFixed(2)) : parseFloat(0),
                             BASE_CERO: debt.status === 'ACTIVA' ? parseFloat(debt.subTotalCero.toFixed(2)) : parseFloat(0),
                             TOTAL: debt.status === 'ACTIVA' ? parseFloat(debt.total.toFixed(2)) : parseFloat(0),
                             FECHA_VENCIMIENTO: debt.endDate,
                             CAJA: debt.cashier,
-                            BODEGA: debt.warehouse,
                             SUCURSAL: debt.subsidiary,
                             USUARIO: debt.userName
                         };

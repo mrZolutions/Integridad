@@ -77,16 +77,16 @@ public class ComprobanteCobroServices {
         comprobanteCobro.setFatherListToNull();
         comprobanteCobro.setListsNull();
         ComprobanteCobro saved = comprobanteCobroRepository.save(comprobanteCobro);
-        
-        Cashier cashier = cashierRepository.findOne(comprobanteCobro.getUserIntegridad().getCashier().getId());
-        cashier.setComprobanteCobroNumberSeq(cashier.getComprobanteCobroNumberSeq() + 1);
-        cashierRepository.save(cashier);
-        
+              
         detailComprobanteCobro.forEach(detail -> {
             detail.setComprobanteCobro(saved);
             detailComprobanteCobroRepository.save(detail);
             detail.setComprobanteCobro(null);
         });
+        
+        Cashier cashierCmpCbro = cashierRepository.findOne(comprobanteCobro.getUserIntegridad().getCashier().getId());
+        cashierCmpCbro.setCompCobroNumberSeq(cashierCmpCbro.getCompCobroNumberSeq() + 1);
+        cashierRepository.save(cashierCmpCbro);
         
         saved.setDetailComprobanteCobro(detailComprobanteCobro);
         log.info("ComprobanteCobroServices createComprobanteCobro: {}, {}", saved.getId(), saved.getComprobanteStringSeq());

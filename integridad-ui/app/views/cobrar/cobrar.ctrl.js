@@ -169,7 +169,12 @@ angular.module('integridadUiApp')
             vm.noAccount = undefined;
             vm.details = undefined;
             vm.valorDocumento = undefined;
+            vm.dailyCiSeq = undefined;
+            vm.dailyCiStringSeq = undefined;
+            vm.comprobanteCobroSeq = undefined;
+            vm.comprobanteCobroStringSeq = undefined;
             vm.usrCliId = $localStorage.user.subsidiary.userClient.id;
+            vm.userCashier = $localStorage.user.cashier;
             clientService.getLazyByUserClientId(vm.usrCliId).then(function(response) {
                 vm.clientList = response;
                 vm.loading = false;
@@ -181,7 +186,7 @@ angular.module('integridadUiApp')
 
         //Sección de Comprobante de Ingreso para el Asiento Automático
         function _getDailyCiSeqNumber() {
-            vm.numberAddedOne = parseInt($localStorage.user.cashier.dailyCiNumberSeq) + 1;
+            vm.numberAddedOne = parseInt(vm.userCashier.dailyCiNumberSeq) + 1;
             vm.dailyCiSeq = vm.numberAddedOne;
             vm.dailyCiStringSeq = utilSeqService._pad_with_zeroes(vm.numberAddedOne, 6);
         };
@@ -203,9 +208,9 @@ angular.module('integridadUiApp')
 
         //Sección de Comprobante de Cobro para el Asiento Automático
         function _getComprobanteCobroSeqNumber() {
-            vm.numberBAddedOne = parseInt($localStorage.user.cashier.comprobanteCobroNumberSeq) + 1;
-            vm.comprobanteCobroSeq = vm.numberBAddedOne;
-            vm.comprobanteCobroStringSeq = utilSeqService._pad_with_zeroes(vm.numberBAddedOne, 6);
+            vm.numbAddedOne = parseInt(vm.userCashier.compCobroNumberSeq) + 1;
+            vm.comprobanteCobroSeq = vm.numbAddedOne;
+            vm.comprobanteCobroStringSeq = utilSeqService._pad_with_zeroes(vm.numbAddedOne, 6);
         };
 
         function _initializeComprobanteCobro() {
@@ -367,7 +372,7 @@ angular.module('integridadUiApp')
                     paymentService.createPayment(payment).then(function(response) {
                         vm.paymentCreated = response;
                         if (vm.paymentCreated.modePayment === 'CHQ' || vm.paymentCreated.modePayment === 'TRF' || vm.paymentCreated.modePayment === 'DEP') {
-                            _asientoComprobanteCobro();
+                            //_asientoComprobanteCobro();
                             _asientoComprobanteIngreso();
                         };
                         vm.success = 'Abono realizado con exito';
@@ -411,7 +416,7 @@ angular.module('integridadUiApp')
             vm.comprobanteCobro.paymentId = vm.paymentCreated.id;
             
             comprobanteService.createComprobanteCobro(vm.comprobanteCobro).then(function(response) {
-                $localStorage.user.cashier.comprobanteCobroNumberSeq = vm.comprobanteCobro.comprobanteSeq;
+                vm.userCashier.compCobroNumberSeq = vm.comprobanteCobro.comprobanteSeq;
             }).catch(function(error) {
                 vm.loading = false;
                 vm.error = error.data;
@@ -461,7 +466,7 @@ angular.module('integridadUiApp')
             vm.dailybookCi.dateRecordBook = $('#pickerDateOfPayment').data("DateTimePicker").date().toDate().getTime();
             
             contableService.createDailybookCi(vm.dailybookCi).then(function(response) {
-                $localStorage.user.cashier.dailyCiNumberSeq = vm.dailybookCi.dailyCiSeq;
+                vm.userCashier.dailyCiNumberSeq = vm.dailybookCi.dailyCiSeq;
                 vm.loading = false;
             }).catch(function(error) {
                 vm.loading = false;
@@ -620,7 +625,7 @@ angular.module('integridadUiApp')
                         });
                         vm.success = 'Abono realizado con exito';
                     });
-                    _asientoComprobanteMultipleCobro();
+                    //_asientoComprobanteMultipleCobro();
                     _asientoComprobanteMultipleIngreso();
                     _activate();
                 } else {
@@ -647,7 +652,7 @@ angular.module('integridadUiApp')
             vm.comprobanteCobro.detailComprobanteCobro = [];
             vm.comprobanteCobro.detailComprobanteCobro = vm.itemsMultipleCobros;
             comprobanteService.createComprobanteCobro(vm.comprobanteCobro).then(function(response) {
-                $localStorage.user.cashier.comprobanteCobroNumberSeq = vm.comprobanteCobro.comprobanteSeq;
+                vm.userCashier.compCobroNumberSeq = vm.comprobanteCobro.comprobanteSeq;
             }).catch(function(error) {
                 vm.loading = false;
                 vm.error = error.data;
@@ -697,7 +702,7 @@ angular.module('integridadUiApp')
             vm.dailybookCi.subTotalCero = 0;
             vm.dailybookCi.dateRecordBook = $('#pickerDateOfMultiplePayment').data("DateTimePicker").date().toDate().getTime();
             contableService.createDailybookCi(vm.dailybookCi).then(function(response) {
-                $localStorage.user.cashier.dailyCiNumberSeq = vm.dailybookCi.dailyCiSeq;
+                vm.userCashier.dailyCiNumberSeq = vm.dailybookCi.dailyCiSeq;
                 vm.loading = false;
             }).catch(function(error) {
                 vm.loading = false;

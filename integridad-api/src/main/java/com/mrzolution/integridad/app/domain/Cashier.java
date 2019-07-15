@@ -33,7 +33,7 @@ public class Cashier implements Child {
     private long quotationNumberSeq;
     private long retentionNumberSeq;
     private long creditNoteNumberSeq;
-    private long comprobanteCobroNumberSeq;
+    private long compCobroNumberSeq;
     private long dateCreated;
     private boolean active;
     private boolean specialPrint;
