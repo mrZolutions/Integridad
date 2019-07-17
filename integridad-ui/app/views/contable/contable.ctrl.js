@@ -305,7 +305,9 @@ angular.module('integridadUiApp')
             } else if (vm.item.tipo == 'CREDITO (C)') {
                 vm.item.haber = vm.item.baseImponible;
             };
-            vm.item.numCheque =  '--';
+            vm.item.numCheque = vm.numCheque;
+            vm.item.dailybookNumber = vm.dailyCgStringSeq;
+            vm.item.dateDetailDailybook = $('#pickerDateRecordBookCg').data("DateTimePicker").date().toDate().getTime();
             vm.dailybookCg.detailDailybookContab.push(vm.item);
             vm.item = undefined;
             vm.cuenta = undefined;
@@ -544,7 +546,9 @@ angular.module('integridadUiApp')
                 name: vm.generalDetailCe,
                 deber: parseFloat((vm.dailybookCe.total).toFixed(2))
             };
-            vm.itemProvider.numCheque =  '--';
+            vm.itemProvider.dailybookNumber = vm.dailyCeStringSeq;
+            vm.itemProvider.dateDetailDailybook = $('#pickerDateRecordBookCe').data("DateTimePicker").date().toDate().getTime();
+            vm.itemProvider.numCheque = vm.numCheque;
             vm.dailybookCe.detailDailybookContab.push(vm.itemProvider);
             vm.loading = false;
         };
@@ -573,7 +577,9 @@ angular.module('integridadUiApp')
                     name: vm.generalDetailCe,
                     deber: parseFloat(vm.dailybookCe.total)
                 };
-                vm.itemProvider.numCheque = '--';
+                vm.itemProvider.numCheque = vm.numCheque;
+                vm.itemProvider.dailybookNumber = vm.dailyCeStringSeq;
+                vm.itemProvider.dateDetailDailybook = $('#pickerDateRecordBookCe').data("DateTimePicker").date().toDate().getTime();
                 vm.dailybookCe.detailDailybookContab.push(vm.itemProvider);
             };
         };
@@ -649,6 +655,8 @@ angular.module('integridadUiApp')
                 vm.itemb.deber = vm.itemb.baseImponible;
             };
             vm.itemb.numCheque =  vm.numCheque;
+            vm.itemb.dailybookNumber = vm.dailyCeStringSeq;
+            vm.itemb.dateDetailDailybook = $('#pickerDateRecordBookCe').data("DateTimePicker").date().toDate().getTime();
             vm.dailybookCe.detailDailybookContab.push(vm.itemb);
             vm.itemb = undefined;
             vm.cuenta = undefined;
@@ -930,6 +938,8 @@ angular.module('integridadUiApp')
                 haber: vm.dailybookCi.total
             };
             vm.itemClient.numCheque = vm.numChequeCi;
+            vm.itemClient.dailybookNumber = vm.dailyCiStringSeq;
+            vm.itemClient.dateDetailDailybook = $('#pickerDateRecordBookCi').data("DateTimePicker").date().toDate().getTime();
             vm.dailybookCi.detailDailybookContab.push(vm.itemClient);
             vm.loading = false;
         };
@@ -947,6 +957,8 @@ angular.module('integridadUiApp')
                     haber: parseFloat(vm.dailybookCi.total)
                 };
                 vm.itemClient.numCheque = vm.numChequeCi;
+                vm.itemClient.dailybookNumber = vm.dailyCiStringSeq;
+                vm.itemClient.dateDetailDailybook = $('#pickerDateRecordBookCi').data("DateTimePicker").date().toDate().getTime();
                 vm.dailybookCi.detailDailybookContab.push(vm.itemClient);
             };
         };
@@ -1021,7 +1033,9 @@ angular.module('integridadUiApp')
             } else if (vm.itemCib.tipo == 'DEBITO (D)') {
                 vm.itemCib.deber = vm.itemCib.baseImponible;
             };
-            vm.itemCib.numCheque = '--';
+            vm.itemCib.numCheque = vm.numChequeCi;
+            vm.itemCib.dailybookNumber = vm.dailyCiStringSeq;
+            vm.itemCib.dateDetailDailybook = $('#pickerDateRecordBookCi').data("DateTimePicker").date().toDate().getTime();
             vm.dailybookCi.detailDailybookContab.push(vm.itemCib);
             vm.itemCib = undefined;
             vm.cuenta = undefined;
@@ -1320,6 +1334,8 @@ angular.module('integridadUiApp')
                 vm.itema.haber = vm.itema.baseImponible;
             };
             vm.itema.numCheque =  '--';
+            vm.itema.dailybookNumber = vm.dailyCxPStringSeq;
+            vm.itema.dateDetailDailybook = $('#pickerDateRecordBookCxP').data("DateTimePicker").date().toDate().getTime();
             vm.dailybookCxP.detailDailybookContab.push(vm.itema);
             vm.itema = undefined;
             vm.cuenta = undefined;
@@ -1797,11 +1813,15 @@ angular.module('integridadUiApp')
     
             if (vm.retenCodeFuente != null) {
                 vm.itemRetentionFuente.numCheque = '--';
+                vm.itemRetentionFuente.dailybookNumber = vm.dailyCxPStringSeq;
+                vm.itemRetentionFuente.dateDetailDailybook = $('#pickerDateRecordBookCxP').data("DateTimePicker").date().toDate().getTime();
                 vm.dailybookCxP.detailDailybookContab.push(vm.itemRetentionFuente);
             };
             
             if (vm.retenCodeIva != null) {
                 vm.itemRetentionIVA.numCheque = '--';
+                vm.itemRetentionIVA.dailybookNumber = vm.dailyCxPStringSeq;
+                vm.itemRetentionIVA.dateDetailDailybook = $('#pickerDateRecordBookCxP').data("DateTimePicker").date().toDate().getTime();
                 vm.dailybookCxP.detailDailybookContab.push(vm.itemRetentionIVA);
             };
 
@@ -1846,6 +1866,8 @@ angular.module('integridadUiApp')
                 deber: vm.subIva
             };
             vm.itemIva.numCheque = '--';
+            vm.itemIva.dailybookNumber = vm.dailyCxPStringSeq;
+            vm.itemIva.dateDetailDailybook = $('#pickerDateRecordBookCxP').data("DateTimePicker").date().toDate().getTime();
             vm.itemProvider = {
                 typeContab: vm.typeContab,
                 codeConta: vm.provContable,
@@ -1856,6 +1878,8 @@ angular.module('integridadUiApp')
                 haber: parseFloat((vm.dailybookCxP.total - vm.retentionTotal).toFixed(2))
             };
             vm.itemProvider.numCheque = '--';
+            vm.itemProvider.dailybookNumber = vm.dailyCxPStringSeq;
+            vm.itemProvider.dateDetailDailybook = $('#pickerDateRecordBookCxP').data("DateTimePicker").date().toDate().getTime();
             if (vm.item.baseImponible == 0) {
                 vm.dailybookCxP.detailDailybookContab.push(vm.itemProvider);
             } else {

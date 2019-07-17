@@ -328,6 +328,7 @@ angular.module('integridadUiApp')
                 userIntegridad: $localStorage.user,
                 subsidiary: $localStorage.user.subsidiary,
                 provider: vm.provider,
+                ruc: vm.provider.ruc,
                 subTotalDoce: 0,
                 iva: 0,
                 subTotalCero: 0,
@@ -601,6 +602,8 @@ angular.module('integridadUiApp')
             };
             vm.itema.baseImponible = vm.item.base_imponible
             vm.itema.numCheque =  '--';
+            vm.itema.dailybookNumber = vm.dailycxpStringSeq;
+            vm.itema.dateDetailDailybook = $('#pickerDateDebtsToPay').data("DateTimePicker").date().toDate().getTime();
             vm.dailybookCxP.detailDailybookContab.push(vm.itema);
             
             vm.item = undefined;
@@ -1306,11 +1309,15 @@ angular.module('integridadUiApp')
     
             if (vm.retenCodeFuente != null) {
                 vm.itemRetentionFuente.numCheque = '--';
+                vm.itemRetentionFuente.dailybookNumber = vm.dailycxpStringSeq;
+                vm.itemRetentionFuente.dateDetailDailybook = $('#pickerDateDebtsToPay').data("DateTimePicker").date().toDate().getTime();
                 vm.dailybookCxP.detailDailybookContab.push(vm.itemRetentionFuenteCxP);
             };
             
             if (vm.retenCodeIva != null) {
                 vm.itemRetentionIVA.numCheque = '--';
+                vm.itemRetentionIVA.dailybookNumber = vm.dailycxpStringSeq;
+                vm.itemRetentionIVA.dateDetailDailybook = $('#pickerDateDebtsToPay').data("DateTimePicker").date().toDate().getTime();
                 vm.dailybookCxP.detailDailybookContab.push(vm.itemRetentionIVACxP);
             };
 
@@ -1385,6 +1392,8 @@ angular.module('integridadUiApp')
                     deber: vm.subIva
                 };
                 vm.itemIvaCxP.numCheque = '--';
+                vm.itemIvaCxP.dailybookNumber = vm.dailycxpStringSeq;
+                vm.itemIvaCxP.dateDetailDailybook = $('#pickerDateDebtsToPay').data("DateTimePicker").date().toDate().getTime();
                 vm.itemProviderCxP = {
                     typeContab: vm.typeContab,
                     codeConta: vm.provContable,
@@ -1395,6 +1404,8 @@ angular.module('integridadUiApp')
                     haber: parseFloat((vm.debtsToPay.total - vm.retentionTotal).toFixed(2))
                 };
                 vm.itemProviderCxP.numCheque = '--';
+                vm.itemProviderCxP.dailybookNumber = vm.dailycxpStringSeq;
+                vm.itemProviderCxP.dateDetailDailybook = $('#pickerDateDebtsToPay').data("DateTimePicker").date().toDate().getTime();
                 vm.dailybookCxP.detailDailybookContab.push(vm.itemIvaCxP);
                 vm.dailybookCxP.detailDailybookContab.push(vm.itemProviderCxP);
 
@@ -1412,6 +1423,7 @@ angular.module('integridadUiApp')
                 };
                 vm.debtsToPay.items.push(vm.itemProvider);
 
+                //Diario Cxp
                 vm.itemProviderCxP = {
                     typeContab: vm.typeContab,
                     codeConta: vm.provContable,
@@ -1422,6 +1434,8 @@ angular.module('integridadUiApp')
                     haber: parseFloat((vm.debtsToPay.total - vm.retentionTotal).toFixed(2))
                 };
                 vm.itemProviderCxP.numCheque = '--';
+                vm.itemProviderCxP.dailybookNumber = vm.dailycxpStringSeq;
+                vm.itemProviderCxP.dateDetailDailybook = $('#pickerDateDebtsToPay').data("DateTimePicker").date().toDate().getTime();
                 vm.dailybookCxP.detailDailybookContab.push(vm.itemProviderCxP);
             };
         };
@@ -1709,6 +1723,8 @@ angular.module('integridadUiApp')
                 deber: parseFloat(vm.valorDocumento)
             };
             vm.itema.numCheque =  '--';
+            vm.itema.dailybookNumber = vm.dailyCeStringSeq;
+            vm.itema.dateDetailDailybook = $('#pickerDateOfMultiPayment').data("DateTimePicker").date().toDate().getTime();
             vm.dailybookCe.detailDailybookContab.push(vm.itema);
             vm.generalDetailCe_2 = vm.bankName + ' ' + 'Cancela Fcs' + ' ' + vm.debtsBillsNumberPayed;
             vm.itemb = {
@@ -1721,6 +1737,8 @@ angular.module('integridadUiApp')
                 haber: parseFloat(vm.valorDocumento)
             };
             vm.itemb.numCheque = vm.noDocument;
+            vm.itemb.dailybookNumber = vm.dailyCeStringSeq;
+            vm.itemb.dateDetailDailybook = $('#pickerDateOfMultiPayment').data("DateTimePicker").date().toDate().getTime();
             vm.dailybookCe.detailDailybookContab.push(vm.itemb);
             
             vm.dailybookCe.codeTypeContab = vm.selectedTypeBook;
@@ -1863,6 +1881,8 @@ angular.module('integridadUiApp')
                 deber: parseFloat(vm.paymentDebtsCreated.valorAbono)
             };
             vm.itema.numCheque =  '--';
+            vm.itema.dailybookNumber = vm.dailyCeStringSeq;
+            vm.itema.dateDetailDailybook = $('#pickerDateOfPaymentDebt').data("DateTimePicker").date().toDate().getTime();
             vm.dailybookCe.detailDailybookContab.push(vm.itema);
             vm.generalDetailCe_2 = vm.paymentDebtsCreated.banco + ' ' + 'Cancela Fc' + ' ' + vm.paymentDebtsCreated.documentNumber;
             vm.itemb = {
@@ -1875,6 +1895,8 @@ angular.module('integridadUiApp')
                 haber: parseFloat(vm.paymentDebtsCreated.valorAbono)
             };
             vm.itemb.numCheque = vm.paymentDebtsCreated.noDocument;
+            vm.itemb.dailybookNumber = vm.dailyCeStringSeq;
+            vm.itemb.dateDetailDailybook = $('#pickerDateOfPaymentDebt').data("DateTimePicker").date().toDate().getTime();
             vm.dailybookCe.detailDailybookContab.push(vm.itemb);
             
             vm.dailybookCe.codeTypeContab = vm.selectedTypeBook;

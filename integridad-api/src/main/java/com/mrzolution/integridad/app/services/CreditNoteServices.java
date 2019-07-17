@@ -7,6 +7,7 @@ import com.mrzolution.integridad.app.domain.CreditNote;
 import com.mrzolution.integridad.app.domain.*;
 import com.mrzolution.integridad.app.exceptions.BadRequestException;
 import com.mrzolution.integridad.app.repositories.*;
+import java.math.BigDecimal;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -40,17 +41,17 @@ public class CreditNoteServices {
     BillRepository billRepository;
     @Autowired
     KardexRepository kardexRepository;
-    @Autowired
-    KardexChildRepository kardexChildRepository;
         
-    private String document = "";
-    private String statusCambio = "";
-    private String doc = "";
-    private String saldo = "";
-    private double valor = 0.0;
+    private String document;
+    private String statusCambio;
+    private String doc;
+    private String saldo;
+    private double valor = 0;
     private int numC = 1;
-    private double sum = 0.0;
-    private double sumado = 0.0;
+    private double sum = 0;
+    private double sumado = 0;
+    
+    public UUID billId;
 
     public String getDatil(com.mrzolution.integridad.app.domain.ecreditNote.CreditNote requirement, UUID userClientId) throws Exception {
         UserClient userClient = userClientRepository.findOne(userClientId);
@@ -67,7 +68,32 @@ public class CreditNoteServices {
         log.info("CreditNoteServices getDatil httpcall DONE");
         return response;
     }
-	
+    
+    //Busca CreditNote por ID        
+    public CreditNote getCreditNoteById(UUID id) {
+        CreditNote retrieved = creditNoteRepository.findOne(id);
+        if (retrieved != null) {
+            log.info("CreditNoteServices retrieved id: {}", retrieved.getId());
+        } else {
+            log.info("CreditNoteServices retrieved id NULL: {}", id);
+        }		
+        populateChildren(retrieved);
+        log.info("CreditNoteServices getCreditNoteById: {}", id);
+        return retrieved;
+    }
+    
+    //Busca todas las CreditNote del Cliente
+    public Iterable<CreditNote> getCreditNotesByClientId(UUID id) {
+        Iterable<CreditNote> credits = creditNoteRepository.findCreditNotesByClientId(id);
+        credits.forEach(credit -> {
+            credit.setListsNull();
+            credit.setFatherListToNull();
+        });
+        log.info("CreditNoteServices getCreditNotesByClientId: {}", id);
+        return credits;
+    }
+    
+    //Creación de la Nota de Crédito
     public CreditNote createCreditNote(CreditNote creditNote) throws BadRequestException {
         Iterable<CreditNote> credNot = creditNoteRepository.findByDocumentStringSeqAndBillId(creditNote.getDocumentStringSeq(), creditNote.getBillSeq());
         if (Iterables.size(credNot) > 0) {
@@ -99,6 +125,7 @@ public class CreditNoteServices {
             
             detailsKardex.forEach(detail -> {
                 detail.setCreditNote(saved);
+                //kardexRepository.save(detail);
                 detail.setCreditNote(null);
             });
 
@@ -106,18 +133,33 @@ public class CreditNoteServices {
             saved.setDetailsKardex(detailsKardex);
             saved.setFatherListToNull();
             
+            //updateBill(saved);
             Credits validate = creditsRepository.findByBillId(document);
             if (validate != null) {
                 updateCreditsAndPayment(saved, document);
             } else {
                 log.info("CreditNoteServices DO NOT updateCreditsAndPayment");
             }
+            //updateProductBySubsidiary(creditNote, details);
             log.info("CreditNoteServices createCreditNote DONE: {}, {}", saved.getId(), saved.getStringSeq());
             return saved;
         }
     }
-        
-    public void updateCreditsAndPayment(CreditNote saved, String document) throws BadRequestException {
+    
+    //Actualiza la cantidad de Productos (Existencia)
+    public void updateProductBySubsidiary(CreditNote creditNote, List<Detail> details) {
+        details.forEach(detail -> {
+            if (!detail.getProduct().getProductType().getCode().equals("SER")) {
+                ProductBySubsidiary ps = productBySubsidiairyRepository.findBySubsidiaryIdAndProductId(creditNote.getSubsidiary().getId(), detail.getProduct().getId());
+                ps.setQuantity(ps.getQuantity() + detail.getQuantity());
+                productBySubsidiairyRepository.save(ps);
+            }
+        });
+        log.info("CreditNoteServices updateProductBySubsidiary");
+    }
+    
+    //Actualiza tablas Credits y Payment
+    public void updateCreditsAndPayment(CreditNote saved, String document) {
         Credits docNumber = creditsRepository.findByBillId(document);
         doc = docNumber.getBillId();
         if (doc.equals(document) && docNumber.getPayNumber() == numC) {
@@ -127,10 +169,10 @@ public class CreditNoteServices {
                 statusCambio = "NOTA DE CREDITO APLICADA";
                 docNumber.setStatusCredits(statusCambio);
             }
-            Credits spCretits =  creditsRepository.save(docNumber);
+            Credits spCredits =  creditsRepository.save(docNumber);
             
             Payment specialPayment = new Payment();
-            specialPayment.setCredits(spCretits);
+            specialPayment.setCredits(spCredits);
             specialPayment.setDatePayment(saved.getDateCreated());
             specialPayment.setNoDocument(saved.getStringSeq());
             specialPayment.setNoAccount(null);
@@ -145,7 +187,71 @@ public class CreditNoteServices {
             paymentRepository.save(specialPayment);
         }
         log.info("CreditNoteServices updateCreditsAndPayment DONE");
-        valor = 0.0;
+        valor = 0;
+    }
+    
+    //Actualiza tabla Bill
+    public void updateBill(CreditNote saved) {
+        billId = UUID.fromString(saved.getBillSeq());
+        Iterable<Bill> bills = billRepository.findBillById(billId);
+        bills.forEach(bill -> {
+            bill.setListsNull();
+            bill.setFatherListToNull();
+            bill.setCreditNoteApplied(true);
+            bill.setCreditNoteId(saved.getId().toString());
+            bill.setCreditNoteNumber(saved.getStringSeq());
+            sum = bill.getTotal() - saved.getTotal();
+            BigDecimal vsaldo = new BigDecimal(sum);
+            if (sum <= 0) {
+                vsaldo = vsaldo.setScale(0, BigDecimal.ROUND_HALF_UP);
+            } else {
+                vsaldo = vsaldo.setScale(2, BigDecimal.ROUND_HALF_UP);
+            }
+            saldo = String.valueOf(vsaldo);
+            bill.setSaldo(saldo);
+            billRepository.save(bill);
+        });
+        log.info("CreditNoteServices updateBill DONE");
+        sum = 0;
+    }
+    
+    private void populateChildren(CreditNote creditNote) {
+        List<Detail> detailList = getDetailsByCreditNote(creditNote);
+        List<Kardex> detailsKardexList = getDetailsKardexByCreditNote(creditNote);
+        creditNote.setDetails(detailList);
+        creditNote.setDetailsKardex(detailsKardexList);
+        creditNote.setFatherListToNull();
+    }
+
+    private List<Detail> getDetailsByCreditNote(CreditNote creditNote) {
+        List<Detail> detailList = new ArrayList<>();
+        Iterable<Detail> details = detailRepository.findByCreditNote(creditNote);
+        details.forEach(detail -> {
+            detail.setListsNull();
+            detail.setFatherListToNull();
+            detail.getProduct().setFatherListToNull();
+            detail.getProduct().setListsNull();
+            detail.setBill(null);
+            detail.setCreditNote(null);
+            detailList.add(detail);
+        });
+        return detailList;
+    }
+    
+    private List<Kardex> getDetailsKardexByCreditNote(CreditNote creditNote) {
+        List<Kardex> detailsKardexList = new ArrayList<>();
+        Iterable<Kardex> detailsKardex = kardexRepository.findByCreditNote(creditNote);
+        detailsKardex.forEach (detail -> {
+            detail.getBill().setListsNull();
+            detail.getBill().setFatherListToNull();
+            detail.getProduct().setFatherListToNull();
+            detail.getProduct().setListsNull();
+            detail.setBill(null);
+            detail.setCellar(null);
+            detail.setCreditNote(null);
+            detailsKardexList.add(detail);
+        });
+        return detailsKardexList;
     }
     
 }

@@ -94,7 +94,10 @@ angular.module('integridadUiApp')
             vm.medio = {};
             vm.pagos = [];
             vm.user = $localStorage.user;
-            clientService.getLazyByUserClientId(vm.user.subsidiary.userClient.id).then(function(response) {
+            vm.userClientId = $localStorage.user.subsidiary.userClient.id;
+            vm.userCashier = $localStorage.user.cashier;
+            vm.userSubsidiary = $localStorage.user.subsidiary;
+            clientService.getLazyByUserClientId(vm.userClientId).then(function(response) {
                 vm.clientList = response;
                 vm.loading = false;
             }).catch(function(error) {
@@ -105,7 +108,6 @@ angular.module('integridadUiApp')
 
         vm.getDetailsOfBills = function() {
             vm.loading = true;
-            vm.userClientId = vm.user.subsidiary.userClient.id;
             billService.getDetailsOfBillsByUserClientId(vm.userClientId).then(function(response) {
                 vm.detailList = response;
                 vm.loading = false;
@@ -116,8 +118,8 @@ angular.module('integridadUiApp')
         };
 
         function _getSeqNumber() {
-            vm.numberAddedOne = parseInt(vm.user.cashier.billNumberSeq) + 1;
-            vm.seqNumberFirstPart = vm.user.subsidiary.threeCode + '-' + vm.user.cashier.threeCode;
+            vm.numberAddedOne = parseInt(vm.userCashier.billNumberSeq) + 1;
+            vm.seqNumberFirstPart = vm.userSubsidiary.threeCode + '-' + vm.userCashier.threeCode;
             vm.seqNumberSecondPart = utilSeqService._pad_with_zeroes(vm.numberAddedOne, 9);
             vm.seqNumber =  vm.seqNumberFirstPart + '-' + vm.seqNumberSecondPart;
         };
@@ -140,7 +142,7 @@ angular.module('integridadUiApp')
 
         vm.clientSelect = function(client) {
             vm.quotations = [];
-            vm.companyData = $localStorage.user.subsidiary;
+            vm.companyData = vm.userSubsidiary;
             vm.dateBill = new Date();
             vm.clientSelected = client;
             vm.pagos = [];

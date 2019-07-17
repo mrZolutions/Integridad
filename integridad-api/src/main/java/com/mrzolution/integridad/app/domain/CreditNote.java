@@ -13,7 +13,6 @@ import java.util.UUID;
 @Entity
 @Data
 public class CreditNote {
-
     @Id
     @GeneratedValue
     private UUID id;

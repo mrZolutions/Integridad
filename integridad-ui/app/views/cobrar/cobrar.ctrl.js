@@ -437,6 +437,8 @@ angular.module('integridadUiApp')
                 haber: parseFloat(vm.paymentCreated.valorAbono)
             };
             vm.itema.numCheque = vm.paymentCreated.noDocument;
+            vm.itema.dailybookNumber = vm.dailyCiStringSeq;
+            vm.itema.dateDetailDailybook = $('#pickerDateOfPayment').data("DateTimePicker").date().toDate().getTime();
             vm.dailybookCi.detailDailybookContab.push(vm.itema);
             vm.generalDetailCi_2 = vm.paymentCreated.banco;
             vm.itemb = {
@@ -449,6 +451,8 @@ angular.module('integridadUiApp')
                 deber: parseFloat(vm.paymentCreated.valorAbono)
             };
             vm.itemb.numCheque = '--';
+            vm.itemb.dailybookNumber = vm.dailyCiStringSeq;
+            vm.itemb.dateDetailDailybook = $('#pickerDateOfPayment').data("DateTimePicker").date().toDate().getTime();
             vm.dailybookCi.detailDailybookContab.push(vm.itemb);
             vm.dailybookCi.codeTypeContab = vm.selectedTypeBook;
             vm.dailybookCi.nameBank = vm.paymentCreated.banco;
@@ -673,6 +677,8 @@ angular.module('integridadUiApp')
                 haber: parseFloat(vm.valorDocumento)
             };
             vm.itema.numCheque = vm.noDocument;
+            vm.itema.dailybookNumber = vm.dailyCiStringSeq;
+            vm.itema.dateDetailDailybook = $('#pickerDateOfPayment').data("DateTimePicker").date().toDate().getTime();
             vm.dailybookCi.detailDailybookContab.push(vm.itema);
             vm.generalDetailCi_2 = vm.bankName;
             vm.itemb = {
@@ -685,6 +691,8 @@ angular.module('integridadUiApp')
                 deber: parseFloat(vm.valorDocumento)
             };
             vm.itemb.numCheque = '--';
+            vm.itemb.dailybookNumber = vm.dailyCiStringSeq;
+            vm.itemb.dateDetailDailybook = $('#pickerDateOfPayment').data("DateTimePicker").date().toDate().getTime();
             vm.dailybookCi.detailDailybookContab.push(vm.itemb);
             vm.dailybookCi.codeTypeContab = vm.selectedTypeBook;
             vm.dailybookCi.nameBank = vm.bankName;

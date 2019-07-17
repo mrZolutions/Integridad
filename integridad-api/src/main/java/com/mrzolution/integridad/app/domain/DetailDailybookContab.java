@@ -30,6 +30,8 @@ public class DetailDailybookContab implements Child {
     private double baseImponible;
     private String deber;
     private String haber;
+    private long dateDetailDailybook;
+    private String dailybookNumber;
     
     @ManyToOne
     @JoinColumn(name = "dailybookCg_id")

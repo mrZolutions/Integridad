@@ -8,40 +8,56 @@
  * Controller of the integridadUiApp
  */
 angular.module('integridadUiApp')
-    .controller('CreditNoteCtrl', function( _, $rootScope, $location, utilStringService, $localStorage,
+    .controller('CreditNoteCtrl', function( _, $rootScope, $location, providerService, $localStorage,
                                             clientService, billService, creditNoteService, utilSeqService) {
 
         var vm = this;
         vm.error = undefined;
         vm.success = undefined;
         vm.loading = false;
-        vm.clientList = undefined;
         vm.idBill = undefined;
 
+        vm.typeCreditNote = [
+            {code: '1', type: 'NOTA DE CRÉDITO - FACTURAS DE VENTAS'},
+            {code: '2', type: 'NOTA DE CRÉDITO - FACTURAS DE COMPRAS'},
+            {code: '3', type: 'NOTA DE CRÉDITO - FACTURAS OFFLINE'}
+        ];
+
         function _activate() {
+            vm.user = $localStorage.user;
+            vm.userClientId = $localStorage.user.subsidiary.userClient.id;
+            vm.userCashier = $localStorage.user.cashier;
+            vm.userSubsidiary = $localStorage.user.subsidiary;
+
+            vm.clientList = undefined;
             vm.clientSelected = undefined;
             vm.billList = undefined;
             vm.bill = undefined;
             vm.claveDeAcceso = undefined;
             vm.error = undefined;
             vm.success = undefined;
+            vm.creditNoteType = undefined;
+            vm.selectedTypeCreditNote = undefined;
+            vm.providerList = undefined;
+            vm.providerSelected = undefined;
+            vm.cellar = undefined;
+            vm.billOffline = undefined;
 
             vm.impuestoIVA = {
-                "base_imponible": 0.0,
-                "valor": 0.0,
+                "base_imponible": 0,
+                "valor": 0,
                 "codigo": "2",
                 "codigo_porcentaje": "2"
             };
 
             vm.impuestoIVAZero = {
-                "base_imponible": 0.0,
-                "valor": 0.0,
+                "base_imponible": 0,
+                "valor": 0,
                 "codigo": "2",
                 "codigo_porcentaje": "0"
             };
 
-            vm.user = $localStorage.user;
-            clientService.getLazyByUserClientId($localStorage.user.subsidiary.userClient.id).then(function(response) {
+            clientService.getLazyByUserClientId(vm.userClientId).then(function(response) {
                 vm.clientList = response;
                 vm.loading = false;
             }).catch(function(error) {
@@ -50,26 +66,62 @@ angular.module('integridadUiApp')
             });
         };
 
+        vm.loadTypeCreditNote = function(creditNoteType) {
+            vm.creditNoteType = creditNoteType;
+            switch (vm.creditNoteType) {
+                case '1':
+                    vm.selectedTypeCreditNote = vm.creditNoteType;
+                    clientService.getLazyByUserClientId(vm.userClientId).then(function(response) {
+                        vm.clientList = response;
+                        vm.loading = false;
+                    }).catch(function(error) {
+                        vm.loading = false;
+                        vm.error = error.data;
+                    });
+                break;
+                case '2':
+                    vm.selectedTypeCreditNote = vm.creditNoteType;
+                    providerService.getLazyByUserClientId(vm.userClientId).then(function(response) {
+                        vm.providerList = response;
+                        vm.loading = false;
+                    }).catch(function(error) {
+                        vm.loading = false;
+                        vm.error = error.data;
+                    });
+                break;
+                case '3':
+                    vm.selectedTypeCreditNote = vm.creditNoteType;
+                    clientService.getLazyByUserClientId(vm.userClientId).then(function(response) {
+                        vm.clientList = response;
+                        vm.loading = false;
+                    }).catch(function(error) {
+                        vm.loading = false;
+                        vm.error = error.data;
+                    });
+                break;
+            };
+        };
+
         function _getSeqNumber() {
-            vm.numberAddedOne = parseInt($localStorage.user.cashier.creditNoteNumberSeq) + 1;
-            vm.seqNumberFirstPart = $localStorage.user.subsidiary.threeCode + '-' + $localStorage.user.cashier.threeCode;
+            vm.numberAddedOne = parseInt(vm.userCashier.creditNoteNumberSeq) + 1;
+            vm.seqNumberFirstPart = vm.userSubsidiary.threeCode + '-' + vm.userCashier.threeCode;
             vm.seqNumberSecondPart = utilSeqService._pad_with_zeroes(vm.numberAddedOne, 9);
             vm.seqNumber =  vm.seqNumberFirstPart + '-' + vm.seqNumberSecondPart;
         };
 
         function _getTotales() {
-            vm.bill.subTotal = 0.0;
-            vm.bill.iva = 0.0;
-            vm.bill.ivaZero = 0.0;
-            vm.bill.ice = 0.0;
-            vm.bill.baseTaxes = 0.0;
-            vm.bill.baseNoTaxes = 0.0;
-            var subtotal = 0.0;
-            var descuento = 0.0;
-            var baseZero = 0.0;
-            var baseDoce = 0.0;
-            var iva = 0.0;
-            var total = 0.0;
+            vm.bill.subTotal = 0;
+            vm.bill.iva = 0;
+            vm.bill.ivaZero = 0;
+            vm.bill.ice = 0;
+            vm.bill.baseTaxes = 0;
+            vm.bill.baseNoTaxes = 0;
+            var subtotal = 0;
+            var descuento = 0;
+            var baseZero = 0;
+            var baseDoce = 0;
+            var iva = 0;
+            var total = 0;
             _.each(vm.bill.details, function(detail) {
                 subtotal = subtotal + (detail.quantity * detail.costEach);
                 if (detail.product.iva) {
@@ -163,7 +215,7 @@ angular.module('integridadUiApp')
             };
             vm.impuestoIVAZero = {
                 "base_imponible": vm.bill.baseNoTaxes,
-                "valor": 0.0,
+                "valor": 0,
                 "codigo": "2",
                 "codigo_porcentaje": "0"
             };
@@ -223,7 +275,19 @@ angular.module('integridadUiApp')
                 if (!_.isEmpty(impuestos)) {
                     item.impuestos = impuestos;
                 };
-                vm.items.push(item);
+                //vm.items.push(item);
+                //var kardex = {
+                //    creditNote: vm.bill.id,
+                //    product: det.product,
+                //    dateRegister: $('#pickerBillDate').data("DateTimePicker").date().toDate().getTime(),
+                //    details: 'NOTA DE CRÉDITO',
+                //    observation: 'REINGRESO',
+                //    prodCostEach: det.costEach,
+                //    prodName: det.product.name,
+                //    prodQuantity: det.quantity,
+                //    prodTotal: det.total
+                //};
+                //vm.bill.detailsKardex.push(kardex);
             });
 
             var req = creditNoteService.createRequirement(vm.clientSelected, vm.bill, $localStorage.user, vm.impuestosTotales, vm.items);
@@ -239,7 +303,7 @@ angular.module('integridadUiApp')
                     vm.bill.billSeq = vm.idBill;
                     creditNoteService.create(vm.bill).then(function(respBill) {
                         vm.billed = true;
-                        $localStorage.user.cashier.creditNoteNumberSeq = vm.bill.creditSeq;
+                        vm.userCashier.creditNoteNumberSeq = vm.bill.creditSeq;
                         vm.success = 'Nota de Crédito creada';
                         vm.loading = false;
                     }).catch(function(error) {

@@ -102,13 +102,13 @@ public class RetentionClientServices {
             detail.setRetentionClient(null);
         });
         saved.setDetailRetentionClient(details);
-        updateBillCreditsAndPayment(saved, document);
+        updateBillAndCreditsAndPayment(saved, document);
         log.info("RetentionClientServices createRetentionClient: {}, {}", saved.getId(), saved.getRetentionNumber());
         return saved;
     }
 
     @Async("asyncExecutor")
-    public void updateBillCreditsAndPayment(RetentionClient saved, String document) {
+    public void updateBillAndCreditsAndPayment(RetentionClient saved, String document) {
         Credits docNumber = creditsRepository.findByBillId(document);
         doc = docNumber.getBillId();
         

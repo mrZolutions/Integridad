@@ -35,7 +35,7 @@
     <!--SELECCIÓN DE TIPO DE DIARIO-->
     <div class="row" ng-show="vm.selectedTypeBook === undefined">
         <div class="form-group col-md-4">
-            <label>Seleccione tipo de Diario:</label><br/>
+            <label>Seleccione el tipo de Diario:</label><br/>
             <select ng-options="deta.code as deta.type for deta in vm.typeBookList"
                     ng-model="vm.dailybookType" class="form-control">
             </select>

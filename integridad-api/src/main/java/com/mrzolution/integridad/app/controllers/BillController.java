@@ -1,7 +1,6 @@
 package com.mrzolution.integridad.app.controllers;
 
 import com.mrzolution.integridad.app.domain.Bill;
-import com.mrzolution.integridad.app.domain.Detail;
 import com.mrzolution.integridad.app.domain.ebill.Requirement;
 import com.mrzolution.integridad.app.domain.report.CashClosureReport;
 import com.mrzolution.integridad.app.domain.report.ItemReport;

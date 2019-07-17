@@ -229,7 +229,7 @@ public class BillServices {
     
     //Actualiza la cantidad de Productos (Existencia)
     public void updateProductBySubsidiary(Bill bill, int typeDocument, List<Detail> details) {
-        details.forEach(detail-> {
+        details.forEach(detail -> {
             if (!detail.getProduct().getProductType().getCode().equals("SER") && typeDocument == 1) {
                 ProductBySubsidiary ps = productBySubsidiairyRepository.findBySubsidiaryIdAndProductId(bill.getSubsidiary().getId(), detail.getProduct().getId());
                 ps.setQuantity(ps.getQuantity() - detail.getQuantity());
@@ -408,6 +408,7 @@ public class BillServices {
             detail.getProduct().setFatherListToNull();
             detail.getProduct().setListsNull();
             detail.setBill(null);
+            detail.setCreditNote(null);
             detailList.add(detail);
         });
         return detailList;
@@ -423,6 +424,7 @@ public class BillServices {
             detail.getProduct().setListsNull();
             detail.setBill(null);
             detail.setCellar(null);
+            detail.setCreditNote(null);
             detailsKardexList.add(detail);
         });
         return detailsKardexList;

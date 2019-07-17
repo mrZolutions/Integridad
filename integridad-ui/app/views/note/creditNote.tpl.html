@@ -18,7 +18,7 @@
 </div>
 
 <div class="form-group col-md-12">
-    <div class="header">
+    <div class="header" ng-show="vm.selectedTypeCreditNote === undefined">
         <h4><b>Nota de Cr&eacute;dito</b></h4>
     </div>
 
@@ -33,21 +33,75 @@
         </div>
     </div>
 
+    <!--SELECCIÓN DE TIPO DE NOTA DE CRÉDITO
+    <div class="row" ng-show="vm.selectedTypeCreditNote === undefined">
+        <div class="form-group col-md-6">
+            <label>Seleccione el tipo de Nota de Cr&eacute;dito:</label><br/>
+            <select ng-options="deta.code as deta.type for deta in vm.typeCreditNote"
+                    ng-model="vm.creditNoteType" class="form-control">
+            </select>
+        </div>
+        <div class="form-group col-md-4">
+            <br/>
+            <button type="button" title="Continuar" class="btn btn-primary btn-sm" ng-click="vm.loadTypeCreditNote()">
+                    <span class = "glyphicon glyphicon-ok" aria-hidden = "true"></span>
+            </button>
+        </div>
+        <div class="form-group col-md-12">
+            <button type="button" title="Volver a Inicio" class="btn btn-danger btn-sm"
+                    ng-click="vm.exit()">
+                    <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
+            </button>
+        </div>
+    </div>
+    FIN SELECCIÓN DE TIPO DE NOTA DE CRÉDITO
+
+    <div class="row" ng-show="vm.selectedTypeCreditNote === undefined">
+        <div class="form-group col-md-6">
+            <button type="button" class="btn btn-primary btn-block" ng-click="vm.loadTypeCreditNote('1')">
+                NOTA DE CRÉDITO - FACTURAS DE VENTAS        
+            </button>
+        </div>
+        <div class="form-group col-md-6">
+            <button type="button" class="btn btn-primary btn-block" ng-click="vm.loadTypeCreditNote('2')">
+                NOTA DE CRÉDITO - FACTURAS DE COMPRAS        
+            </button>
+        </div>
+        <div class="form-group col-md-6">
+            <button type="button" class="btn btn-primary btn-block" ng-click="vm.loadTypeCreditNote('3')">
+                NOTA DE CRÉDITO - FACTURAS OFFLINE        
+            </button>
+        </div>
+        <div class="form-group col-md-12">
+            <button type="button" title="Volver a Inicio" class="btn btn-danger btn-sm"
+                    ng-click="vm.exit()">
+                    <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
+            </button>
+        </div>
+    </div>-->
+
+    <!--CARGA DE CLIENTES PARA NOTA DE CRÉDITO DE FACTURAS DE VENTAS-->
     <div ng-show="vm.clientSelected === undefined && vm.bill === undefined">
-        <input ng-model="searchText" class="form-control" placeholder="Buscar">
+        <!--<div class="row">
+            <div class="form-group col-md-12">
+                <h4><b>Nota de Cŕedito de Facturas de Ventas</b></h4>
+            </div>
+            <div class="form-group col-md-12">
+                <input ng-model = "searchText" class = "form-control" placeholder = "Buscar Clientes">
+            </div>
+        </div>-->
         <table class="table table-striped">
             <thead>
                 <tr>
                     <th>C&oacute;digo</th>
                     <th>Nombre</th>
                     <th>No. Identidad</th>
-                    <th></th>
                 </tr>
             </thead>
             <tbody>
                 <tr ng-show="vm.clientList == 0">
                     <td colspan="4">
-                        No hay clientes ingresados
+                        No hay Clientes ingresados
                     </td>
                 </tr>
                 <tr ng-repeat="clientPreSelect in vm.clientList | orderBy:'name' | filter:searchText">
@@ -63,10 +117,110 @@
                 </tr>
             </tbody>
         </table>
+        <!--<div class="row">
+            <div class="form-group col-md-12">
+                <button type="button" title="Volver" class="btn btn-primary btn-sm"
+                        ng-click="vm.cancelCreditNote()">
+                        <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
+                </button>
+            </div>
+        </div>-->
+        <div class="form-group col-md-12">
+            <button type="button" title="Volver a Inicio" class="btn btn-danger btn-sm"
+                    ng-click="vm.exit()">
+                    <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
+            </button>
+        </div>
+    </div>
+
+    <!--CARGA DE PROVEEDORES PARA NOTA DE CRÉDITO DE FACTURAS DE COMPRAS-->
+    <div ng-show="vm.selectedTypeCreditNote === '2' && vm.providerSelected === undefined && vm.cellar === undefined">
         <div class="row">
             <div class="form-group col-md-12">
-                <button type="button" title="Volver a Inicio" class="btn btn-danger btn-sm"
-                        ng-click="vm.exit()">
+                <h4><b>Nota de Cŕedito de Facturas de Compras</b></h4>
+            </div>
+            <div class="form-group col-md-12">
+                <input ng-model = "searchText" class = "form-control" placeholder = "Buscar Proveedores">
+            </div>
+        </div>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>C&oacute;digo</th>
+                    <th>Nombre Comercial</th>
+                    <th>Raz&oacute;n Social</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-show="vm.providerList == 0">
+                    <td colspan="4">
+                        No hay Proveedores ingresados
+                    </td>
+                </tr>
+                <tr ng-repeat="providerPreSelect in vm.providerList | orderBy:'name' | filter:searchText">
+                    <td>{{providerPreSelect.codeIntegridad}}</td>
+                    <td>{{providerPreSelect.name}}</td>
+                    <td>{{providerPreSelect.razonSocial}}</td>
+                    <td>
+                        <button type="button" title="Buscar Facturas" class="btn btn-primary btn-sm" ng-click=""
+                                data-toggle="modal" data-target="#modalCellars">
+                                <span class = "glyphicon glyphicon-search" aria-hidden = "true"></span>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="row">
+            <div class="form-group col-md-12">
+                <button type="button" title="Volver" class="btn btn-primary btn-sm"
+                        ng-click="vm.cancelCreditNote()">
+                        <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!--CARGA DE CLIENTES PARA NOTA DE CRÉDITO DE FACTURAS OFFLINE-->
+    <div ng-show="vm.selectedTypeCreditNote === '3' && vm.clientSelected === undefined && vm.billOffline === undefined">
+        <div class="row">
+            <div class="form-group col-md-12">
+                <h4><b>Nota de Cŕedito de Facturas Offline</b></h4>
+            </div>
+            <div class="form-group col-md-12">
+                <input ng-model = "searchText" class = "form-control" placeholder = "Buscar Clientes">
+            </div>
+        </div>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>C&oacute;digo</th>
+                    <th>Nombre</th>
+                    <th>No. Identidad</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-show="vm.clientList == 0">
+                    <td colspan="4">
+                        No hay Clientes ingresados
+                    </td>
+                </tr>
+                <tr ng-repeat="clientOffSelect in vm.clientList | orderBy:'name' | filter:searchText">
+                    <td>{{clientOffSelect.codApp}}</td>
+                    <td>{{clientOffSelect.name}}</td>
+                    <td>{{clientOffSelect.typeId}} - {{clientOffSelect.identification}}</td>
+                    <td>
+                        <button type="button" title="Buscar Facturas" class="btn btn-primary btn-sm" ng-click=""
+                                data-toggle="modal" data-target="#modalBillsOffline">
+                                <span class = "glyphicon glyphicon-search" aria-hidden = "true"></span>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="row">
+            <div class="form-group col-md-12">
+                <button type="button" title="Volver" class="btn btn-primary btn-sm"
+                        ng-click="vm.cancelCreditNote()">
                         <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
                 </button>
             </div>
@@ -385,6 +539,7 @@
             </div>
         </div>
     </div>
+
     <div id="modalBills" class="modal fade" role="dialog">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -400,12 +555,11 @@
                                 <table class="table table-striped">
                                     <thead>
                                         <tr>
-                                            <th> N&uacute;mero </th>
-                                            <th> Fecha </th>
-                                            <th> Cliente </th>
-                                            <th> Total </th>
-                                            <th>
-                                            </th>
+                                            <th>N&uacute;mero</th>
+                                            <th>Fecha</th>
+                                            <th>Cliente</th>
+                                            <th>Total</th>
+                                            <th></th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -415,10 +569,10 @@
                                             </td>
                                         </tr>
                                         <tr ng-repeat="bill in vm.billList | orderBy:'dateCreated':true | filter:searchTextBills">
-                                            <td>{{ bill.stringSeq }}</td>
-                                            <td>{{ bill.dateCreated | date :  "dd/MM/yyyy"}}</td>
-                                            <td>{{ bill.client.name }}</td>
-                                            <td>{{ bill.total }}</td>
+                                            <td>{{bill.stringSeq}}</td>
+                                            <td>{{bill.dateCreated | date :  "dd/MM/yyyy"}}</td>
+                                            <td>{{bill.client.name}}</td>
+                                            <td>{{bill.total}}</td>
                                             <td>
                                                 <button type="button" title="Crear Nota de Crédito" class="btn btn-primary btn-sm" ng-click="vm.billSelect(bill)"
                                                         data-dismiss="modal">
