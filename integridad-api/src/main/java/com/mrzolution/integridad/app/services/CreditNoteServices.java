@@ -198,7 +198,6 @@ public class CreditNoteServices {
             bill.setListsNull();
             bill.setFatherListToNull();
             bill.setCreditNoteApplied(true);
-            bill.setCreditNoteId(saved.getId().toString());
             bill.setCreditNoteNumber(saved.getStringSeq());
             sum = bill.getTotal() - saved.getTotal();
             BigDecimal vsaldo = new BigDecimal(sum);

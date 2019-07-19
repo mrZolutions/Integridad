@@ -408,7 +408,6 @@ public class BillServices {
             detail.getProduct().setFatherListToNull();
             detail.getProduct().setListsNull();
             detail.setBill(null);
-            detail.setCreditNote(null);
             detailList.add(detail);
         });
         return detailList;
@@ -423,8 +422,6 @@ public class BillServices {
             detail.getProduct().setFatherListToNull();
             detail.getProduct().setListsNull();
             detail.setBill(null);
-            detail.setCellar(null);
-            detail.setCreditNote(null);
             detailsKardexList.add(detail);
         });
         return detailsKardexList;
