@@ -54,7 +54,6 @@ public class Bill {
     private String stringQuotationSeq;
     private String observation;
     
-    private String creditNoteId;
     private String creditNoteNumber;
     private boolean creditNoteApplied;
 

@@ -56,14 +56,6 @@ angular.module('integridadUiApp')
                 "codigo": "2",
                 "codigo_porcentaje": "0"
             };
-
-            clientService.getLazyByUserClientId(vm.userClientId).then(function(response) {
-                vm.clientList = response;
-                vm.loading = false;
-            }).catch(function(error) {
-                vm.loading = false;
-                vm.error = error.data;
-            });
         };
 
         vm.loadTypeCreditNote = function(creditNoteType) {
@@ -275,26 +267,14 @@ angular.module('integridadUiApp')
                 if (!_.isEmpty(impuestos)) {
                     item.impuestos = impuestos;
                 };
-                //vm.items.push(item);
-                //var kardex = {
-                //    creditNote: vm.bill.id,
-                //    product: det.product,
-                //    dateRegister: $('#pickerBillDate').data("DateTimePicker").date().toDate().getTime(),
-                //    details: 'NOTA DE CRÉDITO',
-                //    observation: 'REINGRESO',
-                //    prodCostEach: det.costEach,
-                //    prodName: det.product.name,
-                //    prodQuantity: det.quantity,
-                //    prodTotal: det.total
-                //};
-                //vm.bill.detailsKardex.push(kardex);
+                vm.items.push(item);
             });
 
             var req = creditNoteService.createRequirement(vm.clientSelected, vm.bill, $localStorage.user, vm.impuestosTotales, vm.items);
             
             creditNoteService.getClaveDeAcceso(req, vm.companyData.userClient.id).then(function(resp) {
-                var obj = JSON.parse(resp.data);
-                //var obj = {clave_acceso: '1234560', id:'id12345'};
+                //var obj = JSON.parse(resp.data);
+                var obj = {clave_acceso: '1234560', id:'id12345'};
                 if (obj.errors === undefined) {
                     vm.claveDeAcceso = obj.clave_acceso;
                     vm.bill.claveDeAcceso = obj.clave_acceso;
