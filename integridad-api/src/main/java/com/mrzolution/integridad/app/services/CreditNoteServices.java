@@ -63,8 +63,8 @@ public class CreditNoteServices {
         String data = mapper.writeValueAsString(requirement);
         log.info("CreditNoteServices getDatil MAPPER creado");
         
-        String response = httpCallerService.post(Constants.DATIL_CREDIT_NOTE_LINK, data, userClient);
-        //String response = "OK";
+        //String response = httpCallerService.post(Constants.DATIL_CREDIT_NOTE_LINK, data, userClient);
+        String response = "OK";
         log.info("CreditNoteServices getDatil httpcall DONE");
         return response;
     }
@@ -92,7 +92,7 @@ public class CreditNoteServices {
         log.info("CreditNoteServices getCreditNotesByClientId: {}", id);
         return credits;
     }
-    
+
     //Creación de la Nota de Crédito
     public CreditNote createCreditNote(CreditNote creditNote) throws BadRequestException {
         Iterable<CreditNote> credNot = creditNoteRepository.findByDocumentStringSeqAndBillId(creditNote.getDocumentStringSeq(), creditNote.getBillSeq());
@@ -122,25 +122,17 @@ public class CreditNoteServices {
                 detailRepository.save(detail);
                 detail.setCreditNote(null);
             });
-            
-            detailsKardex.forEach(detail -> {
-                detail.setCreditNote(saved);
-                //kardexRepository.save(detail);
-                detail.setCreditNote(null);
-            });
-
             saved.setDetails(details);
-            saved.setDetailsKardex(detailsKardex);
             saved.setFatherListToNull();
             
-            //updateBill(saved);
+            updateBill(saved);
             Credits validate = creditsRepository.findByBillId(document);
             if (validate != null) {
                 updateCreditsAndPayment(saved, document);
             } else {
                 log.info("CreditNoteServices DO NOT updateCreditsAndPayment");
             }
-            //updateProductBySubsidiary(creditNote, details);
+            updateProductBySubsidiary(creditNote, details);
             log.info("CreditNoteServices createCreditNote DONE: {}, {}", saved.getId(), saved.getStringSeq());
             return saved;
         }
@@ -157,7 +149,7 @@ public class CreditNoteServices {
         });
         log.info("CreditNoteServices updateProductBySubsidiary");
     }
-    
+        
     //Actualiza tablas Credits y Payment
     public void updateCreditsAndPayment(CreditNote saved, String document) {
         Credits docNumber = creditsRepository.findByBillId(document);
@@ -230,7 +222,6 @@ public class CreditNoteServices {
             detail.setFatherListToNull();
             detail.getProduct().setFatherListToNull();
             detail.getProduct().setListsNull();
-            detail.setBill(null);
             detail.setCreditNote(null);
             detailList.add(detail);
         });
@@ -245,8 +236,6 @@ public class CreditNoteServices {
             detail.getBill().setFatherListToNull();
             detail.getProduct().setFatherListToNull();
             detail.getProduct().setListsNull();
-            detail.setBill(null);
-            detail.setCellar(null);
             detail.setCreditNote(null);
             detailsKardexList.add(detail);
         });

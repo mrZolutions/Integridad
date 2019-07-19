@@ -118,7 +118,7 @@ public class DailybookCeServices {
     //Desactivación o Anulación de los COMPROBANTES DE EGRESO
     public DailybookCe deactivateDailybookCe(DailybookCe dailybookCe) throws BadRequestException {
         if (dailybookCe.getId() == null) {
-            throw new BadRequestException("Invalid DailybookCe");
+            throw new BadRequestException("Invalid DIARIO DE COMPROBANTE DE EGRESO");
         }
         DailybookCe dailybookCeToDeactivate = dailybookCeRepository.findOne(dailybookCe.getId());
         dailybookCeToDeactivate.setListsNull();

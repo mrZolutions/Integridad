@@ -35,7 +35,7 @@ public class BillController {
         log.info("BillController getDatil DONE");
         return new ResponseEntity<String>(response, HttpStatus.ACCEPTED);
     }
-
+     
     //Selecciona todas las Facturas del Cliente
     @RequestMapping(method = RequestMethod.GET, value="/bill/client/{id}")
     public ResponseEntity getBillByClientId(@PathVariable("id") UUID id) {

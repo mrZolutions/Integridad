@@ -12,7 +12,7 @@ import java.util.UUID;
 @Entity
 @Data
 public class Cashier implements Child {
-
+    
     @Id
     @GeneratedValue
     private UUID id;

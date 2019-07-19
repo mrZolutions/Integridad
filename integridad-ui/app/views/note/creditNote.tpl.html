@@ -21,6 +21,15 @@
     <div class="header" ng-show="vm.selectedTypeCreditNote === undefined">
         <h4><b>Nota de Cr&eacute;dito</b></h4>
     </div>
+    <div class="header" ng-show="vm.selectedTypeCreditNote === '1'">
+        <h4><b>Nota de Cŕedito de Facturas de Ventas</b></h4>
+    </div>
+    <div class="header" ng-show="vm.selectedTypeCreditNote === '2'">
+        <h4><b>Nota de Cŕedito de Facturas de Compras</b></h4>
+    </div>
+    <div class="header" ng-show="vm.selectedTypeCreditNote === '3'">
+        <h4><b>Nota de Cŕedito de Facturas Offline</b></h4>
+    </div>
 
     <div class="row" ng-show="vm.error !== undefined">
         <div class="form-group col-md-12">
@@ -54,7 +63,7 @@
             </button>
         </div>
     </div>
-    FIN SELECCIÓN DE TIPO DE NOTA DE CRÉDITO
+    FIN SELECCIÓN DE TIPO DE NOTA DE CRÉDITO-->
 
     <div class="row" ng-show="vm.selectedTypeCreditNote === undefined">
         <div class="form-group col-md-6">
@@ -78,18 +87,15 @@
                     <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
             </button>
         </div>
-    </div>-->
+    </div>
 
     <!--CARGA DE CLIENTES PARA NOTA DE CRÉDITO DE FACTURAS DE VENTAS-->
-    <div ng-show="vm.clientSelected === undefined && vm.bill === undefined">
-        <!--<div class="row">
-            <div class="form-group col-md-12">
-                <h4><b>Nota de Cŕedito de Facturas de Ventas</b></h4>
-            </div>
+    <div ng-show="vm.selectedTypeCreditNote === '1' && vm.clientSelected === undefined && vm.bill === undefined">
+        <div class="row">
             <div class="form-group col-md-12">
                 <input ng-model = "searchText" class = "form-control" placeholder = "Buscar Clientes">
             </div>
-        </div>-->
+        </div>
         <table class="table table-striped">
             <thead>
                 <tr>
@@ -117,28 +123,19 @@
                 </tr>
             </tbody>
         </table>
-        <!--<div class="row">
+        <div class="row">
             <div class="form-group col-md-12">
                 <button type="button" title="Volver" class="btn btn-primary btn-sm"
                         ng-click="vm.cancelCreditNote()">
                         <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
                 </button>
             </div>
-        </div>-->
-        <div class="form-group col-md-12">
-            <button type="button" title="Volver a Inicio" class="btn btn-danger btn-sm"
-                    ng-click="vm.exit()">
-                    <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
-            </button>
         </div>
     </div>
 
     <!--CARGA DE PROVEEDORES PARA NOTA DE CRÉDITO DE FACTURAS DE COMPRAS-->
     <div ng-show="vm.selectedTypeCreditNote === '2' && vm.providerSelected === undefined && vm.cellar === undefined">
         <div class="row">
-            <div class="form-group col-md-12">
-                <h4><b>Nota de Cŕedito de Facturas de Compras</b></h4>
-            </div>
             <div class="form-group col-md-12">
                 <input ng-model = "searchText" class = "form-control" placeholder = "Buscar Proveedores">
             </div>
@@ -183,9 +180,6 @@
     <!--CARGA DE CLIENTES PARA NOTA DE CRÉDITO DE FACTURAS OFFLINE-->
     <div ng-show="vm.selectedTypeCreditNote === '3' && vm.clientSelected === undefined && vm.billOffline === undefined">
         <div class="row">
-            <div class="form-group col-md-12">
-                <h4><b>Nota de Cŕedito de Facturas Offline</b></h4>
-            </div>
             <div class="form-group col-md-12">
                 <input ng-model = "searchText" class = "form-control" placeholder = "Buscar Clientes">
             </div>

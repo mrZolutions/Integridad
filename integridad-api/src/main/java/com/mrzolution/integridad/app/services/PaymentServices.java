@@ -123,7 +123,7 @@ public class PaymentServices {
         totalReten = 0;
         totalNotac = 0;
         
-        log.info("PaymentServices getPaymentsByUserClientId: {}, {}", id, dateTwo);
+        log.info("PaymentServices getPaymentsByUserClientId: {}, {}, {}", id, dateOne, dateTwo);
         Iterable<Payment> payments = paymentRepository.findAllPaymentsByUserClientIdAndDates(id, dateOne, dateTwo);
         List<CCResumenReport> ccResumenReportList = new ArrayList<>();
         

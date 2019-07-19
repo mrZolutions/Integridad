@@ -127,7 +127,7 @@ public class PaymentDebtsServices {
         totalAbono = 0;
         totalReten = 0;
         
-        log.info("PaymentServices getPaymentDebtsByUserClientIdAndDates: {}, {}", id, dateTwo);
+        log.info("PaymentServices getPaymentDebtsByUserClientIdAndDates: {}, {}, {}", id, dateOne, dateTwo);
         Iterable<PaymentDebts> paymentsDebts = paymentDebtsRepository.findPaymentsDebtsByUserClientIdAndDates(id, dateOne, dateTwo);
         List<CPResumenPaymentDebtsReport> cpResumenPaymentDebtsReportList = new ArrayList<>();
         

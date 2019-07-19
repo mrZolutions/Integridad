@@ -67,8 +67,8 @@ public class BillServices {
         String data = mapper.writeValueAsString(requirement);
         log.info("BillServices getDatil MAPPER creado");
                         
-        String response = httpCallerService.post(Constants.DATIL_LINK, data, userClient);
-        //String response = "OK";
+        //String response = httpCallerService.post(Constants.DATIL_LINK, data, userClient);
+        String response = "OK";
         log.info("BillServices getDatil httpcall DONE");
         return response;
     }
@@ -200,7 +200,7 @@ public class BillServices {
     
     //Almacena los Detalles de la Cotización
     public void saveDetailsQuotation(Bill saved, List<Detail> details) {
-        details.forEach(detail-> {
+        details.forEach(detail -> {
             detail.setBill(saved);
             detailRepository.save(detail);
             detail.setBill(null);

@@ -118,7 +118,7 @@ public class DailybookCiServices {
     //Desactivación o Anulación de los COMPROBANTES DE INGRESO
     public DailybookCi deactivateDailybookCi(DailybookCi dailybookCi) throws BadRequestException {
         if (dailybookCi.getId() == null) {
-            throw new BadRequestException("Invalid DailybookCi");
+            throw new BadRequestException("Invalid DIARIO DE COMPROBANTE DE INGRESO");
         }
         DailybookCi dailybookCiToDeactivate = dailybookCiRepository.findOne(dailybookCi.getId());
         dailybookCiToDeactivate.setListsNull();

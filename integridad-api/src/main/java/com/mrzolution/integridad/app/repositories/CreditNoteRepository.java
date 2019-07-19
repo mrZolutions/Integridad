@@ -13,7 +13,7 @@ import java.util.UUID;
 
 @Repository
 @Qualifier(value="CreditNoteRepository")
-public interface CreditNoteRepository extends CrudRepository<CreditNote, UUID>{
+public interface CreditNoteRepository extends CrudRepository<CreditNote, UUID> {
 	
     Iterable<Bill> findByClient(Client client);
     

@@ -69,7 +69,7 @@ public class CellarServices {
             log.info("CellarServices retrieved id NULL: {}", id);
         }		
         populateChildren(retrieved);
-        log.info("CellarServices getById: {}", id);
+        log.info("CellarServices getCellarById: {}", id);
         return retrieved;
     }
        
