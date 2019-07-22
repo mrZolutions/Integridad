@@ -42,29 +42,6 @@
         </div>
     </div>
 
-    <!--SELECCIÓN DE TIPO DE NOTA DE CRÉDITO
-    <div class="row" ng-show="vm.selectedTypeCreditNote === undefined">
-        <div class="form-group col-md-6">
-            <label>Seleccione el tipo de Nota de Cr&eacute;dito:</label><br/>
-            <select ng-options="deta.code as deta.type for deta in vm.typeCreditNote"
-                    ng-model="vm.creditNoteType" class="form-control">
-            </select>
-        </div>
-        <div class="form-group col-md-4">
-            <br/>
-            <button type="button" title="Continuar" class="btn btn-primary btn-sm" ng-click="vm.loadTypeCreditNote()">
-                    <span class = "glyphicon glyphicon-ok" aria-hidden = "true"></span>
-            </button>
-        </div>
-        <div class="form-group col-md-12">
-            <button type="button" title="Volver a Inicio" class="btn btn-danger btn-sm"
-                    ng-click="vm.exit()">
-                    <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
-            </button>
-        </div>
-    </div>
-    FIN SELECCIÓN DE TIPO DE NOTA DE CRÉDITO-->
-
     <div class="row" ng-show="vm.selectedTypeCreditNote === undefined">
         <div class="form-group col-md-6">
             <button type="button" class="btn btn-primary btn-block" ng-click="vm.loadTypeCreditNote('1')">
@@ -90,7 +67,7 @@
     </div>
 
     <!--CARGA DE CLIENTES PARA NOTA DE CRÉDITO DE FACTURAS DE VENTAS-->
-    <div ng-show="vm.selectedTypeCreditNote === '1' && vm.clientSelected === undefined && vm.bill === undefined">
+    <div ng-show="vm.selectedTypeCreditNote === '1' && vm.clientSelected === undefined && vm.bill === undefined && vm.creditNote === undefined">
         <div class="row">
             <div class="form-group col-md-12">
                 <input ng-model = "searchText" class = "form-control" placeholder = "Buscar Clientes">
@@ -119,6 +96,10 @@
                                 data-toggle="modal" data-target="#modalBills">
                                 <span class = "glyphicon glyphicon-search" aria-hidden = "true"></span>
                         </button>
+                        <button type="button" title="Buscar Notas de Cŕedito" class="btn btn-success btn-sm" ng-click="vm.creditsNoteByClient(clientPreSelect)"
+                                data-toggle="modal" data-target="#modalNotes">
+                                <span class = "glyphicon glyphicon-zoom-in" aria-hidden = "true"></span>
+                        </button>
                     </td>
                 </tr>
             </tbody>
@@ -134,7 +115,7 @@
     </div>
 
     <!--CARGA DE PROVEEDORES PARA NOTA DE CRÉDITO DE FACTURAS DE COMPRAS-->
-    <div ng-show="vm.selectedTypeCreditNote === '2' && vm.providerSelected === undefined && vm.cellar === undefined">
+    <div ng-show="vm.selectedTypeCreditNote === '2' && vm.providerSelected === undefined && vm.cellar === undefined && vm.creditNote === undefined">
         <div class="row">
             <div class="form-group col-md-12">
                 <input ng-model = "searchText" class = "form-control" placeholder = "Buscar Proveedores">
@@ -178,7 +159,7 @@
     </div>
 
     <!--CARGA DE CLIENTES PARA NOTA DE CRÉDITO DE FACTURAS OFFLINE-->
-    <div ng-show="vm.selectedTypeCreditNote === '3' && vm.clientSelected === undefined && vm.billOffline === undefined">
+    <div ng-show="vm.selectedTypeCreditNote === '3' && vm.clientSelected === undefined && vm.billOffline === undefined && vm.creditNote === undefined">
         <div class="row">
             <div class="form-group col-md-12">
                 <input ng-model = "searchText" class = "form-control" placeholder = "Buscar Clientes">
@@ -357,7 +338,7 @@
                            ng-model="vm.bill.discountPercentage" class="form-control" maxlength="9" ng-change="vm.getFechaCobro()" ng-disabled="!vm.newBill">
                 </div>
             </div>
-
+            
             <div class="row">
                 <div class="form-group col-md-12">
                     <b>MOTIVO: </b>
@@ -365,6 +346,7 @@
                 </div>
             </div>
         </div>
+        
         <div class="panel panel-primary">
             <div class="panel-heading">
                 <b>Detalle</b>
@@ -489,17 +471,18 @@
                         ng-show="vm.claveDeAcceso === undefined" ng-click="vm.saveCreditNote()">
                         <span class = "glyphicon glyphicon-floppy-save" aria-hidden = "true"></span>
                 </button>
-                <button type="button" title="Salir" class="btn btn-primary btn-sm"
-                        ng-click="vm.cancelCreditNote()">
-                        <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
-                </button>
                 <button print-btn type="button" title="Imprimir Nota de Crédito" class="btn btn-primary btn-sm"
                         ng-disabled="vm.claveDeAcceso === undefined; vm.error !== undefined" ng-click="vm.cancelBill()">
                         <span class = "glyphicon glyphicon-print" aria-hidden = "true"></span>
                 </button>
+                <button type="button" title="Salir" class="btn btn-primary btn-sm"
+                        ng-click="vm.cancelCreditNote()">
+                        <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
+                </button>
             </div>
         </div>
     </div>
+
     <div id="modalEditDetail" class="modal fade" role="dialog">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -586,6 +569,296 @@
                             <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
                     </button>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="modalNotes" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" ng-click="vm.creditNoteList = undefined">&times;</button>
+                    <h4 class="modal-title">Notas de Cr&eacute;dito -- {{vm.clientName}}</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12" >
+                            <div ng-show="vm.creditNoteList !== undefined">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>N&uacute;mero</th>
+                                            <th>Fecha</th>
+                                            <th>Factura</th>
+                                            <th>Total</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-show="vm.creditNoteList == 0">
+                                            <td colspan="4">
+                                                No hay Notas de Cŕedito realizadas para este Cliente
+                                            </td>
+                                        </tr>
+                                        <tr ng-repeat="creditNote in vm.creditNoteList | orderBy:'dateCreated':true">
+                                            <td>{{creditNote.stringSeq}}</td>
+                                            <td>{{creditNote.dateCreated | date :  "dd/MM/yyyy"}}</td>
+                                            <td>{{creditNote.documentStringSeq}}</td>
+                                            <td>{{creditNote.total}}</td>
+                                            <td>
+                                                <button type="button" title="Ver Nota de Crédito" class="btn btn-primary btn-sm" ng-click="vm.creditNoteSelect(creditNote)"
+                                                        data-dismiss="modal">
+                                                        <span class = "glyphicon glyphicon-file" aria-hidden = "true"></span>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" title="Salir" class="btn btn-primary btn-sm" data-dismiss="modal"
+                            ng-click="vm.creditNoteList = undefined">
+                            <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="panel-group" ng-show="vm.creditNote !== undefined"  print-section>
+        <div class="panel panel-primary">
+            <div class="panel-heading" print-remove>
+                <b>Datos del Cliente</b>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-12 ">
+                    <table width="100%">
+                        <tr>
+                            <td width="30%" align="center"><img src="images/{{vm.companyData.userClient.logo}}" ><br></td>
+                            <td width="70%">
+                                <b>{{vm.companyData.userClient.name}}</b><br/></br>
+                                <b>Matriz: {{vm.companyData.userClient.address1}}</b><br/>
+                                <b>Establecimiento: {{vm.companyData.address1}}</b><br/><br/>
+                                <b>RUC: {{vm.companyData.userClient.ruc}}</b><br/>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="form-group col-md-12 ">
+                    <table width="100%">
+                        <tr>
+                            <td width="30%">
+                                <label>FECHA NOTA DE CREDITO: </label>
+                                {{vm.creditNote.dateCreated | date :  "dd/MM/yyyy"}}
+                            </td>
+                            <td width="70%">
+                                <div style=" padding-left: 10px" >
+                                    <label>CLAVE DE ACCESO: </label><br/>
+                                    {{vm.creditNote.claveDeAcceso}}
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="form-group col-md-12 ">
+                    <table width="100%">
+                        <tr>
+                            <td>
+                                <b>NOMBRE: </b>{{vm.creditNote.client.name}}<br/>
+                            </td>
+                            <td>
+                                <b ng-if="vm.clientSelected.typeId === 'CED'">CEDULA: </b>
+                                <b ng-if="vm.clientSelected.typeId === 'RUC'">RUC: </b>
+                                {{vm.creditNote.client.identification}}
+                            </td>
+                            <td>
+                                <b>TELEFONO: </b>{{vm.creditNote.client.phone}}
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="form-group col-md-12 ">
+                    <table width="100%">
+                        <tr>
+                            <td><b>DIRECCION: </b>{{vm.creditNote.client.address}}</td>
+                            <td><b>E-MAIL: </b>{{vm.creditNote.client.email}}</td>
+                        </tr>
+                        <tr>
+                            <td><b>No NOTA DE CREDITO: </b> {{vm.creditNote.stringSeq}}</td>
+                            <td><b>No FACTURA: </b> {{vm.creditNote.documentStringSeq}}</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <div class="row" ng-if="vm.companyData.userClient.espTemp == 'A-1'" print-if="vm.companyData.userClient.espTemp == 'A-1'">
+                <div class="form-group col-md-12 ">
+                    <table width="100%" style="border-collapse: separate; border-spacing: 6px;">
+                        <tr>
+                            <td width="50%">
+                                <b>ORDEN DE COMPRA: </b>
+                                {{vm.creditNote.ordenDecompra}}
+                            </td>
+                            <td width="50%">
+                                <b>SERVICES RECEIPTS REGISTER: </b>
+                                {{vm.creditNote.srr}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="50%">
+                                <b>LUGAR: </b>
+                                {{vm.creditNote.lugar}}
+                            </td>
+                            <td width="50%">
+                                <b>OTI/OTIR: </b>
+                                {{vm.creditNote.otir}}
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <b>DESCUENTO &#37;: </b>
+                    {{vm.creditNote.discount}}
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="form-group col-md-12">
+                    <b>MOTIVO: </b>
+                    {{vm.creditNote.motivo}}
+                </div>
+            </div>
+        </div>
+        
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <b>Detalle</b>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="form-group col-md-12">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th> Item </th>
+                                    <th> C&oacute;digo </th>
+                                    <th> Nombre Producto </th>
+                                    <th> Descripci&oacute;n </th>
+                                    <th> Cant. </th>
+                                    <th> U. Med. </th>
+                                    <th> V. Unit. </th>
+                                    <th> Desc. </th>
+                                    <th> V. Total. </th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="detail in vm.creditNote.details">
+                                    <td>{{$index + 1}}</td>
+                                    <td>{{detail.product.codeIntegridad}}</td>
+                                    <td>{{detail.product.name}}</td>
+                                    <td>{{detail.adicional}}</td>
+                                    <td>{{detail.quantity}}</td>
+                                    <td>{{detail.product.unitOfMeasurementFull}}</td>
+                                    <td>{{detail.costEach}}</td>
+                                    <td>{{detail.discount}}</td>
+                                    <td>{{detail.total}}</td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td><b>SUBTOTAL: </b></td>
+                                    <td>{{(vm.creditNote.subTotal).toFixed(2)}}</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td><b>DESCUENTO: </b></td>
+                                    <td>{{(vm.creditNote.discount).toFixed(2)}}</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td><b>BASE 0%: </b></td>
+                                    <td>{{(vm.creditNote.baseNoTaxes).toFixed(2)}}</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td><b>BASE 12%: </b></td>
+                                    <td>{{(vm.creditNote.baseTaxes).toFixed(2)}}</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td><b>IVA: </b></td>
+                                    <td>{{(vm.creditNote.iva).toFixed(2)}}</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td><b>TOTAL: </b></td>
+                                    <td>{{(vm.creditNote.total).toFixed(2)}}</td>
+                                    <td></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="panel-footer" print-remove>
+                <button print-btn type="button" title="Imprimir Nota de Crédito" class="btn btn-primary btn-sm"
+                        ng-click="vm.cancelCreditNote()">
+                        <span class = "glyphicon glyphicon-print" aria-hidden = "true"></span>
+                </button>
+                <button type="button" title="Salir" class="btn btn-primary btn-sm"
+                        ng-click="vm.cancelCreditNote()">
+                        <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
+                </button>
             </div>
         </div>
     </div>

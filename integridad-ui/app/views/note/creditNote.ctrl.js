@@ -31,6 +31,9 @@ angular.module('integridadUiApp')
 
             vm.clientList = undefined;
             vm.clientSelected = undefined;
+            vm.clientName = undefined;
+            vm.creditNote = undefined;
+            vm.creditNoteList = undefined;
             vm.billList = undefined;
             vm.bill = undefined;
             vm.claveDeAcceso = undefined;
@@ -273,8 +276,8 @@ angular.module('integridadUiApp')
             var req = creditNoteService.createRequirement(vm.clientSelected, vm.bill, $localStorage.user, vm.impuestosTotales, vm.items);
             
             creditNoteService.getClaveDeAcceso(req, vm.companyData.userClient.id).then(function(resp) {
-                var obj = JSON.parse(resp.data);
-                //var obj = {clave_acceso: '1234560', id:'id12345'};
+                //var obj = JSON.parse(resp.data);
+                var obj = {clave_acceso: '1234560', id:'id12345'};
                 if (obj.errors === undefined) {
                     vm.claveDeAcceso = obj.clave_acceso;
                     vm.bill.claveDeAcceso = obj.clave_acceso;
@@ -300,6 +303,32 @@ angular.module('integridadUiApp')
         vm.removeDetail = function(index) {
             vm.bill.details.splice(index,1);
             _getTotales();
+        };
+
+        vm.creditsNoteByClient = function(client) {
+            vm.error = undefined;
+            vm.success = undefined;
+            vm.companyData = $localStorage.user.subsidiary;
+            vm.clientName = client.name;
+            creditNoteService.getCreditsNoteByClientId(client.id).then(function(response) {
+                vm.creditNoteList = response;
+            }).catch(function (error) {
+                vm.loading = false;
+                vm.error = error.data;
+            });
+        };
+
+        vm.creditNoteSelect = function(creditNote) {
+            vm.loading = true;
+            vm.error = undefined;
+            vm.success = undefined;
+            creditNoteService.getCreditNoteById(creditNote.id).then(function(response) {
+                vm.creditNote = response;
+                vm.loading = false;
+            }).catch(function (error) {
+                vm.loading = false;
+                vm.error = error.data;
+            });
         };
 
         vm.exit = function() {

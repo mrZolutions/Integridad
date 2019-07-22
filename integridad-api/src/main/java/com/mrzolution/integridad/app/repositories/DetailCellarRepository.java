@@ -1,6 +1,7 @@
 package com.mrzolution.integridad.app.repositories;
 
 import com.mrzolution.integridad.app.domain.Cellar;
+import com.mrzolution.integridad.app.domain.CreditNoteCellar;
 import com.mrzolution.integridad.app.domain.DetailCellar;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -18,6 +19,8 @@ import org.springframework.stereotype.Repository;
 @Qualifier(value="DetailCellarRepository")
 public interface DetailCellarRepository extends CrudRepository<DetailCellar, UUID> {
     Iterable<DetailCellar> findByCellar(Cellar cellar);
+    
+    Iterable<DetailCellar> findByCreditNoteCellar(CreditNoteCellar creditNoteCellar);
     
     @Query("SELECT d FROM DetailCellar d JOIN d.cellar c JOIN c.provider p WHERE p.userClient.id = (:userClientId) AND (d.adicional != null OR d.adicional != '') AND c.active = true ORDER BY c.billNumber")
     Iterable<DetailCellar> findDetailsOfCellarsByUserClientId(@Param("userClientId") UUID id);

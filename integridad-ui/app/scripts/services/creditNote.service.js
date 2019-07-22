@@ -80,4 +80,16 @@ angular
                 return response.data;
             });
         };
+
+        this.getCreditsNoteByClientId = function(id) {
+            return securityService.get('/creditnote/client/' + id).then(function successCallback(response) {
+                return response.data;
+            });
+        };
+
+        this.getCreditNoteById = function(id) {
+            return securityService.get('/creditnote/' + id).then(function successCallback(response) {
+                return response.data;
+            });
+        };
 });

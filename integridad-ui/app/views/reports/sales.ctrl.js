@@ -412,6 +412,7 @@ angular.module('integridadUiApp')
                             NUMERO_CUENTA: debt.debtNumber,
                             NUMERO_FACTURA: debt.billNumber,
                             NUMERO_AUTORIZACION: debt.authorizationNumber,
+                            COMP_COMPRA: debt.buyTypeVoucher,
                             COD_SUSTENTO: debt.purchaseType,
                             ESTADO: debt.status,
                             DESCRIPCION: debt.observacion,

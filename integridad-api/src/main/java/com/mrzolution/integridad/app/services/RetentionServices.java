@@ -171,28 +171,40 @@ public class RetentionServices {
             Double subTotalIva = Double.valueOf(0);
             String codRetenFuente = null;
             String codRetenIva = null;
-            for (DetailRetention detail : retention.getDetailRetentions()) {
-                sum = Double.sum(sum, detail.getTotal());
-                if ("RETENCION EN LA FUENTE".equals(detail.getTaxType())) {
-                    baseF = Double.sum(baseF, detail.getBaseImponible());
-                    porcenF = Double.sum(porcenF, detail.getPercentage());
-                    subTotalF = baseF * (porcenF / 100.00);
-                    if (detail.getCode() != null) {
-                        codRetenFuente = detail.getCode();
-                    } else {
-                        codRetenFuente = null;
+            if (retention.isActive()) {
+                for (DetailRetention detail : retention.getDetailRetentions()) {
+                    sum = Double.sum(sum, detail.getTotal());
+                    if ("RETENCION EN LA FUENTE".equals(detail.getTaxType())) {
+                        baseF = Double.sum(baseF, detail.getBaseImponible());
+                        porcenF = Double.sum(porcenF, detail.getPercentage());
+                        subTotalF = baseF * (porcenF / 100.00);
+                        if (detail.getCode() != null) {
+                            codRetenFuente = detail.getCode();
+                        } else {
+                            codRetenFuente = null;
+                        }
+                    }
+                    if ("RETENCION EN EL IVA".equals(detail.getTaxType())) {
+                        baseIva = Double.sum(baseIva, detail.getBaseImponible());
+                        porcenIva = Double.sum(porcenIva, detail.getPercentage());
+                        subTotalIva = baseIva * (porcenIva / 100.00);
+                        if (detail.getCode() != null) {
+                            codRetenIva = detail.getCode();
+                        } else {
+                            codRetenIva = null;
+                        }
                     }
                 }
-                if ("RETENCION EN EL IVA".equals(detail.getTaxType())) {
-                    baseIva = Double.sum(baseIva, detail.getBaseImponible());
-                    porcenIva = Double.sum(porcenIva, detail.getPercentage());
-                    subTotalIva = baseIva * (porcenIva / 100.00);
-                    if (detail.getCode() != null) {
-                        codRetenIva = detail.getCode();
-                    } else {
-                        codRetenIva = null;
-                    }
-                }
+            } else {
+                sum = 0.0;
+                baseF = 0.0;
+                porcenF = 0.0;
+                subTotalF = 0.0;
+                codRetenFuente = "--";
+                baseIva = 0.0;
+                porcenIva = 0.0;
+                subTotalIva = 0.0;
+                codRetenIva = "--";
             }
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
             String date = dateFormat.format(new Date(retention.getDateCreated()));

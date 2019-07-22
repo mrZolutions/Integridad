@@ -38,6 +38,10 @@ public class Cellar {
     private double baseNoTaxes;
     private double baseTaxes;
     
+    private String credNotCellarId;
+    private String credNotCellarNumber;
+    private boolean credNotCellarApplied;
+    
     @ManyToOne
     @JoinColumn(name = "warehouse_id")
     private Warehouse warehouse;

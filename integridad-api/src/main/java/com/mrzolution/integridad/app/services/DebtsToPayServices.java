@@ -252,7 +252,7 @@ public class DebtsToPayServices {
             String status = debt.isActive() ? "ACTIVA" : "ANULADA";
             String endDate = dateFormat.format(new Date(endDateLong));
             
-            DebtsReport debtsReport = new DebtsReport(date, debt.getProvider().getCodeIntegridad(), debt.getProvider().getRazonSocial(), debt.getProvider().getRuc(), debt.getDebtsSeq(), debt.getBillNumber(), debt.getAuthorizationNumber(), debt.getPurchaseType(),
+            DebtsReport debtsReport = new DebtsReport(date, debt.getProvider().getCodeIntegridad(), debt.getProvider().getRazonSocial(), debt.getProvider().getRuc(), debt.getDebtsSeq(), debt.getBillNumber(), debt.getAuthorizationNumber(), debt.getBuyTypeVoucher(), debt.getPurchaseType(),
                                           status, debt.getObservacion(), debt.getRetentionNumber(), debt.getSubTotalDoce(), debt.getIva(), debt.getSubTotalCero(), debt.getTotal(), endDate, debt.getUserIntegridad().getCashier().getNameNumber(), debt.getSubsidiary().getName(),
                                           debt.getUserIntegridad().getFirstName() + " " + debt.getUserIntegridad().getLastName());
             

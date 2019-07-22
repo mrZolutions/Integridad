@@ -43,5 +43,32 @@ public class CreditNoteController {
         log.info("CreditNoteController createCreditNote DONE");
 	return new ResponseEntity<CreditNote>(response, HttpStatus.CREATED);
     }
+    
+    //Selecciona todas las Notas de Crédito del Cliente
+    @RequestMapping(method = RequestMethod.GET, value="/client/{id}")
+    public ResponseEntity getCreditNoteByClientId(@PathVariable("id") UUID id) {
+        Iterable<CreditNote> response = null;
+        try {
+            response = service.getCreditNotesByClientId(id);
+        } catch (BadRequestException e) {
+            log.error("CreditNoteController getCreditNoteByClientId Exception thrown: {}", e.getMessage());
+	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+	}
+        log.info("CreditNoteController getCreditNoteByClientId DONE");
+        return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
+    }
+    
+    @RequestMapping(method = RequestMethod.GET, value="/{id}")
+    public ResponseEntity getCreditNoteById(@PathVariable("id") UUID id) {
+        CreditNote response = null;
+        try {
+            response = service.getCreditNoteById(id);
+        } catch (BadRequestException e) {
+            log.error("CreditNoteController getCreditNoteById Exception thrown: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+        log.info("CreditNoteController getBillById DONE");
+        return new ResponseEntity<CreditNote>(response, HttpStatus.ACCEPTED);
+    }
 
 }

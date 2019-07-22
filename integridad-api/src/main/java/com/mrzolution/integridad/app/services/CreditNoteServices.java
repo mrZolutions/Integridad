@@ -22,15 +22,11 @@ public class CreditNoteServices {
     @Autowired
     DetailRepository detailRepository;
     @Autowired
-    DetailChildRepository detailChildRepository;
-    @Autowired
     httpCallerService httpCallerService;
     @Autowired
     CashierRepository cashierRepository;
     @Autowired
     ProductBySubsidiairyRepository productBySubsidiairyRepository;
-    @Autowired
-    PagoRepository pagoRepository;
     @Autowired
     PaymentRepository paymentRepository;
     @Autowired
@@ -39,8 +35,6 @@ public class CreditNoteServices {
     UserClientRepository userClientRepository;
     @Autowired
     BillRepository billRepository;
-    @Autowired
-    KardexRepository kardexRepository;
         
     private String document;
     private String statusCambio;
@@ -103,11 +97,9 @@ public class CreditNoteServices {
             if (details == null) {
                 throw new BadRequestException("Debe tener un detalle por lo menos");
             }
-            List<Kardex> detailsKardex = creditNote.getDetailsKardex();
             creditNote.setDateCreated(new Date().getTime());
             creditNote.setActive(true);
             creditNote.setDetails(null);
-            creditNote.setDetailsKardex(null);
             creditNote.setFatherListToNull();
             creditNote.setListsNull();
             CreditNote saved = creditNoteRepository.save(creditNote);
@@ -147,7 +139,7 @@ public class CreditNoteServices {
                 productBySubsidiairyRepository.save(ps);
             }
         });
-        log.info("CreditNoteServices updateProductBySubsidiary");
+        log.info("CreditNoteServices updateProductBySubsidiary DONE");
     }
         
     //Actualiza tablas Credits y Payment
@@ -209,9 +201,7 @@ public class CreditNoteServices {
     
     private void populateChildren(CreditNote creditNote) {
         List<Detail> detailList = getDetailsByCreditNote(creditNote);
-        List<Kardex> detailsKardexList = getDetailsKardexByCreditNote(creditNote);
         creditNote.setDetails(detailList);
-        creditNote.setDetailsKardex(detailsKardexList);
         creditNote.setFatherListToNull();
     }
 
@@ -220,7 +210,6 @@ public class CreditNoteServices {
         Iterable<Detail> details = detailRepository.findByCreditNote(creditNote);
         details.forEach(detail -> {
             detail.setListsNull();
-            detail.setFatherListToNull();
             detail.getProduct().setFatherListToNull();
             detail.getProduct().setListsNull();
             detail.setCreditNote(null);
@@ -228,19 +217,4 @@ public class CreditNoteServices {
         });
         return detailList;
     }
-    
-    private List<Kardex> getDetailsKardexByCreditNote(CreditNote creditNote) {
-        List<Kardex> detailsKardexList = new ArrayList<>();
-        Iterable<Kardex> detailsKardex = kardexRepository.findByCreditNote(creditNote);
-        detailsKardex.forEach (detail -> {
-            detail.getBill().setListsNull();
-            detail.getBill().setFatherListToNull();
-            detail.getProduct().setFatherListToNull();
-            detail.getProduct().setListsNull();
-            detail.setCreditNote(null);
-            detailsKardexList.add(detail);
-        });
-        return detailsKardexList;
-    }
-    
 }

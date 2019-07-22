@@ -32,6 +32,7 @@ public class PaymentDebts implements Child {
     private String numeroLote;
     private double valorAbono;
     private double valorReten;
+    private double valorNotac;
     private boolean active;
     
     @ManyToOne

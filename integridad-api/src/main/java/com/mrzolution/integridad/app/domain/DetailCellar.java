@@ -31,6 +31,10 @@ public class DetailCellar implements Child {
     private Cellar cellar;
     
     @ManyToOne
+    @JoinColumn(name = "credit_note_cellar_id")
+    private CreditNoteCellar creditNoteCellar;
+    
+    @ManyToOne
     @JoinColumn(name = "product_id")
     private Product product;
     
@@ -40,5 +44,9 @@ public class DetailCellar implements Child {
     public void setFatherListToNull() {
         cellar.setListsNull();
         cellar.setFatherListToNull();
+        if (creditNoteCellar != null) {
+            creditNoteCellar.setListsNull();
+            creditNoteCellar.setFatherListToNull();
+        }
     }
 }
