@@ -54,8 +54,13 @@ public class Bill {
     private String stringQuotationSeq;
     private String observation;
     
+    private String creditNoteId;
     private String creditNoteNumber;
     private boolean creditNoteApplied;
+    
+    //private String retentionId;
+    //private String retentionNumber;
+    //private double retentionValue;
 
     @ManyToOne
     @JoinColumn(name = "client_id")
