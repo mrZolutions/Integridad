@@ -150,7 +150,6 @@ angular.module('integridadUiApp')
             vm.retentionClientList = undefined;
             vm.clientList = [];
             vm.itemsMultiplePayments = [];
-            vm.itemsMultipleCobros = [];
             vm.creditsBillsSelected = undefined;
             vm.multipleCobroSelected = undefined;
             vm.clientName = undefined;
@@ -161,8 +160,6 @@ angular.module('integridadUiApp')
             vm.clientCodConta = undefined;
             vm.ctaCtableBankList = undefined;
             vm.paymentList = undefined;
-            vm.comprobanteCobroList = undefined;
-            vm.comprobanteCobroCreated = undefined;
             vm.bankName = undefined;
             vm.modePayment = undefined;
             vm.noDocument = undefined;
@@ -171,10 +168,14 @@ angular.module('integridadUiApp')
             vm.valorDocumento = undefined;
             vm.dailyCiSeq = undefined;
             vm.dailyCiStringSeq = undefined;
+            vm.comprobanteCobroList = undefined;
+            vm.comprobanteCobroCreated = undefined;
             vm.comprobanteCobroSeq = undefined;
             vm.comprobanteCobroStringSeq = undefined;
-            vm.usrCliId = $localStorage.user.subsidiary.userClient.id;
+            vm.itemsMultipleCobros = [];
             vm.userCashier = $localStorage.user.cashier;
+
+            vm.usrCliId = $localStorage.user.subsidiary.userClient.id;
             clientService.getLazyByUserClientId(vm.usrCliId).then(function(response) {
                 vm.clientList = response;
                 vm.loading = false;
@@ -372,7 +373,7 @@ angular.module('integridadUiApp')
                     paymentService.createPayment(payment).then(function(response) {
                         vm.paymentCreated = response;
                         if (vm.paymentCreated.modePayment === 'CHQ' || vm.paymentCreated.modePayment === 'TRF' || vm.paymentCreated.modePayment === 'DEP') {
-                            //_asientoComprobanteCobro();
+                            _asientoComprobanteCobro();
                             _asientoComprobanteIngreso();
                         };
                         vm.success = 'Abono realizado con exito';
@@ -623,13 +624,14 @@ angular.module('integridadUiApp')
                         vm.payment.banco = vm.bankName;
                         paymentService.createPayment(vm.payment).then(function(response) {
                             vm.paymentCreated = response;
+                            vm.loading = false;
+                            vm.success = 'Abono realizado con exito';
                         }).catch(function(error) {
                             vm.loading = false;
                             vm.error = error.data;
                         });
-                        vm.success = 'Abono realizado con exito';
                     });
-                    //_asientoComprobanteMultipleCobro();
+                    _asientoComprobanteMultipleCobro();
                     _asientoComprobanteMultipleIngreso();
                     _activate();
                 } else {
@@ -678,7 +680,7 @@ angular.module('integridadUiApp')
             };
             vm.itema.numCheque = vm.noDocument;
             vm.itema.dailybookNumber = vm.dailyCiStringSeq;
-            vm.itema.dateDetailDailybook = $('#pickerDateOfPayment').data("DateTimePicker").date().toDate().getTime();
+            vm.itema.dateDetailDailybook = $('#pickerDateOfMultiplePayment').data("DateTimePicker").date().toDate().getTime();
             vm.dailybookCi.detailDailybookContab.push(vm.itema);
             vm.generalDetailCi_2 = vm.bankName;
             vm.itemb = {
@@ -692,7 +694,7 @@ angular.module('integridadUiApp')
             };
             vm.itemb.numCheque = '--';
             vm.itemb.dailybookNumber = vm.dailyCiStringSeq;
-            vm.itemb.dateDetailDailybook = $('#pickerDateOfPayment').data("DateTimePicker").date().toDate().getTime();
+            vm.itemb.dateDetailDailybook = $('#pickerDateOfMultiplePayment').data("DateTimePicker").date().toDate().getTime();
             vm.dailybookCi.detailDailybookContab.push(vm.itemb);
             vm.dailybookCi.codeTypeContab = vm.selectedTypeBook;
             vm.dailybookCi.nameBank = vm.bankName;
@@ -711,7 +713,6 @@ angular.module('integridadUiApp')
             vm.dailybookCi.dateRecordBook = $('#pickerDateOfMultiplePayment').data("DateTimePicker").date().toDate().getTime();
             contableService.createDailybookCi(vm.dailybookCi).then(function(response) {
                 vm.userCashier.dailyCiNumberSeq = vm.dailybookCi.dailyCiSeq;
-                vm.loading = false;
             }).catch(function(error) {
                 vm.loading = false;
                 vm.error = error.data;

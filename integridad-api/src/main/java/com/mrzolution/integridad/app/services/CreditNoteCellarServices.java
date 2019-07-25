@@ -5,6 +5,7 @@ import com.mrzolution.integridad.app.domain.Cashier;
 import com.mrzolution.integridad.app.domain.Cellar;
 import com.mrzolution.integridad.app.domain.CreditNoteCellar;
 import com.mrzolution.integridad.app.domain.CreditsDebts;
+import com.mrzolution.integridad.app.domain.DebtsToPay;
 import com.mrzolution.integridad.app.domain.DetailCellar;
 import com.mrzolution.integridad.app.domain.PaymentDebts;
 import com.mrzolution.integridad.app.domain.ProductBySubsidiary;
@@ -13,6 +14,7 @@ import com.mrzolution.integridad.app.repositories.CashierRepository;
 import com.mrzolution.integridad.app.repositories.CellarRepository;
 import com.mrzolution.integridad.app.repositories.CreditNoteCellarRepository;
 import com.mrzolution.integridad.app.repositories.CreditsDebtsRepository;
+import com.mrzolution.integridad.app.repositories.DebtsToPayRepository;
 import com.mrzolution.integridad.app.repositories.DetailCellarRepository;
 import com.mrzolution.integridad.app.repositories.PaymentDebtsRepository;
 import com.mrzolution.integridad.app.repositories.ProductBySubsidiairyRepository;
@@ -46,13 +48,14 @@ public class CreditNoteCellarServices {
     CreditsDebtsRepository creditsDebtsRepository;
     @Autowired
     CashierRepository cashierRepository;
-    
-    private String document;
-    private String statusCambio;
-    private String doc;
-    private double valor = 0;
+    @Autowired
+    DebtsToPayRepository debtsToPayRepositoty;
     
     public UUID cellarId;
+    public String debtsId;
+    public String doc;
+    public double valor;
+    public String estadoCambio;
     
     //Busca CreditNote por ID        
     public CreditNoteCellar getCreditNoteCellarById(UUID id) {
@@ -94,7 +97,6 @@ public class CreditNoteCellarServices {
             creditNoteCellar.setFatherListToNull();
             creditNoteCellar.setListsNull();
             CreditNoteCellar saved = creditNoteCellarRepository.save(creditNoteCellar);
-            document = creditNoteCellar.getCellarSeq();
         
             Cashier cashier = cashierRepository.findOne(creditNoteCellar.getUserIntegridad().getCashier().getId());
             cashier.setCreditNoteCellarNumberSeq(cashier.getCreditNoteCellarNumberSeq() + 1);
@@ -109,14 +111,9 @@ public class CreditNoteCellarServices {
             saved.setFatherListToNull();
             
             updateCellar(saved);
-            //Credits validate = creditsRepository.findByBillId(document);
-            //if (validate != null) {
-            //    updateCreditsAndPayment(saved, document);
-            //} else {
-            //    log.info("CreditNoteServices DO NOT updateCreditsAndPayment");
-            //}
             updateProductBySubsidiary(creditNoteCellar, detailsCellar);
-            log.info("CreditNoteServices createCreditNote DONE: {}, {}", saved.getId(), saved.getStringSeq());
+            updateDebtsToPayWithCreditsDebtsAndPaymentDebts(saved);
+            log.info("CreditNoteCellarServices createCreditNoteCellar DONE: {}, {}", saved.getId(), saved.getStringSeq());
             return saved;
         }
     }
@@ -130,40 +127,8 @@ public class CreditNoteCellarServices {
                 productBySubsidiairyRepository.save(ps);
             }
         });
-        log.info("CreditNoteServices updateProductBySubsidiary DONE");
+        log.info("CreditNoteCellarServices updateProductBySubsidiary DONE");
     }
-        
-    //Actualiza tablas CreditsDebts y PaymentDebts
-    //public void updateCreditsDebtsAndPaymentDebts(CreditNoteCellar saved, String document) {
-    //    CreditsDebts docNumber = creditsDebtsRepository.findByBillId(document);
-    //    doc = docNumber.getBillId();
-    //    if (doc.equals(document) && docNumber.getPayNumber() == numC) {
-    //        valor = docNumber.getValor();
-    //        docNumber.setValor(valor - saved.getTotal());
-    //        if (docNumber.getValor() <= 0.01) {
-    //            statusCambio = "NOTA DE CREDITO APLICADA";
-    //            docNumber.setStatusCredits(statusCambio);
-    //        }
-    //        CreditsDebts spCredits =  creditsDebtsRepository.save(docNumber);
-            
-    //        PaymentDebts specialPayment = new PaymentDebts();
-    //        specialPayment.setCreditsDebts(spCredits);
-    //        specialPayment.setDatePayment(saved.getDateCreated());
-    //        specialPayment.setNoDocument(saved.getStringSeq());
-    //        specialPayment.setNoAccount(null);
-    //        specialPayment.setDocumentNumber(saved.getDocumentStringSeq());
-    //        specialPayment.setTypePayment("NTC");
-    //        specialPayment.setDetail("ABONO POR NOTA DE CREDITO");
-    //        specialPayment.setModePayment("NTC");
-    //        specialPayment.setValorAbono(0.0);
-    //        specialPayment.setValorReten(0.0);
-    //        specialPayment.setValorNotac(saved.getTotal());
-    //        specialPayment.setActive(true);
-    //        paymentRepository.save(specialPayment);
-    //    }
-    //    log.info("CreditNoteCellarServices updateCreditsAndPayment DONE");
-    //    valor = 0;
-    //}
     
     //Actualiza tabla Cellar
     public void updateCellar(CreditNoteCellar saved) {
@@ -178,6 +143,47 @@ public class CreditNoteCellarServices {
             cellarRepository.save(cellar);
         });
         log.info("CreditNoteCellarServices updateCellar DONE");
+    }
+    
+    //Actualiza tablas CreditsDebts y PaymentDebts
+    public void updateDebtsToPayWithCreditsDebtsAndPaymentDebts(CreditNoteCellar saved) {
+        Iterable<DebtsToPay> debts = debtsToPayRepositoty.findDebtsToPayByProdiverIdAndBillNumber(saved.getProvider().getId(), saved.getDocumentStringSeq());
+        debts.forEach(debt -> {
+            debt.setListsNull();
+            debt.setFatherListToNull();
+            debtsId = debt.getId().toString();
+            CreditsDebts creditsDebts = creditsDebtsRepository.findByDebtsToPayId(debtsId);
+            doc = creditsDebts.getDebtsToPayId();
+            if (doc.equals(debtsId)) {
+                creditsDebts.setValor(creditsDebts.getValor() - saved.getTotal());
+                estadoCambio = "NOTA DE CREDITO APLICADA";
+                creditsDebts.setEstadoCredits(estadoCambio);
+                CreditsDebts spCreditsDebts = creditsDebtsRepository.save(creditsDebts);
+                valor = spCreditsDebts.getValor();
+                PaymentDebts spPaymentDebts = new PaymentDebts();
+                spPaymentDebts.setCreditsDebts(spCreditsDebts);
+                spPaymentDebts.setDatePayment(saved.getDateCreated());
+                spPaymentDebts.setNoDocument(saved.getStringSeq());
+                spPaymentDebts.setNoAccount("--");
+                spPaymentDebts.setDocumentNumber(saved.getDocumentStringSeq());
+                spPaymentDebts.setTypePayment("NTC");
+                spPaymentDebts.setDetail("ABONO POR NOTA DE CREDITO");
+                spPaymentDebts.setModePayment("NTC");
+                spPaymentDebts.setValorAbono(0.0);
+                spPaymentDebts.setValorReten(0.0);
+                spPaymentDebts.setValorNotac(saved.getTotal());
+                spPaymentDebts.setActive(true);
+                paymentDebtsRepository.save(spPaymentDebts);
+            }
+            debt.setCredNoteApplied(true);
+            debt.setCredNoteId(saved.getId().toString());
+            debt.setCredNoteNumber(saved.getStringSeq());
+            debt.setObservacion("NOTA DE CRÉDITO APLICADA" + "--" + debt.getObservacion());
+            debt.setSaldo(valor);
+            debtsToPayRepositoty.save(debt);
+            log.info("CreditNoteCellarServices updateDebtsToPayWithCreditsDebtsAndPaymentDebts DONE");
+            valor = 0;
+        });
     }
     
     private void populateChildren(CreditNoteCellar creditNoteCellar) {

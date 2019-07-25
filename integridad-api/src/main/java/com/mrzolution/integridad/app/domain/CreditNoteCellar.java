@@ -30,7 +30,6 @@ public class CreditNoteCellar {
     private double baseNoTaxes;
     private double baseTaxes;
     private String motivo;
-    private String claveDeAcceso;
 
 
     @ManyToOne

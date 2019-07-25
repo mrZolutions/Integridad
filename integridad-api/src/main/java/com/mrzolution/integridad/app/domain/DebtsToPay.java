@@ -46,6 +46,10 @@ public class DebtsToPay {
     private double retentionTotal;
     private String observacion;
     private String estado;
+    
+    private String credNoteId;
+    private String credNoteNumber;
+    private boolean credNoteApplied;
 
     @ManyToOne
     @JoinColumn(name = "provider_id")

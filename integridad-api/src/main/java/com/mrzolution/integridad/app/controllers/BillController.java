@@ -50,6 +50,20 @@ public class BillController {
         return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
     }
     
+    //Selecciona todas las Facturas del Cliente
+    @RequestMapping(method = RequestMethod.GET, value="/bill/client/nocrednot/{id}")
+    public ResponseEntity getBillByClientIdAndNoCN(@PathVariable("id") UUID id) {
+        Iterable<Bill> response = null;
+        try {
+            response = service.getBillByClientIdAndNoCN(id, 1);
+        } catch (BadRequestException e) {
+            log.error("BillController getBillByClientIdAndNoCN Exception thrown: {}", e.getMessage());
+	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+	}
+        log.info("BillController getBillByClientIdAndNoCN DONE");
+        return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
+    }
+    
     //Selecciona todas las Facturas del Cliente con Saldo != '0.00'
     @RequestMapping(method = RequestMethod.GET, value="/bill/client/saldo/{id}")
     public ResponseEntity getBillByClientIdWithSaldo(@PathVariable("id") UUID id) {

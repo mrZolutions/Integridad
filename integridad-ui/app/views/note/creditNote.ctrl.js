@@ -8,8 +8,8 @@
  * Controller of the integridadUiApp
  */
 angular.module('integridadUiApp')
-    .controller('CreditNoteCtrl', function( _, $rootScope, $location, providerService, $localStorage,
-                                            clientService, billService, creditNoteService, utilSeqService) {
+    .controller('CreditNoteCtrl', function(_, $location, providerService, $localStorage, debtsToPayService, cellarService,
+                                           clientService, billService, creditNoteService, utilSeqService, creditNoteCellarService) {
 
         var vm = this;
         vm.error = undefined;
@@ -28,6 +28,7 @@ angular.module('integridadUiApp')
             vm.userClientId = $localStorage.user.subsidiary.userClient.id;
             vm.userCashier = $localStorage.user.cashier;
             vm.userSubsidiary = $localStorage.user.subsidiary;
+            vm.newCNCellar = undefined;
 
             vm.clientList = undefined;
             vm.clientSelected = undefined;
@@ -43,7 +44,9 @@ angular.module('integridadUiApp')
             vm.selectedTypeCreditNote = undefined;
             vm.providerList = undefined;
             vm.providerSelected = undefined;
+            vm.providerName = undefined;
             vm.cellar = undefined;
+            vm.cellarList = undefined;
             vm.billOffline = undefined;
 
             vm.impuestoIVA = {
@@ -97,6 +100,8 @@ angular.module('integridadUiApp')
             };
         };
 
+// Sección Nota de Cŕedito de Facturas de Venta
+
         function _getSeqNumber() {
             vm.numberAddedOne = parseInt(vm.userCashier.creditNoteNumberSeq) + 1;
             vm.seqNumberFirstPart = vm.userSubsidiary.threeCode + '-' + vm.userCashier.threeCode;
@@ -139,10 +144,10 @@ angular.module('integridadUiApp')
             vm.bill.iva = iva;
             vm.bill.total = total;
 
-            vm.impuestoICE.base_imponible = vm.bill.subTotal
+            //vm.impuestoICE.base_imponible = vm.bill.subTotal
             vm.impuestoIVA.base_imponible = vm.bill.baseTaxes
             vm.impuestoIVAZero.base_imponible = vm.bill.baseNoTaxes
-            vm.impuestoICE.valor = vm.bill.ice;
+            //vm.impuestoICE.valor = vm.bill.ice;
             vm.impuestoIVA.valor = vm.bill.iva
             vm.impuestoIVAZero.valor = 0.0;
         };
@@ -152,7 +157,7 @@ angular.module('integridadUiApp')
             vm.success = undefined;
             vm.companyData = $localStorage.user.subsidiary;
             vm.clientSelected = client;
-            billService.getAllBillsByClientId(vm.clientSelected.id).then(function(response) {
+            billService.getAllBillsByClientIdAndNoCN(vm.clientSelected.id).then(function(response) {
                 vm.billList = response;
             }).catch(function (error) {
                 vm.loading = false;
@@ -193,6 +198,11 @@ angular.module('integridadUiApp')
             vm.bill.details[vm.indexDetail] = angular.copy(vm.detail);
             vm.indexDetail = undefined;
             vm.detail = undefined;
+            _getTotales();
+        };
+
+        vm.removeDetail = function(index) {
+            vm.bill.details.splice(index,1);
             _getTotales();
         };
 
@@ -300,11 +310,6 @@ angular.module('integridadUiApp')
             });
         };
 
-        vm.removeDetail = function(index) {
-            vm.bill.details.splice(index,1);
-            _getTotales();
-        };
-
         vm.creditsNoteByClient = function(client) {
             vm.error = undefined;
             vm.success = undefined;
@@ -324,6 +329,157 @@ angular.module('integridadUiApp')
             vm.success = undefined;
             creditNoteService.getCreditNoteById(creditNote.id).then(function(response) {
                 vm.creditNote = response;
+                vm.loading = false;
+            }).catch(function (error) {
+                vm.loading = false;
+                vm.error = error.data;
+            });
+        };
+
+// Sección Nota de Crédito de Facturas de Compra
+
+        function _getSeqNumbCredNotCellar() {
+            vm.numberAddedO = parseInt(vm.userCashier.creditNoteCellarNumberSeq) + 1;
+            vm.seqNumberFirstP = vm.userSubsidiary.threeCode + '-' + vm.userCashier.threeCode;
+            vm.seqNumberSecondP = utilSeqService._pad_with_zeroes(vm.numberAddedO, 9);
+            vm.seqNumbCredNotCellar =  vm.seqNumberFirstP + '-' + vm.seqNumberSecondP;
+        };
+
+        function _getCellarTotal() {
+            vm.cellar.subTotal = 0;
+            vm.cellar.iva = 0;
+            vm.cellar.ivaZero = 0;
+            vm.cellar.ice = 0;
+            vm.cellar.baseTaxes = 0;
+            vm.cellar.baseNoTaxes = 0;
+            var subtotal = 0;
+            var baseZero = 0;
+            var baseDoce = 0;
+            var iva = 0;
+            var ivaZero = 0;
+            var total = 0;
+            _.each(vm.cellar.detailsCellar, function(detail) {
+                subtotal = subtotal + (detail.quantity * detail.costEach);
+                if (detail.product.iva) {
+                    baseDoce = baseDoce + (detail.quantity * detail.costEach);
+                    iva = baseDoce * 0.12;
+                } else {
+                    baseZero = baseZero + (detail.quantity * detail.costEach);
+                    ivaZero = 0;
+                };
+                
+            });
+            total = baseDoce + baseZero + iva;
+            vm.cellar.subTotal = subtotal;
+            vm.cellar.iva = iva;
+            vm.cellar.ivaZero = ivaZero;
+            vm.cellar.ice = 0;
+            vm.cellar.baseTaxes = baseDoce;
+            vm.cellar.baseNoTaxes = baseZero;
+            vm.cellar.total = total;
+        };
+
+        vm.providerSelect = function(provider) {
+            vm.error = undefined;
+            vm.success = undefined;
+            vm.companyData = $localStorage.user.subsidiary;
+            vm.providerSelected = provider;
+            cellarService.getCellarsByProviderIdAndNoCN(vm.providerSelected.id).then(function(response) {
+                vm.cellarList = response;
+            }).catch(function (error) {
+                vm.loading = false;
+                vm.error = error.data;
+            });
+        };
+
+        vm.cellarSelect = function(cellar) {
+            vm.items = [];
+            vm.newCNCellar = true;
+            cellarService.getAllCellarById(cellar.id).then(function(response) {
+                vm.cellar = angular.copy(response);
+                vm.cellar.detailsCellar = [];
+                vm.idCellar = cellar.id;
+                vm.cellar.provider = vm.providerSelected;
+                vm.cellar.userIntegridad= $localStorage.user;
+                vm.cellar.subsidiary= $localStorage.user.subsidiary;
+                _.each(response.detailsCellar, function(detail) {
+                    detail.id = undefined;
+                    vm.cellar.detailsCellar.push(detail);
+                });
+                vm.cellar.documentStringSeq = response.billNumber;
+                _getSeqNumbCredNotCellar();
+                var today = new Date();
+                $('#pickerCreditNoteCellarDate').data("DateTimePicker").date(today);
+            }).catch(function(error) {
+                vm.loading = false;
+                vm.error = error.data;
+            });
+        };
+
+        //vm.editDetailCellar = function(index) {
+        //    vm.indexDetailC = index;
+        //    vm.detailC = angular.copy(vm.cellar.detailsCellar[index]);
+        //};
+
+        //vm.acceptProduct = function() {
+        //    vm.detailC.total = vm.detailC.quantity * vm.detailC.costEach;
+        //    vm.cellar.detailsCellar[vm.indexDetailC] = angular.copy(vm.detailC);
+        //    vm.indexDetailC = undefined;
+        //    vm.detailC = undefined;
+        //    _getCellarTotal();
+        //};
+
+        vm.removeDetailCellar = function(index) {
+            vm.cellar.detailsCellar.splice(index,1);
+            _getCellarTotal();
+        };
+
+        vm.saveCreditNoteCellar = function() {
+            vm.loading = true;
+            debtsToPayService.getDebtsToPayByProdiverIdAndBillNumber(vm.providerSelected.id, vm.cellar.documentStringSeq).then(function(response) {
+                if (response.length === 0) {
+                    vm.error = 'NO se puede guardar la Nota de Crédito, debibo que la Factura de Compra NO Existe en Cuentas por Pagar';
+                    vm.loading = false;
+                } else {
+                    vm.cellar.creditSeq = vm.numberAddedO;
+                    vm.cellar.cellarSeq = vm.idCellar;
+                    vm.cellar.stringSeq = vm.seqNumbCredNotCellar;
+                    creditNoteCellarService.create(vm.cellar).then(function(response) {
+                        vm.newCNCellar = false;
+                        vm.userCashier.creditNoteCellarNumberSeq = vm.cellar.creditSeq;
+                        vm.success = 'Nota de Crédito creada';
+                        vm.loading = false;
+                    }).catch(function(error) {
+                        vm.loading = false;
+                        vm.error = error.data;
+                    });
+                };
+            }).catch(function(error) {
+                vm.loading = false;
+                vm.error = error.data;
+            });
+        };
+
+        vm.creditsNoteByProvider = function(provider) {
+            vm.error = undefined;
+            vm.success = undefined;
+            vm.providerName = provider.name;
+            creditNoteCellarService.getCreditsNoteCellarByProviderId(provider.id).then(function(response) {
+                vm.creditNoteCellarList = response;
+            }).catch(function (error) {
+                vm.loading = false;
+                vm.error = error.data;
+            });
+        };
+
+        vm.creditNoteCellarSelect = function(creditNote) {
+            vm.loading = true;
+            vm.error = undefined;
+            vm.success = undefined;
+            vm.companyData = $localStorage.user.subsidiary;
+            creditNoteCellarService.getCreditNoteCellarById(creditNote.id).then(function(response) {
+                vm.cellar = response;
+                vm.providerSelected = response.provider;
                 vm.loading = false;
             }).catch(function (error) {
                 vm.loading = false;

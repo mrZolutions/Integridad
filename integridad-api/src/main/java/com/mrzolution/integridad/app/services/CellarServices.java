@@ -180,6 +180,7 @@ public class CellarServices {
         log.info("CellarServices updateProductBySubsidiary DONE");
     }
     
+    //Selecciona los Ingresos a Bodega por Proveedor
     public Iterable<Cellar> getCellarsByProviderId(UUID id) {
         Iterable<Cellar> cellars = cellarRepository.findCellarsByProviderId(id);
         cellars.forEach(cellar -> {
@@ -190,6 +191,18 @@ public class CellarServices {
         return cellars;
     }
     
+    //Selecciona los Ingresos a Bodega sin Nota de Cŕedito Aplicada por Proveedor
+    public Iterable<Cellar> getCellarsByProviderIdAndNoCN(UUID id) {
+        Iterable<Cellar> cellars = cellarRepository.findCellarsByProviderIdAndNoCN(id);
+        cellars.forEach(cellar -> {
+            cellar.setListsNull();
+            cellar.setFatherListToNull();
+        });
+        log.info("CellarServices getCellarsByProviderIdAndNoCN: {}", id);
+        return cellars;
+    }
+    
+    //Selecciona los Ingresos a Bodega Pendientes por Aprobación
     public Iterable<Cellar> getCellarPendingOfWarehouse(UUID id) {
         Iterable<Cellar> cellars = cellarRepository.findCellarPendingOfWarehouse(id);
         cellars.forEach(cellar -> {

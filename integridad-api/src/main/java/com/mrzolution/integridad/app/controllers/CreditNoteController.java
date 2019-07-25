@@ -58,6 +58,7 @@ public class CreditNoteController {
         return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
     }
     
+    //Selecciona la Nota de Crédito por ID
     @RequestMapping(method = RequestMethod.GET, value="/{id}")
     public ResponseEntity getCreditNoteById(@PathVariable("id") UUID id) {
         CreditNote response = null;
@@ -67,7 +68,7 @@ public class CreditNoteController {
             log.error("CreditNoteController getCreditNoteById Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
-        log.info("CreditNoteController getBillById DONE");
+        log.info("CreditNoteController getCreditNoteById DONE");
         return new ResponseEntity<CreditNote>(response, HttpStatus.ACCEPTED);
     }
 

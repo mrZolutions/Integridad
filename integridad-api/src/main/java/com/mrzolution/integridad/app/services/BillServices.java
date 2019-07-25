@@ -104,6 +104,17 @@ public class BillServices {
         return bills;
     }
     
+    //Selecciona todas las Facturas sin Nota de Cŕedito Aplicada del Cliente
+    public Iterable<Bill> getBillByClientIdAndNoCN(UUID id, int type) {
+        Iterable<Bill> bills = billRepository.findBillByClientIdAndNoCN(id, type);
+        bills.forEach(bill -> {
+            bill.setListsNull();
+            bill.setFatherListToNull();
+        });
+        log.info("BillServices getBillByClientIdAndNoCN: {}", id);
+        return bills;
+    }
+    
     //Selecciona todas las Facturas del Cliente con Saldo != '0.00'
     public Iterable<Bill> getBillByClientIdWithSaldo(UUID id, int type) {
         Iterable<Bill> bills = billRepository.findBillByClientIdWithSaldo(id, type);

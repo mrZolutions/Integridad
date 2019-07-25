@@ -19,6 +19,12 @@ angular
             });
         };
 
+        this.getAllBillsByClientIdAndNoCN = function(id) {
+            return securityService.get('/bill/bill/client/nocrednot/' + id).then(function successCallback(response) {
+                return response.data;
+            });
+        };
+
         this.getAllBillsByClientIdWithSaldo = function(id) {
             return securityService.get('/bill/bill/client/saldo/' + id).then(function successCallback(response) {
                 return response.data;

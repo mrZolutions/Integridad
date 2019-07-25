@@ -80,6 +80,19 @@ public class DebtsToPayController {
         return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
     }
     
+    @RequestMapping(method = RequestMethod.GET, value="/debts/provider/{id}/{billNum}")
+    public ResponseEntity getDebtsToPayByProdiverIdAndBillNumber(@PathVariable("id") UUID id, @PathVariable("billNum") String billNum) {
+        Iterable<DebtsToPay> response = null;
+        try {
+            response = service.getDebtsToPayByProdiverIdAndBillNumber(id, billNum);
+        } catch (BadRequestException e) {
+            log.error("DebtsToPayController getDebtsToPayByProdiverIdAndBillNumber Exception thrown: {}", e.getMessage());
+	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+        log.info("DebtsToPayController getDebtsToPayByProdiverIdAndBillNumber DONE");
+        return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
+    }
+    
     @RequestMapping(method = RequestMethod.GET, value="/company/{id}")
     public ResponseEntity getDebtsToPayByUserClientId(@PathVariable("id") UUID id) {
         Iterable<DebtsToPay> response = null;

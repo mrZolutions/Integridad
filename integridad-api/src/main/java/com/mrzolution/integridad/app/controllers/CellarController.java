@@ -93,6 +93,19 @@ public class CellarController {
         return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
     }
     
+    @RequestMapping(method = RequestMethod.GET, value="/provider/nocrednot/{id}")
+    public ResponseEntity getCellarsByProviderIdAndNoCN(@PathVariable("id") UUID id) {
+        Iterable<Cellar> response = null;
+        try {
+            response = service.getCellarsByProviderIdAndNoCN(id);
+        } catch (BadRequestException e) {
+            log.error("CellarController getCellarsByProviderId Exception thrown: {}", e.getMessage());
+	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+        log.info("CellarController getCellarsByProviderId DONE");
+        return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
+    }
+    
     @RequestMapping(method = RequestMethod.GET, value="/rep/{userClientId}/{dateOne}/{dateTwo}")
     public ResponseEntity getByUserClientIdAndDatesActives(@PathVariable("userClientId") UUID userClientId, @PathVariable("dateOne") long dateOne, @PathVariable("dateTwo") long dateTwo) {
         List<CellarEntryReport> response = null;

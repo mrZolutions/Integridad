@@ -84,6 +84,16 @@ public class DebtsToPayServices {
         return debts;
     }
     
+    public Iterable<DebtsToPay> getDebtsToPayByProdiverIdAndBillNumber(UUID id, String billNum) {
+        Iterable<DebtsToPay> debts = debtsToPayRepository.findDebtsToPayByProdiverIdAndBillNumber(id, billNum);
+        debts.forEach(debt -> {
+            debt.setListsNull();
+            debt.setFatherListToNull();
+        });
+        log.info("DebtsToPayServices getDebtsToPayByProdiverIdAndBillNumber: {}, {}", id, billNum);
+        return debts;
+    }
+    
     //Selección de Debts por Id de Empresa
     public Iterable<DebtsToPay> getDebtsToPayByUserClientId(UUID id) {
         Iterable<DebtsToPay> debts = debtsToPayRepository.findDebtsToPayByUserClientId(id);

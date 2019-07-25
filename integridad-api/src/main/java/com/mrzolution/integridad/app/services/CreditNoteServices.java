@@ -148,18 +148,16 @@ public class CreditNoteServices {
         doc = docNumber.getBillId();
         if (doc.equals(document) && docNumber.getPayNumber() == numC) {
             valor = docNumber.getValor();
-            docNumber.setValor(valor - saved.getTotal());
-            if (docNumber.getValor() <= 0.01) {
-                statusCambio = "NOTA DE CREDITO APLICADA";
-                docNumber.setStatusCredits(statusCambio);
-            }
+            docNumber.setValor(valor - saved.getTotal());    
+            statusCambio = "NOTA DE CREDITO APLICADA";
+            docNumber.setStatusCredits(statusCambio);
             Credits spCredits =  creditsRepository.save(docNumber);
             
             Payment specialPayment = new Payment();
             specialPayment.setCredits(spCredits);
             specialPayment.setDatePayment(saved.getDateCreated());
             specialPayment.setNoDocument(saved.getStringSeq());
-            specialPayment.setNoAccount(null);
+            specialPayment.setNoAccount("--");
             specialPayment.setDocumentNumber(saved.getDocumentStringSeq());
             specialPayment.setTypePayment("NTC");
             specialPayment.setDetail("ABONO POR NOTA DE CREDITO");
@@ -184,6 +182,7 @@ public class CreditNoteServices {
             bill.setCreditNoteApplied(true);
             bill.setCreditNoteId(saved.getId().toString());
             bill.setCreditNoteNumber(saved.getStringSeq());
+            bill.setObservation("NOTA DE CRÉDITO APLICADA");
             sum = bill.getTotal() - saved.getTotal();
             BigDecimal vsaldo = new BigDecimal(sum);
             if (sum <= 0) {
