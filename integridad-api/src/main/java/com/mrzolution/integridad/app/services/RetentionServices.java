@@ -90,7 +90,7 @@ public class RetentionServices {
     }
     
     //Selecciona todas las Retenciones del Proveedor y Factura de Compra
-    public Iterable<Retention> getRetentionByProviderIdAndDocumentNumber (UUID id, String documentNumber) {
+    public Iterable<Retention> getRetentionByProviderIdAndDocumentNumber(UUID id, String documentNumber) {
         Iterable<Retention> retentions = retentionRepository.findRetentionByProviderIdAndDocumentNumber(id, documentNumber);
         retentions.forEach(retention -> {
             retention.setListsNull();

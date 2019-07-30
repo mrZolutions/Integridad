@@ -332,6 +332,7 @@ angular.module('integridadUiApp')
         vm.createRetention = function(prov) {
             var today = new Date();
             vm.retentionCreated = false;
+            vm.providerId = prov.id;
             vm.retention = {
                 provider: prov,
                 typeRetention: undefined,
@@ -548,52 +549,62 @@ angular.module('integridadUiApp')
         vm.getClaveAcceso = function() {
             vm.loading = true;
             var totalRetent = 0;
-            var eRet = eretentionService.createERetention(vm.retention, $localStorage.user);
-            eretentionService.getClaveDeAcceso(eRet, $localStorage.user.subsidiary.userClient.id).then(function(resp) {
-                var obj = JSON.parse(resp.data);
-                //var obj = {clave_acceso: '1234560', id:'id12345'};
-                if (obj.errors === undefined) {
-                    vm.retention.claveDeAcceso = obj.clave_acceso;
-                    vm.retention.idSri = obj.id;
-                    vm.retention.stringSeq = vm.retention.retentionSeq;
-                    vm.retention.retSeq = eRet.secuencial;
-                    vm.retention.ejercicioFiscal = vm.retention.ejercicio;
-                    vm.retention.documentNumber = vm.retention.numero;
-                    vm.retention.documentDate = $('#pickerBillDateDocumentRetention').data("DateTimePicker").date().toDate().getTime();
-                    vm.retention.userIntegridad = $localStorage.user;
-                    vm.retention.subsidiary = $localStorage.user.subsidiary;
-                    _.each(vm.retention.items, function(detail) {
-                        totalRetent = parseFloat(totalRetent + detail.valor_retenido);
-                    });
-                    vm.retention.total = totalRetent;
-                    vm.retention.detailRetentions = [];
-                    _.each(vm.retention.items, function(item) {
-                        var detail = {
-                            taxType: item.codigo === String(1) ? 'RETENCION EN LA FUENTE' : 'RETENCION EN EL IVA',
-                            code: item.codigo_porcentaje_integridad,
-                            baseImponible: item.base_imponible,
-                            percentage: item.porcentaje,
-                            total: item.valor_retenido
+            eretentionService.getRetentionByProviderIdAndDocumentNumber(vm.providerId, vm.retention.numero).then(function(response) {
+                if (response.length === 0) {
+                    var eRet = eretentionService.createERetention(vm.retention, $localStorage.user);
+                    eretentionService.getClaveDeAcceso(eRet, $localStorage.user.subsidiary.userClient.id).then(function(resp) {
+                        var obj = JSON.parse(resp.data);
+                        //var obj = {clave_acceso: '1234560', id:'id12345'};
+                        if (obj.errors === undefined) {
+                            vm.retention.claveDeAcceso = obj.clave_acceso;
+                            vm.retention.idSri = obj.id;
+                            vm.retention.stringSeq = vm.retention.retentionSeq;
+                            vm.retention.retSeq = eRet.secuencial;
+                            vm.retention.ejercicioFiscal = vm.retention.ejercicio;
+                            vm.retention.documentNumber = vm.retention.numero;
+                            vm.retention.documentDate = $('#pickerBillDateDocumentRetention').data("DateTimePicker").date().toDate().getTime();
+                            vm.retention.userIntegridad = $localStorage.user;
+                            vm.retention.subsidiary = $localStorage.user.subsidiary;
+                            _.each(vm.retention.items, function(detail) {
+                                totalRetent = parseFloat(totalRetent + detail.valor_retenido);
+                            });
+                            vm.retention.total = totalRetent;
+                            vm.retention.detailRetentions = [];
+                            _.each(vm.retention.items, function(item) {
+                                var detail = {
+                                    taxType: item.codigo === String(1) ? 'RETENCION EN LA FUENTE' : 'RETENCION EN EL IVA',
+                                    code: item.codigo_porcentaje_integridad,
+                                    baseImponible: item.base_imponible,
+                                    percentage: item.porcentaje,
+                                    total: item.valor_retenido
+                                };
+                                vm.retention.detailRetentions.push(detail);
+                            });
+                            eretentionService.create(vm.retention).then(function(respRetention) {
+                                vm.retention = respRetention;
+                                vm.totalRetention = 0;
+                                _.each(vm.retention.detailRetentions, function(detail) {
+                                    vm.totalRetention = parseFloat(vm.totalRetention + detail.total);
+                                });
+                                vm.retentionCreated = true;
+                                $localStorage.user.cashier.retentionNumberSeq = parseInt($localStorage.user.cashier.retentionNumberSeq) + 1;
+                                vm.loading = false;
+                            }).catch(function(error) {
+                                vm.loading = false;
+                                vm.error = error;
+                            });
+                        } else {
+                            vm.loading = false;
+                            vm.error = "Error al obtener Clave de Acceso: " + JSON.stringify(obj.errors);
                         };
-                        vm.retention.detailRetentions.push(detail);
-                    });
-                    eretentionService.create(vm.retention).then(function(respRetention) {
-                        vm.retention = respRetention;
-                        vm.totalRetention = 0;
-                        _.each(vm.retention.detailRetentions, function(detail) {
-                            vm.totalRetention = parseFloat(vm.totalRetention + detail.total);
-                        });
-                        vm.retentionCreated = true;
-                        $localStorage.user.cashier.retentionNumberSeq = parseInt($localStorage.user.cashier.retentionNumberSeq) + 1;
-                        vm.loading = false;
                     }).catch(function(error) {
                         vm.loading = false;
-                        vm.error = error;
+                        vm.error = error.data;
                     });
                 } else {
-                    vm.loading = false;
-                    vm.error = "Error al obtener Clave de Acceso: " + JSON.stringify(obj.errors);
+                    vm.error = 'Ya Existe una Retención para esta Factura';
                 };
+                vm.loading = false;
             }).catch(function(error) {
                 vm.loading = false;
                 vm.error = error.data;

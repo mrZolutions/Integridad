@@ -741,7 +741,7 @@ angular.module('integridadUiApp')
             var numTwo = utilSeqService._pad_with_zeroes(vm.threeNumberTwo, 3);
             var parNum = utilSeqService._pad_with_zeroes(vm.seccondPartNumber, 9);
             vm.debtsBillNumber = numOne + '-' + numTwo + '-' + parNum;
-            eretentionService.getRetentionsByProviderIdAndDocumentNumber(vm.providerId, vm.debtsBillNumber).then(function(response) {
+            eretentionService.getRetentionByProviderIdAndDocumentNumber(vm.providerId, vm.debtsBillNumber).then(function(response) {
                 vm.retentionList = response;
                 vm.loading = false;
             }).catch(function(error) {

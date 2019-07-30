@@ -1245,7 +1245,7 @@ angular.module('integridadUiApp')
 
         vm.getRetentionByProviderAndDocumentNumber = function() {
             vm.loading = true;
-            eretentionService.getRetentionsByProviderIdAndDocumentNumber(vm.providerId, vm.debtsBillNumber).then(function(response) {
+            eretentionService.getRetentionByProviderIdAndDocumentNumber(vm.providerId, vm.debtsBillNumber).then(function(response) {
                 vm.retentionList = response;
                 vm.loading = false;
             }).catch(function(error) {

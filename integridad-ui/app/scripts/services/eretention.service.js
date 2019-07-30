@@ -81,7 +81,7 @@ angular
             });
         };
 
-        this.getRetentionsByProviderIdAndDocumentNumber = function(id, seq) {
+        this.getRetentionByProviderIdAndDocumentNumber = function(id, seq) {
             return securityService.get('/retention/retention/provider/docnum/' + id + '/' + seq).then(function successCallback(response) {
                 return response.data;
             });
