@@ -112,11 +112,9 @@ public class RetentionServices {
         retention.setListsNull();
         Retention saved = retentionRepository.save(retention);
         
-        Iterable<Cashier> cashiers = cashierRepository.findCashierById(retention.getUserIntegridad().getCashier().getId());
-        cashiers.forEach(cashier -> {
-            cashier.setRetentionNumberSeq(cashier.getRetentionNumberSeq() + 1);
-            cashierRepository.save(cashier);
-        });
+        Cashier cashier = cashierRepository.findOne(retention.getUserIntegridad().getCashier().getId());
+        cashier.setRetentionNumberSeq(cashier.getRetentionNumberSeq() + 1);
+        cashierRepository.save(cashier);
             
         details.forEach(detail -> {
             detail.setRetention(saved);
