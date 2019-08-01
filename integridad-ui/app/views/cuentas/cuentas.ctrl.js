@@ -7,7 +7,7 @@
  * Controller of the integridadUiApp
  */
 angular.module('integridadUiApp')
-    .controller('CuentasContablesCtrl', function( _, $location, $localStorage, cuentaContableService) {
+    .controller('CuentasContablesCtrl', function(_, $location, $localStorage, cuentaContableService) {
         var vm = this;
         vm.error = undefined;
         vm.success = undefined;

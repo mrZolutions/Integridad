@@ -9,6 +9,7 @@ import com.mrzolution.integridad.app.domain.DebtsToPay;
 import com.mrzolution.integridad.app.domain.DetailCellar;
 import com.mrzolution.integridad.app.domain.PaymentDebts;
 import com.mrzolution.integridad.app.domain.ProductBySubsidiary;
+import com.mrzolution.integridad.app.domain.report.CreditNoteCellarReport;
 import com.mrzolution.integridad.app.exceptions.BadRequestException;
 import com.mrzolution.integridad.app.repositories.CashierRepository;
 import com.mrzolution.integridad.app.repositories.CellarRepository;
@@ -18,6 +19,7 @@ import com.mrzolution.integridad.app.repositories.DebtsToPayRepository;
 import com.mrzolution.integridad.app.repositories.DetailCellarRepository;
 import com.mrzolution.integridad.app.repositories.PaymentDebtsRepository;
 import com.mrzolution.integridad.app.repositories.ProductBySubsidiairyRepository;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -98,10 +100,12 @@ public class CreditNoteCellarServices {
             creditNoteCellar.setListsNull();
             CreditNoteCellar saved = creditNoteCellarRepository.save(creditNoteCellar);
         
-            Cashier cashier = cashierRepository.findOne(creditNoteCellar.getUserIntegridad().getCashier().getId());
-            cashier.setCreditNoteCellarNumberSeq(cashier.getCreditNoteCellarNumberSeq() + 1);
-            cashierRepository.save(cashier);
-
+            Iterable<Cashier> cashiers = cashierRepository.findCashierById(creditNoteCellar.getUserIntegridad().getCashier().getId());
+            cashiers.forEach(cashier -> {
+                cashier.setCreditNoteCellarNumberSeq(cashier.getCreditNoteCellarNumberSeq() + 1);
+                cashierRepository.save(cashier);
+            });
+            
             detailsCellar.forEach(detail -> {
                 detail.setCreditNoteCellar(saved);
                 detailCellarRepository.save(detail);
@@ -184,6 +188,24 @@ public class CreditNoteCellarServices {
             log.info("CreditNoteCellarServices updateDebtsToPayWithCreditsDebtsAndPaymentDebts DONE");
             valor = 0;
         });
+    }
+    
+    public List<CreditNoteCellarReport> getCreditNotesCellarByUserClientIdAndDates(UUID userClientId, long dateOne, long dateTwo) {
+        log.info("CreditNoteServices getCreditNotesByUserClientIdAndDates: {}, {}, {}", userClientId, dateOne, dateTwo);
+        Iterable<CreditNoteCellar> creditNotesCellar = creditNoteCellarRepository.findCreditNotesCellarByUserClientIdAndDates(userClientId, dateOne, dateTwo);
+        List<CreditNoteCellarReport> creditNoteCellarReportList = new ArrayList<>();
+        creditNotesCellar.forEach(creditNote -> {
+            creditNote.setListsNull();
+            String status = creditNote.isActive() ? "ACTIVA" : "ANULADA";
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+            String dateCreated = dateFormat.format(new Date(creditNote.getDateCreated()));
+            
+            CreditNoteCellarReport creditNoteCellarReport = new CreditNoteCellarReport(creditNote.getStringSeq(), dateCreated, creditNote.getDocumentStringSeq(), status, creditNote.getBaseTaxes(),
+                                                                     creditNote.getBaseNoTaxes(), creditNote.getIva(), creditNote.getTotal(), creditNote.getMotivo());
+            
+            creditNoteCellarReportList.add(creditNoteCellarReport);
+        });
+        return creditNoteCellarReportList;
     }
     
     private void populateChildren(CreditNoteCellar creditNoteCellar) {

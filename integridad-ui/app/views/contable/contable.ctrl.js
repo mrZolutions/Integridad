@@ -1,5 +1,4 @@
 'use strict';
-
 /**
  * @ngdoc function
  * @name integridadUiApp.controller:ContableCtrl
@@ -9,7 +8,7 @@
  */
 angular.module('integridadUiApp')
     .controller('ContableCtrl', function(_, $localStorage, cuentaContableService, providerService, eretentionService, billService,
-                                            utilSeqService, debtsToPayService, clientService, contableService, $location) {
+                                         utilSeqService, debtsToPayService, clientService, contableService, $location) {
         var vm = this;
         vm.error = undefined;
         vm.success = undefined;

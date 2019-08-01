@@ -1,5 +1,4 @@
 'use strict';
-
 /**
  * @ngdoc function
  * @name integridadUiApp.controller:ProductionCtrl
@@ -333,7 +332,7 @@ angular.module('integridadUiApp')
                 product: item.product,
                 codeWarehouse: vm.warehouse.codeWarehouse,
                 dateRegister: $('#pickerDateEnterCellar').data("DateTimePicker").date().toDate().getTime(),
-                details: 'INGRESO A BODEGA',
+                details: 'INGRESO A BODEGA Nro. ' + vm.cellSeqNumber + ', Fc. ' + vm.cellar.billNumber,
                 observation: 'INGRESO',
                 prodCostEach: item.costEach,
                 prodName: item.product.name,
@@ -567,7 +566,7 @@ angular.module('integridadUiApp')
                 product: item.product,
                 codeWarehouse: vm.warehouse.codeWarehouse,
                 dateRegister: $('#pickerDateConsumption').data("DateTimePicker").date().toDate().getTime(),
-                details: 'CONSUMO INTERNO',
+                details: 'CONSUMO INTERNO Nro. ' + vm.csmSeqNumber,
                 observation: vm.consumption.observation,
                 prodCostEach: item.costEach,
                 prodName: item.product.name,

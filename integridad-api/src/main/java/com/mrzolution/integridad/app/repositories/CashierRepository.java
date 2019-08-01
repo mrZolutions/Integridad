@@ -16,4 +16,7 @@ public interface CashierRepository extends CrudRepository<Cashier, UUID> {
     Iterable<Cashier> findBySubsidiaryId(@Param("id") UUID id);
 
     Iterable<Cashier> findBySubsidiary(Subsidiary subsidiary);
+    
+    @Query("SELECT c FROM Cashier c WHERE c.id = (:id) AND c.active = true")
+    Iterable<Cashier> findCashierById(@Param("id") UUID id);
 }

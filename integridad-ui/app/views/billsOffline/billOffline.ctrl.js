@@ -1,5 +1,4 @@
 'use strict';
-
 /**
  * @ngdoc function
  * @name integridadUiApp.controller:BillOfflineCtrl
@@ -8,7 +7,7 @@
  * Controller of the integridadUiApp
  */
 angular.module('integridadUiApp')
-    .controller('BillOfflineCtrl', function( _, $location, utilStringService, $localStorage,
+    .controller('BillOfflineCtrl', function(_, $location, utilStringService, $localStorage,
                                             clientService, productService, authService, billOfflineService, $window,
                                             cashierService, utilSeqService) {
 

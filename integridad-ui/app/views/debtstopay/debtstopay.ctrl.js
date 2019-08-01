@@ -1,5 +1,4 @@
 'use strict';
-
 /**
  * @ngdoc function
  * @name integridadUiApp.controller:DebtsToPayCtrl
@@ -9,7 +8,7 @@
  */
 angular.module('integridadUiApp')
     .controller('DebtsToPayCtrl', function(_, $localStorage, providerService, cuentaContableService, debtsToPayService, authService, contableService,
-                                            utilSeqService, creditsDebtsService, paymentDebtsService, $location, eretentionService, cashierService) {
+                                           utilSeqService, creditsDebtsService, paymentDebtsService, $location, eretentionService, cashierService) {
         var vm = this;
         vm.error = undefined;
         vm.success = undefined;

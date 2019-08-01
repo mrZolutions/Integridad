@@ -126,9 +126,13 @@ public class ConsumptionServices {
         consumption.setFatherListToNull();
         consumption.setListsNull();
         Consumption saved = consumptionRepository.save(consumption);
-        Cashier cashier = cashierRepository.findOne(consumption.getUserIntegridad().getCashier().getId());
-        cashier.setCsmNumberSeq(cashier.getCsmNumberSeq() + 1);
-        cashierRepository.save(cashier);
+        
+        Iterable<Cashier> cashiers = cashierRepository.findCashierById(consumption.getUserIntegridad().getCashier().getId());
+        cashiers.forEach(cashier -> {
+            cashier.setCsmNumberSeq(cashier.getCsmNumberSeq() + 1);
+            cashierRepository.save(cashier);
+        });
+        
         saveDetailsConsumption(saved, detailsConsumption);
         saveKardex(saved, detailsKardex);
         updateProductBySubsidiary(consumption, detailsConsumption);

@@ -1,6 +1,11 @@
 'use strict';
-
-
+/**
+ * @ngdoc function
+ * @name integridadUiApp.controller:QuotationCtrl
+ * @description
+ * # QuotationCtrl
+ * Controller of the integridadUiApp
+ */
 angular.module('integridadUiApp')
     .controller('QuotationCtrl', function( _,$location, $localStorage, clientService, productService, billService,
                                           utilSeqService) {

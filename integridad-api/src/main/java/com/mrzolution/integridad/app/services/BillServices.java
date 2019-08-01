@@ -163,9 +163,11 @@ public class BillServices {
 
         // typeDocument 1 is Bill 0 is Quotation
         if (typeDocument == 1) {
-            Cashier cashier = cashierRepository.findOne(bill.getUserIntegridad().getCashier().getId());
-            cashier.setBillNumberSeq(cashier.getBillNumberSeq() + 1);
-            cashierRepository.save(cashier);
+            Iterable<Cashier> cashiers = cashierRepository.findCashierById(bill.getUserIntegridad().getCashier().getId());
+            cashiers.forEach(cashier -> {
+                cashier.setBillNumberSeq(cashier.getBillNumberSeq() + 1);
+                cashierRepository.save(cashier);
+            });
             // Excepción PPE, Dental y Ferretería Lozada NO actualizan Kardex
             if ("A-1".equals(bill.getClient().getUserClient().getEspTemp()) || "A-2".equals(bill.getClient().getUserClient().getEspTemp()) || "A-N".equals(bill.getClient().getUserClient().getEspTemp())) {
                 saveDetailsBill(saved, details);
@@ -178,9 +180,11 @@ public class BillServices {
                 updateProductBySubsidiary(bill, typeDocument, details);
             }
         } else {
-            Cashier cashier = cashierRepository.findOne(bill.getUserIntegridad().getCashier().getId());
-            cashier.setQuotationNumberSeq(cashier.getQuotationNumberSeq() + 1);
-            cashierRepository.save(cashier);
+            Iterable<Cashier> cashiers = cashierRepository.findCashierById(bill.getUserIntegridad().getCashier().getId());
+            cashiers.forEach(cashier -> {
+                cashier.setQuotationNumberSeq(cashier.getQuotationNumberSeq() + 1);
+                cashierRepository.save(cashier);
+            });
             saveDetailsQuotation(saved, details);
         }
         log.info("BillServices createBill: {}, {}", saved.getId(), saved.getStringSeq());

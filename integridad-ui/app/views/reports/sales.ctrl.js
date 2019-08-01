@@ -1,5 +1,4 @@
 'use strict';
-
 /**
  * @ngdoc function
  * @name integridadUiApp.controller:ReportSalesCtrl
@@ -8,8 +7,8 @@
  * Controller of the menu
  */
 angular.module('integridadUiApp')
-    .controller('ReportSalesCtrl', function(_, $localStorage, creditsbillService, billService, eretentionService, eretentionClientService, cellarService,
-                                            paymentService, paymentDebtsService, creditsDebtsService, $location, debtsToPayService, consumptionService) {
+    .controller('ReportSalesCtrl', function(_, $localStorage, creditsbillService, billService, eretentionService, eretentionClientService, cellarService, creditNoteCellarService,
+                                            paymentService, paymentDebtsService, creditsDebtsService, $location, debtsToPayService, consumptionService, creditNoteService) {
         var vm = this;
         var today = new Date();
         $('#pickerBillDateOne').data("DateTimePicker").date(today);
@@ -224,6 +223,42 @@ angular.module('integridadUiApp')
             var userCliId = $localStorage.user.subsidiary.userClient.id;
 
             cellarService.getByUserClientIdAndDatesActives(userCliId, dateOne, dateTwo).then(function(response) {
+                vm.reportList = response;
+                vm.loading = false;
+            }).catch(function(error) {
+                vm.loading = false;
+                vm.error = error.data;
+            });
+        };
+
+        vm.getReportCreditNote = function() {
+            vm.isProductReportList = '13';
+            vm.reportList = undefined;
+            vm.loading = true;
+            var dateOne = $('#pickerBillDateOne').data("DateTimePicker").date().toDate().getTime();
+            var dateTwo = $('#pickerBillDateTwo').data("DateTimePicker").date().toDate().getTime();
+            dateTwo += 86399000;
+            var userCliId = $localStorage.user.subsidiary.userClient.id;
+
+            creditNoteService.getCreditNotesByUserClientIdAndDates(userCliId, dateOne, dateTwo).then(function(response) {
+                vm.reportList = response;
+                vm.loading = false;
+            }).catch(function(error) {
+                vm.loading = false;
+                vm.error = error.data;
+            });
+        };
+
+        vm.getReportCreditNoteCompras = function() {
+            vm.isProductReportList = '14';
+            vm.reportList = undefined;
+            vm.loading = true;
+            var dateOne = $('#pickerBillDateOne').data("DateTimePicker").date().toDate().getTime();
+            var dateTwo = $('#pickerBillDateTwo').data("DateTimePicker").date().toDate().getTime();
+            dateTwo += 86399000;
+            var userCliId = $localStorage.user.subsidiary.userClient.id;
+
+            creditNoteCellarService.getCreditNotesCellarByUserClientIdAndDates(userCliId, dateOne, dateTwo).then(function(response) {
                 vm.reportList = response;
                 vm.loading = false;
             }).catch(function(error) {
@@ -501,6 +536,40 @@ angular.module('integridadUiApp')
                             COST_UNIT: parseFloat(cellarReport.prodCostEach.toFixed(4)),
                             IVA: parseFloat(cellarReport.prodIva.toFixed(4)),
                             TOTAL: parseFloat(cellarReport.prodTotal.toFixed(2))
+                        };
+                
+                        dataReport.push(data);
+                    });
+                break;
+                case '13':
+                    _.each(vm.reportList, function(creditNote) {
+                        var data = {
+                            NOT_CRED: creditNote.stringSeq,
+                            FECHA: creditNote.dateCreated,
+                            NRO_FACTURA: creditNote.documentStringSeq,
+                            ESTADO: creditNote.status,
+                            BASE_DOCE: creditNote.status === 'ACTIVA' ? parseFloat(creditNote.baseDoce.toFixed(2)) : parseFloat(0),
+                            BASE_CERO: creditNote.status === 'ACTIVA' ? parseFloat(creditNote.baseCero.toFixed(2)) : parseFloat(0),
+                            IVA: creditNote.status === 'ACTIVA' ? parseFloat(creditNote.iva.toFixed(2)) : parseFloat(0),
+                            TOTAL: creditNote.status === 'ACTIVA' ? parseFloat(creditNote.total.toFixed(2)) : parseFloat(0),
+                            MOTIVO: creditNote.motivo
+                        };
+                
+                        dataReport.push(data);
+                    });
+                break;
+                case '14':
+                    _.each(vm.reportList, function(creditNoteComp) {
+                        var data = {
+                            NOT_CRED: creditNoteComp.stringSeq,
+                            FECHA: creditNoteComp.dateCreated,
+                            NRO_FACTURA: creditNoteComp.documentStringSeq,
+                            ESTADO: creditNoteComp.status,
+                            BASE_DOCE: creditNoteComp.status === 'ACTIVA' ? parseFloat(creditNoteComp.baseDoce.toFixed(2)) : parseFloat(0),
+                            BASE_CERO: creditNoteComp.status === 'ACTIVA' ? parseFloat(creditNoteComp.baseCero.toFixed(2)) : parseFloat(0),
+                            IVA: creditNoteComp.status === 'ACTIVA' ? parseFloat(creditNoteComp.iva.toFixed(2)) : parseFloat(0),
+                            TOTAL: creditNoteComp.status === 'ACTIVA' ? parseFloat(creditNoteComp.total.toFixed(2)) : parseFloat(0),
+                            MOTIVO: creditNoteComp.motivo
                         };
                 
                         dataReport.push(data);

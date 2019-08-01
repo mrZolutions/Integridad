@@ -137,9 +137,13 @@ public class CellarServices {
         cellar.setFatherListToNull();
         cellar.setListsNull();
         Cellar saved = cellarRepository.save(cellar);
-        Cashier cashier = cashierRepository.findOne(cellar.getUserIntegridad().getCashier().getId());
-        cashier.setWhNumberSeq(cashier.getWhNumberSeq() + 1);
-        cashierRepository.save(cashier);
+        
+        Iterable<Cashier> cashiers = cashierRepository.findCashierById(cellar.getUserIntegridad().getCashier().getId());
+        cashiers.forEach(cashier -> {
+            cashier.setWhNumberSeq(cashier.getWhNumberSeq() + 1);
+            cashierRepository.save(cashier);
+        });
+        
         saveDetailsCellar(saved, detailsCellar);
         saveKardex(saved, detailsKardex);
         if ("INGRESADO".equals(saved.getStatusIngreso())) {

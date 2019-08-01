@@ -26,4 +26,7 @@ public interface CreditNoteCellarRepository extends CrudRepository<CreditNoteCel
     
     @Query("SELECT c FROM CreditNoteCellar c WHERE c.provider.id = (:id) AND c.active = true")
     Iterable<CreditNoteCellar> findCreditNotesCellarByProviderId(@Param("id") UUID id);
+    
+    @Query("SELECT c FROM CreditNoteCellar c WHERE c.subsidiary.userClient.id = (:userClientId) AND c.dateCreated >= (:dateOne) AND c.dateCreated <= (:dateTwo)")
+    Iterable<CreditNoteCellar> findCreditNotesCellarByUserClientIdAndDates(@Param("userClientId") UUID id, @Param("dateOne") long dateOne, @Param("dateTwo") long dateTwo);
 }

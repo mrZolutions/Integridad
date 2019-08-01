@@ -92,4 +92,10 @@ angular
                 return response.data;
             });
         };
+
+        this.getCreditNotesByUserClientIdAndDates = function(userClientId, dateOne, dateTwo) {
+            return securityService.get('/creditnote/rep/creditnote/' + userClientId + '/' + dateOne + '/' + dateTwo).then(function successCallback(response) {
+                return response.data;
+            });
+        };
 });

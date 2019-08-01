@@ -100,9 +100,11 @@ public class DailybookCeServices {
         dailybookCe.setListsNull();
         DailybookCe saved = dailybookCeRepository.save(dailybookCe);
         
-        Cashier cashier = cashierRepository.findOne(dailybookCe.getUserIntegridad().getCashier().getId());
-        cashier.setDailyCeNumberSeq(cashier.getDailyCeNumberSeq() + 1);
-        cashierRepository.save(cashier);
+        Iterable<Cashier> cashiers = cashierRepository.findCashierById(dailybookCe.getUserIntegridad().getCashier().getId());
+        cashiers.forEach(cashier -> {
+            cashier.setDailyCeNumberSeq(cashier.getDailyCeNumberSeq() + 1);
+            cashierRepository.save(cashier);
+        });
         
         detailDailybookContab.forEach(detail -> {
             detail.setDailybookCe(saved);

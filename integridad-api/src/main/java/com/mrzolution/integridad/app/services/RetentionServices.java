@@ -111,10 +111,12 @@ public class RetentionServices {
         retention.setFatherListToNull();
         retention.setListsNull();
         Retention saved = retentionRepository.save(retention);
-                
-        Cashier cashier = cashierRepository.findOne(retention.getUserIntegridad().getCashier().getId());
-        cashier.setRetentionNumberSeq(cashier.getRetentionNumberSeq() + 1);
-        cashierRepository.save(cashier);
+        
+        Iterable<Cashier> cashiers = cashierRepository.findCashierById(retention.getUserIntegridad().getCashier().getId());
+        cashiers.forEach(cashier -> {
+            cashier.setRetentionNumberSeq(cashier.getRetentionNumberSeq() + 1);
+            cashierRepository.save(cashier);
+        });
             
         details.forEach(detail -> {
             detail.setRetention(saved);
@@ -211,6 +213,7 @@ public class RetentionServices {
             String status = retention.isActive() ? "ACTIVA" : "ANULADA";
             String docDate = dateFormat.format(new Date(retention.getDocumentDate()));
             String retDate = dateFormat.format(new Date(retention.getDateCreated()));
+            
             RetentionReport saleReport= new RetentionReport(docDate, retention.getDocumentNumber(), retention.getProvider().getRazonSocial(), retention.getProvider().getRuc(), retDate, retention.getStringSeq(), retention.getClaveDeAcceso(),
                                                             retention.getEjercicioFiscal(), retention.getDebtsSeq(), status, codRetenFuente, baseF, porcenF, subTotalF, codRetenIva, baseIva, porcenIva, subTotalIva, sum,
                                                             retention.getSubsidiary().getName(), retention.getUserIntegridad().getFirstName());

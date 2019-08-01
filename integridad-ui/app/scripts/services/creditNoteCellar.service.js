@@ -18,4 +18,10 @@ angular
                 return response.data;
             });
         };
+
+        this.getCreditNotesCellarByUserClientIdAndDates = function(userClientId, dateOne, dateTwo) {
+            return securityService.get('/crednotcellar/rep/crednotcellar/' + userClientId + '/' + dateOne + '/' + dateTwo).then(function successCallback(response) {
+                return response.data;
+            });
+        };
 });

@@ -1,8 +1,10 @@
 package com.mrzolution.integridad.app.controllers;
 
 import com.mrzolution.integridad.app.domain.CreditNote;
+import com.mrzolution.integridad.app.domain.report.CreditNoteReport;
 import com.mrzolution.integridad.app.exceptions.BadRequestException;
 import com.mrzolution.integridad.app.services.CreditNoteServices;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -71,5 +73,17 @@ public class CreditNoteController {
         log.info("CreditNoteController getCreditNoteById DONE");
         return new ResponseEntity<CreditNote>(response, HttpStatus.ACCEPTED);
     }
-
+    
+    @RequestMapping(method = RequestMethod.GET, value="/rep/creditnote/{userClientId}/{dateOne}/{dateTwo}")
+    public ResponseEntity getCreditNotesByUserClientIdAndDates(@PathVariable("userClientId") UUID userClientId, @PathVariable("dateOne") long dateOne, @PathVariable("dateTwo") long dateTwo) {
+        List<CreditNoteReport> response = null;
+	try {
+            response = service.getCreditNotesByUserClientIdAndDates(userClientId, dateOne, dateTwo);
+	} catch(BadRequestException e) {
+            log.error("CreditNoteController getCreditNotesByUserClientIdAndDates Exception thrown: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+	}
+        log.info("CreditNoteController getCreditNotesByUserClientIdAndDates DONE");
+	return new ResponseEntity<List>(response, HttpStatus.ACCEPTED);
+    }
 }

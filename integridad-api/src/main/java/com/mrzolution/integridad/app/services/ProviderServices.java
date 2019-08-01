@@ -30,12 +30,10 @@ public class ProviderServices {
 	if (provider.getCodeIntegridad() == null) {
             throw new BadRequestException("Debe tener el codigo de contabilidad");
 	}
-        
-	log.info("ProviderServices create: {}", provider.getName());
 	provider.setDateCreated(new Date().getTime());
 	provider.setActive(true);
 	Provider saved = providerRepository.save(provider);
-	log.info("ProviderServices createProvider: {}", saved.getId());
+	log.info("ProviderServices createProvider: {}, {}", saved.getId(), saved.getRazonSocial());
 	return saved;
     }
 
@@ -43,10 +41,9 @@ public class ProviderServices {
 	if (provider.getId() == null) {
 		throw new BadRequestException("Invalid Provider");
 	}
-	log.info("ProviderServices update: {}", provider.getName());
 	provider.setListsNull();
 	Provider updated = providerRepository.save(provider);
-	log.info("ProviderServices updateProvider: {}", updated.getId());
+	log.info("ProviderServices updateProvider: {}, {}", updated.getId(), updated.getRazonSocial());
     }
 
     public Provider getProviderById(UUID id) {

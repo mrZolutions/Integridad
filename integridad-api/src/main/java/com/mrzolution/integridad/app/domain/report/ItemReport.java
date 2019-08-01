@@ -1,7 +1,6 @@
 package com.mrzolution.integridad.app.domain.report;
 
 import lombok.Data;
-
 import java.util.UUID;
 
 @Data

@@ -28,6 +28,5 @@ public interface ProductBySubsidiairyRepository extends CrudRepository<ProductBy
 	Page<UUID> findBySubsidiaryIAndVariabledAndProductActive(@Param("id") UUID subsidiaryId, @Param("variable") String variable, Pageable pageable);
 
 	@Query("SELECT p FROM ProductBySubsidiary p WHERE p.product.id = (:id)")
-	Iterable<ProductBySubsidiary> findByProductId(@Param("id") UUID productId);
-        
+	Iterable<ProductBySubsidiary> findByProductId(@Param("id") UUID productId);       
 }

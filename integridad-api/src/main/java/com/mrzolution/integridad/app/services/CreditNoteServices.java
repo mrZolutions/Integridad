@@ -5,9 +5,11 @@ import com.google.common.collect.Iterables;
 import com.mrzolution.integridad.app.cons.Constants;
 import com.mrzolution.integridad.app.domain.CreditNote;
 import com.mrzolution.integridad.app.domain.*;
+import com.mrzolution.integridad.app.domain.report.CreditNoteReport;
 import com.mrzolution.integridad.app.exceptions.BadRequestException;
 import com.mrzolution.integridad.app.repositories.*;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -105,25 +107,29 @@ public class CreditNoteServices {
             CreditNote saved = creditNoteRepository.save(creditNote);
             document = creditNote.getBillSeq();
         
-            Cashier cashier = cashierRepository.findOne(creditNote.getUserIntegridad().getCashier().getId());
-            cashier.setCreditNoteNumberSeq(cashier.getCreditNoteNumberSeq() + 1);
-            cashierRepository.save(cashier);
+            Iterable<Cashier> cashiers = cashierRepository.findCashierById(creditNote.getUserIntegridad().getCashier().getId());
+            cashiers.forEach(cashier -> {
+                cashier.setCreditNoteNumberSeq(cashier.getCreditNoteNumberSeq() + 1);
+                cashierRepository.save(cashier);
+            });
 
             details.forEach(detail -> {
                 detail.setCreditNote(saved);
                 detailRepository.save(detail);
                 detail.setCreditNote(null);
             });
+            
             saved.setDetails(details);
             saved.setFatherListToNull();
-            
             updateBill(saved);
+            
             Credits validate = creditsRepository.findByBillId(document);
             if (validate != null) {
                 updateCreditsAndPayment(saved, document);
             } else {
                 log.info("CreditNoteServices DO NOT updateCreditsAndPayment");
             }
+            
             updateProductBySubsidiary(creditNote, details);
             log.info("CreditNoteServices createCreditNote DONE: {}, {}", saved.getId(), saved.getStringSeq());
             return saved;
@@ -196,6 +202,24 @@ public class CreditNoteServices {
         });
         log.info("CreditNoteServices updateBill DONE");
         sum = 0;
+    }
+    
+    public List<CreditNoteReport> getCreditNotesByUserClientIdAndDates(UUID userClientId, long dateOne, long dateTwo) {
+        log.info("CreditNoteServices getCreditNotesByUserClientIdAndDates: {}, {}, {}", userClientId, dateOne, dateTwo);
+        Iterable<CreditNote> creditNotes = creditNoteRepository.findCreditNotesByUserClientIdAndDates(userClientId, dateOne, dateTwo);
+        List<CreditNoteReport> creditNoteReportList = new ArrayList<>();
+        creditNotes.forEach(creditNote -> {
+            creditNote.setListsNull();
+            String status = creditNote.isActive() ? "ACTIVA" : "ANULADA";
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+            String dateCreated = dateFormat.format(new Date(creditNote.getDateCreated()));
+            
+            CreditNoteReport creditNoteReport = new CreditNoteReport(creditNote.getStringSeq(), dateCreated, creditNote.getDocumentStringSeq(), status, creditNote.getBaseTaxes(),
+                                                                     creditNote.getBaseNoTaxes(), creditNote.getIva(), creditNote.getTotal(), creditNote.getMotivo());
+            
+            creditNoteReportList.add(creditNoteReport);
+        });
+        return creditNoteReportList;
     }
     
     private void populateChildren(CreditNote creditNote) {

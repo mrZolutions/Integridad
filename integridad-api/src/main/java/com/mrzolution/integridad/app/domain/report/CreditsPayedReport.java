@@ -6,6 +6,7 @@ import lombok.Data;
  *
  * @author daniel-one
  */
+
 @Data
 public class CreditsPayedReport {
     private String clientName;

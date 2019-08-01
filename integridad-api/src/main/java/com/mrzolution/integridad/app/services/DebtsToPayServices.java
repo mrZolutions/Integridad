@@ -154,9 +154,11 @@ public class DebtsToPayServices {
         debtsToPay.setListsNull();
         DebtsToPay saved = debtsToPayRepository.save(debtsToPay);
         
-        Cashier cashier = cashierRepository.findOne(debtsToPay.getUserIntegridad().getCashier().getId());
-        cashier.setDebtsNumberSeq(cashier.getDebtsNumberSeq() + 1);
-        cashierRepository.save(cashier);
+        Iterable<Cashier> cashiers = cashierRepository.findCashierById(debtsToPay.getUserIntegridad().getCashier().getId());
+        cashiers.forEach(cashier -> {
+            cashier.setDebtsNumberSeq(cashier.getDebtsNumberSeq() + 1);
+            cashierRepository.save(cashier);
+        });
         
         detailDebtsToPay.forEach(detail -> {
             detail.setDebtsToPay(saved);

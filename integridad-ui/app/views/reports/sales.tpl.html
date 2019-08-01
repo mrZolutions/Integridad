@@ -70,23 +70,23 @@
         <div class="panel-footer">
             <div class="row">
                 <div class="form-group col-md-10">
-                    <p><b>Rep. Productos, Ventas y Retenciones</b></p>
+                    <p><b>Productos Vendidos, Ventas y Retenciones</b></p>
                     <button type="button" title="Seleccione Fecha Inicio - Fecha Fin" class="btn btn-primary btn-sm"
                             ng-click="vm.getReportProducts()">
-                            De Productos
+                            Prod. Vendidos
                     </button>
                     <button type="button" title="Seleccione Fecha Inicio - Fecha Fin" class="btn btn-primary btn-sm"
                             ng-click="vm.getReportSales()">
-                            De Ventas
+                            Ventas
                     </button>
                     <button type="button" title="Seleccione Fecha Inicio - Fecha Fin" class="btn btn-primary btn-sm"
                             ng-click="vm.getReportRetention()">
                             RET en Compras
                     </button>
-                    <button type="button" title="Seleccione Fecha Inicio" class="btn btn-primary btn-sm"
+                    <!--<button type="button" title="Seleccione Fecha Inicio" class="btn btn-primary btn-sm"
                             ng-click="vm.getReportCierreCaja()">
                             Cierre Caja
-                    </button>
+                    </button>-->
                 </div>
                 <div class="form-group col-md-2">
                     <p><b>Exportar</b></p>
@@ -96,7 +96,18 @@
                     </button>
                 </div>
                 <div class="form-group col-md-6">
-                    <p><b>Rep. Cuentas por Cobrar</b></p>
+                    <p><b>Rep. Notas de Cŕedito</b></p>
+                    <button type="button" title="Seleccione Fecha Inicio - Fecha Fin" class="btn btn-primary btn-sm"
+                            ng-click="vm.getReportCreditNote()">
+                            Notas Crédito Ventas
+                    </button>
+                    <button type="button" title="Seleccione Fecha Inicio - Fecha Fin" class="btn btn-primary btn-sm"
+                            ng-click="vm.getReportCreditNoteCompras()">
+                            Notas Crédito Compras
+                    </button>
+                </div>
+                <div class="form-group col-md-6">
+                    <p><b>Rep. Cuentas Pendientes, Retenciones y Abonos</b></p>
                     <button type="button" title="Seleccione Fecha Fin" class="btn btn-primary btn-sm"
                             ng-click="vm.getCreditsPendingReport()">
                             Ctas Pendientes
@@ -213,11 +224,11 @@
                     <td>{{data.authorizationNumber}}</td>
                     <td>{{data.status}}</td>
                     <td>{{data.oti}}</td>
-                    <td>{{data.status === 'ACTIVA' ? data.baseTaxes.toFixed(2) : ''}}</td>
-                    <td>{{data.status === 'ACTIVA' ? data.discount.toFixed(2) : ''}}</td>
-                    <td>{{data.status === 'ACTIVA' ? data.baseNoTaxes.toFixed(2) : ''}}</td>
-                    <td>{{data.status === 'ACTIVA' ? data.iva.toFixed(2) : ''}}</td>
-                    <td>{{data.status === 'ACTIVA' ? data.total.toFixed(2) : ''}}</td>
+                    <td>{{data.status === 'ACTIVA' ? data.baseTaxes.toFixed(2) : '0'}}</td>
+                    <td>{{data.status === 'ACTIVA' ? data.discount.toFixed(2) : '0'}}</td>
+                    <td>{{data.status === 'ACTIVA' ? data.baseNoTaxes.toFixed(2) : '0'}}</td>
+                    <td>{{data.status === 'ACTIVA' ? data.iva.toFixed(2) : '0'}}</td>
+                    <td>{{data.status === 'ACTIVA' ? data.total.toFixed(2) : '0'}}</td>
                     <td>{{data.endDate}}</td>
                     <td>{{data.cashier}}</td>
                     <td>{{data.warehouse}}</td>
@@ -229,7 +240,7 @@
     </div>
 
     <!--Reporte de Retenciones-->
-    <div class="table-responsive" ng-if="vm.isProductReportList === '3' && vm.reportList !== undefined">
+    <div class="table-responsive" ng-if="vm.isProductReportList === '3'">
         <table class="table table-striped">
             <thead>
                 <tr>
@@ -285,7 +296,7 @@
     </div>
 
     <!--Reporte de Ctas Pendientes CxC-->
-    <div class="table-responsive" ng-if="vm.isProductReportList === '4' && vm.reportList !== undefined">
+    <div class="table-responsive" ng-if="vm.isProductReportList === '4'">
         <table class="table table-striped">
             <thead>
                 <tr>
@@ -333,7 +344,7 @@
     </div>
 
     <!--Reporte de Retenciones de Ventas-->
-    <div class="table-responsive" ng-if="vm.isProductReportList === '5' && vm.reportList !== undefined">
+    <div class="table-responsive" ng-if="vm.isProductReportList === '5'">
         <table class="table table-striped">
             <thead>
                 <tr>
@@ -383,7 +394,7 @@
     </div>
 
     <!--Reporte de Pagos y Abonos CxC-->
-    <div class="table-responsive" ng-if="vm.isProductReportList === '6' && vm.reportList !== undefined">
+    <div class="table-responsive" ng-if="vm.isProductReportList === '6'">
         <table class="table table-striped">
             <thead>
                 <tr>
@@ -419,7 +430,7 @@
     </div>
 
     <!--Reporte de Ctas Pendientes CxP-->
-    <div class="table-responsive" ng-if="vm.isProductReportList === '7' && vm.reportList !== undefined">
+    <div class="table-responsive" ng-if="vm.isProductReportList === '7'">
         <table class="table table-striped">
             <thead>
                 <tr>
@@ -455,7 +466,7 @@
     </div>
 
     <!--Reporte de Compras CxP-->
-    <div class="table-responsive" ng-if="vm.isProductReportList === '8' && vm.reportList !== undefined">
+    <div class="table-responsive" ng-if="vm.isProductReportList === '8'">
         <table class="table table-striped">
             <thead>
                 <tr>
@@ -498,7 +509,7 @@
                     <td>{{data.subTotalDoce.toFixed(2)}}</td>
                     <td>{{data.iva.toFixed(2)}}</td>
                     <td>{{data.subTotalCero.toFixed(2)}}</td>
-                    <td>{{data.status === 'ACTIVA' ? data.total.toFixed(2) : ''}}</td>
+                    <td>{{data.status === 'ACTIVA' ? data.total.toFixed(2) : '0'}}</td>
                     <td>{{data.endDate}}</td>
                     <td>{{data.cashier}}</td>
                     <td>{{data.warehouse}}</td>
@@ -510,7 +521,7 @@
     </div>
 
     <!--Reporte de Cierre de Caja-->
-    <div class="table-responsive" ng-if="vm.isProductReportList === '9' && vm.reportList !== undefined">
+    <div class="table-responsive" ng-if="vm.isProductReportList === '9'">
         <table class="table table-striped">
             <thead>
                 <tr>
@@ -550,7 +561,7 @@
     </div>
 
     <!--Reporte de Productos Consumidos-->
-    <div class="table-responsive" ng-if="vm.isProductReportList === '10' && vm.reportList !== undefined">
+    <div class="table-responsive" ng-if="vm.isProductReportList === '10'">
         <table class="table table-striped">
             <thead>
                 <tr>
@@ -584,7 +595,7 @@
     </div>
 
     <!--Reporte de Pagos y Abonos CxP-->
-    <div class="table-responsive" ng-if="vm.isProductReportList === '11' && vm.reportList !== undefined">
+    <div class="table-responsive" ng-if="vm.isProductReportList === '11'">
         <table class="table table-striped">
             <thead>
                 <tr>
@@ -620,7 +631,7 @@
     </div>
     
     <!--Reporte de Ingresos a Bodega-->
-    <div class="table-responsive" ng-if="vm.isProductReportList === '12' && vm.reportList !== undefined">
+    <div class="table-responsive" ng-if="vm.isProductReportList === '12'">
         <table class="table table-striped">
             <thead>
                 <tr>
@@ -648,6 +659,70 @@
                     <td>{{data.prodCostEach.toFixed(4)}}</td>
                     <td>{{data.prodIva.toFixed(4)}}</td>
                     <td>{{data.prodTotal.toFixed(2)}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!--Reporte de Notas de Crédito-->
+    <div class="table-responsive" ng-if="vm.isProductReportList === '13'">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Nro. Nota de Cr&eacute;dito</th>
+                    <th>Fecha</th>
+                    <th>Nro. Factura</th>
+                    <th>Estado</th>
+                    <th>Base 12</th>
+                    <th>Base 0</th>
+                    <th>Iva</th>
+                    <th>Total</th>
+                    <th>Motivo</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="data in vm.reportList | orderBy:'nomCliente'" >
+                    <td>{{data.stringSeq}}</td>
+                    <td>{{data.dateCreated}}</td>
+                    <td>{{data.documentStringSeq}}</td>
+                    <td>{{data.status}}</td>
+                    <td>{{data.status === 'ACTIVA' ? data.baseDoce.toFixed(2) : '0'}}</td>
+                    <td>{{data.status === 'ACTIVA' ? data.baseCero.toFixed(2) : '0'}}</td>
+                    <td>{{data.status === 'ACTIVA' ? data.iva.toFixed(2) : '0'}}</td>
+                    <td>{{data.status === 'ACTIVA' ? data.total.toFixed(2) : '0'}}</td>
+                    <td>{{data.motivo}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!--Reporte de Notas de Crédito Compras-->
+    <div class="table-responsive" ng-if="vm.isProductReportList === '14'">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Nro. Nota de Cr&eacute;dito</th>
+                    <th>Fecha</th>
+                    <th>Nro. Factura</th>
+                    <th>Estado</th>
+                    <th>Base 12</th>
+                    <th>Base 0</th>
+                    <th>Iva</th>
+                    <th>Total</th>
+                    <th>Motivo</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="data in vm.reportList | orderBy:'nomCliente'" >
+                    <td>{{data.stringSeq}}</td>
+                    <td>{{data.dateCreated}}</td>
+                    <td>{{data.documentStringSeq}}</td>
+                    <td>{{data.status}}</td>
+                    <td>{{data.status === 'ACTIVA' ? data.baseDoce.toFixed(2) : '0'}}</td>
+                    <td>{{data.status === 'ACTIVA' ? data.baseCero.toFixed(2) : '0'}}</td>
+                    <td>{{data.status === 'ACTIVA' ? data.iva.toFixed(2) : '0'}}</td>
+                    <td>{{data.status === 'ACTIVA' ? data.total.toFixed(2) : '0'}}</td>
+                    <td>{{data.motivo}}</td>
                 </tr>
             </tbody>
         </table>

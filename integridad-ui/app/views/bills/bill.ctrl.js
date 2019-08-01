@@ -1,5 +1,4 @@
 'use strict';
-
 /**
  * @ngdoc function
  * @name integridadUiApp.controller:BillCtrl
@@ -8,9 +7,9 @@
  * Controller of the integridadUiApp
  */
 angular.module('integridadUiApp')
-    .controller('BillCtrl', function( _, $rootScope, $location, utilStringService, $localStorage,
-                                    clientService, productService, authService, billService, $window,
-                                    cashierService, requirementService, utilSeqService) {
+    .controller('BillCtrl', function(_, $rootScope, $location, utilStringService, $localStorage,
+                                     clientService, productService, authService, billService, $window,
+                                     cashierService, requirementService, utilSeqService) {
         var vm = this;
         vm.error = undefined;
         vm.success = undefined;
@@ -668,7 +667,7 @@ angular.module('integridadUiApp')
                     bill: vm.bill.id,
                     product: det.product,
                     dateRegister: $('#pickerBillDate').data("DateTimePicker").date().toDate().getTime(),
-                    details: 'VENTA FACTURA',
+                    details: 'VENTA FACTURA Nro. ' + vm.seqNumber,
                     observation: 'EGRESO',
                     prodCostEach: det.costEach,
                     prodName: det.product.name,
