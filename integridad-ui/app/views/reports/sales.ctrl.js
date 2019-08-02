@@ -8,7 +8,7 @@
  */
 angular.module('integridadUiApp')
     .controller('ReportSalesCtrl', function(_, $localStorage, creditsbillService, billService, eretentionService, eretentionClientService, cellarService, creditNoteCellarService,
-                                            paymentService, paymentDebtsService, creditsDebtsService, $location, debtsToPayService, consumptionService, creditNoteService) {
+                                            paymentService, paymentDebtsService, creditsDebtsService, $location, debtsToPayService, consumptionService, creditNoteService, productService) {
         var vm = this;
         var today = new Date();
         $('#pickerBillDateOne').data("DateTimePicker").date(today);
@@ -259,6 +259,21 @@ angular.module('integridadUiApp')
             var userCliId = $localStorage.user.subsidiary.userClient.id;
 
             creditNoteCellarService.getCreditNotesCellarByUserClientIdAndDates(userCliId, dateOne, dateTwo).then(function(response) {
+                vm.reportList = response;
+                vm.loading = false;
+            }).catch(function(error) {
+                vm.loading = false;
+                vm.error = error.data;
+            });
+        };
+
+        vm.getReportExistency = function() {
+            vm.isProductReportList = '15';
+            vm.reportList = undefined;
+            vm.loading = true;
+            var userCliId = $localStorage.user.subsidiary.userClient.id;
+
+            productService.getProductsForExistencyReport(userCliId).then(function(response) {
                 vm.reportList = response;
                 vm.loading = false;
             }).catch(function(error) {
@@ -570,6 +585,29 @@ angular.module('integridadUiApp')
                             IVA: creditNoteComp.status === 'ACTIVA' ? parseFloat(creditNoteComp.iva.toFixed(2)) : parseFloat(0),
                             TOTAL: creditNoteComp.status === 'ACTIVA' ? parseFloat(creditNoteComp.total.toFixed(2)) : parseFloat(0),
                             MOTIVO: creditNoteComp.motivo
+                        };
+                
+                        dataReport.push(data);
+                    });
+                break;
+                case '15':
+                    _.each(vm.reportList, function(existency) {
+                        var data = {
+                            CODIGO: existency.code,
+                            NOMBRE: existency.name,
+                            TIPO: existency.typeProduct,
+                            COSTO_REAL: parseFloat(existency.costReal.toFixed(2)),
+                            COSTO_EFEC: parseFloat(existency.costCash.toFixed(2)),
+                            COSTO_TARJ: parseFloat(existency.costCard.toFixed(2)),
+                            COSTO_CRED: parseFloat(existency.costCredit.toFixed(2)),
+                            COSTO_MAYOR: parseFloat(existency.costMajor.toFixed(2)),
+                            MINIMO: parseInt(existency.maxMin),
+                            CANTIDAD: parseInt(existency.quantity),
+                            GRUPO: existency.groupo,
+                            SUB_GRUPO: existency.subGroup,
+                            MARCA: existency.marca,
+                            LINEA: existency.linea,
+                            OBSERVACION: existency.observacion
                         };
                 
                         dataReport.push(data);

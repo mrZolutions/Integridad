@@ -128,12 +128,7 @@ public class BillServices {
 
     //Bucar Bills por ID        
     public Bill getBillById(UUID id) {
-        Bill retrieved = billRepository.findOne(id);
-        if (retrieved != null) {
-            log.info("BillServices retrieved id: {}", retrieved.getId());
-        } else {
-            log.info("BillServices retrieved id NULL: {}", id);
-        }		
+        Bill retrieved = billRepository.findOne(id);		
         populateChildren(retrieved);
         log.info("BillServices getBillById: {}", id);
         return retrieved;
@@ -195,7 +190,6 @@ public class BillServices {
             detail.setBill(null);
         });
         saved.setDetails(details);
-        log.info("BillServices saveDetailsBill");
     }
     
     //Almacena los Detalles en Kardex
@@ -206,7 +200,6 @@ public class BillServices {
             detailk.setBill(null);
         });
         saved.setDetailsKardex(detailsKardex);
-        log.info("BillServices saveKardex");
     }
     
     //Almacena los Detalles de la Cotización
@@ -217,7 +210,6 @@ public class BillServices {
             detail.setBill(null);
         });
         saved.setDetails(details);
-        log.info("BillServices saveDetailsQuotation");
     }
     
     //Guarda el tipo de Pago y Credits
@@ -235,7 +227,6 @@ public class BillServices {
                 });
             }    
         });
-        log.info("BillServices savePagosAndCreditsBill");
     }
     
     //Actualiza la cantidad de Productos (Existencia)
@@ -247,7 +238,6 @@ public class BillServices {
                 productBySubsidiairyRepository.save(ps);
             }
         });
-        log.info("BillServices updateProductBySubsidiary");
     }
     //Fin de Creación de las Bills
 
@@ -269,11 +259,9 @@ public class BillServices {
         if (bill.getId() == null) {
             throw new BadRequestException("Invalid Bill");
         }
-        log.info("BillServices updateBill: {}", bill.getId());
         Father<Bill, Detail> father = new Father<>(bill, bill.getDetails());
         FatherManageChildren fatherUpdateChildren = new FatherManageChildren(father, detailChildRepository, detailRepository);
         fatherUpdateChildren.updateChildren();
-        log.info("BillServices CHILDREN updated: {}", bill.getId());
         bill.setListsNull();
         Bill updated = billRepository.save(bill);
         log.info("BillServices updateBill id: {}", updated.getId());

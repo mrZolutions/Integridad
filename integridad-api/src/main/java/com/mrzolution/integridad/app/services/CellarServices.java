@@ -57,17 +57,11 @@ public class CellarServices {
             cellar.setListsNull();
             cellar.setFatherListToNull();
         });
-        log.info("CellarServices getByUserLazy: {}", user.getId());
         return cellars;
     }
     
     public Cellar getCellarById(UUID id) {
-        Cellar retrieved = cellarRepository.findOne(id);
-        if (retrieved != null) {
-            log.info("CellarServices retrieved id: {}", retrieved.getId());
-        } else {
-            log.info("CellarServices retrieved id NULL: {}", id);
-        }		
+        Cellar retrieved = cellarRepository.findOne(id);		
         populateChildren(retrieved);
         log.info("CellarServices getCellarById: {}", id);
         return retrieved;
@@ -160,7 +154,6 @@ public class CellarServices {
             detail.setCellar(null);
         });
         saved.setDetailsCellar(detailsCellar);
-        log.info("CellarServices saveDetailsCellar DONE");
     }
     
     public void saveKardex(Cellar saved, List<Kardex> detailsKardex) {
@@ -170,7 +163,6 @@ public class CellarServices {
             detail.setCellar(null);
         });
         saved.setDetailsKardex(detailsKardex);
-        log.info("CellarServices saveKardex DONE");
     }
     
     public void updateProductBySubsidiary(Cellar cellar, List<DetailCellar> detailsCellar) {

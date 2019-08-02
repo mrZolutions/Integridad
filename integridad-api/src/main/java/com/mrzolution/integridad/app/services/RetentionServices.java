@@ -68,11 +68,6 @@ public class RetentionServices {
 
     public Retention getRetentionById(UUID id) {
         Retention retrieved = retentionRepository.findOne(id);
-        if (retrieved != null) {
-            log.info("RetentionServices retrieved id: {}", retrieved.getId());
-        } else {
-            log.info("RetentionServices retrieved id NULL: {}", id);
-        }
         populateChildren(retrieved);
         log.info("RetentionServices getRetentionById: {}", id);
         return retrieved;

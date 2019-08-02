@@ -32,11 +32,6 @@ public class ComprobanteCobroServices {
     //Selecciona COMPROBANTE DE COBRO por Id
     public ComprobanteCobro getComprobanteCobroById(UUID id) {
         ComprobanteCobro comprobante = comprobanteCobroRepository.findOne(id);
-        if (comprobante != null) {
-            log.info("ComprobanteCobroServices retrieved id: {}", comprobante.getId());
-        } else {
-            log.info("ComprobanteCobroServices retrieved id NULL: {}", id);
-	}
         populateChildren(comprobante);
         log.info("ComprobanteCobroServices getComprobanteCobroById: {}", id);
         return comprobante;

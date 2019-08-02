@@ -107,6 +107,13 @@
                     </button>
                 </div>
                 <div class="form-group col-md-6">
+                    <p><b>Rep. Productos</b></p>
+                    <button type="button" class="btn btn-primary btn-sm"
+                            ng-click="vm.getReportExistency()">
+                            Inventario de Productos
+                    </button>
+                </div>
+                <div class="form-group col-md-6">
                     <p><b>Rep. Cuentas Pendientes, Retenciones y Abonos</b></p>
                     <button type="button" title="Seleccione Fecha Fin" class="btn btn-primary btn-sm"
                             ng-click="vm.getCreditsPendingReport()">
@@ -713,7 +720,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="data in vm.reportList | orderBy:'nomCliente'" >
+                <tr ng-repeat="data in vm.reportList | orderBy:'stringSeq'" >
                     <td>{{data.stringSeq}}</td>
                     <td>{{data.dateCreated}}</td>
                     <td>{{data.documentStringSeq}}</td>
@@ -723,6 +730,50 @@
                     <td>{{data.status === 'ACTIVA' ? data.iva.toFixed(2) : '0'}}</td>
                     <td>{{data.status === 'ACTIVA' ? data.total.toFixed(2) : '0'}}</td>
                     <td>{{data.motivo}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!--Reporte de Productos-->
+    <div class="table-responsive" ng-if="vm.isProductReportList === '15'">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>C&oacute;digo Prod.</th>
+                    <th>Nombre</th>
+                    <th>Tipo Prod.</th>
+                    <th>Costo Real</th>
+                    <th>Efectivo</th>
+                    <th>Costo por Tarjeta</th>
+                    <th>Costo a Cr&eacute;dito</th>
+                    <th>Costo al Mayor</th>
+                    <th>Mínimo</th>
+                    <th>Cantidad</th>
+                    <th>Grupo</th>
+                    <th>Sub Grupo</th>
+                    <th>Marca</th>
+                    <th>L&iacute;nea</th>
+                    <th>Observaci&oacute;n</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="data in vm.reportList | orderBy:'name'" >
+                    <td>{{data.code}}</td>
+                    <td>{{data.name}}</td>
+                    <td>{{data.typeProduct}}</td>
+                    <td>{{data.costReal.toFixed(2)}}</td>
+                    <td>{{data.costCash.toFixed(2)}}</td>
+                    <td>{{data.costCard.toFixed(2)}}</td>
+                    <td>{{data.costCredit.toFixed(2)}}</td>
+                    <td>{{data.costMajor.toFixed(2)}}</td>
+                    <td>{{data.maxMin}}</td>
+                    <td>{{data.quantity}}</td>
+                    <td>{{data.groupo}}</td>
+                    <td>{{data.subGroup}}</td>
+                    <td>{{data.marca}}</td>
+                    <td>{{data.linea}}</td>
+                    <td>{{data.observacion}}</td>
                 </tr>
             </tbody>
         </table>

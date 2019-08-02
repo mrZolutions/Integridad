@@ -43,8 +43,8 @@ angular
             });
         };
 
-        this.getProductsBySusidiaryId = function(userClientId) {
-            return securityService.get('/product/allproducts/' + userClientId).then(function successCallback(response) {
+        this.getProductsForExistencyReport = function(userClientId) {
+            return securityService.get('/product/rep/existency/' + userClientId).then(function successCallback(response) {
                 return response.data;
             });
         };

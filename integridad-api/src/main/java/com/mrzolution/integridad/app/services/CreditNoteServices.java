@@ -67,12 +67,7 @@ public class CreditNoteServices {
     
     //Busca CreditNote por ID        
     public CreditNote getCreditNoteById(UUID id) {
-        CreditNote retrieved = creditNoteRepository.findOne(id);
-        if (retrieved != null) {
-            log.info("CreditNoteServices retrieved id: {}", retrieved.getId());
-        } else {
-            log.info("CreditNoteServices retrieved id NULL: {}", id);
-        }		
+        CreditNote retrieved = creditNoteRepository.findOne(id);		
         populateChildren(retrieved);
         log.info("CreditNoteServices getCreditNoteById: {}", id);
         return retrieved;
@@ -145,7 +140,6 @@ public class CreditNoteServices {
                 productBySubsidiairyRepository.save(ps);
             }
         });
-        log.info("CreditNoteServices updateProductBySubsidiary DONE");
     }
         
     //Actualiza tablas Credits y Payment
@@ -174,7 +168,6 @@ public class CreditNoteServices {
             specialPayment.setActive(true);
             paymentRepository.save(specialPayment);
         }
-        log.info("CreditNoteServices updateCreditsAndPayment DONE");
         valor = 0;
     }
     
@@ -200,7 +193,6 @@ public class CreditNoteServices {
             bill.setSaldo(saldo);
             billRepository.save(bill);
         });
-        log.info("CreditNoteServices updateBill DONE");
         sum = 0;
     }
     

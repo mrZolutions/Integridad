@@ -11,8 +11,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.mrzolution.integridad.app.domain.Product;
+import com.mrzolution.integridad.app.domain.report.ExistencyReport;
 import com.mrzolution.integridad.app.exceptions.BadRequestException;
 import com.mrzolution.integridad.app.services.ProductServices;
+import java.util.List;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -35,7 +37,7 @@ public class ProductController {
         log.info("ProductController createProduct DONE");
 	return new ResponseEntity<Product>(response, HttpStatus.CREATED);
     }
-	
+
     @RequestMapping(method = RequestMethod.PUT)
     public ResponseEntity updateProduct(@RequestBody Product product) {
         try {
@@ -47,7 +49,7 @@ public class ProductController {
         log.info("ProductController updateProduct DONE");
 	return new ResponseEntity<Void>(HttpStatus.ACCEPTED);
     }
-	
+
     @RequestMapping(method = RequestMethod.DELETE, value = "/{productId}")
     public ResponseEntity deleteProduct(@PathVariable("productId") UUID productId) {
         Product response = null;
@@ -60,7 +62,7 @@ public class ProductController {
         log.info("ProductController deleteProduct DONE");
 	return new ResponseEntity<Product>(response, HttpStatus.CREATED);
     }
-	
+
     @RequestMapping(method = RequestMethod.GET, value="/{productId}")
     public ResponseEntity getAllProductById(@PathVariable(value = "productId") UUID productId) {
         Product response = null;
@@ -73,7 +75,7 @@ public class ProductController {
         log.info("ProductController getAllProductById DONE");
 	return new ResponseEntity<Product>(response, HttpStatus.CREATED);
     }
-	
+
     @RequestMapping(method = RequestMethod.GET, value="/actives")
     public ResponseEntity getAllActives() {
         Iterable<Product> response = null;
@@ -86,7 +88,7 @@ public class ProductController {
         log.info("ProductController getAllActives DONE");
 	return new ResponseEntity<Iterable>(response, HttpStatus.CREATED);
     }
-	
+
     @RequestMapping(method = RequestMethod.GET, value="/actives/user_client/{userClientId}")
     public ResponseEntity getAllActivesByUserClientId(@PathVariable("userClientId") UUID userClientId) {
         Iterable<Product> response = null;
@@ -99,7 +101,7 @@ public class ProductController {
         log.info("ProductController getAllActivesByUserClientId DONE");
 	return new ResponseEntity<Iterable>(response, HttpStatus.CREATED);
     }
-        
+
     @RequestMapping(method = RequestMethod.GET, value="/actives/subsidiary/{subsidiaryId}/{page}")
     public ResponseEntity getAllActivesBySubsidiaryId(@PathVariable("subsidiaryId") UUID subsidiaryId, @PathVariable("page") int page, @RequestParam(required = false, name = "var") String variable) {
         Page<Product> response = null;
@@ -111,5 +113,18 @@ public class ProductController {
         }
         log.info("ProductController getAllActivesBySubsidiaryId DONE");
         return new ResponseEntity<Page>(response, HttpStatus.CREATED);
-    }	
+    }
+    
+    @RequestMapping(method = RequestMethod.GET, value="/rep/existency/{userClientId}")
+    public ResponseEntity getProductsForExistencyReport(@PathVariable("userClientId") UUID userClientId) {
+        List<ExistencyReport> response = null;
+        try {
+            response = service.getProductsForExistencyReport(userClientId);
+	} catch (BadRequestException e) {
+            log.error("ProductController getProductsForExistencyReport Exception thrown: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+	}
+        log.info("ProductController getProductsForExistencyReport DONE");
+	return new ResponseEntity<List>(response, HttpStatus.ACCEPTED);
+    }
 }
