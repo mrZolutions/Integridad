@@ -98,11 +98,9 @@ public class DailybookFvServices {
         dailybookFv.setListsNull();
         DailybookFv saved = dailybookFvRepository.save(dailybookFv);
         
-        Iterable<Cashier> cashiers = cashierRepository.findCashierById(dailybookFv.getUserIntegridad().getCashier().getId());
-        cashiers.forEach(cashier -> {
-            cashier.setDailyFvNumberSeq(cashier.getDailyFvNumberSeq() + 1);
-            cashierRepository.save(cashier);
-        });
+        Cashier cashier = cashierRepository.findOne(dailybookFv.getUserIntegridad().getCashier().getId());
+        cashier.setDailyFvNumberSeq(cashier.getDailyFvNumberSeq() + 1);
+        cashierRepository.save(cashier);
         
         detailDailybookContab.forEach(detail -> {
             detail.setDailybookFv(saved);

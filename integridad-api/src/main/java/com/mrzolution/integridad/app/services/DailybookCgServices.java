@@ -67,11 +67,9 @@ public class DailybookCgServices {
         dailybookCg.setListsNull();
         DailybookCg saved = dailybookCgRepository.save(dailybookCg);
         
-        Iterable<Cashier> cashiers = cashierRepository.findCashierById(dailybookCg.getUserIntegridad().getCashier().getId());
-        cashiers.forEach(cashier -> {
-            cashier.setDailyCgNumberSeq(cashier.getDailyCgNumberSeq() + 1);
-            cashierRepository.save(cashier);
-        });
+        Cashier cashier = cashierRepository.findOne(dailybookCg.getUserIntegridad().getCashier().getId());
+        cashier.setDailyCgNumberSeq(cashier.getDailyCgNumberSeq() + 1);
+        cashierRepository.save(cashier);
         
         detailDailybookContab.forEach(detail -> {
             detail.setDailybookCg(saved);

@@ -100,11 +100,9 @@ public class CreditNoteCellarServices {
             creditNoteCellar.setListsNull();
             CreditNoteCellar saved = creditNoteCellarRepository.save(creditNoteCellar);
         
-            Iterable<Cashier> cashiers = cashierRepository.findCashierById(creditNoteCellar.getUserIntegridad().getCashier().getId());
-            cashiers.forEach(cashier -> {
-                cashier.setCreditNoteCellarNumberSeq(cashier.getCreditNoteCellarNumberSeq() + 1);
-                cashierRepository.save(cashier);
-            });
+            Cashier cashier = cashierRepository.findOne(creditNoteCellar.getUserIntegridad().getCashier().getId());
+            cashier.setCreditNoteCellarNumberSeq(cashier.getCreditNoteCellarNumberSeq() + 1);
+            cashierRepository.save(cashier);
             
             detailsCellar.forEach(detail -> {
                 detail.setCreditNoteCellar(saved);

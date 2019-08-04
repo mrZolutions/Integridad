@@ -89,11 +89,9 @@ public class DailybookCxPServices {
         dailybookCxP.setListsNull();
         DailybookCxP saved = dailybookCxPRepository.save(dailybookCxP);
         
-        Iterable<Cashier> cashiers = cashierRepository.findCashierById(dailybookCxP.getUserIntegridad().getCashier().getId());
-        cashiers.forEach(cashier -> {
-            cashier.setDailyCppNumberSeq(cashier.getDailyCppNumberSeq() + 1);
-            cashierRepository.save(cashier);
-        });
+        Cashier cashier = cashierRepository.findOne(dailybookCxP.getUserIntegridad().getCashier().getId());
+        cashier.setDailyCppNumberSeq(cashier.getDailyCppNumberSeq() + 1);
+        cashierRepository.save(cashier);
         
         detailDailybookContab.forEach(detail -> {
             detail.setDailybookCxP(saved);

@@ -102,11 +102,9 @@ public class CreditNoteServices {
             CreditNote saved = creditNoteRepository.save(creditNote);
             document = creditNote.getBillSeq();
         
-            Iterable<Cashier> cashiers = cashierRepository.findCashierById(creditNote.getUserIntegridad().getCashier().getId());
-            cashiers.forEach(cashier -> {
-                cashier.setCreditNoteNumberSeq(cashier.getCreditNoteNumberSeq() + 1);
-                cashierRepository.save(cashier);
-            });
+            Cashier cashier = cashierRepository.findOne(creditNote.getUserIntegridad().getCashier().getId());
+            cashier.setCreditNoteNumberSeq(cashier.getCreditNoteNumberSeq() + 1);
+            cashierRepository.save(cashier);
 
             details.forEach(detail -> {
                 detail.setCreditNote(saved);

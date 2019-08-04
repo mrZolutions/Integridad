@@ -154,11 +154,9 @@ public class BillOfflineServices {
         billOffline.setListsNull();
         BillOffline saved = billOfflineRepository.save(billOffline);
 
-        Iterable<Cashier> cashiers = cashierRepository.findCashierById(billOffline.getUserIntegridad().getCashier().getId());
-        cashiers.forEach(cashier -> {
-            cashier.setBillOfflineNumberSeq(cashier.getBillOfflineNumberSeq() + 1);
-            cashierRepository.save(cashier);
-        });
+        Cashier cashier = cashierRepository.findOne(billOffline.getUserIntegridad().getCashier().getId());
+        cashier.setBillOfflineNumberSeq(cashier.getBillOfflineNumberSeq() + 1);
+        cashierRepository.save(cashier);
         
         saveDetailsOfflineOfBillOffline(saved, detailsOffline);
         savePagosOfflineOfBillOffline(saved, pagosOffline);
