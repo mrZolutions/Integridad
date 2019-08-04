@@ -43,7 +43,7 @@
             <thead>
                 <tr>
                     <th>C&oacute;digo</th>
-                    <th>Nombre</th>
+                    <th>Bodega</th>
                     <th>Sucursal</th>
                 </tr>
             </thead>
@@ -104,10 +104,12 @@
                     <th>No. Identidad</th>
                     <th>
                         <button type="button" title="Busqueda por Detalles" class="btn btn-primary btn-sm" ng-click="vm.getDetailsOfCellars()">
-                                Busqueda por Detalles
+                          <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
                         </button>
-                        <button type="button" title = "Agregar Nuevo Proveedor" class="btn btn-primary" ng-click="vm.providerCreate()">
-                                <span class = "glyphicon glyphicon-user" aria-hidden = "true"></span>
+                    </th>
+                    <th>
+                        <button type="button" title="Agregar Nuevo Proveedor" class="btn btn-primary btn-sm" ng-click="vm.providerCreate()">
+                                <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
                         </button>
                     </th>
                 </tr>
