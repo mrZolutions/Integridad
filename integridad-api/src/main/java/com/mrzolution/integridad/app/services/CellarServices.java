@@ -1,21 +1,11 @@
 package com.mrzolution.integridad.app.services;
 
 import com.google.common.collect.Lists;
-import com.mrzolution.integridad.app.domain.Cashier;
-import com.mrzolution.integridad.app.domain.Cellar;
-import com.mrzolution.integridad.app.domain.DetailCellar;
-import com.mrzolution.integridad.app.domain.Kardex;
-import com.mrzolution.integridad.app.domain.ProductBySubsidiary;
-import com.mrzolution.integridad.app.domain.UserIntegridad;
+import com.mrzolution.integridad.app.domain.*;
 import com.mrzolution.integridad.app.domain.report.CellarEntryReport;
 import com.mrzolution.integridad.app.exceptions.BadRequestException;
-import com.mrzolution.integridad.app.repositories.CashierRepository;
-import com.mrzolution.integridad.app.repositories.CellarRepository;
-import com.mrzolution.integridad.app.repositories.DetailCellarChildRepository;
-import com.mrzolution.integridad.app.repositories.DetailCellarRepository;
-import com.mrzolution.integridad.app.repositories.KardexRepository;
-import com.mrzolution.integridad.app.repositories.ProductBySubsidiairyRepository;
-import com.mrzolution.integridad.app.repositories.UserClientRepository;
+import com.mrzolution.integridad.app.repositories.*;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -27,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
@@ -50,6 +41,8 @@ public class CellarServices {
     ProductBySubsidiairyRepository productBySubsidiairyRepository;
     @Autowired
     KardexRepository kardexRepository;
+    @Autowired
+    ProductRepository productRepository;
     
     public Iterable<Cellar> getByUserLazy(UserIntegridad user) {
         Iterable<Cellar> cellars = cellarRepository.findCellarByUserIntegridad(user);
@@ -139,7 +132,7 @@ public class CellarServices {
         saveDetailsCellar(saved, detailsCellar);
         saveKardex(saved, detailsKardex);
         if ("INGRESADO".equals(saved.getStatusIngreso())) {
-            updateProductBySubsidiary(cellar, detailsCellar);
+            updateProductBySubsidiary(saved, detailsCellar);
         }
         log.info("CellarServices createCellar: {}, {}", saved.getId(), saved.getWhNumberSeq());
         return saved;
@@ -162,13 +155,15 @@ public class CellarServices {
         });
         saved.setDetailsKardex(detailsKardex);
     }
-    
+
     public void updateProductBySubsidiary(Cellar cellar, List<DetailCellar> detailsCellar) {
         detailsCellar.forEach(detail -> {
             if (!detail.getProduct().getProductType().getCode().equals("SER")) {
                 ProductBySubsidiary ps = productBySubsidiairyRepository.findBySubsidiaryIdAndProductId(cellar.getSubsidiary().getId(), detail.getProduct().getId());
-                ps.setQuantity(ps.getQuantity() + detail.getQuantity());
-                productBySubsidiairyRepository.save(ps);
+                if(ps != null){
+                    ps.setQuantity(ps.getQuantity() + detail.getQuantity());
+                    productBySubsidiairyRepository.save(ps);
+                }
             }
         });
         log.info("CellarServices updateProductBySubsidiary DONE");

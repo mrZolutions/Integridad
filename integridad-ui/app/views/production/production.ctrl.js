@@ -7,20 +7,22 @@
  * Controller of the integridadUiApp
  */
 angular.module('integridadUiApp')
-    .controller('ProductionCtrl', function( _, $localStorage, providerService, productService, warehouseService,
-                                            clientService, cellarService, consumptionService, utilSeqService, $location) {
-    
+    .controller('ProductionCtrl', function( _, $localStorage, providerService, productService, warehouseService, validatorService, subsidiaryService,
+                                            productTypeService, messurementListService, clientService, cellarService, consumptionService, utilSeqService, $location,
+                                            cuentaContableService,brandService, lineService, groupService, subgroupService, utilStringService) {
+
     var vm = this;
     vm.error = undefined;
     vm.success = undefined;
     vm.loading = false;
+    vm.userData = $localStorage.user;
     vm.clientList = undefined;
 
     vm.prices = [
         { name: 'EFECTIVO', cod: 'cashPercentage'}, { name: 'MAYORISTA', cod: 'majorPercentage'},
         { name: 'CREDITO', cod: 'creditPercentage'}, { name: 'TARJETA', cod: 'cardPercentage'}
     ];
-    
+
     function _activate() {
         vm.newCellar = undefined;
         vm.celled = false;
@@ -68,10 +70,37 @@ angular.module('integridadUiApp')
             "codigo": "2",
             "codigo_porcentaje": 0
         };
+        vm.providerType = [
+            'PROVEEDORES LOCALES O NACIONALES 01',
+            'PROVEEDORES DEL EXTERIOR 02',
+        ];
+        vm.purchaseType = [
+            {code: 'BIEN', name: 'BIENES'},
+            {code: 'SERV', name: 'SERVICIOS'},
+            {code: 'MATP', name: 'MATERIA PRIMA'},
+            {code: 'CONS', name: 'CONSUMIBLES'},
+            {code: 'RMBG', name: 'REEMBOLSO DE GASTOS'},
+            {code: 'TKAE', name: 'TIKETS AEREOS'}
+        ];
         vm.usrCliId = $localStorage.user.subsidiary.userClient.id;
         vm.userCode = $localStorage.user.userType.code;
+        vm.provider = undefined;
+        vm.messurements = messurementListService.getMessurementList();
         warehouseService.getAllWarehouseByUserClientId(vm.usrCliId).then(function(response) {
             vm.warehouseList = response;
+            vm.loading = false;
+        }).catch(function(error) {
+            vm.loading = false;
+            vm.error = error.data;
+        });
+        productTypeService.getproductTypesLazy().then(function(response) {
+          vm.productTypes = response;
+        }).catch(function(error) {
+          vm.loading = false;
+          vm.error = error.data;
+        });
+        cuentaContableService.getCuentaContableByType($localStorage.user.subsidiary.userClient.id, 'INVT').then(function(response) {
+            vm.cuentaContableList = response;
             vm.loading = false;
         }).catch(function(error) {
             vm.loading = false;
@@ -275,7 +304,7 @@ angular.module('integridadUiApp')
         vm.impuestoIVAZero.valor = 0;
         vm.cellar.baseTaxes = (vm.cellar.baseTaxes - discountWithIva).toFixed(4);
         vm.cellar.baseNoTaxes = (vm.cellar.baseNoTaxes - discountWithNoIva).toFixed(4);
-        vm.cellar.total = (parseFloat(vm.cellar.baseTaxes) 
+        vm.cellar.total = (parseFloat(vm.cellar.baseTaxes)
             + parseFloat(vm.cellar.baseNoTaxes)
             + parseFloat(vm.cellar.iva)
             + parseFloat(vm.cellar.ice)).toFixed(4);
@@ -285,8 +314,8 @@ angular.module('integridadUiApp')
         var detail = {
             product: angular.copy(vm.productToAdd),
             quantity: vm.quantity,
-            costEach: vm.productToAdd.costEachCalculated,
-            total: (parseFloat(vm.quantity) * parseFloat(vm.productToAdd.costEachCalculated)).toFixed(4),
+            costEach: vm.productToAdd.costEach,
+            total: (parseFloat(vm.quantity) * parseFloat(vm.productToAdd.costEach)).toFixed(4),
             adicional: vm.adicional
         };
         if (vm.indexDetail !== undefined) {
@@ -294,7 +323,23 @@ angular.module('integridadUiApp')
         } else {
             vm.cellar.detailsCellar.push(detail);
         };
-        vm.productToAdd = undefined;
+
+        productService.update(vm.productToAdd).then(function(response) {
+          vm.productToAdd = undefined;
+          vm.selectedGroup = undefined;
+          vm.selectedLine = undefined;
+          vm.wizard = undefined;
+          vm.error = undefined;
+          if (isRemove) {
+            vm.success = 'Registro eliminado con exito';
+          } else {
+            vm.success = 'Registro actualizado con exito';
+          };
+        }).catch(function(error) {
+          vm.loading = false;
+          vm.error = error.data;
+        });
+
         vm.quantity = undefined;
         vm.adicional = undefined;
         _getCellarTotalSubtotal();
@@ -520,7 +565,7 @@ angular.module('integridadUiApp')
         vm.impuestoIVAZero.valor = 0;
         vm.consumption.baseTaxes = (vm.consumption.baseTaxes - discountWithIva).toFixed(4);
         vm.consumption.baseNoTaxes = (vm.consumption.baseNoTaxes - discountWithNoIva).toFixed(4);
-        vm.consumption.total = (parseFloat(vm.consumption.baseTaxes) 
+        vm.consumption.total = (parseFloat(vm.consumption.baseTaxes)
             + parseFloat(vm.consumption.baseNoTaxes)
             + parseFloat(vm.consumption.iva)
             + parseFloat(vm.consumption.ice)).toFixed(4);
@@ -711,7 +756,7 @@ angular.module('integridadUiApp')
     vm.removeDetailCsm = function(index) {
         vm.consumption.detailsConsumption.splice(index,1);
     };
-  
+
     vm.rangeCsm = function() {
         return new Array(vm.totalPages);
     };
@@ -720,12 +765,12 @@ angular.module('integridadUiApp')
         vm.page = 0;
         _filterProductCsm();
     };
-  
+
     vm.paginateCsm = function(page) {
         vm.page = page;
         _filterProductCsm();
     };
-  
+
     vm.getActiveClassCsm = function(index) {
         var classActive = vm.page === index? 'active' : '';
         return classActive;
@@ -779,9 +824,20 @@ angular.module('integridadUiApp')
             productSelect.quantity = 1;
         };
         vm.productToAdd = angular.copy(productSelect);
-        var costEachCalculated = vm.getCost(productSelect.cashPercentage, productSelect.averageCost);
-        vm.productToAdd.costEachCalculated = costEachCalculated;
+        if (vm.productToAdd.costEach === null){
+            var costEachCalculated = vm.getCost(productSelect.cashPercentage, productSelect.averageCost);
+            vm.productToAdd.costEach = costEachCalculated;
+            vm.productToAdd.averageCostSuggested = vm.productToAdd.averageCost
+        };
         vm.quantity = 1;
+    };
+
+    vm.calcAvg = function () {
+        if (vm.productToAdd.averageCost !== null){
+            vm.productToAdd.averageCostSuggested = ((parseFloat(vm.productToAdd.costEach) + parseFloat(vm.productToAdd.averageCost)) / 2).toFixed(4);
+        } else {
+            vm.productToAdd.averageCostSuggested = vm.productToAdd.costEach;
+        };
     };
 
     vm.editDetail = function(detail, index) {
@@ -790,7 +846,7 @@ angular.module('integridadUiApp')
         vm.quantity= detail.quantity;
         vm.adicional = detail.adicional;
     };
-  
+
     vm.range = function() {
         return new Array(vm.totalPages);
     };
@@ -799,12 +855,12 @@ angular.module('integridadUiApp')
         vm.page = 0;
         _filterProduct();
     };
-  
+
     vm.paginate = function(page) {
         vm.page = page;
         _filterProduct();
     };
-  
+
     vm.getActiveClass = function(index) {
         var classActive = vm.page === index? 'active' : '';
         return classActive;
@@ -813,6 +869,363 @@ angular.module('integridadUiApp')
     vm.exit = function() {
         $location.path('/home');
     };
+
+    // NEW PROVIDER ---------------------
+    vm.providerCreate = function() {
+        vm.error = undefined;
+        vm.success = undefined;
+        vm.provider = {
+            codeIntegridad: vm.providerList.length + 1,
+            active: true,
+            userClient: vm.userData.subsidiary.userClient
+        };
+        vm.providerList = undefined;
+    };
+
+    vm.cancelProvider = function() {
+        vm.error = undefined;
+        vm.success = undefined;
+        vm.provider = undefined;
+        providerService.getLazyByUserClientId(vm.usrCliId).then(function(response) {
+            vm.providerList = response;
+            vm.loading = false;
+        }).catch(function(error) {
+            vm.loading = false;
+            vm.error = error.data;
+        });
+    };
+
+    function createProvider() {
+        providerService.getProviderByUserClientIdAndRuc(vm.usrCliId, vm.provider.ruc).then(function(response) {
+            if (response.length === 0) {
+                providerService.create(vm.provider).then(function(responseProv) {
+                  providerService.getLazyByUserClientId(vm.usrCliId).then(function(response) {
+                      vm.provider = undefined;
+                      vm.providerList = response;
+                      vm.loading = false;
+                  }).catch(function(error) {
+                      vm.loading = false;
+                      vm.error = error.data;
+                  });
+                    vm.error = undefined;
+                    vm.success = 'Registro realizado con exito';
+                }).catch(function(error) {
+                    vm.loading = false;
+                    vm.error = error.data;
+                });
+            } else {
+                vm.error = 'El Proveedor Ya Existe';
+            };
+            vm.loading = false;
+        }).catch(function(error) {
+            vm.loading = false;
+            vm.error = error.data;
+        });
+      };
+
+    vm.registerProvider = function() {
+        var idValid = true;
+        if (vm.provider.rucType === 'CED') {
+            idValid = validatorService.isCedulaValid(vm.provider.ruc);
+        } else if (vm.provider.rucType === 'RUC') {
+            idValid = validatorService.isRucValid(vm.provider.ruc);
+        } else if (vm.provider.rucType === 'IEX') {
+            idValid = true;
+        };
+
+        if (!idValid) {
+            vm.error = 'Identificacion invalida';
+        } else {
+            createProvider();
+        };
+    };
+
+    // NEW PROVIDER --------------------- END
+
+    // NEW PRODUCT ----------------------
+
+    function _getSubsidiaries() {
+        subsidiaryService.getByProjectId($localStorage.user.subsidiary.userClient.id).then(function(response) {
+            vm.subsidiaries = response;
+        }).catch(function(error) {
+            vm.loading = false;
+            vm.error = error.data;
+        });
+    };
+
+    function _getBrands() {
+        brandService.getBrandsLazy($localStorage.user.subsidiary.userClient.id).then(function(response) {
+            vm.brands = response;
+        }).catch(function(error) {
+            vm.loading = false;
+            vm.error = error.data;
+        });
+    };
+
+    function _getLines() {
+        lineService.getLinesLazy($localStorage.user.subsidiary.userClient.id).then(function(response) {
+            vm.lineas = response;
+        }).catch(function(error) {
+            vm.loading = false;
+            vm.error = error.data;
+        });
+    };
+
+    function createProduct() {
+        var productBySubsidiary = {
+            dateCreated: new Date().getTime(),
+            quantity: 0,
+            subsidiary: vm.warehouseSelected.subsidiary,
+            active: true
+        };
+        vm.productBySubsidiaries.push(productBySubsidiary);
+        vm.product.productBySubsidiaries = vm.productBySubsidiaries;
+        vm.product.cuentaContableByProducts = [];
+        _.each(vm.cuentasContablesForProductSale, function (cc){
+            var cuentaContableByProduct = {
+                cuentaContable: cc,
+                type: 'VENTA'
+            };
+            vm.product.cuentaContableByProducts.push(cuentaContableByProduct);
+        });
+        _.each(vm.cuentasContablesForProductConsume, function (cc){
+            var cuentaContableByProduct = {
+                cuentaContable: cc,
+                type: 'CONSUMO'
+            };
+            vm.product.cuentaContableByProducts.push(cuentaContableByProduct);
+        });
+        _.each(vm.cuentasContablesForProductFinished, function (cc){
+            var cuentaContableByProduct = {
+                cuentaContable: cc,
+                type: 'PRODUCTO_TERMINADO'
+            };
+            vm.product.cuentaContableByProducts.push(cuentaContableByProduct);
+        });
+        _.each(vm.cuentasContablesForProductCost, function (cc){
+            var cuentaContableByProduct = {
+                cuentaContable: cc,
+                type: 'COSTO_DE_VENTA'
+            };
+            vm.product.cuentaContableByProducts.push(cuentaContableByProduct);
+        });
+        productService.create(vm.product).then(function(response) {
+            vm.product = undefined;
+            vm.selectedGroup = undefined;
+            vm.selectedLine = undefined;
+            vm.wizard = undefined;
+            vm.error = undefined;
+            vm.success = 'Registro realizado con exito';
+            vm.loading = false;
+            vm.selectProductToAdd(response)
+        }).catch(function(error) {
+            vm.loading = false;
+            vm.error = error.data;
+        });
+    };
+
+    vm.registerProduct = function() {
+        _getSubsidiaries();
+        vm.success = undefined;
+        vm.error = undefined
+        vm.productBySubsidiaries = [];
+        vm.cuentasContablesForProductSale = [];
+        vm.cuentasContablesForProductConsume = [];
+        vm.cuentasContablesForProductFinished = [];
+        vm.cuentasContablesForProductCost = [];
+        vm.wizard = 1;
+        vm.product = {
+            userClient: $localStorage.user.subsidiary.userClient,
+            productBySubsidiaries: []
+        };
+    };
+
+    vm.cancelProduct = function() {
+        vm.success = undefined;
+        vm.error = undefined
+        vm.wizard = undefined;
+    };
+
+    vm.wiz2 = function() {
+        vm.productBySubsidiaries = [];
+        if (vm.product.productType.code !== 'SER') {
+            vm.product.unitOfMeasurementAbbr = vm.messurementSelected.shortName;
+            vm.product.unitOfMeasurementFull = vm.messurementSelected.name;
+        };
+        _.each(vm.subsidiaries, function(sub) {
+            if (sub.selected) {
+                var productBySubsidiary = {
+                    dateCreated: new Date().getTime(),
+                    quantity: sub.cantidad,
+                    subsidiary: sub,
+                    active: true
+                };
+                vm.productBySubsidiaries.push(productBySubsidiary);
+            };
+        });
+        _getBrands();
+        _getLines();
+        vm.wizard = 2;
+    };
+
+    vm.wiz3 = function() {
+        vm.wizard = 3;
+    };
+
+    vm.addCuentaContableSale = function(){
+        if (vm.cuentaContableSale !== undefined && vm.cuentaContableSale.id !== undefined) {
+            vm.cuentasContablesForProductSale.push(vm.cuentaContableSale);
+        };
+    };
+
+    vm.removeCCSale = function(cc){
+        vm.cuentasContablesForProductSale = _.filter(vm.cuentasContablesForProductSale, function(cuenta){return cuenta.name !== cc.name})
+    };
+
+    vm.addCuentaContableConsume = function(){
+        if (vm.cuentaContableConsume !== undefined && vm.cuentaContableConsume.id !== undefined) {
+            vm.cuentasContablesForProductConsume.push(vm.cuentaContableConsume);
+        };
+    };
+
+    vm.removeCCConsume = function(cc){
+        vm.cuentasContablesForProductConsume = _.filter(vm.cuentasContablesForProductConsume, function(cuenta){return cuenta.name !== cc.name})
+    };
+
+    vm.addCuentaContableFinished = function(){
+        if (vm.cuentaContableFinished !== undefined && vm.cuentaContableFinished.id !== undefined) {
+            vm.cuentasContablesForProductFinished.push(vm.cuentaContableFinished);
+        };
+    };
+
+    vm.removeCCFinished = function(cc){
+        vm.cuentasContablesForProductFinished = _.filter(vm.cuentasContablesForProductFinished, function(cuenta){return cuenta.name !== cc.name})
+    };
+
+    vm.addCuentaContableCost = function(){
+        if (vm.cuentaContableCost !== undefined && vm.cuentaContableCost.id !== undefined) {
+            vm.cuentasContablesForProductCost.push(vm.cuentaContableCost);
+        };
+    };
+
+    vm.removeCCCost = function(cc){
+        vm.cuentasContablesForProductCost = _.filter(vm.cuentasContablesForProductCost, function(cuenta){return cuenta.name !== cc.name})
+    };
+
+    vm.getGroups = function() {
+        if (vm.selectedLine !== null && vm.selectedLine !== undefined) {
+            groupService.getGroupsByLineLazy(vm.selectedLine.id).then(function(response) {
+                vm.groups = response;
+            }).catch(function(error) {
+                vm.loading = false;
+                vm.error = error.data;
+            });
+        };
+    };
+
+    vm.getSubGroups = function() {
+        if (vm.selectedGroup !== null && vm.selectedGroup !== undefined) {
+            subgroupService.getSubGroupsByGroupLazy(vm.selectedGroup.id).then(function(response) {
+                vm.subGroups = response;
+            }).catch(function(error) {
+                vm.loading = false;
+                vm.error = error.data;
+            });
+        };
+    };
+
+    vm.createBrand = function() {
+        vm.newBrand = {
+            userClient: $localStorage.user.subsidiary.userClient,
+            code: vm.brands.length + 1,
+            active: true
+        };
+    };
+
+    vm.createLine = function() {
+        vm.newLine = {
+            userClient: $localStorage.user.subsidiary.userClient,
+            code: vm.lineas.length + 1,
+            active: true,
+            groupLines:[]
+        };
+    };
+
+    vm.createGroup = function() {
+        vm.newGroup = {
+            line: vm.selectedLine,
+            code: vm.groups.length + 1,
+            active: true,
+            products: []
+        };
+    };
+
+    vm.createSubGroup = function() {
+        vm.newSubGroup = {
+            groupLine: vm.selectedGroup,
+            code: vm.subGroups.length + 1,
+            active: true,
+            subGroups: []
+        };
+    };
+
+    vm.saveNewBrand = function() {
+        brandService.create(vm.newBrand).then(function(response) {
+            vm.brands.push(response);
+            vm.product.brand = response;
+            vm.newBrand = undefined;
+        }).catch(function(error) {
+            vm.loading = false;
+            vm.error = error.data;
+        });
+    };
+
+    vm.saveNewLine = function() {
+        lineService.create(vm.newLine).then(function(response) {
+            vm.lineas.push(response);
+            vm.selectedLine = response;
+            vm.newLine = undefined;
+            vm.groups = [];
+        }).catch(function(error) {
+            vm.loading = false;
+            vm.error = error.data;
+        });
+    };
+
+    vm.saveNewGroup = function() {
+        groupService.create(vm.newGroup).then(function(response) {
+            vm.groups.push(response);
+            vm.selectedGroup = response;
+            vm.newGroup = undefined;
+            vm.subGroups = [];
+        }).catch(function(error) {
+            vm.loading = false;
+            vm.error = error.data;
+        });
+    };
+
+    vm.saveNewSubGroup = function() {
+        subgroupService.create(vm.newSubGroup).then(function(response) {
+            vm.subGroups.push(response);
+            vm.product.subgroup = response;
+            vm.newSubGroup = undefined;
+        }).catch(function(error) {
+            vm.loading = false;
+            vm.error = error.data;
+        });
+    };
+
+    vm.saveProduct = function() {
+        var validationError = utilStringService.isAnyInArrayStringEmpty([vm.product.name]);
+        if (validationError) {
+            vm.error = 'Debe ingresar Nombre del producto';
+        } else {
+            vm.loading = true;
+            createProduct();
+        };
+    };
+
+    // NEW PRODUCT -------------------- END
 
     //Init Controler Code
     (function initController() {

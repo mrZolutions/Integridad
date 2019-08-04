@@ -37,6 +37,13 @@ public class Product implements Child {
     private boolean ice;
     private boolean iva;
 
+    @Column(nullable = true)
+    private String wareHouseType;
+    @Column(nullable = true)
+    private Double costEach;
+    @Column(nullable = true)
+    private Double averageCostSuggested;
+
 
     @ManyToOne
     @JoinColumn(name = "product_type_id")
@@ -57,10 +64,16 @@ public class Product implements Child {
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     private List<ProductBySubsidiary> productBySubsidiaries;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    private List<CuentaContableByProduct> cuentaContableByProducts;
     
     public void setListsNull() {
         if (productBySubsidiaries != null) {
             productBySubsidiaries = null;
+        }
+        if(cuentaContableByProducts !=null){
+            cuentaContableByProducts = null;
         }
     }
     

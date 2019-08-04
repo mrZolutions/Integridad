@@ -14,7 +14,7 @@ import java.util.UUID;
 
 @Repository
 @Qualifier(value="ProductBySubsidiairyRepository")
-public interface ProductBySubsidiairyRepository extends CrudRepository<ProductBySubsidiary, UUID>{
+public interface ProductBySubsidiairyRepository extends CrudRepository<ProductBySubsidiary, UUID> {
         
     Iterable<ProductBySubsidiary> findByProduct(Product products);
     
@@ -32,4 +32,12 @@ public interface ProductBySubsidiairyRepository extends CrudRepository<ProductBy
 
     @Query("SELECT p FROM ProductBySubsidiary p WHERE p.product.id = (:id)")
     Iterable<ProductBySubsidiary> findByProductId(@Param("id") UUID productId);       
+
+    //594f9d5a-3236-4702-86e1-6f0d34f0bd14 75591174-db48-4313-a6a0-1f2581ff9ed3 b7583d7b-39e5-4ba1-aa88-5fa5eeee2024
+    @Query("SELECT distinct p.product.id FROM ProductBySubsidiary p WHERE p.subsidiary.id = (:id) and p.product.active = true and (p.product.productType.id not in ('594f9d5a-3236-4702-86e1-6f0d34f0bd14', '75591174-db48-4313-a6a0-1f2581ff9ed3', 'b7583d7b-39e5-4ba1-aa88-5fa5eeee2024'))")
+    Page<UUID> findBySubsidiaryIdAndProductActiveForBill(@Param("id") UUID subsidiaryId, Pageable pageable);
+
+    @Query("SELECT distinct p.product.id FROM ProductBySubsidiary p WHERE p.subsidiary.id = (:id) and p.product.active = true and (p.product.codeIntegridad like (%:variable%) or p.product.name like (%:variable%)) and (p.product.productType.id not in ('594f9d5a-3236-4702-86e1-6f0d34f0bd14', '75591174-db48-4313-a6a0-1f2581ff9ed3', 'b7583d7b-39e5-4ba1-aa88-5fa5eeee2024'))")
+    Page<UUID> findBySubsidiaryIAndVariabledAndProductActiveForBill(@Param("id") UUID subsidiaryId, @Param("variable") String variable, Pageable pageable);
+        
 }

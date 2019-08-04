@@ -7,7 +7,7 @@
             <div class="sk-circle4 sk-child"></div>
             <div class="sk-circle5 sk-child"></div>
             <div class="sk-circle6 sk-child"></div>
-            <div class="sk-circle7 sk-child"></div>        
+            <div class="sk-circle7 sk-child"></div>
             <div class="sk-circle8 sk-child"></div>
             <div class="sk-circle9 sk-child"></div>
             <div class="sk-circle10 sk-child"></div>
@@ -31,7 +31,7 @@
             <div class = "alert alert-success">{{vm.success}}</div>
         </div>
     </div>
-    
+
     <!--CARGA DE WAREHOUSE POR USERCLIENT-->
     <div class="table-responsive" ng-show="vm.warehouseSelected === undefined">
         <div class="row">
@@ -58,7 +58,7 @@
                     <td>{{warehouse.nameNumber}}</td>
                     <td>{{warehouse.subsidiary.name}}</td>
                     <td>
-                        <button type="button" title = "Seleccionar Bodega" class="btn btn-primary btn-sm" 
+                        <button type="button" title = "Seleccionar Bodega" class="btn btn-primary btn-sm"
                                 ng-click="vm.selectWarehouse(warehouse)">
                                 <span class = "glyphicon glyphicon-check" aria-hidden = "true"></span>
                         </button>
@@ -106,6 +106,9 @@
                         <button type="button" title="Busqueda por Detalles" class="btn btn-primary btn-sm" ng-click="vm.getDetailsOfCellars()">
                                 Busqueda por Detalles
                         </button>
+                        <button type="button" title = "Agregar Nuevo Proveedor" class="btn btn-primary" ng-click="vm.providerCreate()">
+                                <span class = "glyphicon glyphicon-user" aria-hidden = "true"></span>
+                        </button>
                     </th>
                 </tr>
             </thead>
@@ -122,11 +125,11 @@
                     <td>{{provider.ruc}}</td>
                     <td></td>
                     <td>
-                        <button type="button" title="Ingreso a Bodega" class="btn btn-primary btn-sm" 
+                        <button type="button" title="Ingreso a Bodega" class="btn btn-primary btn-sm"
                                 ng-click="vm.providerSelectToEnterCellar(provider)">
                                 <span class="glyphicon glyphicon-import" aria-hidden="true"></span>
                         </button>
-                        <button type="button" title="Consulta de Ingreso a Bodega" class="btn btn-primary btn-sm" 
+                        <button type="button" title="Consulta de Ingreso a Bodega" class="btn btn-primary btn-sm"
                                 ng-click="vm.consultSavedCellar(provider)">
                                 <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
                         </button>
@@ -136,7 +139,7 @@
         </table>
         <div class="row">
             <div class="form-group col-md-12">
-                <button type="button" title="Salir" class="btn btn-primary btn-sm" 
+                <button type="button" title="Salir" class="btn btn-primary btn-sm"
                         ng-click="vm.cancelSelectWarehouse()">
                         <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
                 </button>
@@ -248,9 +251,9 @@
             </div>
         </div>
     </div>
-    
+
     <!--SECCIÓN DE INGRESO A BODEGA-->
-    <div class="panel-group table-responsive" ng-show="vm.providerSelected !== undefined">
+    <div class="panel-group table-responsive" ng-show="vm.providerSelected !== undefined && vm.wizard === undefined">
         <div class="row">
             <div class="form-group col-md-12">
                 <h4><b>Ingreso a Bodega</b></h4>
@@ -378,7 +381,7 @@
                                                 data-toggle="modal" data-target="#modalAddProduct">
                                                 <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
                                         </button>
-                                        <button type="button" title="Eliminar Producto" class="btn btn-primary btn-sm" 
+                                        <button type="button" title="Eliminar Producto" class="btn btn-primary btn-sm"
                                                 ng-click="vm.removeDetail($index)">
                                                 <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
                                         </button>
@@ -468,12 +471,12 @@
         <b>INGRESO No. {{vm.cellSeqNumber}}</b><br/>
         <b>FACTURA No. {{vm.cellar.billNumber}}</b><br/>
         <b>CLAVE ACCESO: {{vm.cellar.authNumber}}</b><br/>
-    
+
         <b>RAZON SOCIAL:</b><br/>
         <b>{{vm.cellar.provider.name}}</b><br/>
         <b>IDENTIFICACION: {{vm.cellar.provider.ruc}}</b><br/>
         <b>FECHA: {{vm.getDateToPrint() | date :  "dd/MM/yyyy"}}</b><br/>
-      
+
         <table width="100%">
             <thead>
                 <tr>
@@ -510,7 +513,7 @@
                 <td>TOTAL: &#36;{{vm.cellar.total}}</td>
             </tr>
         </table>
-    
+
         ------------------------------------
     </div>
 
@@ -526,12 +529,15 @@
                     <div class="row">
                         <div class="col-md-12" ng-if="vm.productToAdd === undefined">
                             <div class="row">
-                                <div class="form-group col-md-10">
+                                <div class="form-group col-md-8">
                                     <input ng-model="vm.searchText" class="form-control" placeholder="Buscar" />
                                 </div>
-                                <div class="form-group col-md-2">
+                                <div class="form-group col-md-4">
                                     <button type="button" title="Buscar" class="btn btn-primary btn-sm" ng-click="vm.filter()">
                                             <span class = "glyphicon glyphicon-search" aria-hidden = "true"></span>
+                                    </button>
+                                    <button type="button" title="Crear Producto" class="btn btn-primary btn-sm" data-dismiss="modal" ng-click="vm.registerProduct()">
+                                            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                                     </button>
                                 </div>
                             </div>
@@ -585,7 +591,7 @@
                                         <div class="form-group col-md-6">
                                             <b>PRECIO UNITARIO: </b>
                                             <input type="text"
-                                                   ng-model="vm.productToAdd.costEachCalculated" class="form-control">
+                                                   ng-model="vm.productToAdd.costEach" class="form-control" ng-change="vm.calcAvg()">
                                         </div>
                                     </div>
                                     <div class="row">
@@ -594,6 +600,59 @@
                                             <input type="text"
                                                    ng-model="vm.adicional" class="form-control">
                                         </div>
+                                    </div>
+                                    <hr/>
+                                    <div class="row">
+                                        <div class="form-group col-md-6">
+                                            <b>COSTO PROMEDIO: </b><br/>
+                                            $ {{vm.productToAdd.averageCostSuggested}}
+                                        </div>
+                                        <div class="form-group col-md-6">
+                                            <b>COSTO: </b>
+                                            <input type="text"
+                                                   ng-model="vm.productToAdd.averageCost" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                      <div class="form-group col-md-6">
+                                        <label>M&aacute;ximo / M&iacute;nimo: </label>
+                                        <input type="text" onkeypress="return ((event.which >= 46 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+                                               ng-model="vm.productToAdd.maxMinimun" class="form-control" maxlength="9" ng-disabled="vm.productToAdd.productType.code === 'SER'">
+                                      </div>
+                                    </div>
+                                    <div class="row">
+                                      <div class="form-group col-md-6">
+                                        <label>Ganancia % efectivo: </label>
+                                        <input type="text" onkeypress="return ((event.which >= 46 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+                                               ng-model="vm.productToAdd.cashPercentage" class="form-control" maxlength="9">
+                                      </div>
+                                      <div class="form-group col-md-6">
+                                        <label>Ganancia % cr&eacute;dito: </label>
+                                        <input type="text" onkeypress="return ((event.which >= 46 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+                                               ng-model="vm.productToAdd.creditPercentage" class="form-control" maxlength="9">
+                                      </div>
+                                    </div>
+                                    <div class="row">
+                                      <div class="form-group col-md-6">
+                                        <label>Ganancia % tarjeta: </label>
+                                        <input type="text" onkeypress="return ((event.which >= 46 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+                                               ng-model="vm.productToAdd.cardPercentage" class="form-control" maxlength="9">
+                                      </div>
+                                      <div class="form-group col-md-6">
+                                        <label>Ganancia % mayorista: </label>
+                                        <input type="text" onkeypress="return ((event.which >= 46 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+                                               ng-model="vm.productToAdd.majorPercentage" class="form-control" maxlength="9">
+                                      </div>
+                                    </div>
+                                    <div class="row">
+                                      <div class="form-group col-md-6">
+                                        <label>IVA: </label>
+                                        <input class="pull-right" ng-model="vm.productToAdd.iva" type="checkbox">
+                                      </div>
+                                      <div class="form-group col-md-6">
+                                        <label>ICE: </label>
+                                        <input class="pull-right" ng-model="vm.productToAdd.ice" type="checkbox">
+                                      </div>
                                     </div>
                                 </div>
                             </div>
@@ -653,11 +712,11 @@
                     <td>{{cellar.total}}</td>
                     <td>{{cellar.statusIngreso}}</td>
                     <td>
-                        <button type="button" title="Ver Factura" 
+                        <button type="button" title="Ver Factura"
                                 class="btn btn-primary btn-sm" ng-click="vm.cellarSelected(cellar)">
                                 <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
                         </button>
-                        <button type="button" title="Autorizar Ingreso a Bodega" class="btn btn-warning btn-sm" 
+                        <button type="button" title="Autorizar Ingreso a Bodega" class="btn btn-warning btn-sm"
                                 ng-click="vm.validateCellar=cellar"
                                 data-toggle="modal" data-target="#modalValidar">
                                 <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
@@ -668,7 +727,7 @@
         </table>
         <div class="row">
             <div class="form-group col-md-12">
-                <button type="button" title="Salir" class="btn btn-primary btn-sm" 
+                <button type="button" title="Salir" class="btn btn-primary btn-sm"
                         ng-click="vm.cancelFindCellars()">
                         <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
                 </button>
@@ -842,7 +901,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" title="Autorizar Ingreso" class="btn btn-warning btn-sm" 
+                    <button type="button" title="Autorizar Ingreso" class="btn btn-warning btn-sm"
                             ng-click="vm.validateEnterCellar()" data-dismiss="modal">
                             <span class = "glyphicon glyphicon-ok" aria-hidden = "true"></span>
                     </button>
@@ -1160,12 +1219,12 @@
         <b>CONSUMO No. {{vm.csmSeqNumber}}</b><br/>
         <b>SUPERVISOR: {{vm.consumption.nameSupervisor}}</b><br/>
         <b>OBSERVACIONES: {{vm.consumption.observation}}</b><br/>
-        
+
         <b>RAZON SOCIAL:</b><br/>
         <b>{{vm.consumption.client.name}}</b><br/>
         <b>IDENTIFICACION: {{vm.consumption.client.identification}}</b><br/>
         <b>FECHA: {{vm.getDateToPrintCsm() | date :  "dd/MM/yyyy"}}</b><br/>
-          
+
         <table width="100%">
             <thead>
                 <tr>
@@ -1202,7 +1261,7 @@
                 <td>TOTAL: &#36;{{vm.consumption.total}}</td>
             </tr>
         </table>
-        
+
         ------------------------------------
     </div>
 
@@ -1324,4 +1383,820 @@
     </div>
     <!--FIN DEL MODAL PARA AGREGAR PRODUCTOS-->
     <!--FIN DE CONSUMO DESDE BODEGA-->
+
+    <!--INICIO MODULO PARA CREAR PROOVEEDOR-->
+    <div class="table-responsive" ng-show="vm.provider !== undefined">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <b>Datos del Proveedor</b>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="form-group col-md-4">
+                        <label>C&oacute;digo: </label>
+                        <input type="text" ng-model="vm.provider.codeIntegridad" class="form-control">
+                    </div>
+                    <div class="form-group col-md-8">
+                        <label>Tipo de proveedor: </label>
+                        <select ng-options="tipo as tipo for tipo in vm.providerType" ng-model="vm.provider.providerType"
+                                class="form-control">
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-6">
+                        <label>Tipo de Identificaci&oacute;n: </label>
+                        <select ng-options="item.code as item.name for item in [{code:'CED', name:'CEDULA'}, {code:'RUC', name:'RUC'}, {code:'IEX', name:'IDENTIFICACIÓN EXTERIOR'}]"
+                                ng-model="vm.provider.rucType" class="form-control">
+                        </select>
+                    </div>
+                    <div class="form-group col-md-6" ng-show="vm.provider.rucType === 'CED'">
+                        <label>C&eacute;dula: </label>
+                        <input type="text" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+                               ng-model="vm.provider.ruc" class="form-control" maxlength="10">
+                    </div>
+                    <div class="form-group col-md-6" ng-show="vm.provider.rucType === 'RUC'">
+                        <label>RUC: </label>
+                        <input type="text" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+                               ng-model="vm.provider.ruc" class="form-control" maxlength="13">
+                    </div>
+                    <div class="form-group col-md-6" ng-show="vm.provider.rucType === 'IEX'">
+                        <label>ID. Exterior: </label>
+                        <input type="text" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+                               ng-model="vm.provider.ruc" class="form-control" maxlength="13">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-12">
+                        <label>Nombre Comercial: </label>
+                        <input type="text" ng-model="vm.provider.name" class="form-control">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-12">
+                        <label>Raz&oacute;n Social: </label>
+                        <input type="text" ng-model="vm.provider.razonSocial" class="form-control">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-12">
+                        <label>Direcci&oacute;n: </label>
+                        <input type="text" ng-model="vm.provider.address1" class="form-control">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-6">
+                        <label>Pa&iacute;s: </label>
+                        <input type="text" ng-model="vm.provider.country" class="form-control">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label>Ciudad: </label>
+                        <input type="text" ng-model="vm.provider.city" class="form-control">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-6">
+                        <label>Tel&eacute;fono: (incluir c&oacute;digo de provincia ej: 02) </label>
+                        <input type="text" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+                               ng-model="vm.provider.phone" class="form-control" maxlength="9">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label>Tel&eacute;fono celular: </label>
+                        <input type="text" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+                               ng-model="vm.provider.celPhone" class="form-control" maxlength="10">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-6">
+                        <label>Email: </label>
+                        <input type="text" ng-model="vm.provider.email" class="form-control">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label>Contacto: </label>
+                        <input type="text" ng-model="vm.provider.contact" class="form-control">
+                    </div>
+                </div>
+            </div>
+            <div class="panel-footer">
+                <button type="button" title = "Guardar Proveedor" class="btn btn-success btn-sm" ng-click="vm.registerProvider()"
+                        ng-disabled="vm.disableSave()">
+                        <span class = "glyphicon glyphicon-floppy-save" aria-hidden = "true"></span>
+                </button>
+                <button type="button" title = "Salir" class="btn btn-primary btn-sm"
+                        ng-click="vm.cancelProvider()">
+                        <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+    <!--FIN DE MODULO PARA CREAR PROVEEDOR-->
+
+    <!-- INICIO MODULO DE INGRESO DE NUEVO PRODUCT -->
+    <br/>
+    <div class="form-group col-md-12" ng-show="vm.wizard !== undefined">
+      <div class="header">
+        <h4><b>Productos</b></h4>
+      </div>
+    </div>
+    <div class="panel panel-primary" ng-show="vm.wizard === 1">
+      <div class="panel-body">
+        <div class="row">
+          <div class="form-group col-md-12">
+            <label>Nombre *: </label>
+            <input type="text" ng-model="vm.product.name" class="form-control">
+          </div>
+        </div>
+        <div class="row">
+          <div class="form-group col-md-4">
+            <label>C&oacute;digo: </label>
+            <input type="text" ng-model="vm.product.codeIntegridad" class="form-control">
+          </div>
+          <div class="form-group col-md-4">
+            <label>Tipo de Producto: </label>
+            <select ng-options="type as type.name for type in vm.productTypes  | orderBy:'name'  track by type.id"
+                    ng-model="vm.product.productType" class="form-control">
+            </select>
+          </div>
+          <div class="form-group col-md-4">
+            <label>Medida: </label>
+            <select ng-options="mess as mess.name for mess in vm.messurements  | orderBy:'name'  track by mess.shortName"
+                    ng-model="vm.messurementSelected" ng-change="vm.setUnitOfMeasurementFull()" class="form-control"
+                    ng-disabled="vm.product.productType.code === 'SER'">
+            </select>
+          </div>
+        </div>
+        <div class="row">
+          <div class="form-group col-md-12">
+            <label>Caracter&iacute;sticas: </label>
+            <textarea class="form-control" rows="3" id="comment" ng-model="vm.product.characteristics"></textarea>
+          </div>
+        </div>
+        <div class="row">
+          <div class="form-group col-md-6">
+            <label>C&oacute;digo de Barras: </label>
+            <input type="text" onkeypress="return ((event.which >= 46 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+                   ng-model="vm.product.barCode" class="form-control" maxlength="9">
+          </div>
+        </div>
+        
+        <div class="row">
+          <div class="form-group col-md-6">
+            <div class="row">
+              <div class="form-group col-md-8">
+                <label>Cuenta contable para la Venta: </label>
+                <select ng-options="cc as cc.name for cc in vm.cuentaContableList  | orderBy:'name'  track by cc.id"
+                        ng-model="vm.cuentaContableSale" class="form-control">
+                </select>
+              </div>
+              <div class="form-group col-md-4">
+                <label>&nbsp;</label>
+                <button type="button" title = "Agregar Cuenta Contable" class="form-control btn btn-primary btn-sm" ng-click="vm.addCuentaContableSale()">
+                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                </button>
+              </div>
+            </div>
+            <div class="row">
+              <div class="form-group col-md-12">
+                <table class="table table-striped">
+                  <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr ng-repeat="ccp in vm.cuentasContablesForProductSale | orderBy:'name':true">
+                      <td>{{ccp.name}}</td>
+                      <td>
+                        <button type="button" title = "Siguiente" class="btn btn-primary btn-sm" ng-click="vm.removeCCSale(ccp)">
+                              <span class = "glyphicon glyphicon-minus" aria-hidden = "true"></span>
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group col-md-6">
+            <div class="row">
+              <div class="form-group col-md-8">
+                <label>Cuenta contable para el Consumo: </label>
+                <select ng-options="cc as cc.name for cc in vm.cuentaContableList  | orderBy:'name'  track by cc.id"
+                        ng-model="vm.cuentaContableConsume" class="form-control">
+                </select>
+              </div>
+              <div class="form-group col-md-4">
+                <label>&nbsp;</label>
+                <button type="button" title = "Agregar Cuenta Contable" class="form-control btn btn-primary btn-sm" ng-click="vm.addCuentaContableConsume()">
+                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                </button>
+              </div>
+            </div>
+            <div class="row">
+              <div class="form-group col-md-12">
+                <table class="table table-striped">
+                  <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr ng-repeat="ccp in vm.cuentasContablesForProductConsume | orderBy:'name':true">
+                      <td>{{ccp.name}}</td>
+                      <td>
+                        <button type="button" title = "Siguiente" class="btn btn-primary btn-sm" ng-click="vm.removeCCConsume(ccp)">
+                              <span class = "glyphicon glyphicon-minus" aria-hidden = "true"></span>
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="form-group col-md-6">
+            <div class="row">
+              <div class="form-group col-md-8">
+                <label>Cuenta contable para el Producto Terminado: </label>
+                <select ng-options="cc as cc.name for cc in vm.cuentaContableList  | orderBy:'name'  track by cc.id"
+                        ng-model="vm.cuentaContableFinished" class="form-control">
+                </select>
+              </div>
+              <div class="form-group col-md-4">
+                <label>&nbsp;</label>
+                <button type="button" title = "Agregar Cuenta Contable" class="form-control btn btn-primary btn-sm" ng-click="vm.addCuentaContableFinished()">
+                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                </button>
+              </div>
+            </div>
+            <div class="row">
+              <div class="form-group col-md-12">
+                <table class="table table-striped">
+                  <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr ng-repeat="ccp in vm.cuentasContablesForProductFinished | orderBy:'name':true">
+                      <td>{{ccp.name}}</td>
+                      <td>
+                        <button type="button" title = "Siguiente" class="btn btn-primary btn-sm" ng-click="vm.removeCCFinished(ccp)">
+                              <span class = "glyphicon glyphicon-minus" aria-hidden = "true"></span>
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group col-md-6">
+            <div class="row">
+              <div class="form-group col-md-8">
+                <label>Cuenta contable para el Costo de Ventas: </label>
+                <select ng-options="cc as cc.name for cc in vm.cuentaContableList  | orderBy:'name'  track by cc.id"
+                        ng-model="vm.cuentaContableCost" class="form-control">
+                </select>
+              </div>
+              <div class="form-group col-md-4">
+                <label>&nbsp;</label>
+                <button type="button" title = "Agregar Cuenta Contable" class="form-control btn btn-primary btn-sm" ng-click="vm.addCuentaContableCost()">
+                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                </button>
+              </div>
+            </div>
+            <div class="row">
+              <div class="form-group col-md-12">
+                <table class="table table-striped">
+                  <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr ng-repeat="ccp in vm.cuentasContablesForProductCost | orderBy:'name':true">
+                      <td>{{ccp.name}}</td>
+                      <td>
+                        <button type="button" title = "Siguiente" class="btn btn-primary btn-sm" ng-click="vm.removeCCCost(ccp)">
+                              <span class = "glyphicon glyphicon-minus" aria-hidden = "true"></span>
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel-footer">
+        <button type="button" title = "Siguiente" class="btn btn-primary btn-sm" ng-click="vm.wiz2()"
+                ng-disabled="vm.product.name === undefined">
+              <span class = "glyphicon glyphicon-arrow-right" aria-hidden = "true"></span>
+        </button>
+        <button type="button" title = "Salir" class="btn btn-primary btn-sm" ng-click="vm.cancelProduct()">
+                <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
+        </button>
+      </div>
+    </div>
+
+    <div class="panel panel-primary" ng-show="vm.wizard === 2">
+      <div class="panel-body">
+        <div class="row">
+          <div class="form-group col-md-6">
+            <label>Marca: </label>
+            <select ng-options="brand as brand.name for brand in vm.brands  | orderBy:'name'  track by brand.id"
+                    ng-model="vm.product.brand" class="form-control">
+            </select>
+          </div>
+          <div class="form-group col-md-3">
+            <label>&nbsp;</label>
+            <button type="button" title = "Crear Marcas" class="form-control btn btn-primary btn-sm" ng-click="vm.createBrand()"
+                    data-toggle="modal" data-target="#modalCreateBrand">
+                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+            </button>
+          </div>
+          <div class="form-group col-md-3">
+            <label>&nbsp;</label>
+            <button type="button" title = "Editar Marcas" class="form-control btn btn-primary btn-sm"
+                    data-toggle="modal" data-target="#modalEditBrand">
+                    <span class = "glyphicon glyphicon-pencil" aria-hidden = "true"></span>
+            </button>
+          </div>
+        </div>
+        <div class="row">
+          <div class="form-group col-md-6">
+            <label>L&iacute;nea: </label>
+            <select ng-options="lin as lin.name for lin in vm.lineas  | orderBy:'name'  track by lin.id"
+                    ng-model="vm.selectedLine" class="form-control" ng-change="vm.getGroups()">
+            </select>
+          </div>
+          <div class="form-group col-md-3">
+            <label>&nbsp;</label>
+            <button type="button" title = "Crear Líneas" class="form-control btn btn-primary btn-sm" ng-click="vm.createLine()"
+                    data-toggle="modal" data-target="#modalCreateLine" ng-disabled="vm.product.brand === undefined">
+                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+            </button>
+          </div>
+          <div class="form-group col-md-3">
+            <label>&nbsp;</label>
+            <button type="button" title = "Editar Líneas" class="form-control btn btn-primary btn-sm"
+                    data-toggle="modal" data-target="#modalEditLine" ng-disabled="vm.product.brand === undefined">
+                    <span class = "glyphicon glyphicon-pencil" aria-hidden = "true"></span>
+            </button>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="form-group col-md-6">
+            <label>Grupo: </label>
+            <select ng-options="group as group.name for group in vm.groups  | orderBy:'name'  track by group.id"
+                    ng-model="vm.selectedGroup" class="form-control" ng-change="vm.getSubGroups()">
+            </select>
+          </div>
+          <div class="form-group col-md-3">
+            <label>&nbsp;</label>
+            <button type="button" title = "Crear Grupo" class="form-control btn btn-primary btn-sm" ng-click="vm.createGroup()"
+                    data-toggle="modal" data-target="#modalCreateGroup" ng-disabled="vm.selectedLine === undefined">
+                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+            </button>
+          </div>
+          <div class="form-group col-md-3">
+            <label>&nbsp;</label>
+            <button type="button" title = "Editar Grupos" class="form-control btn btn-primary btn-sm"
+                    data-toggle="modal" data-target="#modalEditGroup" ng-disabled="vm.selectedLine === undefined">
+                    <span class = "glyphicon glyphicon-pencil" aria-hidden = "true"></span>
+            </button>
+          </div>
+        </div>
+        <div class="row">
+          <div class="form-group col-md-6">
+            <label>Subgrupo: </label>
+            <select ng-options="subgroup as subgroup.name for subgroup in vm.subGroups  | orderBy:'name'  track by subgroup.id"
+                    ng-model="vm.product.subgroup" class="form-control">
+            </select>
+          </div>
+          <div class="form-group col-md-3">
+            <label>&nbsp;</label>
+            <button type="button" title = "Crear Subgrupo" class="form-control btn btn-primary btn-sm" ng-click="vm.createSubGroup()"
+                    data-toggle="modal" data-target="#modalCreateSubGroup" ng-disabled="vm.selectedGroup === undefined">
+                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+            </button>
+          </div>
+          <div class="form-group col-md-3">
+            <label>&nbsp;</label>
+            <button type="button" title = "Editar Subgrupos" class="form-control btn btn-primary btn-sm"
+                    data-toggle="modal" data-target="#modalEditSubGroup" ng-disabled="vm.selectedGroup === undefined">
+                    <span class = "glyphicon glyphicon-pencil" aria-hidden = "true"></span>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="panel-footer">
+        <button type="button" title = "Atrás" class="btn btn-primary btn-sm" ng-click="vm.wizard = 1">
+                <span class = "glyphicon glyphicon-arrow-left" aria-hidden = "true"></span>
+        </button>
+        <button type="button" title = "Guardar Producto" class="btn btn-success btn-sm" ng-click="vm.saveProduct()"
+                data-toggle="modal" data-target="#modalAddProduct">
+                <span class = "glyphicon glyphicon-floppy-save" aria-hidden = "true"></span>
+        </button>
+        <button type="button" title = "Salir" class="btn btn-primary btn-sm" ng-click="vm.cancelProduct()">
+                <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
+        </button>
+      </div>
+    </div>
+
+    <div class="panel panel-primary" ng-show="vm.wizard === 3">
+      <div class="panel-body">
+        <div class="row">
+          <div class="form-group col-md-6">
+            <label>M&aacute;ximo / M&iacute;nimo: </label>
+            <input type="text" onkeypress="return ((event.which >= 46 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+                   ng-model="vm.product.maxMinimun" class="form-control" maxlength="9" ng-disabled="vm.product.productType.code === 'SER'">
+          </div>
+          <div class="form-group col-md-6">
+            <label>Costo (promedio): </label>
+            <input type="text" onkeypress="return ((event.which >= 46 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+                   ng-model="vm.product.averageCost" class="form-control" maxlength="9">
+          </div>
+        </div>
+        <div class="row">
+          <div class="form-group col-md-6">
+            <label>Ganancia % efectivo: </label>
+            <input type="text" onkeypress="return ((event.which >= 46 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+                   ng-model="vm.product.cashPercentage" class="form-control" maxlength="9">
+          </div>
+          <div class="form-group col-md-6">
+            <label>Ganancia % cr&eacute;dito: </label>
+            <input type="text" onkeypress="return ((event.which >= 46 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+                   ng-model="vm.product.creditPercentage" class="form-control" maxlength="9">
+          </div>
+        </div>
+        <div class="row">
+          <div class="form-group col-md-6">
+            <label>Ganancia % tarjeta: </label>
+            <input type="text" onkeypress="return ((event.which >= 46 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+                   ng-model="vm.product.cardPercentage" class="form-control" maxlength="9">
+          </div>
+          <div class="form-group col-md-6">
+            <label>Ganancia % mayorista: </label>
+            <input type="text" onkeypress="return ((event.which >= 46 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+                   ng-model="vm.product.majorPercentage" class="form-control" maxlength="9">
+          </div>
+        </div>
+        <div class="row">
+          <div class="form-group col-md-6">
+            <label>IVA: </label>
+            <input class="pull-right" ng-model="vm.product.iva" type="checkbox">
+          </div>
+          <div class="form-group col-md-6">
+            <label>ICE: </label>
+            <input class="pull-right" ng-model="vm.product.ice" type="checkbox">
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="form-group col-md-3">
+            <label>Costo sin IVA:</label><br/>
+            <p>{{vm.costPreview()}}</p>
+          </div>
+          <div class="form-group col-md-3">
+            <label>Costo + IVA:</label><br/>
+            <p>{{vm.costIvaPreview()}}</p>
+          </div>
+        </div>
+      </div>
+      <div class="panel-footer">
+        <button type="button" title = "Atrás" class="btn btn-primary btn-sm" ng-click="vm.wizard = 2">
+                <span class = "glyphicon glyphicon-arrow-left" aria-hidden = "true"></span>
+        </button>
+        <button type="button" title = "Guardar Producto" class="btn btn-success btn-sm" ng-click="vm.save()">
+                <span class = "glyphicon glyphicon-floppy-save" aria-hidden = "true"></span>
+        </button>
+        <button type="button" title = "Salir" class="btn btn-primary btn-sm" ng-click="vm.cancel()">
+                <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
+        </button>
+      </div>
+    </div>
+
+    <div id="modalCreateBrand" class="modal fade" role="dialog">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" ng-click="vm.newBrand=undefined">&times;</button>
+            <h4 class="modal-title">Crear Marca</h4>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+              <div class="form-group col-md-12">
+                <label>Nombre : </label>
+                <input type="text" ng-model="vm.newBrand.name" class="form-control">
+              </div>
+            </div>
+            <div class="row">
+              <div class="form-group col-md-6">
+                <label>C&oacute;digo: </label>
+                <input type="text" ng-model="vm.newBrand.code" class="form-control">
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" title = "Aceptar" class="btn btn-success btn-sm" ng-click="vm.saveNewBrand()" data-dismiss="modal">
+                    <span class = "glyphicon glyphicon-thumbs-up" aria-hidden = "true"></span>
+            </button>
+            <button type="button" title = "Salir" class="btn btn-primary btn-sm" ng-click="vm.newBrand = undefined" data-dismiss="modal">
+                    <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="modalEditBrand" class="modal fade" role="dialog">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Marcas</h4>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+              <div class="form-group col-md-12">
+                <table class="table table-striped">
+                  <thead>
+                    <tr>
+                      <th> Marca </th>
+                      <th> C&oacute;digo</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr ng-repeat="brand in vm.brands">
+                      <td>
+                        {{ brand.name }}
+                      </td>
+                      <td>{{ brand.code }}</td>
+                      <td>
+                        <button type="button" class="btn btn-primary btn-sm" title="Eliminar"
+                                ng-click="vm.deleteBrand(brand)">
+                                <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" title = "Salir" class="btn btn-primary btn-sm" data-dismiss="modal">
+                <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="modalCreateLine" class="modal fade" role="dialog">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" ng-click="vm.newLine=undefined">&times;</button>
+            <h4 class="modal-title">Crear L&iacute;nea</h4>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+              <div class="form-group col-md-12">
+                <label>Nombre : </label>
+                <input type="text" ng-model="vm.newLine.name" class="form-control">
+              </div>
+            </div>
+            <div class="row">
+              <div class="form-group col-md-6">
+                <label>C&oacute;digo: </label>
+                <input type="text" ng-model="vm.newLine.code" class="form-control">
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" title = "Aceptar" class="btn btn-success btn-sm" ng-click="vm.saveNewLine()" data-dismiss="modal">
+                    <span class = "glyphicon glyphicon-thumbs-up" aria-hidden = "true"></span>
+            </button>
+            <button type="button" title = "Salir" class="btn btn-primary btn-sm" ng-click="vm.newLine = undefined" data-dismiss="modal">
+                    <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="modalEditLine" class="modal fade" role="dialog">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" >&times;</button>
+            <h4 class="modal-title">L&iacute;neas</h4>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+              <div class="form-group col-md-12">
+                <table class="table table-striped">
+                  <thead>
+                    <tr>
+                      <th> L&iacute;nea </th>
+                      <th> C&oacute;digo</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr ng-repeat="line in vm.lineas">
+                      <td>
+                        {{ line.name }}
+                      </td>
+                      <td>{{ line.code }}</td>
+                      <td>
+                        <button type="button" title = "Eliminar" class="btn btn-primary btn-sm" ng-click="vm.deleteLine(line)">
+                                <span class = "glyphicon glyphicon-trash" aria-hidden = "true"></span>
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" title = "Salir" class="btn btn-primary btn-sm" data-dismiss="modal">
+                    <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="modalCreateGroup" class="modal fade" role="dialog">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" ng-click="vm.newGroup=undefined">&times;</button>
+            <h4 class="modal-title">Crear Grupo</h4>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+              <div class="form-group col-md-12">
+                <label>Nombre : </label>
+                <input type="text" ng-model="vm.newGroup.name" class="form-control">
+              </div>
+            </div>
+            <div class="row">
+              <div class="form-group col-md-6">
+                <label>C&oacute;digo: </label>
+                <input type="text" ng-model="vm.newGroup.code" class="form-control">
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" title = "Aceptar" class="btn btn-success btn-sm" ng-click="vm.saveNewGroup()" data-dismiss="modal">
+                    <span class = "glyphicon glyphicon-thumbs-up" aria-hidden = "true"></span>
+            </button>
+            <button type="button" title = "Salir" class="btn btn-primary btn-sm" ng-click="vm.newGroup = undefined" data-dismiss="modal">
+                    <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="modalEditGroup" class="modal fade" role="dialog">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" >&times;</button>
+            <h4 class="modal-title">Grupos</h4>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+              <div class="form-group col-md-12">
+                <table class="table table-striped">
+                  <thead>
+                    <tr>
+                      <th> Grupo </th>
+                      <th> C&oacute;digo</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr ng-repeat="group in vm.groups">
+                      <td>
+                        {{ group.name }}
+                      </td>
+                      <td>{{ group.code }}</td>
+                      <td>
+                        <button type="button" title = "Eliminar" class="btn btn-primary btn-sm" ng-click="vm.deleteGroup(group)">
+                                <span class = "glyphicon glyphicon-trash" aria-hidden = "true"></span>
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" title = "Salir" class="btn btn-primary btn-sm" data-dismiss="modal">
+                    <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="modalCreateSubGroup" class="modal fade" role="dialog">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" ng-click="vm.newSubGroup=undefined">&times;</button>
+            <h4 class="modal-title">Crear Subgrupo</h4>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+              <div class="form-group col-md-12">
+                <label>Nombre : </label>
+                <input type="text" ng-model="vm.newSubGroup.name" class="form-control">
+              </div>
+            </div>
+            <div class="row">
+              <div class="form-group col-md-6">
+                <label>C&oacute;digo: </label>
+                <input type="text" ng-model="vm.newSubGroup.code" class="form-control">
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" title = "Aceptar" class="btn btn-success btn-sm" ng-click="vm.saveNewSubGroup()" data-dismiss="modal">
+                    <span class = "glyphicon glyphicon-thumbs-up" aria-hidden = "true"></span>
+            </button>
+            <button type="button" title = "Salir" class="btn btn-primary btn-sm" ng-click="vm.newSubGroup = undefined" data-dismiss="modal">
+                    <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="modalEditSubGroup" class="modal fade" role="dialog">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" >&times;</button>
+            <h4 class="modal-title">Editar Subgrupos</h4>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+              <div class="form-group col-md-12">
+                <table class="table table-striped">
+                  <thead>
+                    <tr>
+                      <th> Subgrupo </th>
+                      <th> C&oacute;digo</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr ng-repeat="subgroup in vm.subGroups">
+                      <td>
+                        {{ subgroup.name }}
+                      </td>
+                      <td>{{ subgroup.code }}</td>
+                      <td>
+                        <button type="button" title = "Eliminar" class="btn btn-primary btn-sm" ng-click="vm.deleteSubGroup(subgroup)">
+                                <span class = "glyphicon glyphicon-trash" aria-hidden = "true"></span>
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" title = "Salir" class="btn btn-primary btn-sm" data-dismiss="modal">
+                    <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- FIN MODULO DE INGRESO DE NUEVO PRODUCTO -->
 </div>
