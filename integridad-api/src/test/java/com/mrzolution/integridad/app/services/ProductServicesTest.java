@@ -49,19 +49,19 @@ public class ProductServicesTest {
 		product.setProductBySubsidiaries(productBySubsidiaryList);
 	}
 	
-	@Test
-	public void getByIdTest() throws Exception{
-		UUID id = UUID.randomUUID();
-		product.setId(id);
-		
-		Mockito.when(productRepository.findOne(id)).thenReturn(product);
-		Mockito.when(productBySubsidiaryRepository.findByProductId(id)).thenReturn(productBySubsidiaryList);
+	//@Test
+	//public void getByIdTest() throws Exception{
+	//	UUID id = UUID.randomUUID();
+	//	product.setId(id);
+	//	
+	//	Mockito.when(productRepository.findOne(id)).thenReturn(product);
+	//	Mockito.when(productBySubsidiaryRepository.findByProductId(id)).thenReturn(productBySubsidiaryList);
 
-		Product retrieved = service.getProductById(id);
-		ListValidation.childsLisAndFathertValidation(Product.class, retrieved);
+	//	Product retrieved = service.getProductById(id);
+	//	ListValidation.childsLisAndFathertValidation(Product.class, retrieved);
 		
-		Assert.assertNotNull(retrieved);
-	}
+	//	Assert.assertNotNull(retrieved);
+	//}
 
 	@Test
 	public void onUpdateShouldCallRightChildrenRepository(){
