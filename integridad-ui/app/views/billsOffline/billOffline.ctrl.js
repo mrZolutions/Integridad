@@ -50,6 +50,10 @@ angular.module('integridadUiApp')
         ];
                                                 
         vm.seqChanged = false;
+
+        vm.valParra = '2455e4bf-68f3-4071-b5c9-833d62512b00';
+        vm.laQuinta = '758dea84-74f5-4209-b218-9b84c10621fc';
+        vm.mrZolutions = '4907601b-6e54-4675-80a8-ab6503e1dfeb';
                                             
         function _activate() {
             vm.error = undefined;
@@ -90,6 +94,7 @@ angular.module('integridadUiApp')
             vm.medio = {};
             vm.pagosOffline = [];
             vm.user = $localStorage.user;
+            vm.userClientId = $localStorage.user.subsidiary.userClient.id;
             clientService.getLazyByUserClientId(vm.user.subsidiary.userClient.id).then(function(response) {
                 vm.clientList = response;
                 vm.loading = false;
@@ -441,9 +446,10 @@ angular.module('integridadUiApp')
             });
         };
 
-        vm.printToCartAndCancel = function(printBillOfflineId) {
-            var innerContents = document.getElementById(printBillOfflineId).innerHTML;
-            var popupWinindow = window.open('', 'printMatrixBillOfflineId', 'width=300,height=400');
+        vm.printToCartAndCancel = function(printBillOffline) {
+            var innerContents = document.getElementById(printBillOffline).innerHTML;
+            
+            var popupWinindow = window.open('', 'printMatrixBillOffline', 'width=300,height=400');
             popupWinindow.document.write('<html><head><title></title>');
             popupWinindow.document.write('</head><body>');
             popupWinindow.document.write(innerContents);
@@ -453,9 +459,10 @@ angular.module('integridadUiApp')
             _activate();
         };
 
-        vm.printToCart = function(printBillOfflineId) {
-            var innerContents = document.getElementById(printBillOfflineId).innerHTML;
-            var popupWinindow = window.open('', 'printMatrixBillOfflineId', 'width=300,height=400');
+        vm.printToCart = function(printBillOffline) {
+            var innerContents = document.getElementById(printBillOffline).innerHTML;
+            
+            var popupWinindow = window.open('', 'printMatrixBillOffline', 'width=300,height=400');
             popupWinindow.document.write('<html><body>');
             popupWinindow.document.write(innerContents);
             popupWinindow.document.write('</body></html>');
@@ -463,11 +470,36 @@ angular.module('integridadUiApp')
             popupWinindow.close();
         };
 
+        vm.printToCartAndCancelParra = function(printBillOffline) {
+            var innerContents = document.getElementById(printBillOffline).innerHTML;
+            var texto = innerContents;
+            var popupWinindow = window.open('', 'printMatrixBillOffline', 'width=300,height=400');
+            popupWinindow.document.write('<html><head><title></title>');
+            popupWinindow.document.write('</head><body>');
+            popupWinindow.document.write(texto);
+            popupWinindow.document.write('</body></html>');
+            popupWinindow.print();
+            popupWinindow.close();
+            _activate();
+        };
+
+        vm.printToCartParra = function(printBillOffline) {
+            var innerContents = document.getElementById(printBillOffline).innerHTML;
+            var texto = innerContents;
+            var popupWinindow = window.open('', 'printMatrixBillOffline', 'width=300,height=400');
+            popupWinindow.document.write('<html><body>');
+            popupWinindow.document.write(texto);
+            popupWinindow.document.write('</body></html>');
+            popupWinindow.print();
+            popupWinindow.close();
+        };
+
         vm.printBillThermal = function(billPrint) {
             var innerContents = document.getElementById(billPrint).innerHTML;
+            var texto = innerContents.fixed();
             var popupWinindow = window.open('', 'billPrint', 'width=300,height=400');
             popupWinindow.document.write('<html><body>');
-            popupWinindow.document.write(innerContents);
+            popupWinindow.document.write(texto);
             popupWinindow.document.write('</body></html>');
             popupWinindow.print();
             popupWinindow.close();

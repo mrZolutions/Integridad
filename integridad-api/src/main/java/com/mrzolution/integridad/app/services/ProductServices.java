@@ -20,7 +20,7 @@ import com.mrzolution.integridad.app.domain.Product;
 import com.mrzolution.integridad.app.domain.report.ExistencyReport;
 import com.mrzolution.integridad.app.repositories.ProductRepository;
 import lombok.extern.slf4j.Slf4j;
-//import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.Async;
 
 @Slf4j
 @Component
@@ -43,6 +43,7 @@ public class ProductServices {
     public long cantidad;
     public long minimo;
         
+    @Async("asyncExecutor")
     public Product createProduct(Product product) throws BadRequestException {
     	Iterable<Product> products = productRepository.findByCodeIntegridadAndClientId(product.getCodeIntegridad(), product.getUserClient().getId());
         if (Iterables.size(products) > 0) {
@@ -73,7 +74,7 @@ public class ProductServices {
         return saved;
     }
 	
-    //@Async("asyncExecutor")
+    @Async("asyncExecutor")
     public void updateProduct(Product product) {
 	product.setLastDateUpdated(new Date().getTime());
 	Father<Product, ProductBySubsidiary> father =
@@ -90,7 +91,6 @@ public class ProductServices {
     public Product getProductById(UUID id) {
 	Product findOne = productRepository.findOne(id);
 	populateChildren(findOne);
-        log.info("ProductServices getProductById: {}", id);
 	return findOne;
     }
 	

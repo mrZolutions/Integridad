@@ -326,7 +326,7 @@
                     </div>
                 </div>
             </div>
-            <div class="panel-footer">
+            <div class="panel-footer" ng-show="vm.userClientId === vm.laQuinta">
                 <button type="button" title = "Forma de Pago" class="btn btn-primary btn-sm" ng-if="vm.newBillOffline"
                         data-toggle="modal" data-target="#modalAddPago"
                         ng-disabled="vm.billOffline.total <= 0 || vm.billedOffline"
@@ -346,6 +346,40 @@
                         ng-if="vm.newBillOffline" ng-disabled="vm.billOffline.claveDeAcceso === undefined"
                         ng-click="vm.printBillThermal('billPrint')">
                         <span class = "glyphicon glyphicon-print" aria-hidden = "true"></span>
+                </button>
+            </div>
+            <div class="panel-footer" ng-show="vm.userClientId === vm.valParra">
+                <button type="button" title = "Forma de Pago" class="btn btn-primary btn-sm" ng-if="vm.newBillOffline"
+                        data-toggle="modal" data-target="#modalAddPago"
+                        ng-disabled="vm.billOffline.total <= 0 || vm.billedOffline"
+                        ng-show="vm.billOffline.claveDeAcceso === undefined">
+                        <span class = "glyphicon glyphicon-usd" aria-hidden = "true"></span>
+                </button>
+                <button type="button" title = "Imprimir a Epson LX-300" class="btn btn-primary btn-sm"
+                        ng-if="vm.newBillOffline" ng-disabled="vm.billOffline.claveDeAcceso === undefined"
+                        ng-click="vm.printToCartAndCancelParra('printMatrixBillOfflineParra')">
+                        <span class = "glyphicon glyphicon-print" aria-hidden = "true"></span>
+                </button>
+                <button type="button" title="Salir" class="btn btn-primary btn-sm" ng-if="vm.newBillOffline"
+                        ng-click="vm.cancelBillOffline()">
+                        <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
+                </button>
+            </div>
+            <div class="panel-footer" ng-show="vm.userClientId === vm.mrZolutions">
+                <button type="button" title = "Forma de Pago" class="btn btn-primary btn-sm" ng-if="vm.newBillOffline"
+                        data-toggle="modal" data-target="#modalAddPago"
+                        ng-disabled="vm.billOffline.total <= 0 || vm.billedOffline"
+                        ng-show="vm.billOffline.claveDeAcceso === undefined">
+                        <span class = "glyphicon glyphicon-usd" aria-hidden = "true"></span>
+                </button>
+                <button type="button" title = "Imprimir a Epson LX-300" class="btn btn-primary btn-sm"
+                        ng-if="vm.newBillOffline" ng-disabled="vm.billOffline.claveDeAcceso === undefined"
+                        ng-click="vm.printToCartAndCancelParra('printMatrixBillOfflineParra')">
+                        <span class = "glyphicon glyphicon-print" aria-hidden = "true"></span>
+                </button>
+                <button type="button" title="Salir" class="btn btn-primary btn-sm" ng-if="vm.newBillOffline"
+                        ng-click="vm.cancelBillOffline()">
+                        <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
                 </button>
             </div>
         </div>
@@ -389,7 +423,7 @@
                     </div>
                 </div>
             </div>
-            <div class="panel-footer">
+            <div class="panel-footer" ng-show="vm.userClientId === vm.laQuinta">
                 <button type="button" title = "Imprimir a Epson LX-300" class="btn btn-primary btn-sm"
                         ng-if="!vm.newBillOffline" ng-click="vm.printToCart('printMatrixBillOfflineId')">
                         <span class = "glyphicon glyphicon-print" aria-hidden = "true"></span>
@@ -401,6 +435,26 @@
                 <button type="button" title = "Imprimir a ThermalPrint P58" class="btn btn-danger btn-sm"
                         ng-if="!vm.newBillOffline" ng-click="vm.printBillThermal('billPrint')">
                         <span class = "glyphicon glyphicon-print" aria-hidden = "true"></span>
+                </button>
+            </div>
+            <div class="panel-footer" ng-show="vm.userClientId === vm.valParra">
+                <button type="button" title = "Imprimir a Epson LX-300" class="btn btn-primary btn-sm"
+                        ng-if="!vm.newBillOffline" ng-click="vm.printToCartParra('printMatrixBillOfflineParra')">
+                        <span class = "glyphicon glyphicon-print" aria-hidden = "true"></span>
+                </button>
+                <button type="button" title="Salir" class="btn btn-primary btn-sm"
+                        ng-click="vm.clientSelected = undefined">
+                        <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
+                </button>
+            </div>
+            <div class="panel-footer" ng-show="vm.userClientId === vm.mrZolutions">
+                <button type="button" title = "Imprimir a Epson LX-300" class="btn btn-primary btn-sm"
+                        ng-if="!vm.newBillOffline" ng-click="vm.printToCartParra('printMatrixBillOfflineParra')">
+                        <span class = "glyphicon glyphicon-print" aria-hidden = "true"></span>
+                </button>
+                <button type="button" title="Salir" class="btn btn-primary btn-sm"
+                        ng-click="vm.clientSelected = undefined">
+                        <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
                 </button>
             </div>
         </div>
@@ -433,6 +487,65 @@
                 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TOT: &#36;{{(vm.billOffline.total).toFixed(2)}}
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <!--IMPRIME TICKET FACTURA VALPARRA-->
+    <div id="printMatrixBillOfflineParra" ng-show='false'>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{vm.clientSelected.name}} <br/>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{(vm.clientSelected.address).substr(0,30)}} <br/>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{vm.clientSelected.identification}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{vm.clientSelected.phone - vm.clientSelected.celPhone}}<br/>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{vm.getDateToPrint() | date : "dd/MM/yyyy"}}
+        <br/>
+        <br/>
+        <br/>
+        <div style="height: 300px">
+            <table width="100%">
+                <tbody>
+                    <tr ng-repeat="detailOffline in vm.billOffline.detailsOffline">
+                        <td>{{detailOffline.quantity}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{(detailOffline.product.name).substr(0,17)}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#36;{{(detailOffline.costEach).toFixed(2)}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#36;{{(detailOffline.total).toFixed(2)}}<br></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <br/>
+        <br/>
+        <table width="100%">
+            <tr>
+                <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#36;{{(vm.billOffline.subTotal).toFixed(2)}}
+                </td>
+            </tr>
+            <br/>
+            <br/>
+            <br/>
+            <tr>
+                <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#36;{{(vm.billOffline.iva).toFixed(2)}}
+                </td>
+            </tr>
+            <tr>
+                <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#36;{{(vm.billOffline.total).toFixed(2)}}
                 </td>
             </tr>
         </table>
