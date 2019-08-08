@@ -562,18 +562,24 @@ angular.module('integridadUiApp')
 
         vm.billDeactivate = function() {
             vm.loading = true;
-            var index = vm.billList.indexOf(vm.cancelBill);
-            billService.cancelBill(vm.cancelBill).then(function(response) {
-                var index = vm.billList.indexOf(vm.cancelBill);
-                if (index > -1) {
-                    vm.billList.splice(index, 1);
-                };
-                vm.cancelBill = undefined
+            var index = vm.billList.indexOf(vm.cancelaBill);
+            if (vm.cancelaBill.creditNoteApplied === false) {
+                billService.cancelBill(vm.cancelaBill).then(function(response) {
+                    var index = vm.billList.indexOf(vm.cancelaBill);
+                    if (index > -1) {
+                        vm.billList.splice(index, 1);
+                    };
+                    vm.cancelaBill = undefined;
+                    vm.success = "Factura de Venta Anulada";
+                    vm.loading = false;
+                }).catch(function(error) {
+                    vm.loading = false;
+                    vm.error = error.data;
+                });
+            } else {
                 vm.loading = false;
-            }).catch(function(error) {
-                vm.loading = false;
-                vm.error = error.data;
-            });
+                vm.error = "La Factura NO se Puede Anular debido a que presenta una Nota de Crédito";
+            };
         };
 
         vm.getQuotations = function() {

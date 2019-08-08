@@ -157,7 +157,7 @@
                         <button type="button" title="Ver Factura" class="btn btn-primary btn-sm" ng-click="vm.billSelect(bill)">
                                 <span class = "glyphicon glyphicon-eye-open" aria-hidden = "true"></span>
                         </button>
-                        <button type="button" title="Anular Factura" class="btn btn-warning btn-sm" ng-click="vm.cancelBill = bill"
+                        <button type="button" title="Anular Factura" class="btn btn-warning btn-sm" ng-click="vm.cancelaBill = bill"
                                 data-toggle="modal" data-target="#modalAnular">
                                 <span class = "glyphicon glyphicon-warning-sign" aria-hidden = "true"></span>
                         </button>
@@ -1065,13 +1065,13 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" ng-click="vm.client=undefined">&times;</button>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
                     <h3 class="modal-title">¡¡¡Advertencia!!!</h3>
                 </div>
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-md-12" >
-                            <p>¿Est&aacute; seguro que desea Anular la Factura <b>No. {{vm.cancelBill.stringSeq}}</b>?</p>
+                            <p>¿Est&aacute; seguro que desea Anular la Factura <b>No. {{vm.cancelaBill.stringSeq}}</b>?</p>
                             <p>Recuerde que la Factura Anulada <b>NO puede ser Recuperada</b></p>
                         </div>
                     </div>

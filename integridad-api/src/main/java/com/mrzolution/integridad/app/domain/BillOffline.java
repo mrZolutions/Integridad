@@ -42,6 +42,10 @@ public class BillOffline {
     private String observation;
     private String claveDeAcceso;
     private String idSri;
+    
+    private String creditNoteId;
+    private String creditNoteNumber;
+    private boolean creditNoteApplied;
 
     @ManyToOne
     @JoinColumn(name = "client_id")

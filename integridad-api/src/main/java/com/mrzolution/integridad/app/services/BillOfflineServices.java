@@ -200,6 +200,7 @@ public class BillOfflineServices {
     //Fin de Creación de las BillsOffline
     
     //Desactivación o Anulación de las BillsOffline
+    @Async("asyncExecutor")
     public BillOffline deactivateBillOffline(BillOffline billOffline) throws BadRequestException {
         if (billOffline.getId() == null) {
             throw new BadRequestException("Invalid BillOffline");
@@ -207,8 +208,21 @@ public class BillOfflineServices {
         BillOffline billToDeactivate = billOfflineRepository.findOne(billOffline.getId());
         billToDeactivate.setListsNull();
         billToDeactivate.setActive(false);
-        billOfflineRepository.save(billToDeactivate);
-        log.info("BillOfflineServices deactivateBillOffline id: {}", billOffline.getId());
+        BillOffline savedOff = billOfflineRepository.save(billToDeactivate);
+        populateChildren(savedOff);
+        updatePSdeactivatedBillOffline(savedOff, savedOff.getDetailsOffline());
+        log.info("BillOfflineServices deactivateBillOffline: {}, {}", savedOff.getId(), savedOff.getStringSeq());
         return billToDeactivate;
+    }
+    
+    public void updatePSdeactivatedBillOffline(BillOffline deactivated, List<DetailOffline> details) {
+        details.forEach(detail -> {
+            if (!detail.getProduct().getProductType().getCode().equals("SER")) {
+                ProductBySubsidiary ps = productBySubsidiairyRepository.findBySubsidiaryIdAndProductId(deactivated.getSubsidiary().getId(), detail.getProduct().getId());
+                ps.setQuantity(ps.getQuantity() + detail.getQuantity());
+                productBySubsidiairyRepository.save(ps);
+            }
+        });
+        log.info("BillOfflineServices updatePSdeactivatedBillOffline DONE");
     }
 }

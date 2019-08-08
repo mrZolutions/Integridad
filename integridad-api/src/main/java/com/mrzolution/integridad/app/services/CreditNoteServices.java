@@ -13,8 +13,8 @@ import java.text.SimpleDateFormat;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import java.util.*;
+import org.springframework.scheduling.annotation.Async;
 
 @Slf4j
 @Component
@@ -85,6 +85,7 @@ public class CreditNoteServices {
     }
 
     //Creación de la Nota de Crédito
+    @Async("asyncExecutor")
     public CreditNote createCreditNote(CreditNote creditNote) throws BadRequestException {
         Iterable<CreditNote> credNot = creditNoteRepository.findByDocumentStringSeqAndBillId(creditNote.getDocumentStringSeq(), creditNote.getBillSeq());
         if (Iterables.size(credNot) > 0) {

@@ -240,20 +240,7 @@ public class BillServices {
         });
     }
     //Fin de Creación de las Bills
-
-    //Desactivación o Anulación de las Bills
-    public Bill deactivateBill(Bill bill) throws BadRequestException {
-        if (bill.getId() == null) {
-            throw new BadRequestException("Invalid Bill");
-        }
-        Bill billToDeactivate = billRepository.findOne(bill.getId());
-        billToDeactivate.setListsNull();
-        billToDeactivate.setActive(false);
-        billRepository.save(billToDeactivate);
-        log.info("BillServices deactivateBill id: {}", bill.getId());
-        return billToDeactivate;
-    }
-
+    
     //Actualización de las Bills
     public Bill updateBill(Bill bill) throws BadRequestException {
         if (bill.getId() == null) {
@@ -266,6 +253,33 @@ public class BillServices {
         Bill updated = billRepository.save(bill);
         log.info("BillServices updateBill id: {}", updated.getId());
         return updated;
+    }
+
+    //Desactivación o Anulación de las Bills
+    @Async("asyncExecutor")
+    public Bill deactivateBill(Bill bill) throws BadRequestException {
+        if (bill.getId() == null) {
+            throw new BadRequestException("Invalid Bill");
+        }
+        Bill billToDeactivate = billRepository.findOne(bill.getId());
+        billToDeactivate.setListsNull();
+        billToDeactivate.setActive(false);
+        Bill saved = billRepository.save(billToDeactivate);
+        populateChildren(saved);
+        updatePSdeactivatedBill(saved, saved.getDetails());
+        log.info("BillServices deactivateBill: {}, {}", saved.getId(), saved.getStringSeq());
+        return billToDeactivate;
+    }
+    
+    public void updatePSdeactivatedBill(Bill deactivated, List<Detail> details) {
+        details.forEach(detail -> {
+            if (!detail.getProduct().getProductType().getCode().equals("SER")) {
+                ProductBySubsidiary ps = productBySubsidiairyRepository.findBySubsidiaryIdAndProductId(deactivated.getSubsidiary().getId(), detail.getProduct().getId());
+                ps.setQuantity(ps.getQuantity() + detail.getQuantity());
+                productBySubsidiairyRepository.save(ps);
+            }
+        });
+        log.info("BillServices updatePSdeactivatedBill DONE");
     }
 
     //Busca las Bills por Numero de Sequencia y Subsidiaria

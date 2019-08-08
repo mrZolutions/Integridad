@@ -337,7 +337,7 @@
                     </div>
                 </div>
             </div>
-            <div class="panel-footer" ng-show="vm.userClientId === vm.laQuinta">
+            <div class="panel-footer" ng-show="vm.userClientId !== vm.valParra">
                 <button type="button" title = "Forma de Pago" class="btn btn-primary btn-sm" ng-if="vm.newBillOffline"
                         data-toggle="modal" data-target="#modalAddPago"
                         ng-disabled="vm.billOffline.total <= 0 || vm.billedOffline"
@@ -417,7 +417,7 @@
                     </div>
                 </div>
             </div>
-            <div class="panel-footer" ng-show="vm.userClientId === vm.laQuinta">
+            <div class="panel-footer" ng-show="vm.userClientId !== vm.valParra">
                 <button type="button" title = "Imprimir a Epson LX-300" class="btn btn-primary btn-sm"
                         ng-if="!vm.newBillOffline" ng-click="vm.printToCart('printMatrixBillOfflineId')">
                         <span class = "glyphicon glyphicon-print" aria-hidden = "true"></span>
@@ -575,7 +575,7 @@
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-md-12" >
-                            <p>¿Est&aacute; seguro que desea Anular la Factura <b>No. {{vm.cancelBillOffline.stringSeq}}</b>?</p>
+                            <p>¿Est&aacute; seguro que desea Anular la Factura <b>No. {{vm.cancelaBillOffline.stringSeq}}</b>?</p>
                             <p>Recuerde que la Factura Anulada <b>NO puede ser Recuperada</b></p>
                         </div>
                     </div>

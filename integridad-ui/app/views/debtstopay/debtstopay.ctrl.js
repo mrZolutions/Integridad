@@ -1964,17 +1964,23 @@ angular.module('integridadUiApp')
         vm.debtsToPayDeactivate = function() {
             vm.loading = true;
             var index = vm.providerDebtsList.indexOf(vm.deactivateDebtsToPay);
-            debtsToPayService.deactivateDebtsToPay(vm.deactivateDebtsToPay).then(function(response) {
-                var index = vm.providerDebtsList.indexOf(vm.deactivateDebtsToPay);
-                if (index > -1) {
-                    vm.providerDebtsList.splice(index, 1);
-                };
-                vm.deactivateDebtsToPay = undefined
+            if (vm.deactivateDebtsToPay.credNoteApplied === false) {
+                debtsToPayService.deactivateDebtsToPay(vm.deactivateDebtsToPay).then(function(response) {
+                    var index = vm.providerDebtsList.indexOf(vm.deactivateDebtsToPay);
+                    if (index > -1) {
+                        vm.providerDebtsList.splice(index, 1);
+                    };
+                    vm.deactivateDebtsToPay = undefined;
+                    vm.success = "Factura de Compra Anulada";
+                    vm.loading = false;
+                }).catch(function(error) {
+                    vm.loading = false;
+                    vm.error = error.data;
+                });
+            } else {
                 vm.loading = false;
-            }).catch(function(error) {
-                vm.loading = false;
-                vm.error = error.data;
-            });
+                vm.error = "La Factura NO se Puede Anular debido a que presenta una Nota de Crédito";
+            };
         };
 
         vm.getTotalDebitoRep = function() {

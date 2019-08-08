@@ -517,18 +517,24 @@ angular.module('integridadUiApp')
 
         vm.billOfflineDeactivate = function() {
             vm.loading = true;
-            var index = vm.billOfflineList.indexOf(vm.cancelBillOffline);
-            billOfflineService.deactivateBillOffline(vm.cancelBillOffline).then(function(response) {
-              var index = vm.billOfflineList.indexOf(vm.cancelBillOffline);
-              if (index > -1) {
-                  vm.billOfflineList.splice(index, 1);
-              };
-              vm.cancelBillOffline = undefined
-              vm.loading = false;
-            }).catch(function(error) {
-              vm.loading = false;
-              vm.error = error.data;
-            });
+            var index = vm.billOfflineList.indexOf(vm.cancelaBillOffline);
+            if (vm.cancelaBillOffline.creditNoteApplied === false) {
+                billOfflineService.deactivateBillOffline(vm.cancelaBillOffline).then(function(response) {
+                    var index = vm.billOfflineList.indexOf(vm.cancelaBillOffline);
+                    if (index > -1) {
+                        vm.billOfflineList.splice(index, 1);
+                    };
+                    vm.cancelaBillOffline = undefined;
+                    vm.success = "Factura Offline Anulada";
+                    vm.loading = false;
+                  }).catch(function(error) {
+                    vm.loading = false;
+                    vm.error = error.data;
+                  });
+            } else {
+                vm.loading = false;
+                vm.error = "La Factura NO se Puede Anular debido a que presenta una Nota de Crédito";
+            };
           };
 
         vm.saveBillOffline = function() {
@@ -597,7 +603,7 @@ angular.module('integridadUiApp')
                 $localStorage.user.cashier.billOfflineNumberSeq = vm.billOffline.billSeq;
                 if (vm.seqChanged) {
                     cashierService.update($localStorage.user.cashier).then(function(resp) {
-                    
+                        // cashier updated
                     }).catch(function(error) {
                         vm.loading = false;
                         vm.error = error.data;

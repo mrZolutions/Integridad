@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 /**
@@ -84,6 +85,7 @@ public class CreditNoteCellarServices {
     }
     
     //Creación de la Nota de Crédito
+    @Async("asyncExecutor")
     public CreditNoteCellar createCreditNoteCellar(CreditNoteCellar creditNoteCellar) throws BadRequestException {
         Iterable<CreditNoteCellar> credNotCellar = creditNoteCellarRepository.findByDocumentStringSeqAndCellarId(creditNoteCellar.getDocumentStringSeq(), creditNoteCellar.getCellarSeq());
         if (Iterables.size(credNotCellar) > 0) {
