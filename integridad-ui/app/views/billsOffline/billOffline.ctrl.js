@@ -167,7 +167,11 @@ angular.module('integridadUiApp')
                 };
                 if (detail.product.iva) {
                     vm.billOffline.baseTaxes += parseFloat((detail.total).toFixed(2));
-                    vm.billOffline.iva = 0.0;
+                    if (vm.userClientId === vm.laQuinta) {
+                        vm.billOffline.iva = 0.0;
+                    } else {
+                        vm.billOffline.iva = parseFloat((parseFloat(vm.billOffline.iva) + (parseFloat(tot) * 0.12)).toFixed(2));
+                    };
                     if (vm.billOffline.discountPercentage) {
                         discountWithIva = parseFloat((parseFloat(discountWithIva) + (parseFloat(detail.total) * parseFloat((vm.billOffline.discountPercentage) / 100))).toFixed(2));
                     };
@@ -195,6 +199,7 @@ angular.module('integridadUiApp')
             vm.impuestoIVA.valor = vm.billOffline.iva;
             vm.impuestoIVAZero.valor = 0.0;
             vm.billOffline.total = parseFloat((parseFloat(vm.billOffline.baseTaxes)
+                +  parseFloat(vm.billOffline.iva)
                 +  parseFloat(vm.billOffline.baseNoTaxes)).toFixed(2));
         };
             
@@ -557,14 +562,14 @@ angular.module('integridadUiApp')
                 var impuesto = {};
               
                 if (det.product.iva) {
-                    impuesto.base_imponible = parseFloat(((parseFloat(det.costEach) - (parseFloat(det.costEach) * parseFloat((vm.billOffline.discountPercentage / 100)))) * parseFloat(det.quantity)).toFixed(4));
+                    impuesto.base_imponible = parseFloat(((parseFloat(det.costEach) - (parseFloat(det.costEach) * parseFloat((vm.billOffline.discountPercentage / 100)))) * parseFloat(det.quantity)).toFixed(2));
                     impuesto.valor = parseFloat((parseFloat(impuesto.base_imponible) * 0.12).toFixed(2));
                     impuesto.tarifa = 12.0;
                     impuesto.codigo = '2';
                     impuesto.codigo_porcentaje = '2';
                     impuestos.push(impuesto);
                 } else {
-                    impuesto.base_imponible = parseFloat(((parseFloat(det.costEach) - (parseFloat(det.costEach) * parseFloat((vm.billOffline.discountPercentage / 100)))) * parseFloat(det.quantity)).toFixed(4));
+                    impuesto.base_imponible = parseFloat(((parseFloat(det.costEach) - (parseFloat(det.costEach) * parseFloat((vm.billOffline.discountPercentage / 100)))) * parseFloat(det.quantity)).toFixed(2));
                     impuesto.valor = parseFloat((parseFloat(impuesto.base_imponible) * 0.0000).toFixed(2));
                     impuesto.tarifa = 0.0;
                     impuesto.codigo = '2';
@@ -572,7 +577,7 @@ angular.module('integridadUiApp')
                     impuestos.push(impuesto);
                 };
                 if (det.product.ice) {
-                    impuesto.base_imponible = parseFloat((det.costEach).toFixed(4));
+                    impuesto.base_imponible = parseFloat((det.costEach).toFixed(2));
                     impuesto.valor = costWithIce;
                     impuesto.tarifa = 10.0;
                     impuesto.codigo = '3';

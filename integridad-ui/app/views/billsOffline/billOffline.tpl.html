@@ -273,7 +273,7 @@
                                     <td>{{detailOffline.product.unitOfMeasurementFull}}</td>
                                     <td>{{detailOffline.costEach}}</td>
                                     <td>{{detailOffline.discount}} %</td>
-                                    <td>{{(detailOffline.total).toFixed(4)}}</td>
+                                    <td>{{(detailOffline.total).toFixed(2)}}</td>
                                     <td ng-if="vm.newBillOffline">
                                         <button type="button" title="Editar Producto" class="btn btn-primary btn-sm"
                                                 ng-click="vm.editDetail(detailOffline, $index)"
@@ -296,7 +296,7 @@
                                     <td></td>
                                     <td></td>
                                     <td><b>SUBTOTAL: </b></td>
-                                    <td>{{(vm.billOffline.subTotal).toFixed(4)}}</td>
+                                    <td>{{(vm.billOffline.subTotal).toFixed(2)}}</td>
                                     <td></td>
                                 </tr>
                                 <tr>
@@ -307,10 +307,10 @@
                                     <td></td>
                                     <td></td>
                                     <td><b>DESCUENTO: </b></td>
-                                    <td>{{(vm.billOffline.discount).toFixed(4)}}</td>
+                                    <td>{{(vm.billOffline.discount).toFixed(2)}}</td>
                                     <td></td>
                                 </tr>
-                                <tr ng-show="vm.userClientId === vm.valParra">
+                                <tr ng-show="vm.userClientId !== vm.laQuinta">
                                     <td></td>
                                     <td></td>
                                     <td></td>
