@@ -154,6 +154,17 @@
                             Consumos
                     </button>
                 </div>
+                <div class="form-group col-md-6">
+                    <p><b>Offline -- Productos Vendidos, Ventas</b></p>
+                    <!--<button type="button" title="Seleccione Fecha Inicio - Fecha Fin" class="btn btn-primary btn-sm"
+                            ng-click="vm.getReportProductsOffline()">
+                            Prod. Vendidos
+                    </button>-->
+                    <button type="button" title="Seleccione Fecha Inicio - Fecha Fin" class="btn btn-primary btn-sm"
+                            ng-click="vm.getReportSalesOffline()">
+                            Ventas
+                    </button>
+                </div>
             </div>
             <div ng-show="vm.reportList.length === 0">
                 <br/>
@@ -774,6 +785,49 @@
                     <td>{{data.marca}}</td>
                     <td>{{data.linea}}</td>
                     <td>{{data.observacion}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!--Reporte de Ventas Offline-->
+    <div class="table-responsive" ng-if="vm.isProductReportList === '16'">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Fecha</th>
+                    <th>C&oacute;digo-Cliente</th>
+                    <th>Cliente</th>
+                    <th>RUC/CI</th>
+                    <th>No. Factura</th>
+                    <th>Estado</th>
+                    <th>Base 12%</th>
+                    <th>Descuento</th>
+                    <th>Base 0%</th>
+                    <th>Iva</th>
+                    <th>Total</th>
+                    <th>Caja</th>
+                    <th>Sucursal</th>
+                    <th>Usuario</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="data in vm.reportList | orderBy:'date'" >
+                    <td>{{data.date}}</td>
+                    <td>{{data.clientCode}}</td>
+                    <td>{{data.clientName}}</td>
+                    <td>{{data.ruc}}</td>
+                    <td>{{data.billNumber}}</td>
+                    <td>{{data.status}}</td>
+                    <td>{{data.status === 'ACTIVA' ? data.baseTaxes.toFixed(2) : '0'}}</td>
+                    <td>{{data.status === 'ACTIVA' ? data.discount.toFixed(2) : '0'}}</td>
+                    <td>{{data.status === 'ACTIVA' ? data.baseNoTaxes.toFixed(2) : '0'}}</td>
+                    <td>{{data.status === 'ACTIVA' ? data.iva.toFixed(2) : '0'}}</td>
+                    <td>{{data.status === 'ACTIVA' ? data.total.toFixed(2) : '0'}}</td>
+                    <td>{{data.endDate}}</td>
+                    <td>{{data.cashier}}</td>
+                    <td>{{data.subsidiary}}</td>
+                    <td>{{data.userName}}</td>
                 </tr>
             </tbody>
         </table>

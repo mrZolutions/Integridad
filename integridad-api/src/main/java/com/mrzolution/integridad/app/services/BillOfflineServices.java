@@ -6,6 +6,7 @@ import com.mrzolution.integridad.app.domain.DetailOffline;
 import com.mrzolution.integridad.app.domain.PagoOffline;
 import com.mrzolution.integridad.app.domain.ProductBySubsidiary;
 import com.mrzolution.integridad.app.domain.UserIntegridad;
+import com.mrzolution.integridad.app.domain.report.SalesOfflineReport;
 import com.mrzolution.integridad.app.exceptions.BadRequestException;
 import com.mrzolution.integridad.app.repositories.BillOfflineRepository;
 import com.mrzolution.integridad.app.repositories.CashierRepository;
@@ -14,6 +15,7 @@ import com.mrzolution.integridad.app.repositories.DetailOfflineRepository;
 import com.mrzolution.integridad.app.repositories.PagoOfflineRepository;
 import com.mrzolution.integridad.app.repositories.ProductBySubsidiairyRepository;
 import com.mrzolution.integridad.app.repositories.UserClientRepository;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -224,5 +226,25 @@ public class BillOfflineServices {
             }
         });
         log.info("BillOfflineServices updatePSdeactivatedBillOffline DONE");
+    }
+    
+    //Reporte de Ventas Offline
+    public List<SalesOfflineReport> getAllBySubIdAndDates(UUID userClientId, long dateOne, long dateTwo) {
+        log.info("BillOfflineServices getAllBySubIdAndDates: {}, {}, {}", userClientId, dateOne, dateTwo);
+        Iterable<BillOffline> billsOffline = billOfflineRepository.findAllByUserClientIdAndDates(userClientId, dateOne, dateTwo);
+        List<SalesOfflineReport> salesOfflineReportList = new ArrayList<>();
+        billsOffline.forEach(billOff-> {
+            billOff.setListsNull();
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+            String date = dateFormat.format(new Date(billOff.getDateCreated()));
+            String status = billOff.isActive() ? "ACTIVA" : "ANULADA";
+
+            SalesOfflineReport saleOfflineReport= new SalesOfflineReport(date, billOff.getClient().getCodApp(), billOff.getClient().getName(), billOff.getClient().getIdentification(),
+			billOff.getStringSeq(), status, billOff.getBaseTaxes(), billOff.getDiscount(),billOff.getBaseNoTaxes(), billOff.getIva(), billOff.getTotal(), billOff.getUserIntegridad().getCashier().getNameNumber(),
+			billOff.getSubsidiary().getName(), billOff.getUserIntegridad().getFirstName() + " " + billOff.getUserIntegridad().getLastName());
+
+            salesOfflineReportList.add(saleOfflineReport);
+        });
+        return salesOfflineReportList;
     }
 }

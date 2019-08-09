@@ -32,4 +32,10 @@ public interface BillOfflineRepository extends CrudRepository<BillOffline, UUID>
     
     @Query("SELECT b FROM BillOffline b WHERE b.subsidiary.id = (:subId) AND b.stringSeq = (:seq) AND b.typeDocument = 1 AND b.active = true")
     Iterable<BillOffline> findBillsOfflineByStringSeqAndSubsidiaryId(@Param("seq") String stringSeq, @Param("subId") UUID id);
+    
+    @Query("SELECT b FROM BillOffline b WHERE b.subsidiary.userClient.id = (:userClientId) AND b.dateCreated >= (:dateOne) AND b.dateCreated <= (:dateTwo) AND b.active = true AND b.typeDocument = 1 ORDER BY b.stringSeq")
+    Iterable<BillOffline> findByUserClientIdAndDatesActives(@Param("userClientId") UUID id, @Param("dateOne") long dateOne, @Param("dateTwo") long dateTwo);
+
+    @Query("SELECT b FROM BillOffline b WHERE b.subsidiary.userClient.id = (:userClientId) AND b.dateCreated >= (:dateOne) AND b.dateCreated <= (:dateTwo) AND b.typeDocument = 1 ORDER BY b.stringSeq")
+    Iterable<BillOffline> findAllByUserClientIdAndDates(@Param("userClientId") UUID id, @Param("dateOne") long dateOne, @Param("dateTwo") long dateTwo);
 }

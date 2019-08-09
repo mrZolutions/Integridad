@@ -1,8 +1,10 @@
 package com.mrzolution.integridad.app.controllers;
 
 import com.mrzolution.integridad.app.domain.BillOffline;
+import com.mrzolution.integridad.app.domain.report.SalesOfflineReport;
 import com.mrzolution.integridad.app.exceptions.BadRequestException;
 import com.mrzolution.integridad.app.services.BillOfflineServices;
+import java.util.List;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -102,5 +104,19 @@ public class BillOfflineController {
         }
         log.info("BillOfflineController deactivateBillOffline DONE");
         return new ResponseEntity<Void>(HttpStatus.ACCEPTED);
+    }
+    
+    //Reporte de Ventas Offline
+    @RequestMapping(method = RequestMethod.GET, value="/rep/sales/{userClientId}/{dateOne}/{dateTwo}")
+    public ResponseEntity getByUserClientIdAndDates(@PathVariable("userClientId") UUID userClientId, @PathVariable("dateOne") long dateOne, @PathVariable("dateTwo") long dateTwo) {
+        List<SalesOfflineReport> response = null;
+        try {
+            response = service.getAllBySubIdAndDates(userClientId, dateOne, dateTwo);
+        } catch (BadRequestException e) {
+            log.error("BillOfflineController getByUserClientIdAndDates Exception thrown: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+        log.info("BillOfflineController getByUserClientIdAndDates DONE");
+        return new ResponseEntity<List>(response, HttpStatus.ACCEPTED);
     }
 }

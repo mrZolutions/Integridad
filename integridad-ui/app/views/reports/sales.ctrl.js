@@ -7,7 +7,7 @@
  * Controller of the menu
  */
 angular.module('integridadUiApp')
-    .controller('ReportSalesCtrl', function(_, $localStorage, creditsbillService, billService, eretentionService, eretentionClientService, cellarService, creditNoteCellarService,
+    .controller('ReportSalesCtrl', function(_, $localStorage, creditsbillService, billService, eretentionService, eretentionClientService, cellarService, creditNoteCellarService, billOfflineService,
                                             paymentService, paymentDebtsService, creditsDebtsService, $location, debtsToPayService, consumptionService, creditNoteService, productService) {
         var vm = this;
         var today = new Date();
@@ -274,6 +274,24 @@ angular.module('integridadUiApp')
             var userCliId = $localStorage.user.subsidiary.userClient.id;
 
             productService.getProductsForExistencyReport(userCliId).then(function(response) {
+                vm.reportList = response;
+                vm.loading = false;
+            }).catch(function(error) {
+                vm.loading = false;
+                vm.error = error.data;
+            });
+        };
+
+        vm.getReportSalesOffline = function() {
+            vm.isProductReportList = '16';
+            vm.reportList = undefined;
+            vm.loading = true;
+            var dateOne = $('#pickerBillDateOne').data("DateTimePicker").date().toDate().getTime();
+            var dateTwo = $('#pickerBillDateTwo').data("DateTimePicker").date().toDate().getTime();
+            dateTwo += 86399000;
+            var userCliId = $localStorage.user.subsidiary.userClient.id;
+
+            billOfflineService.getBillsOfflineByUserClientAndDates(userCliId, dateOne, dateTwo).then(function(response) {
                 vm.reportList = response;
                 vm.loading = false;
             }).catch(function(error) {
@@ -608,6 +626,28 @@ angular.module('integridadUiApp')
                             MARCA: existency.marca,
                             LINEA: existency.linea,
                             OBSERVACION: existency.observacion
+                        };
+                
+                        dataReport.push(data);
+                    });
+                break;
+                case '16':
+                    _.each(vm.reportList, function(billOff) {
+                        var data = {
+                            FECHA: billOff.date,
+                            CODIGO_CLIENTE: billOff.clientCode,
+                            CLIENTE: billOff.clientName,
+                            RUC_CI: billOff.ruc,
+                            NUMERO_FACTURA: billOff.billNumber,
+                            ESTADO: billOff.status,
+                            BASE_DOCE: billOff.status === 'ACTIVA' ? parseFloat(billOff.baseTaxes.toFixed(2)) : parseFloat(0),
+                            DESCUENTO: billOff.status === 'ACTIVA' ? parseFloat(billOff.discount.toFixed(2)) : parseFloat(0),
+                            BASE_CERO: billOff.status === 'ACTIVA' ? parseFloat(billOff.baseNoTaxes.toFixed(2)) : parseFloat(0),
+                            IVA: billOff.status === 'ACTIVA' ? parseFloat(billOff.iva.toFixed(2)) : parseFloat(0),
+                            TOTAL: billOff.status === 'ACTIVA' ? parseFloat(billOff.total.toFixed(2)) : parseFloat(0),
+                            CAJA: bill.cashier,
+                            SUCURSAL: bill.subsidiary,
+                            USUARIO: bill.userName
                         };
                 
                         dataReport.push(data);
