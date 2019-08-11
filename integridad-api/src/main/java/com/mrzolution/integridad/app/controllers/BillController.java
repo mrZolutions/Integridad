@@ -104,6 +104,7 @@ public class BillController {
         return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
     }
 
+    //Reporte de Productos Vendidos
     @RequestMapping(method = RequestMethod.GET, value="/rep/{userClientId}/{dateOne}/{dateTwo}")
     public ResponseEntity getByUserClientIdAndDatesActives(@PathVariable("userClientId") UUID userClientId, @PathVariable("dateOne") long dateOne, @PathVariable("dateTwo") long dateTwo) {
         List<ItemReport> response = null;

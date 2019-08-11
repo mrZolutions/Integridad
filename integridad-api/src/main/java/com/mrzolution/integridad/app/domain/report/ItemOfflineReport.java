@@ -1,13 +1,17 @@
 package com.mrzolution.integridad.app.domain.report;
 
-import lombok.Data;
 import java.util.UUID;
+import lombok.Data;
+
+/**
+ *
+ * @author daniel-one
+ */
 
 @Data
-public class ItemReport {
+public class ItemOfflineReport {
     private UUID id;
-    private String type;
-    private String billSeqString;
+    private String billOffSeqString;
     private String code;
     private String description;
     private Double quantity;
@@ -17,9 +21,8 @@ public class ItemReport {
     private Double iva;
     private Double total;
 
-    public ItemReport(UUID id, String type, String billSeqString, String code, String description, Double quantity, Double valUnit, Double subTotal, Double discount, Double iva, Double total) {
-        this.type = type;
-        this.billSeqString = billSeqString;
+    public ItemOfflineReport(UUID id, String billOffSeqString, String code, String description, Double quantity, Double valUnit, Double subTotal, Double discount, Double iva, Double total) {
+        this.billOffSeqString = billOffSeqString;
         this.code = code;
         this.description = description;
         this.quantity = quantity;

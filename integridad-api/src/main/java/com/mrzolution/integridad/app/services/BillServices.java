@@ -293,7 +293,7 @@ public class BillServices {
         return bills;
     }
 
-    //Reporte de Productos
+    //Reporte de Productos Vendidos
     public List<ItemReport> getBySubIdAndDatesActives(UUID userClientId, long dateOne, long dateTwo) {
         log.info("BillServices getByUserClientIdAndDates: {}, {}, {}", userClientId, dateOne, dateTwo);
         Iterable<Bill> bills = billRepository.findByUserClientIdAndDatesActives(userClientId, dateOne, dateTwo);

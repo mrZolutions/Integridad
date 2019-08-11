@@ -31,7 +31,7 @@ angular
             });
         };
 
-        this.getBillsOfflineActivesByUserClientAndDates = function(userClientId, dateOne, dateTwo) {
+        this.getProductsSoldByUserClientAndDates = function(userClientId, dateOne, dateTwo) {
             return securityService.get('/billoffline/rep/' + userClientId + '/' + dateOne + '/' + dateTwo).then(function successCallback(response) {
                 return response.data;
             });

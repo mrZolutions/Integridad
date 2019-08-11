@@ -1,11 +1,13 @@
 package com.mrzolution.integridad.app.services;
 
+import com.google.common.collect.Lists;
 import com.mrzolution.integridad.app.domain.BillOffline;
 import com.mrzolution.integridad.app.domain.Cashier;
 import com.mrzolution.integridad.app.domain.DetailOffline;
 import com.mrzolution.integridad.app.domain.PagoOffline;
 import com.mrzolution.integridad.app.domain.ProductBySubsidiary;
 import com.mrzolution.integridad.app.domain.UserIntegridad;
+import com.mrzolution.integridad.app.domain.report.ItemOfflineReport;
 import com.mrzolution.integridad.app.domain.report.SalesOfflineReport;
 import com.mrzolution.integridad.app.exceptions.BadRequestException;
 import com.mrzolution.integridad.app.repositories.BillOfflineRepository;
@@ -18,7 +20,9 @@ import com.mrzolution.integridad.app.repositories.UserClientRepository;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -246,5 +250,63 @@ public class BillOfflineServices {
             salesOfflineReportList.add(saleOfflineReport);
         });
         return salesOfflineReportList;
+    }
+    
+    //Reporte de Productos Vendidos Offline
+    public List<ItemOfflineReport> getBySubIdAndDatesActives(UUID userClientId, long dateOne, long dateTwo) {
+        log.info("BillOfflineServices getByUserClientIdAndDates: {}, {}, {}", userClientId, dateOne, dateTwo);
+        Iterable<BillOffline> billsOffline = billOfflineRepository.findByUserClientIdAndDatesActives(userClientId, dateOne, dateTwo);
+        Set<UUID> productIds = new HashSet<>();
+        billsOffline.forEach(billOff -> {
+            populateChildren(billOff);
+            for (DetailOffline detail: billOff.getDetailsOffline()) {
+                productIds.add(detail.getProduct().getId());
+            }
+        });	
+        return loadListItemsOffline(Lists.newArrayList(billsOffline), productIds);
+    }
+    
+    private List<ItemOfflineReport> loadListItemsOffline(List<BillOffline> billsOffline, Set<UUID> productIds) {
+        List<ItemOfflineReport> reportList = new ArrayList<>();
+        for (UUID uuidCurrent: productIds) {
+            Double quantityTotal = new Double(0);
+            Double subTotalTotal = new Double(0);
+            Double discountTotal = new Double(0);
+            Double ivaTotal = new Double(0);
+            Double totalTotal = new Double(0);
+            Double iva = new Double(0);
+            Double total = new Double(0);
+            String code = "";
+            String desc = "";
+            for (BillOffline billOff: billsOffline) {
+                for (DetailOffline detail: billOff.getDetailsOffline()) {
+                    if (uuidCurrent.equals(detail.getProduct().getId())) {
+                        if (detail.getProduct().isIva()) {
+                            iva = 0.12;
+                            total = 1.12;
+                        } else {
+                            iva = 0.0;
+                            total = 1.0;
+                        }
+                        Double discount = Double.valueOf(Double.valueOf(billOff.getDiscountPercentage())/100) * detail.getTotal();
+                        ItemOfflineReport item = new ItemOfflineReport(detail.getProduct().getId(), billOff.getStringSeq(), detail.getProduct().getCodeIntegridad(),
+					detail.getProduct().getName(),Double.valueOf(detail.getQuantity()), detail.getCostEach(), detail.getTotal(), discount, ((detail.getTotal()- discount) * iva), ((detail.getTotal()- discount) * total));
+                        quantityTotal += item.getQuantity();
+                        subTotalTotal += item.getSubTotal();
+                        discountTotal += item.getDiscount();
+                        ivaTotal += item.getIva();
+                        totalTotal += item.getTotal();
+                        code = detail.getProduct().getCodeIntegridad();
+                        desc = detail.getProduct().getName();
+                        reportList.add(item);
+                    }
+                }
+            }
+            ItemOfflineReport itemOfflineTotal = new ItemOfflineReport(uuidCurrent, "SUB-TOTAL", code,
+			desc, quantityTotal, null, subTotalTotal, discountTotal, ivaTotal, totalTotal);
+
+            reportList.add(itemOfflineTotal);
+        }
+        return reportList;
     }
 }

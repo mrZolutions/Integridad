@@ -16,6 +16,8 @@ angular.module('integridadUiApp')
         // undefined = retention; true = products; false = sales
         vm.isProductReportList = undefined;
         vm.reportList = undefined;
+        vm.userClientId = $localStorage.user.subsidiary.userClient.id;
+        vm.valParra = '2455e4bf-68f3-4071-b5c9-833d62512b00';
 
         vm.getReportProducts = function() {
             vm.isProductReportList = '1';
@@ -24,9 +26,8 @@ angular.module('integridadUiApp')
             var dateOne = $('#pickerBillDateOne').data("DateTimePicker").date().toDate().getTime();
             var dateTwo = $('#pickerBillDateTwo').data("DateTimePicker").date().toDate().getTime();
             dateTwo += 86399000;
-            var userCliId = $localStorage.user.subsidiary.userClient.id;
 
-            billService.getActivesByUserClientAndDates(userCliId, dateOne, dateTwo).then(function(response) {
+            billService.getActivesByUserClientAndDates(vm.userClientId, dateOne, dateTwo).then(function(response) {
                 vm.reportList = response;
                 vm.loading = false;
             }).catch(function(error) {
@@ -42,9 +43,8 @@ angular.module('integridadUiApp')
             var dateOne = $('#pickerBillDateOne').data("DateTimePicker").date().toDate().getTime();
             var dateTwo = $('#pickerBillDateTwo').data("DateTimePicker").date().toDate().getTime();
             dateTwo += 86399000;
-            var userCliId = $localStorage.user.subsidiary.userClient.id;
 
-            billService.getAllByUserClientAndDates(userCliId, dateOne, dateTwo).then(function(response) {
+            billService.getAllByUserClientAndDates(vm.userClientId, dateOne, dateTwo).then(function(response) {
                 vm.reportList = response;
                 vm.loading = false;
             }).catch(function(error) {
@@ -60,9 +60,8 @@ angular.module('integridadUiApp')
             var dateOne = $('#pickerBillDateOne').data("DateTimePicker").date().toDate().getTime();
             var dateTwo = $('#pickerBillDateTwo').data("DateTimePicker").date().toDate().getTime();
             dateTwo += 86399000;
-            var userCliId = $localStorage.user.subsidiary.userClient.id;
-
-            eretentionService.getAllByUserClientAndDates(userCliId, dateOne, dateTwo).then(function(response) {
+            
+            eretentionService.getAllByUserClientAndDates(vm.userClientId, dateOne, dateTwo).then(function(response) {
                 vm.reportList = response;
                 vm.loading = false;
             }).catch(function(error) {
@@ -77,9 +76,8 @@ angular.module('integridadUiApp')
             vm.loading = true;
             var dateTwo = $('#pickerBillDateTwo').data("DateTimePicker").date().toDate().getTime();
             dateTwo += 86399000;
-            var userCliId = $localStorage.user.subsidiary.userClient.id;
-
-            creditsbillService.getAllCreditsOfBillByUserClientId(userCliId, dateTwo).then(function(response) {
+            
+            creditsbillService.getAllCreditsOfBillByUserClientId(vm.userClientId, dateTwo).then(function(response) {
                 vm.reportList = response;
                 vm.loading = false;
             }).catch(function(error) {
@@ -95,9 +93,8 @@ angular.module('integridadUiApp')
             var dateOne = $('#pickerBillDateOne').data("DateTimePicker").date().toDate().getTime();
             var dateTwo = $('#pickerBillDateTwo').data("DateTimePicker").date().toDate().getTime();
             dateTwo += 86399000;
-            var userCliId = $localStorage.user.subsidiary.userClient.id;
-
-            eretentionClientService.getRetentionClientByUserClientAndDates(userCliId, dateOne, dateTwo).then(function(response) {
+            
+            eretentionClientService.getRetentionClientByUserClientAndDates(vm.userClientId, dateOne, dateTwo).then(function(response) {
                 vm.reportList = response;
                 vm.loading = false;
             }).catch(function(error) {
@@ -113,9 +110,8 @@ angular.module('integridadUiApp')
             var dateOne = $('#pickerBillDateOne').data("DateTimePicker").date().toDate().getTime();
             var dateTwo = $('#pickerBillDateTwo').data("DateTimePicker").date().toDate().getTime();
             dateTwo += 86399000;
-            var userCliId = $localStorage.user.subsidiary.userClient.id;
-
-            paymentService.getAllPaymentsByUserClientIdAndDates(userCliId, dateOne, dateTwo).then(function(response) {
+            
+            paymentService.getAllPaymentsByUserClientIdAndDates(vm.userClientId, dateOne, dateTwo).then(function(response) {
                 vm.reportList = response;
                 vm.loading = false;
             }).catch(function(error) {
@@ -130,9 +126,8 @@ angular.module('integridadUiApp')
             vm.loading = true;
             var dateTwo = $('#pickerBillDateTwo').data("DateTimePicker").date().toDate().getTime();
             dateTwo += 86399000;
-            var userCliId = $localStorage.user.subsidiary.userClient.id;
-
-            creditsDebtsService.getAllCreditsDebtsPendingOfDebtsToPayByUserClientId(userCliId, dateTwo).then(function(response) {
+            
+            creditsDebtsService.getAllCreditsDebtsPendingOfDebtsToPayByUserClientId(vm.userClientId, dateTwo).then(function(response) {
                 vm.reportList = response;
                 vm.loading = false;
             }).catch(function(error) {
@@ -148,9 +143,8 @@ angular.module('integridadUiApp')
             var dateOne = $('#pickerBillDateOne').data("DateTimePicker").date().toDate().getTime();
             var dateTwo = $('#pickerBillDateTwo').data("DateTimePicker").date().toDate().getTime();
             dateTwo += 86399000;
-            var userCliId = $localStorage.user.subsidiary.userClient.id;
-
-            debtsToPayService.getDebtsToPayByUserClientIdAndDates(userCliId, dateOne, dateTwo).then(function(response) {
+            
+            debtsToPayService.getDebtsToPayByUserClientIdAndDates(vm.userClientId, dateOne, dateTwo).then(function(response) {
                 vm.reportList = response;
                 vm.loading = false;
             }).catch(function(error) {
@@ -166,9 +160,8 @@ angular.module('integridadUiApp')
             var dateOne = $('#pickerBillDateOne').data("DateTimePicker").date().toDate().getTime();
             var dateTwo = $('#pickerBillDateOne').data("DateTimePicker").date().toDate().getTime();
             dateTwo += 86399000;
-            var userCliId = $localStorage.user.subsidiary.userClient.id;
-
-            billService.getForCashClosureReportAndDate(userCliId, dateOne, dateTwo).then(function(response) {
+            
+            billService.getForCashClosureReportAndDate(vm.userClientId, dateOne, dateTwo).then(function(response) {
                 vm.reportList = response;
                 vm.loading = false;
             }).catch(function(error) {
@@ -184,9 +177,8 @@ angular.module('integridadUiApp')
             var dateOne = $('#pickerBillDateOne').data("DateTimePicker").date().toDate().getTime();
             var dateTwo = $('#pickerBillDateTwo').data("DateTimePicker").date().toDate().getTime();
             dateTwo += 86399000;
-            var userCliId = $localStorage.user.subsidiary.userClient.id;
-
-            consumptionService.getActivesByUserClientAndDates(userCliId, dateOne, dateTwo).then(function(response) {
+            
+            consumptionService.getActivesByUserClientAndDates(vm.userClientId, dateOne, dateTwo).then(function(response) {
                 vm.reportList = response;
                 vm.loading = false;
             }).catch(function(error) {
@@ -202,9 +194,8 @@ angular.module('integridadUiApp')
             var dateOne = $('#pickerBillDateOne').data("DateTimePicker").date().toDate().getTime();
             var dateTwo = $('#pickerBillDateTwo').data("DateTimePicker").date().toDate().getTime();
             dateTwo += 86399000;
-            var userCliId = $localStorage.user.subsidiary.userClient.id;
-
-            paymentDebtsService.getPaymentDebtsByUserClientIdAndDates(userCliId, dateOne, dateTwo).then(function(response) {
+            
+            paymentDebtsService.getPaymentDebtsByUserClientIdAndDates(vm.userClientId, dateOne, dateTwo).then(function(response) {
                 vm.reportList = response;
                 vm.loading = false;
             }).catch(function(error) {
@@ -220,9 +211,8 @@ angular.module('integridadUiApp')
             var dateOne = $('#pickerBillDateOne').data("DateTimePicker").date().toDate().getTime();
             var dateTwo = $('#pickerBillDateTwo').data("DateTimePicker").date().toDate().getTime();
             dateTwo += 86399000;
-            var userCliId = $localStorage.user.subsidiary.userClient.id;
-
-            cellarService.getByUserClientIdAndDatesActives(userCliId, dateOne, dateTwo).then(function(response) {
+            
+            cellarService.getByUserClientIdAndDatesActives(vm.userClientId, dateOne, dateTwo).then(function(response) {
                 vm.reportList = response;
                 vm.loading = false;
             }).catch(function(error) {
@@ -238,9 +228,8 @@ angular.module('integridadUiApp')
             var dateOne = $('#pickerBillDateOne').data("DateTimePicker").date().toDate().getTime();
             var dateTwo = $('#pickerBillDateTwo').data("DateTimePicker").date().toDate().getTime();
             dateTwo += 86399000;
-            var userCliId = $localStorage.user.subsidiary.userClient.id;
-
-            creditNoteService.getCreditNotesByUserClientIdAndDates(userCliId, dateOne, dateTwo).then(function(response) {
+            
+            creditNoteService.getCreditNotesByUserClientIdAndDates(vm.userClientId, dateOne, dateTwo).then(function(response) {
                 vm.reportList = response;
                 vm.loading = false;
             }).catch(function(error) {
@@ -256,9 +245,8 @@ angular.module('integridadUiApp')
             var dateOne = $('#pickerBillDateOne').data("DateTimePicker").date().toDate().getTime();
             var dateTwo = $('#pickerBillDateTwo').data("DateTimePicker").date().toDate().getTime();
             dateTwo += 86399000;
-            var userCliId = $localStorage.user.subsidiary.userClient.id;
-
-            creditNoteCellarService.getCreditNotesCellarByUserClientIdAndDates(userCliId, dateOne, dateTwo).then(function(response) {
+            
+            creditNoteCellarService.getCreditNotesCellarByUserClientIdAndDates(vm.userClientId, dateOne, dateTwo).then(function(response) {
                 vm.reportList = response;
                 vm.loading = false;
             }).catch(function(error) {
@@ -271,9 +259,8 @@ angular.module('integridadUiApp')
             vm.isProductReportList = '15';
             vm.reportList = undefined;
             vm.loading = true;
-            var userCliId = $localStorage.user.subsidiary.userClient.id;
-
-            productService.getProductsForExistencyReport(userCliId).then(function(response) {
+            
+            productService.getProductsForExistencyReport(vm.userClientId).then(function(response) {
                 vm.reportList = response;
                 vm.loading = false;
             }).catch(function(error) {
@@ -289,9 +276,25 @@ angular.module('integridadUiApp')
             var dateOne = $('#pickerBillDateOne').data("DateTimePicker").date().toDate().getTime();
             var dateTwo = $('#pickerBillDateTwo').data("DateTimePicker").date().toDate().getTime();
             dateTwo += 86399000;
-            var userCliId = $localStorage.user.subsidiary.userClient.id;
+            
+            billOfflineService.getBillsOfflineByUserClientAndDates(vm.userClientId, dateOne, dateTwo).then(function(response) {
+                vm.reportList = response;
+                vm.loading = false;
+            }).catch(function(error) {
+                vm.loading = false;
+                vm.error = error.data;
+            });
+        };
 
-            billOfflineService.getBillsOfflineByUserClientAndDates(userCliId, dateOne, dateTwo).then(function(response) {
+        vm.getReportProductsOffline = function() {
+            vm.isProductReportList = '17';
+            vm.reportList = undefined;
+            vm.loading = true;
+            var dateOne = $('#pickerBillDateOne').data("DateTimePicker").date().toDate().getTime();
+            var dateTwo = $('#pickerBillDateTwo').data("DateTimePicker").date().toDate().getTime();
+            dateTwo += 86399000;
+
+            billOfflineService.getProductsSoldByUserClientAndDates(vm.userClientId, dateOne, dateTwo).then(function(response) {
                 vm.reportList = response;
                 vm.loading = false;
             }).catch(function(error) {
@@ -650,6 +653,23 @@ angular.module('integridadUiApp')
                             USUARIO: bill.userName
                         };
                 
+                        dataReport.push(data);
+                    });
+                break;
+                case '17':
+                    _.each(vm.reportList, function(billOff) {
+                        var data = {
+                            NUMERO: billOff.billOffSeqString,
+                            CODIGO: billOff.code,
+                            DESCRIPCION: billOff.description,
+                            CANTIDAD: billOff.quantity,
+                            VAL_UNITARIO: billOff.valUnit,
+                            SUBTOTAL: parseFloat(billOff.subTotal.toFixed(2)),
+                            DESCUENTO: parseFloat(billOff.discount.toFixed(2)),
+                            IVA: parseFloat(billOff.iva.toFixed(2)),
+                            TOTAL: parseFloat(billOff.total.toFixed(2))
+                        };
+              
                         dataReport.push(data);
                     });
                 break;

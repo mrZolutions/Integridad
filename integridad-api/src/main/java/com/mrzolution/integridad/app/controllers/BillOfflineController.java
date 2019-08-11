@@ -1,6 +1,7 @@
 package com.mrzolution.integridad.app.controllers;
 
 import com.mrzolution.integridad.app.domain.BillOffline;
+import com.mrzolution.integridad.app.domain.report.ItemOfflineReport;
 import com.mrzolution.integridad.app.domain.report.SalesOfflineReport;
 import com.mrzolution.integridad.app.exceptions.BadRequestException;
 import com.mrzolution.integridad.app.services.BillOfflineServices;
@@ -117,6 +118,20 @@ public class BillOfflineController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
         log.info("BillOfflineController getByUserClientIdAndDates DONE");
+        return new ResponseEntity<List>(response, HttpStatus.ACCEPTED);
+    }
+    
+    //Reporte de Productos Vendidos Offline
+    @RequestMapping(method = RequestMethod.GET, value="/rep/{userClientId}/{dateOne}/{dateTwo}")
+    public ResponseEntity getByUserClientIdAndDatesActives(@PathVariable("userClientId") UUID userClientId, @PathVariable("dateOne") long dateOne, @PathVariable("dateTwo") long dateTwo) {
+        List<ItemOfflineReport> response = null;
+        try {
+            response = service.getBySubIdAndDatesActives(userClientId, dateOne, dateTwo);
+        } catch (BadRequestException e) {
+            log.error("BillOfflineController getByUserClientIdAndDatesActives Exception thrown: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+        log.info("BillOfflineController getByUserClientIdAndDatesActives DONE");
         return new ResponseEntity<List>(response, HttpStatus.ACCEPTED);
     }
 }
