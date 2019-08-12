@@ -598,7 +598,7 @@ angular.module('integridadUiApp')
             vm.billOffline.stringSeq = vm.seqNumber;
             vm.billOffline.priceType = vm.priceType.name;
             
-            billOfflineService.getBillsOfflineByStringSeq(stringSeq, vm.companyData.id).then(function(response) {
+            billOfflineService.getBillsOfflineByStringSeq(vm.seqNumber, vm.companyData.id).then(function(response) {
                 if (response.length === 0) {
                     billOfflineService.createBillOffline(vm.billOffline, 1).then(function(respBill) {
                         vm.billedOffline = true;
