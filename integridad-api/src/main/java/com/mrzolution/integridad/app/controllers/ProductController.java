@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.mrzolution.integridad.app.domain.Product;
+import com.mrzolution.integridad.app.domain.report.ExistencyCatReport;
 import com.mrzolution.integridad.app.domain.report.ExistencyReport;
 import com.mrzolution.integridad.app.exceptions.BadRequestException;
 import com.mrzolution.integridad.app.services.ProductServices;
@@ -125,6 +126,19 @@ public class ProductController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
         log.info("ProductController getProductsForExistencyReport DONE");
+	return new ResponseEntity<List>(response, HttpStatus.ACCEPTED);
+    }
+    
+    @RequestMapping(method = RequestMethod.GET, value="/rep/existency/cat/{userClientId}")
+    public ResponseEntity getProductsForExistencyCatReport(@PathVariable("userClientId") UUID userClientId) {
+        List<ExistencyCatReport> response = null;
+        try {
+            response = service.getProductsForExistencyCatReport(userClientId);
+	} catch (BadRequestException e) {
+            log.error("ProductController getProductsForExistencyCatReport Exception thrown: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+	}
+        log.info("ProductController getProductsForExistencyCatReport DONE");
 	return new ResponseEntity<List>(response, HttpStatus.ACCEPTED);
     }
 

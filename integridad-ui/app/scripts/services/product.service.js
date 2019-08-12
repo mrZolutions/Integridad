@@ -48,6 +48,12 @@ angular
                 return response.data;
             });
         };
+
+        this.getProductsForExistencyCatReport = function(userClientId) {
+            return securityService.get('/product/rep/existency/cat/' + userClientId).then(function successCallback(response) {
+                return response.data;
+            });
+        };
         
         this.getLazyBySusidiaryIdForBill = function(subsidiaryId, page, variable) {
             return securityService.get('/product/actives/subsidiary/bill/' + subsidiaryId + '/' + page + '?var=' + variable).then(function successCallback(response) {

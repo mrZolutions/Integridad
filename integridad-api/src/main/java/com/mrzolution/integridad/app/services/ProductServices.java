@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Component;
 import com.mrzolution.integridad.app.domain.Product;
+import com.mrzolution.integridad.app.domain.report.ExistencyCatReport;
 import com.mrzolution.integridad.app.domain.report.ExistencyReport;
 import com.mrzolution.integridad.app.repositories.ProductRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -250,6 +251,66 @@ public class ProductServices {
             existencyReportList.add(existencyReport);
         });
         return existencyReportList;
+    }
+    
+    public List<ExistencyCatReport> getProductsForExistencyCatReport(UUID userClientId) {
+        log.info("ProductServices getProductsForExistencyCatReport: {}", userClientId);
+        codigo = "SER";
+        Iterable<Product> productosCat = productRepository.findProductsForExistencyReport(userClientId, codigo);
+        List<ExistencyCatReport> existencyCatReportList = new ArrayList<>();
+        
+        productosCat.forEach(productCat -> {
+            populateForExistency(productCat);
+            
+            Double costoCatReal = Double.valueOf(0);
+            Double costoCatCash = Double.valueOf(0);
+            Double costoCatCard = Double.valueOf(0);
+            Double costoCatCredit = Double.valueOf(0);
+            Double costoCatMayor = Double.valueOf(0);
+            
+            for (ProductBySubsidiary pss : productCat.getProductBySubsidiaries()) {
+                if (pss.getQuantity() != null && pss.isActive()) {
+                    cantidad = Long.sum(cantidad, pss.getQuantity());
+                } else {
+                    cantidad = 0;
+                }
+            }
+            
+            if (productCat.getAverageCost() != null) {
+                costoCatReal = productCat.getAverageCost();
+            } else {
+                costoCatReal = 0.0;
+            }
+            
+            if (productCat.getCashPercentage() != null) {
+                costoCatCash = costoCatReal + (costoCatReal * (productCat.getCashPercentage() / 100));
+            } else {
+                costoCatCash = 0.0;
+            }
+            
+            if (productCat.getCardPercentage() != null) {
+                costoCatCard = costoCatReal + (costoCatReal * (productCat.getCardPercentage() / 100));
+            } else {
+                costoCatCard = 0.0;
+            }
+            
+            if (productCat.getCreditPercentage() != null) {
+                costoCatCredit = costoCatReal + (costoCatReal * (productCat.getCreditPercentage() / 100));
+            } else {
+                costoCatCredit = 0.0;
+            }
+            
+            if (productCat.getMajorPercentage() != null) {
+                costoCatMayor = costoCatReal + (costoCatReal * (productCat.getMajorPercentage() / 100));
+            } else {
+                costoCatMayor = 0.0;
+            }
+            
+            ExistencyCatReport existencyCatReport = new ExistencyCatReport(productCat.getCodeIntegridad(), productCat.getName(), costoCatReal, costoCatCash,
+                                                                           costoCatCard, costoCatCredit, costoCatMayor, cantidad);
+            existencyCatReportList.add(existencyCatReport);
+        });
+        return existencyCatReportList;
     }
     
     private void populateForExistency(Product products) {

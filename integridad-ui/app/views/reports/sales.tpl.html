@@ -69,7 +69,7 @@
         </div>
         <div class="panel-footer">
             <div class="row">
-                <div class="form-group col-md-10">
+                <div class="form-group col-md-10" ng-if="vm.userClientId !== vm.valParra">
                     <p><b>Productos Vendidos, Ventas y Retenciones</b></p>
                     <button type="button" title="Seleccione Fecha Inicio - Fecha Fin" class="btn btn-primary btn-sm"
                             ng-click="vm.getReportProducts()">
@@ -108,13 +108,17 @@
                 </div>
                 <div class="form-group col-md-6">
                     <p><b>Rep. Productos</b></p>
-                    <button type="button" class="btn btn-primary btn-sm"
+                    <button type="button" class="btn btn-primary btn-sm" ng-if="vm.userClientId !== vm.catedral"
                             ng-click="vm.getReportExistency()">
                             Inventario de Productos
                     </button>
+                    <button type="button" class="btn btn-primary btn-sm" ng-if="vm.userClientId === vm.catedral"
+                            ng-click="vm.getReportExistencyCat()">
+                            Inventario
+                    </button>
                 </div>
-                <div class="form-group col-md-6">
-                    <p><b>Rep. Cuentas Pendientes, Retenciones y Abonos</b></p>
+                <div class="form-group col-md-6" ng-if="vm.userClientId !== vm.valParra">
+                    <p><b>Rep. Cuentas por Cobrar</b></p>
                     <button type="button" title="Seleccione Fecha Fin" class="btn btn-primary btn-sm"
                             ng-click="vm.getCreditsPendingReport()">
                             Ctas Pendientes
@@ -128,7 +132,7 @@
                             Abonos y Otros
                     </button>
                 </div>
-                <div class="form-group col-md-6">
+                <div class="form-group col-md-6" ng-if="vm.userClientId !== vm.valParra">
                     <p><b>Rep. Cuentas por Pagar</b></p>
                     <button type="button" title="Seleccione Fecha Inicio - Fecha Fin" class="btn btn-primary btn-sm"
                             ng-click="vm.getReportDebts()">
@@ -143,7 +147,7 @@
                             Abonos y Otros
                     </button>
                 </div>
-                <div class="form-group col-md-6">
+                <div class="form-group col-md-6" ng-if="vm.userClientId !== vm.valParra">
                     <p><b>Rep. Bodega (Ingresos / Consumos)</b></p>
                     <button type="button" title="Seleccione Fecha Inicio - Fecha Fin" class="btn btn-primary btn-sm"
                             ng-click="vm.getCellarEntryReport()">
@@ -154,7 +158,7 @@
                             Consumos
                     </button>
                 </div>
-                <div class="form-group col-md-6">
+                <div class="form-group col-md-6" ng-if="vm.userClientId === vm.valParra">
                     <p><b>Offline -- Productos Vendidos, Ventas</b></p>
                     <button type="button" title="Seleccione Fecha Inicio - Fecha Fin" class="btn btn-primary btn-sm"
                             ng-click="vm.getReportProductsOffline()">
@@ -860,6 +864,36 @@
                     <td>{{data.discount.toFixed(2)}}</td>
                     <td>{{data.iva.toFixed(2)}}</td>
                     <td>{{data.total.toFixed(2)}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!--Reporte de Productos-->
+    <div class="table-responsive" ng-if="vm.isProductReportList === '18'">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>C&oacute;digo Prod.</th>
+                    <th>Nombre</th>
+                    <th>Costo Real</th>
+                    <th>Efectivo</th>
+                    <th>Costo por Tarjeta</th>
+                    <th>Costo a Cr&eacute;dito</th>
+                    <th>Costo al Mayor</th>
+                    <th>Cantidad</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="data in vm.reportList | orderBy:'name'">
+                    <td>{{data.code}}</td>
+                    <td>{{data.name}}</td>
+                    <td>{{data.costReal.toFixed(2)}}</td>
+                    <td>{{data.costCash.toFixed(2)}}</td>
+                    <td>{{data.costCard.toFixed(2)}}</td>
+                    <td>{{data.costCredit.toFixed(2)}}</td>
+                    <td>{{data.costMajor.toFixed(2)}}</td>
+                    <td>{{data.quantity}}</td>
                 </tr>
             </tbody>
         </table>

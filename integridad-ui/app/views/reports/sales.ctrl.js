@@ -18,6 +18,7 @@ angular.module('integridadUiApp')
         vm.reportList = undefined;
         vm.userClientId = $localStorage.user.subsidiary.userClient.id;
         vm.valParra = '2455e4bf-68f3-4071-b5c9-833d62512b00';
+        vm.catedral = '1e2049c3-a3bc-4231-a0de-dded8020dc1b';
 
         vm.getReportProducts = function() {
             vm.isProductReportList = '1';
@@ -295,6 +296,20 @@ angular.module('integridadUiApp')
             dateTwo += 86399000;
 
             billOfflineService.getProductsSoldByUserClientAndDates(vm.userClientId, dateOne, dateTwo).then(function(response) {
+                vm.reportList = response;
+                vm.loading = false;
+            }).catch(function(error) {
+                vm.loading = false;
+                vm.error = error.data;
+            });
+        };
+
+        vm.getReportExistencyCat = function() {
+            vm.isProductReportList = '18';
+            vm.reportList = undefined;
+            vm.loading = true;
+            
+            productService.getProductsForExistencyCatReport(vm.userClientId).then(function(response) {
                 vm.reportList = response;
                 vm.loading = false;
             }).catch(function(error) {
@@ -670,6 +685,22 @@ angular.module('integridadUiApp')
                             TOTAL: parseFloat(billOff.total.toFixed(2))
                         };
               
+                        dataReport.push(data);
+                    });
+                break;
+                case '18':
+                    _.each(vm.reportList, function(existency) {
+                        var data = {
+                            CODIGO: existency.code,
+                            NOMBRE: existency.name,
+                            COST_REAL: parseFloat(existency.costReal.toFixed(2)),
+                            COST_EFEC: parseFloat(existency.costCash.toFixed(2)),
+                            COST_TARJ: parseFloat(existency.costCard.toFixed(2)),
+                            COST_CRED: parseFloat(existency.costCredit.toFixed(2)),
+                            COST_MAYOR: parseFloat(existency.costMajor.toFixed(2)),
+                            CANTIDAD: parseInt(existency.quantity),
+                        };
+                
                         dataReport.push(data);
                     });
                 break;
