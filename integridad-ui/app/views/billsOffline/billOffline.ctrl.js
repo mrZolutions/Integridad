@@ -214,7 +214,7 @@ angular.module('integridadUiApp')
                     vm.seqChanged = true;
                     $('#modalEditBillNumber').modal('hide');
                 } else {
-                    vm.seqErrorNumber = "NUMERO DE FACTURA YA EXISTENTE"
+                    vm.seqErrorNumber = "NUMERO DE FACTURA YA EXISTENTE";
                 };
                 vm.loading = false;
             }).catch(function(error) {
@@ -597,24 +597,30 @@ angular.module('integridadUiApp')
             vm.billOffline.billSeq = vm.numberAddedOne;
             vm.billOffline.stringSeq = vm.seqNumber;
             vm.billOffline.priceType = vm.priceType.name;
-            if (vm.userClientId === vm.valParra) {
-                vm.billOffline.iva = parseFloat((parseFloat(vm.billOffline.subTotal) * 0.12).toFixed(2));
-                vm.billOffline.total = parseFloat((parseFloat(vm.billOffline.subTotal) + parseFloat(vm.billOffline.iva)).toFixed(2));
-            };
-
-            billOfflineService.createBillOffline(vm.billOffline, 1).then(function(respBill) {
-                vm.billedOffline = true;
-                vm.billOfflineCreated = respBill;
-                $localStorage.user.cashier.billOfflineNumberSeq = vm.billOffline.billSeq;
-                if (vm.seqChanged) {
-                    cashierService.update($localStorage.user.cashier).then(function(resp) {
-                        // cashier updated
+            
+            billOfflineService.getBillsOfflineByStringSeq(stringSeq, vm.companyData.id).then(function(response) {
+                if (response.length === 0) {
+                    billOfflineService.createBillOffline(vm.billOffline, 1).then(function(respBill) {
+                        vm.billedOffline = true;
+                        vm.billOfflineCreated = respBill;
+                        $localStorage.user.cashier.billOfflineNumberSeq = vm.billOffline.billSeq;
+                        if (vm.seqChanged) {
+                            cashierService.update($localStorage.user.cashier).then(function(resp) {
+                                // cashier updated
+                            }).catch(function(error) {
+                                vm.loading = false;
+                                vm.error = error.data;
+                            });
+                        };
+                        vm.loading = false;
                     }).catch(function(error) {
                         vm.loading = false;
                         vm.error = error.data;
                     });
+                } else {
+                    vm.seqErrorNumber = "NUMERO DE FACTURA YA EXISTENTE";
+                    vm.loading = false;
                 };
-                vm.loading = false;
             }).catch(function(error) {
                 vm.loading = false;
                 vm.error = error.data;
