@@ -33,6 +33,7 @@ public class Cellar {
     private boolean active;
     private double iva;
     private double ice;
+    private double descuento;
     private double total;
     private double subTotal;
     private double baseNoTaxes;

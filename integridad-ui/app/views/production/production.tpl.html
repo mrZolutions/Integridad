@@ -326,10 +326,15 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="form-group col-md-10">
+                    <div class="form-group col-md-8">
                         <label>N&uacute;mero de Autorizaci&oacute;n:</label><br/>
                         <input type="text" ng-model="vm.cellar.authNumber" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
                                class="form-control" maxlength="90">
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label>Monto por Descuento</label><br/>
+                        <input type="text" ng-change="vm.recalculateTotalCellar()" ng-model="vm.cellar.descuento" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+                               class="form-control" maxlength="10">
                     </div>
                 </div>
             </div>

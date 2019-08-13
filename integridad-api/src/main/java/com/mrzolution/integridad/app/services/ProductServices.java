@@ -175,10 +175,12 @@ public class ProductServices {
             Double costoMayor = Double.valueOf(0);
             
             for (ProductBySubsidiary pss : product.getProductBySubsidiaries()) {
-                if (pss.getQuantity() != null && pss.isActive()) {
-                    cantidad = pss.getQuantity();
-                } else {
-                    cantidad = 0;
+                if (pss.isActive()) {
+                    if (pss.getQuantity() != null) {
+                        cantidad = pss.getQuantity();
+                    } else {
+                        cantidad = 0;
+                    }
                 }
             }
             
@@ -224,6 +226,28 @@ public class ProductServices {
                 costoMayor = 0.0;
             }
             
+            if (product.getSubgroup() != null) {
+                if (product.getSubgroup().getGroupLine() != null) {
+                    if (product.getSubgroup().getGroupLine().getLine() != null) {
+                        linea = product.getSubgroup().getGroupLine().getLine().getName();
+                    } else {
+                        linea = "NO ASIGNADO";
+                    }
+                    grupo = product.getSubgroup().getGroupLine().getName();
+                } else {
+                    grupo = "NO ASIGNADO";
+                }
+                subGrupo = product.getSubgroup().getName();
+            } else {
+                subGrupo = "NO ASIGNADO";
+            }
+            
+            if (product.getBrand() != null) {
+                marca = product.getBrand().getName();
+            } else {
+                marca = "NO ASIGNADO";
+            }
+            
             ExistencyReport existencyReport = new ExistencyReport(product.getCodeIntegridad(), product.getName(), product.getProductType().getName(), costoReal, costoCash,
                                                                   costoCard, costoCredit, costoMayor, minimo, cantidad, grupo, subGrupo, marca, linea, observ);
             existencyReportList.add(existencyReport);
@@ -247,10 +271,12 @@ public class ProductServices {
             Double costoCatMayor = Double.valueOf(0);
             
             for (ProductBySubsidiary pss : productCat.getProductBySubsidiaries()) {
-                if (pss.getQuantity() != null && pss.isActive()) {
-                    cantidad = pss.getQuantity();
-                } else {
-                    cantidad = 0;
+                if (pss.isActive()) {
+                    if (pss.getQuantity() != null) {
+                        cantidad = pss.getQuantity();
+                    } else {
+                        cantidad = 0;
+                    }
                 }
             }
             

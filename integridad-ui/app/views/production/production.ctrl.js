@@ -268,6 +268,9 @@ angular.module('integridadUiApp')
         vm.cellar.baseNoTaxes = 0;
         var discountWithIva = 0;
         var discountWithNoIva = 0;
+        if (vm.cellar.descuento == null || vm.cellar.descuento == undefined) {
+            vm.cellar.descuento = 0;
+        };
         _.each(vm.cellar.detailsCellar, function(detail) {
             vm.cellar.subTotal = (parseFloat(vm.cellar.subTotal) + parseFloat(detail.total)).toFixed(4);
             var tot = detail.total;
@@ -291,11 +294,6 @@ angular.module('integridadUiApp')
                 vm.cellar.ice = (parseFloat(vm.cellar.ice) + (parseFloat(tot) * 0.10)).toFixed(4);
             };
         });
-        if (vm.cellar.discountPercentage) {
-            vm.cellar.discount = ((parseInt(vm.cellar.discountPercentage)/100) * vm.cellar.subTotal).toFixed(4);
-        } else {
-            vm.cellar.discount = 0;
-        };
         vm.impuestoICE.base_imponible = vm.cellar.subTotal;
         vm.impuestoIVA.base_imponible = vm.cellar.baseTaxes;
         vm.impuestoIVAZero.base_imponible = vm.cellar.baseNoTaxes;
@@ -307,7 +305,15 @@ angular.module('integridadUiApp')
         vm.cellar.total = (parseFloat(vm.cellar.baseTaxes)
             + parseFloat(vm.cellar.baseNoTaxes)
             + parseFloat(vm.cellar.iva)
-            + parseFloat(vm.cellar.ice)).toFixed(4);
+            + parseFloat(vm.cellar.ice)
+            - parseFloat(vm.cellar.descuento)).toFixed(4);
+    };
+
+    vm.recalculateTotalCellar = function() {
+        if (vm.cellar.descuento == null || vm.cellar.descuento == undefined) {
+            vm.cellar.descuento = 0;
+        };
+        _getCellarTotalSubtotal();
     };
 
     vm.acceptCellarProduct = function(closeModal) {
