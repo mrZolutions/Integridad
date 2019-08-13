@@ -176,7 +176,7 @@ public class ProductServices {
             
             for (ProductBySubsidiary pss : product.getProductBySubsidiaries()) {
                 if (pss.getQuantity() != null && pss.isActive()) {
-                    cantidad = Long.sum(cantidad, pss.getQuantity());
+                    cantidad = pss.getQuantity();
                 } else {
                     cantidad = 0;
                 }
@@ -270,7 +270,7 @@ public class ProductServices {
             
             for (ProductBySubsidiary pss : productCat.getProductBySubsidiaries()) {
                 if (pss.getQuantity() != null && pss.isActive()) {
-                    cantidad = Long.sum(cantidad, pss.getQuantity());
+                    cantidad = pss.getQuantity();
                 } else {
                     cantidad = 0;
                 }
