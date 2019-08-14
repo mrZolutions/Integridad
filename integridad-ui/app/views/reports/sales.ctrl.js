@@ -663,9 +663,9 @@ angular.module('integridadUiApp')
                             BASE_CERO: billOff.status === 'ACTIVA' ? parseFloat(billOff.baseNoTaxes.toFixed(2)) : parseFloat(0),
                             IVA: billOff.status === 'ACTIVA' ? parseFloat(billOff.iva.toFixed(2)) : parseFloat(0),
                             TOTAL: billOff.status === 'ACTIVA' ? parseFloat(billOff.total.toFixed(2)) : parseFloat(0),
-                            CAJA: bill.cashier,
-                            SUCURSAL: bill.subsidiary,
-                            USUARIO: bill.userName
+                            CAJA: billOff.cashier,
+                            SUCURSAL: billOff.subsidiary,
+                            USUARIO: billOff.userName
                         };
                 
                         dataReport.push(data);

@@ -172,9 +172,10 @@ angular.module('integridadUiApp')
             vm.comprobanteCobroSeq = undefined;
             vm.comprobanteCobroStringSeq = undefined;
             vm.itemsMultipleCobros = [];
-            vm.userCashier = $localStorage.user.cashier;
 
+            vm.userCashier = $localStorage.user.cashier;
             vm.usrCliId = $localStorage.user.subsidiary.userClient.id;
+
             clientService.getLazyByUserClientId(vm.usrCliId).then(function(response) {
                 vm.clientList = response;
                 vm.loading = false;
