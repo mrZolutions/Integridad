@@ -597,6 +597,7 @@ angular.module('integridadUiApp')
             vm.billOffline.billSeq = vm.numberAddedOne;
             vm.billOffline.stringSeq = vm.seqNumber;
             vm.billOffline.priceType = vm.priceType.name;
+            vm.billOffline.dateCreated = $('#pickerBillOfflineDate').data("DateTimePicker").date().toDate().getTime();
             
             billOfflineService.getBillsOfflineByStringSeq(vm.seqNumber, vm.companyData.id).then(function(response) {
                 if (response.length === 0) {

@@ -439,6 +439,7 @@ angular.module('integridadUiApp')
             };
             vm.itema.numCheque = vm.paymentCreated.noDocument;
             vm.itema.dailybookNumber = vm.dailyCiStringSeq;
+            vm.itema.userClientId = vm.usrCliId;
             vm.itema.dateDetailDailybook = $('#pickerDateOfPayment').data("DateTimePicker").date().toDate().getTime();
             vm.dailybookCi.detailDailybookContab.push(vm.itema);
             vm.generalDetailCi_2 = vm.paymentCreated.banco;
@@ -453,6 +454,7 @@ angular.module('integridadUiApp')
             };
             vm.itemb.numCheque = '--';
             vm.itemb.dailybookNumber = vm.dailyCiStringSeq;
+            vm.itemb.userClientId = vm.usrCliId;
             vm.itemb.dateDetailDailybook = $('#pickerDateOfPayment').data("DateTimePicker").date().toDate().getTime();
             vm.dailybookCi.detailDailybookContab.push(vm.itemb);
             vm.dailybookCi.codeTypeContab = vm.selectedTypeBook;
@@ -680,6 +682,7 @@ angular.module('integridadUiApp')
             };
             vm.itema.numCheque = vm.noDocument;
             vm.itema.dailybookNumber = vm.dailyCiStringSeq;
+            vm.itema.userClientId = vm.usrCliId;
             vm.itema.dateDetailDailybook = $('#pickerDateOfMultiplePayment').data("DateTimePicker").date().toDate().getTime();
             vm.dailybookCi.detailDailybookContab.push(vm.itema);
             vm.generalDetailCi_2 = vm.bankName;
@@ -694,6 +697,7 @@ angular.module('integridadUiApp')
             };
             vm.itemb.numCheque = '--';
             vm.itemb.dailybookNumber = vm.dailyCiStringSeq;
+            vm.itemb.userClientId = vm.usrCliId;
             vm.itemb.dateDetailDailybook = $('#pickerDateOfMultiplePayment').data("DateTimePicker").date().toDate().getTime();
             vm.dailybookCi.detailDailybookContab.push(vm.itemb);
             vm.dailybookCi.codeTypeContab = vm.selectedTypeBook;

@@ -32,6 +32,7 @@ public class DetailDailybookContab implements Child {
     private String haber;
     private long dateDetailDailybook;
     private String dailybookNumber;
+    private String userClientId;
     
     @ManyToOne
     @JoinColumn(name = "dailybookCg_id")

@@ -8,7 +8,9 @@ import com.mrzolution.integridad.app.domain.DailybookFv;
 import com.mrzolution.integridad.app.domain.DetailDailybookContab;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -28,4 +30,7 @@ public interface DetailDailybookContabRepository extends CrudRepository<DetailDa
     Iterable<DetailDailybookContab> findByDailybookCxP(DailybookCxP dailybookCxP);
     
     Iterable<DetailDailybookContab> findByDailybookFv(DailybookFv dailybookFv);
+    
+    @Query("SELECT d FROM DetailDailybookContab d WHERE d.codeConta = (:code) AND d.dateDetailDailybook >= (:dateOne) AND d.dateDetailDailybook <= (:dateTwo) AND d.userClientId = (:id)")
+    Iterable<DetailDailybookContab> findCodeContaByDatesAndUserClientId(@Param("code") String code, @Param("dateOne") long dateOne, @Param("dateTwo") long dateTwo, @Param("id") String id);
 }

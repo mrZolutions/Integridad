@@ -151,7 +151,7 @@ public class BillOfflineServices {
         if (typeDocument == 1 && pagosOffline == null) {
             throw new BadRequestException("Debe tener un pago por lo menos");
         }
-        billOffline.setDateCreated(new Date().getTime());
+        
         billOffline.setTypeDocument(typeDocument);
         billOffline.setActive(true);
         billOffline.setDetailsOffline(null);

@@ -602,6 +602,7 @@ angular.module('integridadUiApp')
             vm.itema.baseImponible = vm.item.base_imponible
             vm.itema.numCheque =  '--';
             vm.itema.dailybookNumber = vm.dailycxpStringSeq;
+            vm.itema.userClientId = vm.usrCliId;
             vm.itema.dateDetailDailybook = $('#pickerDateDebtsToPay').data("DateTimePicker").date().toDate().getTime();
             vm.dailybookCxP.detailDailybookContab.push(vm.itema);
             
@@ -1309,6 +1310,7 @@ angular.module('integridadUiApp')
             if (vm.retenCodeFuente != null) {
                 vm.itemRetentionFuente.numCheque = '--';
                 vm.itemRetentionFuente.dailybookNumber = vm.dailycxpStringSeq;
+                vm.itemRetentionFuente.userClientId = vm.usrCliId;
                 vm.itemRetentionFuente.dateDetailDailybook = $('#pickerDateDebtsToPay').data("DateTimePicker").date().toDate().getTime();
                 vm.dailybookCxP.detailDailybookContab.push(vm.itemRetentionFuenteCxP);
             };
@@ -1316,6 +1318,7 @@ angular.module('integridadUiApp')
             if (vm.retenCodeIva != null) {
                 vm.itemRetentionIVA.numCheque = '--';
                 vm.itemRetentionIVA.dailybookNumber = vm.dailycxpStringSeq;
+                vm.itemRetentionIVA.userClientId = vm.usrCliId;
                 vm.itemRetentionIVA.dateDetailDailybook = $('#pickerDateDebtsToPay').data("DateTimePicker").date().toDate().getTime();
                 vm.dailybookCxP.detailDailybookContab.push(vm.itemRetentionIVACxP);
             };
@@ -1392,6 +1395,7 @@ angular.module('integridadUiApp')
                 };
                 vm.itemIvaCxP.numCheque = '--';
                 vm.itemIvaCxP.dailybookNumber = vm.dailycxpStringSeq;
+                vm.itemIvaCxP.userClientId = vm.usrCliId;
                 vm.itemIvaCxP.dateDetailDailybook = $('#pickerDateDebtsToPay').data("DateTimePicker").date().toDate().getTime();
                 vm.itemProviderCxP = {
                     typeContab: vm.typeContab,
@@ -1404,6 +1408,7 @@ angular.module('integridadUiApp')
                 };
                 vm.itemProviderCxP.numCheque = '--';
                 vm.itemProviderCxP.dailybookNumber = vm.dailycxpStringSeq;
+                vm.itemProviderCxP.userClientId = vm.usrCliId;
                 vm.itemProviderCxP.dateDetailDailybook = $('#pickerDateDebtsToPay').data("DateTimePicker").date().toDate().getTime();
                 vm.dailybookCxP.detailDailybookContab.push(vm.itemIvaCxP);
                 vm.dailybookCxP.detailDailybookContab.push(vm.itemProviderCxP);
@@ -1434,6 +1439,7 @@ angular.module('integridadUiApp')
                 };
                 vm.itemProviderCxP.numCheque = '--';
                 vm.itemProviderCxP.dailybookNumber = vm.dailycxpStringSeq;
+                vm.itemProviderCxP.userClientId = vm.usrCliId;
                 vm.itemProviderCxP.dateDetailDailybook = $('#pickerDateDebtsToPay').data("DateTimePicker").date().toDate().getTime();
                 vm.dailybookCxP.detailDailybookContab.push(vm.itemProviderCxP);
             };
@@ -1723,6 +1729,7 @@ angular.module('integridadUiApp')
             };
             vm.itema.numCheque =  '--';
             vm.itema.dailybookNumber = vm.dailyCeStringSeq;
+            vm.itema.userClientId = vm.usrCliId;
             vm.itema.dateDetailDailybook = $('#pickerDateOfMultiPayment').data("DateTimePicker").date().toDate().getTime();
             vm.dailybookCe.detailDailybookContab.push(vm.itema);
             vm.generalDetailCe_2 = vm.bankName + ' ' + 'Cancela Fcs' + ' ' + vm.debtsBillsNumberPayed;
@@ -1737,6 +1744,7 @@ angular.module('integridadUiApp')
             };
             vm.itemb.numCheque = vm.noDocument;
             vm.itemb.dailybookNumber = vm.dailyCeStringSeq;
+            vm.itemb.userClientId = vm.usrCliId;
             vm.itemb.dateDetailDailybook = $('#pickerDateOfMultiPayment').data("DateTimePicker").date().toDate().getTime();
             vm.dailybookCe.detailDailybookContab.push(vm.itemb);
             
@@ -1881,6 +1889,7 @@ angular.module('integridadUiApp')
             };
             vm.itema.numCheque =  '--';
             vm.itema.dailybookNumber = vm.dailyCeStringSeq;
+            vm.itema.userClientId = vm.usrCliId;
             vm.itema.dateDetailDailybook = $('#pickerDateOfPaymentDebt').data("DateTimePicker").date().toDate().getTime();
             vm.dailybookCe.detailDailybookContab.push(vm.itema);
             vm.generalDetailCe_2 = vm.paymentDebtsCreated.banco + ' ' + 'Cancela Fc' + ' ' + vm.paymentDebtsCreated.documentNumber;
@@ -1895,6 +1904,7 @@ angular.module('integridadUiApp')
             };
             vm.itemb.numCheque = vm.paymentDebtsCreated.noDocument;
             vm.itemb.dailybookNumber = vm.dailyCeStringSeq;
+            vm.itemb.userClientId = vm.usrCliId;
             vm.itemb.dateDetailDailybook = $('#pickerDateOfPaymentDebt').data("DateTimePicker").date().toDate().getTime();
             vm.dailybookCe.detailDailybookContab.push(vm.itemb);
             
