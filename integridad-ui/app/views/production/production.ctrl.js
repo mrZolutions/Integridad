@@ -274,12 +274,9 @@ angular.module('integridadUiApp')
         _.each(vm.cellar.detailsCellar, function(detail) {
             vm.cellar.subTotal = (parseFloat(vm.cellar.subTotal) + parseFloat(detail.total)).toFixed(2);
             var tot = detail.total;
-            if (vm.cellar.discountPercentage) {
-                tot = (parseFloat(detail.total) - (parseInt(vm.cellar.discountPercentage) / 100) * (parseFloat(detail.total))).toFixed(2);
-            };
             if (detail.product.iva) {
                 vm.cellar.baseTaxes += parseFloat(detail.total);
-                vm.cellar.iva = (parseFloat(vm.cellar.iva) + (parseFloat(tot) * 0.12)).toFixed(2);
+                vm.cellar.iva = ((vm.cellar.iva + ((tot - vm.cellar.descuento) * 0.12))).toFixed(2);
                 if (vm.cellar.discountPercentage) {
                     discountWithIva = (parseFloat(discountWithIva) + ((parseInt(vm.cellar.discountPercentage) / 100) * detail.total)).toFixed(2);
                 };
