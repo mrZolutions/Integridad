@@ -272,26 +272,26 @@ angular.module('integridadUiApp')
             vm.cellar.descuento = 0;
         };
         _.each(vm.cellar.detailsCellar, function(detail) {
-            vm.cellar.subTotal = (parseFloat(vm.cellar.subTotal) + parseFloat(detail.total)).toFixed(4);
+            vm.cellar.subTotal = (parseFloat(vm.cellar.subTotal) + parseFloat(detail.total)).toFixed(2);
             var tot = detail.total;
             if (vm.cellar.discountPercentage) {
-                tot = (parseFloat(detail.total) - (parseInt(vm.cellar.discountPercentage) / 100) * (parseFloat(detail.total))).toFixed(4);
+                tot = (parseFloat(detail.total) - (parseInt(vm.cellar.discountPercentage) / 100) * (parseFloat(detail.total))).toFixed(2);
             };
             if (detail.product.iva) {
                 vm.cellar.baseTaxes += parseFloat(detail.total);
-                vm.cellar.iva = (parseFloat(vm.cellar.iva) + (parseFloat(tot) * 0.12)).toFixed(4);
+                vm.cellar.iva = (parseFloat(vm.cellar.iva) + (parseFloat(tot) * 0.12)).toFixed(2);
                 if (vm.cellar.discountPercentage) {
-                    discountWithIva = (parseFloat(discountWithIva) + ((parseInt(vm.cellar.discountPercentage) / 100) * detail.total)).toFixed(4);
+                    discountWithIva = (parseFloat(discountWithIva) + ((parseInt(vm.cellar.discountPercentage) / 100) * detail.total)).toFixed(2);
                 };
             } else {
                 vm.cellar.baseNoTaxes += parseFloat(detail.total);
-                vm.cellar.ivaZero = (parseFloat(vm.cellar.ivaZero) + parseFloat(tot)).toFixed(4);
+                vm.cellar.ivaZero = (parseFloat(vm.cellar.ivaZero) + parseFloat(tot)).toFixed(2);
                 if (vm.cellar.discountPercentage) {
-                    discountWithNoIva = (parseFloat(discountWithNoIva) + ((parseInt(vm.cellar.discountPercentage) / 100) * detail.total)).toFixed(4);
+                    discountWithNoIva = (parseFloat(discountWithNoIva) + ((parseInt(vm.cellar.discountPercentage) / 100) * detail.total)).toFixed(2);
                 };
             };
             if (detail.product.ice) {
-                vm.cellar.ice = (parseFloat(vm.cellar.ice) + (parseFloat(tot) * 0.10)).toFixed(4);
+                vm.cellar.ice = (parseFloat(vm.cellar.ice) + (parseFloat(tot) * 0.10)).toFixed(2);
             };
         });
         vm.impuestoICE.base_imponible = vm.cellar.subTotal;
@@ -300,13 +300,12 @@ angular.module('integridadUiApp')
         vm.impuestoICE.valor = vm.cellar.ice;
         vm.impuestoIVA.valor = vm.cellar.iva;
         vm.impuestoIVAZero.valor = 0;
-        vm.cellar.baseTaxes = (vm.cellar.baseTaxes - discountWithIva).toFixed(4);
-        vm.cellar.baseNoTaxes = (vm.cellar.baseNoTaxes - discountWithNoIva).toFixed(4);
+        vm.cellar.baseTaxes = (parseFloat(vm.cellar.baseTaxes - discountWithIva) - parseFloat(vm.cellar.descuento)).toFixed(2);
+        vm.cellar.baseNoTaxes = (vm.cellar.baseNoTaxes - discountWithNoIva).toFixed(2);
         vm.cellar.total = (parseFloat(vm.cellar.baseTaxes)
             + parseFloat(vm.cellar.baseNoTaxes)
             + parseFloat(vm.cellar.iva)
-            + parseFloat(vm.cellar.ice)
-            - parseFloat(vm.cellar.descuento)).toFixed(4);
+            + parseFloat(vm.cellar.ice)).toFixed(2);
     };
 
     vm.recalculateTotalCellar = function() {
