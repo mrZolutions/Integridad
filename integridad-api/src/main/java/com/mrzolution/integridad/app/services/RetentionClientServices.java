@@ -86,6 +86,7 @@ public class RetentionClientServices {
         return retenCli;
     }
     
+    @Async("asyncExecutor")
     public RetentionClient createRetentionClient(RetentionClient retentionClient) throws BadRequestException {   
 	List<DetailRetentionClient> details = retentionClient.getDetailRetentionClient();
         document = retentionClient.getBill().getId().toString();
@@ -107,7 +108,6 @@ public class RetentionClientServices {
         return saved;
     }
 
-    @Async("asyncExecutor")
     public void updateBillAndCreditsAndPayment(RetentionClient saved, String document) {
         Credits docNumber = creditsRepository.findByBillId(document);
         doc = docNumber.getBillId();
@@ -202,6 +202,7 @@ public class RetentionClientServices {
         return retentionClientReportList;
     }
     
+    @Async("asyncExecutor")
     public RetentionClient deactivateRetentionClient(RetentionClient retentionClient) throws BadRequestException {
         if (retentionClient.getId() == null) {
             throw new BadRequestException("Invalid Retention");

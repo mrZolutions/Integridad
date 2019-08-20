@@ -207,10 +207,9 @@ public class RetentionServices {
             String docDate = dateFormat.format(new Date(retention.getDocumentDate()));
             String retDate = dateFormat.format(new Date(retention.getDateCreated()));
             
-            RetentionReport saleReport= new RetentionReport(docDate, retention.getDocumentNumber(), retention.getProvider().getRazonSocial(), retention.getProvider().getRuc(), retDate, retention.getStringSeq(), retention.getClaveDeAcceso(),
-                                                            retention.getEjercicioFiscal(), retention.getDebtsSeq(), status, codRetenFuente, baseF, porcenF, subTotalF, codRetenIva, baseIva, porcenIva, subTotalIva, sum,
-                                                            retention.getSubsidiary().getName(), retention.getUserIntegridad().getFirstName());
-
+            RetentionReport saleReport = new RetentionReport(docDate, retention.getDocumentNumber(), retention.getProvider().getRazonSocial(), retention.getProvider().getRuc(), retDate, retention.getStringSeq(), retention.getClaveDeAcceso(),
+                                                             retention.getEjercicioFiscal(), retention.getDebtsSeq(), status, codRetenFuente, baseF, porcenF, subTotalF, codRetenIva, baseIva, porcenIva, subTotalIva, sum,
+                                                             retention.getSubsidiary().getName(), retention.getUserIntegridad().getFirstName());
             retentionReportList.add(saleReport);
         });
         return retentionReportList;

@@ -145,7 +145,6 @@ angular.module('integridadUiApp')
             vm.billMultipleList = undefined;
             vm.creditsbillList = undefined;
             vm.retentionClient = undefined;
-            vm.retentionClientCreated = undefined;
             vm.retentionClientList = undefined;
             vm.clientList = [];
             vm.itemsMultiplePayments = [];
@@ -735,7 +734,6 @@ angular.module('integridadUiApp')
                     vm.creditValue = bill.total;
                     vm.creditValueSubtotal = bill.subTotal;
                     vm.creditValueIva = bill.iva;
-                    vm.retentionClientCreated = false;
                     vm.retentionClient = {
                         bill: bill,
                         typeRetention: undefined,
@@ -863,8 +861,9 @@ angular.module('integridadUiApp')
                 _.each(vm.retentionClient.detailRetentionClient, function(detail) {
                     vm.totalRetention = parseFloat(vm.totalRetention + detail.total);
                 });
-                vm.retentionClientCreated = true;
+                vm.success = 'Retención creada';
                 vm.loading = false;
+                _activate();
             }).catch(function(error) {
                 vm.loading = false;
                 vm.error = error.data;

@@ -34,7 +34,7 @@
 
     <!--SELECCIÓN DE TIPO DE DIARIO-->
     <div class="row" ng-show="vm.selectedTypeBook === undefined">
-        <div class="form-group col-md-4">
+        <div class="form-group col-md-5">
             <label>Seleccione el tipo de Diario:</label><br/>
             <select ng-options="deta.code as deta.type for deta in vm.typeBookList"
                     ng-model="vm.dailybookType" class="form-control">
@@ -2700,6 +2700,87 @@
                         ng-click="vm.cancel()">
                         <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
                 </button>
+            </div>
+        </div>
+    </div>
+
+    <!--REPORTE DE MAYORES ESPECÍFICOS-->
+    <div class="panel panel-primary" ng-show="vm.selectedTypeBook === '12'">
+        <div class="panel-heading">
+            <b>Reporte de Mayores Espec&iacute;ficos</b>
+        </div>
+        <div class="panel-body">
+            <div class="row table-responsive" ng-show="vm.cuentaContableList !== undefined">
+                <div class="form-group col-md-12">
+                    <input ng-model="searchTextCuenta" class="form-control" placeholder="Buscar">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>C&oacute;digo</th>
+                                <th>Nombre G&eacute;nerico</th>
+                                <th>Descripci&oacute;n</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-show="vm.cuentaContableList == 0">
+                                <td colspan="2">
+                                    No hay Fuente Seleccionada
+                                </td>
+                            </tr>
+                            <tr dir-paginate = "cc in vm.cuentaContableList | orderBy:'type' | filter:searchTextCuenta | itemsPerPage: 5"  pagination-id = "cuentasPagination">
+                                <td>{{cc.code}}</td>
+                                <td>{{cc.name}}</td>
+                                <td>{{cc.description}}</td>
+                                <td>
+                                    <button type = "button" title = "Seleccionar" class = "btn btn-primary btn-sm"
+                                            ng-click = "vm.selectCuentaContable(cc)" data-toggle = "modal" data-target = "#modalSelectCuenta">
+                                            <span class = "glyphicon glyphicon-check" aria-hidden = "true"></span>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <dir-pagination-controls pagination-id = "cuentasPagination"></dir-pagination-controls>
+                </div>
+            </div>
+        </div>
+        <div class="panel-footer">
+            <button type="button" title="Volver" class="btn btn-primary btn-sm"
+                    ng-click="vm.cancel()">
+                    <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
+            </button>
+        </div>
+    </div>
+    <!--MODAL DE SELECCIONDE CUENTA CONTABLE PARA REPORTE DE MAYORES ESPECÍFICOS-->
+    <div id="modalSelectCuenta" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type = "button" class = "close" data-dismiss = "modal">&times;</button>
+                    <h4 class = "modal-title">Reporte de Mayores Espec&iacute;ficos</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            <label>Seleccione el Periodo:</label>
+                            <select ng-options="period.code as period.type for period in vm.periodReport"
+                                    ng-model="vm.periodBookType" class="form-control">
+                            </select>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <br/>
+                            <button type="button" title = "Aceptar" class="btn btn-success btn-sm" ng-click="vm.getEspecificMajorReport()" 
+                                    data-dismiss="modal">
+                                    <span class = "glyphicon glyphicon-thumbs-up" aria-hidden = "true"></span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" title = "Salir" class="btn btn-primary btn-sm" data-dismiss="modal">
+                            <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
+                    </button>
+                </div>
             </div>
         </div>
     </div>

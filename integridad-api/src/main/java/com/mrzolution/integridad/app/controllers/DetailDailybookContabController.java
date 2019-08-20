@@ -1,9 +1,9 @@
 package com.mrzolution.integridad.app.controllers;
 
-import com.mrzolution.integridad.app.domain.DetailDailybookContab;
+import com.mrzolution.integridad.app.domain.report.EspecificMajorReport;
 import com.mrzolution.integridad.app.exceptions.BadRequestException;
 import com.mrzolution.integridad.app.services.DetailDailybookContabServices;
-import java.util.UUID;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,16 +25,16 @@ public class DetailDailybookContabController {
     @Autowired
     DetailDailybookContabServices service;
     
-    @RequestMapping(method = RequestMethod.GET, value="/{id}")
-    public ResponseEntity getCodeContaByDatesAndUserClientId(@PathVariable("code") String code, @PathVariable("dateOne") long dateOne, @PathVariable("dateTwo") long dateTwo, @PathVariable("id") String id) {
-        Iterable<DetailDailybookContab> response = null;
+    @RequestMapping(method = RequestMethod.GET, value="rep/mayoresp/{id}/{code}/{dateOne}/{dateTwo}")
+    public ResponseEntity getEspecificMajorReportByUserClientIdAndDates(@PathVariable("id") String id, @PathVariable("code") String code, @PathVariable("dateOne") long dateOne, @PathVariable("dateTwo") long dateTwo) {
+        List<EspecificMajorReport> response = null;
         try {
-            response = service.getCodeContaByDatesAndUserClientId(code, dateOne, dateTwo, id);
+            response = service.getEspecificMajorReportByUserClientIdAndDates(id, code, dateOne, dateTwo);
         } catch (BadRequestException e) {
-            log.error("DetailDailybookContabController getAllByUserClientId Exception thrown: {}", e.getMessage());
+            log.error("DetailDailybookContabController getEspecificMajorReportByUserClientIdAndDates Exception thrown: {}", e.getMessage());
 	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
-        log.info("DetailDailybookContabController getAllByUserClientId DONE");
+        log.info("DetailDailybookContabController getEspecificMajorReportByUserClientIdAndDates DONE");
         return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
     }
 }

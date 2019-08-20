@@ -6,6 +6,7 @@ import lombok.Data;
  *
  * @author mrzolutions-daniel
  */
+
 @Data
 public class PaymentReport {
     private long datePayment;

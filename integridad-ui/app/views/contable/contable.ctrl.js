@@ -37,6 +37,21 @@ angular.module('integridadUiApp')
             {code: '12', type: 'REPORTE MAYORES ESPECÍFICOS'}
         ];
 
+        vm.periodReport = [
+            {code: '01', type: '01/2019'}, {code: '02', type: '02/2019'}, {code: '03', type: '03/2019'},
+            {code: '04', type: '04/2019'}, {code: '05', type: '05/2019'}, {code: '06', type: '06/2019'},
+            {code: '07', type: '07/2019'}, {code: '08', type: '08/2019'}, {code: '09', type: '09/2019'},
+            {code: '10', type: '10/2019'}, {code: '11', type: '11/2019'}, {code: '12', type: '12/2019'}
+            //{code: '13', type: '01/2020'}, {code: '14', type: '02/2020'}, {code: '15', type: '03/2020'},
+            //{code: '16', type: '04/2020'}, {code: '17', type: '05/2020'}, {code: '18', type: '06/2020'},
+            //{code: '19', type: '07/2020'}, {code: '20', type: '08/2020'}, {code: '21', type: '09/2020'},
+            //{code: '22', type: '10/2020'}, {code: '23', type: '11/2020'}, {code: '24', type: '12/2020'}
+            //{code: '25', type: '01/2021'}, {code: '26', type: '02/2021'}, {code: '27', type: '03/2021'},
+            //{code: '28', type: '04/2021'}, {code: '29', type: '05/2021'}, {code: '30', type: '06/2021'},
+            //{code: '31', type: '07/2021'}, {code: '32', type: '08/2021'}, {code: '33', type: '09/2021'},
+            //{code: '24', type: '10/2021'}, {code: '35', type: '11/2021'}, {code: '36', type: '12/2021'}
+        ];
+
         function _activate() {
             vm.loading = true;
             vm.success = undefined;
@@ -47,6 +62,7 @@ angular.module('integridadUiApp')
             vm.cuenta = undefined;
             vm.cuentaContableList = undefined;
             vm.cuentaContableBankList = undefined;
+            vm.codeConta = undefined;
             
             //Contabilidad General Cg
             vm.dailybookCgNew = undefined;
@@ -228,6 +244,16 @@ angular.module('integridadUiApp')
                         vm.error = error.data;
                     });
                 break;
+                case '12':
+                    vm.selectedTypeBook = vm.dailybookType;
+                    cuentaContableService.getCuentaContableByUserClient(vm.usrCliId).then(function(response) {
+                        vm.cuentaContableList = response;
+                        vm.loading = false;
+                    }).catch(function(error) {
+                        vm.loading = false;
+                        vm.error = error.data;
+                    });
+                break;
             };
         };
 
@@ -293,6 +319,14 @@ angular.module('integridadUiApp')
                 descrip: cuenta.description,
                 name: cuenta.name
             };
+        };
+
+        vm.selectCuentaContable = function(cuenta) {
+            vm.codeConta = cuenta.code;
+        };
+
+        vm.getEspecificMajorReport = function() {
+
         };
 
         vm.addItemCg = function() {
