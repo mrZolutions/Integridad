@@ -63,6 +63,10 @@ angular.module('integridadUiApp')
             vm.cuentaContableList = undefined;
             vm.cuentaContableBankList = undefined;
             vm.codeConta = undefined;
+            vm.periodBookType = undefined;
+            vm.fchIni = undefined;
+            vm.fchFin = undefined;
+            vm.isProductReportList = undefined;
             
             //Contabilidad General Cg
             vm.dailybookCgNew = undefined;
@@ -321,13 +325,92 @@ angular.module('integridadUiApp')
             };
         };
 
+        //Reporte Mayor Específico
         vm.selectCuentaContable = function(cuenta) {
             vm.codeConta = cuenta.code;
         };
 
         vm.getEspecificMajorReport = function() {
+            vm.cuentaContableList = undefined;
+            switch (vm.periodBookType) {
+                case '01': //01-2019
+                    vm.fchIni = 1546300801000; vm.fchFin = 1548979199000;
+                break;
+                case '02': //02-2019
+                    vm.fchIni = 1548979201000; vm.fchFin = 1551398399000;
+                break;
+                case '03': //03-2019
+                    vm.fchIni = 1551398401000; vm.fchFin = 1554076799000;
+                break;
+                case '04': //04-2019
+                    vm.fchIni = 1554076801000; vm.fchFin = 1556668799000;
+                break;
+                case '05': //05-2019
+                    vm.fchIni = 1556668801000; vm.fchFin = 1559347199000;
+                break;
+                case '06': //06-2019
+                    vm.fchIni = 1559347201000; vm.fchFin = 1561939199000;
+                break;
+                case '07': //07-2019
+                    vm.fchIni = 1561939201000; vm.fchFin = 1564617599000;
+                break;
+                case '08': //08-2019
+                    vm.fchIni = 1564617601000; vm.fchFin = 1567295999000;
+                break;
+                case '09': //09-2019
+                    vm.fchIni = 1567296001000; vm.fchFin = 1569887999000;
+                break;
+                case '10': //10-2019
+                    vm.fchIni = 1569888001000; vm.fchFin = 1572566399000;
+                break;
+                case '11': //11-2019
+                    vm.fchIni = 1572566401000; vm.fchFin = 1575158399000;
+                break;
+                case '12': //12-2019
+                    vm.fchIni = 1575158401000; vm.fchFin = 1577836799000;
+                break;
+            };
+            vm.isProductReportList = '1';
+            vm.reportList = undefined;
+            vm.loading = true;
 
+            contableService.getEspecificMajorReportByUserClientIdAndDates(vm.usrCliId, vm.codeConta, vm.fchIni, vm.fchFin).then(function(response) {
+                vm.reportList = response;
+                vm.loading = false;
+            }).catch(function(error) {
+                vm.loading = false;
+                vm.error = error.data;
+            });
         };
+
+        vm.exportExcel = function() {
+            var dataReport = [];
+            switch (vm.isProductReportList) {
+                case '1':
+                    _.each(vm.reportList, function(major) {
+                        var data = {
+                            FECHA: major.fecha,
+                            TIPO: major.tipoDocumento,
+                            NRO_DIARIO: major.documento,
+                            DESCRIPCION: major.descripcion,
+                            CHQ_DEP_TRANF: major.cheque,
+                            DEBER: parseFloat(major.deber.toFixed(2)),
+                            HABER: parseFloat(major.haber.toFixed(2)),
+                            SALDOS: parseFloat(major.saldos.toFixed(2))
+                        };
+              
+                        dataReport.push(data);
+                    });
+                break;
+            };
+            var ws = XLSX.utils.json_to_sheet(dataReport);
+            /* add to workbook */
+            var wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "Mayor_Especifico");
+            /* write workbook and force a download */
+            XLSX.writeFile(wb, "Reporte_Mayor_Especifico.xlsx");
+        };
+        //Fin de Reporte
 
         vm.addItemCg = function() {
             if (vm.indexEdit !== undefined) {

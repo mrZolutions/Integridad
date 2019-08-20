@@ -2710,6 +2710,14 @@
             <b>Reporte de Mayores Espec&iacute;ficos</b>
         </div>
         <div class="panel-body">
+            <div class="row table-responsive" ng-if="vm.isProductReportList != undefined">
+                <div class="form-group col-md-10"></div>
+                <div class="form-group col-md-2">
+                    <button type="button" title="Exportar a Hoja Excel" class="btn btn-primary btn-sm" ng-click="vm.exportExcel()">
+                            Excel
+                    </button>
+                </div>
+            </div>
             <div class="row table-responsive" ng-show="vm.cuentaContableList !== undefined">
                 <div class="form-group col-md-12">
                     <input ng-model="searchTextCuenta" class="form-control" placeholder="Buscar">
@@ -2742,6 +2750,34 @@
                     </table>
                     <dir-pagination-controls pagination-id = "cuentasPagination"></dir-pagination-controls>
                 </div>
+            </div>
+            <div class="table-responsive" ng-if="vm.isProductReportList === '1'">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Tipo</th>
+                            <th>Nro. Diario</th>
+                            <th>Descripci&oacute;n</th>
+                            <th>Cheque/Dep/Transf</th>
+                            <th>Deber</th>
+                            <th>Haber</th>
+                            <th>Saldo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="data in vm.reportList | orderBy:'code'" >
+                            <td>{{data.fecha}}</td>
+                            <td>{{data.tipoDocumento}}</td>
+                            <td>{{data.documento}}</td>
+                            <td>{{data.descripcion}}</td>
+                            <td>{{data.cheque}}</td>
+                            <td>{{data.deber.toFixed(2)}}</td>
+                            <td>{{data.haber.toFixed(2)}}</td>
+                            <td>{{data.saldos.toFixed(2)}}</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
         <div class="panel-footer">

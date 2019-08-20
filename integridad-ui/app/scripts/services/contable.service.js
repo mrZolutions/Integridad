@@ -191,4 +191,11 @@ angular
                 return response.data;
             });
         };
+
+        //Reporte de Mayor Específico
+        this.getEspecificMajorReportByUserClientIdAndDates = function(id, codeConta, dateOne, dateTwo) {
+            return securityService.get('/dailybook/details/rep/mayoresp/' + id + '/' + codeConta + '/' + dateOne + '/' + dateTwo).then(function successCallback(response) {
+                return response.data;
+            });
+        };
 });

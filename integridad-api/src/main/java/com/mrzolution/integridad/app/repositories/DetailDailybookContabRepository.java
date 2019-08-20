@@ -31,6 +31,9 @@ public interface DetailDailybookContabRepository extends CrudRepository<DetailDa
     
     Iterable<DetailDailybookContab> findByDailybookFv(DailybookFv dailybookFv);
     
-    @Query("SELECT d FROM DetailDailybookContab d WHERE d.userClientId = (:id) AND d.codeConta = (:code) AND d.dateDetailDailybook >= (:dateOne) AND d.dateDetailDailybook <= (:dateTwo)")
+    @Query("SELECT d FROM DetailDailybookContab d WHERE d.userClientId = (:id) AND d.codeConta = (:code) AND d.dateDetailDailybook <= (:dateOne) ORDER BY d.dateDetailDailybook")
+    Iterable<DetailDailybookContab> findPreviousEspecificMajorByUserClientIdAndDate(@Param("id") String id, @Param("code") String code, @Param("dateOne") long dateOne);
+    
+    @Query("SELECT d FROM DetailDailybookContab d WHERE d.userClientId = (:id) AND d.codeConta = (:code) AND d.dateDetailDailybook >= (:dateOne) AND d.dateDetailDailybook <= (:dateTwo) ORDER BY d.dateDetailDailybook")
     Iterable<DetailDailybookContab> findEspecificMajorByUserClientIdAndDates(@Param("id") String id, @Param("code") String code, @Param("dateOne") long dateOne, @Param("dateTwo") long dateTwo);
 }
