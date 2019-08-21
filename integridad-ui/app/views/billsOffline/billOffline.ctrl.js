@@ -51,11 +51,12 @@ angular.module('integridadUiApp')
                                                 
         vm.seqChanged = false;
 
-        vm.valParra = '2455e4bf-68f3-4071-b5c9-833d62512b00';
-        vm.laQuinta = '758dea84-74f5-4209-b218-9b84c10621fc';
-        vm.mrZolutions = '4907601b-6e54-4675-80a8-ab6503e1dfeb';
-                                            
         function _activate() {
+            vm.valParra = '2455e4bf-68f3-4071-b5c9-833d62512b00';
+            vm.laQuinta = '758dea84-74f5-4209-b218-9b84c10621fc';
+            vm.mrZolutions = '4907601b-6e54-4675-80a8-ab6503e1dfeb';
+            vm.pineda = '6e663299-d61c-44de-b42c-a3d6595b46d2';
+        
             vm.error = undefined;
             vm.aux = undefined;
             vm.newBillOffline = undefined;
@@ -489,6 +490,30 @@ angular.module('integridadUiApp')
         };
 
         vm.printToCartParra = function(printBillOffline) {
+            var innerContents = document.getElementById(printBillOffline).innerHTML;
+            var texto = innerContents;
+            var popupWinindow = window.open('', 'printMatrixBillOffline', 'width=300,height=400');
+            popupWinindow.document.write('<html><body>');
+            popupWinindow.document.write(texto);
+            popupWinindow.document.write('</body></html>');
+            popupWinindow.print();
+            popupWinindow.close();
+        };
+
+        vm.printToCartAndCancelPineda = function(printBillOffline) {
+            var innerContents = document.getElementById(printBillOffline).innerHTML;
+            var texto = innerContents;
+            var popupWinindow = window.open('', 'printMatrixBillOffline', 'width=300,height=400');
+            popupWinindow.document.write('<html><head><title></title>');
+            popupWinindow.document.write('</head><body>');
+            popupWinindow.document.write(texto);
+            popupWinindow.document.write('</body></html>');
+            popupWinindow.print();
+            popupWinindow.close();
+            _activate();
+        };
+
+        vm.printToCartPineda = function(printBillOffline) {
             var innerContents = document.getElementById(printBillOffline).innerHTML;
             var texto = innerContents;
             var popupWinindow = window.open('', 'printMatrixBillOffline', 'width=300,height=400');
