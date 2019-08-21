@@ -17,7 +17,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
@@ -69,9 +68,10 @@ public class CellarServices {
         Cellar cellarToValidate = cellarRepository.findOne(cellar.getId());
         populateChildren(cellarToValidate);
         cellarToValidate.setStatusIngreso("INGRESADO");
-        cellarRepository.save(cellarToValidate);
+        Cellar saved = cellarRepository.save(cellarToValidate);
+        saveDetailsCellar(saved, cellarToValidate.getDetailsCellar());
         updateProductBySubsidiary(cellar, cellarToValidate.getDetailsCellar());
-        log.info("Cellarservices validateCellar DONE");
+        log.info("CellarServices validateCellar DONE");
         return cellarToValidate;
     }
     
