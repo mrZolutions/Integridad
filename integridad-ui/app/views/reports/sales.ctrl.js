@@ -18,6 +18,9 @@ angular.module('integridadUiApp')
         vm.reportList = undefined;
         vm.userClientId = $localStorage.user.subsidiary.userClient.id;
         vm.valParra = '2455e4bf-68f3-4071-b5c9-833d62512b00';
+        vm.laQuinta = '758dea84-74f5-4209-b218-9b84c10621fc';
+        vm.mrZolutions = '4907601b-6e54-4675-80a8-ab6503e1dfeb';
+        vm.pineda = '6e663299-d61c-44de-b42c-a3d6595b46d2';
         vm.catedral = '1e2049c3-a3bc-4231-a0de-dded8020dc1b';
 
         vm.getReportProducts = function() {
