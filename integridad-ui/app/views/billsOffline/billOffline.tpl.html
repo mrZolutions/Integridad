@@ -475,7 +475,6 @@
         <br/>
         <br/>
         <br/>
-        <br/>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{vm.clientSelected.name}} <br/>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{(vm.clientSelected.address).substr(0,30)}} <br/>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{vm.clientSelected.identification}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -485,7 +484,7 @@
         <br/>
         <br/>
         <br/>
-        <div style="height: 300px">
+        <div style="height: 293px">
             <table width="100%">
                 <tbody>
                     <tr ng-repeat="detailOffline in vm.billOffline.detailsOffline">
@@ -545,25 +544,26 @@
         <b>{{vm.clientSelected.name}}</b><br/>
         <b>IDENTIFICACION: {{vm.clientSelected.identification}}</b><br/>
         <b>FECHA: {{vm.getDateToPrint() | date :  "dd/MM/yyyy"}}</b><br/>
-      
-        <table width="100%">
-            <thead>
-                <tr>
-                    <th align="left">DESCRIPCION;</th>
-                    <th align="left">&nbsp;CANT&nbsp;</th>
-                    <th align="left">&nbsp;P.UNIT</th>
-                    <th align="right">&nbsp;TOTAL</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr ng-repeat="detailOffline in vm.billOffline.detailsOffline">
-                    <td align="left">{{(detailOffline.product.name).substr(0,22)}}</td>
-                    <td align="left">&nbsp;{{detailOffline.quantity}}&nbsp;</td>
-                    <td align="left"> &#36;{{detailOffline.costEach}}&nbsp;</td>
-                    <td align="right">&#36;{{detailOffline.total}}</td>
-                </tr>
-            </tbody>
-        </table>
+        <div style="height: 300px">
+            <table width="100%">
+                <thead>
+                    <tr>
+                        <th align="left">DESCRIPCION;</th>
+                        <th align="left">&nbsp;CANT&nbsp;</th>
+                        <th align="left">&nbsp;P.UNIT</th>
+                        <th align="right">&nbsp;TOTAL</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="detailOffline in vm.billOffline.detailsOffline">
+                        <td align="left">{{(detailOffline.product.name).substr(0,22)}}</td>
+                        <td align="left">&nbsp;{{detailOffline.quantity}}&nbsp;</td>
+                        <td align="left"> &#36;{{detailOffline.costEach}}&nbsp;</td>
+                        <td align="right">&#36;{{detailOffline.total}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
         <br/>
         <br/>
         <br/>
