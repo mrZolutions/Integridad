@@ -59,7 +59,7 @@ public class ComprobanteCobroServices {
         return comprobantes;
     }
     
-    //Creación de los COMPROBANTES DE INGRESO
+    //Creación de los COMPROBANTES DE COBRO
     public ComprobanteCobro createComprobanteCobro(ComprobanteCobro comprobanteCobro) throws BadRequestException {
         List<DetailComprobanteCobro> detailComprobanteCobro = comprobanteCobro.getDetailComprobanteCobro();
         

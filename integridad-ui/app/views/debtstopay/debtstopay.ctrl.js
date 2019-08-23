@@ -335,6 +335,29 @@ angular.module('integridadUiApp')
                 detailDailybookContab: []
             };
         };
+        //Fin de Sección
+
+        //Sección de Comprobante de Pago para el Asiento Automático
+        function _getComprobantePagoSeqNumber() {
+            vm.numbAddedOne = parseInt(vm.userCashier.compPagoNumberSeq) + 1;
+            vm.comprobantePagoSeq = vm.numbAddedOne;
+            vm.comprobantePagoStringSeq = utilSeqService._pad_with_zeroes(vm.numbAddedOne, 6);
+        };
+
+        function _initializeComprobantePago() {
+            vm.comprobantePago = {
+                provider: vm.providerSelected,
+                userIntegridad: $localStorage.user,
+                subsidiary: $localStorage.user.subsidiary,
+                providerName: vm.providerSelected.name,
+                providerRuc: vm.providerSelected.ruc,
+                subTotalDoce: 0,
+                iva: 0,
+                total: 0,
+                detailComprobantePago: []
+            };
+        };
+        //Fin de Sección
 
         vm.getAllDebtsToPay = function() {
             vm.loading = true;
@@ -360,12 +383,52 @@ angular.module('integridadUiApp')
             _initializeDebts();
             _getDailyCxPSeqNumber();
             _initializeDailybookCxP();
+            _initializeComprobantePago();
             var today = new Date();
             $('#pickerDateDebtsToPay').data("DateTimePicker").date(today);
             $('#pickerDateDebtsToPay').on("dp.change", function(data) {
                 vm.ejercicio = ('0' + ($('#pickerDateDebtsToPay').data("DateTimePicker").date().toDate().getMonth() + 1)).slice(-2) + '/' + $('#pickerDateDebtsToPay').data("DateTimePicker").date().toDate().getFullYear();
             });
             vm.loading = false;
+        };
+
+        vm.comprobantePagoByProvider = function(provider) {
+            vm.loading = true;
+            vm.success = undefined;
+            vm.providerSelected = provider;
+            vm.providerId = provider.id;
+            vm.providerRuc = provider.ruc;
+            vm.providerName = provider.name;
+            comprobanteService.getComprobantePagoByProviderId(vm.providerId).then(function(response) {
+                vm.comprobantePagoList = response;
+                vm.loading = false;
+            }).catch(function(error) {
+                vm.loading = false;
+                vm.error = error.data;
+            });
+        };
+
+        vm.comprobantePagoSelected = function(comprobantePago) {
+            vm.loading = true;
+            vm.comprobantePagoList = undefined;
+            vm.activecmpP = comprobantePago.active;
+            comprobanteService.getComprobantePagoById(comprobantePago.id).then(function(response) {
+                vm.comprobantePagoCreated = response;
+                vm.loading = false;
+            }).catch(function(error) {
+                vm.loading = false;
+                vm.error = error.data;
+            });
+        };
+
+        vm.getTotalComprobantePagoCreated = function() {
+            var totalComprobantePago = 0;
+            if (vm.comprobantePagoCreated) {
+                _.each(vm.comprobantePagoCreated.detailComprobantePago, function(detail) {
+                    totalComprobantePago = (parseFloat(totalComprobantePago) + parseFloat(detail.totalAbono)).toFixed(2);
+                });
+            };
+            return totalComprobantePago;
         };
 
         vm.validateAdm = function() {
