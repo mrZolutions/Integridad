@@ -103,6 +103,7 @@ public class DailybookFvServices {
         cashierRepository.save(cashier);
         
         detailDailybookContab.forEach(detail -> {
+            detail.setActive(true);
             detail.setDailybookFv(saved);
             detailDailybookContabRepository.save(detail);
             detail.setDailybookFv(null);

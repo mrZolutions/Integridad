@@ -72,6 +72,7 @@ public class DailybookCgServices {
         cashierRepository.save(cashier);
         
         detailDailybookContab.forEach(detail -> {
+            detail.setActive(true);
             detail.setDailybookCg(saved);
             detailDailybookContabRepository.save(detail);
             detail.setDailybookCg(null);

@@ -105,6 +105,7 @@ public class DailybookCeServices {
         cashierRepository.save(cashier);
         
         detailDailybookContab.forEach(detail -> {
+            detail.setActive(true);
             detail.setDailybookCe(saved);
             detailDailybookContabRepository.save(detail);
             detail.setDailybookCe(null);

@@ -33,6 +33,7 @@ public class DetailDailybookContab implements Child {
     private long dateDetailDailybook;
     private String dailybookNumber;
     private String userClientId;
+    private boolean active;
     
     @ManyToOne
     @JoinColumn(name = "dailybookCg_id")

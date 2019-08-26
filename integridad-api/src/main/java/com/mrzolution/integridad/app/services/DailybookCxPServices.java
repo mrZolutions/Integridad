@@ -94,6 +94,7 @@ public class DailybookCxPServices {
         cashierRepository.save(cashier);
         
         detailDailybookContab.forEach(detail -> {
+            detail.setActive(true);
             detail.setDailybookCxP(saved);
             detailDailybookContabRepository.save(detail);
             detail.setDailybookCxP(null);
