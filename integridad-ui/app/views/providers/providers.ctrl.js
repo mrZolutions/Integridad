@@ -476,6 +476,7 @@ angular.module('integridadUiApp')
                     totalRetorno = (parseFloat(totalRetorno) + parseFloat(detail.valor_retenido)).toFixed(2);
                 });
             };
+            vm.retention.total = totalRetorno;
             return totalRetorno;
         };
 
@@ -564,10 +565,6 @@ angular.module('integridadUiApp')
                             vm.retention.documentDate = $('#pickerBillDateDocumentRetention').data("DateTimePicker").date().toDate().getTime();
                             vm.retention.userIntegridad = $localStorage.user;
                             vm.retention.subsidiary = $localStorage.user.subsidiary;
-                            _.each(vm.retention.items, function(detail) {
-                                totalRetent = parseFloat(totalRetent + detail.valor_retenido);
-                            });
-                            vm.retention.total = totalRetent;
                             vm.retention.detailRetentions = [];
                             _.each(vm.retention.items, function(item) {
                                 var detail = {
