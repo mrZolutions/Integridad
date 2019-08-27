@@ -104,6 +104,19 @@ public class DailybookCeController {
         return new ResponseEntity<DailybookCe>(response, HttpStatus.CREATED);
     }
     
+    @RequestMapping(method = RequestMethod.POST, value="/asin")
+    public ResponseEntity createDailybookAsinCe(@RequestBody DailybookCe dailybookCe) {
+        DailybookCe response = null;
+	try {
+            response = service.createDailybookAsinCe(dailybookCe);
+	} catch (BadRequestException e) {
+            log.error("DailybookCeController createDailybookAsinCe Exception thrown: {}", e.getMessage());
+	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+	}
+        log.info("DailybookCeController createDailybookAsinCe DONE");
+        return new ResponseEntity<DailybookCe>(response, HttpStatus.CREATED);
+    }
+    
     @RequestMapping(method = RequestMethod.PUT)
     public ResponseEntity deactivateDailybookCe(@RequestBody DailybookCe dailybookCe) {
         try {

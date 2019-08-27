@@ -91,6 +91,19 @@ public class DailybookCxPController {
         return new ResponseEntity<DailybookCxP>(response, HttpStatus.CREATED);
     }
     
+    @RequestMapping(method = RequestMethod.POST, value="/asin")
+    public ResponseEntity createDailybookAsinCxP(@RequestBody DailybookCxP dailybookCxP) {
+        DailybookCxP response = null;
+	try {
+            response = service.createDailybookAsinCxP(dailybookCxP);
+	} catch (BadRequestException e) {
+            log.error("DailybookCxPController createDailybookAsinCxP Exception thrown: {}", e.getMessage());
+	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+	}
+        log.info("DailybookCxPController createDailybookAsinCxP DONE");
+        return new ResponseEntity<DailybookCxP>(response, HttpStatus.CREATED);
+    }
+    
     @RequestMapping(method = RequestMethod.PUT)
     public ResponseEntity deactivateDailybookCxP(@RequestBody DailybookCxP dailybookCxP) {
         try {

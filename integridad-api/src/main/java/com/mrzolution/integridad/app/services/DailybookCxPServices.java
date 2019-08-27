@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import com.mrzolution.integridad.app.repositories.DailybookCxPRepository;
 import com.mrzolution.integridad.app.repositories.DetailDailybookContabRepository;
+import org.springframework.scheduling.annotation.Async;
 
 /**
  *
@@ -102,6 +103,37 @@ public class DailybookCxPServices {
         
         saved.setDetailDailybookContab(detailDailybookContab);
         log.info("DailybookCxPServices createDailybookCxP: {}, {}", saved.getId(), saved.getDailycxpStringSeq());
+        return saved;
+    }
+    
+    //Creación de los Diarios CxP
+    @Async("asyncExecutor")
+    public DailybookCxP createDailybookAsinCxP(DailybookCxP dailybookCxP) throws BadRequestException {
+        List<DetailDailybookContab> detailDailybookContab = dailybookCxP.getDetailDailybookContab();
+        
+        if (detailDailybookContab == null) {
+            throw new BadRequestException("Debe tener una cuenta por lo menos");
+        }
+        
+        dailybookCxP.setActive(true);
+        dailybookCxP.setDetailDailybookContab(null);
+        dailybookCxP.setFatherListToNull();
+        dailybookCxP.setListsNull();
+        DailybookCxP saved = dailybookCxPRepository.save(dailybookCxP);
+        
+        Cashier cashier = cashierRepository.findOne(dailybookCxP.getUserIntegridad().getCashier().getId());
+        cashier.setDailyCppNumberSeq(cashier.getDailyCppNumberSeq() + 1);
+        cashierRepository.save(cashier);
+        
+        detailDailybookContab.forEach(detail -> {
+            detail.setActive(true);
+            detail.setDailybookCxP(saved);
+            detailDailybookContabRepository.save(detail);
+            detail.setDailybookCxP(null);
+        });
+        
+        saved.setDetailDailybookContab(detailDailybookContab);
+        log.info("DailybookCxPServices createDailybookAsinCxP: {}, {}", saved.getId(), saved.getDailycxpStringSeq());
         return saved;
     }
     

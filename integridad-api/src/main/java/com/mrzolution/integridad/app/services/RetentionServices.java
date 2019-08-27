@@ -50,8 +50,8 @@ public class RetentionServices {
         String data = mapper.writeValueAsString(requirement);
         log.info("RetentionServices getDatil MAPPER creado");
 	
-        String response = httpCallerService.post(Constants.DATIL_RETENTION_LINK, data, userClient);
-        //String response = "OK";
+        //String response = httpCallerService.post(Constants.DATIL_RETENTION_LINK, data, userClient);
+        String response = "OK";
         log.info("RetentionServices getDatil httpcall DONE");
         return response;
     }
@@ -170,13 +170,19 @@ public class RetentionServices {
                 for (DetailRetention detail : retention.getDetailRetentions()) {
                     sum = Double.sum(sum, detail.getTotal());
                     if ("RETENCION EN LA FUENTE".equals(detail.getTaxType())) {
-                        baseF = Double.sum(baseF, detail.getBaseImponible());
-                        porcenF = Double.sum(porcenF, detail.getPercentage());
-                        subTotalF = baseF * (porcenF / 100.00);
-                        if (detail.getCode() != null) {
-                            codRetenFuente = detail.getCode();
+                        if (detail.getPercentage() != 0) {
+                            baseF = detail.getBaseImponible();
+                            porcenF = detail.getPercentage();
+                            subTotalF = baseF * (porcenF / 100.00);
+                            if (detail.getCode() != null) {
+                                codRetenFuente = detail.getCode();
+                            } else {
+                                codRetenFuente = null;
+                            }
                         } else {
-                            codRetenFuente = null;
+                            if (codRetenFuente == null) {
+                                codRetenFuente = detail.getCode();
+                            }
                         }
                     }
                     if ("RETENCION EN EL IVA".equals(detail.getTaxType())) {

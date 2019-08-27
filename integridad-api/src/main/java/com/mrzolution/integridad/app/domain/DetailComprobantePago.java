@@ -21,13 +21,13 @@ public class DetailComprobantePago implements Child {
     @GeneratedValue
     private UUID id;
     
-    private String numCheque;
-    private String cuenta;
-    private String banco;
-    private String tipoAbono;
-    private double totalAbono;
-    private String billNumber;
-    private long dateBill;
+    private String codeConta;
+    private String descrip;
+    private String name;
+    private String tipo;
+    private double baseImponible;
+    private String deber;
+    private String haber;
     
     @ManyToOne
     @JoinColumn(name = "comprobantePago_id")

@@ -30,6 +30,7 @@ public class Retention {
     private String debtsToPayId;
     private String debtsSeq;
     private double total;
+    private String typeDocument;
 
     @ManyToOne
     @JoinColumn(name = "provider_id")

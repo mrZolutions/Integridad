@@ -386,7 +386,8 @@ angular.module('integridadUiApp')
                 prodCostEach: item.costEach,
                 prodName: item.product.name,
                 prodQuantity: item.quantity,
-                prodTotal: item.total
+                prodTotal: item.total,
+                userClientId: vm.usrCliId
             };
             vm.cellar.detailsKardex.push(kardex);
         });
@@ -620,7 +621,8 @@ angular.module('integridadUiApp')
                 prodCostEach: item.costEach,
                 prodName: item.product.name,
                 prodQuantity: item.quantity,
-                prodTotal: item.total
+                prodTotal: item.total,
+                userClientId: vm.usrCliId
             };
             vm.consumption.detailsKardex.push(kardex);
         });

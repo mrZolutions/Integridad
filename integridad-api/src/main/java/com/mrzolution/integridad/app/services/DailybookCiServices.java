@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 /**
@@ -113,6 +114,37 @@ public class DailybookCiServices {
         
         saved.setDetailDailybookContab(detailDailybookContab);
         log.info("DailybookCiServices createDailybookCi: {}, {}", saved.getId(), saved.getDailyCiStringSeq());
+        return saved;
+    }
+    
+    //Creación de los COMPROBANTES DE INGRESO ASINCRONOS
+    @Async("asyncExecutor")
+    public DailybookCi createDailybookAsinCi(DailybookCi dailybookCi) throws BadRequestException {
+        List<DetailDailybookContab> detailDailybookContab = dailybookCi.getDetailDailybookContab();
+        
+        if (detailDailybookContab == null) {
+            throw new BadRequestException("Debe tener una cuenta por lo menos");
+        }
+        
+        dailybookCi.setActive(true);
+        dailybookCi.setDetailDailybookContab(null);
+        dailybookCi.setFatherListToNull();
+        dailybookCi.setListsNull();
+        DailybookCi saved = dailybookCiRepository.save(dailybookCi);
+        
+        Cashier cashier = cashierRepository.findOne(dailybookCi.getUserIntegridad().getCashier().getId());
+        cashier.setDailyCiNumberSeq(cashier.getDailyCiNumberSeq() + 1);
+        cashierRepository.save(cashier);
+        
+        detailDailybookContab.forEach(detail -> {
+            detail.setActive(true);
+            detail.setDailybookCi(saved);
+            detailDailybookContabRepository.save(detail);
+            detail.setDailybookCi(null);
+        });
+        
+        saved.setDetailDailybookContab(detailDailybookContab);
+        log.info("DailybookCiServices createDailybookAsinCi: {}, {}", saved.getId(), saved.getDailyCiStringSeq());
         return saved;
     }
     

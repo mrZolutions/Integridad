@@ -33,6 +33,12 @@ angular
             });
         };
 
+        this.createDailybookAsinCe = function(dailybookCe) {
+            return securityService.post('/dailyce/asin', dailybookCe).then(function successCallback(response) {
+                return response.data;
+            });
+        };
+
         this.getDailybookCeById = function(id) {
             return securityService.get('/dailyce/' + id).then(function successCallback(response) {
                 return response.data;
@@ -76,6 +82,12 @@ angular
             });
         };
 
+        this.createDailybookAsinCi = function(dailybookCi) {
+            return securityService.post('/dailyci/asin', dailybookCi).then(function successCallback(response) {
+                return response.data;
+            });
+        };
+
         this.getDailybookCiById = function(id) {
             return securityService.get('/dailyci/' + id).then(function successCallback(response) {
                 return response.data;
@@ -115,6 +127,12 @@ angular
         //Diario Cuentas por Pagar
         this.createDailybookCxP = function(dailybookCxP) {
             return securityService.post('/dailycxp', dailybookCxP).then(function successCallback(response) {
+                return response.data;
+            });
+        };
+
+        this.createDailybookAsinCxP = function(dailybookCxP) {
+            return securityService.post('/dailycxp/asin', dailybookCxP).then(function successCallback(response) {
                 return response.data;
             });
         };

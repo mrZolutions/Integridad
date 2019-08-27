@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 /**
@@ -60,6 +61,7 @@ public class ComprobanteCobroServices {
     }
     
     //Creación de los COMPROBANTES DE COBRO
+    @Async("asyncExecutor")
     public ComprobanteCobro createComprobanteCobro(ComprobanteCobro comprobanteCobro) throws BadRequestException {
         List<DetailComprobanteCobro> detailComprobanteCobro = comprobanteCobro.getDetailComprobanteCobro();
         

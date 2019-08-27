@@ -34,7 +34,7 @@
     </div>
 
     <!--SECCIÓN DE CARGA DE PROVEEDORES POR USERCLIENT-->
-    <div class="table-responsive" ng-show="vm.providerSelected === undefined && vm.debtsToPayList === undefined && vm.providerDebtsList === undefined && vm.debtsProviderSelected === undefined && vm.debtsToPaySelectedToUpdate === undefined && vm.allDebtsToPayList === undefined && vm.multipleSelected === undefined && vm.paymentDebtsList === undefined">
+    <div class="table-responsive" ng-show="vm.providerSelected === undefined && vm.debtsToPayList === undefined && vm.providerDebtsList === undefined && vm.debtsProviderSelected === undefined && vm.debtsToPaySelectedToUpdate === undefined && vm.allDebtsToPayList === undefined && vm.multipleSelected === undefined && vm.paymentDebtsList === undefined && vm.comprobantePagoList === undefined">
         <div class="row">
             <div class="form-group col-md-12">
                 <input ng-model="searchText" class="form-control" placeholder="Buscar Proveedores">
@@ -78,6 +78,9 @@
                         </button>
                         <button type = "button" title = "Consultar Pagos por Proveedor" class = "btn btn-primary btn-sm" ng-click = "vm.paymentDebtsByProvider(provider)">
                                 <span class = "glyphicon glyphicon-zoom-in" aria-hidden = "true"></span>
+                        </button>
+                        <button type = "button" title = "Consultar Comprobante de Pago" class = "btn btn-success btn-sm" ng-click = "vm.comprobantePagoByProvider(provider)">
+                                <span class = "glyphicon glyphicon-search" aria-hidden = "true"></span>
                         </button>
                     </td>
                 </tr>
@@ -2005,6 +2008,201 @@
                         ng-click = "vm.debtsProviderSelected = undefined">
                         <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
                 </button>
+            </div>
+        </div>
+    </div>
+
+    <!--CONSULTA DE COMPROBANTES DE PAGOS REALIZADOS POR PROVEEDOR-->
+    <div class="table-responsive" ng-show="vm.comprobantePagoList !== undefined">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <b>Listado de Comprobantes de Pagos Pertenecientes a: {{vm.providerName}}</b>
+            </div>
+            <div class="panel-body">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Nro. Comprobante</th>
+                            <th>Nro. Factura</th>
+                            <th>Fecha</th>
+                            <th>Total</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-show="vm.comprobantePagoList == 0">
+                            <td colspan="4">
+                                El Proveedor <b>No Presenta</b> Comprobantes de Pagos realizados...
+                            </td>
+                        </tr>
+                        <tr ng-repeat="comprobantePago in vm.comprobanteCobroList">
+                            <td>{{comprobantePago.comprobanteStringSeq}}</td>
+                            <td>{{comprobantePago.billNumber}}</td>
+                            <td>{{comprobantePago.dateComprobante | date : "dd/MM/yyyy"}}</td>
+                            <td>{{comprobantePago.total.toFixed(2)}}</td>
+                            <td>
+                                <button type="button" title = "Ver Comprobante de Pago" class="btn btn-primary btn-sm" 
+                                        ng-click="vm.comprobantePagoSelected(comprobanteCobro)">
+                                        <span class = "glyphicon glyphicon-eye-open" aria-hidden = "true"></span>
+                                </button>
+                                <button type="button" title = "Anular Comprobante de Pago" class="btn btn-warning btn-sm" 
+                                        ng-click="vm.deactivateComprobantePago = comprobantePago" data-toggle="modal" data-target="#modalAnularComprobantePago">
+                                        <span class = "glyphicon glyphicon-warning-sign" aria-hidden = "true"></span>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="panel-footer">
+                <button type="button" title = "Salir" class="btn btn-primary btn-sm" ng-click="vm.cancel()">
+                        <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="table-responsive" ng-show="vm.comprobantePagoCreated" id="printArea" print-section>
+        <div class="panel panel-primary">
+            <div class="panel-body">
+                <div class="row">
+                    <div class="form-group col-md-12 ">
+                        <table width="100%">
+                            <tr>
+                                <td width="40%" align="center"><img src="images/{{vm.userData.subsidiary.userClient.logo}}"><br></td>
+                                <td width="60%" rowspan="2">
+                                    <div style="padding:0px 15px;">
+                                        <div class="form-group col-md-12">
+                                            <h3>
+                                                <label>COMPROBANTE DE PAGO</label>
+                                                <label>Nro: {{vm.comprobantePagoCreated.comprobanteStringSeq}}</label>
+                                            </h3>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-12 ">
+                        <table width="100%">
+                            <tr>
+                                <td width="60%">
+                                    <div>
+                                        <label>BENEFICIARIO: </label>
+                                        {{vm.comprobantePagoCreated.providerName}}
+                                    </div>
+                                </td>
+                                <td width="40%">
+                                    <div>
+                                        <label>LA CANTIDAD DE: </label>
+                                        &#36;{{vm.comprobantePagoCreated.total}}
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                        <table width="100%">
+                            <tr>
+                                <td width="40%">
+                                    <div>
+                                        <label>CONCEPTO: </label>
+                                        {{vm.comprobantePagoCreated.comprobanteConcep}}
+                                    </div>
+                                </td>
+                                <td width="30%">
+                                    <div>
+                                        <label>BANCO: </label>
+                                        {{vm.comprobantePagoCreated.nameBank}}
+                                    </div>
+                                </td>
+                                
+                                <td width="30%">
+                                    <div>
+                                        <label>CHQ/TRF/DEP: </label>
+                                        {{vm.comprobantePagoCreated.numCheque}}
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                        <table width="100%">
+                            <tr>
+                                <td width="30%">
+                                    <div>
+                                        <label>FECHA: </label>
+                                        {{vm.comprobantePagoCreated.dateComprobante | date : "dd-MM-yyyy"}}
+                                    </div>
+                                </td>
+                                <td width="30%">
+                                    <div>
+                                        <label>CTA. CTE: </label>
+                                        {{vm.comprobantePagoCreated.codeConta}}
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-12">
+                        <table width="100%" border="1">
+                            <tr>
+                                <td><b>CUENTA</b></td>
+                                <td><b>DESCRIPCIÓN</b></td>
+                                <td><b>DÉBITO</b></td>
+                                <td><b>CRÉDITO</b></td>
+                            </tr>
+                            <tr ng-repeat="detail in vm.comprobantePagoCreated.detailComprobantePago">
+                                <td>{{detail.codeConta}}</td>
+                                <td>{{detail.name}}</td>
+                                <td>{{detail.deber}}</td>
+                                <td>{{detail.haber}}</td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td><b>TOTALES:</b></td>
+                                <td>{{vm.getTotalDebitoCPCreated()}}</td>
+                                <td>{{vm.getTotalCreditoCPCreated()}}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <table width="100%">
+                            <tr>
+                                <td width="33%" align="center">
+                                    <br/><br/>
+                                    _____________<br/>
+                                    ELABORADO
+                                </td>
+                                <td width="33%" align="center">
+                                    <br/><br/>
+                                    ___________<br/>
+                                    REVISADO
+                                </td>
+                                <td width="33%" align="center">
+                                    <br/><br/>
+                                    ________________<br/>
+                                    RECIBÍ CONFORME
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="row" print-remove>
+                    <div class="form-group col-md-12">
+                        <button print-btn type="button" title = "Imprimir Comprobante de Pago" class="btn btn-primary btn-sm"
+                                ng-show="vm.activecmpP === true" ng-click="vm.cancel()">
+                                <span class = "glyphicon glyphicon-print" aria-hidden = "true"></span>
+                        </button>
+                        <button type="button" title = "Salir" class="btn btn-primary btn-sm"
+                                ng-click="vm.cancel()">
+                                <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

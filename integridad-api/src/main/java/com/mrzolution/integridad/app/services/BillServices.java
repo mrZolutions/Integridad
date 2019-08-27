@@ -67,8 +67,8 @@ public class BillServices {
         String data = mapper.writeValueAsString(requirement);
         log.info("BillServices getDatil MAPPER creado");
                         
-        String response = httpCallerService.post(Constants.DATIL_LINK, data, userClient);
-        //String response = "OK";
+        //String response = httpCallerService.post(Constants.DATIL_LINK, data, userClient);
+        String response = "OK";
         log.info("BillServices getDatil httpcall DONE");
         return response;
     }
@@ -195,6 +195,7 @@ public class BillServices {
     //Almacena los Detalles en Kardex
     public void saveKardex(Bill saved, List<Kardex> detailsKardex) {
         detailsKardex.forEach(detailk -> {
+            detailk.setActive(true);
             detailk.setBill(saved);
             kardexRepository.save(detailk);
             detailk.setBill(null);

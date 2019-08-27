@@ -150,6 +150,7 @@ public class ConsumptionServices {
     
     public void saveKardex(Consumption saved, List<Kardex> detailsKardex) {
         detailsKardex.forEach(detail -> {
+            detail.setActive(true);
             detail.setConsumption(saved);
             kardexRepository.save(detail);
             detail.setConsumption(null);

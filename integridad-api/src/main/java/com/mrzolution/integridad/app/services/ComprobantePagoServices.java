@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 /**
@@ -60,11 +61,12 @@ public class ComprobantePagoServices {
     }
     
     //Creación de los COMPROBANTES DE PAGO
+    @Async("asyncExecutor")
     public ComprobantePago createComprobantePago(ComprobantePago comprobantePago) throws BadRequestException {
         List<DetailComprobantePago> detailComprobantePago = comprobantePago.getDetailComprobantePago();
         
         if (detailComprobantePago == null) {
-            throw new BadRequestException("Debe tener una Factura por lo menos");
+            throw new BadRequestException("Debe tener una Detalle por lo menos");
         }
         
         comprobantePago.setActive(true);

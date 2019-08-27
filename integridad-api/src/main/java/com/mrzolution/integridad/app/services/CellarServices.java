@@ -149,6 +149,7 @@ public class CellarServices {
     
     public void saveKardex(Cellar saved, List<Kardex> detailsKardex) {
         detailsKardex.forEach(detail -> {
+            detail.setActive(true);
             detail.setCellar(saved);
             kardexRepository.save(detail);
             detail.setCellar(null);

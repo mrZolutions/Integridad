@@ -226,29 +226,6 @@ angular.module('integridadUiApp')
                 detailComprobanteCobro: []
             };
         };
-        //Fin de Sección
-
-        vm.clientConsult = function(client) {
-            vm.loading = true;
-            vm.success = undefined;
-            vm.clientSelected = client;
-            vm.clientId = client.id;
-            vm.clientIdentification = client.identification;
-            vm.clientName = client.name;
-            vm.clientCodConta = client.codConta;
-            vm.clientAddress = client.address;
-            vm.clientPhone = client.cel_phone;
-            vm.clientEmail = client.email;
-            _initializeDailybookCi();
-            _initializeComprobanteCobro();
-            billService.getAllBillsByClientIdWithSaldo(vm.clientId).then(function(response) {
-                vm.billList = response;
-                vm.loading = false;
-            }).catch(function(error) {
-                vm.loading = false;
-                vm.error = error.data;
-            });
-        };
 
         vm.comprobanteCobroByClient = function(client) {
             vm.loading = true;
@@ -287,6 +264,29 @@ angular.module('integridadUiApp')
                 });
             };
             return totalComprobanteCobro;
+        };
+        //Fin de Sección
+
+        vm.clientConsult = function(client) {
+            vm.loading = true;
+            vm.success = undefined;
+            vm.clientSelected = client;
+            vm.clientId = client.id;
+            vm.clientIdentification = client.identification;
+            vm.clientName = client.name;
+            vm.clientCodConta = client.codConta;
+            vm.clientAddress = client.address;
+            vm.clientPhone = client.cel_phone;
+            vm.clientEmail = client.email;
+            _initializeDailybookCi();
+            _initializeComprobanteCobro();
+            billService.getAllBillsByClientIdWithSaldo(vm.clientId).then(function(response) {
+                vm.billList = response;
+                vm.loading = false;
+            }).catch(function(error) {
+                vm.loading = false;
+                vm.error = error.data;
+            });
         };
 
         vm.paymentsByClient = function(client) {
