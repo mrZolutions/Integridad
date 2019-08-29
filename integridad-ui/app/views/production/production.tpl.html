@@ -56,7 +56,7 @@
                     <td>{{warehouse.codeWarehouse}}</td>
                     <td>{{warehouse.nameNumber}}</td>
                     <td>
-                        <button type="button" title = "Seleccionar Bodega" class="btn btn-primary btn-sm"
+                        <button type="button" title = "Ingresos" class="btn btn-primary btn-sm"
                                 ng-click="vm.selectWarehouse(warehouse)">
                                 <span class = "glyphicon glyphicon-check" aria-hidden = "true"></span>
                         </button>
@@ -64,7 +64,7 @@
                                 ng-disabled="vm.userCode === 'EMP'" ng-click="vm.findCellarPending(warehouse)">
                                 <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
                         </button>
-                        <button type="button" title="Consumos Internos" class="btn btn-primary btn-sm" ng-click="vm.consumptionFromWarehouse(warehouse)">
+                        <button type="button" title="Egresos" class="btn btn-primary btn-sm" ng-click="vm.consumptionFromWarehouse(warehouse)">
                                 <span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
                         </button>
                     </td>
@@ -148,6 +148,7 @@
     </div>
     <!--FIN DE CARGA DE PROVEEDORES POR WAREHOUSE PARA INGRESO A BODEGA-->
 
+    <!--BUSQUEDA DE DETALLES POR FACTURAS-->
     <div class="table-responsive" ng-show="vm.detailCellarList !== undefined">
         <div class="row">
             <div class="form-group col-md-12">
@@ -550,7 +551,6 @@
                                     <tr>
                                         <th> C&oacute;digo </th>
                                         <th> Nombre </th>
-                                        <th> Precio Unitario $</th>
                                         <th></th>
                                     </tr>
                                 </thead>
@@ -563,7 +563,6 @@
                                     <tr ng-repeat="productSelect in vm.productList | orderBy:'name' | filter:searchTextProd">
                                         <td>{{productSelect.codeIntegridad}}</td>
                                         <td>{{productSelect.name}}</td>
-                                        <td>{{vm.getCost(productSelect.cashPercentage, productSelect.averageCost)}}</td>
                                         <td>
                                             <button type="button" title="Seleccionar" class="btn btn-primary btn-sm" ng-click="vm.selectProductToAdd(productSelect)">
                                                     <span class = "glyphicon glyphicon-check" aria-hidden = "true"></span>
@@ -916,11 +915,11 @@
     <!--FIN DEL MODAL PARA VALIDAR EL INGRESO A BODEGA-->
     <!--FIN DE CARGA DE CELLAR PENDING POR WAREHOUSE-->
 
-    <!--SECCIÓN DE CONSULTA DE CLIENTES POR USERCLIENT - MODULO CONSUMO-->
+    <!--SECCIÓN DE CONSULTA DE CLIENTES POR USERCLIENT - MODULO EGRESO-->
     <div class="table-responsive" ng-show="vm.warehouseSelected !== undefined && vm.clientList !== undefined">
         <div class="row">
             <div class="form-group col-md-12">
-                <h4><b>Consumos Internos</b></h4>
+                <h4><b>Egresos</b></h4>
                 <h4>Sucursal: {{vm.warehouseSubsidiaryName}}</h4>
                 <h5><b>Bodega: {{vm.warehouseName}}</b></h5>
             </div>
@@ -951,10 +950,10 @@
                     <td>{{clientPreSelect.typeId}}</td>
                     <td>{{clientPreSelect.identification}}</td>
                     <td>
-                        <button type="button" title="Nuevo Consumo" class="btn btn-primary btn-sm" ng-click="vm.clientSelect(clientPreSelect)">
+                        <button type="button" title="Nuevo Egreso" class="btn btn-primary btn-sm" ng-click="vm.clientSelect(clientPreSelect)">
                                 <span class = "glyphicon glyphicon-file" aria-hidden = "true"></span>
                         </button>
-                        <button type="button" title="Consultar Consumos" class="btn btn-primary btn-sm" ng-click="vm.clientConsult(clientPreSelect)">
+                        <button type="button" title="Consultar Egreso" class="btn btn-primary btn-sm" ng-click="vm.clientConsult(clientPreSelect)">
                                 <span class = "glyphicon glyphicon-search" aria-hidden = "true"></span>
                         </button>
                     </td>
@@ -971,11 +970,11 @@
         </div>
     </div>
 
-    <!--SECCIÓN DE CONSULTA DE CONSUMOS POR CLIENTE-->
+    <!--SECCIÓN DE CONSULTA DE EGRESOS POR CLIENTE-->
     <div class="table-responsive" ng-show="vm.consumptionList !== undefined">
         <div class="row">
             <div class="form-group col-md-12">
-                <h4><b>Consumos Internos</b></h4>
+                <h4><b>Egresos</b></h4>
                 <h4>Sucursal: {{vm.warehouseSubsidiaryName}}</h4>
                 <h5><b>Bodega: {{vm.warehouseName}}</b></h5>
             </div>
@@ -994,7 +993,7 @@
             <tbody>
                 <tr ng-show="vm.consumptionList == 0">
                     <td colspan="4">
-                        No hay Consumos realizados
+                        No hay Egresos realizados
                     </td>
                 </tr>
                 <tr ng-repeat="consumption in vm.consumptionList | orderBy:'dateConsumption':true | filter:searchText">
@@ -1003,7 +1002,7 @@
                     <td>{{consumption.client.name}}</td>
                     <td>{{consumption.total}}</td>
                     <td>
-                        <button type="button" title="Ver Consumo" class="btn btn-primary btn-sm" ng-click="vm.findConsumptionByClient(consumption)">
+                        <button type="button" title="Ver Egreso" class="btn btn-primary btn-sm" ng-click="vm.findConsumptionByClient(consumption)">
                                 <span class = "glyphicon glyphicon-eye-open" aria-hidden = "true"></span>
                         </button>
                     </td>
@@ -1019,11 +1018,11 @@
         </div>
     </div>
 
-    <!--SECCIÓN DE CONSUMO DESDE BODEGA-->
+    <!--SECCIÓN DE EGRESO DESDE BODEGA-->
     <div class="panel-group table-responsive" ng-show="vm.clientSelected !== undefined">
         <div class="row">
             <div class="form-group col-md-12">
-                <h4><b>Consumos Internos</b></h4>
+                <h4><b>Egresos</b></h4>
                 <h4>Sucursal: {{vm.warehouseSubsidiaryName}}</h4>
                 <h5><b>Bodega: {{vm.warehouseName}}</b></h5>
             </div>
@@ -1031,13 +1030,13 @@
         <div class="panel panel-primary">
             <div class="panel-heading">
                 <div>
-                    <b>Consumo Nro: </b>{{vm.csmSeqNumber}}
+                    <b>Egreso Nro: </b>{{vm.csmSeqNumber}}
                 </div>
             </div>
             <div class="panel-body">
                 <div class="row">
                     <div class="form-group col-md-3">
-                        <label>Consumo:</label>
+                        <label>Egreso:</label>
                         {{vm.csmSeqNumber}}
                     </div>
                     <div class="form-group col-md-3">
@@ -1061,7 +1060,7 @@
                         {{vm.clientSelected.email}}
                     </div>
                     <div class="form-group col-md-4">
-                        <label>Fecha de Consumo:</label>
+                        <label>Fecha de Egreso:</label>
                         <div class="input-group date" id="pickerDateConsumption">
                             <input type="text" class="form-control input-group-addon"/>
                             <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"/></span>
@@ -1074,7 +1073,7 @@
                 </div>
                 <div class="row">
                     <div class="form-group col-md-6">
-                        <label>Supervisor que Autoriza el Consumo:</label><br/>
+                        <label>Supervisor que Autoriza el Egreso:</label><br/>
                         <input type="text" class="form-control" ng-model="vm.consumption.nameSupervisor">
                     </div>
                     <div class="form-group col-md-6">
@@ -1121,7 +1120,7 @@
                                     <td>{{detail.product.name}}</td>
                                     <td>{{detail.quantity}}</td>
                                     <td>{{detail.product.unitOfMeasurementFull}}</td>
-                                    <td>{{detail.costEach}}</td>
+                                    <td>{{detail.averageCostSuggested}}</td>
                                     <td>{{detail.total}}</td>
                                     <td ng-if="vm.newConsumption">
                                         <button type="button" title="Editar Producto" class="btn btn-primary btn-sm"
@@ -1196,12 +1195,12 @@
                 </div>
             </div>
             <div class="panel-footer">
-                <button type="button" title="Guardar Consumo" class="btn btn-primary btn-sm"
+                <button type="button" title="Guardar Egreso" class="btn btn-primary btn-sm"
                         ng-click="vm.saveConsumption(vm.consumption)" ng-if="vm.newConsumption"
                         ng-disabled="vm.consumption.total <= 0">
                         <span class="glyphicon glyphicon-floppy-saved" aria-hidden="true"></span>
                 </button>
-                <button type="button" title = "Imprimir Ticket-Consumo" class="btn btn-primary btn-sm"
+                <button type="button" title = "Imprimir Ticket-Egreso" class="btn btn-primary btn-sm"
                         ng-show="!vm.newConsumption" ng-click="vm.printToCartAndCancelCsm('printMatrixConsumptionId')">
                         <span class = "glyphicon glyphicon-print" aria-hidden = "true"></span>
                 </button>
@@ -1217,10 +1216,10 @@
         </div>
     </div>
 
-    <!--IMPRIME TICKET DE CONSUMO-->
+    <!--IMPRIME TICKET DE EGRESO-->
     <div id="printMatrixConsumptionId" ng-show='false'>
         ------------------------------<br/>
-        <b>CONSUMO No. {{vm.csmSeqNumber}}</b><br/>
+        <b>EGRESO No. {{vm.csmSeqNumber}}</b><br/>
         <b>SUPERVISOR: {{vm.consumption.nameSupervisor}}</b><br/>
         <b>OBSERVACIONES: {{vm.consumption.observation}}</b><br/>
 
@@ -1269,10 +1268,10 @@
         ------------------------------------
     </div>
 
-    <!--CREA TICKET CONSUMO PARA THERMAL PRINTER-->
+    <!--CREA TICKET EGRESO PARA THERMAL PRINTER-->
     <div id="billPrint" ng-show='false'>
         --------------------
-        CSMO No. {{vm.csmSeqNumber}}<br/>
+        EGRS No. {{vm.csmSeqNumber}}<br/>
         SUP: {{vm.consumption.nameSupervisor}}<br/>
         R.S: {{(vm.consumption.client.name).substr(0,16)}}<br/>
         RUC: {{vm.consumption.client.identification}}
@@ -1315,7 +1314,7 @@
                                         <th> C&oacute;digo </th>
                                         <th> Nombre </th>
                                         <th> Cantidad Disponible</th>
-                                        <th> Precio Unitario $</th>
+                                        <th> Costo Promedio $</th>
                                         <th></th>
                                     </tr>
                                 </thead>
@@ -1329,7 +1328,7 @@
                                         <td>{{productSelect.codeIntegridad}}</td>
                                         <td>{{productSelect.name}}</td>
                                         <td>{{productSelect.quantity}}</td>
-                                        <td>{{vm.getCostCsm(productSelect.cashPercentage, productSelect.averageCost)}}</td>
+                                        <td>{{productSelect.averageCostSuggested}}</td>
                                         <td>
                                             <button type="button" title="Seleccionar" class="btn btn-primary btn-sm" ng-click="vm.selectProductToAddCsm(productSelect)">
                                                     <span class = "glyphicon glyphicon-check" aria-hidden = "true"></span>
@@ -1353,15 +1352,19 @@
                                 </div>
                                 <div class="panel-body">
                                     <div class="row">
-                                        <div class="form-group col-md-6">
-                                            <b>CANTIDAD A INGRESAR: </b>
+                                        <div class="form-group col-md-4">
+                                            <b>CANTIDAD A EGRESAR: </b>
                                             <input type="text" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
                                                    ng-model="vm.quantity" class="form-control" maxlength="9">
                                         </div>
-                                        <div class="form-group col-md-6">
-                                            <b>PRECIO UNITARIO: </b>
+                                        <div class="form-group col-md-4">
+                                            <b>COSTO UNITARIO ACTUAL: </b><br/>
+                                            $ {{vm.productToAdd.costEach}}
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <b>COSTO PROMEDIO: </b>
                                             <input type="text"
-                                                    ng-model="vm.productToAdd.costEachCalculated" class="form-control">
+                                                   ng-model="vm.productToAdd.averageCostSuggested" class="form-control">
                                         </div>
                                     </div>
                                 </div>
@@ -1386,7 +1389,7 @@
         </div>
     </div>
     <!--FIN DEL MODAL PARA AGREGAR PRODUCTOS-->
-    <!--FIN DE CONSUMO DESDE BODEGA-->
+    <!--FIN DE EGRESO DESDE BODEGA-->
 
     <!--INICIO MODULO PARA CREAR PROOVEEDOR-->
     <div class="table-responsive" ng-show="vm.provider !== undefined">
@@ -1593,7 +1596,7 @@
                 <div class="form-group col-md-6">
                     <div class="row">
                         <div class="form-group col-md-8">
-                            <label>Cuenta contable para el Consumo: </label>
+                            <label>Cuenta contable para el Egreso: </label>
                             <select ng-options="cc as cc.name for cc in vm.cuentaContableList  | orderBy:'name'  track by cc.id"
                                     ng-model="vm.cuentaContableConsume" class="form-control">
                             </select>
