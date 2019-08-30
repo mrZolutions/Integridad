@@ -441,7 +441,7 @@ angular.module('integridadUiApp')
             vm.itema.userClientId = vm.usrCliId;
             vm.itema.dateDetailDailybook = $('#pickerDateOfPayment').data("DateTimePicker").date().toDate().getTime();
             vm.dailybookCi.detailDailybookContab.push(vm.itema);
-            vm.generalDetailCi_2 = vm.paymentCreated.banco;
+            vm.generalDetailCi_2 = 'Cobro de Fc: ' + vm.paymentCreated.documentNumber + ' con ' + vm.paymentCreated.modePayment + ' Nro. ' + vm.paymentCreated.noDocument + ' en ' + vm.paymentCreated.banco + ', a ' + vm.paymentCreated.clientName;
             vm.itemb = {
                 typeContab: vm.typeContabCi,
                 codeConta: vm.paymentCreated.ctaCtableBanco,
@@ -684,7 +684,7 @@ angular.module('integridadUiApp')
             vm.itema.userClientId = vm.usrCliId;
             vm.itema.dateDetailDailybook = $('#pickerDateOfMultiplePayment').data("DateTimePicker").date().toDate().getTime();
             vm.dailybookCi.detailDailybookContab.push(vm.itema);
-            vm.generalDetailCi_2 = vm.bankName;
+            vm.generalDetailCi_2 = 'Cobro de Fcs: ' + vm.billsNumberPayed + ' con ' + vm.modePayment + ' Nro. ' + vm.noDocument + ' en ' + vm.bankName + ', a ' + vm.clientName;
             vm.itemb = {
                 typeContab: vm.typeContabCi,
                 codeConta: vm.ctaCtableBankCode,
