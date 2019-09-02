@@ -314,6 +314,33 @@ angular.module('integridadUiApp')
         _getCellarTotalSubtotal();
     };
 
+    vm.selectProductToAdd = function(productSelect) {
+        if (productSelect.productType.code === 'SER') {
+            productSelect.quantity = 1;
+        };
+        vm.productToAdd = angular.copy(productSelect);
+        if (vm.productToAdd.costEach === null) {
+            var costEachCalculated = vm.getCost(productSelect.cashPercentage, productSelect.averageCost);
+            vm.productToAdd.costEach = costEachCalculated;
+            vm.productToAdd.averageCostSuggested = vm.productToAdd.averageCost
+        };
+        vm.quantity = 1;
+    };
+
+    vm.calcAvg = function() {
+        if (vm.productToAdd.averageCost === null || vm.productToAdd.averageCost === '' || vm.productToAdd.averageCost <= 0) {
+            vm.productToAdd.averageCostSuggested = vm.productToAdd.costEach;
+        } else {
+            var costCellar = 0;
+            var quantityCellar = parseInt(vm.productToAdd.quantityCellar) + parseInt(vm.quantity);
+            costCellar = parseFloat((vm.quantity * vm.productToAdd.costEach).toFixed(4));
+            if (quantityCellar <= 0) {
+                quantityCellar = parseInt(vm.quantity);
+            };
+            vm.productToAdd.averageCostSuggested = ((vm.productToAdd.costCellar + costCellar) / quantityCellar).toFixed(4);
+        };
+    };
+
     vm.acceptCellarProduct = function(closeModal) {
         var detail = {
             product: angular.copy(vm.productToAdd),
@@ -322,6 +349,10 @@ angular.module('integridadUiApp')
             total: (parseFloat(vm.quantity) * parseFloat(vm.productToAdd.costEach)).toFixed(4),
             adicional: vm.adicional
         };
+
+        vm.productToAdd.quantityCellar = parseInt(vm.productToAdd.quantityCellar) + parseInt(vm.quantity);
+        vm.productToAdd.costCellar = vm.productToAdd.costCellar + (vm.productToAdd.costEach * detail.quantity);
+
         if (vm.indexDetail !== undefined) {
             vm.cellar.detailsCellar[vm.indexDetail] = detail;
         } else {
@@ -819,27 +850,6 @@ angular.module('integridadUiApp')
         var aC = 1 + ((cashPercen) / 100);
         var cost = aC * averageCost;
         return (cost).toFixed(4);
-    };
-
-    vm.selectProductToAdd = function(productSelect) {
-        if (productSelect.productType.code === 'SER') {
-            productSelect.quantity = 1;
-        };
-        vm.productToAdd = angular.copy(productSelect);
-        if (vm.productToAdd.costEach === null) {
-            var costEachCalculated = vm.getCost(productSelect.cashPercentage, productSelect.averageCost);
-            vm.productToAdd.costEach = costEachCalculated;
-            vm.productToAdd.averageCostSuggested = vm.productToAdd.averageCost
-        };
-        vm.quantity = 1;
-    };
-
-    vm.calcAvg = function () {
-        if (vm.productToAdd.averageCost === null || vm.productToAdd.averageCost === '' || vm.productToAdd.averageCost <= 0) {
-            vm.productToAdd.averageCostSuggested = vm.productToAdd.costEach;
-        } else {
-            vm.productToAdd.averageCostSuggested = ((parseFloat(vm.productToAdd.costEach) + parseFloat(vm.productToAdd.averageCost)) / 2).toFixed(3);
-        };
     };
 
     vm.editDetail = function(detail, index) {

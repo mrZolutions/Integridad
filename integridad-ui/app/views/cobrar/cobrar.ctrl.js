@@ -471,7 +471,7 @@ angular.module('integridadUiApp')
             vm.dailybookCi.subTotalCero = 0;
             vm.dailybookCi.dateRecordBook = $('#pickerDateOfPayment').data("DateTimePicker").date().toDate().getTime();
             
-            contableService.createDailybookCi(vm.dailybookCi).then(function(response) {
+            contableService.createDailybookAsinCi(vm.dailybookCi).then(function(response) {
                 vm.userCashier.dailyCiNumberSeq = vm.dailybookCi.dailyCiSeq;
                 vm.loading = false;
             }).catch(function(error) {
@@ -714,7 +714,8 @@ angular.module('integridadUiApp')
             vm.dailybookCi.subTotalDoce = parseFloat((vm.valorDocumento / 1.12).toFixed(2));
             vm.dailybookCi.subTotalCero = 0;
             vm.dailybookCi.dateRecordBook = $('#pickerDateOfMultiplePayment').data("DateTimePicker").date().toDate().getTime();
-            contableService.createDailybookCi(vm.dailybookCi).then(function(response) {
+            
+            contableService.createDailybookAsinCi(vm.dailybookCi).then(function(response) {
                 vm.userCashier.dailyCiNumberSeq = vm.dailybookCi.dailyCiSeq;
             }).catch(function(error) {
                 vm.loading = false;

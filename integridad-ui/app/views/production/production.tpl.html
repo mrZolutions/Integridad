@@ -592,7 +592,7 @@
                                                    ng-model="vm.quantity" class="form-control" maxlength="9">
                                         </div>
                                         <div class="form-group col-md-6">
-                                            <b>PRECIO UNITARIO: </b>
+                                            <b>COSTO DE COMPRA: </b>
                                             <input type="text"
                                                    ng-model="vm.productToAdd.costEach" class="form-control" ng-change="vm.calcAvg()">
                                         </div>
@@ -607,15 +607,16 @@
                                     <hr/>
                                     <div class="row">
                                         <div class="form-group col-md-6">
-                                            <b>COSTO PROMEDIO: </b><br/>
+                                            <b>COSTO PROM. SUGERIDO: </b><br/>
                                             $ {{vm.productToAdd.averageCostSuggested}}
                                         </div>
                                         <div class="form-group col-md-6">
-                                            <b>COSTO: </b>
+                                            <b>COSTO PARA LA VENTA: </b>
                                             <input type="text"
                                                    ng-model="vm.productToAdd.averageCost" class="form-control">
                                         </div>
                                     </div>
+                                    <hr/>
                                     <div class="row">
                                         <div class="form-group col-md-6">
                                             <label>M&aacute;ximo / M&iacute;nimo: </label>

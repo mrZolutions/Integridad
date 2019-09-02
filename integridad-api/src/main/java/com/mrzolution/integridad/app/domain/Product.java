@@ -36,6 +36,11 @@ public class Product implements Child {
     private Long maxMinimun;
     private boolean ice;
     private boolean iva;
+    
+    @Column(nullable = true)
+    private Long quantityCellar;
+    @Column(nullable = true)
+    private Double costCellar;
 
     @Column(nullable = true)
     private String wareHouseType;
