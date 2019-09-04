@@ -161,7 +161,7 @@ public class BillServices {
             Cashier cashier = cashierRepository.findOne(bill.getUserIntegridad().getCashier().getId());
             cashier.setBillNumberSeq(cashier.getBillNumberSeq() + 1);
             cashierRepository.save(cashier);
-            // Excepción PPE, Dental y Ferretería Lozada NO actualizan Kardex
+            // Excepción PPE, Dental, Lozada, VallParra, Pineda NO actualizan Kardex
             if ("A-1".equals(bill.getClient().getUserClient().getEspTemp()) || "A-2".equals(bill.getClient().getUserClient().getEspTemp()) || "A-N".equals(bill.getClient().getUserClient().getEspTemp())) {
                 saveDetailsBill(saved, details);
                 savePagosAndCreditsBill(saved, pagos);

@@ -636,7 +636,9 @@
         <p>RUC: {{vm.companyData.userClient.ruc}}</p><br>
         <p>DIRECCION MATRIZ: {{vm.companyData.userClient.address1}}</p><br>
         <p>FACTURA No. {{vm.seqNumber}}</p><br>
-        <p>CLAVE ACCESO: {{vm.bill.claveDeAcceso}}</p><br><br>
+        <p>CLAVE ACCESO: {{vm.bill.claveDeAcceso}}</p><br>
+        <b>AMBIENTE: PRODUCCIÓN</b><br/>
+        <b>EMISIÓN: NORMAL</b><br/><br>
         <p>RAZON SOCIAL: {{vm.clientSelected.name}}</p><br>
         <p>IDENTIFICACION: {{vm.clientSelected.identification}}</p><br>
         <p>FECHA: {{vm.getDateToPrint() | date:  "dd/MM/yyyy"}}</p><br><br>
@@ -666,6 +668,8 @@
 
         <b>FACTURA No. {{vm.seqNumber}}</b><br/>
         <b>CLAVE ACCESO: {{vm.bill.claveDeAcceso}}</b><br/>
+        <b>AMBIENTE: PRODUCCIÓN</b><br/>
+        <b>EMISIÓN: NORMAL</b><br/>
 
         <b>RAZON SOCIAL:</b><br/>
         <b>{{vm.clientSelected.name}}</b><br/>

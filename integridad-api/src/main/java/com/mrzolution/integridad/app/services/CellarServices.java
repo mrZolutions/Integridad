@@ -128,11 +128,18 @@ public class CellarServices {
         Cashier cashier = cashierRepository.findOne(cellar.getUserIntegridad().getCashier().getId());
         cashier.setWhNumberSeq(cashier.getWhNumberSeq() + 1);
         cashierRepository.save(cashier);
-        
-        saveDetailsCellar(saved, detailsCellar);
-        saveKardex(saved, detailsKardex);
-        if ("INGRESADO".equals(saved.getStatusIngreso())) {
-            updateProductBySubsidiary(saved, detailsCellar);
+        // Excepción PPE, Dental, Lozada, VallParra, Pineda NO actualizan Kardex
+        if ("A-1".equals(cellar.getProvider().getUserClient().getEspTemp()) || "A-2".equals(cellar.getProvider().getUserClient().getEspTemp()) || "A-N".equals(cellar.getProvider().getUserClient().getEspTemp())) {
+            saveDetailsCellar(saved, detailsCellar);
+            if ("INGRESADO".equals(saved.getStatusIngreso())) {
+                updateProductBySubsidiary(saved, detailsCellar);
+            }
+        } else {
+            saveDetailsCellar(saved, detailsCellar);
+            saveKardex(saved, detailsKardex);
+            if ("INGRESADO".equals(saved.getStatusIngreso())) {
+                updateProductBySubsidiary(saved, detailsCellar);
+            }
         }
         log.info("CellarServices createCellar: {}, {}", saved.getId(), saved.getWhNumberSeq());
         return saved;

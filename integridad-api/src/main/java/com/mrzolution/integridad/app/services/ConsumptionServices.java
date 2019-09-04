@@ -130,10 +130,15 @@ public class ConsumptionServices {
         Cashier cashier = cashierRepository.findOne(consumption.getUserIntegridad().getCashier().getId());
         cashier.setCsmNumberSeq(cashier.getCsmNumberSeq() + 1);
         cashierRepository.save(cashier);
-        
-        saveDetailsConsumption(saved, detailsConsumption);
-        saveKardex(saved, detailsKardex);
-        updateProductBySubsidiary(consumption, detailsConsumption);
+        // Excepción PPE, Dental, Lozada, VallParra, Pineda NO actualizan Kardex
+        if ("A-1".equals(consumption.getClient().getUserClient().getEspTemp()) || "A-2".equals(consumption.getClient().getUserClient().getEspTemp()) || "A-N".equals(consumption.getClient().getUserClient().getEspTemp())) {
+            saveDetailsConsumption(saved, detailsConsumption);
+            updateProductBySubsidiary(consumption, detailsConsumption);
+        } else {
+            saveDetailsConsumption(saved, detailsConsumption);
+            saveKardex(saved, detailsKardex);
+            updateProductBySubsidiary(consumption, detailsConsumption);
+        }
         log.info("ConsumptionServices createConsumption: {}, {}", saved.getId(), saved.getCsmNumberSeq());
         return saved;
     }
