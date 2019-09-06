@@ -200,8 +200,8 @@ angular.module('integridadUiApp')
                         vm.dailybookCgList = response;
                         vm.loading = false;
                     }).catch(function(error) {
-                        vm.loading = false;
                         vm.error = error.data;
+                        vm.loading = false;
                     });
                 break;
                 case '2':
@@ -211,8 +211,8 @@ angular.module('integridadUiApp')
                         vm.providerCeList = response;
                         vm.loading = false;
                     }).catch(function(error) {
-                        vm.loading = false;
                         vm.error = error.data;
+                        vm.loading = false;
                     });
                 break;
                 case '3':
@@ -222,8 +222,8 @@ angular.module('integridadUiApp')
                         vm.clientCiList = response;
                         vm.loading = false;
                     }).catch(function(error) {
-                        vm.loading = false;
                         vm.error = error.data;
+                        vm.loading = false;
                     });
                 break;
                 case '5':
@@ -233,8 +233,8 @@ angular.module('integridadUiApp')
                         vm.providerCxPList = response;
                         vm.loading = false;
                     }).catch(function(error) {
-                        vm.loading = false;
                         vm.error = error.data;
+                        vm.loading = false;
                     });
                 break;
                 case '6':
@@ -244,8 +244,8 @@ angular.module('integridadUiApp')
                         vm.clientFvList = response;
                         vm.loading = false;
                     }).catch(function(error) {
-                        vm.loading = false;
                         vm.error = error.data;
+                        vm.loading = false;
                     });
                 break;
                 case '12':
@@ -254,8 +254,8 @@ angular.module('integridadUiApp')
                         vm.cuentaContableList = response;
                         vm.loading = false;
                     }).catch(function(error) {
-                        vm.loading = false;
                         vm.error = error.data;
+                        vm.loading = false;
                     });
                 break;
             };
@@ -382,6 +382,7 @@ angular.module('integridadUiApp')
                 vm.error = error.data;
             });
         };
+        //Fin Reporte Mayor Específico
 
         vm.exportExcel = function() {
             var dataReport = [];

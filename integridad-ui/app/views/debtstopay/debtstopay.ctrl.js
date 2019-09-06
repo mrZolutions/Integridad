@@ -323,7 +323,7 @@ angular.module('integridadUiApp')
             };
         };
 
-        //Sección de Comprobante de Egreso para el Asiento Automático
+        //Sección Inicio de Secuencia de Numeración de Comprobante de Egreso para el Asiento Automático
         function _getDailyCeSeqNumber() {
             vm.numberAddedOneCe = parseInt($localStorage.user.cashier.dailyCeNumberSeq) + 1;
             vm.dailyCeSeq = vm.numberAddedOneCe;
@@ -345,7 +345,7 @@ angular.module('integridadUiApp')
         };
         //Fin de Sección
 
-        //Sección de Comprobante de Pago para el Asiento Automático
+        //Sección Inicio de Secuencia de Numeración de Comprobante de Pago para el Asiento Automático
         function _getComprobantePagoSeqNumber() {
             vm.numbAddedOne = parseInt(vm.userCashier.compPagoNumberSeq) + 1;
             vm.comprobantePagoSeq = vm.numbAddedOne;
