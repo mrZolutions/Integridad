@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 /**
@@ -96,27 +97,38 @@ public class PaymentDebtsServices {
             } else {
                 abono = saved.getValorReten();
             }
-            updateCreditsDebtsAndDebtsToPay(saved);
+            updateCreditsDebts(saved);
+            updateDebtsToPay(saved);
         }
         log.info("PaymentDebtsServices createPaymentDebts: {}, {}", saved.getId(), saved.getDocumentNumber());
         return saved;
     }
     
-    public void updateCreditsDebtsAndDebtsToPay(PaymentDebts saved) {
+    public void updateCreditsDebts(PaymentDebts saved) {
         Iterable<CreditsDebts> creditsDebts = creditsDebtsRepository.findCreditsDebtsById(saved.getCreditsDebts().getId());
         creditsDebts.forEach(creditDebt -> {
             creditDebt.setValor(creditDebt.getValor() - saved.getValorAbono());
-            CreditsDebts Valor = creditsDebtsRepository.save(creditDebt);
-            Iterable<DebtsToPay> debts = debtsToPayRepository.findDebtsToPayById(Valor.getPagoDebts().getDebtsToPay().getId());
-            debts.forEach(debt -> {
-                resto = Valor.getValor();
-                BigDecimal vresto = new BigDecimal(resto);
-                vresto = vresto.setScale(2, BigDecimal.ROUND_HALF_UP);
-                debt.setSaldo(vresto.doubleValue());
-                debtsToPayRepository.save(debt);
-            });
+            creditDebt.setListsNull();
+            creditDebt.setFatherListToNull();
+            creditsDebtsRepository.save(creditDebt);
         });
-        log.info("PaymentDebtsServices updateCreditsDebtsAndDebtsToPay DONE");
+        log.info("PaymentDebtsServices updateCreditsDebts DONE");
+        nume = 0;
+        resto = 0;
+    }
+    
+    public void updateDebtsToPay(PaymentDebts saved) {
+        Iterable<DebtsToPay> debts = debtsToPayRepository.findDebtsToPayById(saved.getCreditsDebts().getPagoDebts().getDebtsToPay().getId());
+        debts.forEach(debt -> {
+            resto = saved.getCreditsDebts().getValor();
+            BigDecimal vresto = new BigDecimal(resto);
+            vresto = vresto.setScale(2, BigDecimal.ROUND_HALF_UP);
+            debt.setSaldo(vresto.doubleValue());
+            debt.setListsNull();
+            debt.setFatherListToNull();
+            debtsToPayRepository.save(debt);
+        });
+        log.info("PaymentDebtsServices updateDebtsToPay DONE");
         nume = 0;
         resto = 0;
     }
@@ -233,6 +245,7 @@ public class PaymentDebtsServices {
         return statementProviderReportList;
     }
     
+    @Async("asyncExecutor")
     public PaymentDebts deactivatePaymentDebts(PaymentDebts payment) throws BadRequestException {
         if (payment.getId() == null) {
             throw new BadRequestException("Invalid PaymentDebts");

@@ -491,7 +491,7 @@ angular.module('integridadUiApp')
                     product: item.product,
                     codeWarehouse: vm.warehouse.codeWarehouse,
                     dateRegister: $('#pickerDateEnterCellar').data("DateTimePicker").date().toDate().getTime(),
-                    details: 'INGRESO A BODEGA Nro. ' + vm.cellSeqNumber + ', Fc. ' + vm.cellar.billNumber,
+                    details: 'INGRESO A BODEGA Nro. ' + vm.cellSeqNumber + ', Fact. ' + vm.cellar.billNumber,
                     observation: 'INGRESO',
                     prodCostEach: item.costEach,
                     prodName: item.product.name,

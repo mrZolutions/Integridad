@@ -347,9 +347,9 @@ angular.module('integridadUiApp')
 
         //Sección Inicio de Secuencia de Numeración de Comprobante de Pago para el Asiento Automático
         function _getComprobantePagoSeqNumber() {
-            vm.numbAddedOne = parseInt(vm.userCashier.compPagoNumberSeq) + 1;
-            vm.comprobantePagoSeq = vm.numbAddedOne;
-            vm.comprobantePagoStringSeq = utilSeqService._pad_with_zeroes(vm.numbAddedOne, 6);
+            vm.numbAddedOneCP = parseInt($localStorage.user.cashier.compPagoNumberSeq) + 1;
+            vm.comprobantePagoSeq = vm.numbAddedOneCP;
+            vm.comprobantePagoStringSeq = utilSeqService._pad_with_zeroes(vm.numbAddedOneCP, 6);
         };
 
         function _initializeComprobantePago() {
@@ -860,7 +860,7 @@ angular.module('integridadUiApp')
             var numTwo = utilSeqService._pad_with_zeroes(vm.threeNumberTwo, 3);
             var parNum = utilSeqService._pad_with_zeroes(vm.seccondPartNumber, 9);
             vm.debtsBillNumber = numOne + '-' + numTwo + '-' + parNum;
-            vm.generalDetailCxP = vm.providerName + ' ' + 'Fc' + ' ' + vm.debtsBillNumber;
+            vm.generalDetailCxP = vm.providerName + ' Fact. ' + vm.debtsBillNumber;
             _.map(vm.retention.detailRetentions, function(detail) {
                 if (detail.taxType == 'RETENCION EN LA FUENTE') {
                     vm.retenCodeFuente = detail.code;
@@ -1372,14 +1372,16 @@ angular.module('integridadUiApp')
                     
                 //Diario CxP
                 vm.itemRetentionFuenteCxP = undefined;
-                vm.itemRetentionFuenteCxP = { typeContab: vm.typeContab, codeConta: vm.retenFteCodeContable,
+                vm.itemRetentionFuenteCxP = { 
+                    typeContab: vm.typeContab, codeConta: vm.retenFteCodeContable,
                     descrip: vm.retenFteDescContable, tipo: 'CREDITO (C)',
                     baseImponible: vm.retenFteValor, name: vm.retenFteNombContableCxP,
                     haber: vm.retenFteValor
                 };
                 
                 vm.itemRetentionIVACxP = undefined;
-                vm.itemRetentionIVACxP = { typeContab: vm.typeContab, codeConta: vm.retenIvaCodeContable,
+                vm.itemRetentionIVACxP = { 
+                    typeContab: vm.typeContab, codeConta: vm.retenIvaCodeContable,
                     descrip: vm.retenIvaDescContable, tipo: 'CREDITO (C)',
                     baseImponible: vm.retenIvaValor, name: vm.retenIvaNombContableCxP,
                     haber: vm.retenIvaValor
@@ -1415,7 +1417,7 @@ angular.module('integridadUiApp')
                 var numTwo = utilSeqService._pad_with_zeroes(vm.threeNumberTwo, 3);
                 var parNum = utilSeqService._pad_with_zeroes(vm.seccondPartNumber, 9);
                 vm.debtsBillNumber = numOne + '-' + numTwo + '-' + parNum;
-                vm.generalDetailCxP = vm.providerName + ' ' + 'Fc' + ' ' + vm.debtsBillNumber;
+                vm.generalDetailCxP = vm.providerName + ' Fact. ' + vm.debtsBillNumber;
             };
 
             if (vm.indexEdit !== undefined) {
@@ -1440,7 +1442,7 @@ angular.module('integridadUiApp')
             };
           
             if (vm.typeTaxes === '1') {
-                vm.subIva = parseFloat((vm.item.base_imponible * 0.12).toFixed(2));
+                vm.subIva = (vm.item.base_imponible * 0.12).toFixed(2);
                 vm.subTotalDoce = vm.item.base_imponible;
                 vm.subTotalCero = vm.debtsToPay.total - vm.subTotalDoce - vm.subIva;
                 vm.itemIva = {
@@ -1451,13 +1453,15 @@ angular.module('integridadUiApp')
                     nomb_contable: 'DEFINIDA PARA TODAS LAS COMPRAS',
                     deber: vm.subIva
                 };
+                var subBase = 0;
+                subBase = (vm.debtsToPay.total - vm.retentionTotal).toFixed(2);
                 vm.itemProvider = {
                     codigo_contable: vm.provContable,
                     desc_contable: 'PROVEEDORES LOCALES',
                     tipo: 'CREDITO (C)',
                     base_imponible: parseFloat((vm.debtsToPay.total - vm.retentionTotal).toFixed(2)),
                     nomb_contable: 'DEFINIDA PARA TODOS LOS PROVEEDORES',
-                    haber: parseFloat((vm.debtsToPay.total - vm.retentionTotal).toFixed(2))
+                    haber: subBase
                 };
                 vm.debtsToPay.items.push(vm.itemIva);
                 vm.debtsToPay.items.push(vm.itemProvider);
@@ -1483,7 +1487,7 @@ angular.module('integridadUiApp')
                     tipo: 'CREDITO (C)',
                     baseImponible: parseFloat((vm.debtsToPay.total - vm.retentionTotal).toFixed(2)),
                     name: vm.generalDetailCxP,
-                    haber: parseFloat((vm.debtsToPay.total - vm.retentionTotal).toFixed(2))
+                    haber: subBase
                 };
                 vm.itemProviderCxP.numCheque = '--';
                 vm.itemProviderCxP.dailybookNumber = vm.dailycxpStringSeq;
@@ -1496,13 +1500,15 @@ angular.module('integridadUiApp')
                 vm.subIva = 0;
                 vm.subTotalDoce = 0;
                 vm.subTotalCero = vm.debtsToPay.total;
+                var subBaseDos = 0;
+                subBaseDos = (vm.debtsToPay.total - vm.retentionTotal).toFixed(2);
                 vm.itemProvider = {
                     codigo_contable: vm.provContable,
                     desc_contable: 'PROVEEDORES LOCALES',
                     tipo: 'CREDITO (C)',
                     base_imponible: parseFloat((vm.debtsToPay.total - vm.retentionTotal).toFixed(2)),
                     nomb_contable: 'DEFINIDA PARA TODOS LOS PROVEEDORES',
-                    haber: parseFloat((vm.debtsToPay.total - vm.retentionTotal).toFixed(2))
+                    haber: subBaseDos
                 };
                 vm.debtsToPay.items.push(vm.itemProvider);
 
@@ -1514,7 +1520,7 @@ angular.module('integridadUiApp')
                     tipo: 'CREDITO (C)',
                     baseImponible: parseFloat((vm.debtsToPay.total - vm.retentionTotal).toFixed(2)),
                     name: vm.generalDetailCxP,
-                    haber: parseFloat((vm.debtsToPay.total - vm.retentionTotal).toFixed(2))
+                    haber: subBaseDos
                 };
                 vm.itemProviderCxP.numCheque = '--';
                 vm.itemProviderCxP.dailybookNumber = vm.dailycxpStringSeq;
@@ -1610,7 +1616,7 @@ angular.module('integridadUiApp')
             vm.dailybookCxP.dailycxpStringSeq = vm.dailycxpStringSeq;
             vm.dailybookCxP.dailycxpStringUserSeq = 'DIARIO CxP GENERADO ' + vm.dailycxpStringSeq;
             vm.dailybookCxP.clientProvName = vm.responseDebtsToPay.provider.name;
-            vm.dailybookCxP.generalDetail = vm.responseDebtsToPay.provider.name + ' Fc: ' + vm.responseDebtsToPay.billNumber;
+            vm.dailybookCxP.generalDetail = vm.responseDebtsToPay.provider.name + ' Fact: ' + vm.responseDebtsToPay.billNumber;
             vm.dailybookCxP.total =  vm.responseDebtsToPay.total;
             vm.dailybookCxP.iva = parseFloat((vm.responseDebtsToPay.total * 0.12).toFixed(2));
             vm.dailybookCxP.subTotalDoce = parseFloat((vm.responseDebtsToPay.total / 1.12).toFixed(2));
@@ -1770,7 +1776,7 @@ angular.module('integridadUiApp')
                         });
                     });
                     _asientoComprobanteMultiEgreso();
-                    //_asientoComprobanteMultiPago();
+                    _asientoComprobanteMultiPago();
                     _activate();
                 } else {
                     vm.error = 'El Nro. de Documento (Cheque, Transferencia y/o Depósito) Ya Existe y no puede repetirse';
@@ -1798,7 +1804,7 @@ angular.module('integridadUiApp')
             };
 
             vm.itemPagoMA = {};
-            vm.generalDetailCP_1 = vm.providerName + ' Fcs: ' + vm.debtsBillsNumberPayed;
+            vm.generalDetailCP_1 = 'Pago de Facts. Nro: ' + vm.debtsBillsNumberPayed + ' a:' + vm.providerName;
             vm.itemPagoMA = {
                 codeConta: vm.provContable,
                 descrip: 'PROVEEDORES LOCALES',
@@ -1809,7 +1815,7 @@ angular.module('integridadUiApp')
             };
             vm.comprobantePago.detailComprobantePago.push(vm.itemPagoMA);
             vm.itemPagoMB = {};
-            vm.generalDetailCP_2 = vm.bankName + ' Cancela Fcs: ' + vm.debtsBillsNumberPayed;
+            vm.generalDetailCP_2 = vm.bankName + ' Cancela Facts. Nro: ' + vm.debtsBillsNumberPayed;
             vm.itemPagoMB = {
                 codeConta: vm.ctaCtableBankCode,
                 descrip: vm.bankName,
@@ -1834,7 +1840,7 @@ angular.module('integridadUiApp')
             vm.comprobantePago.subTotalDoce = parseFloat((vm.valorDocumento / 1.12).toFixed(2));
 
             comprobanteService.createComprobantePago(vm.comprobantePago).then(function(response) {
-                vm.userCashier.compPagoNumberSeq = vm.comprobantePago.comprobanteSeq;
+                $localStorage.user.cashier.compPagoNumberSeq = vm.comprobantePago.comprobanteSeq;
             }).catch(function(error) {
                 vm.loading = false;
                 vm.error = error.data;
@@ -1856,7 +1862,7 @@ angular.module('integridadUiApp')
             } else {
                 vm.provContable = '2.01.01.01';
             };
-            vm.generalDetailCe_1 = vm.providerName + ' Fcs: ' + vm.debtsBillsNumberPayed;
+            vm.generalDetailCe_1 = vm.providerName + ' Facts. ' + vm.debtsBillsNumberPayed;
             vm.itema = {
                 typeContab: vm.typeContabCe,
                 codeConta: vm.provContable,
@@ -1871,7 +1877,7 @@ angular.module('integridadUiApp')
             vm.itema.userClientId = vm.usrCliId;
             vm.itema.dateDetailDailybook = $('#pickerDateOfMultiPayment').data("DateTimePicker").date().toDate().getTime();
             vm.dailybookCe.detailDailybookContab.push(vm.itema);
-            vm.generalDetailCe_2 = vm.bankName + ' Cancela Fcs: ' + vm.debtsBillsNumberPayed + ', a: ' + vm.providerName + ', con ' + vm.modePayment + ' Nro. ' + vm.noDocument;
+            vm.generalDetailCe_2 = vm.bankName + ' Cancela Facts. ' + vm.debtsBillsNumberPayed + ', a: ' + vm.providerName + ', con ' + vm.modePayment + ' Nro. ' + vm.noDocument;
             vm.itemb = {
                 typeContab: vm.typeContabCe,
                 codeConta: vm.ctaCtableBankCode,
@@ -1970,15 +1976,15 @@ angular.module('integridadUiApp')
                         switch (vm.paymentDebtsCreated.modePayment) {
                             case 'CHQ':
                                 _asientoComprobanteEgreso();
-                                //_asientoComprobantePago();
+                                _asientoComprobantePago();
                             break;
                             case 'TRF':
                                 _asientoComprobanteEgreso();
-                                //_asientoComprobantePago();
+                                _asientoComprobantePago();
                             break;
                             case 'DEP':
                                 _asientoComprobanteEgreso();
-                                //_asientoComprobantePago();
+                                _asientoComprobantePago();
                             break;
                         };
                         vm.success = 'Abono realizado con exito';
@@ -2006,7 +2012,7 @@ angular.module('integridadUiApp')
 
         function _asientoComprobantePago() {
             _getComprobantePagoSeqNumber();
-            vm.generalDetailCP_1 = vm.paymentDebtsCreated.providerName + ' Fc: ' + vm.paymentDebtsCreated.documentNumber;
+            vm.generalDetailCP_1 = 'Pago de Fact. Nro: ' + vm.paymentDebtsCreated.documentNumber + ' a:' + vm.paymentDebtsCreated.providerName;
             vm.itemPagoA = {
                 codeConta: vm.paymentDebtsCreated.ctaCtableProvider,
                 descrip: 'PROVEEDORES LOCALES',
@@ -2016,7 +2022,7 @@ angular.module('integridadUiApp')
                 deber: parseFloat(vm.paymentDebtsCreated.valorAbono)
             };
             vm.comprobantePago.detailComprobantePago.push(vm.itemPagoA);
-            vm.generalDetailCP_2 = vm.paymentDebtsCreated.banco + ' Cancela Fc: ' + vm.paymentDebtsCreated.documentNumber;
+            vm.generalDetailCP_2 = vm.paymentDebtsCreated.banco + ' Cancela Fact. Nro: ' + vm.paymentDebtsCreated.documentNumber;
             vm.itemPagoB = {
                 codeConta: vm.paymentDebtsCreated.ctaCtableBanco,
                 descrip: vm.paymentDebtsCreated.banco,
@@ -2041,8 +2047,7 @@ angular.module('integridadUiApp')
             vm.comprobantePago.subTotalDoce = parseFloat((vm.paymentDebtsCreated.valorAbono / 1.12).toFixed(2));
 
             comprobanteService.createComprobantePago(vm.comprobantePago).then(function(response) {
-                vm.userCashier.compPagoNumberSeq = vm.comprobantePago.comprobanteSeq;
-                vm.loading = false;
+                $localStorage.user.cashier.compPagoNumberSeq = vm.comprobantePago.comprobanteSeq;
             }).catch(function(error) {
                 vm.loading = false;
                 vm.error = error.data;
@@ -2052,7 +2057,7 @@ angular.module('integridadUiApp')
         function _asientoComprobanteEgreso() {
             _getDailyCeSeqNumber();
             vm.selectedTypeBook = '2';
-            vm.generalDetailCe_1 = vm.paymentDebtsCreated.providerName + ' Fc: ' + vm.paymentDebtsCreated.documentNumber;
+            vm.generalDetailCe_1 = vm.paymentDebtsCreated.providerName + ' Fact. ' + vm.paymentDebtsCreated.documentNumber;
             vm.itema = {
                 typeContab: vm.typeContabCe,
                 codeConta: vm.paymentDebtsCreated.ctaCtableProvider,
@@ -2067,7 +2072,7 @@ angular.module('integridadUiApp')
             vm.itema.userClientId = vm.usrCliId;
             vm.itema.dateDetailDailybook = $('#pickerDateOfPaymentDebt').data("DateTimePicker").date().toDate().getTime();
             vm.dailybookCe.detailDailybookContab.push(vm.itema);
-            vm.generalDetailCe_2 = vm.paymentDebtsCreated.banco + ' Cancela Fc: ' + vm.paymentDebtsCreated.documentNumber + ', a: ' + vm.paymentDebtsCreated.providerName + ', con ' + vm.paymentDebtsCreated.modePayment + ' Nro. ' + vm.paymentDebtsCreated.noDocument;
+            vm.generalDetailCe_2 = vm.paymentDebtsCreated.banco + ' Cancela Fact. ' + vm.paymentDebtsCreated.documentNumber + ', a: ' + vm.paymentDebtsCreated.providerName + ', con ' + vm.paymentDebtsCreated.modePayment + ' Nro. ' + vm.paymentDebtsCreated.noDocument;
             vm.itemb = {
                 typeContab: vm.typeContabCe,
                 codeConta: vm.paymentDebtsCreated.ctaCtableBanco,

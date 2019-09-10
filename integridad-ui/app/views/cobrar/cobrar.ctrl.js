@@ -408,7 +408,7 @@ angular.module('integridadUiApp')
             vm.comprobanteCobro.dateComprobante = $('#pickerDateOfPayment').data("DateTimePicker").date().toDate().getTime();
             vm.comprobanteCobro.comprobanteSeq = vm.comprobanteCobroSeq;
             vm.comprobanteCobro.comprobanteStringSeq = vm.comprobanteCobroStringSeq;
-            vm.comprobanteCobro.comprobanteConcep = 'Cancela Fc' + ' ' + vm.paymentCreated.documentNumber;
+            vm.comprobanteCobro.comprobanteConcep = 'Cancela Fact. ' + vm.paymentCreated.documentNumber;
             vm.comprobanteCobro.comprobanteEstado = 'PROCESADO';
             vm.comprobanteCobro.total = vm.paymentCreated.valorAbono;
             vm.comprobanteCobro.subTotalDoce = parseFloat((vm.paymentCreated.valorAbono / 1.12).toFixed(2));
@@ -426,7 +426,7 @@ angular.module('integridadUiApp')
         function _asientoComprobanteIngreso() {
             _getDailyCiSeqNumber();
             vm.selectedTypeBook = '3';
-            vm.generalDetailCi_1 = vm.paymentCreated.clientName + ' ' + 'Cancela Fc' + ' ' + vm.paymentCreated.documentNumber;
+            vm.generalDetailCi_1 = vm.paymentCreated.clientName + ' Cancela Fact. ' + vm.paymentCreated.documentNumber;
             vm.itema = {
                 typeContab: vm.typeContabCi,
                 codeConta: vm.paymentCreated.ctaCtableClient,
@@ -441,7 +441,7 @@ angular.module('integridadUiApp')
             vm.itema.userClientId = vm.usrCliId;
             vm.itema.dateDetailDailybook = $('#pickerDateOfPayment').data("DateTimePicker").date().toDate().getTime();
             vm.dailybookCi.detailDailybookContab.push(vm.itema);
-            vm.generalDetailCi_2 = 'Cobro de Fc: ' + vm.paymentCreated.documentNumber + ' con ' + vm.paymentCreated.modePayment + ' Nro. ' + vm.paymentCreated.noDocument + ' en ' + vm.paymentCreated.banco + ', a ' + vm.paymentCreated.clientName;
+            vm.generalDetailCi_2 = 'Cobro de Fact. ' + vm.paymentCreated.documentNumber + ' con ' + vm.paymentCreated.modePayment + ' Nro. ' + vm.paymentCreated.noDocument + ' en ' + vm.paymentCreated.banco + ', a ' + vm.paymentCreated.clientName;
             vm.itemb = {
                 typeContab: vm.typeContabCi,
                 codeConta: vm.paymentCreated.ctaCtableBanco,
@@ -651,7 +651,7 @@ angular.module('integridadUiApp')
             vm.comprobanteCobro.dateComprobante = $('#pickerDateOfMultiplePayment').data("DateTimePicker").date().toDate().getTime();
             vm.comprobanteCobro.comprobanteSeq = vm.comprobanteCobroSeq;
             vm.comprobanteCobro.comprobanteStringSeq = vm.comprobanteCobroStringSeq;
-            vm.comprobanteCobro.comprobanteConcep = 'Cancela Fcs' + ' ' + vm.billsNumberPayed;
+            vm.comprobanteCobro.comprobanteConcep = 'Cancela Facts. ' + vm.billsNumberPayed;
             vm.comprobanteCobro.comprobanteEstado = 'PROCESADO';
             vm.comprobanteCobro.total = vm.valorDocumento;
             vm.comprobanteCobro.subTotalDoce = parseFloat((vm.valorDocumento / 1.12).toFixed(2));
@@ -669,7 +669,7 @@ angular.module('integridadUiApp')
         function _asientoComprobanteMultipleIngreso() {
             _getDailyCiSeqNumber();
             vm.selectedTypeBook = '3';
-            vm.generalDetailCi_1 = vm.clientName + ' ' + 'Cancela Fcs' + ' ' + vm.billsNumberPayed;
+            vm.generalDetailCi_1 = vm.clientName + ' Cancela Facts. ' + vm.billsNumberPayed;
             vm.itema = {
                 typeContab: vm.typeContabCi,
                 codeConta: vm.clientCodConta,
@@ -684,7 +684,7 @@ angular.module('integridadUiApp')
             vm.itema.userClientId = vm.usrCliId;
             vm.itema.dateDetailDailybook = $('#pickerDateOfMultiplePayment').data("DateTimePicker").date().toDate().getTime();
             vm.dailybookCi.detailDailybookContab.push(vm.itema);
-            vm.generalDetailCi_2 = 'Cobro de Fcs: ' + vm.billsNumberPayed + ' con ' + vm.modePayment + ' Nro. ' + vm.noDocument + ' en ' + vm.bankName + ', a ' + vm.clientName;
+            vm.generalDetailCi_2 = 'Cobro de Facts. ' + vm.billsNumberPayed + ' con ' + vm.modePayment + ' Nro. ' + vm.noDocument + ' en ' + vm.bankName + ', a ' + vm.clientName;
             vm.itemb = {
                 typeContab: vm.typeContabCi,
                 codeConta: vm.ctaCtableBankCode,

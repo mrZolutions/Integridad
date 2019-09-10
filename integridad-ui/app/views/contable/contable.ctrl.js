@@ -641,7 +641,7 @@ angular.module('integridadUiApp')
             $('#modalShowDebtsToPayCe').modal('hide');
             vm.debtsBillNumber = debtsToPay.billNumber;
             vm.debtsTotal = debtsToPay.total;
-            vm.generalDetailCe = vm.providerName + ' ' + 'Fc' + ' ' + vm.debtsBillNumber;
+            vm.generalDetailCe = vm.providerName + ' Fact. ' + vm.debtsBillNumber;
             vm.dailybookCe.billNumber = vm.debtsBillNumber;
             vm.dailybookCe.total = vm.debtsTotal;
             //Selección de las Cuentas Contables por defecto dependiendo del Cliente
@@ -675,7 +675,7 @@ angular.module('integridadUiApp')
 
         vm.putGeneralDetailCe = function() {
             if (vm.generalDetailCe == null || vm.generalDetailCe == undefined || vm.generalDetailCe == '') {
-                vm.generalDetailCe = vm.providerName + ' ' + 'Fc' + ' ' + vm.dailybookCe.billNumber;
+                vm.generalDetailCe = vm.providerName + ' Fact. ' + vm.dailybookCe.billNumber;
                 //Selección de las Cuentas Contables por defecto dependiendo del Cliente
                 if (vm.usrCliId === vm.laQuinta) {
                     vm.provContable = '2.01.03.01.001';
@@ -1047,7 +1047,7 @@ angular.module('integridadUiApp')
             $('#modalShowBillsCi').modal('hide');
             vm.billNumber = bill.stringSeq;
             vm.billSaldo = bill.saldo;
-            vm.generalDetailCi = vm.clientName + ' ' + 'Cancela Fc' + ' ' + vm.billNumber;
+            vm.generalDetailCi = vm.clientName + ' Cancela Fact. ' + vm.billNumber;
             vm.dailybookCi.billNumber = vm.billNumber;
             vm.dailybookCi.total = vm.billSaldo;
             vm.itemClient = {
@@ -1069,7 +1069,7 @@ angular.module('integridadUiApp')
 
         vm.putGeneralDetailCi = function() {
             if (vm.generalDetailCi == null || vm.generalDetailCi == undefined || vm.generalDetailCi == '') {
-                vm.generalDetailCi = vm.clientName + ' ' + 'Cancela Fc' + ' ' + vm.dailybookCi.billNumber;
+                vm.generalDetailCi = vm.clientName + ' Cancela Fact. ' + vm.dailybookCi.billNumber;
                 vm.itemClient = {
                     typeContab: vm.typeContab,
                     codeConta: vm.clientContable,
@@ -1345,7 +1345,7 @@ angular.module('integridadUiApp')
             $('#modalShowDebtsToPay').modal('hide');
             vm.debtsBillNumber = debtsToPay.billNumber;
             vm.debtsTotal = debtsToPay.total;
-            vm.generalDetailCxP = vm.providerName + ' ' + 'Fc' + ' ' + vm.debtsBillNumber;
+            vm.generalDetailCxP = vm.providerName + ' Fact. ' + vm.debtsBillNumber;
             vm.dailybookCxP.billNumber = vm.debtsBillNumber;
             vm.dailybookCxP.total = vm.debtsTotal;
             vm.loading = false;
@@ -1353,7 +1353,7 @@ angular.module('integridadUiApp')
 
         vm.putGeneralDetailCxP = function() {
             if (vm.generalDetailCxP == null || vm.generalDetailCxP == undefined || vm.generalDetailCxP == '') {
-                vm.generalDetailCxP = vm.providerName + ' ' + 'Fc' + ' ' + vm.dailybookCxP.billNumber;
+                vm.generalDetailCxP = vm.providerName + ' Fact. ' + vm.dailybookCxP.billNumber;
             };
         };
 

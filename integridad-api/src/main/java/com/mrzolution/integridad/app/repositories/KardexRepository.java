@@ -21,9 +21,18 @@ import org.springframework.stereotype.Repository;
 public interface KardexRepository extends CrudRepository<Kardex, UUID> {
     Iterable<Kardex> findByBill(Bill bill);
     
+    @Query("SELECT k FROM Kardex k WHERE k.bill.id = (:id)")
+    Iterable<Kardex> findByBillId(@Param("id") UUID id);
+    
     Iterable<Kardex> findByCellar(Cellar cellar);
     
+    @Query("SELECT k FROM Kardex k WHERE k.cellar.id = (:id)")
+    Iterable<Kardex> findByCellarId(@Param("id") UUID id);
+    
     Iterable<Kardex> findByConsumption(Consumption consumption);
+    
+    @Query("SELECT k FROM Kardex k WHERE k.consumption.id = (:id)")
+    Iterable<Kardex> findByConsumptionId(@Param("id") UUID id);
     
     @Query("SELECT k FROM Kardex k WHERE k.userClientId = (:id) AND k.product.id = (:provID) AND k.dateRegister >= (:dateOne) AND k.dateRegister <= (:dateTwo) AND k.active = true ORDER BY k.dateRegister")
     Iterable<Kardex> findKardexActivesByUserClientIdAndProductIdAndDates(@Param("id") String id, @Param("provID") UUID provID, @Param("dateOne") long dateOne, @Param("dateTwo") long dateTwo);

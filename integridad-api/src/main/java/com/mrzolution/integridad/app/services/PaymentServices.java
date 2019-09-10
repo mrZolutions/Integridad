@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 /**
@@ -85,32 +86,43 @@ public class PaymentServices {
             } else {
                 abono = saved.getValorNotac();
             }
-            updateCreditsAndBill(saved);
+            updateCredits(saved);
+            updateBill(saved);
         }
         log.info("PaymentServices createPayment: {}, {}", saved.getId(), saved.getDocumentNumber());
 	return saved;
     }
     
-    public void updateCreditsAndBill(Payment saved){
+    public void updateCredits(Payment saved) {
         Iterable<Credits> credits = creditsRepository.findCreditsById(saved.getCredits().getId());
         credits.forEach(credit -> {
             credit.setValor(credit.getValor() - saved.getValorAbono());
-            Credits Valor = creditsRepository.save(credit);
-            Iterable<Bill> bills = billRepository.findBillById(Valor.getPago().getBill().getId());
-            bills.forEach(bill -> {
-                resto = Valor.getValor();
-                BigDecimal vresto = new BigDecimal(resto);
-                if (Valor.getValor() <= 0) {
-                    vresto = vresto.setScale(0, BigDecimal.ROUND_HALF_UP);
-                } else {
-                    vresto = vresto.setScale(2, BigDecimal.ROUND_HALF_UP);
-                }
-                saldo = String.valueOf(vresto);
-                bill.setSaldo(saldo);
-                billRepository.save(bill);
-            });
+            credit.setListsNull();
+            credit.setFatherListToNull();
+            creditsRepository.save(credit);
         });
-        log.info("PaymentServices updateCreditsAndBill DONE");
+        log.info("PaymentServices updateCredits DONE");
+        resto = 0;
+        saldo = "";
+    }
+    
+    public void updateBill(Payment saved) {
+        Iterable<Bill> bills = billRepository.findBillById(saved.getCredits().getPago().getBill().getId());
+        bills.forEach(bill -> {
+            resto = saved.getCredits().getValor();
+            BigDecimal vresto = new BigDecimal(resto);
+            if (resto <= 0) {
+                vresto = vresto.setScale(0, BigDecimal.ROUND_HALF_UP);
+            } else {
+                vresto = vresto.setScale(2, BigDecimal.ROUND_HALF_UP);
+            }
+            saldo = String.valueOf(vresto);
+            bill.setSaldo(saldo);
+            bill.setListsNull();
+            bill.setFatherListToNull();
+            billRepository.save(bill);
+        });
+        log.info("PaymentServices updateBill DONE");
         resto = 0;
         saldo = "";
     }
@@ -173,6 +185,7 @@ public class PaymentServices {
         return ccResumenReportList;
     }
     
+    @Async("asyncExecutor")
     public Payment deactivatePayment(Payment payment) throws BadRequestException {
         if (payment.getId() == null) {
             throw new BadRequestException("Invalid Payment");

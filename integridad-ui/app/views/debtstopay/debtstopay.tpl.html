@@ -34,7 +34,7 @@
     </div>
 
     <!--SECCIÓN DE CARGA DE PROVEEDORES POR USERCLIENT-->
-    <div class="table-responsive" ng-show="vm.providerSelected === undefined && vm.debtsToPayList === undefined && vm.providerDebtsList === undefined && vm.debtsProviderSelected === undefined && vm.debtsToPaySelectedToUpdate === undefined && vm.allDebtsToPayList === undefined && vm.multipleSelected === undefined && vm.paymentDebtsList === undefined && vm.comprobantePagoList === undefined">
+    <div class="table-responsive" ng-show="vm.providerSelected === undefined && vm.debtsToPayList === undefined && vm.providerDebtsList === undefined && vm.debtsProviderSelected === undefined && vm.debtsToPaySelectedToUpdate === undefined && vm.allDebtsToPayList === undefined && vm.multipleSelected === undefined && vm.paymentDebtsList === undefined && vm.comprobantePagoList === undefined && vm.comprobantePagoCreated === undefined">
         <div class="row">
             <div class="form-group col-md-12">
                 <input ng-model="searchText" class="form-control" placeholder="Buscar Proveedores">
@@ -2035,14 +2035,14 @@
                                 El Proveedor <b>No Presenta</b> Comprobantes de Pagos realizados...
                             </td>
                         </tr>
-                        <tr ng-repeat="comprobantePago in vm.comprobanteCobroList">
+                        <tr ng-repeat="comprobantePago in vm.comprobantePagoList">
                             <td>{{comprobantePago.comprobanteStringSeq}}</td>
                             <td>{{comprobantePago.billNumber}}</td>
                             <td>{{comprobantePago.dateComprobante | date : "dd/MM/yyyy"}}</td>
                             <td>{{comprobantePago.total.toFixed(2)}}</td>
                             <td>
                                 <button type="button" title = "Ver Comprobante de Pago" class="btn btn-primary btn-sm" 
-                                        ng-click="vm.comprobantePagoSelected(comprobanteCobro)">
+                                        ng-click="vm.comprobantePagoSelected(comprobantePago)">
                                         <span class = "glyphicon glyphicon-eye-open" aria-hidden = "true"></span>
                                 </button>
                                 <button type="button" title = "Anular Comprobante de Pago" class="btn btn-warning btn-sm" 
@@ -2062,7 +2062,7 @@
         </div>
     </div>
 
-    <div class="table-responsive" ng-show="vm.comprobantePagoCreated" id="printArea" print-section>
+    <div class="table-responsive" ng-show="vm.comprobantePagoCreated !== undefined" id="printArea" print-section>
         <div class="panel panel-primary">
             <div class="panel-body">
                 <div class="row">
@@ -2159,7 +2159,6 @@
                                 <td>{{detail.haber}}</td>
                             </tr>
                             <tr>
-                                <td></td>
                                 <td></td>
                                 <td><b>TOTALES:</b></td>
                                 <td>{{vm.getTotalDebitoCPCreated()}}</td>

@@ -34,7 +34,7 @@
     </div>
     
     <!--SECCIÓN DE CARGA DE LOS LOS CLIENTES-->
-    <div class="table-responsive" ng-show="vm.billList === undefined && vm.clientSelected === undefined && vm.multipleCobroSelected === undefined && vm.paymentList === undefined && vm.retentionClientList === undefined && vm.comprobanteCobroList === undefined">
+    <div class="table-responsive" ng-show="vm.billList === undefined && vm.clientSelected === undefined && vm.multipleCobroSelected === undefined && vm.paymentList === undefined && vm.retentionClientList === undefined && vm.comprobanteCobroList === undefined && vm.comprobanteCobroCreated === undefined">
         <div class="row">
             <div class="form-group col-md-12">
                 <input ng-model="searchText" class="form-control" placeholder="Buscar Clientes">
@@ -1132,7 +1132,7 @@
         </div>
     </div>
 
-    <div class="table-responsive" ng-show="vm.comprobanteCobroCreated" id="printArea" print-section>
+    <div class="table-responsive" ng-show="vm.comprobanteCobroCreated !== undefined" id="printArea" print-section>
         <div class="panel panel-primary">
             <div class="panel-heading" print-remove>
                 <b>Comprobante de Cobro</b>

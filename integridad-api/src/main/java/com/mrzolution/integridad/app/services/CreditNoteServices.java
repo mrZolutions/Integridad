@@ -37,6 +37,8 @@ public class CreditNoteServices {
     UserClientRepository userClientRepository;
     @Autowired
     BillRepository billRepository;
+    @Autowired
+    KardexRepository kardexRepository;
         
     private String document;
     private String statusCambio;
@@ -116,6 +118,7 @@ public class CreditNoteServices {
             saved.setDetails(details);
             saved.setFatherListToNull();
             updateBill(saved);
+            updateKardex(saved);
             
             Credits validate = creditsRepository.findByBillId(document);
             if (validate != null) {
@@ -195,6 +198,20 @@ public class CreditNoteServices {
         sum = 0;
     }
     
+    //Actualiza Tabla Kardex
+    public void updateKardex(CreditNote saved) {
+        billId = UUID.fromString(saved.getBillSeq());
+        Iterable<Kardex> kardexs = kardexRepository.findByBillId(billId);
+        kardexs.forEach(kardex -> {
+            doc = kardex.getDetails() + " -- N.C. APLICADA";
+            kardex.setListsNull();
+            kardex.setFatherListToNull();
+            kardex.setDetails(doc);
+            kardexRepository.save(kardex);
+        });
+    }
+
+    //Reporte de Notas de Crédito
     public List<CreditNoteReport> getCreditNotesByUserClientIdAndDates(UUID userClientId, long dateOne, long dateTwo) {
         log.info("CreditNoteServices getCreditNotesByUserClientIdAndDates: {}, {}, {}", userClientId, dateOne, dateTwo);
         Iterable<CreditNote> creditNotes = creditNoteRepository.findCreditNotesByUserClientIdAndDates(userClientId, dateOne, dateTwo);

@@ -263,16 +263,17 @@ public class BillServices {
             throw new BadRequestException("Invalid Bill");
         }
         Bill billToDeactivate = billRepository.findOne(bill.getId());
-        billToDeactivate.setListsNull();
         billToDeactivate.setActive(false);
+        billToDeactivate.setListsNull();
         Bill saved = billRepository.save(billToDeactivate);
         populateChildren(saved);
-        updatePSdeactivatedBill(saved, saved.getDetails());
+        updateKardexOfDeactivatedBill(saved);
+        updatePSOfDeactivatedBill(saved, saved.getDetails());
         log.info("BillServices deactivateBill: {}, {}", saved.getId(), saved.getStringSeq());
         return billToDeactivate;
     }
     
-    public void updatePSdeactivatedBill(Bill deactivated, List<Detail> details) {
+    public void updatePSOfDeactivatedBill(Bill deactivated, List<Detail> details) {
         details.forEach(detail -> {
             if (!detail.getProduct().getProductType().getCode().equals("SER")) {
                 ProductBySubsidiary ps = productBySubsidiairyRepository.findBySubsidiaryIdAndProductId(deactivated.getSubsidiary().getId(), detail.getProduct().getId());
@@ -280,7 +281,18 @@ public class BillServices {
                 productBySubsidiairyRepository.save(ps);
             }
         });
-        log.info("BillServices updatePSdeactivatedBill DONE");
+        log.info("BillServices updatePSOfDeactivatedBill DONE");
+    }
+    
+    public void updateKardexOfDeactivatedBill(Bill deactivated) {
+        Iterable<Kardex> kardexs = kardexRepository.findByBillId(deactivated.getId());
+        kardexs.forEach(kardex -> {
+            kardex.setDetails(kardex.getDetails() + " -- ANULADA");
+            kardex.setActive(false);
+            kardex.setListsNull();
+            kardex.setFatherListToNull();
+            kardexRepository.save(kardex);
+        });
     }
 
     //Busca las Bills por Numero de Sequencia y Subsidiaria
