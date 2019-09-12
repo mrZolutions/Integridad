@@ -1764,45 +1764,77 @@ angular.module('integridadUiApp')
                 vm.provContable = '2.01.01.01';
             };
             vm.debtsBillsNumberPayed = vm.getDebtsBillNumberPayed();
-            paymentDebtsService.getPaymentDebtsByUserClientIdWithBankAndNroDocument(vm.usrCliId, vm.bankName, vm.noDocument).then(function(response) {
-                if (response.length === 0) {
-                    _.each(vm.itemsMultiplePayments, function(detail) { 
-                        vm.paymentDebts = {
-                            creditsDebts: detail.credit_debt
-                        };
-                        vm.paymentDebts.typePayment = vm.typePayment;
-                        if (vm.paymentDebts.typePayment == 'PAC') {
-                            vm.valorReten = 0;
-                        };
-                        vm.paymentDebts.datePayment = $('#pickerDateOfMultiPayment').data("DateTimePicker").date().toDate().getTime();
-                        vm.paymentDebts.documentNumber = detail.bill_number;
-                        vm.paymentDebts.modePayment = vm.modePayment;
-                        vm.paymentDebts.detail = vm.details;
-                        vm.paymentDebts.valorAbono = detail.debt_abono;
-                        vm.paymentDebts.noAccount = vm.noAccount;
-                        vm.paymentDebts.noDocument = vm.noDocument;
-                        vm.paymentDebts.ctaCtableBanco = vm.ctaCtableBankCode;
-                        vm.paymentDebts.banco = vm.bankName;
-                        paymentDebtsService.createPaymentDebts(vm.paymentDebts).then(function(response) {
-                            vm.paymentDebtsCreated = response;
-                            vm.success = 'Abono realizado con exito';
-                            vm.loading = false;
-                        }).catch(function(error) {
-                            vm.loading = false;
-                            vm.error = error.data;
-                        });
+            if (vm.paymentDebts.modePayment === 'EFC') {
+                _.each(vm.itemsMultiplePayments, function(detail) { 
+                    vm.paymentDebts = {
+                        creditsDebts: detail.credit_debt
+                    };
+                    vm.paymentDebts.typePayment = vm.typePayment;
+                    if (vm.paymentDebts.typePayment == 'PAC') {
+                        vm.valorReten = 0;
+                    };
+                    vm.paymentDebts.datePayment = $('#pickerDateOfMultiPayment').data("DateTimePicker").date().toDate().getTime();
+                    vm.paymentDebts.documentNumber = detail.bill_number;
+                    vm.paymentDebts.modePayment = vm.modePayment;
+                    vm.paymentDebts.detail = vm.details;
+                    vm.paymentDebts.valorAbono = detail.debt_abono;
+                    vm.paymentDebts.noAccount = "--";
+                    vm.paymentDebts.noDocument = "EFECTIVO";
+                    vm.paymentDebts.ctaCtableBanco = vm.ctaCtableBankCode;
+                    vm.paymentDebts.banco = vm.bankName;
+                    paymentDebtsService.createPaymentDebts(vm.paymentDebts).then(function(response) {
+                        vm.paymentDebtsCreated = response;
+                        vm.success = 'Abono realizado con exito';
+                        vm.loading = false;
+                    }).catch(function(error) {
+                        vm.loading = false;
+                        vm.error = error.data;
                     });
-                    _asientoComprobanteMultiEgreso();
-                    _asientoComprobanteMultiPago();
-                    _activate();
-                } else {
-                    vm.error = 'El Nro. de Documento (Cheque, Transferencia y/o Depósito) Ya Existe y no puede repetirse';
+                });
+                _asientoComprobanteMultiEgreso();
+                _asientoComprobanteMultiPago();
+                _activate();
+            } else {
+                paymentDebtsService.getPaymentDebtsByUserClientIdWithBankAndNroDocument(vm.usrCliId, vm.bankName, vm.noDocument).then(function(response) {
+                    if (response.length === 0) {
+                        _.each(vm.itemsMultiplePayments, function(detail) { 
+                            vm.paymentDebts = {
+                                creditsDebts: detail.credit_debt
+                            };
+                            vm.paymentDebts.typePayment = vm.typePayment;
+                            if (vm.paymentDebts.typePayment == 'PAC') {
+                                vm.valorReten = 0;
+                            };
+                            vm.paymentDebts.datePayment = $('#pickerDateOfMultiPayment').data("DateTimePicker").date().toDate().getTime();
+                            vm.paymentDebts.documentNumber = detail.bill_number;
+                            vm.paymentDebts.modePayment = vm.modePayment;
+                            vm.paymentDebts.detail = vm.details;
+                            vm.paymentDebts.valorAbono = detail.debt_abono;
+                            vm.paymentDebts.noAccount = vm.noAccount;
+                            vm.paymentDebts.noDocument = vm.noDocument;
+                            vm.paymentDebts.ctaCtableBanco = vm.ctaCtableBankCode;
+                            vm.paymentDebts.banco = vm.bankName;
+                            paymentDebtsService.createPaymentDebts(vm.paymentDebts).then(function(response) {
+                                vm.paymentDebtsCreated = response;
+                                vm.success = 'Abono realizado con exito';
+                                vm.loading = false;
+                            }).catch(function(error) {
+                                vm.loading = false;
+                                vm.error = error.data;
+                            });
+                        });
+                        _asientoComprobanteMultiEgreso();
+                        _asientoComprobanteMultiPago();
+                        _activate();
+                    } else {
+                        vm.error = 'El Nro. de Documento (Cheque, Transferencia y/o Depósito) Ya Existe y no puede repetirse';
+                        vm.loading = false;
+                    };
+                }).catch(function(error) {
                     vm.loading = false;
-                };
-            }).catch(function(error) {
-                vm.loading = false;
-                vm.error = error.data;
-            });
+                    vm.error = error.data;
+                });
+            };
         };
 
         function _asientoComprobanteMultiPago() {
@@ -1976,7 +2008,13 @@ angular.module('integridadUiApp')
             vm.paymentDebts.datePayment = $('#pickerDateOfPaymentDebt').data("DateTimePicker").date().toDate().getTime();
             vm.paymentDebts.creditId = vm.creditsDebtsId;
             vm.paymentDebts.documentNumber = vm.debtsBillNumber;
-            if (vm.paymentDebts.modePayment === 'CHQ' || vm.paymentDebts.modePayment === 'TRF' || vm.paymentDebts.modePayment === 'DEP') {
+            if (vm.paymentDebts.modePayment === 'EFC') {
+                vm.paymentDebts.noDocument = 'EFECTIVO'
+                vm.paymentDebts.ctaCtableBanco = vm.ctaCtableBankCode;
+                vm.paymentDebts.banco = vm.bankName;
+                vm.paymentDebts.ctaCtableProvider = vm.provContable;
+                vm.paymentDebts.providerName = vm.providerName;
+            } else if (vm.paymentDebts.modePayment === 'CHQ' || vm.paymentDebts.modePayment === 'TRF' || vm.paymentDebts.modePayment === 'DEP') {
                 vm.paymentDebts.ctaCtableBanco = vm.ctaCtableBankCode;
                 vm.paymentDebts.banco = vm.bankName;
                 vm.paymentDebts.ctaCtableProvider = vm.provContable;
@@ -1987,38 +2025,48 @@ angular.module('integridadUiApp')
                 vm.paymentDebts.ctaCtableProvider = '--';
                 vm.paymentDebts.providerName = '--';
             };
-            paymentDebtsService.getPaymentDebtsByUserClientIdWithBankAndNroDocument(vm.usrCliId, vm.paymentDebts.banco, vm.paymentDebts.noDocument).then(function(response) {
-                if (response.length === 0) {
-                    paymentDebtsService.createPaymentDebts(paymentDebts).then(function(response) {
-                        vm.paymentDebtsCreated = response;
-                        switch (vm.paymentDebtsCreated.modePayment) {
-                            case 'CHQ':
-                                _asientoComprobanteEgreso();
-                                _asientoComprobantePago();
-                            break;
-                            case 'TRF':
-                                _asientoComprobanteEgreso();
-                                _asientoComprobantePago();
-                            break;
-                            case 'DEP':
-                                _asientoComprobanteEgreso();
-                                _asientoComprobantePago();
-                            break;
-                        };
-                        vm.success = 'Abono realizado con exito';
-                        vm.loading = false;
-                    }).catch(function(error) {
-                        vm.loading = false;
-                        vm.error = error.data;
-                    });
-                } else {
-                    vm.error = 'El Nro. de Documento (Cheque, Transferencia y/o Depósito) Ya Existe y no puede repetirse';
+            if (vm.paymentDebts.modePayment === 'EFC') {
+                paymentDebtsService.createPaymentDebts(paymentDebts).then(function(response) {
+                    vm.paymentDebtsCreated = response;
+                    _asientoComprobanteEgreso();
+                    _asientoComprobantePago();
+                    vm.success = 'Abono realizado con exito';
                     vm.loading = false;
-                };
-            }).catch(function(error) {
-                vm.loading = false;
-                vm.error = error.data;
-            });
+                }).catch(function(error) {
+                    vm.loading = false;
+                    vm.error = error.data;
+                });
+            } else if (vm.paymentDebts.modePayment === 'CHQ' || vm.paymentDebts.modePayment === 'TRF' || vm.paymentDebts.modePayment === 'DEP') {
+                paymentDebtsService.getPaymentDebtsByUserClientIdWithBankAndNroDocument(vm.usrCliId, vm.paymentDebts.banco, vm.paymentDebts.noDocument).then(function(response) {
+                    if (response.length === 0) {
+                        paymentDebtsService.createPaymentDebts(paymentDebts).then(function(response) {
+                            vm.paymentDebtsCreated = response;
+                            _asientoComprobanteEgreso();
+                            _asientoComprobantePago();                            
+                            vm.success = 'Abono realizado con exito';
+                            vm.loading = false;
+                        }).catch(function(error) {
+                            vm.loading = false;
+                            vm.error = error.data;
+                        });
+                    } else {
+                        vm.error = 'El Nro. de Documento (Cheque, Transferencia y/o Depósito) Ya Existe y no puede repetirse';
+                        vm.loading = false;
+                    };
+                }).catch(function(error) {
+                    vm.loading = false;
+                    vm.error = error.data;
+                });
+            } else {
+                paymentDebtsService.createPaymentDebts(paymentDebts).then(function(response) {
+                    vm.paymentDebtsCreated = response;
+                    vm.success = 'Abono realizado con exito';
+                    vm.loading = false;
+                }).catch(function(error) {
+                    vm.loading = false;
+                    vm.error = error.data;
+                });
+            };
             _activate();
         };
 

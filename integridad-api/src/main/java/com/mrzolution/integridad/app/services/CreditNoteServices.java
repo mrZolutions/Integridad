@@ -137,11 +137,11 @@ public class CreditNoteServices {
     public void updateProductBySubsidiary(CreditNote creditNote, List<Detail> details) {
         details.forEach(detail -> {
             if (!detail.getProduct().getProductType().getCode().equals("SER")) {
-                ProductBySubsidiary ps = productBySubsidiairyRepository.findBySubsidiaryIdAndProductId(creditNote.getSubsidiary().getId(), detail.getProduct().getId());
-                ps.setQuantity(ps.getQuantity() + detail.getQuantity());
-                ps.setListsNull();
-                ps.setFatherListToNull();
-                productBySubsidiairyRepository.save(ps);
+                ProductBySubsidiary psNc = productBySubsidiairyRepository.findBySubsidiaryIdAndProductId(creditNote.getSubsidiary().getId(), detail.getProduct().getId());
+                psNc.setQuantity(psNc.getQuantity() + detail.getQuantity());
+                psNc.setListsNull();
+                psNc.setFatherListToNull();
+                productBySubsidiairyRepository.save(psNc);
             }
         });
     }

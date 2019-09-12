@@ -167,11 +167,11 @@ public class ConsumptionServices {
     public void updateProductBySubsidiary(Consumption consumption, List<DetailConsumption> detailsConsumption) {
         detailsConsumption.forEach(detail-> {
             if (!detail.getProduct().getProductType().getCode().equals("SER")) {
-                ProductBySubsidiary ps = productBySubsidiairyRepository.findBySubsidiaryIdAndProductId(consumption.getSubsidiary().getId(), detail.getProduct().getId());
-                ps.setQuantity(ps.getQuantity() - detail.getQuantity());
-                ps.setListsNull();
-                ps.setFatherListToNull();
-                productBySubsidiairyRepository.save(ps);
+                ProductBySubsidiary psCn = productBySubsidiairyRepository.findBySubsidiaryIdAndProductId(consumption.getSubsidiary().getId(), detail.getProduct().getId());
+                psCn.setQuantity(psCn.getQuantity() - detail.getQuantity());
+                psCn.setListsNull();
+                psCn.setFatherListToNull();
+                productBySubsidiairyRepository.save(psCn);
             }
         });
         log.info("ConsumptionServices updateProductBySubsidiary DONE");

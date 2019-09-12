@@ -47,4 +47,10 @@ angular
                 return response.data;
             });
         };
+
+        this.getByUserClientIdAndBillNumberActive = function(userClientId, billNum) {
+            return securityService.get('/cellar/userclient/' + userClientId + '/' + billNum).then(function successCallback(response) {
+                return response.data;
+            });
+        };
 });

@@ -93,6 +93,19 @@ public class CellarController {
         return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
     }
     
+    @RequestMapping(method = RequestMethod.GET, value="/userclient/{userClientId}/{billNum}")
+    public ResponseEntity getByUserClientIdAndBillNumberActive(@PathVariable("userClientId") UUID userClientId, @PathVariable("billNum") String billNum) {
+        Iterable<Cellar> response = null;
+        try {
+            response = service.getByUserClientIdAndBillNumberActive(userClientId, billNum);
+        } catch (BadRequestException e) {
+            log.error("CellarController getByUserClientIdAndBillNumberActive Exception thrown: {}", e.getMessage());
+	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+        log.info("CellarController getByUserClientIdAndBillNumberActive DONE");
+        return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
+    }
+    
     @RequestMapping(method = RequestMethod.GET, value="/provider/nocrednot/{id}")
     public ResponseEntity getCellarsByProviderIdAndNoCN(@PathVariable("id") UUID id) {
         Iterable<Cellar> response = null;

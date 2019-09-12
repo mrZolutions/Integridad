@@ -501,11 +501,21 @@ angular.module('integridadUiApp')
                 };
                 vm.cellar.detailsKardex.push(kardex);
             });
-            cellarService.create(vm.cellar).then(function(respCellar) {
-                vm.celled = true;
-                vm.cellarCreated = respCellar;
-                $localStorage.user.cashier.whNumberSeq = vm.numberAddedOne;
-                vm.loading = false;
+            cellarService.getByUserClientIdAndBillNumberActive(vm.usrCliId, vm.cellar.billNumber).then(function(response) {
+                if (response.length === 0) {
+                    cellarService.create(vm.cellar).then(function(respCellar) {
+                        vm.celled = true;
+                        vm.cellarCreated = respCellar;
+                        $localStorage.user.cashier.whNumberSeq = vm.numberAddedOne;
+                        vm.loading = false;
+                    }).catch(function(error) {
+                        vm.loading = false;
+                        vm.error = error.data;
+                    });
+                } else {
+                    vm.error = 'El Nro. de Documento (Factura) Ya Existe y no puede repetirse';
+                    vm.loading = false;
+                };
             }).catch(function(error) {
                 vm.loading = false;
                 vm.error = error.data;
@@ -515,6 +525,7 @@ angular.module('integridadUiApp')
         vm.cancelCellar = function() {
             vm.warehouseSelected = undefined;
             vm.providerSelected = undefined;
+            vm.error = undefined;
         };
 
         vm.cellarSelected = function(cellar) {

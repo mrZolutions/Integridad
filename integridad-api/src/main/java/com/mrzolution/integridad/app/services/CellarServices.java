@@ -167,12 +167,12 @@ public class CellarServices {
     public void updateProductBySubsidiary(Cellar cellar, List<DetailCellar> detailsCellar) {
         detailsCellar.forEach(detail -> {
             if (!detail.getProduct().getProductType().getCode().equals("SER")) {
-                ProductBySubsidiary ps = productBySubsidiairyRepository.findBySubsidiaryIdAndProductId(cellar.getSubsidiary().getId(), detail.getProduct().getId());
-                if(ps != null){
-                    ps.setQuantity(ps.getQuantity() + detail.getQuantity());
-                    ps.setListsNull();
-                    ps.setFatherListToNull();
-                    productBySubsidiairyRepository.save(ps);
+                ProductBySubsidiary psCl = productBySubsidiairyRepository.findBySubsidiaryIdAndProductId(cellar.getSubsidiary().getId(), detail.getProduct().getId());
+                if(psCl != null){
+                    psCl.setQuantity(psCl.getQuantity() + detail.getQuantity());
+                    psCl.setListsNull();
+                    psCl.setFatherListToNull();
+                    productBySubsidiairyRepository.save(psCl);
                 }
             }
         });
@@ -229,6 +229,17 @@ public class CellarServices {
             cellar.setListsNull();
         });
         log.info("CellarServices getActivesCellarByWhNumberSeqAndUserClientId: {}, {}", whNumberSeq, userClientId);
+        return cellars;
+    }
+    
+    //Busca Por Empresa y Nro. Factura
+    public Iterable<Cellar> getByUserClientIdAndBillNumberActive(UUID userClientId, String billNum) {
+        Iterable<Cellar> cellars = cellarRepository.findByUserClientIdAndBillNumberActive(userClientId, billNum);
+        cellars.forEach(cellar -> {
+            cellar.setFatherListToNull();
+            cellar.setListsNull();
+        });
+        log.info("CellarServices getActivesCellarByWhNumberSeqAndUserClientId: {}, {}", userClientId, billNum);
         return cellars;
     }
     
