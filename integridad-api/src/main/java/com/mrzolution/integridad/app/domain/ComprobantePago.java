@@ -30,6 +30,7 @@ public class ComprobantePago {
     private String comprobanteSeq;
     private String comprobanteStringSeq;
     private String comprobanteConcep;
+    private String comprobanteEstado;
     private String billNumber;
     private String numCheque;
     private String nameBank;

@@ -169,6 +169,8 @@ public class ConsumptionServices {
             if (!detail.getProduct().getProductType().getCode().equals("SER")) {
                 ProductBySubsidiary ps = productBySubsidiairyRepository.findBySubsidiaryIdAndProductId(consumption.getSubsidiary().getId(), detail.getProduct().getId());
                 ps.setQuantity(ps.getQuantity() - detail.getQuantity());
+                ps.setListsNull();
+                ps.setFatherListToNull();
                 productBySubsidiairyRepository.save(ps);
             }
         });

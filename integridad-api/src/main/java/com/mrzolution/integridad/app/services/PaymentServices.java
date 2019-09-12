@@ -109,7 +109,7 @@ public class PaymentServices {
     public void updateBill(Payment saved) {
         Iterable<Bill> bills = billRepository.findBillById(saved.getCredits().getPago().getBill().getId());
         bills.forEach(bill -> {
-            resto = saved.getCredits().getValor();
+            resto = saved.getCredits().getValor() - saved.getValorAbono();
             BigDecimal vresto = new BigDecimal(resto);
             if (resto <= 0) {
                 vresto = vresto.setScale(0, BigDecimal.ROUND_HALF_UP);

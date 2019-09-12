@@ -415,6 +415,23 @@ angular.module('integridadUiApp')
             };
             return totalCredito;
         };
+
+        vm.comprobantePagoDeactivate = function() {
+            vm.loading = true;
+            var index = vm.comprobantePagoList.indexOf(vm.deactivateComprobantePago);
+            comprobanteService.deactivateComprobanteCobro(vm.deactivateComprobantePago).then(function(response) {
+                var index = vm.comprobantePagoList.indexOf(vm.deactivateComprobantePago);
+                if (index > -1) {
+                    vm.comprobantePagoList.splice(index, 1);
+                };
+                vm.deactivateComprobantePago = undefined;
+                vm.success = 'Comprobante de Pago anulado con exito';
+                vm.loading = false;
+            }).catch(function(error) {
+                vm.loading = false;
+                vm.error = error.data;
+            });
+        };
         //Fin de Sección
 
         vm.getAllDebtsToPay = function() {
@@ -1832,6 +1849,7 @@ angular.module('integridadUiApp')
             vm.comprobantePago.billNumber = vm.debtsBillsNumberPayed;
             vm.comprobantePago.numCheque = vm.noDocument;
             vm.comprobantePago.nameBank = vm.bankName;
+            vm.comprobantePago.comprobanteEstado = 'PROCESADO';
             vm.comprobantePago.codeConta = vm.ctaCtableBankCode;
             vm.comprobantePago.paymentDebtId = vm.paymentDebtsCreated.id;
             vm.comprobantePago.comprobanteConcep = vm.generalDetailCP_1;
@@ -2012,7 +2030,7 @@ angular.module('integridadUiApp')
 
         function _asientoComprobantePago() {
             _getComprobantePagoSeqNumber();
-            vm.generalDetailCP_1 = 'Pago de Fact. Nro: ' + vm.paymentDebtsCreated.documentNumber + ' a:' + vm.paymentDebtsCreated.providerName;
+            vm.generalDetailCP_1 = 'Pago de Fact. Nro: ' + vm.paymentDebtsCreated.documentNumber + ' a: ' + vm.paymentDebtsCreated.providerName;
             vm.itemPagoA = {
                 codeConta: vm.paymentDebtsCreated.ctaCtableProvider,
                 descrip: 'PROVEEDORES LOCALES',
@@ -2039,6 +2057,7 @@ angular.module('integridadUiApp')
             vm.comprobantePago.billNumber = vm.paymentDebtsCreated.documentNumber;
             vm.comprobantePago.numCheque = vm.paymentDebtsCreated.noDocument;;
             vm.comprobantePago.nameBank = vm.paymentDebtsCreated.banco;
+            vm.comprobantePago.comprobanteEstado = 'PROCESADO';
             vm.comprobantePago.codeConta = vm.paymentDebtsCreated.ctaCtableBanco;
             vm.comprobantePago.paymentDebtId = vm.paymentDebtsCreated.id;
             vm.comprobantePago.comprobanteConcep = vm.generalDetailCP_1;

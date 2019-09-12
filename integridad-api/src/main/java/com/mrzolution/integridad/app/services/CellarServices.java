@@ -170,6 +170,8 @@ public class CellarServices {
                 ProductBySubsidiary ps = productBySubsidiairyRepository.findBySubsidiaryIdAndProductId(cellar.getSubsidiary().getId(), detail.getProduct().getId());
                 if(ps != null){
                     ps.setQuantity(ps.getQuantity() + detail.getQuantity());
+                    ps.setListsNull();
+                    ps.setFatherListToNull();
                     productBySubsidiairyRepository.save(ps);
                 }
             }

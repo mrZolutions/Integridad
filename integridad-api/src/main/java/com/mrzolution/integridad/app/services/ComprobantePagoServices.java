@@ -90,6 +90,21 @@ public class ComprobantePagoServices {
         return saved;
     }
     
+    //Desactivación de los Comprobantes de Pago
+    @Async("asyncExecutor")
+    public ComprobantePago deactivateComprobantePago(ComprobantePago comprobantePago) throws BadRequestException {
+        if (comprobantePago.getId() == null) {
+            throw new BadRequestException("Invalid ComprobantePago");
+        }
+        ComprobantePago compPagoToDeactivate = comprobantePagoRepository.findOne(comprobantePago.getId());
+        compPagoToDeactivate.setListsNull();
+        compPagoToDeactivate.setActive(false);
+        compPagoToDeactivate.setComprobanteEstado("ANULADO");
+        comprobantePagoRepository.save(compPagoToDeactivate);
+        log.info("ComprobantePagoServices deactivateComprobantePago: {}", compPagoToDeactivate.getId());
+        return compPagoToDeactivate;
+    }
+    
     //Carga los Detalles hacia un COMPROBANTE DE PAGO
     private void populateChildren(ComprobantePago comprobantePago) {
 	List<DetailComprobantePago> detailComprobantePagoList = new ArrayList<>();

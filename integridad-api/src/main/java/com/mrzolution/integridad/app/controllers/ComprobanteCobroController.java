@@ -77,4 +77,16 @@ public class ComprobanteCobroController {
         log.info("ComprobanteCobroController createComprobanteCobro DONE");
         return new ResponseEntity<ComprobanteCobro>(response, HttpStatus.CREATED);
     }
+    
+    @RequestMapping(method = RequestMethod.PUT)
+    public ResponseEntity deactivateComprobanteCobro(@RequestBody ComprobanteCobro comprobanteCobro) {
+        try {
+            service.deactivateComprobanteCobro(comprobanteCobro);
+        } catch (BadRequestException e) {
+            log.error("ComprobanteCobroController deactivateComprobanteCobro Exception thrown: {}", e.getMessage());
+    	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+        log.info("ComprobanteCobroController deactivateComprobanteCobro DONE");
+        return new ResponseEntity<Void>(HttpStatus.ACCEPTED);
+    }
 }

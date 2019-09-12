@@ -23,6 +23,12 @@ angular
             });
         };
 
+        this.deactivateComprobanteCobro = function(comprobanteCobro) {
+            return securityService.put('/compcobro', comprobanteCobro).then(function successCallback(response) {
+                return response.data;
+            });
+        };
+
         //Comprobante de Pago
         this.createComprobantePago = function(comprobantePago) {
             return securityService.post('/comppago', comprobantePago).then(function successCallback(response) {
@@ -41,6 +47,12 @@ angular
         };
         this.getComprobantePagoByProviderId = function(id) {
             return securityService.get('/comppago/provider/' + id).then(function successCallback(response) {
+                return response.data;
+            });
+        };
+
+        this.deactivateComprobantePago = function(comprobantePago) {
+            return securityService.put('/comppago', comprobantePago).then(function successCallback(response) {
                 return response.data;
             });
         };

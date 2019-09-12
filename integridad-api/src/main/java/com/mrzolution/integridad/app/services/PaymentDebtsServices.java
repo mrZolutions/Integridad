@@ -113,23 +113,25 @@ public class PaymentDebtsServices {
             creditsDebtsRepository.save(creditDebt);
         });
         log.info("PaymentDebtsServices updateCreditsDebts DONE");
-        nume = 0;
         resto = 0;
     }
     
     public void updateDebtsToPay(PaymentDebts saved) {
         Iterable<DebtsToPay> debts = debtsToPayRepository.findDebtsToPayById(saved.getCreditsDebts().getPagoDebts().getDebtsToPay().getId());
         debts.forEach(debt -> {
-            resto = saved.getCreditsDebts().getValor();
+            resto = saved.getCreditsDebts().getValor() - saved.getValorAbono();
             BigDecimal vresto = new BigDecimal(resto);
-            vresto = vresto.setScale(2, BigDecimal.ROUND_HALF_UP);
+            if (resto <= 0) {
+                vresto = vresto.setScale(0, BigDecimal.ROUND_HALF_UP);
+            } else {
+                vresto = vresto.setScale(2, BigDecimal.ROUND_HALF_UP);
+            }
             debt.setSaldo(vresto.doubleValue());
             debt.setListsNull();
             debt.setFatherListToNull();
             debtsToPayRepository.save(debt);
         });
         log.info("PaymentDebtsServices updateDebtsToPay DONE");
-        nume = 0;
         resto = 0;
     }
     
@@ -139,7 +141,7 @@ public class PaymentDebtsServices {
         totalAbono = 0;
         totalReten = 0;
         
-        log.info("PaymentServices getPaymentDebtsByUserClientIdAndDates: {}, {}, {}", id, dateOne, dateTwo);
+        log.info("PaymentDebtsServices getPaymentDebtsByUserClientIdAndDates: {}, {}, {}", id, dateOne, dateTwo);
         Iterable<PaymentDebts> paymentsDebts = paymentDebtsRepository.findPaymentsDebtsByUserClientIdAndDates(id, dateOne, dateTwo);
         List<CPResumenPaymentDebtsReport> cpResumenPaymentDebtsReportList = new ArrayList<>();
         
@@ -195,7 +197,7 @@ public class PaymentDebtsServices {
         totalReten = 0;
         saldo = 0;
         
-        log.info("PaymentServices getStatementProviderReport: {}, {}", id, dateTwo);
+        log.info("PaymentDebtsServices getStatementProviderReport: {}, {}", id, dateTwo);
         Iterable<PaymentDebts> paymentsDebts = paymentDebtsRepository.findStatementProviderReport(id, dateTwo);
         List<StatementProviderReport> statementProviderReportList = new ArrayList<>();
         

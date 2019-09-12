@@ -1115,7 +1115,7 @@
                                         ng-click="vm.comprobanteCobroSelected(comprobanteCobro)">
                                         <span class = "glyphicon glyphicon-eye-open" aria-hidden = "true"></span>
                                 </button>
-                                <button type="button" title = "Anular Comprobante de Cobro" class="btn btn-warning btn-sm" 
+                                <button type="button" title = "Anular Comprobante de Cobro" class="btn btn-warning btn-sm" ng-show="comprobanteCobro.active !== false" 
                                         ng-click="vm.deactivateComprobanteCobro = comprobanteCobro" data-toggle="modal" data-target="#modalAnularComprobanteCobro">
                                         <span class = "glyphicon glyphicon-warning-sign" aria-hidden = "true"></span>
                                 </button>
@@ -1291,6 +1291,35 @@
         </div>
     </div>
 
+    <!--ANULAR COMPROBANTE DE COBRO-->
+    <div id="modalAnularComprobanteCobro" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h3 class="modal-title">¡¡¡Advertencia!!!</h3>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                       <div class="col-md-12" >
+                            <p>¿Est&aacute; seguro que desea Anular el Comprobante de Cobro?</p>
+                            <p>Recuerde que el Comprobante de Cobro ANULADO <b>NO puede ser Recuperado</b>.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" title="Anular Comprobante de Cobro" class="btn btn-danger btn-sm" ng-click="vm.comprobanteCobroDeactivate()" data-dismiss="modal">
+                            <span class = "glyphicon glyphicon-screenshot" aria-hidden = "true"></span>
+                    </button>
+                    <button type="button" title = "Salir" class="btn btn-primary btn-sm" data-dismiss="modal">
+                            <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--FIN DE COMPROBANTE DE COBRO-->
+
     <!--RETENCIONES DE FACTURAS DE CLIENTES-->
     <div class="table-responsive" ng-show="vm.retentionClient !== undefined">
         <div class="panel panel-primary">
@@ -1446,72 +1475,6 @@
             </div>
         </div>
     </div>
-    
-<!--    <div class="table-responsive" ng-show="vm.retentionClientCreated">
-        <div class="panel panel-primary">
-            <div class="panel-heading">
-                <h4>Comprobante</h4>
-                <b>Retención de Factura No. {{vm.billNumber}}</b>
-            </div>
-            <div class="panel-body">
-                <div class="row">
-                    <div class="form-group col-md-12 ">
-                        <table width="100%">
-                            <tr>
-                            <td>
-                                <div style="padding:0px 20px;">
-                                    <b>NOMBRE DEL CLIENTE: {{vm.clientName}}</b><br/>
-                                    <b>IDENTIFICACIÓN: {{vm.clientIdentification}}</b><br/><br/>
-                                    <b>Nro. DE RETENCIÓN: {{vm.retentionClient.retentionNumber}}</b><br/>
-                                    <b>FECHA: {{vm.retentionClient.documentDate | date : "dd-MM-yyyy"}}</b><br/>
-                                    <b>EJERCICIO FISCAL: {{vm.retentionClient.ejercicioFiscal}}</b><br/>
-                                </div>
-                            </td>
-                            </tr>
-                        </table>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="form-group col-md-12 ">
-                        <table width="100%" border="1">
-                            <tr>
-                                <td><b>EJERCICIO FISCAL </b></td>
-                                <td><b>TIPO IMPUESTO </b></td>
-                                <td><b>CODIGO </b></td>
-                                <td><b>BASE IMPONIBLE </b></td>
-                                <td><b>RETENCIONES % </b></td>
-                                <td><b>VALOR </b></td>
-                            </tr>
-                            <tr ng-repeat="detail in vm.retentionClient.detailRetentionClient">
-                                <td>{{vm.retentionClient.ejercicioFiscal}}</td>
-                                <td>{{detail.taxType}}</td>
-                                <td>{{detail.code}}</td>
-                                <td>{{detail.baseImponible.toFixed(2)}}</td>
-                                <td>{{detail.percentage}}</td>
-                                <td>{{detail.total.toFixed(2)}}</td>
-                            </tr>
-                            <tr>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td><b>TOTAL</b></td>
-                                <td>{{vm.totalRetention.toFixed(2)}}</td>
-                            </tr>
-                        </table>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="form-group col-md-12">
-                    <button type="button" title = "Salir" class="btn btn-primary btn-sm"
-                            ng-click="vm.cancel()">
-                            <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
-                    </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div> -->
     
     <div id="modalPreview" class="modal fade" role="dialog">
         <div class="modal-dialog">

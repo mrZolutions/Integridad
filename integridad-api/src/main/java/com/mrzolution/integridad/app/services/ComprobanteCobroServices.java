@@ -90,6 +90,21 @@ public class ComprobanteCobroServices {
         return saved;
     }
     
+    //Desactivación de los Comprobantes de Cobro
+    @Async("asyncExecutor")
+    public ComprobanteCobro deactivateComprobanteCobro(ComprobanteCobro comprobanteCobro) throws BadRequestException {
+        if (comprobanteCobro.getId() == null) {
+            throw new BadRequestException("Invalid ComprobanteCobro");
+        }
+        ComprobanteCobro compCobroToDeactivate = comprobanteCobroRepository.findOne(comprobanteCobro.getId());
+        compCobroToDeactivate.setListsNull();
+        compCobroToDeactivate.setActive(false);
+        compCobroToDeactivate.setComprobanteEstado("ANULADO");
+        comprobanteCobroRepository.save(compCobroToDeactivate);
+        log.info("ComprobanteCobroServices deactivateComprobanteCobro: {}", compCobroToDeactivate.getId());
+        return compCobroToDeactivate;
+    }
+    
     //Carga los Detalles hacia un COMPROBANTE DE COBRO
     private void populateChildren(ComprobanteCobro comprobanteCobro) {
 	List<DetailComprobanteCobro> detailComprobanteCobroList = new ArrayList<>();
