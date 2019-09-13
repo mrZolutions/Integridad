@@ -27,13 +27,11 @@ public class KardexServices {
     public double sumSale;
     public double sumSaldo;
     public double sumCompra;
-    public double sumVenta;
+    public double sumProm;
+    public double quanty;
     
     public double totalEntra;
-    public double totalSale;
-    public double totalSaldo;
     public double totalCompra;
-    public double totalVenta;
     
     public List<KardexOfProductReport> getKardexActivesByUserClientIdAndProductIdAndDates(String id, UUID prodID, long dateOne, long dateTwo) {
         log.info("KardexServices getKardexActivesByUserClientIdAndProductIdAndDates");
@@ -42,24 +40,33 @@ public class KardexServices {
         sumEntra = 0.0;
         sumSale = 0.0;
         sumSaldo = 0.0;
+        quanty = 0.0;
+        totalEntra = 0.0;
+        totalCompra = 0.0;
         detaKardex.forEach(kard ->{
             if (kard.isActive()) {
                 SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
                 String fechaReg = dateFormat.format(new Date(kard.getDateRegister()));
-                if ("INGRESO".equals(kard.getObservation())) {
+                
+                if ("INGRESO".equals(kard.getObservation())){
+                    totalEntra = kard.getProdQuantity();
+                    quanty = quanty + totalEntra;
+                    totalCompra = totalCompra + kard.getProdTotal();
+                    sumProm = totalCompra / quanty;
+                }
+                
+                if ("INGRESO".equals(kard.getObservation()) || "NCV".equals(kard.getObservation())) {
                     sumEntra = kard.getProdQuantity();
                     sumCompra = kard.getProdCostEach();
-                    sumSale = 0.0;
-                    sumVenta = 0.0;
                 } else {
                     sumEntra = 0.0;
                     sumCompra = 0.0;
                     sumSale = kard.getProdQuantity();
-                    sumVenta = kard.getProdCostEach();
                 }
+                
                 sumSaldo = sumSaldo + (sumEntra - sumSale);
                 
-                KardexOfProductReport kardexOfProductReport = new KardexOfProductReport(fechaReg, kard.getDetails(), sumEntra, sumSale, sumSaldo, sumCompra, sumVenta);
+                KardexOfProductReport kardexOfProductReport = new KardexOfProductReport(fechaReg, kard.getProdName(), kard.getDetails(), sumEntra, sumSale, sumSaldo, sumCompra, sumProm);
                 
                 kardexOfProductReportList.add(kardexOfProductReport);
             }

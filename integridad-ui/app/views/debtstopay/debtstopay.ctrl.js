@@ -1764,7 +1764,7 @@ angular.module('integridadUiApp')
                 vm.provContable = '2.01.01.01';
             };
             vm.debtsBillsNumberPayed = vm.getDebtsBillNumberPayed();
-            if (vm.paymentDebts.modePayment === 'EFC') {
+            if (vm.modePayment === 'EFC') {
                 _.each(vm.itemsMultiplePayments, function(detail) { 
                     vm.paymentDebts = {
                         creditsDebts: detail.credit_debt
@@ -1883,7 +1883,6 @@ angular.module('integridadUiApp')
             vm.comprobantePago.nameBank = vm.bankName;
             vm.comprobantePago.comprobanteEstado = 'PROCESADO';
             vm.comprobantePago.codeConta = vm.ctaCtableBankCode;
-            vm.comprobantePago.paymentDebtId = vm.paymentDebtsCreated.id;
             vm.comprobantePago.comprobanteConcep = vm.generalDetailCP_1;
             vm.comprobantePago.total = vm.valorDocumento;
             vm.comprobantePago.iva = parseFloat((vm.valorDocumento * 0.12).toFixed(2));

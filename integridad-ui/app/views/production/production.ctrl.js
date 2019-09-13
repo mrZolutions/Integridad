@@ -51,7 +51,10 @@ angular.module('integridadUiApp')
             vm.success = undefined;
             vm.error = undefined;
             vm.prodKarId = undefined;
+            vm.prodKarName = undefined;
             vm.selectedKardex = undefined;
+            vm.reportList = undefined;
+            vm.isProductReportList = undefined;
 
             vm.impuestosTotales = [];
             vm.impuestoICE = {
@@ -247,6 +250,7 @@ angular.module('integridadUiApp')
         vm.selectProductForKardex = function(productKar) {
             vm.productListKar = undefined;
             vm.prodKarId = productKar.id;
+            vm.prodKarName = productKar.name;
         };
         
         vm.getKardexReportForProduct = function() {
@@ -277,12 +281,13 @@ angular.module('integridadUiApp')
                     _.each(vm.reportList, function(kardex) {
                         var data = {
                             FECHA: kardex.fecha,
+                            PRODUCTO: kardex.prodName,
                             DESCRIPCION: kardex.detalle,
-                            ENTRADAS: parseFloat(kardex.entrada.toFixed(2)),
-                            SALIDAS: parseFloat(kardex.salida.toFixed(2)),
+                            ENTRA: parseFloat(kardex.entrada.toFixed(2)),
+                            SALE: parseFloat(kardex.salida.toFixed(2)),
                             SALDOS: parseFloat(kardex.saldo.toFixed(2)),
-                            COMPRA: parseFloat(kardex.compra.toFixed(2)),
-                            VENTA: parseFloat(kardex.venta.toFixed(2))
+                            COST_COMP: parseFloat(kardex.compra.toFixed(2)),
+                            COST_PROM: parseFloat(kardex.promedio.toFixed(2))
                         };
             
                         dataReport.push(data);

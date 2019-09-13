@@ -673,7 +673,7 @@ angular.module('integridadUiApp')
                     bill: vm.bill.id,
                     product: det.product,
                     dateRegister: $('#pickerBillDate').data("DateTimePicker").date().toDate().getTime(),
-                    details: 'VENTA FACTURA Nro. ' + vm.seqNumber,
+                    details: 'FACTURA-VENTA Nro. ' + vm.seqNumber,
                     observation: 'EGRESO',
                     prodCostEach: det.costEach,
                     prodName: det.product.name,

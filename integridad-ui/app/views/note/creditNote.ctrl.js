@@ -143,11 +143,9 @@ angular.module('integridadUiApp')
             vm.bill.iva = iva;
             vm.bill.total = total;
 
-            //vm.impuestoICE.base_imponible = vm.bill.subTotal
-            vm.impuestoIVA.base_imponible = vm.bill.baseTaxes
-            vm.impuestoIVAZero.base_imponible = vm.bill.baseNoTaxes
-            //vm.impuestoICE.valor = vm.bill.ice;
-            vm.impuestoIVA.valor = vm.bill.iva
+            vm.impuestoIVA.base_imponible = vm.bill.baseTaxes;
+            vm.impuestoIVAZero.base_imponible = vm.bill.baseNoTaxes;
+            vm.impuestoIVA.valor = vm.bill.iva;
             vm.impuestoIVAZero.valor = 0.0;
         };
 

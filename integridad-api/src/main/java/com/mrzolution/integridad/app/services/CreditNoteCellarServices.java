@@ -7,6 +7,7 @@ import com.mrzolution.integridad.app.domain.CreditNoteCellar;
 import com.mrzolution.integridad.app.domain.CreditsDebts;
 import com.mrzolution.integridad.app.domain.DebtsToPay;
 import com.mrzolution.integridad.app.domain.DetailCellar;
+import com.mrzolution.integridad.app.domain.Kardex;
 import com.mrzolution.integridad.app.domain.PaymentDebts;
 import com.mrzolution.integridad.app.domain.ProductBySubsidiary;
 import com.mrzolution.integridad.app.domain.report.CreditNoteCellarReport;
@@ -17,6 +18,7 @@ import com.mrzolution.integridad.app.repositories.CreditNoteCellarRepository;
 import com.mrzolution.integridad.app.repositories.CreditsDebtsRepository;
 import com.mrzolution.integridad.app.repositories.DebtsToPayRepository;
 import com.mrzolution.integridad.app.repositories.DetailCellarRepository;
+import com.mrzolution.integridad.app.repositories.KardexRepository;
 import com.mrzolution.integridad.app.repositories.PaymentDebtsRepository;
 import com.mrzolution.integridad.app.repositories.ProductBySubsidiairyRepository;
 import java.text.SimpleDateFormat;
@@ -53,6 +55,8 @@ public class CreditNoteCellarServices {
     CashierRepository cashierRepository;
     @Autowired
     DebtsToPayRepository debtsToPayRepositoty;
+    @Autowired
+    KardexRepository kardexRepository;
     
     public UUID cellarId;
     public String debtsId;
@@ -108,9 +112,28 @@ public class CreditNoteCellarServices {
             
             detailsCellar.forEach(detail -> {
                 detail.setCreditNoteCellar(saved);
-                detailCellarRepository.save(detail);
+                DetailCellar detCelSaved = detailCellarRepository.save(detail);
                 detail.setCreditNoteCellar(null);
+                Kardex spKarCel = new Kardex();
+                    spKarCel.setActive(true);
+                    spKarCel.setBill(null);
+                    spKarCel.setCellar(null);
+                    spKarCel.setConsumption(null);
+                    spKarCel.setCredNoteIdVenta("--");
+                    spKarCel.setCredNoteIdCompra(saved.getId().toString());
+                    spKarCel.setDateRegister(saved.getDateCreated());
+                    spKarCel.setDetails("N.C. Nro. " + saved.getNotaCredito() + " de INGRESO A BODEGA Nro. " + detCelSaved.getCellar().getWhNumberSeq() + ", Fc. " + saved.getDocumentStringSeq());
+                    spKarCel.setObservation("NCC");
+                    spKarCel.setProdCostEach(detCelSaved.getCostEach());
+                    spKarCel.setProdQuantity(detCelSaved.getQuantity());
+                    spKarCel.setProdTotal(detCelSaved.getTotal());
+                    spKarCel.setProduct(detCelSaved.getProduct());
+                    spKarCel.setProdName(detCelSaved.getProduct().getName());
+                    spKarCel.setCodeWarehouse("--");
+                    spKarCel.setUserClientId(saved.getSubsidiary().getUserClient().getId().toString());
+                kardexRepository.save(spKarCel);
             });
+            
             saved.setDetailsCellar(detailsCellar);
             saved.setFatherListToNull();
             
@@ -165,18 +188,18 @@ public class CreditNoteCellarServices {
                 CreditsDebts spCreditsDebts = creditsDebtsRepository.save(creditsDebts);
                 valor = spCreditsDebts.getValor();
                 PaymentDebts spPaymentDebts = new PaymentDebts();
-                spPaymentDebts.setCreditsDebts(spCreditsDebts);
-                spPaymentDebts.setDatePayment(saved.getDateCreated());
-                spPaymentDebts.setNoDocument(saved.getStringSeq());
-                spPaymentDebts.setNoAccount("--");
-                spPaymentDebts.setDocumentNumber(saved.getDocumentStringSeq());
-                spPaymentDebts.setTypePayment("NTC");
-                spPaymentDebts.setDetail("ABONO POR NOTA DE CREDITO");
-                spPaymentDebts.setModePayment("NTC");
-                spPaymentDebts.setValorAbono(0.0);
-                spPaymentDebts.setValorReten(0.0);
-                spPaymentDebts.setValorNotac(saved.getTotal());
-                spPaymentDebts.setActive(true);
+                    spPaymentDebts.setCreditsDebts(spCreditsDebts);
+                    spPaymentDebts.setDatePayment(saved.getDateCreated());
+                    spPaymentDebts.setNoDocument(saved.getStringSeq());
+                    spPaymentDebts.setNoAccount("--");
+                    spPaymentDebts.setDocumentNumber(saved.getDocumentStringSeq());
+                    spPaymentDebts.setTypePayment("NTC");
+                    spPaymentDebts.setDetail("ABONO POR NOTA DE CREDITO");
+                    spPaymentDebts.setModePayment("NTC");
+                    spPaymentDebts.setValorAbono(0.0);
+                    spPaymentDebts.setValorReten(0.0);
+                    spPaymentDebts.setValorNotac(saved.getTotal());
+                    spPaymentDebts.setActive(true);
                 paymentDebtsRepository.save(spPaymentDebts);
             }
             debt.setCredNoteApplied(true);

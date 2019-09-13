@@ -111,14 +111,31 @@ public class CreditNoteServices {
 
             details.forEach(detail -> {
                 detail.setCreditNote(saved);
-                detailRepository.save(detail);
+                Detail detSaved = detailRepository.save(detail);
                 detail.setCreditNote(null);
+                Kardex spKar = new Kardex();
+                    spKar.setActive(true);
+                    spKar.setBill(null);
+                    spKar.setCellar(null);
+                    spKar.setConsumption(null);
+                    spKar.setCredNoteIdVenta(saved.getId().toString());
+                    spKar.setCredNoteIdCompra("--");
+                    spKar.setDateRegister(saved.getDateCreated());
+                    spKar.setDetails("N.C. Nro: " + saved.getStringSeq() + " de FACTURA-VENTA Nro. " + saved.getDocumentStringSeq());
+                    spKar.setObservation("NCV");
+                    spKar.setProdCostEach(detSaved.getCostEach());
+                    spKar.setProdQuantity(detSaved.getQuantity());
+                    spKar.setProdTotal(detSaved.getTotal());
+                    spKar.setProduct(detSaved.getProduct());
+                    spKar.setProdName(detSaved.getProduct().getName());
+                    spKar.setCodeWarehouse("--");
+                    spKar.setUserClientId(saved.getSubsidiary().getUserClient().getId().toString());
+                kardexRepository.save(spKar);
             });
             
             saved.setDetails(details);
             saved.setFatherListToNull();
             updateBill(saved);
-            updateKardex(saved);
             
             Credits validate = creditsRepository.findByBillId(document);
             if (validate != null) {
@@ -156,20 +173,19 @@ public class CreditNoteServices {
             statusCambio = "NOTA DE CREDITO APLICADA";
             docNumber.setStatusCredits(statusCambio);
             Credits spCredits =  creditsRepository.save(docNumber);
-            
             Payment specialPayment = new Payment();
-            specialPayment.setCredits(spCredits);
-            specialPayment.setDatePayment(saved.getDateCreated());
-            specialPayment.setNoDocument(saved.getStringSeq());
-            specialPayment.setNoAccount("--");
-            specialPayment.setDocumentNumber(saved.getDocumentStringSeq());
-            specialPayment.setTypePayment("NTC");
-            specialPayment.setDetail("ABONO POR NOTA DE CREDITO");
-            specialPayment.setModePayment("NTC");
-            specialPayment.setValorAbono(0.0);
-            specialPayment.setValorReten(0.0);
-            specialPayment.setValorNotac(saved.getTotal());
-            specialPayment.setActive(true);
+                specialPayment.setCredits(spCredits);
+                specialPayment.setDatePayment(saved.getDateCreated());
+                specialPayment.setNoDocument(saved.getStringSeq());
+                specialPayment.setNoAccount("--");
+                specialPayment.setDocumentNumber(saved.getDocumentStringSeq());
+                specialPayment.setTypePayment("NTC");
+                specialPayment.setDetail("ABONO POR NOTA DE CREDITO");
+                specialPayment.setModePayment("NTC");
+                specialPayment.setValorAbono(0.0);
+                specialPayment.setValorReten(0.0);
+                specialPayment.setValorNotac(saved.getTotal());
+                specialPayment.setActive(true);
             paymentRepository.save(specialPayment);
         }
         valor = 0;
@@ -198,19 +214,6 @@ public class CreditNoteServices {
             billRepository.save(bill);
         });
         sum = 0;
-    }
-    
-    //Actualiza Tabla Kardex
-    public void updateKardex(CreditNote saved) {
-        billId = UUID.fromString(saved.getBillSeq());
-        Iterable<Kardex> kardexs = kardexRepository.findByBillId(billId);
-        kardexs.forEach(kardex -> {
-            doc = kardex.getDetails() + " -- N.C. APLICADA";
-            kardex.setListsNull();
-            kardex.setFatherListToNull();
-            kardex.setDetails(doc);
-            kardexRepository.save(kardex);
-        });
     }
 
     //Reporte de Notas de Crédito

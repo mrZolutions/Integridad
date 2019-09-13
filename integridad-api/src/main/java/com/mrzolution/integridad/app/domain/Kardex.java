@@ -32,6 +32,8 @@ public class Kardex implements Child {
     private double prodTotal;
     private String userClientId;
     private boolean active;
+    private String credNoteIdVenta;
+    private String credNoteIdCompra;
     
     @ManyToOne
     @JoinColumn(name = "bill_id")

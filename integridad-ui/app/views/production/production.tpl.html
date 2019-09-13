@@ -2207,7 +2207,7 @@
     <!--REPORTE DE KARDEX-->
     <div class="panel panel-primary" ng-show="vm.selectedKardex !== undefined">
         <div class="panel-heading">
-            <b>Reporte de Kardex por Producto</b>
+            <b>Reporte de Kardex por Producto: {{vm.prodKarName}}</b>
         </div>
         <div class="panel-body">
             <div class="row table-responsive" ng-if="vm.isProductReportList != undefined">
@@ -2267,23 +2267,25 @@
                     <thead>
                         <tr>
                             <th>Fecha</th>
+                            <th>Nombre</th>
                             <th>Descripci&oacute;n</th>
                             <th>Entradas</th>
                             <th>Salidas</th>
                             <th>Saldo</th>
-                            <th>Compra</th>
-                            <th>Venta</th>
+                            <th>Costo Compra</th>
+                            <th>Costo Promedio</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr ng-repeat="data in vm.reportList | orderBy:'code'" >
                             <td>{{data.fecha}}</td>
+                            <td>{{data.prodName}}</td>
                             <td>{{data.detalle}}</td>
                             <td>{{data.entrada.toFixed(2)}}</td>
                             <td>{{data.salida.toFixed(2)}}</td>
                             <td>{{data.saldo.toFixed(2)}}</td>
                             <td>{{data.compra.toFixed(2)}}</td>
-                            <td>{{data.venta.toFixed(2)}}</td>
+                            <td>{{data.promedio.toFixed(2)}}</td>
                         </tr>
                     </tbody>
                 </table>

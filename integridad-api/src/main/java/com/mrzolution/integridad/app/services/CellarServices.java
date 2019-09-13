@@ -239,7 +239,7 @@ public class CellarServices {
             cellar.setFatherListToNull();
             cellar.setListsNull();
         });
-        log.info("CellarServices getActivesCellarByWhNumberSeqAndUserClientId: {}, {}", userClientId, billNum);
+        log.info("CellarServices getByUserClientIdAndBillNumberActive: {}, {}", userClientId, billNum);
         return cellars;
     }
     
