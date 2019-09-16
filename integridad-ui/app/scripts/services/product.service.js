@@ -67,6 +67,12 @@ angular
             });
         };
 
+        this.getProdByUserClientIdAndCodeIntegActive = function(userClientId, code) {
+            return securityService.get('/product/prod/' + userClientId + '/' + code).then(function successCallback(response) {
+                return response.data;
+            });
+        };
+
         //Reporte de Kardex por Producto
         this.getKardexActivesByUserClientIdAndProductIdAndDates = function(id, prodID, dateOne, dateTwo) {
             return securityService.get('/product/kardex/rep/' + id + '/' + prodID + '/' + dateOne + '/' + dateTwo).then(function successCallback(response) {

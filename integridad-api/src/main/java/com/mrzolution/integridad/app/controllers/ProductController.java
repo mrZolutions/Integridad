@@ -89,6 +89,19 @@ public class ProductController {
         log.info("ProductController getAllActives DONE");
 	return new ResponseEntity<Iterable>(response, HttpStatus.CREATED);
     }
+    
+    @RequestMapping(method = RequestMethod.GET, value="/prod/{userClientId}/{code}")
+    public ResponseEntity getProdByUserClientIdAndCodeIntegActive(@PathVariable("userClientId") UUID userClientId, @PathVariable("code") String code) {
+        Iterable<Product> response = null;
+        try {
+            response = service.getProdByUserClientIdAndCodeIntegActive(userClientId, code);
+        } catch (BadRequestException e) {
+            log.error("ProductController getProdByUserClientIdAndCodeIntegActive Exception thrown: {}", e.getMessage());	    
+	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+        log.info("ProductController getProdByUserClientIdAndCodeIntegActive DONE");
+	return new ResponseEntity<Iterable>(response, HttpStatus.CREATED);
+    }
 
     @RequestMapping(method = RequestMethod.GET, value="/actives/user_client/{userClientId}")
     public ResponseEntity getAllActivesByUserClientId(@PathVariable("userClientId") UUID userClientId) {

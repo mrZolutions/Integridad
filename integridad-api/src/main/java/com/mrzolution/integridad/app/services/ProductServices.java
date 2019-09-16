@@ -120,6 +120,16 @@ public class ProductServices {
         log.info("ProductServices getAllActivesByUserClientIdAndActive");
 	return actives;
     }
+    
+    public Iterable<Product> getProdByUserClientIdAndCodeIntegActive(UUID userClientId, String code) {
+        Iterable<Product> products = productRepository.findProdByUserClientIdAndCodeIntegActive(userClientId, code);
+        products.forEach(prod ->{
+            prod.setListsNull();
+            prod.setFatherListToNull();
+        });
+        log.info("ProductServices getProdByUserClientIdAndCodeIntegActive: {}, {}", userClientId, code);
+        return products;
+    }
         
     public Page<Product> getAllActivesBySubsidiaryIdAndActive(UUID subsidiaryId, String variable, Pageable pageable) {
 	log.info("ProductServices getAllActivesBySubsidiaryIdAndActive");

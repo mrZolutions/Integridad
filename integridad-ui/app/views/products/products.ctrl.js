@@ -34,6 +34,7 @@ angular.module('integridadUiApp')
         function _activate() {
             vm.searchText = undefined;
             vm.loading = true;
+            vm.userClientId = $localStorage.user.subsidiary.userClient.id;
             vm.messurements = messurementListService.getMessurementList();
             productTypeService.getproductTypesLazy().then(function(response) {
                 vm.productTypes = response;
@@ -124,14 +125,24 @@ angular.module('integridadUiApp')
                                             
         function create() {
             vm.product.productBySubsidiaries = vm.productBySubsidiaries;
-            productService.create(vm.product).then(function(response) {
-                vm.product = undefined;
-                vm.selectedGroup = undefined;
-                vm.selectedLine = undefined;
-                vm.wizard = 0;
-                _activate();
-                vm.error = undefined;
-                vm.success = 'Registro realizado con exito';
+            productService.getProdByUserClientIdAndCodeIntegActive(vm.userClientId, vm.product.codeIntegridad).then(function(response) {
+                if (response.length === 0) {
+                    productService.create(vm.product).then(function(response) {
+                        vm.product = undefined;
+                        vm.selectedGroup = undefined;
+                        vm.selectedLine = undefined;
+                        vm.wizard = 0;
+                        _activate();
+                        vm.error = undefined;
+                        vm.success = 'Registro realizado con exito';
+                    }).catch(function(error) {
+                        vm.loading = false;
+                        vm.error = error.data;
+                    });
+                } else {
+                    vm.error = "Código de Producto ya existente, favor Ingrese otro...";
+                    vm.loading = false;
+                };
             }).catch(function(error) {
                 vm.loading = false;
                 vm.error = error.data;
@@ -139,8 +150,12 @@ angular.module('integridadUiApp')
         };
                                             
         function update(isRemove) {
-            _.each(vm.product.productBySubsidiaries, function(ps){ps.active=false;});
-            _.each(vm.productBySubsidiaries, function(psNew){vm.product.productBySubsidiaries.push(psNew)});
+            _.each(vm.product.productBySubsidiaries, function(ps) {
+                ps.active=false;
+            });
+            _.each(vm.productBySubsidiaries, function(psNew) {
+                vm.product.productBySubsidiaries.push(psNew);
+            });
             productService.update(vm.product).then(function(response) {
                 vm.product = undefined;
                 vm.selectedGroup = undefined;

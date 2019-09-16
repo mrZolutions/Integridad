@@ -32,10 +32,10 @@ public class KardexController {
         try {
             response = service.getKardexActivesByUserClientIdAndProductIdAndDates(id, provID, dateOne, dateTwo);
         } catch (BadRequestException e) {
-            log.error("DetailDailybookContabController getKardexActivesByUserClientIdAndProductIdAndDates Exception thrown: {}", e.getMessage());
+            log.error("KardexController getKardexActivesByUserClientIdAndProductIdAndDates Exception thrown: {}", e.getMessage());
 	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
-        log.info("DetailDailybookContabController getKardexActivesByUserClientIdAndProductIdAndDates DONE");
+        log.info("KardexController getKardexActivesByUserClientIdAndProductIdAndDates DONE");
         return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
     }
 }
