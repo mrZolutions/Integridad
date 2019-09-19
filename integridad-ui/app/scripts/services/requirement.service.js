@@ -1,6 +1,6 @@
 angular
-  .module('app.services')
-  .service('requirementService', function(dateService) {
+    .module('app.services')
+    .service('requirementService', function(dateService) {
         function getTipyCode(code) {
             tipyIdCode = {
                 RUC: '04',
@@ -92,6 +92,12 @@ angular
                 req.informacion_adicional = informAdicional;
             } else if (user.cashier.subsidiary.userClient.espTemp === 'A-4') {
                 req.comprador.email = req.comprador.email + ', facturacion@catedral.com.ec';
+                var informAdicional = {
+                    observ: ' ' + bill.observation
+                };
+                req.informacion_adicional = informAdicional;
+            } else if (user.cashier.subsidiary.userClient.espTemp === 'A-QTA') {
+                req.comprador.email = req.comprador.email + ', facturaslaquintarm@hotmail.com';
                 var informAdicional = {
                     observ: ' ' + bill.observation
                 };

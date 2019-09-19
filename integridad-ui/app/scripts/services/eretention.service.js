@@ -46,6 +46,8 @@ angular
                 eRet.sujeto.email = eRet.sujeto.email + ', ferrelozada@yahoo.com';
             } else if (user.cashier.subsidiary.userClient.espTemp === 'A-4') {
                 eRet.sujeto.email = eRet.sujeto.email + ', facturacion@catedral.com.ec';
+            } else if (user.cashier.subsidiary.userClient.espTemp === 'A-QTA') {
+                eRet.sujeto.email = eRet.sujeto.email + ', facturaslaquintarm@hotmail.com';
             };
             _.each(eRet.items, function(item) {
                 item.codigo = String(item.codigo);
