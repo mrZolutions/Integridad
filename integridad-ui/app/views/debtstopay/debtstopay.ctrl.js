@@ -419,7 +419,7 @@ angular.module('integridadUiApp')
         vm.comprobantePagoDeactivate = function() {
             vm.loading = true;
             var index = vm.comprobantePagoList.indexOf(vm.deactivateComprobantePago);
-            comprobanteService.deactivateComprobanteCobro(vm.deactivateComprobantePago).then(function(response) {
+            comprobanteService.deactivateComprobantePago(vm.deactivateComprobantePago).then(function(response) {
                 var index = vm.comprobantePagoList.indexOf(vm.deactivateComprobantePago);
                 if (index > -1) {
                     vm.comprobantePagoList.splice(index, 1);
