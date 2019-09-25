@@ -704,6 +704,7 @@ angular.module('integridadUiApp')
             var detail = {
                 product: angular.copy(vm.productToAdd),
                 quantity: vm.quantity,
+                costEach: vm.productToAdd.costEach,
                 averageCostSuggested: vm.productToAdd.averageCostSuggested,
                 total: (parseFloat(vm.quantity) * parseFloat(vm.productToAdd.averageCostSuggested)).toFixed(4)
             };

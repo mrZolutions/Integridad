@@ -23,6 +23,7 @@ public class DetailConsumption implements Child {
     
     private long quantity;
     private Double costEach;
+    private Double averageCostSuggested;
     private Double total;
     private String adicional;
     
