@@ -110,10 +110,10 @@ public class CreditNoteCellarServices {
             cashier.setCreditNoteCellarNumberSeq(cashier.getCreditNoteCellarNumberSeq() + 1);
             cashierRepository.save(cashier);
             
-            detailsCellar.forEach(detail -> {
-                detail.setCreditNoteCellar(saved);
-                DetailCellar detCelSaved = detailCellarRepository.save(detail);
-                detail.setCreditNoteCellar(null);
+            detailsCellar.forEach(detailC -> {
+                detailC.setCreditNoteCellar(saved);
+                DetailCellar detCelSaved = detailCellarRepository.save(detailC);
+                detailC.setCreditNoteCellar(null);
                 Kardex spKarCel = new Kardex();
                     spKarCel.setActive(true);
                     spKarCel.setBill(null);
@@ -122,7 +122,7 @@ public class CreditNoteCellarServices {
                     spKarCel.setCredNoteIdVenta("--");
                     spKarCel.setCredNoteIdCompra(saved.getId().toString());
                     spKarCel.setDateRegister(saved.getDateCreated());
-                    spKarCel.setDetails("N.C. Nro. " + saved.getNotaCredito() + " de INGRESO A BODEGA Nro. " + detCelSaved.getCellar().getWhNumberSeq() + ", Fc. " + saved.getDocumentStringSeq());
+                    spKarCel.setDetails("N.C. Nro. " + saved.getNotaCredito() + ", de FACTURA-COMPRA Nro. " + saved.getDocumentStringSeq());
                     spKarCel.setObservation("NCC");
                     spKarCel.setProdCostEach(detCelSaved.getCostEach());
                     spKarCel.setProdQuantity(detCelSaved.getQuantity());
