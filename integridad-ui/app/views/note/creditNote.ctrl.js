@@ -7,7 +7,7 @@
  * Controller of the integridadUiApp
  */
 angular.module('integridadUiApp')
-    .controller('CreditNoteCtrl', function(_, $location, providerService, $localStorage, debtsToPayService, cellarService,
+    .controller('CreditNoteCtrl', function(_, $location, providerService, $localStorage, debtsToPayService, cellarService, productService,
                                            clientService, billService, creditNoteService, utilSeqService, creditNoteCellarService) {
 
         var vm = this;
@@ -413,22 +413,115 @@ angular.module('integridadUiApp')
             });
         };
 
-        //vm.editDetailCellar = function(index) {
-        //    vm.indexDetailC = index;
-        //    vm.detailC = angular.copy(vm.cellar.detailsCellar[index]);
-        //};
+        vm.editDetailCellar = function(index) {
+            vm.indexDetailCellar = index;
+            vm.detailCellar = angular.copy(vm.cellar.detailsCellar[index]);
+        };
 
-        //vm.acceptProduct = function() {
-        //    vm.detailC.total = vm.detailC.quantity * vm.detailC.costEach;
-        //    vm.cellar.detailsCellar[vm.indexDetailC] = angular.copy(vm.detailC);
-        //    vm.indexDetailC = undefined;
-        //    vm.detailC = undefined;
-        //    _getCellarTotal();
-        //};
+        vm.acceptProdEdited = function() {
+            vm.detailCellar.total = parseFloat((parseFloat(vm.detailCellar.quantity) * parseFloat(vm.detailCellar.costEach)).toFixed(4));
+            vm.cellar.detailsCellar[vm.indexDetailCellar] = angular.copy(vm.detailCellar);
+            vm.indexDetailCellar = undefined;
+            vm.detailCellar = undefined;
+            _getCellarTotal();
+        };
 
         vm.removeDetailCellar = function(index) {
             vm.cellar.detailsCellar.splice(index,1);
             _getCellarTotal();
+        };
+
+        vm.addProductServices = function() {
+            vm.indexDetailCellar = undefined;
+            vm.loading = true;
+            vm.errorQuantity = undefined;
+            vm.page = 0;
+            vm.searchText = undefined;
+            _filterProductServices();
+        };
+
+        function _filterProductServices() {
+            vm.totalPages = 0;
+            var variable = vm.searchText? vm.searchText : null;
+            productService.getLazyBySusidiaryId($localStorage.user.subsidiary.id, vm.page, variable).then(function(response) {
+                vm.loading = false;
+                vm.totalPages = response.totalPages;
+                vm.productServicesList = [];
+                for (var i = 0; i < response.content.length; i++) {
+                    var productFound = _.find(vm.cellar.detailsCellar, function(detail) {
+                        return detail.product.id === response.content[i].id;
+                    });
+                    if (productFound === undefined) {
+                        var sub = _.find(response.content[i].productBySubsidiaries, function(s) {
+                            return (s.subsidiary.id === $localStorage.user.subsidiary.id && s.active === true);
+                        });
+                        if (sub) {
+                            response.content[i].quantity = sub.quantity
+                            vm.productServicesList.push(response.content[i]);
+                        };
+                    };
+                };
+            }).catch(function(error) {
+                vm.loading = false;
+                vm.error = error.data;
+            });
+        };
+
+        vm.filter = function() {
+            vm.page = 0;
+            _filterProductServices();
+        };
+    
+        vm.paginate = function(page) {
+            vm.page = page;
+            _filterProductServices();
+        };
+    
+        vm.getActiveClass = function(index) {
+            var classActive = vm.page === index? 'active' : '';
+            return classActive;
+        };
+    
+        vm.range = function() {
+            return new Array(vm.totalPages);
+        };
+
+        vm.selectProductServicesToAdd = function(productSelect) {
+            if (productSelect.productType.code === 'SER') {
+                productSelect.quantity = 1;
+            };
+            vm.productToAdd = angular.copy(productSelect);
+            var costEachCalculated = productSelect.averageCost;
+            vm.productToAdd.costEachCalculated = costEachCalculated;
+            vm.quantity = 1;
+        };
+
+        vm.acceptProductServices = function(closeModal) {
+            vm.errorQuantity = undefined;
+            var detail = {
+                product: angular.copy(vm.productToAdd),
+                quantity: vm.quantity,
+                costEach: vm.productToAdd.costEachCalculated,
+                total: parseFloat((vm.quantity * vm.productToAdd.costEachCalculated).toFixed(2)),
+                adicional: vm.adicional
+            };
+            if (vm.indexDetailCellar !== undefined) {
+                vm.cellar.detailsCellar[vm.indexDetailCellar] = detail;
+            } else {
+                vm.cellar.detailsCellar.push(detail);
+            };
+            vm.productToAdd = undefined;
+            vm.quantity = undefined;
+            vm.adicional = undefined;
+            _getCellarTotal();
+            if (closeModal) {
+                $('#modalAddProductServices').modal('hide');
+            } else {
+                var newProductList = _.filter(vm.productServicesList, function(prod) {
+                    return prod.id !== detail.product.id;
+                });
+                vm.productServicesList = newProductList;
+            };
         };
 
         vm.saveCreditNoteCellar = function() {

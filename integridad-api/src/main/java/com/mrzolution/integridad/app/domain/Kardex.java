@@ -31,6 +31,7 @@ public class Kardex implements Child {
     private long prodQuantity;
     private double prodTotal;
     private String userClientId;
+    private String subsidiaryId;
     private boolean active;
     private String credNoteIdVenta;
     private String credNoteIdCompra;
@@ -51,6 +52,10 @@ public class Kardex implements Child {
     @JoinColumn(name = "product_id")
     private Product product;
     
+    @ManyToOne
+    @JoinColumn(name = "billoff_id")
+    private BillOffline billOffline;
+    
     public void setListsNull() {
     }
     
@@ -70,6 +75,10 @@ public class Kardex implements Child {
         if (product != null) {
             product.setListsNull();
             product.setFatherListToNull();
+        }
+        if (billOffline != null) {
+            billOffline.setListsNull();
+            billOffline.setFatherListToNull();
         }
     }
     

@@ -37,7 +37,6 @@ public class BillOffline {
     private double baseTaxes;
     private double discount;
     private int discountPercentage;
-    private String saldo;
     private int typeDocument;
     private String observation;
     private String claveDeAcceso;
@@ -65,9 +64,13 @@ public class BillOffline {
     @OneToMany(mappedBy = "billOffline", cascade = CascadeType.ALL)
     private List<PagoOffline> pagosOffline;
     
+    @OneToMany(mappedBy = "billOffline", cascade = CascadeType.ALL)
+    private List<Kardex> detailsKardexOffline;
+    
     public void setListsNull(){
     	detailsOffline = null;
     	pagosOffline = null;
+        detailsKardexOffline = null;
     }
     
     public void setFatherListToNull(){

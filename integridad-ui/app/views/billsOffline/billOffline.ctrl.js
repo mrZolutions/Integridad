@@ -96,6 +96,7 @@ angular.module('integridadUiApp')
             vm.pagosOffline = [];
             vm.user = $localStorage.user;
             vm.userClientId = $localStorage.user.subsidiary.userClient.id;
+            vm.subsidiaryId = $localStorage.user.subsidiary.id;
             clientService.getLazyByUserClientId(vm.user.subsidiary.userClient.id).then(function(response) {
                 vm.clientList = response;
                 vm.loading = false;
@@ -571,6 +572,7 @@ angular.module('integridadUiApp')
             vm.loading = true;
             $('#modalAddPago').modal('hide');
             vm.impuestosTotales = [];
+            vm.billOffline.detailsKardexOffline = [];
             if (vm.impuestoIVA.base_imponible > 0) {
                 vm.impuestosTotales.push(vm.impuestoIVA);
             };
@@ -613,6 +615,21 @@ angular.module('integridadUiApp')
                 if (vm.billOffline.discountPercentage === undefined) {
                     vm.billOffline.discountPercentage = 0;
                 };
+
+                var kardexoff = {
+                    billOffline: vm.billOffline.id,
+                    product: det.product,
+                    dateRegister: $('#pickerBillOfflineDate').data("DateTimePicker").date().toDate().getTime(),
+                    details: 'FACTURA-OFFLINE-VENTA Nro. ' + vm.seqNumber,
+                    observation: 'EGRESO',
+                    prodCostEach: det.costEach,
+                    prodName: det.product.name,
+                    prodQuantity: det.quantity,
+                    prodTotal: det.total,
+                    subsidiaryId: vm.subsidiaryId,
+                    userClientId: vm.userClientId
+                };
+                vm.billOffline.detailsKardexOffline.push(kardexoff);
             });
 
             var obj = {clave_acceso: '1124225675', id:'id12345'};

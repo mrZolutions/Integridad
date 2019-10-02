@@ -137,7 +137,7 @@ public class ProductServices {
 	if (variable.equals("null")) {
             productIdList = productBySubsidiairyRepository.findBySubsidiaryIdAndProductActive(subsidiaryId, pageable);
 	} else {
-            productIdList = productBySubsidiairyRepository.findBySubsidiaryIAndVariabledAndProductActive(subsidiaryId, variable, new PageRequest(0, 150, Sort.Direction.ASC, "product"));
+            productIdList = productBySubsidiairyRepository.findBySubsidiaryIdAndVariabledAndProductActive(subsidiaryId, variable, new PageRequest(0, 150, Sort.Direction.ASC, "product"));
 	}
 	List<Product> listReturn = new ArrayList<>();
 	productIdList.forEach(page -> {
@@ -157,7 +157,7 @@ public class ProductServices {
             productIdList = productBySubsidiairyRepository.findBySubsidiaryIdAndProductActiveForBill(subsidiaryId, pageable);
         } else {
             log.info("ProductServices getAllActivesBySubsidiaryIdForBill with variable");
-            productIdList = productBySubsidiairyRepository.findBySubsidiaryIAndVariabledAndProductActiveForBill(subsidiaryId, variable, new PageRequest(0, 150, Sort.Direction.ASC, "product"));
+            productIdList = productBySubsidiairyRepository.findBySubsidiaryIdAndVariabledAndProductActiveForBill(subsidiaryId, variable, new PageRequest(0, 150, Sort.Direction.ASC, "product"));
         }
         List<Product> listReturn = new ArrayList<>();
         productIdList.forEach(page -> {

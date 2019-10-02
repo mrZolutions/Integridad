@@ -129,6 +129,7 @@ public class CreditNoteServices {
                     spKar.setProduct(detSaved.getProduct());
                     spKar.setProdName(detSaved.getProduct().getName());
                     spKar.setCodeWarehouse("--");
+                    spKar.setSubsidiaryId(saved.getSubsidiary().getId().toString());
                     spKar.setUserClientId(saved.getSubsidiary().getUserClient().getId().toString());
                 kardexRepository.save(spKar);
             });

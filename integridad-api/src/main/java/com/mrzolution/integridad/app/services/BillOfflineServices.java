@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.mrzolution.integridad.app.domain.BillOffline;
 import com.mrzolution.integridad.app.domain.Cashier;
 import com.mrzolution.integridad.app.domain.DetailOffline;
+import com.mrzolution.integridad.app.domain.Kardex;
 import com.mrzolution.integridad.app.domain.PagoOffline;
 import com.mrzolution.integridad.app.domain.ProductBySubsidiary;
 import com.mrzolution.integridad.app.domain.UserIntegridad;
@@ -14,6 +15,8 @@ import com.mrzolution.integridad.app.repositories.BillOfflineRepository;
 import com.mrzolution.integridad.app.repositories.CashierRepository;
 import com.mrzolution.integridad.app.repositories.DetailOfflineChildRepository;
 import com.mrzolution.integridad.app.repositories.DetailOfflineRepository;
+import com.mrzolution.integridad.app.repositories.KardexChildRepository;
+import com.mrzolution.integridad.app.repositories.KardexRepository;
 import com.mrzolution.integridad.app.repositories.PagoOfflineRepository;
 import com.mrzolution.integridad.app.repositories.ProductBySubsidiairyRepository;
 import com.mrzolution.integridad.app.repositories.UserClientRepository;
@@ -51,6 +54,10 @@ public class BillOfflineServices {
     PagoOfflineRepository pagoOfflineRepository;
     @Autowired
     UserClientRepository userClientRepository;
+    @Autowired
+    KardexRepository kardexRepository;
+    @Autowired
+    KardexChildRepository kardexChildRepository;
     
     public Iterable<BillOffline> getBillsOfflineByTypeDocument(int value) {
         Iterable<BillOffline> billsOffline = billOfflineRepository.findBillsOfflineByTypeDocument(value);
@@ -145,6 +152,7 @@ public class BillOfflineServices {
     public BillOffline createBillOffline(BillOffline billOffline, int typeDocument) throws BadRequestException {
         List<DetailOffline> detailsOffline = billOffline.getDetailsOffline();
         List<PagoOffline> pagosOffline = billOffline.getPagosOffline();
+        List<Kardex> detailsKardexOffline = billOffline.getDetailsKardexOffline();
         if (detailsOffline == null) {
             throw new BadRequestException("Debe tener un detalle por lo menos");
         }
@@ -156,6 +164,7 @@ public class BillOfflineServices {
         billOffline.setActive(true);
         billOffline.setDetailsOffline(null);
         billOffline.setPagosOffline(null);
+        billOffline.setDetailsKardexOffline(null);
         billOffline.setFatherListToNull();
         billOffline.setListsNull();
         BillOffline saved = billOfflineRepository.save(billOffline);
@@ -165,9 +174,9 @@ public class BillOfflineServices {
         cashierRepository.save(cashier);
         
         saveDetailsOfflineOfBillOffline(saved, detailsOffline);
+        saveKardex(saved, detailsKardexOffline);
         savePagosOfflineOfBillOffline(saved, pagosOffline);
         updateProductBySubsidiary(billOffline, typeDocument, detailsOffline);
-        
         log.info("BillOfflineServices createBillOffline: {}, {}", saved.getId(), saved.getStringSeq());
         return saved;
     }
@@ -202,6 +211,18 @@ public class BillOfflineServices {
             }
         });
         log.info("BillOfflineServices updateProductBySubsidiary");
+    }
+    
+    //Almacena los Detalles en Kardex
+    public void saveKardex(BillOffline saved, List<Kardex> detailsKardexOffline) {
+        detailsKardexOffline.forEach(detailkoff -> {
+            detailkoff.setActive(true);
+            detailkoff.setBillOffline(saved);
+            kardexRepository.save(detailkoff);
+            detailkoff.setBillOffline(null);
+        });
+        saved.setDetailsKardexOffline(detailsKardexOffline);
+        log.info("BillOfflineServices saveKardex");
     }
     //Fin de Creación de las BillsOffline
     

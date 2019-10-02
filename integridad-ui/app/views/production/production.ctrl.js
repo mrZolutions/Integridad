@@ -91,6 +91,7 @@ angular.module('integridadUiApp')
             ];
         
             vm.usrCliId = $localStorage.user.subsidiary.userClient.id;
+            vm.subsidiaryId = $localStorage.user.subsidiary.id;
             vm.userCode = $localStorage.user.userType.code;
             vm.provider = undefined;
             vm.messurements = messurementListService.getMessurementList();
@@ -502,6 +503,7 @@ angular.module('integridadUiApp')
                     prodName: item.product.name,
                     prodQuantity: item.quantity,
                     prodTotal: item.total,
+                    subsidiaryId: vm.subsidiaryId,
                     userClientId: vm.usrCliId
                 };
                 vm.cellar.detailsKardex.push(kardex);
@@ -747,6 +749,7 @@ angular.module('integridadUiApp')
                     prodName: item.product.name,
                     prodQuantity: item.quantity,
                     prodTotal: item.total,
+                    subsidiaryId: vm.subsidiaryId,
                     userClientId: vm.usrCliId
                 };
                 vm.consumption.detailsKardex.push(kardex);

@@ -941,4 +941,4 @@ angular.module('integridadUiApp')
         (function initController() {
             _activate();
         })();
-  });
+});

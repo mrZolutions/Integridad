@@ -94,6 +94,7 @@ angular.module('integridadUiApp')
             vm.pagos = [];
             vm.user = $localStorage.user;
             vm.userClientId = $localStorage.user.subsidiary.userClient.id;
+            vm.subsidiaryId = $localStorage.user.subsidiary.id;
             vm.userCashier = $localStorage.user.cashier;
             vm.userSubsidiary = $localStorage.user.subsidiary;
             clientService.getLazyByUserClientId(vm.userClientId).then(function(response) {
@@ -679,6 +680,7 @@ angular.module('integridadUiApp')
                     prodName: det.product.name,
                     prodQuantity: det.quantity,
                     prodTotal: det.total,
+                    subsidiaryId: vm.subsidiaryId,
                     userClientId: vm.userClientId
                 };
                 vm.bill.detailsKardex.push(kardex);
