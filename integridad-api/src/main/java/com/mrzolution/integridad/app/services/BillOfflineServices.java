@@ -113,40 +113,7 @@ public class BillOfflineServices {
         log.info("BillOfflineServices getBillOfflineById: {}", id);
         return retrieved;
     }
-    
-    private void populateChildren(BillOffline billOffline) {
-        List<DetailOffline> detailOfflineList = getDetailsOfflineByBill(billOffline);
-        List<PagoOffline> pagoOfflineList = getPagosOfflineByBill(billOffline);
-        billOffline.setDetailsOffline(detailOfflineList);
-        billOffline.setPagosOffline(pagoOfflineList);
-        billOffline.setFatherListToNull();
-    }
-
-    private List<DetailOffline> getDetailsOfflineByBill(BillOffline billOffline) {
-        List<DetailOffline> detailOfflineList = new ArrayList<>();
-        Iterable<DetailOffline> detailsOffline = detailOfflineRepository.findByBillOffline(billOffline);
-        detailsOffline.forEach(detailOffline -> {
-            detailOffline.setListsNull();
-            detailOffline.setFatherListToNull();
-            detailOffline.getProduct().setFatherListToNull();
-            detailOffline.getProduct().setListsNull();
-            detailOffline.setBillOffline(null);
-            detailOfflineList.add(detailOffline);
-        });
-        return detailOfflineList;
-    }
        
-    private List<PagoOffline> getPagosOfflineByBill(BillOffline billOffline) {
-        List<PagoOffline> pagoOfflineList = new ArrayList<>();
-        Iterable<PagoOffline> pagosOffline = pagoOfflineRepository.findByBillOffline(billOffline);
-        pagosOffline.forEach(pagoOffline -> {
-            pagoOffline.setFatherListToNull();
-            pagoOffline.setBillOffline(null);
-            pagoOfflineList.add(pagoOffline);
-        });
-        return pagoOfflineList;
-    }
-    
     //Inicio de Creación de las BillsOffline    
     @Async("asyncExecutor")
     public BillOffline createBillOffline(BillOffline billOffline, int typeDocument) throws BadRequestException {
@@ -174,7 +141,7 @@ public class BillOfflineServices {
         cashierRepository.save(cashier);
         
         saveDetailsOfflineOfBillOffline(saved, detailsOffline);
-        saveKardex(saved, detailsKardexOffline);
+        saveKardexOfBillOffline(saved, detailsKardexOffline);
         savePagosOfflineOfBillOffline(saved, pagosOffline);
         updateProductBySubsidiary(billOffline, typeDocument, detailsOffline);
         log.info("BillOfflineServices createBillOffline: {}, {}", saved.getId(), saved.getStringSeq());
@@ -189,7 +156,17 @@ public class BillOfflineServices {
             detailOffline.setBillOffline(null);
         });
         saved.setDetailsOffline(detailsOffline);
-        log.info("BillOfflineServices saveDetailsOfflineOfBillOffline");
+    }
+    
+    //Almacena los Detalles en Kardex
+    public void saveKardexOfBillOffline(BillOffline saved, List<Kardex> detailsKardexOffline) {
+        detailsKardexOffline.forEach(detailkoff -> {
+            detailkoff.setActive(true);
+            detailkoff.setBillOffline(saved);
+            kardexRepository.save(detailkoff);
+            detailkoff.setBillOffline(null);
+        });
+        saved.setDetailsKardexOffline(detailsKardexOffline);
     }
     
     //Guarda el tipo de Pago y Credits
@@ -198,7 +175,6 @@ public class BillOfflineServices {
             pagoOffline.setBillOffline(saved);
             PagoOffline pagoSaved = pagoOfflineRepository.save(pagoOffline);		
         });
-        log.info("BillOfflineServices savePagosOfflineOfBillOffline");
     }
     
     //Actualiza la cantidad de Productos (Existencia)
@@ -211,18 +187,6 @@ public class BillOfflineServices {
             }
         });
         log.info("BillOfflineServices updateProductBySubsidiary");
-    }
-    
-    //Almacena los Detalles en Kardex
-    public void saveKardex(BillOffline saved, List<Kardex> detailsKardexOffline) {
-        detailsKardexOffline.forEach(detailkoff -> {
-            detailkoff.setActive(true);
-            detailkoff.setBillOffline(saved);
-            kardexRepository.save(detailkoff);
-            detailkoff.setBillOffline(null);
-        });
-        saved.setDetailsKardexOffline(detailsKardexOffline);
-        log.info("BillOfflineServices saveKardex");
     }
     //Fin de Creación de las BillsOffline
     
@@ -330,4 +294,54 @@ public class BillOfflineServices {
         }
         return reportList;
     }
+    
+    private void populateChildren(BillOffline billOffline) {
+        List<DetailOffline> detailOfflineList = getDetailsOfflineByBill(billOffline);
+        List<PagoOffline> pagoOfflineList = getPagosOfflineByBill(billOffline);
+        List<Kardex> detailsKardexOfflineList = getDetailsKardexOfflineByBill(billOffline);
+        billOffline.setDetailsOffline(detailOfflineList);
+        billOffline.setPagosOffline(pagoOfflineList);
+        billOffline.setDetailsKardexOffline(detailsKardexOfflineList);
+        billOffline.setFatherListToNull();
+    }
+
+    private List<DetailOffline> getDetailsOfflineByBill(BillOffline billOffline) {
+        List<DetailOffline> detailOfflineList = new ArrayList<>();
+        Iterable<DetailOffline> detailsOffline = detailOfflineRepository.findByBillOffline(billOffline);
+        detailsOffline.forEach(detailOffline -> {
+            detailOffline.setListsNull();
+            detailOffline.setFatherListToNull();
+            detailOffline.getProduct().setFatherListToNull();
+            detailOffline.getProduct().setListsNull();
+            detailOffline.setBillOffline(null);
+            detailOfflineList.add(detailOffline);
+        });
+        return detailOfflineList;
+    }
+    
+    private List<Kardex> getDetailsKardexOfflineByBill(BillOffline billOffline) {
+        List<Kardex> detailsKardexOfflineList = new ArrayList<>();
+        Iterable<Kardex> detailsKardexOffline = kardexRepository.findByBillOffline(billOffline);
+        detailsKardexOffline.forEach(detailkardex -> {
+            detailkardex.getBillOffline().setListsNull();
+            detailkardex.getBillOffline().setFatherListToNull();
+            detailkardex.getProduct().setFatherListToNull();
+            detailkardex.getProduct().setListsNull();
+            detailkardex.setBillOffline(null);
+            detailsKardexOfflineList.add(detailkardex);
+        });
+        return detailsKardexOfflineList;
+    }
+       
+    private List<PagoOffline> getPagosOfflineByBill(BillOffline billOffline) {
+        List<PagoOffline> pagoOfflineList = new ArrayList<>();
+        Iterable<PagoOffline> pagosOffline = pagoOfflineRepository.findByBillOffline(billOffline);
+        pagosOffline.forEach(pagoOffline -> {
+            pagoOffline.setFatherListToNull();
+            pagoOffline.setBillOffline(null);
+            pagoOfflineList.add(pagoOffline);
+        });
+        return pagoOfflineList;
+    }
+
 }

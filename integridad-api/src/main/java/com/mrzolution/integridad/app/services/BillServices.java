@@ -420,8 +420,8 @@ public class BillServices {
         List<Pago> pagoList = getPagosByBill(bill);
         List<Kardex> detailsKardexList = getDetailsKardexByBill(bill);
         bill.setDetails(detailList);
-        bill.setDetailsKardex(detailsKardexList);
         bill.setPagos(pagoList);
+        bill.setDetailsKardex(detailsKardexList);
         bill.setFatherListToNull();
     }
 

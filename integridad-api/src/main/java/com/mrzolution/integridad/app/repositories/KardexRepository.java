@@ -1,6 +1,7 @@
 package com.mrzolution.integridad.app.repositories;
 
 import com.mrzolution.integridad.app.domain.Bill;
+import com.mrzolution.integridad.app.domain.BillOffline;
 import com.mrzolution.integridad.app.domain.Cellar;
 import com.mrzolution.integridad.app.domain.Consumption;
 import com.mrzolution.integridad.app.domain.Kardex;
@@ -33,6 +34,8 @@ public interface KardexRepository extends CrudRepository<Kardex, UUID> {
     
     @Query("SELECT k FROM Kardex k WHERE k.consumption.id = (:id)")
     Iterable<Kardex> findByConsumptionId(@Param("id") UUID id);
+        
+    Iterable<Kardex> findByBillOffline(BillOffline billOffline);
     
     @Query("SELECT k FROM Kardex k WHERE k.userClientId = (:id) AND k.product.id = (:provID) AND k.dateRegister >= (:dateOne) AND k.dateRegister <= (:dateTwo) AND k.active = true ORDER BY k.dateRegister")
     Iterable<Kardex> findKardexActivesByUserClientIdAndProductIdAndDates(@Param("id") String id, @Param("provID") UUID provID, @Param("dateOne") long dateOne, @Param("dateTwo") long dateTwo);
