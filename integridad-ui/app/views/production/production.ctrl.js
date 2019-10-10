@@ -32,6 +32,7 @@ angular.module('integridadUiApp')
             vm.cellSeqNumber = undefined;
             vm.dateCellar = undefined;
             vm.detailCellarList = undefined;
+            vm.clientList = undefined;
             vm.clientSelected = undefined;
             vm.consumption = undefined;
             vm.newConsumption = undefined;
@@ -53,6 +54,7 @@ angular.module('integridadUiApp')
             vm.prodKarId = undefined;
             vm.prodKarName = undefined;
             vm.selectedKardex = undefined;
+            vm.selectedForSetting = undefined;
             vm.reportList = undefined;
             vm.isProductReportList = undefined;
 
@@ -232,9 +234,89 @@ angular.module('integridadUiApp')
             vm.warehouseSelected = undefined;
         };
 
+        //Ajuste por Kardex
+        vm.settingForKardex = function(warehouse) {
+            vm.warehouseSelected = warehouse;
+            vm.searchTextSet = undefined;
+            vm.loading = true;
+            productTypeService.getproductTypesLazy().then(function(response) {
+                vm.selectedForSetting = response;
+                vm.loading = false;
+            }).catch(function(error) {
+                vm.error = error.data;
+                vm.loading = false;
+            });
+            vm.pageSet = 0;
+            _filterSet();
+        };
+
+        function _filterSet() {
+            vm.loading = true;
+            vm.totalPagesSet = 0;
+            vm.productListSet = [];
+            var variableSet = vm.searchTextSet? vm.searchTextSet : null;
+            if ($routeParams.subsidiaryId) {
+                productService.getLazyBySusidiaryId($routeParams.subsidiaryId, vm.pageSet, variableSet).then(function(response) {
+                    vm.totalPagesSet = response.totalPages;
+                    vm.totalElementsSet = response.totalElements;
+                    _getProductQuantitiesSet(response.content);
+                    vm.loading = false;
+                }).catch(function(error) {
+                    vm.error = error.data;
+                    vm.loading = false;
+                });
+            } else {
+                productService.getLazyBySusidiaryId($localStorage.user.subsidiary.id, vm.pageSet, variableSet).then(function(response) {
+                    vm.totalElementsSet = response.totalElements;
+                    vm.totalPagesSet = response.totalPages;
+                    _getProductQuantitiesSet(response.content);
+                    vm.loading = false;
+                }).catch(function(error) {
+                    vm.error = error.data;
+                    vm.loading = false;
+                });
+            };
+        };
+
+        function _getProductQuantitiesSet(listResponse) {
+            for (var i = 0; i < listResponse.length; i++) {
+                var sub = _.find(listResponse[i].productBySubsidiaries, function(s) {
+                    return (s.subsidiary.id === $localStorage.user.subsidiary.id && s.active === true);
+                });
+                if (sub) {
+                    listResponse[i].quantity = sub.quantity
+                    vm.productListSet.push(listResponse[i]);
+                };
+            };
+        };
+
+        vm.filterSet = function() {
+            vm.pageSet = 0;
+            _filterSet();
+        };
+        
+        vm.paginateSet = function(page) {
+            vm.pageSet = page;
+            _filterSet();
+        };
+
+        vm.rangeSet = function() {
+            return new Array(vm.totalPagesSet);
+        };
+
+        vm.getActiveClassSet = function(index) {
+            var classActiveSet = vm.pageSet === index? 'active' : '';
+            return classActiveSet;
+        };
+
+        vm.cancelSetting = function() {
+            _activate();
+        };
+        //Fin Ajuste Kardex
+
         //Reporte Kardex
         vm.reportKardex = function(warehouse) {
-            vm.warehouseSelected = warehouse.id;
+            vm.warehouseSelected = warehouse;
             vm.searchTextKar = undefined;
             vm.loading = true;
             productTypeService.getproductTypesLazy().then(function(response) {
@@ -301,6 +383,65 @@ angular.module('integridadUiApp')
             XLSX.utils.book_append_sheet(wb, ws, "Kardex_Producto");
             /* write workbook and force a download */
             XLSX.writeFile(wb, "Reporte_Kardex.xlsx");
+        };
+
+        function _filterKar() {
+            vm.loading = true;
+            vm.totalPagesKar = 0;
+            vm.productListKar = [];
+            var variableKar = vm.searchTextKar? vm.searchTextKar : null;
+            if ($routeParams.subsidiaryId) {
+                productService.getLazyBySusidiaryId($routeParams.subsidiaryId, vm.pageKar, variableKar).then(function(response) {
+                    vm.totalPagesKar = response.totalPages;
+                    vm.totalElementsKar = response.totalElements;
+                    _getProductQuantitiesKar(response.content);
+                    vm.loading = false;
+                }).catch(function(error) {
+                    vm.error = error.data;
+                    vm.loading = false;
+                });
+            } else {
+                productService.getLazyBySusidiaryId($localStorage.user.subsidiary.id, vm.pageKar, variableKar).then(function(response) {
+                    vm.totalElementsKar = response.totalElements;
+                    vm.totalPagesKar = response.totalPages;
+                    _getProductQuantitiesKar(response.content);
+                    vm.loading = false;
+                }).catch(function(error) {
+                    vm.error = error.data;
+                    vm.loading = false;
+                });
+            };
+        };
+        
+        function _getProductQuantitiesKar(listResponse) {
+            for (var i = 0; i < listResponse.length; i++) {
+                var sub = _.find(listResponse[i].productBySubsidiaries, function(s) {
+                    return (s.subsidiary.id === $localStorage.user.subsidiary.id && s.active === true);
+                });
+                if (sub) {
+                    listResponse[i].quantity = sub.quantity
+                    vm.productListKar.push(listResponse[i]);
+                };
+            };
+        };
+        
+        vm.filterKar = function() {
+            vm.pageKar = 0;
+            _filterKar();
+        };
+                
+        vm.paginateKar = function(page) {
+            vm.pageKar = page;
+            _filterKar();
+        };
+        
+        vm.rangeKar = function() {
+            return new Array(vm.totalPagesKar);
+        };
+        
+        vm.getActiveClassKar = function(index) {
+            var classActiveKar = vm.pageKar === index? 'active' : '';
+            return classActiveKar;
         };
         //Fin Reporte Kardex
 
@@ -766,8 +907,7 @@ angular.module('integridadUiApp')
         };
 
         vm.cancelConsumption = function() {
-            vm.warehouseSelected = undefined;
-            vm.clientSelected = undefined;
+            _activate();
         };
 
         vm.findConsumptionByClient = function(consumption) {
@@ -976,67 +1116,6 @@ angular.module('integridadUiApp')
             var classActive = vm.page === index? 'active' : '';
             return classActive;
         };
-
-        //Carga de Productos para Reporte de Kardex
-        function _filterKar() {
-            vm.loading = true;
-            vm.totalPagesKar = 0;
-            vm.productListKar = [];
-            var variableKar = vm.searchTextKar? vm.searchTextKar : null;
-            if ($routeParams.subsidiaryId) {
-                productService.getLazyBySusidiaryId($routeParams.subsidiaryId, vm.pageKar, variableKar).then(function(response) {
-                    vm.totalPagesKar = response.totalPages;
-                    vm.totalElementsKar = response.totalElements;
-                    _getProductQuantitiesKar(response.content);
-                    vm.loading = false;
-                }).catch(function(error) {
-                    vm.error = error.data;
-                    vm.loading = false;
-                });
-            } else {
-                productService.getLazyBySusidiaryId($localStorage.user.subsidiary.id, vm.pageKar, variableKar).then(function(response) {
-                    vm.totalElementsKar = response.totalElements;
-                    vm.totalPagesKar = response.totalPages;
-                    _getProductQuantitiesKar(response.content);
-                    vm.loading = false;
-                }).catch(function(error) {
-                    vm.error = error.data;
-                    vm.loading = false;
-                });
-            };
-        };
-
-        function _getProductQuantitiesKar(listResponse) {
-            for (var i = 0; i < listResponse.length; i++) {
-                var sub = _.find(listResponse[i].productBySubsidiaries, function(s) {
-                    return (s.subsidiary.id === $localStorage.user.subsidiary.id && s.active === true);
-                });
-                if (sub) {
-                    listResponse[i].quantity = sub.quantity
-                    vm.productListKar.push(listResponse[i]);
-                };
-            };
-        };
-
-        vm.filterKar = function() {
-            vm.pageKar = 0;
-            _filterKar();
-        };
-        
-        vm.paginateKar = function(page) {
-            vm.pageKar = page;
-            _filterKar();
-        };
-
-        vm.rangeKar = function() {
-            return new Array(vm.totalPagesKar);
-        };
-
-        vm.getActiveClassKar = function(index) {
-            var classActive = vm.page === index? 'active' : '';
-            return classActive;
-        };
-        //Fin Sección Productos para Reporte de Kardex
 
         vm.exit = function() {
             $location.path('/home');

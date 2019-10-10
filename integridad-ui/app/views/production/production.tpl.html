@@ -23,12 +23,12 @@
     </div>
     <div class="row" ng-show="vm.error != undefined">
         <div class = "form-group col-md-12">
-            <div class = "alert alert-danger">{{vm.error}}</div>
+            <div class="alert alert-danger">{{vm.error}}</div>
         </div>
     </div>
-    <div class = "row" ng-show = "vm.success != undefined">
-        <div class = "form-group col-md-12">
-            <div class = "alert alert-success">{{vm.success}}</div>
+    <div class="row" ng-show="vm.success != undefined">
+        <div class="form-group col-md-12">
+            <div class="alert alert-success">{{vm.success}}</div>
         </div>
     </div>
 
@@ -60,15 +60,18 @@
                                 ng-click="vm.selectWarehouse(warehouse)">
                                 <span class = "glyphicon glyphicon-check" aria-hidden = "true"></span>
                         </button>
-                        <button type="button" title="Consulta de Ingresos Pendientes" class="btn btn-primary btn-sm"
+                        <button type="button" title="Consulta de Ingresos Pendientes" class="btn btn-success btn-sm"
                                 ng-disabled="vm.userCode === 'EMP'" ng-click="vm.findCellarPending(warehouse)">
                                 <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
                         </button>
                         <button type="button" title="Egresos" class="btn btn-primary btn-sm" ng-click="vm.consumptionFromWarehouse(warehouse)">
                                 <span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
                         </button>
-                        <button type="button" title="Kardex por Productos" class="btn btn-primary btn-sm" ng-click="vm.reportKardex(warehouse)">
+                        <button type="button" title="Reporte Kardex por Producto" class="btn btn-success btn-sm" ng-click="vm.reportKardex(warehouse)">
                                 <span class="glyphicon glyphicon-film" aria-hidden="true"></span>
+                        </button>
+                        <button type="button" title="Ajuste Kardex por Producto" class="btn btn-primary btn-sm" ng-click="vm.settingForKardex(warehouse)">
+                                <span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
                         </button>
                     </td>
                 </tr>
@@ -2044,8 +2047,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" title = "Salir" class="btn btn-primary btn-sm" data-dismiss="modal">
-                            <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
+                    <button type="button" title="Salir" class="btn btn-primary btn-sm" data-dismiss="modal">
+                            <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
                     </button>
                 </div>
             </div>
@@ -2074,11 +2077,11 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" title = "Aceptar" class="btn btn-success btn-sm" ng-click="vm.saveNewGroup()" data-dismiss="modal">
-                            <span class = "glyphicon glyphicon-thumbs-up" aria-hidden = "true"></span>
+                    <button type="button" title="Aceptar" class="btn btn-success btn-sm" ng-click="vm.saveNewGroup()" data-dismiss="modal">
+                            <span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span>
                     </button>
-                    <button type="button" title = "Salir" class="btn btn-primary btn-sm" ng-click="vm.newGroup = undefined" data-dismiss="modal">
-                            <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
+                    <button type="button" title="Salir" class="btn btn-primary btn-sm" ng-click="vm.newGroup = undefined" data-dismiss="modal">
+                            <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
                     </button>
                 </div>
             </div>
@@ -2108,8 +2111,8 @@
                                     <td>{{group.name}}</td>
                                     <td>{{group.code}}</td>
                                     <td>
-                                        <button type="button" title = "Eliminar" class="btn btn-primary btn-sm" ng-click="vm.deleteGroup(group)">
-                                                <span class = "glyphicon glyphicon-trash" aria-hidden = "true"></span>
+                                        <button type="button" title="Eliminar" class="btn btn-primary btn-sm" ng-click="vm.deleteGroup(group)">
+                                                <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
                                         </button>
                                     </td>
                                     </tr>
@@ -2119,8 +2122,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" title = "Salir" class="btn btn-primary btn-sm" data-dismiss="modal">
-                            <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
+                    <button type="button" title="Salir" class="btn btn-primary btn-sm" data-dismiss="modal">
+                            <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
                     </button>
                 </div>
             </div>
@@ -2149,11 +2152,11 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" title = "Aceptar" class="btn btn-success btn-sm" ng-click="vm.saveNewSubGroup()" data-dismiss="modal">
-                            <span class = "glyphicon glyphicon-thumbs-up" aria-hidden = "true"></span>
+                    <button type="button" title="Aceptar" class="btn btn-success btn-sm" ng-click="vm.saveNewSubGroup()" data-dismiss="modal">
+                            <span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span>
                     </button>
-                    <button type="button" title = "Salir" class="btn btn-primary btn-sm" ng-click="vm.newSubGroup = undefined" data-dismiss="modal">
-                            <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
+                    <button type="button" title="Salir" class="btn btn-primary btn-sm" ng-click="vm.newSubGroup = undefined" data-dismiss="modal">
+                            <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
                     </button>
                 </div>
             </div>
@@ -2183,8 +2186,8 @@
                                         <td>{{subgroup.name}}</td>
                                         <td>{{subgroup.code}}</td>
                                         <td>
-                                            <button type="button" title = "Eliminar" class="btn btn-primary btn-sm" ng-click="vm.deleteSubGroup(subgroup)">
-                                                    <span class = "glyphicon glyphicon-trash" aria-hidden = "true"></span>
+                                            <button type="button" title="Eliminar" class="btn btn-primary btn-sm" ng-click="vm.deleteSubGroup(subgroup)">
+                                                    <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
                                             </button>
                                         </td>
                                     </tr>
@@ -2194,8 +2197,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" title = "Salir" class="btn btn-primary btn-sm" data-dismiss="modal">
-                            <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
+                    <button type="button" title="Salir" class="btn btn-primary btn-sm" data-dismiss="modal">
+                            <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
                     </button>
                 </div>
             </div>
@@ -2204,97 +2207,101 @@
     <!-- FIN MODULO DE INGRESO DE NUEVO PRODUCTO -->
 
     <!--REPORTE DE KARDEX-->
-    <div class="panel panel-primary" ng-show="vm.selectedKardex !== undefined">
-        <div class="panel-heading">
-            <b>Reporte de Kardex por Producto: {{vm.prodKarName}}</b>
+    <div class="table-responsive" ng-show="vm.selectedKardex !== undefined">
+        <div class="row">
+            <div class="form-group col-md-12">
+                <h4><b>Reporte Kardex por Producto</b></h4>
+            </div>
         </div>
-        <div class="panel-body">
-            <div class="row table-responsive" ng-if="vm.isProductReportList != undefined">
-                <div class="form-group col-md-10"></div>
+        <div class="row" ng-if="vm.isProductReportList != undefined">
+            <div class="form-group col-md-10">
+                <h5><b>Producto: </b>{{vm.prodKarName}}</h5>
+            </div>
+            <div class="form-group col-md-2">
+                <button type="button" title="Exportar a Hoja Excel" class="btn btn-primary btn-sm" ng-click="vm.exportExcel()">
+                        Excel
+                </button>
+            </div>
+        </div>
+        <div class="row" ng-show="vm.productListKar !== undefined">
+            <div class="form-group col-md-12">
+                <div class="form-group col-md-10">
+                    <input ng-model="vm.searchTextKar" class="form-control" placeholder="Buscar" />
+                </div>
                 <div class="form-group col-md-2">
-                    <button type="button" title="Exportar a Hoja Excel" class="btn btn-primary btn-sm" ng-click="vm.exportExcel()">
-                            Excel
+                    <button type="button" title="Buscar Producto" class="btn btn-primary" ng-click="vm.filterKar()">
+                            <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
                     </button>
                 </div>
-            </div>
-            <div class="row table-responsive" ng-show="vm.productListKar !== undefined">
-                <div class="form-group col-md-12">
-                    <div class="form-group col-md-10">
-                        <input ng-model="vm.searchTextKar" class="form-control" placeholder="Buscar" />
-                    </div>
-                    <div class="form-group col-md-2">
-                        <button type="button" title="Buscar Producto" class="btn btn-primary" ng-click="vm.filterKar()">
-                                <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
-                        </button>
-                    </div>
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th> C&oacute;digo</th>
-                                <th> Nombre</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr ng-show="vm.productListKar == 0">
-                                <td colspan="4">
-                                    No hay productos ingresados
-                                </td>
-                            </tr>
-                            <tr ng-repeat="productKar in vm.productListKar | orderBy:'name'">
-                                <td>{{productKar.codeIntegridad}}</td>
-                                <td>{{productKar.name}}</td>
-                                <td>
-                                    <button type = "button" title = "Seleccionar" class = "btn btn-primary btn-sm"
-                                            ng-click = "vm.selectProductForKardex(productKar)" data-toggle = "modal" data-target = "#modalSelectKardexProduct">
-                                            <span class = "glyphicon glyphicon-check" aria-hidden = "true"></span>
-                                    </button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <nav aria-label="Page navigation example">
-                        <ul class="pagination pagination-sm">
-                            <li class="page-item" ng-repeat="page in vm.rangeKar() track by $index" ng-class="vm.getActiveClassKar($index)">
-                                <a class="page-link" ng-click="vm.paginateKar($index)">{{$index + 1}}</a>
-                            </li>
-                        </ul>
-                    </nav>
-                </div>
-            </div>
-            <div class="table-responsive" ng-if="vm.isProductReportList === '1'">
                 <table class="table table-striped">
                     <thead>
                         <tr>
-                            <th>Fecha</th>
+                            <th>C&oacute;digo</th>
                             <th>Nombre</th>
-                            <th>Descripci&oacute;n</th>
-                            <th>Entradas</th>
-                            <th>Salidas</th>
-                            <th>Saldo</th>
-                            <th>Costo Compra</th>
-                            <th>Costo Promedio</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr ng-repeat="data in vm.reportList | orderBy:'code'" >
-                            <td>{{data.fecha}}</td>
-                            <td>{{data.prodName}}</td>
-                            <td>{{data.detalle}}</td>
-                            <td>{{data.entrada.toFixed(2)}}</td>
-                            <td>{{data.salida.toFixed(2)}}</td>
-                            <td>{{data.saldo.toFixed(2)}}</td>
-                            <td>{{data.compra.toFixed(2)}}</td>
-                            <td>{{data.promedio.toFixed(2)}}</td>
+                        <tr ng-show="vm.productListKar == 0">
+                            <td colspan="4">
+                                No hay productos ingresados
+                            </td>
+                        </tr>
+                        <tr ng-repeat="productKar in vm.productListKar | orderBy:'name'">
+                            <td>{{productKar.codeIntegridad}}</td>
+                            <td>{{productKar.name}}</td>
+                            <td>
+                                <button type="button" title="Seleccionar" class="btn btn-primary btn-sm"
+                                        ng-click="vm.selectProductForKardex(productKar)" data-toggle="modal" data-target="#modalSelectKardexProduct">
+                                        <span class="glyphicon glyphicon-check" aria-hidden="true"></span>
+                                </button>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination pagination-sm">
+                        <li class="page-item" ng-repeat="page in vm.rangeKar() track by $index" ng-class="vm.getActiveClassKar($index)">
+                            <a class="page-link" ng-click="vm.paginateKar($index)">{{$index + 1}}</a>
+                        </li>
+                    </ul>
+                </nav>
             </div>
         </div>
-        <div class="panel-footer">
-            <button type="button" title="Volver" class="btn btn-primary btn-sm"
-                    ng-click="vm.cancelKardex()">
-                    <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
-            </button>    
+        <div class="table-responsive" ng-if="vm.isProductReportList === '1'">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Nombre</th>
+                        <th>Descripci&oacute;n</th>
+                        <th>Entradas</th>
+                        <th>Salidas</th>
+                        <th>Saldo</th>
+                        <th>Costo Compra</th>
+                        <th>Costo Promedio</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="data in vm.reportList | orderBy:'code'" >
+                        <td>{{data.fecha}}</td>
+                        <td>{{data.prodName}}</td>
+                        <td>{{data.detalle}}</td>
+                        <td>{{data.entrada.toFixed(2)}}</td>
+                        <td>{{data.salida.toFixed(2)}}</td>
+                        <td>{{data.saldo.toFixed(2)}}</td>
+                        <td>{{data.compra.toFixed(2)}}</td>
+                        <td>{{data.promedio.toFixed(2)}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="row">
+            <div class="form-group col-md-12">
+                <button type="button" title="Volver" class="btn btn-primary btn-sm"
+                        ng-click="vm.cancelKardex()">
+                        <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
+                </button>
+            </div>
         </div>
     </div>
     <!--MODAL DE SELECCION DE PRODUCTO, FECHAS-->
@@ -2333,18 +2340,86 @@
                         </div>
                         <div class="form-group col-md-2">
                             <br/>
-                            <button type="button" title = "Aceptar" class="btn btn-success btn-sm" 
+                            <button type="button" title="Aceptar" class="btn btn-success btn-sm" 
                                     ng-click="vm.getKardexReportForProduct()" data-dismiss="modal">
-                                    <span class = "glyphicon glyphicon-thumbs-up" aria-hidden = "true"></span>
+                                    <span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span>
                             </button>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" title = "Salir" class="btn btn-primary btn-sm" data-dismiss="modal">
-                            <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
+                    <button type="button" title="Salir" class="btn btn-primary btn-sm" data-dismiss="modal">
+                            <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
                     </button>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!--AJUSTE DE PRODUCTOS PARA KARDEX-->
+    <div class="table-responsive" ng-show="vm.selectedForSetting !== undefined">
+        <div class="row">
+            <div class="form-group col-md-12">
+                <h4><b>Ajuste Kardex por Producto</b></h4>
+            </div>
+        </div>
+        <div class="row" ng-show="vm.productListSet !== undefined">
+            <div class="form-group col-md-12">
+                <div class="form-group col-md-10">
+                    <input ng-model="vm.searchTextSet" class="form-control" placeholder="Buscar" />
+                </div>
+                <div class="form-group col-md-2">
+                    <button type="button" title="Buscar Producto" class="btn btn-primary" ng-click="vm.filterSet()">
+                            <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                    </button>
+                </div>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>C&oacute;digo</th>
+                            <th>Nombre</th>
+                            <th>Precio Unitario $</th>
+                            <th>Costo Promedio $</th>
+                            <th>Cantidad Disponible</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-show="vm.productListSet == 0">
+                            <td colspan="4">
+                                No hay productos ingresados
+                            </td>
+                        </tr>
+                        <tr ng-repeat="productSet in vm.productListSet | orderBy:'name'">
+                            <td>{{productSet.codeIntegridad}}</td>
+                            <td>{{productSet.name}}</td>
+                            <td>{{productSet.costEach}}</td>
+                            <td>{{productSet.averageCostSuggested}}</td>
+                            <td>{{productSet.quantity}}</td>
+                            <td>
+                                <button type="button" title="Ajustar Cantidad" class="btn btn-primary btn-sm"
+                                        ng-click="" data-toggle="modal" data-target="">
+                                        <span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination pagination-sm">
+                        <li class="page-item" ng-repeat="page in vm.rangeSet() track by $index" ng-class="vm.getActiveClassSet($index)">
+                            <a class="page-link" ng-click="vm.paginateSet($index)">{{$index + 1}}</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-md-12">
+                <button type="button" title="Volver" class="btn btn-primary btn-sm"
+                        ng-click="vm.cancelSetting()">
+                        <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
+                </button>
             </div>
         </div>
     </div>
