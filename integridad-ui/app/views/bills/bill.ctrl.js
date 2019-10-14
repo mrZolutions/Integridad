@@ -93,6 +93,7 @@ angular.module('integridadUiApp')
             vm.medio = {};
             vm.pagos = [];
             vm.user = $localStorage.user;
+            vm.userId = $localStorage.user.id;
             vm.userClientId = $localStorage.user.subsidiary.userClient.id;
             vm.subsidiaryId = $localStorage.user.subsidiary.id;
             vm.userCashier = $localStorage.user.cashier;
@@ -676,12 +677,14 @@ angular.module('integridadUiApp')
                     dateRegister: $('#pickerBillDate').data("DateTimePicker").date().toDate().getTime(),
                     details: 'FACTURA-VENTA Nro. ' + vm.seqNumber,
                     observation: 'EGRESO',
+                    detalle: '--',
                     prodCostEach: det.costEach,
                     prodName: det.product.name,
                     prodQuantity: det.quantity,
                     prodTotal: det.total,
                     subsidiaryId: vm.subsidiaryId,
-                    userClientId: vm.userClientId
+                    userClientId: vm.userClientId,
+                    userId: vm.userId
                 };
                 vm.bill.detailsKardex.push(kardex);
             });
@@ -693,8 +696,8 @@ angular.module('integridadUiApp')
                 if (vm.bill.discountPercentage === undefined) {
                     vm.bill.discountPercentage = 0;
                 };
-                //var obj = JSON.parse(resp.data);
-                var obj = {clave_acceso: '1234560', id:'id12345'};
+                var obj = JSON.parse(resp.data);
+                //var obj = {clave_acceso: '1234560', id:'id12345'};
                 if (obj.errors === undefined) {
                     vm.bill.claveDeAcceso = obj.clave_acceso;
                     vm.bill.idSri = obj.id;

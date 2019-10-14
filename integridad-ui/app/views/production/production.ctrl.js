@@ -53,6 +53,11 @@ angular.module('integridadUiApp')
             vm.error = undefined;
             vm.prodKarId = undefined;
             vm.prodKarName = undefined;
+            vm.prodSet = undefined;
+            vm.prodSetId = undefined;
+            vm.prodSetName = undefined;
+            vm.prodSetCostEach = undefined;
+            vm.setObserva = undefined;
             vm.selectedKardex = undefined;
             vm.selectedForSetting = undefined;
             vm.reportList = undefined;
@@ -91,10 +96,11 @@ angular.module('integridadUiApp')
                 {code: 'RMBG', name: 'REEMBOLSO DE GASTOS'},
                 {code: 'TKAE', name: 'TIKETS AEREOS'}
             ];
-        
+
             vm.usrCliId = $localStorage.user.subsidiary.userClient.id;
             vm.subsidiaryId = $localStorage.user.subsidiary.id;
             vm.userCode = $localStorage.user.userType.code;
+            vm.userId = $localStorage.user.id;
             vm.provider = undefined;
             vm.messurements = messurementListService.getMessurementList();
 
@@ -235,9 +241,23 @@ angular.module('integridadUiApp')
         };
 
         //Ajuste por Kardex
+        function _initializeKardex() {
+            vm.kardex = {
+                codeWarehouse: vm.warehouseSelected.codeWarehouse,
+                product: vm.prodSet,
+                subsidiaryId: vm.subsidiaryId,
+                userClientId: vm.usrCliId,
+                userId: vm.userId,
+                prodCostEach: vm.prodSetCostEach,
+                prodQuantity: 0,
+                prodName: vm.prodSetName
+            };
+        };
+
         vm.settingForKardex = function(warehouse) {
             vm.warehouseSelected = warehouse;
             vm.searchTextSet = undefined;
+            vm.success = undefined;
             vm.loading = true;
             productTypeService.getproductTypesLazy().then(function(response) {
                 vm.selectedForSetting = response;
@@ -312,12 +332,42 @@ angular.module('integridadUiApp')
         vm.cancelSetting = function() {
             _activate();
         };
+
+        vm.selectProductForSetting = function(productSet) {
+            vm.prodSet = productSet;
+            vm.prodSetId = productSet.id;
+            vm.prodSetName = productSet.name;
+            vm.prodSetCostEach = productSet.costEach;
+            _initializeKardex();
+        };
+
+        vm.saveKardex = function() {
+            vm.loading = true;
+            if (parseInt(vm.kardex.prodQuantity) <= 0 ) {
+                vm.error = 'La cantidad ingresada NO puede ser menor o igual a 0';
+                vm.loading = false;
+            } else {
+                vm.kardex.prodTotal = parseFloat((vm.prodSetCostEach * vm.kardex.prodQuantity).toFixed(2));
+                vm.kardex.observation = vm.setObserva;
+                vm.kardex.details = vm.setObserva + ' - AJUSTE DE CANTIDAD DE PRODUCTO POR KARDEX',
+                productService.createKardex(vm.kardex).then(function(respKar) {
+                    vm.kardexCreated = respKar;
+                    vm.success = 'Ajuste Realizado';
+                    vm.loading = false;
+                }).catch(function(error) {
+                    vm.loading = false;
+                    vm.error = error.data;
+                });
+                _activate();
+            };
+        };
         //Fin Ajuste Kardex
 
         //Reporte Kardex
         vm.reportKardex = function(warehouse) {
             vm.warehouseSelected = warehouse;
             vm.searchTextKar = undefined;
+            vm.success = undefined;
             vm.loading = true;
             productTypeService.getproductTypesLazy().then(function(response) {
                 vm.selectedKardex = response;
@@ -640,12 +690,14 @@ angular.module('integridadUiApp')
                     dateRegister: $('#pickerDateEnterCellar').data("DateTimePicker").date().toDate().getTime(),
                     details: 'INGRESO A BODEGA Nro. ' + vm.cellSeqNumber + ', Fact. ' + vm.cellar.billNumber,
                     observation: 'INGRESO',
+                    detalle: '--',
                     prodCostEach: item.costEach,
                     prodName: item.product.name,
                     prodQuantity: item.quantity,
                     prodTotal: item.total,
                     subsidiaryId: vm.subsidiaryId,
-                    userClientId: vm.usrCliId
+                    userClientId: vm.usrCliId,
+                    userId: vm.userId
                 };
                 vm.cellar.detailsKardex.push(kardex);
             });
@@ -885,13 +937,15 @@ angular.module('integridadUiApp')
                     codeWarehouse: vm.warehouse.codeWarehouse,
                     dateRegister: $('#pickerDateConsumption').data("DateTimePicker").date().toDate().getTime(),
                     details: 'CONSUMO INTERNO Nro. ' + vm.csmSeqNumber,
-                    observation: vm.consumption.observation,
+                    observation: 'EGRESO',
+                    detalle: vm.consumption.observation,
                     prodCostEach: item.costEach,
                     prodName: item.product.name,
                     prodQuantity: item.quantity,
                     prodTotal: item.total,
                     subsidiaryId: vm.subsidiaryId,
-                    userClientId: vm.usrCliId
+                    userClientId: vm.usrCliId,
+                    userId: vm.userId
                 };
                 vm.consumption.detailsKardex.push(kardex);
             });

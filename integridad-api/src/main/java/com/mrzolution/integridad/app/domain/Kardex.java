@@ -25,12 +25,14 @@ public class Kardex implements Child {
     private String codeWarehouse;
     private String details;
     private String observation;
+    private String detalle;
     private long dateRegister;
     private String prodName;
     private double prodCostEach;
     private long prodQuantity;
     private double prodTotal;
     private String userClientId;
+    private String userId;
     private String subsidiaryId;
     private boolean active;
     private String credNoteIdVenta;

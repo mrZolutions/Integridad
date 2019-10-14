@@ -124,6 +124,7 @@ public class CreditNoteCellarServices {
                     spKarCel.setDateRegister(saved.getDateCreated());
                     spKarCel.setDetails("N.C. Nro. " + saved.getNotaCredito() + ", de FACTURA-COMPRA Nro. " + saved.getDocumentStringSeq());
                     spKarCel.setObservation("NCC");
+                    spKarCel.setDetalle("--");
                     spKarCel.setProdCostEach(detCelSaved.getCostEach());
                     spKarCel.setProdQuantity(detCelSaved.getQuantity());
                     spKarCel.setProdTotal(detCelSaved.getTotal());

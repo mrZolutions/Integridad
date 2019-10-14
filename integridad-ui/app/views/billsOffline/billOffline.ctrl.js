@@ -97,6 +97,7 @@ angular.module('integridadUiApp')
             vm.user = $localStorage.user;
             vm.userClientId = $localStorage.user.subsidiary.userClient.id;
             vm.subsidiaryId = $localStorage.user.subsidiary.id;
+            vm.userId = $localStorage.user.id;
             clientService.getLazyByUserClientId(vm.user.subsidiary.userClient.id).then(function(response) {
                 vm.clientList = response;
                 vm.loading = false;
@@ -622,12 +623,14 @@ angular.module('integridadUiApp')
                     dateRegister: $('#pickerBillOfflineDate').data("DateTimePicker").date().toDate().getTime(),
                     details: 'FACTURA-OFFLINE-VENTA Nro. ' + vm.seqNumber,
                     observation: 'EGRESO',
+                    detalle: '--',
                     prodCostEach: det.costEach,
                     prodName: det.product.name,
                     prodQuantity: det.quantity,
                     prodTotal: det.total,
                     subsidiaryId: vm.subsidiaryId,
-                    userClientId: vm.userClientId
+                    userClientId: vm.userClientId,
+                    userId: vm.userId
                 };
                 vm.billOffline.detailsKardexOffline.push(kardexoff);
             });

@@ -1,5 +1,6 @@
 package com.mrzolution.integridad.app.controllers;
 
+import com.mrzolution.integridad.app.domain.Kardex;
 import com.mrzolution.integridad.app.domain.report.KardexOfProductReport;
 import com.mrzolution.integridad.app.exceptions.BadRequestException;
 import com.mrzolution.integridad.app.services.KardexServices;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -25,6 +27,19 @@ import org.springframework.web.bind.annotation.RestController;
 public class KardexController {
     @Autowired
     KardexServices service;
+    
+    @RequestMapping(method = RequestMethod.POST, value= "/setprodkar")
+    public ResponseEntity createKardex(@RequestBody Kardex kardex) {
+        Kardex response = null;
+        try {
+            response = service.createKardex(kardex);
+        } catch (BadRequestException e) {
+            log.error("KardexController createKardex Exception thrown: {}", e.getMessage());
+	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+	}
+        log.info("KardexController createKardex DONE");
+        return new ResponseEntity<Kardex>(response, HttpStatus.CREATED);
+    }
     
     @RequestMapping(method = RequestMethod.GET, value="rep/{id}/{provID}/{dateOne}/{dateTwo}")
     public ResponseEntity getKardexActivesByUserClientIdAndProductIdAndDates(@PathVariable("id") String id, @PathVariable("provID") UUID provID, @PathVariable("dateOne") long dateOne, @PathVariable("dateTwo") long dateTwo) {

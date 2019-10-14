@@ -79,4 +79,11 @@ angular
                 return response.data;
             });
         };
+
+        //Ajuste Kardex por Producto
+        this.createKardex = function(kardex) {
+            return securityService.post('/product/kardex/setprodkar', kardex).then(function successCallback(response) {
+                return response.data;
+            });
+        };
 });

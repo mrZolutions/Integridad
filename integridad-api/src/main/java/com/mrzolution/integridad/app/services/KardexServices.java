@@ -1,8 +1,11 @@
 package com.mrzolution.integridad.app.services;
 
 import com.mrzolution.integridad.app.domain.Kardex;
+import com.mrzolution.integridad.app.domain.ProductBySubsidiary;
 import com.mrzolution.integridad.app.domain.report.KardexOfProductReport;
+import com.mrzolution.integridad.app.exceptions.BadRequestException;
 import com.mrzolution.integridad.app.repositories.KardexRepository;
+import com.mrzolution.integridad.app.repositories.ProductBySubsidiairyRepository;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -10,6 +13,7 @@ import java.util.List;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 /**
@@ -22,6 +26,10 @@ import org.springframework.stereotype.Component;
 public class KardexServices {
     @Autowired
     KardexRepository kardexRepository;
+    @Autowired
+    ProductBySubsidiairyRepository productBySubsidiairyRepository;
+    
+    public UUID subsidiaryId;
     
     public double sumEntra;
     public double sumSale;
@@ -46,7 +54,7 @@ public class KardexServices {
         totalCompra = 0.0;
         sumProm = 0.0;
         
-        detaKardex.forEach(kard ->{
+        detaKardex.forEach(kard -> {
             if (kard.isActive()) {
                 SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
                 String fechaReg = dateFormat.format(new Date(kard.getDateRegister()));
@@ -76,5 +84,29 @@ public class KardexServices {
             }
         });
         return kardexOfProductReportList;
+    }
+    
+    @Async("asyncExecutor")
+    public Kardex createKardex(Kardex kard) throws BadRequestException {
+        if (kard.getProdQuantity() <= 0) {
+            throw new BadRequestException("La cantidad ingresada NO puede ser menor o igual a 0");
+        }
+        kard.setDateRegister(new Date().getTime());
+        kard.setActive(true);
+        kard.setListsNull();
+        kard.setFatherListToNull();
+        Kardex kardSaved = kardexRepository.save(kard);
+        subsidiaryId = UUID.fromString(kardSaved.getSubsidiaryId());
+
+        if ("INGRESO".equals(kardSaved.getObservation())) {
+            ProductBySubsidiary prodSub = productBySubsidiairyRepository.findBySubsidiaryIdAndProductId(subsidiaryId, kardSaved.getProduct().getId());
+            prodSub.setQuantity(prodSub.getQuantity() + kardSaved.getProdQuantity());
+            productBySubsidiairyRepository.save(prodSub);
+        } else {
+            ProductBySubsidiary prodSub = productBySubsidiairyRepository.findBySubsidiaryIdAndProductId(subsidiaryId, kardSaved.getProduct().getId());
+            prodSub.setQuantity(prodSub.getQuantity() - kardSaved.getProdQuantity());
+            productBySubsidiairyRepository.save(prodSub);
+        }
+        return kardSaved;
     }
 }
