@@ -347,6 +347,8 @@ angular.module('integridadUiApp')
                 vm.error = 'La cantidad ingresada NO puede ser menor o igual a 0';
                 vm.loading = false;
             } else {
+                vm.kardex.dateRegister = $('#pickerSettingKardexDate').data("DateTimePicker").date().toDate().getTime();
+                vm.kardex.prodCostEach = vm.prodSetCostEach;
                 vm.kardex.prodTotal = parseFloat((vm.prodSetCostEach * vm.kardex.prodQuantity).toFixed(2));
                 vm.kardex.observation = vm.setObserva;
                 vm.kardex.details = vm.setObserva + ' - AJUSTE DE CANTIDAD DE PRODUCTO POR KARDEX',

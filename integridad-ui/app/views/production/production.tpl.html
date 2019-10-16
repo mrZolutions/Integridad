@@ -2434,19 +2434,35 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <div class="form-group col-md-4">
+                        <div class="form-group col-md-5 ">
+                            <label>FECHA AJUSTE: </label>
+                            <div class="input-group date" id="pickerSettingKardexDate">
+                                <input type="text" class="form-control input-group-addon"/>
+                                <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"/></span>
+                            </div>
+                            <script>
+                                $('#pickerSettingKardexDate').datetimepicker({
+                                    format: "DD/MM/YY",
+                                });
+                            </script>
+                        </div>                        
+                        <div class="form-group col-md-5">
                             <label>Tipo de Ajuste:</label>
                             <select ng-options="setprod.name as setprod.name for setprod in [{code: 'ING' ,name:'INGRESO'}, {code: 'EGR', name:'EGRESO'}]"
                                     ng-model="vm.setObserva" class="form-control">
                             </select>
                         </div>
-                        <div class="form-group col-md-8">
-                            <label>Observación:</label>
-                            <input type="text" ng-model="vm.kardex.detalle" class="form-control">
-                        </div>
                         <div class="form-group col-md-4">
                             <label>Cantidad para Ajuste:</label>
                             <input type="text" ng-model="vm.kardex.prodQuantity" class="form-control">
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label>Costo Unitario:</label>
+                            <input type="text" ng-model="vm.prodSetCostEach" class="form-control">
+                        </div>
+                        <div class="form-group col-md-10">
+                            <label>Observación:</label>
+                            <input type="text" ng-model="vm.kardex.detalle" class="form-control">
                         </div>
                     </div>
                 </div>

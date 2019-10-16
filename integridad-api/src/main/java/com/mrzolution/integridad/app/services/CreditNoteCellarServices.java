@@ -133,6 +133,7 @@ public class CreditNoteCellarServices {
                     spKarCel.setCodeWarehouse("--");
                     spKarCel.setSubsidiaryId(saved.getSubsidiary().getId().toString());
                     spKarCel.setUserClientId(saved.getSubsidiary().getUserClient().getId().toString());
+                    spKarCel.setUserId(saved.getUserIntegridad().getId().toString());
                 kardexRepository.save(spKarCel);
             });
             

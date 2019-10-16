@@ -91,7 +91,6 @@ public class KardexServices {
         if (kard.getProdQuantity() <= 0) {
             throw new BadRequestException("La cantidad ingresada NO puede ser menor o igual a 0");
         }
-        kard.setDateRegister(new Date().getTime());
         kard.setActive(true);
         kard.setListsNull();
         kard.setFatherListToNull();

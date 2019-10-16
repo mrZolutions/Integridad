@@ -1814,6 +1814,12 @@
                             <label>Descripci&oacute;n:</label><br/>
                             <input type="text" class="form-control" ng-model="vm.detailitemCib"/>
                         </div>
+                        <div class="form-group col-md-3">
+                            <label>Tipo de Cuenta:</label>
+                            <select ng-options="tip.name as tip.name for tip in [{code: 'DEB' ,name:'DEBITO (D)'}, {code: 'CRD', name:'CREDITO (C)'}]"
+                                    ng-model="vm.itemCib.tipo" class="form-control">
+                            </select>
+                        </div>
                         <div class="form-group col-md-2">
                             <label>Valor</label>
                             <input type="text" onkeypress="return ((event.which >= 46 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
@@ -1848,6 +1854,12 @@
                         <div class="form-group col-md-5">
                             <label>Descripci&oacute;n:</label><br/>
                             <input type="text" class="form-control" ng-model="vm.itemCib.name"/>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label>Tipo de Cuenta:</label>
+                            <select ng-options="tip.name as tip.name for tip in [{code: 'DEB' ,name:'DEBITO (D)'}, {code: 'CRD', name:'CREDITO (C)'}]"
+                                    ng-model="vm.itemCib.tipo" class="form-control">
+                            </select>
                         </div>
                         <div class="form-group col-md-2">
                             <label>Valor</label>
