@@ -1,11 +1,14 @@
 package com.mrzolution.integridad.app.services;
 
 import com.mrzolution.integridad.app.domain.Kardex;
+import com.mrzolution.integridad.app.domain.Product;
 import com.mrzolution.integridad.app.domain.ProductBySubsidiary;
 import com.mrzolution.integridad.app.domain.report.KardexOfProductReport;
 import com.mrzolution.integridad.app.exceptions.BadRequestException;
 import com.mrzolution.integridad.app.repositories.KardexRepository;
 import com.mrzolution.integridad.app.repositories.ProductBySubsidiairyRepository;
+import com.mrzolution.integridad.app.repositories.ProductRepository;
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -27,8 +30,11 @@ public class KardexServices {
     @Autowired
     KardexRepository kardexRepository;
     @Autowired
+    ProductRepository productRepository;
+    @Autowired
     ProductBySubsidiairyRepository productBySubsidiairyRepository;
     
+    public UUID usrClntId;
     public UUID subsidiaryId;
     
     public double sumEntra;
@@ -94,18 +100,40 @@ public class KardexServices {
         kard.setActive(true);
         kard.setListsNull();
         kard.setFatherListToNull();
-        Kardex kardSaved = kardexRepository.save(kard);
-        subsidiaryId = UUID.fromString(kardSaved.getSubsidiaryId());
+        Kardex karSvd = kardexRepository.save(kard);
+        usrClntId = UUID.fromString(karSvd.getUserClientId());
+        subsidiaryId = UUID.fromString(karSvd.getSubsidiaryId());
 
-        if ("INGRESO".equals(kardSaved.getObservation())) {
-            ProductBySubsidiary prodSub = productBySubsidiairyRepository.findBySubsidiaryIdAndProductId(subsidiaryId, kardSaved.getProduct().getId());
-            prodSub.setQuantity(prodSub.getQuantity() + kardSaved.getProdQuantity());
+        if ("INGRESO".equals(karSvd.getObservation())) {
+            //Actualización del campo (quantity) en tabla Product by Subsiduary
+            ProductBySubsidiary prodSub = productBySubsidiairyRepository.findBySubsidiaryIdAndProductId(subsidiaryId, karSvd.getProduct().getId());
+                prodSub.setQuantity(prodSub.getQuantity() + karSvd.getProdQuantity());
             productBySubsidiairyRepository.save(prodSub);
+            
+            //Actualización de los campos (quantity_cellar, cost_cellar, average_cost_suggested) en tabla Product
+            Long qntCel = Long.valueOf(0);
+            Double cstCel = Double.valueOf(0);
+            Double avgCst = Double.valueOf(0);
+            
+            Product prod = productRepository.findPrdByUsrClntAndId(usrClntId, karSvd.getProduct().getId());
+                qntCel = karSvd.getProdQuantity() + prod.getQuantityCellar();    
+                cstCel = karSvd.getProdTotal() + prod.getCostCellar();
+                avgCst = cstCel / qntCel;
+                BigDecimal vavgCst = new BigDecimal(avgCst);
+                if (avgCst > 0) {
+                    vavgCst = vavgCst.setScale(4, BigDecimal.ROUND_HALF_UP);
+                }
+                avgCst = vavgCst.doubleValue();
+                prod.setQuantityCellar(qntCel);
+                prod.setCostCellar(cstCel);
+                prod.setAverageCostSuggested(avgCst);
+            productRepository.save(prod);
         } else {
-            ProductBySubsidiary prodSub = productBySubsidiairyRepository.findBySubsidiaryIdAndProductId(subsidiaryId, kardSaved.getProduct().getId());
-            prodSub.setQuantity(prodSub.getQuantity() - kardSaved.getProdQuantity());
-            productBySubsidiairyRepository.save(prodSub);
+            //Actualización del campo cantidad en Product by Subsiduary
+            ProductBySubsidiary prodSub = productBySubsidiairyRepository.findBySubsidiaryIdAndProductId(subsidiaryId, karSvd.getProduct().getId());
+                prodSub.setQuantity(prodSub.getQuantity() - karSvd.getProdQuantity());
+            productBySubsidiairyRepository.save(prodSub);            
         }
-        return kardSaved;
+        return karSvd;
     }
 }

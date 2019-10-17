@@ -21,23 +21,23 @@ public interface ProductBySubsidiairyRepository extends CrudRepository<ProductBy
     @Query("SELECT p FROM ProductBySubsidiary p WHERE p.subsidiary.id = (:id)")
     Iterable<ProductBySubsidiary> findBySubsidiaryId(@Param("id") UUID subsidiaryId);
 
-    @Query("SELECT p FROM ProductBySubsidiary p WHERE p.subsidiary.id = (:idS) and p.product.id = (:idP) and p.active = true")
+    @Query("SELECT p FROM ProductBySubsidiary p WHERE p.subsidiary.id = (:idS) AND p.product.id = (:idP) AND p.active = true")
     ProductBySubsidiary findBySubsidiaryIdAndProductId(@Param("idS") UUID subsidiaryId, @Param("idP") UUID ProductId);
         
-    @Query("SELECT distinct p.product.id FROM ProductBySubsidiary p WHERE p.subsidiary.id = (:id) and p.product.active = true")
+    @Query("SELECT DISTINCT p.product.id FROM ProductBySubsidiary p WHERE p.subsidiary.id = (:id) AND p.product.active = true")
     Page<UUID> findBySubsidiaryIdAndProductActive(@Param("id") UUID subsidiaryId, Pageable pageable);
         
-    @Query("SELECT distinct p.product.id FROM ProductBySubsidiary p WHERE p.subsidiary.id = (:id) and p.product.active = true and (p.product.codeIntegridad like (%:variable%) or p.product.name like (%:variable%))")
+    @Query("SELECT DISTINCT p.product.id FROM ProductBySubsidiary p WHERE p.subsidiary.id = (:id) AND p.product.active = true AND (p.product.codeIntegridad LIKE (%:variable%) OR p.product.name LIKE (%:variable%))")
     Page<UUID> findBySubsidiaryIdAndVariabledAndProductActive(@Param("id") UUID subsidiaryId, @Param("variable") String variable, Pageable pageable);
 
     @Query("SELECT p FROM ProductBySubsidiary p WHERE p.product.id = (:id)")
     Iterable<ProductBySubsidiary> findByProductId(@Param("id") UUID productId);       
 
     //594f9d5a-3236-4702-86e1-6f0d34f0bd14 75591174-db48-4313-a6a0-1f2581ff9ed3 b7583d7b-39e5-4ba1-aa88-5fa5eeee2024
-    @Query("SELECT distinct p.product.id FROM ProductBySubsidiary p WHERE p.subsidiary.id = (:id) and p.product.active = true and (p.product.productType.id not in ('594f9d5a-3236-4702-86e1-6f0d34f0bd14', '75591174-db48-4313-a6a0-1f2581ff9ed3', 'b7583d7b-39e5-4ba1-aa88-5fa5eeee2024'))")
+    @Query("SELECT DISTINCT p.product.id FROM ProductBySubsidiary p WHERE p.subsidiary.id = (:id) AND p.product.active = true AND (p.product.productType.id NOT IN ('594f9d5a-3236-4702-86e1-6f0d34f0bd14', '75591174-db48-4313-a6a0-1f2581ff9ed3', 'b7583d7b-39e5-4ba1-aa88-5fa5eeee2024'))")
     Page<UUID> findBySubsidiaryIdAndProductActiveForBill(@Param("id") UUID subsidiaryId, Pageable pageable);
 
-    @Query("SELECT distinct p.product.id FROM ProductBySubsidiary p WHERE p.subsidiary.id = (:id) and p.product.active = true and (p.product.codeIntegridad like (%:variable%) or p.product.name like (%:variable%)) and (p.product.productType.id not in ('594f9d5a-3236-4702-86e1-6f0d34f0bd14', '75591174-db48-4313-a6a0-1f2581ff9ed3', 'b7583d7b-39e5-4ba1-aa88-5fa5eeee2024'))")
+    @Query("SELECT DISTINCT p.product.id FROM ProductBySubsidiary p WHERE p.subsidiary.id = (:id) and p.product.active = true AND (p.product.codeIntegridad LIKE (%:variable%) OR p.product.name LIKE (%:variable%)) AND (p.product.productType.id NOT IN ('594f9d5a-3236-4702-86e1-6f0d34f0bd14', '75591174-db48-4313-a6a0-1f2581ff9ed3', 'b7583d7b-39e5-4ba1-aa88-5fa5eeee2024'))")
     Page<UUID> findBySubsidiaryIdAndVariabledAndProductActiveForBill(@Param("id") UUID subsidiaryId, @Param("variable") String variable, Pageable pageable);
         
 }

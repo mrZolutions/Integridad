@@ -9,6 +9,7 @@ import com.mrzolution.integridad.app.domain.DebtsToPay;
 import com.mrzolution.integridad.app.domain.DetailCellar;
 import com.mrzolution.integridad.app.domain.Kardex;
 import com.mrzolution.integridad.app.domain.PaymentDebts;
+import com.mrzolution.integridad.app.domain.Product;
 import com.mrzolution.integridad.app.domain.ProductBySubsidiary;
 import com.mrzolution.integridad.app.domain.report.CreditNoteCellarReport;
 import com.mrzolution.integridad.app.exceptions.BadRequestException;
@@ -21,6 +22,8 @@ import com.mrzolution.integridad.app.repositories.DetailCellarRepository;
 import com.mrzolution.integridad.app.repositories.KardexRepository;
 import com.mrzolution.integridad.app.repositories.PaymentDebtsRepository;
 import com.mrzolution.integridad.app.repositories.ProductBySubsidiairyRepository;
+import com.mrzolution.integridad.app.repositories.ProductRepository;
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -57,12 +60,19 @@ public class CreditNoteCellarServices {
     DebtsToPayRepository debtsToPayRepositoty;
     @Autowired
     KardexRepository kardexRepository;
+    @Autowired
+    ProductRepository productRepository;
     
     public UUID cellarId;
     public String debtsId;
     public String doc;
     public double valor;
     public String estadoCambio;
+    
+    public long qntCel;
+    public double cstCel;
+    public double avgCst;
+
     
     //Busca CreditNote por ID        
     public CreditNoteCellar getCreditNoteCellarById(UUID id) {
@@ -135,6 +145,20 @@ public class CreditNoteCellarServices {
                     spKarCel.setUserClientId(saved.getSubsidiary().getUserClient().getId().toString());
                     spKarCel.setUserId(saved.getUserIntegridad().getId().toString());
                 kardexRepository.save(spKarCel);
+                
+                Product prod = productRepository.findPrdByUsrClntAndId(saved.getSubsidiary().getUserClient().getId(), detCelSaved.getProduct().getId());
+                    qntCel = prod.getQuantityCellar() - detCelSaved.getQuantity();    
+                    cstCel = prod.getCostCellar() - detCelSaved.getTotal();
+                    avgCst = cstCel / qntCel;
+                    BigDecimal vavgCst = new BigDecimal(avgCst);
+                    if (avgCst > 0) {
+                        vavgCst = vavgCst.setScale(4, BigDecimal.ROUND_HALF_UP);
+                    }
+                    avgCst = vavgCst.doubleValue();
+                    prod.setQuantityCellar(qntCel);
+                    prod.setCostCellar(cstCel);
+                    prod.setAverageCostSuggested(avgCst);
+                productRepository.save(prod);
             });
             
             saved.setDetailsCellar(detailsCellar);

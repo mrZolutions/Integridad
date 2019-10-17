@@ -58,6 +58,7 @@ angular.module('integridadUiApp')
             vm.prodSetName = undefined;
             vm.prodSetCostEach = undefined;
             vm.setObserva = undefined;
+            vm.setDetalle = undefined;
             vm.selectedKardex = undefined;
             vm.selectedForSetting = undefined;
             vm.reportList = undefined;
@@ -351,7 +352,8 @@ angular.module('integridadUiApp')
                 vm.kardex.prodCostEach = vm.prodSetCostEach;
                 vm.kardex.prodTotal = parseFloat((vm.prodSetCostEach * vm.kardex.prodQuantity).toFixed(2));
                 vm.kardex.observation = vm.setObserva;
-                vm.kardex.details = vm.setObserva + ' - AJUSTE DE CANTIDAD DE PRODUCTO POR KARDEX',
+                vm.kardex.detalle = vm.setDetalle;
+                vm.kardex.details = vm.setObserva + ' - ' + vm.setDetalle;
                 productService.createKardex(vm.kardex).then(function(respKar) {
                     vm.kardexCreated = respKar;
                     vm.success = 'Ajuste Realizado';

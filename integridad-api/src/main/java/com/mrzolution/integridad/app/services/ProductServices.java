@@ -172,7 +172,7 @@ public class ProductServices {
     public List<ExistencyReport> getProductsForExistencyReport(UUID userClientId) {
         log.info("ProductServices getProductsForExistency: {}", userClientId);
         codigo = "SER";
-        Iterable<Product> productos = productRepository.findProductsForExistencyReport(userClientId, codigo);
+        Iterable<Product> productos = productRepository.findPrdsForExistReport(userClientId, codigo);
         List<ExistencyReport> existencyReportList = new ArrayList<>();
         
         productos.forEach(product -> {
@@ -268,7 +268,7 @@ public class ProductServices {
     public List<ExistencyCatReport> getProductsForExistencyCatReport(UUID userClientId) {
         log.info("ProductServices getProductsForExistencyCatReport: {}", userClientId);
         codigo = "SER";
-        Iterable<Product> productosCat = productRepository.findProductsForExistencyReport(userClientId, codigo);
+        Iterable<Product> productosCat = productRepository.findPrdsForExistReport(userClientId, codigo);
         List<ExistencyCatReport> existencyCatReportList = new ArrayList<>();
         
         productosCat.forEach(productCat -> {
