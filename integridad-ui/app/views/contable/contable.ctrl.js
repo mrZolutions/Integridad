@@ -63,11 +63,15 @@ angular.module('integridadUiApp')
             vm.cuenta = undefined;
             vm.cuentaContableList = undefined;
             vm.cuentaContableBankList = undefined;
+            vm.cuentaContableListForMajor = undefined;
             vm.codeConta = undefined;
             vm.periodBookType = undefined;
             vm.fchIni = undefined;
             vm.fchFin = undefined;
+            vm.datePeriod = undefined;
             vm.isProductReportList = undefined;
+            vm.codeContaOne = undefined;
+            vm.codeContaTwo = undefined;
             
             //Contabilidad General Cg
             vm.dailybookCgNew = undefined;
@@ -259,6 +263,16 @@ angular.module('integridadUiApp')
                         vm.loading = false;
                     });
                 break;
+                case '13':
+                    vm.selectedTypeBook = vm.dailybookType;
+                    cuentaContableService.getCuentaContableByUserClient(vm.usrCliId).then(function(response) {
+                        vm.cuentaContableListForMajor = response;
+                        vm.loading = false;
+                    }).catch(function(error) {
+                        vm.error = error.data;
+                        vm.loading = false;
+                    });
+                break;
             };
         };
 
@@ -384,6 +398,60 @@ angular.module('integridadUiApp')
             });
         };
         //Fin Reporte Mayor Específico
+
+        //Reporte Mayor General
+        vm.getGeneralMajorReport = function() {
+            vm.cuentaContableListForMajor = undefined;
+            switch (vm.periodBookType) {
+                case '01': //01-2019
+                    vm.datePeriod = 1548979199000;
+                break;
+                case '02': //02-2019
+                    vm.datePeriod = 1551398399000;
+                break;
+                case '03': //03-2019
+                    vm.datePeriod = 1554076799000;
+                break;
+                case '04': //04-2019
+                    vm.datePeriod = 1556668799000;
+                break;
+                case '05': //05-2019
+                    vm.datePeriod = 1559347199000;
+                break;
+                case '06': //06-2019
+                    vm.datePeriod = 1561939199000;
+                break;
+                case '07': //07-2019
+                    vm.datePeriod = 1564617599000;
+                break;
+                case '08': //08-2019
+                    vm.datePeriod = 1567295999000;
+                break;
+                case '09': //09-2019
+                    vm.datePeriod = 1569887999000;
+                break;
+                case '10': //10-2019
+                    vm.datePeriod = 1572566399000;
+                break;
+                case '11': //11-2019
+                    vm.datePeriod = 1575158399000;
+                break;
+                case '12': //12-2019
+                    vm.datePeriod = 1577836799000;
+                break;
+            };
+            vm.isProductReportList = '2';
+            vm.reportList = undefined;
+            vm.loading = true;
+
+            contableService.getGenMajorReportByUsrClntIdAndCodeContaAndDate(vm.usrCliId, vm.codeContaOne, vm.codeContaTwo, vm.datePeriod).then(function(response) {
+                vm.reportList = response;
+                vm.loading = false;
+            }).catch(function(error) {
+                vm.loading = false;
+                vm.error = error.data;
+            });
+        };
 
         vm.exportExcel = function() {
             var dataReport = [];

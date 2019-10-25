@@ -216,4 +216,11 @@ angular
                 return response.data;
             });
         };
+
+        //Reporte Mayor General
+        this.getGenMajorReportByUsrClntIdAndCodeContaAndDate = function(id, codeOne, codeTwo, dateTwo) {
+            return securityService.get('/dailybook/details/rep/mayorgen/' + id + '/' + codeOne + '/' + codeTwo + '/' + dateTwo).then(function successCallback(response) {
+                return response.data;
+            });
+        };
 });

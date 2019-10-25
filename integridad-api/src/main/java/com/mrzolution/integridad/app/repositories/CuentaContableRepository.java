@@ -16,7 +16,7 @@ public interface CuentaContableRepository extends CrudRepository<CuentaContable,
 
     Iterable<CuentaContable> findByActive(boolean active);
 
-    @Query("SELECT cc FROM CuentaContable cc WHERE cc.userClient.id = (:id) AND cc.active = true")
+    @Query("SELECT cc FROM CuentaContable cc WHERE cc.userClient.id = (:id) AND cc.active = true ORDER BY cc.code")
     Iterable<CuentaContable> findByUserClientId(@Param("id") UUID id);
     
     @Query("SELECT cc FROM CuentaContable cc WHERE cc.userClient.id = (:id) AND cc.type != 'BANC' AND cc.active = true")
