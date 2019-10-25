@@ -149,6 +149,7 @@ public class DailybookCiServices {
     }
     
     //Desactivación o Anulación de los COMPROBANTES DE INGRESO
+    @Async("asyncExecutor")
     public DailybookCi deactivateDailybookCi(DailybookCi dailybookCi) throws BadRequestException {
         if (dailybookCi.getId() == null) {
             throw new BadRequestException("Invalid DIARIO DE COMPROBANTE DE INGRESO");
@@ -157,9 +158,20 @@ public class DailybookCiServices {
         dailybookCiToDeactivate.setListsNull();
         dailybookCiToDeactivate.setActive(false);
         dailybookCiToDeactivate.setGeneralDetail("COMPROBANTE DE INGRESO ANULADO");
-        dailybookCiRepository.save(dailybookCiToDeactivate);
+        DailybookCi deactCiSaved = dailybookCiRepository.save(dailybookCiToDeactivate);
+        updateDetailDailyBookContab(deactCiSaved);
         log.info("DailybookCiServices deactivateDailybookCi: {}", dailybookCiToDeactivate.getId());
         return dailybookCiToDeactivate;
+    }
+    
+    public void updateDetailDailyBookContab (DailybookCi dailybookCi) {
+        Iterable<DetailDailybookContab> detailCiBook = detailDailybookContabRepository.findByDailybookCiId(dailybookCi.getId());
+        detailCiBook.forEach(detaCi ->{
+            detaCi.setListsNull();
+            detaCi.setFatherListToNull();
+            detaCi.setActive(false);
+            detailDailybookContabRepository.save(detaCi);
+        });
     }
     
     //Carga los Detalles hacia un COMPROBANTE DE INGRESO

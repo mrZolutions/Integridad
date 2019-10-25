@@ -23,11 +23,23 @@ import org.springframework.stereotype.Repository;
 public interface DetailDailybookContabRepository extends CrudRepository<DetailDailybookContab, UUID> {
     Iterable<DetailDailybookContab> findByDailybookCg(DailybookCg dailybookCg);
     
+    @Query("SELECT d FROM DetailDailybookContab d WHERE d.dailybookCg.id = (:id)")
+    Iterable<DetailDailybookContab> findByDailybookCgId(@Param("id") UUID id);
+    
     Iterable<DetailDailybookContab> findByDailybookCe(DailybookCe dailybookCe);
+    
+    @Query("SELECT d FROM DetailDailybookContab d WHERE d.dailybookCe.id = (:id)")
+    Iterable<DetailDailybookContab> findByDailybookCeId(@Param("id") UUID id);
     
     Iterable<DetailDailybookContab> findByDailybookCi(DailybookCi dailybookCi);
     
+    @Query("SELECT d FROM DetailDailybookContab d WHERE d.dailybookCi.id = (:id)")
+    Iterable<DetailDailybookContab> findByDailybookCiId(@Param("id") UUID id);
+    
     Iterable<DetailDailybookContab> findByDailybookCxP(DailybookCxP dailybookCxP);
+    
+    @Query("SELECT d FROM DetailDailybookContab d WHERE d.dailybookCxP.id = (:id)")
+    Iterable<DetailDailybookContab> findByDailybookCxPId(@Param("id") UUID id);
     
     Iterable<DetailDailybookContab> findByDailybookFv(DailybookFv dailybookFv);
     

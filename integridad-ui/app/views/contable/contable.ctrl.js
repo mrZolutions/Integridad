@@ -34,7 +34,8 @@ angular.module('integridadUiApp')
             {code: '9', type: 'NOTA DE DÉBITO'},
             {code: '10', type: 'INVENTARIO'},
             {code: '11', type: 'TRANSFERENCIA'},
-            {code: '12', type: 'REPORTE MAYORES ESPECÍFICOS'}
+            {code: '12', type: 'REPORTE MAYORES ESPECÍFICOS'},
+            {code: '13', type: 'REPORTE MAYORES GENERAL'}
         ];
 
         vm.periodReport = [
@@ -128,7 +129,7 @@ angular.module('integridadUiApp')
             vm.beneficio = undefined;
             vm.dailybookCiManualCreatedList = undefined;
             
-            //Cuentas por Pagar Cpp
+            //Cuentas por Pagar CxP
             vm.dailybookCxPNew = undefined;
             vm.dailyCxPSeq = undefined;
             vm.dailyCxPStringSeq = undefined;

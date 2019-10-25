@@ -7,7 +7,7 @@
  * Controller of the integridadUiApp
  */
 angular.module('integridadUiApp')
-    .controller('BillCtrl', function(_, $rootScope, $location, utilStringService, $localStorage,
+    .controller('BillCtrl', function(_, $location, utilStringService, $localStorage,
                                      clientService, productService, authService, billService, $window,
                                      cashierService, requirementService, utilSeqService) {
         var vm = this;
@@ -696,8 +696,8 @@ angular.module('integridadUiApp')
                 if (vm.bill.discountPercentage === undefined) {
                     vm.bill.discountPercentage = 0;
                 };
-                var obj = JSON.parse(resp.data);
-                //var obj = {clave_acceso: '1234560', id:'id12345'};
+                //var obj = JSON.parse(resp.data);
+                var obj = {clave_acceso: '1234560', id:'id12345'};
                 if (obj.errors === undefined) {
                     vm.bill.claveDeAcceso = obj.clave_acceso;
                     vm.bill.idSri = obj.id;
