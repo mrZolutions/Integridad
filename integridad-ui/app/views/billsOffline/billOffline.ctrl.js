@@ -103,6 +103,11 @@ angular.module('integridadUiApp')
                 var finalConsumer = _.filter(vm.clientList, function(client){ return client.identification === '9999999999999'})
                 vm.clientSelect(finalConsumer[0]);
                 vm.loading = false;
+                setTimeout(function(){
+                  document.getElementById("input4").focus();
+                }, 500);
+                vm.page = 0;
+                _filterProduct();
             }).catch(function(error) {
                 vm.loading = false;
                 vm.error = error.data;
@@ -130,6 +135,14 @@ angular.module('integridadUiApp')
                 detailsOffline: [],
                 pagosOffline: []
             };
+        };
+
+        vm.filterBarCode = function(){
+
+          if(vm.billOfflineBarCode.length === 13){
+              var res = _.filter(vm.productList, function(prod){ return prod.barCode === vm.billOfflineBarCode; });
+              console.log(res);
+          }
         };
 
         vm.clientSelect = function(client) {
@@ -263,6 +276,7 @@ angular.module('integridadUiApp')
                         if (sub) {
                             response.content[i].quantity = sub.quantity
                             vm.productList.push(response.content[i]);
+                            console.log(response.content[i])
                         };
                     };
                 };

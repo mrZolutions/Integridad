@@ -100,7 +100,12 @@ angular.module('integridadUiApp')
             vm.userSubsidiary = $localStorage.user.subsidiary;
             clientService.getLazyByUserClientId(vm.userClientId).then(function(response) {
                 vm.clientList = response;
+                var finalConsumer = _.filter(vm.clientList, function(client){ return client.identification === '9999999999999'})
+                vm.clientSelect(finalConsumer[0]);
                 vm.loading = false;
+                setTimeout(function(){
+                  document.getElementById("input4").focus();
+                }, 500);
             }).catch(function(error) {
                 vm.loading = false;
                 vm.error = error.data;
