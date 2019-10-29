@@ -106,8 +106,8 @@ angular.module('integridadUiApp')
                 setTimeout(function(){
                   document.getElementById("input4").focus();
                 }, 500);
-                vm.page = 0;
-                _filterProduct();
+                // vm.page = 0;
+                // _filterProduct();
             }).catch(function(error) {
                 vm.loading = false;
                 vm.error = error.data;
@@ -140,8 +140,13 @@ angular.module('integridadUiApp')
         vm.filterBarCode = function(){
 
           if(vm.billOfflineBarCode.length === 13){
-              var res = _.filter(vm.productList, function(prod){ return prod.barCode === vm.billOfflineBarCode; });
-              console.log(res);
+
+            productService.getLazyBySusidiaryIdBarCode($localStorage.user.subsidiary.id, vm.billOfflineBarCode).then(function(response) {
+              console.log(response);
+            });
+
+              // var res = _.filter(vm.productList, function(prod){ return prod.barCode === vm.billOfflineBarCode; });
+              // console.log(res);
           }
         };
 

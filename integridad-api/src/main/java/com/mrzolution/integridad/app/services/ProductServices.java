@@ -148,6 +148,20 @@ public class ProductServices {
 	Page<Product> products = new PageImpl<>(listReturn, pageable, productIdList.getTotalElements());
 	return products;
     }
+
+    public List<Product> getAllActivesBySubsidiaryIdBarCodeAndActive(UUID subsidiaryId, String variable) {
+        log.info("ProductServices getAllActivesBySubsidiaryIdBarCodeAndActive: " + subsidiaryId + " - " + variable);
+        Iterable<Product> productIdList;
+        productIdList = productBySubsidiairyRepository.findBySubsidiaryIdAndBarCodedAndProductActive(subsidiaryId, variable);
+        List<Product> listReturn = new ArrayList<>();
+        productIdList.forEach(ps -> {
+//            System.out.println(ps.getId());
+            populateChildren(ps);
+            ps.setCuentaContableByProducts(null);
+            listReturn.add(ps);
+        });
+        return listReturn;
+    }
     
     public Page<Product> getAllActivesBySubsidiaryIdForBill(UUID subsidiaryId, String variable, Pageable pageable) {
         log.info("ProductServices getAllActivesBySubsidiaryIdForBill");
