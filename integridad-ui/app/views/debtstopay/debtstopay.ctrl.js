@@ -186,8 +186,8 @@ angular.module('integridadUiApp')
             {code: 'TKAE', name: 'TIKETS AEREOS'}
         ];
 
-        vm.typeContab = 'CUENTA POR PAGAR CON RETENCIONES';
-        vm.typeContabCe = 'COMPROBANTE DE EGRESO';
+        vm.typeContab = 'CxP. CON RETENCIONES';
+        vm.typeContabCe = 'COMP. DE EGRESO';
 
         //Función de activación del módulo de Cuentas por Pagar
         function _activate() {

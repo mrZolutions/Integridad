@@ -283,8 +283,8 @@ angular.module('integridadUiApp')
             var req = creditNoteService.createRequirement(vm.clientSelected, vm.bill, $localStorage.user, vm.impuestosTotales, vm.items);
             
             creditNoteService.getClaveDeAcceso(req, vm.companyData.userClient.id).then(function(resp) {
-                //var obj = JSON.parse(resp.data);
-                var obj = {clave_acceso: '1234560', id:'id12345'};
+                var obj = JSON.parse(resp.data);
+                //var obj = {clave_acceso: '1234560', id:'id12345'};
                 if (obj.errors === undefined) {
                     vm.claveDeAcceso = obj.clave_acceso;
                     vm.bill.claveDeAcceso = obj.clave_acceso;

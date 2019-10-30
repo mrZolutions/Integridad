@@ -132,7 +132,7 @@ angular.module('integridadUiApp')
             'AMERICAN'
         ];
 
-        vm.typeContabCi = 'COMPROBANTE DE INGRESO'
+        vm.typeContabCi = 'COMP. DE INGRESO'
 
         function _activate() {
             vm.loading = true;
