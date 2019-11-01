@@ -112,6 +112,15 @@ angular.module('integridadUiApp')
             });
         };
 
+        vm.filterBarCode = function(){
+
+          if(vm.billOfflineBarCode.length === 13){
+            productService.getLazyBySusidiaryIdBarCode($localStorage.user.subsidiary.id, vm.billOfflineBarCode).then(function(response) {
+              console.log(response);
+            });
+          }
+        };
+
         vm.getDetailsOfBills = function() {
             vm.loading = true;
             billService.getDetailsOfBillsByUserClientId(vm.userClientId).then(function(response) {
@@ -146,6 +155,20 @@ angular.module('integridadUiApp')
             };
         };
 
+        vm.filterBarCode = function(){
+
+          if(vm.billOfflineBarCode.length === 13){
+
+            productService.getLazyBySusidiaryIdBarCode($localStorage.user.subsidiary.id, vm.billOfflineBarCode).then(function(response) {
+              vm.quantity = 1;
+              vm.toAdd = response[0];
+              vm.toAddExistency = _.last(vm.toAdd.productBySubsidiaries).quantity;
+              vm.toAddPrice = vm.getCost(vm.toAdd[vm.priceType.cod], vm.toAdd.averageCost);
+              document.getElementById("submitAdd").focus();
+            });
+          }
+        };
+
         vm.clientSelect = function(client) {
             vm.quotations = [];
             vm.companyData = vm.userSubsidiary;
@@ -157,6 +180,9 @@ angular.module('integridadUiApp')
             var today = new Date();
             $('#pickerBillDate').data("DateTimePicker").date(today);
             vm.newBill = true;
+            setTimeout(function(){
+              document.getElementById("input4").focus();
+            }, 500);
         };
 
         vm.clientConsult = function(client) {
@@ -334,7 +360,36 @@ angular.module('integridadUiApp')
             vm.productToAdd = angular.copy(productSelect);
             var costEachCalculated = vm.getCost(productSelect[vm.priceType.cod], productSelect.averageCost);
             vm.productToAdd.costEachCalculated = costEachCalculated;
-            vm.quantity = 1;
+        };
+
+        vm.addProdBarCode = function(){
+          vm.productToAdd = angular.copy(vm.toAdd);
+          vm.selectProductToAdd(vm.productToAdd);
+          vm.acceptProduct(true);
+          vm.billOfflineBarCode = undefined;
+          vm.toAdd = undefined;
+        };
+
+        vm.cancelBarCode = function(){
+          vm.billOfflineBarCode = undefined;
+          vm.toAdd = undefined;
+          vm.quantity = undefined;
+        };
+
+        vm.fill = function(event){
+           if (event.keyCode === 32 || event.charCode === 32) {
+             if(vm.billOfflineBarCode.length < 13){
+               vm.billOfflineBarCodeFixed = vm.billOfflineBarCode;
+               for (var i = vm.billOfflineBarCode.length; i < 13; i++) {
+                 vm.billOfflineBarCodeFixed = vm.billOfflineBarCodeFixed.concat('0');
+               }
+               vm.billOfflineBarCode = vm.billOfflineBarCodeFixed.trim();
+               vm.filterBarCode();
+             }
+           }
+           if (event.keyCode === 102 || event.charCode === 102) {
+             $('#modalAddPago').modal('show');
+           }
         };
 
         vm.acceptProduct = function(closeModal) {

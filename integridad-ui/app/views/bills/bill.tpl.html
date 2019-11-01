@@ -319,6 +319,11 @@
                         <input type="text" ng-change="vm.reCalculateTotal()" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
                                ng-model="vm.bill.discountPercentage" class="form-control" maxlength="9" ng-change="vm.getFechaCobro()" ng-disabled="!vm.newBill">
                     </div>
+                    <div class="form-group col-md-6">
+                      <button type="button" title="Salir" class="btn btn-primary btn-sm" ng-click="vm.clientSelected = undefined">
+                              Cambiar Cliente
+                      </button>
+                    </div>
                 </div>
                 <div class="row" ng-if="vm.companyData.userClient.espTemp != 'A-1'" print-if="vm.companyData.userClient.espTemp != 'A-1'">
                     <div class="form-group col-md-12">
@@ -337,9 +342,44 @@
               <div class="row" print-if="false">
                   <div class="form-group col-md-12">
                       <b>CODIGO DE BARRAS:</b>
-                      <input type="text" id="input4" ng-model="vm.billOffline.barCode" class="form-control">
+                      <input type="text" id="input4" ng-model="vm.billOfflineBarCode" class="form-control" ng-change="vm.filterBarCode()" ng-keypress="vm.fill($event)"
+                      onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))">
                   </div>
               </div>
+              <form ng-submit="vm.addProdBarCode()">
+                <div class="row" print-if="false">
+                  <div class="form-group col-md-8">
+                      <b>CANTIDAD: </b>
+                      <input type="text" ng-model="vm.quantity" ng-attr-tabindex="2" class="form-control">
+                  </div>
+                </div>
+                <div class="row" print-if="false">
+                  <div class="form-group col-md-8">
+                      <b>NOMBRE: </b>
+                      <input type="text" ng-model="vm.toAdd.name" ng-disabled="true" class="form-control">
+                  </div>
+                  <div class="form-group col-md-4">
+                      <b>EXISTENCIA: </b>
+                      <input type="text" ng-model="vm.toAddExistency" ng-disabled="true" class="form-control">
+                  </div>
+                </div>
+                <div class="row" print-if="false">
+                  <div class="form-group col-md-8">
+                      <b>CODIGO: </b>
+                      <input type="text" ng-model="vm.toAdd.codeIntegridad" ng-disabled="true" class="form-control">
+                  </div>
+                  <div class="form-group col-md-4">
+                      <b>PRECIO: </b>
+                      <input type="text" ng-model="vm.toAddPrice" ng-disabled="true" class="form-control">
+                  </div>
+                </div>
+                <div class="row" print-if="false">
+                  <div class="form-group col-md-12">
+                      <input id="submitAdd" ng-attr-tabindex="1" type="submit" value="Aceptar">
+                      <input id="cancel" ng-attr-tabindex="3" type="button" value="Cancelar" ng-click="vm.cancelBarCode()">
+                  </div>
+                </div>
+              </form>
 
 
                 <div class="row">
