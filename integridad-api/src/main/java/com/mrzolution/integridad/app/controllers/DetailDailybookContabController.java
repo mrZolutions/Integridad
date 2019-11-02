@@ -1,6 +1,7 @@
 package com.mrzolution.integridad.app.controllers;
 
 import com.mrzolution.integridad.app.domain.report.EspecificMajorReport;
+import com.mrzolution.integridad.app.domain.report.GeneralMajorReport;
 import com.mrzolution.integridad.app.exceptions.BadRequestException;
 import com.mrzolution.integridad.app.services.DetailDailybookContabServices;
 import java.util.List;
@@ -26,15 +27,28 @@ public class DetailDailybookContabController {
     DetailDailybookContabServices service;
     
     @RequestMapping(method = RequestMethod.GET, value="rep/mayoresp/{id}/{code}/{dateOne}/{dateTwo}")
-    public ResponseEntity getEspecificMajorReportByUserClientIdAndDates(@PathVariable("id") String id, @PathVariable("code") String code, @PathVariable("dateOne") long dateOne, @PathVariable("dateTwo") long dateTwo) {
+    public ResponseEntity getEspfcMajorReportByUserClientIdAndDates(@PathVariable("id") String id, @PathVariable("code") String code, @PathVariable("dateOne") long dateOne, @PathVariable("dateTwo") long dateTwo) {
         List<EspecificMajorReport> response = null;
         try {
-            response = service.getEspecificMajorReportByUserClientIdAndDates(id, code, dateOne, dateTwo);
+            response = service.getEspfcMajorReportByUserClientIdAndDates(id, code, dateOne, dateTwo);
         } catch (BadRequestException e) {
             log.error("DetailDailybookContabController getEspecificMajorReportByUserClientIdAndDates Exception thrown: {}", e.getMessage());
 	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
         log.info("DetailDailybookContabController getEspecificMajorReportByUserClientIdAndDates DONE");
+        return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
+    }
+    
+    @RequestMapping(method = RequestMethod.GET, value="rep/mayorgen/{id}/{codeOne}/{codeTwo}/{dateTwo}")
+    public ResponseEntity getGenMajorReportByUsrClntIdAndCodeContaAndDate(@PathVariable("id") String id, @PathVariable("codeOne") String codeOne, @PathVariable("codeTwo") String codeTwo, @PathVariable("dateTwo") long dateTwo) {
+        List<GeneralMajorReport> response = null;
+        try {
+            response = service.getGenMajorReportByUsrClntIdAndCodeContaAndDate(id, codeOne, codeTwo, dateTwo);
+        } catch (BadRequestException e) {
+            log.error("DetailDailybookContabController getGenMajorReportByUsrClntIdAndCtaCtbleAndDate Exception thrown: {}", e.getMessage());
+	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+	}
+        log.info("DetailDailybookContabController getGenMajorReportByUsrClntIdAndCodeCtbleAndDate DONE");
         return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
     }
 }

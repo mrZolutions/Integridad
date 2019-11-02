@@ -56,7 +56,7 @@
     <!--FIN SELECCIÓN DE TIPO DE DIARIO-->
     
     <!--DIARIO DE CONTABILIDAD GENERAL-->
-    <div class="table-responsive" ng-show="vm.selectedTypeBook === '1' && vm.templateDailybookCg === undefinded && vm.dailybookCgCreated === undefinded && vm.dailybookCgList !== undefined">
+    <div class="table-responsive" ng-show="vm.selectedTypeBook === '1' && vm.templateDailybookCg === undefined && vm.dailybookCgCreated === undefined && vm.dailybookCgList !== undefined">
         <div class="panel panel-primary">
             <div class="panel-heading">
                 <b>DIARIO DE CONTABILIDAD GENERAL</b>
@@ -479,7 +479,7 @@
 
     <!--INICIO DE DIARIO DE COMPROBANTE DE EGRESO-->
     <!--CARGA DE PROVEEDORES PARA DIARIO DE COMPROBANTE DE EGRESO-->
-    <div class="table-responsive" ng-show="vm.selectedTypeBook === '2' && vm.providerCeSelected === undefined && vm.dailybookCeCreated === undefinded && vm.dailybookCeList === undefined && vm.dailybookCeManualCreatedList === undefined && vm.dailybookCeManual === false">
+    <div class="table-responsive" ng-show="vm.selectedTypeBook === '2' && vm.providerCeSelected === undefined && vm.dailybookCeCreated === undefined && vm.dailybookCeList === undefined && vm.dailybookCeManualCreatedList === undefined && vm.dailybookCeManual === false">
         <div class="panel panel-primary">
             <div class="panel-heading">
                 <b>DIARIO DE COMPROBANTE DE EGRESO</b>
@@ -697,7 +697,7 @@
                         <br/>
                         <button type = "button" title = "Buscar y Agregar Factura" class = "btn btn-primary btn-sm"
                                 ng-click = "vm.getDebtsToPayByProviderCe()" data-toggle = "modal" 
-                                data-target = "#modalShowDebtsToPayCe" ng-show = "vm.dailybookCe.billNumber == undefinded || vm.dailybookCe.billNumber == ''">
+                                data-target = "#modalShowDebtsToPayCe" ng-show = "vm.dailybookCe.billNumber == undefined || vm.dailybookCe.billNumber == ''">
                                 <span class = "glyphicon glyphicon-search" aria-hidden = "true"></span>
                         </button>
                     </div>
@@ -757,7 +757,7 @@
                     <div class="form-group col-md-1">
                         <br/>
                         <button type = "button" title = "Llenar Detalle General" class = "btn btn-primary btn-sm"
-                                ng-click = "vm.putGeneralDetailCe()" ng-show="vm.generalDetailCe == undefinded || vm.generalDetailCe == ''">
+                                ng-click = "vm.putGeneralDetailCe()" ng-show="vm.generalDetailCe == undefined || vm.generalDetailCe == ''">
                                 <span class = "glyphicon glyphicon-ok" aria-hidden = "true"></span>
                         </button>
                     </div>
@@ -1193,7 +1193,7 @@
 
     <!--DIARIO DE COMPROBANTE DE INGRESO-->
     <!--CARGA DE CLIENTES PARA DIARIO DE COMPROBANTE DE INGRESO-->
-    <div class="table-responsive" ng-show="vm.selectedTypeBook === '3' && vm.clientCiSelected === undefined && vm.dailybookCiCreated === undefinded && vm.dailybookCiList === undefined && vm.dailybookCiManualCreatedList === undefined && vm.dailybookCiManual === false">
+    <div class="table-responsive" ng-show="vm.selectedTypeBook === '3' && vm.clientCiSelected === undefined && vm.dailybookCiCreated === undefined && vm.dailybookCiList === undefined && vm.dailybookCiManualCreatedList === undefined && vm.dailybookCiManual === false">
         <div class="panel panel-primary">
             <div class="panel-heading">
                 <b>DIARIO DE COMPROBANTE DE INGRESO</b>
@@ -1411,7 +1411,7 @@
                         <br/>
                         <button type = "button" title = "Buscar y Agregar Factura" class = "btn btn-primary btn-sm"
                                 ng-click = "vm.getBillsByClientCi()" data-toggle = "modal" 
-                                data-target = "#modalShowBillsCi" ng-show = "vm.dailybookCi.billNumber == undefinded || vm.dailybookCi.billNumber == ''">
+                                data-target = "#modalShowBillsCi" ng-show = "vm.dailybookCi.billNumber == undefined || vm.dailybookCi.billNumber == ''">
                                 <span class = "glyphicon glyphicon-search" aria-hidden = "true"></span>
                         </button>
                     </div>
@@ -1471,7 +1471,7 @@
                     <div class="form-group col-md-1">
                         <br/>
                         <button type = "button" title = "Llenar Detalle General" class = "btn btn-primary btn-sm"
-                                ng-click = "vm.putGeneralDetailCi()" ng-show="vm.generalDetailCi == undefinded || vm.generalDetailCi == ''">
+                                ng-click = "vm.putGeneralDetailCi()" ng-show="vm.generalDetailCi == undefined || vm.generalDetailCi == ''">
                                 <span class = "glyphicon glyphicon-ok" aria-hidden = "true"></span>
                         </button>
                     </div>
@@ -1884,7 +1884,7 @@
 
     <!--INICIO DE DIARIO DE CUENTAS POR PAGAR-->
     <!--CARGA DE PROVEEDORES PARA DIARIO DE CUENTAS POR PAGAR-->
-    <div class="table-responsive" ng-show="vm.selectedTypeBook === '5' && vm.providerCxPSelected === undefined && vm.dailybookCxPCreated === undefinded && vm.dailybookCxPList === undefined">
+    <div class="table-responsive" ng-show="vm.selectedTypeBook === '5' && vm.providerCxPSelected === undefined && vm.dailybookCxPCreated === undefined && vm.dailybookCxPList === undefined">
         <div class="panel panel-primary">
             <div class="panel-heading">
                 <b>DIARIO DE CUENTAS POR PAGAR</b>
@@ -2040,7 +2040,7 @@
                         <br/>
                         <button type = "button" title = "Buscar y Agregar Factura" class = "btn btn-primary btn-sm"
                                 ng-click = "vm.getDebtsToPayByProvider()" data-toggle = "modal" 
-                                data-target = "#modalShowDebtsToPay" ng-show = "vm.dailybookCxP.billNumber == undefinded || vm.dailybookCxP.billNumber == ''">
+                                data-target = "#modalShowDebtsToPay" ng-show = "vm.dailybookCxP.billNumber == undefined || vm.dailybookCxP.billNumber == ''">
                                 <span class = "glyphicon glyphicon-search" aria-hidden = "true"></span>
                         </button>
                     </div>
@@ -2080,7 +2080,7 @@
                     <div class="form-group col-md-1">
                         <br/>
                         <button type = "button" title = "Llenar Detalle General" class = "btn btn-primary btn-sm"
-                                ng-click = "vm.putGeneralDetailCxP()" ng-show="vm.generalDetailCxP == undefinded || vm.generalDetailCxP == ''">
+                                ng-click = "vm.putGeneralDetailCxP()" ng-show="vm.generalDetailCxP == undefined || vm.generalDetailCxP == ''">
                                 <span class = "glyphicon glyphicon-ok" aria-hidden = "true"></span>
                         </button>
                     </div>
@@ -2460,7 +2460,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" title = "Salir" class="btn btn-primary btn-sm" data-dismiss="modal"
-                            ng-click="vm.retenCodeFuente=undefinded; vm.retenCodeIva=undefinded">
+                            ng-click="vm.retenCodeFuente=undefined; vm.retenCodeIva=undefined">
                             <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
                     </button>
                 </div>
@@ -2615,7 +2615,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" title = "Salir" class="btn btn-primary btn-sm" data-dismiss="modal"
-                            ng-click="vm.retenCodeFuente=undefinded; vm.retenCodeIva=undefinded">
+                            ng-click="vm.retenCodeFuente=undefined; vm.retenCodeIva=undefined">
                             <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
                     </button>
                 </div>
@@ -2657,7 +2657,7 @@
 
     <!--DIARIO DE COMPROBANTE DE FACTURACIÓN-VENTA-->
     <!--CARGA DE CLIENTES PARA DIARIO DE COMPROBANTE DE FACTURACIÓN-VENTA-->
-    <div class="table-responsive" ng-show="vm.selectedTypeBook === '6' && vm.clientFvSelected === undefined && vm.dailybookFvCreated === undefinded && vm.dailybookFvList === undefined && vm.dailybookFvManualCreatedList === undefined && vm.dailybookFvManual === false">
+    <div class="table-responsive" ng-show="vm.selectedTypeBook === '6' && vm.clientFvSelected === undefined && vm.dailybookFvCreated === undefined && vm.dailybookFvList === undefined && vm.dailybookFvManualCreatedList === undefined && vm.dailybookFvManual === false">
         <div class="panel panel-primary">
             <div class="panel-heading">
                 <b>DIARIO DE COMPROBANTE DE FACTURACIÓN-VENTA</b>
@@ -2722,7 +2722,7 @@
             <b>Reporte de Mayores Espec&iacute;ficos</b>
         </div>
         <div class="panel-body">
-            <div class="row table-responsive" ng-if="vm.isProductReportList != undefined">
+            <div class="row table-responsive" ng-if="vm.isProductReportList === '1'">
                 <div class="form-group col-md-10"></div>
                 <div class="form-group col-md-2">
                     <button type="button" title="Exportar a Hoja Excel" class="btn btn-primary btn-sm" ng-click="vm.exportExcel()">
@@ -2752,7 +2752,7 @@
                                 <td>{{cc.name}}</td>
                                 <td>{{cc.description}}</td>
                                 <td>
-                                    <button type = "button" title = "Seleccionar" class = "btn btn-primary btn-sm"
+                                    <button type = "button" title = "Seleccionar Cuenta" class = "btn btn-primary btn-sm"
                                             ng-click = "vm.selectCuentaContable(cc)" data-toggle = "modal" data-target = "#modalSelectCuenta">
                                             <span class = "glyphicon glyphicon-check" aria-hidden = "true"></span>
                                     </button>
@@ -2827,6 +2827,156 @@
                 <div class="modal-footer">
                     <button type="button" title = "Salir" class="btn btn-primary btn-sm" data-dismiss="modal">
                             <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--REPORTE DE MAYORES GENERAL-->
+    <div class="panel panel-primary" ng-show="vm.selectedTypeBook === '13'">
+        <div class="panel-heading">
+            <b>Reporte de Mayores General</b>
+        </div>
+        <div class="panel-body">
+            <div class="row table-responsive" ng-if="vm.isProductReportList === '2'">
+                <div class="form-group col-md-10"></div>
+                <div class="form-group col-md-2">
+                    <button type="button" title="Exportar a Hoja Excel" class="btn btn-primary btn-sm" ng-click="vm.exportExcel()">
+                            Excel
+                    </button>
+                </div>
+            </div>
+            <div class="row table-responsive" ng-show="vm.cuentaContableListForMajor !== undefined">
+                <div class="form-group col-md-3">
+                    <label>Cuenta Contable # 1: </label>
+                    <p>{{vm.codeContaOne}}</p>
+                </div>
+                <div class="form-group col-md-1">
+                    </br>
+                    <button type="button" title="Buscar Cuenta" class="btn btn-primary btn-sm" ng-click=""
+                            data-toggle="modal" data-target="#modalSelectCuentaGeneral">
+                            <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                    </button>
+                </div>
+                <div class="form-group col-md-3">
+                    <label>Cuenta Contable # 2: </label>
+                    <p>{{vm.codeContaTwo}}</p>
+                </div>
+                <div class="form-group col-md-1">
+                    </br>
+                    <button type="button" title="Buscar Cuenta" class="btn btn-primary btn-sm" ng-click=""
+                            data-toggle= "modal" data-target="#modalSelectCuentaGeneral">
+                            <span class= "glyphicon glyphicon-search" aria-hidden="true"></span>
+                    </button>
+                </div>
+                <div class="form-group col-md-2">
+                        <label>Periodo:</label>
+                        <select ng-options="period.code as period.type for period in vm.periodReport"
+                                ng-model="vm.periodBookType" class="form-control">
+                        </select>
+                </div>
+                <div class="form-group col-md-1">
+                    </br>
+                    <button type="button" title="Aceptar" class="btn btn-primary btn-sm"
+                            ng-click="vm.getGeneralMajorReport()">
+                            <span class="glyphicon glyphicon-check" aria-hidden="true"></span>
+                    </button>
+                </div>
+                <div class="form-group col-md-1">
+                    </br>
+                    <button type="button" title="Limpiar Codigos Contables" class="btn btn-warning btn-sm"
+                            ng-click="vm.codeContaOne = undefined; vm.codeContaTwo = undefined">
+                            <span class="glyphicon glyphicon-erase" aria-hidden="true"></span>
+                    </button>
+                </div>
+            </div>
+            <div class="table-responsive" ng-if="vm.isProductReportList === '2'">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Codigo Contable</th>
+                            <th>Fecha</th>
+                            <th>Tipo</th>
+                            <th>Nro. Diario</th>
+                            <th>Descripci&oacute;n</th>
+                            <th>Cheque/Dep/Transf</th>
+                            <th>Deber</th>
+                            <th>Haber</th>
+                            <th>Saldo</th>
+                            <th>Periodo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="data in vm.reportList | orderBy:'code'" >
+                            <td>{{data.codeCtble}}</td>
+                            <td>{{data.fecha}}</td>
+                            <td>{{data.tipoDocumento}}</td>
+                            <td>{{data.documento}}</td>
+                            <td>{{data.descripcion}}</td>
+                            <td>{{data.cheque}}</td>
+                            <td>{{data.deber.toFixed(2)}}</td>
+                            <td>{{data.haber.toFixed(2)}}</td>
+                            <td>{{data.saldos.toFixed(2)}}</td>
+                            <td>{{data.periodo}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="panel-footer">
+            <button type="button" title="Volver" class="btn btn-primary btn-sm"
+                    ng-click="vm.cancel()">
+                    <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
+            </button>
+        </div>
+    </div>
+    <!--MODAL DE SELECCION DE CUENTA CONTABLE PARA REPORTE DE MAYORES GENERAL-->
+    <div id="modalSelectCuentaGeneral" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type = "button" class = "close" data-dismiss = "modal">&times;</button>
+                    <h4 class = "modal-title">Reporte de Mayores General -- Selección de Cuentas Contables</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="form-group col-md-12">
+                            <input ng-model="searchTextCuentaGen" class="form-control" placeholder="Buscar">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>C&oacute;digo</th>
+                                        <th>Nombre G&eacute;nerico</th>
+                                        <th>Descripci&oacute;n</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-show="vm.cuentaContableListForMajor == 0">
+                                        <td colspan="2">
+                                            No hay Fuente Seleccionada
+                                        </td>
+                                    </tr>
+                                    <tr dir-paginate = "ccg in vm.cuentaContableListForMajor | orderBy:'type' | filter:searchTextCuentaGen | itemsPerPage: 7"  pagination-id = "cuentasGenPagination">
+                                        <td>{{ccg.code}}</td>
+                                        <td>{{ccg.name}}</td>
+                                        <td>{{ccg.description}}</td>
+                                        <td>
+                                            <button type="button" title="Seleccionar Cuenta" class="btn btn-primary btn-sm"
+                                                    ng-click="vm.selectCtaCtbleGen(ccg)" data-dismiss="modal">
+                                                    <span class="glyphicon glyphicon-check" aria-hidden="true"></span>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <dir-pagination-controls pagination-id="cuentasGenPagination"></dir-pagination-controls>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" title="Salir" class="btn btn-primary btn-sm" data-dismiss="modal">
+                            <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
                     </button>
                 </div>
             </div>

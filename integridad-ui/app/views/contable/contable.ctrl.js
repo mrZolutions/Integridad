@@ -34,7 +34,8 @@ angular.module('integridadUiApp')
             {code: '9', type: 'NOTA DE DÉBITO'},
             {code: '10', type: 'INVENTARIO'},
             {code: '11', type: 'TRANSFERENCIA'},
-            {code: '12', type: 'REPORTE MAYORES ESPECÍFICOS'}
+            {code: '12', type: 'REPORTE MAYORES ESPECÍFICOS'},
+            {code: '13', type: 'REPORTE MAYORES GENERAL'}
         ];
 
         vm.periodReport = [
@@ -62,11 +63,15 @@ angular.module('integridadUiApp')
             vm.cuenta = undefined;
             vm.cuentaContableList = undefined;
             vm.cuentaContableBankList = undefined;
+            vm.cuentaContableListForMajor = undefined;
             vm.codeConta = undefined;
             vm.periodBookType = undefined;
             vm.fchIni = undefined;
             vm.fchFin = undefined;
+            vm.datePeriod = undefined;
             vm.isProductReportList = undefined;
+            vm.codeContaOne = undefined;
+            vm.codeContaTwo = undefined;
             
             //Contabilidad General Cg
             vm.dailybookCgNew = undefined;
@@ -128,7 +133,7 @@ angular.module('integridadUiApp')
             vm.beneficio = undefined;
             vm.dailybookCiManualCreatedList = undefined;
             
-            //Cuentas por Pagar Cpp
+            //Cuentas por Pagar CxP
             vm.dailybookCxPNew = undefined;
             vm.dailyCxPSeq = undefined;
             vm.dailyCxPStringSeq = undefined;
@@ -195,7 +200,7 @@ angular.module('integridadUiApp')
             switch (vm.dailybookType) {
                 case '1':
                     vm.selectedTypeBook = vm.dailybookType;
-                    vm.typeContab = 'CONTABILIDAD GENERAL';
+                    vm.typeContab = 'CONTAB. GENERAL';
                     contableService.getDailybookCgByUserClientId(vm.usrCliId).then(function(response) {
                         vm.dailybookCgList = response;
                         vm.loading = false;
@@ -206,7 +211,7 @@ angular.module('integridadUiApp')
                 break;
                 case '2':
                     vm.selectedTypeBook = vm.dailybookType;
-                    vm.typeContab = 'COMPROBANTE DE EGRESO';
+                    vm.typeContab = 'COMP. DE EGRESO';
                     providerService.getLazyByUserClientId(vm.usrCliId).then(function(response) {
                         vm.providerCeList = response;
                         vm.loading = false;
@@ -217,7 +222,7 @@ angular.module('integridadUiApp')
                 break;
                 case '3':
                     vm.selectedTypeBook = vm.dailybookType;
-                    vm.typeContab = 'COMPROBANTE DE INGRESO';
+                    vm.typeContab = 'COMP. DE INGRESO';
                     clientService.getLazyByUserClientId(vm.usrCliId).then(function(response) {
                         vm.clientCiList = response;
                         vm.loading = false;
@@ -228,7 +233,7 @@ angular.module('integridadUiApp')
                 break;
                 case '5':
                     vm.selectedTypeBook = vm.dailybookType;
-                    vm.typeContab = 'CUENTA POR PAGAR CON RETENCIONES';
+                    vm.typeContab = 'CxP. CON RETENCIONES';
                     providerService.getLazyByUserClientId(vm.usrCliId).then(function(response) {
                         vm.providerCxPList = response;
                         vm.loading = false;
@@ -239,7 +244,7 @@ angular.module('integridadUiApp')
                 break;
                 case '6':
                     vm.selectedTypeBook = vm.dailybookType;
-                    vm.typeContab = 'COMPROBANTE DE FACTURACIÓN-VENTA';
+                    vm.typeContab = 'COMP. DE FACT-VENTA';
                     clientService.getLazyByUserClientId(vm.usrCliId).then(function(response) {
                         vm.clientFvList = response;
                         vm.loading = false;
@@ -252,6 +257,16 @@ angular.module('integridadUiApp')
                     vm.selectedTypeBook = vm.dailybookType;
                     cuentaContableService.getCuentaContableByUserClient(vm.usrCliId).then(function(response) {
                         vm.cuentaContableList = response;
+                        vm.loading = false;
+                    }).catch(function(error) {
+                        vm.error = error.data;
+                        vm.loading = false;
+                    });
+                break;
+                case '13':
+                    vm.selectedTypeBook = vm.dailybookType;
+                    cuentaContableService.getCuentaContableByUserClient(vm.usrCliId).then(function(response) {
+                        vm.cuentaContableListForMajor = response;
                         vm.loading = false;
                     }).catch(function(error) {
                         vm.error = error.data;
@@ -384,6 +399,79 @@ angular.module('integridadUiApp')
         };
         //Fin Reporte Mayor Específico
 
+        //Reporte Mayor General
+        vm.getGeneralMajorReport = function() {
+            if (vm.codeContaOne === undefined || vm.codeContaTwo === undefined) {
+                vm.error = 'Error: Falta uno de los Códigos Contables';
+            } else if (vm.codeContaOne === vm.codeContaTwo) {
+                vm.error = 'Error: Los Códigos Contables NO PUEDEN ser Iguales';
+            } else if (vm.codeContaOne > vm.codeContaTwo) {
+                vm.error = 'Error: El Código Contable #1 NO PUEDE ser mayor que el Código Contable #2';
+            } else { 
+                vm.error = undefined;
+                vm.cuentaContableListForMajor = undefined;
+                switch (vm.periodBookType) {
+                    case '01': //01-2019
+                        vm.datePeriod = 1548979199000;
+                    break;
+                    case '02': //02-2019
+                        vm.datePeriod = 1551398399000;
+                    break;
+                    case '03': //03-2019
+                        vm.datePeriod = 1554076799000;
+                    break;
+                    case '04': //04-2019
+                        vm.datePeriod = 1556668799000;
+                    break;
+                    case '05': //05-2019
+                        vm.datePeriod = 1559347199000;
+                    break;
+                    case '06': //06-2019
+                        vm.datePeriod = 1561939199000;
+                    break;
+                    case '07': //07-2019
+                        vm.datePeriod = 1564617599000;
+                    break;
+                    case '08': //08-2019
+                        vm.datePeriod = 1567295999000;
+                    break;
+                    case '09': //09-2019
+                        vm.datePeriod = 1569887999000;
+                    break;
+                    case '10': //10-2019
+                        vm.datePeriod = 1572566399000;
+                    break;
+                    case '11': //11-2019
+                        vm.datePeriod = 1575158399000;
+                    break;
+                    case '12': //12-2019
+                        vm.datePeriod = 1577836799000;
+                    break;
+                };
+                vm.isProductReportList = '2';
+                vm.reportList = undefined;
+                vm.loading = true;
+
+                contableService.getGenMajorReportByUsrClntIdAndCodeContaAndDate(vm.usrCliId, vm.codeContaOne, vm.codeContaTwo, vm.datePeriod).then(function(response) {
+                    vm.reportList = response;
+                    vm.loading = false;
+                }).catch(function(error) {
+                    vm.loading = false;
+                    vm.error = error.data;
+                });
+            };
+        };
+
+        vm.selectCtaCtbleGen = function (ctagen) {
+            if (vm.codeContaOne === undefined) {
+                vm.codeContaOne = ctagen.code;
+            } else {
+                vm.codeContaTwo = ctagen.code;
+            };
+        };
+        //Fin Reporte Mayor General
+
+        //Inicio de Exportar a Excel
         vm.exportExcel = function() {
             var dataReport = [];
             switch (vm.isProductReportList) {
@@ -403,15 +491,45 @@ angular.module('integridadUiApp')
                         dataReport.push(data);
                     });
                 break;
+                case '2':
+                    _.each(vm.reportList, function(majorg) {
+                        var data = {
+                            COD_CONTA: majorg.codeCtble,
+                            FECHA: majorg.fecha,
+                            TIPO: majorg.tipoDocumento,
+                            NRO_DIARIO: majorg.documento,
+                            DESCRIPCION: majorg.descripcion,
+                            CHQ_DEP_TRANF: majorg.cheque,
+                            DEBER: parseFloat(majorg.deber.toFixed(2)),
+                            HABER: parseFloat(majorg.haber.toFixed(2)),
+                            SALDOS: parseFloat(majorg.saldos.toFixed(2)),
+                            PERIOD: majorg.periodo
+                        };
+
+                        dataReport.push(data);
+                    });
+                break;
             };
-            var ws = XLSX.utils.json_to_sheet(dataReport);
-            /* add to workbook */
-            var wb = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(wb, ws, "Mayor_Especifico");
-            /* write workbook and force a download */
-            XLSX.writeFile(wb, "Reporte_Mayor_Especifico.xlsx");
+            switch (vm.isProductReportList) {
+                case '1':
+                    var ws = XLSX.utils.json_to_sheet(dataReport);
+                    /* add to workbook */
+                    var wb = XLSX.utils.book_new();
+                    XLSX.utils.book_append_sheet(wb, ws, "Mayor_Especifico");
+                    /* write workbook and force a download */
+                    XLSX.writeFile(wb, "Reporte_Mayor_Especifico.xlsx");
+                break;
+                case '2':
+                    var ws = XLSX.utils.json_to_sheet(dataReport);
+                    /* add to workbook */
+                    var wb = XLSX.utils.book_new();
+                    XLSX.utils.book_append_sheet(wb, ws, "Mayor_General");
+                    /* write workbook and force a download */
+                    XLSX.writeFile(wb, "Reporte_Mayor_General.xlsx");
+                break;
+            };
         };
-        //Fin de Reporte
+        //Fin de Exportar a Excel
 
         vm.addItemCg = function() {
             if (vm.indexEdit !== undefined) {

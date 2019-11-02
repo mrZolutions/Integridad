@@ -149,6 +149,7 @@ public class DailybookCeServices {
     }
     
     //Desactivación o Anulación de los COMPROBANTES DE EGRESO
+    @Async("asyncExecutor")
     public DailybookCe deactivateDailybookCe(DailybookCe dailybookCe) throws BadRequestException {
         if (dailybookCe.getId() == null) {
             throw new BadRequestException("Invalid DIARIO DE COMPROBANTE DE EGRESO");
@@ -157,9 +158,20 @@ public class DailybookCeServices {
         dailybookCeToDeactivate.setListsNull();
         dailybookCeToDeactivate.setActive(false);
         dailybookCeToDeactivate.setGeneralDetail("COMPROBANTE DE EGRESO ANULADO");
-        dailybookCeRepository.save(dailybookCeToDeactivate);
+        DailybookCe deactCeSaved = dailybookCeRepository.save(dailybookCeToDeactivate);
+        updateDetailDailyBookContab(deactCeSaved);
         log.info("DailybookCeServices deactivateDailybookCe: {}", dailybookCeToDeactivate.getId());
         return dailybookCeToDeactivate;
+    }
+    
+    public void updateDetailDailyBookContab (DailybookCe dailybookCe) {
+        Iterable<DetailDailybookContab> detailCeBook = detailDailybookContabRepository.findByDailybookCeId(dailybookCe.getId());
+        detailCeBook.forEach(detaCe ->{
+            detaCe.setListsNull();
+            detaCe.setFatherListToNull();
+            detaCe.setActive(false);
+            detailDailybookContabRepository.save(detaCe);
+        });
     }
     
     //Carga los Detalles hacia un COMPROBANTE DE EGRESO

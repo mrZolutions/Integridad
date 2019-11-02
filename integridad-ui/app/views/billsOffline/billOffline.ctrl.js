@@ -7,9 +7,9 @@
  * Controller of the integridadUiApp
  */
 angular.module('integridadUiApp')
-    .controller('BillOfflineCtrl', function(_, $location, utilStringService, $localStorage,
-                                            clientService, productService, authService, billOfflineService, $window,
-                                            cashierService, utilSeqService) {
+    .controller('BillOfflineCtrl', function(_, $location, utilStringService, $localStorage, projectService,
+                                            clientService, productService, authService, billOfflineService,
+                                            cashierService, utilSeqService, validatorService, countryListService) {
 
         var vm = this;
         vm.error = undefined;
@@ -18,6 +18,8 @@ angular.module('integridadUiApp')
         vm.clientList = undefined;
         vm.isEmp = true;
         vm.pagoTot = undefined;
+        vm.countryList = countryListService.getCountryList();
+        vm.citiesList = countryListService.getCitiesEcuador();
 
         vm.prices = [
             { name: 'EFECTIVO', cod: 'cashPercentage'}, { name: 'TARJETA', cod: 'cardPercentage'}
@@ -59,6 +61,7 @@ angular.module('integridadUiApp')
 
             vm.error = undefined;
             vm.aux = undefined;
+            vm.newClient = undefined;
             vm.newBillOffline = undefined;
             vm.billedOffline = false;
             vm.clientSelected = undefined;
@@ -98,7 +101,7 @@ angular.module('integridadUiApp')
             vm.userClientId = $localStorage.user.subsidiary.userClient.id;
             vm.subsidiaryId = $localStorage.user.subsidiary.id;
             vm.userId = $localStorage.user.id;
-            clientService.getLazyByUserClientId(vm.user.subsidiary.userClient.id).then(function(response) {
+            clientService.getLazyByUserClientId(vm.userClientId).then(function(response) {
                 vm.clientList = response;
                 var finalConsumer = _.filter(vm.clientList, function(client){ return client.identification === '9999999999999'})
                 vm.clientSelect(finalConsumer[0]);
@@ -173,6 +176,72 @@ angular.module('integridadUiApp')
                 vm.loading = false;
                 vm.error = error.data;
             });
+        };
+
+        vm.createClient = function() {
+            vm.newClient = true;
+            projectService.getNumberOfProjects(vm.userClientId).then(function(response) {
+                vm.success = undefined;
+                vm.error = undefined
+                var number = parseInt(response);
+                vm.client = {
+                    country: 'Ecuador',
+                    city: 'Quito',
+                    codApp: number + 1,
+                    userClient: $localStorage.user.subsidiary.userClient
+                };
+            }).catch(function(error) {
+                vm.loading = false;
+                vm.error = error.data;
+            });
+        };
+
+        vm.saveClient = function() {
+            var idValid = true;
+            var validationError = utilStringService.isAnyInArrayStringEmpty([
+                vm.client.name, vm.client.identification, vm.client.codApp
+            ]);
+            if (vm.client.typeId === 'CED') {
+                idValid = validatorService.isCedulaValid(vm.client.identification);
+            } else if (vm.client.typeId === 'RUC') {
+                idValid = validatorService.isRucValid(vm.client.identification);
+            } else if (vm.client.typeId === 'IEX') {
+                idValid = true;
+            };
+
+            if (validationError) {
+                vm.error = 'Debe ingresar Nombres completos, una identificacion y el Codigo de Contabilidad';
+            } else if (!idValid) {
+                vm.error = 'Identificacion invalida';
+            } else {
+                vm.loading = true;
+                createCli();
+            };
+        };
+
+        function createCli() {
+            clientService.getClientByUserClientAndIdentification(vm.userClientId, vm.client.identification).then(function(response) {
+                if (response.length === 0) {
+                    clientService.create(vm.client).then(function(response) {
+                        _activate();
+                        vm.error = undefined;
+                        vm.success = 'Registro realizado con exito';
+                    }).catch(function(error) {
+                        vm.loading = false;
+                        vm.error = error.data;
+                    });
+                } else {
+                    vm.error = 'El Cliente Ya Existe';
+                };
+                vm.loading = false;
+            }).catch(function(error) {
+                vm.loading = false;
+                vm.error = error.data;
+            });
+        };
+
+        vm.cancelCreateClient = function() {
+            _activate();
         };
 
         function _getTotalSubtotal() {

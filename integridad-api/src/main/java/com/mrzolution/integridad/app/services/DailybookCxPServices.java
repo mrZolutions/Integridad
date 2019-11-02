@@ -138,6 +138,7 @@ public class DailybookCxPServices {
     }
     
     //Desactivación o Anulación de los Diarios CxP
+    @Async("asyncExecutor")
     public DailybookCxP deactivateDailybookCxP(DailybookCxP dailybookCxP) throws BadRequestException {
         if (dailybookCxP.getId() == null) {
             throw new BadRequestException("Invalid DIARIO DE CUENTAS POR PAGAR");
@@ -146,9 +147,20 @@ public class DailybookCxPServices {
         dailybookCxPToDeactivate.setListsNull();
         dailybookCxPToDeactivate.setActive(false);
         dailybookCxPToDeactivate.setGeneralDetail("DIARIO DE CUENTAS POR PAGAR ANULADO");
-        dailybookCxPRepository.save(dailybookCxPToDeactivate);
+        DailybookCxP deactCxPSaved = dailybookCxPRepository.save(dailybookCxPToDeactivate);
+        updateDetailDailyBookContab(deactCxPSaved);
         log.info("DailybookCxPServices deactivateDailybookCxP: {}", dailybookCxPToDeactivate.getId());
         return dailybookCxPToDeactivate;
+    }
+    
+    public void updateDetailDailyBookContab (DailybookCxP dailybookCxP) {
+        Iterable<DetailDailybookContab> detailCxPBook = detailDailybookContabRepository.findByDailybookCxPId(dailybookCxP.getId());
+        detailCxPBook.forEach(detaCxP ->{
+            detaCxP.setListsNull();
+            detaCxP.setFatherListToNull();
+            detaCxP.setActive(false);
+            detailDailybookContabRepository.save(detaCxP);
+        });
     }
     
     //Carga los Detalles hacia un Diario CxP

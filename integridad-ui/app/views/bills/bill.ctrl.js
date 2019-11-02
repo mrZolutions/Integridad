@@ -7,7 +7,7 @@
  * Controller of the integridadUiApp
  */
 angular.module('integridadUiApp')
-    .controller('BillCtrl', function(_, $rootScope, $location, utilStringService, $localStorage,
+    .controller('BillCtrl', function(_, $location, utilStringService, $localStorage,
                                      clientService, productService, authService, billService, $window,
                                      cashierService, requirementService, utilSeqService) {
         var vm = this;

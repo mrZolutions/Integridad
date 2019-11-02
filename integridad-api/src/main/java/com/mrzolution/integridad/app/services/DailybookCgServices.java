@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 /**
@@ -84,6 +85,7 @@ public class DailybookCgServices {
     }
     
     //Desactivación o Anulación de los Diarios CG
+    @Async("asyncExecutor")
     public DailybookCg deactivateDailybookCg(DailybookCg dailybookCg) throws BadRequestException {
         if (dailybookCg.getId() == null) {
             throw new BadRequestException("Invalid DIARIO DE CONTABILIDAD GENERAL");
@@ -92,9 +94,20 @@ public class DailybookCgServices {
         dailybookCgToDeactivate.setListsNull();
         dailybookCgToDeactivate.setActive(false);
         dailybookCgToDeactivate.setGeneralDetail("DIARIO DE CONTABILIDAD GENERAL ANULADO");
-        dailybookCgRepository.save(dailybookCgToDeactivate);
+        DailybookCg deactCgSaved = dailybookCgRepository.save(dailybookCgToDeactivate);
+        updateDetailDailyBookContab(deactCgSaved);
         log.info("DailybookCgServices deactivateDailybookCg: {}", dailybookCgToDeactivate.getId());
         return dailybookCgToDeactivate;
+    }
+    
+    public void updateDetailDailyBookContab (DailybookCg dailybookCg) {
+        Iterable<DetailDailybookContab> detailCgBook = detailDailybookContabRepository.findByDailybookCgId(dailybookCg.getId());
+        detailCgBook.forEach(detaCg ->{
+            detaCg.setListsNull();
+            detaCg.setFatherListToNull();
+            detaCg.setActive(false);
+            detailDailybookContabRepository.save(detaCg);
+        });
     }
     
     //Carga los Detalles hacia un Diario Gc
