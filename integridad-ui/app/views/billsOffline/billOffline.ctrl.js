@@ -361,6 +361,9 @@ angular.module('integridadUiApp')
              $('#modalAddPago').modal('show');
              vm.medio = vm.medList[0];
              vm.loadMedio();
+             setTimeout(function(){
+               document.getElementById("addPaymentBtn").focus();
+             }, 500);
            }
         };
 
@@ -428,7 +431,6 @@ angular.module('integridadUiApp')
         };
 
         vm.loadMedio = function() {
-          console.log('-*-*-*-*-*-*-*-*-*-*-*-*-*-*-: ', vm.medio)
             var payed = 0;
             _.each(vm.pagosOffline, function(pago) {
                 payed += parseFloat(pago.total);
@@ -463,6 +465,9 @@ angular.module('integridadUiApp')
         vm.addPago = function() {
             vm.pagosOffline.push(angular.copy(vm.medio));
             vm.medio = {};
+            setTimeout(function(){
+              document.getElementById("processBillBtn").focus();
+            }, 500);
         };
 
         vm.removePago = function(index) {
@@ -720,6 +725,7 @@ angular.module('integridadUiApp')
                                 vm.error = error.data;
                             });
                         };
+                        _activate();
                         vm.loading = false;
                     }).catch(function(error) {
                         vm.loading = false;

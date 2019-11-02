@@ -747,15 +747,15 @@
                                    ng-model="vm.medio.total" class="form-control" maxlength="9">
                         </div>
                         <div class="form-group col-md-4">
-                            <b>VALORsss: </b><br />
+                            <b>VALOR: </b><br />
                             $ {{vm.medio.total}}
                         </div>
                         <div class="form-group col-md-4">
                             <br/>
-                            <input type="submit" title = "Agregar Pago" class="btn btn-primary btn-sm"
-                                    ng-disabled="vm.medio.code === undefined || vm.medio.total === undefined">
-
-
+                            <button type="button" title = "Agregar Pago" class="btn btn-primary btn-sm" ng-click="vm.addPago()" id="addPaymentBtn"
+                                    ng-disabled="vm.medio === undefined || vm.medio.total === undefined">
+                                    <span class = "glyphicon glyphicon-plus" aria-hidden = "true"></span>
+                            </button>
                         </div>
                     </div>
                     <div class="row">
@@ -795,7 +795,7 @@
                   </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" title = "Facturar" class="btn btn-success btn-sm" ng-click="vm.saveBillOffline()"
+                    <button type="button" title = "Facturar" class="btn btn-success btn-sm" ng-click="vm.saveBillOffline()" id="processBillBtn"
                             ng-disabled="(vm.pagosOffline.length === 0 || vm.getCambio < 0) || vm.billedOffline" print-remove>
                             <span class = "glyphicon glyphicon-credit-card" aria-hidden = "true"></span>
                     </button>
