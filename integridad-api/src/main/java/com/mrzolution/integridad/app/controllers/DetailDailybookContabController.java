@@ -39,14 +39,14 @@ public class DetailDailybookContabController {
         return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
     }
     
-    @RequestMapping(method = RequestMethod.GET, value="rep/mayorgen/{id}/{codeOne}/{codeTwo}/{dateTwo}")
-    public ResponseEntity getGenMajorReportByUsrClntIdAndCodeContaAndDate(@PathVariable("id") String id, @PathVariable("codeOne") String codeOne, @PathVariable("codeTwo") String codeTwo, @PathVariable("dateTwo") long dateTwo) {
+    @RequestMapping(method = RequestMethod.GET, value="rep/mayorgen/{id}/{codeOne}/{codeTwo}/{dateOne}/{dateTwo}")
+    public ResponseEntity getGenMajorReportByUsrClntIdAndCodeContaAndDate(@PathVariable("id") String id, @PathVariable("codeOne") String codeOne, @PathVariable("codeTwo") String codeTwo, @PathVariable("dateOne") long dateOne, @PathVariable("dateTwo") long dateTwo) {
         List<GeneralMajorReport> response = null;
         try {
-            response = service.getGenMajorReportByUsrClntIdAndCodeContaAndDate(id, codeOne, codeTwo, dateTwo);
+            response = service.getGenMajorReportByUsrClntIdAndCodeContaAndDate(id, codeOne, codeTwo, dateOne, dateTwo);
         } catch (BadRequestException e) {
             log.error("DetailDailybookContabController getGenMajorReportByUsrClntIdAndCtaCtbleAndDate Exception thrown: {}", e.getMessage());
-	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
         log.info("DetailDailybookContabController getGenMajorReportByUsrClntIdAndCodeCtbleAndDate DONE");
         return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);

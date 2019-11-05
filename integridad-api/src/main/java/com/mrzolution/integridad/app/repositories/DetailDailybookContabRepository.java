@@ -49,6 +49,6 @@ public interface DetailDailybookContabRepository extends CrudRepository<DetailDa
     @Query("SELECT d FROM DetailDailybookContab d WHERE d.userClientId = (:id) AND d.codeConta = (:code) AND d.dateDetailDailybook >= (:dateOne) AND d.dateDetailDailybook <= (:dateTwo) ORDER BY d.dateDetailDailybook")
     Iterable<DetailDailybookContab> findEspecificMajorByUsrClntIdAndDates(@Param("id") String id, @Param("code") String code, @Param("dateOne") long dateOne, @Param("dateTwo") long dateTwo);
     
-    @Query("SELECT d FROM DetailDailybookContab d WHERE d.userClientId = (:id) AND (d.codeConta >= (:codeOne) AND d.codeConta <= (:codeTwo)) AND d.dateDetailDailybook <= (:dateTwo) ORDER BY d.codeConta, d.dateDetailDailybook")
-    Iterable<DetailDailybookContab> findGeneralMajorByUsrClntIdAndCodeContaAndDate(@Param("id") String id, @Param("codeOne") String codeOne, @Param("codeTwo") String codeTwo, @Param("dateTwo") long dateTwo);
+    @Query("SELECT d FROM DetailDailybookContab d WHERE d.userClientId = (:id) AND (d.codeConta >= (:codeOne) AND d.codeConta <= (:codeTwo)) AND (d.dateDetailDailybook >= (:dateOne) AND d.dateDetailDailybook <= (:dateTwo)) ORDER BY d.codeConta, d.dateDetailDailybook")
+    Iterable<DetailDailybookContab> findGeneralMajorByUsrClntIdAndCodeContaAndDate(@Param("id") String id, @Param("codeOne") String codeOne, @Param("codeTwo") String codeTwo, @Param("dateOne") long dateOne, @Param("dateTwo") long dateTwo);
 }

@@ -105,19 +105,19 @@ public class DetailDailybookContabServices {
                 SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
                 String fechaBook = dateFormat.format(new Date(detail.getDateDetailDailybook()));
             
-                Double sumDeber = Double.valueOf(0);
-                Double sumHaber = Double.valueOf(0);
+                Double sumaDeber = Double.valueOf(0);
+                Double sumaHaber = Double.valueOf(0);
             
                 if ("DEBITO (D)".equals(detail.getTipo())) {
-                    sumDeber = detail.getBaseImponible();
+                    sumaDeber = detail.getBaseImponible();
                 } else if ("CREDITO (C)".equals(detail.getTipo())){
-                    sumHaber = detail.getBaseImponible();
+                    sumaHaber = detail.getBaseImponible();
                 } else {
-                    sumDeber = 0.0;
-                    sumHaber = 0.0;
+                    sumaDeber = 0.0;
+                    sumaHaber = 0.0;
                 }
             
-                sumSaldo = sumSaldo + (sumDeber - sumHaber);
+                sumSaldo = sumSaldo + (sumaDeber - sumaHaber);
                 BigDecimal vsaldo = new BigDecimal(sumSaldo);
                 if (sumSaldo == 0) {
                     vsaldo = vsaldo.setScale(0, BigDecimal.ROUND_HALF_UP);
@@ -128,13 +128,13 @@ public class DetailDailybookContabServices {
                 }
                 sumSaldo = vsaldo.doubleValue();
             
-                totalDeber = Double.sum(totalDeber, sumDeber);
-                totalHaber = Double.sum(totalHaber, sumHaber);
+                totalDeber = Double.sum(totalDeber, sumaDeber);
+                totalHaber = Double.sum(totalHaber, sumaHaber);
                 
                 totalSaldo = totalDeber - totalHaber;
             
                 EspecificMajorReport especificMajorReport = new EspecificMajorReport(fechaBook, detail.getTypeContab(), detail.getDailybookNumber(), detail.getName(),
-                                                                                 detail.getNumCheque(), sumDeber, sumHaber, sumSaldo);
+                                                                                     detail.getNumCheque(), sumaDeber, sumaHaber, sumSaldo);
                 especificMajorReportList.add(especificMajorReport);
             }
         });
@@ -144,7 +144,7 @@ public class DetailDailybookContabServices {
         return especificMajorReportList;
     }
     
-    public List<GeneralMajorReport> getGenMajorReportByUsrClntIdAndCodeContaAndDate(String id, String codeOne, String codeTwo, long dateOne) {
+    public List<GeneralMajorReport> getGenMajorReportByUsrClntIdAndCodeContaAndDate(String id, String codeOne, String codeTwo, long dateOne, long dateTwo) {
         totalDeber = 0.0;
         totalHaber = 0.0;
         totalSaldo = 0.0;
@@ -155,7 +155,7 @@ public class DetailDailybookContabServices {
         sumSubTotSaldo = 0.0;
         
         log.info("DetailDailybookContabServices getGeneralMajorReportByUsrClntIdAndCtaCtbleAndDate");
-        Iterable<DetailDailybookContab> detailGen = detailDailybookContabRepository.findGeneralMajorByUsrClntIdAndCodeContaAndDate(id, codeOne, codeTwo, dateOne);
+        Iterable<DetailDailybookContab> detailGen = detailDailybookContabRepository.findGeneralMajorByUsrClntIdAndCodeContaAndDate(id, codeOne, codeTwo, dateOne, dateTwo);
         List<GeneralMajorReport> generalMajorReportList = new ArrayList<>();
         
         if (Iterables.size(detailGen) > 0) {

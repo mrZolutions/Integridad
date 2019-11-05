@@ -2848,43 +2848,51 @@
                 </div>
             </div>
             <div class="row table-responsive" ng-show="vm.cuentaContableListForMajor !== undefined">
-                <div class="form-group col-md-3">
+                <div class="form-group col-md-5">
+                    <label>Fecha Inicio:</label>
+                    <div class="input-group date" id="pickerDateOne">
+                        <input type="text" class="form-control input-group-addon"/>
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                    </div>
+                    <script>
+                        $('#pickerDateOne').datetimepicker({format: "DD/MM/YY",});
+                    </script>
+                </div>
+                <div class="form-group col-md-5">
+                    <label>Fecha Final:</label>
+                    <div class="input-group date" id="pickerDateTwo">
+                        <input type="text" class="form-control input-group-addon"/>
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                    </div>
+                    <script>
+                        $('#pickerDateTwo').datetimepicker({format: "DD/MM/YY",});
+                    </script>
+                </div>
+                <div class="form-group col-md-12"> </div>
+                <div class="form-group col-md-12"> </div>
+                <div class="form-group col-md-12"> </div>
+                <div class="form-group col-md-12"> </div>
+                <div class="form-group col-md-12">
+                    <h4>Selección de Cuentas Contables</h4>
+                </div>
+                <div class="form-group col-md-4">
                     <label>Cuenta Contable # 1: </label>
                     <p>{{vm.codeContaOne}}</p>
                 </div>
-                <div class="form-group col-md-1">
-                    </br>
-                    <button type="button" title="Buscar Cuenta" class="btn btn-primary btn-sm" ng-click=""
-                            data-toggle="modal" data-target="#modalSelectCuentaGeneral">
-                            <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
-                    </button>
-                </div>
-                <div class="form-group col-md-3">
+                <div class="form-group col-md-4">
                     <label>Cuenta Contable # 2: </label>
                     <p>{{vm.codeContaTwo}}</p>
                 </div>
-                <div class="form-group col-md-1">
+                <div class="form-group col-md-3">
                     </br>
                     <button type="button" title="Buscar Cuenta" class="btn btn-primary btn-sm" ng-click=""
                             data-toggle= "modal" data-target="#modalSelectCuentaGeneral">
                             <span class= "glyphicon glyphicon-search" aria-hidden="true"></span>
                     </button>
-                </div>
-                <div class="form-group col-md-2">
-                        <label>Periodo:</label>
-                        <select ng-options="period.code as period.type for period in vm.periodReport"
-                                ng-model="vm.periodBookType" class="form-control">
-                        </select>
-                </div>
-                <div class="form-group col-md-1">
-                    </br>
                     <button type="button" title="Aceptar" class="btn btn-primary btn-sm"
                             ng-click="vm.getGeneralMajorReport()">
                             <span class="glyphicon glyphicon-check" aria-hidden="true"></span>
                     </button>
-                </div>
-                <div class="form-group col-md-1">
-                    </br>
                     <button type="button" title="Limpiar Codigos Contables" class="btn btn-warning btn-sm"
                             ng-click="vm.codeContaOne = undefined; vm.codeContaTwo = undefined">
                             <span class="glyphicon glyphicon-erase" aria-hidden="true"></span>

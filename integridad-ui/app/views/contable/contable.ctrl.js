@@ -68,7 +68,8 @@ angular.module('integridadUiApp')
             vm.periodBookType = undefined;
             vm.fchIni = undefined;
             vm.fchFin = undefined;
-            vm.datePeriod = undefined;
+            vm.dateOne = undefined;
+            vm.dateTwo = undefined;
             vm.isProductReportList = undefined;
             vm.codeContaOne = undefined;
             vm.codeContaTwo = undefined;
@@ -403,56 +404,19 @@ angular.module('integridadUiApp')
         vm.getGeneralMajorReport = function() {
             if (vm.codeContaOne === undefined || vm.codeContaTwo === undefined) {
                 vm.error = 'Error: Falta uno de los Códigos Contables';
-            } else if (vm.codeContaOne === vm.codeContaTwo) {
-                vm.error = 'Error: Los Códigos Contables NO PUEDEN ser Iguales';
             } else if (vm.codeContaOne > vm.codeContaTwo) {
                 vm.error = 'Error: El Código Contable #1 NO PUEDE ser mayor que el Código Contable #2';
             } else { 
                 vm.error = undefined;
                 vm.cuentaContableListForMajor = undefined;
-                switch (vm.periodBookType) {
-                    case '01': //01-2019
-                        vm.datePeriod = 1548979199000;
-                    break;
-                    case '02': //02-2019
-                        vm.datePeriod = 1551398399000;
-                    break;
-                    case '03': //03-2019
-                        vm.datePeriod = 1554076799000;
-                    break;
-                    case '04': //04-2019
-                        vm.datePeriod = 1556668799000;
-                    break;
-                    case '05': //05-2019
-                        vm.datePeriod = 1559347199000;
-                    break;
-                    case '06': //06-2019
-                        vm.datePeriod = 1561939199000;
-                    break;
-                    case '07': //07-2019
-                        vm.datePeriod = 1564617599000;
-                    break;
-                    case '08': //08-2019
-                        vm.datePeriod = 1567295999000;
-                    break;
-                    case '09': //09-2019
-                        vm.datePeriod = 1569887999000;
-                    break;
-                    case '10': //10-2019
-                        vm.datePeriod = 1572566399000;
-                    break;
-                    case '11': //11-2019
-                        vm.datePeriod = 1575158399000;
-                    break;
-                    case '12': //12-2019
-                        vm.datePeriod = 1577836799000;
-                    break;
-                };
+                vm.dateOne = $('#pickerDateOne').data("DateTimePicker").date().toDate().getTime();
+                vm.dateTwo = $('#pickerDateTwo').data("DateTimePicker").date().toDate().getTime();
+                vm.dateTwo += 86399000;
                 vm.isProductReportList = '2';
                 vm.reportList = undefined;
                 vm.loading = true;
 
-                contableService.getGenMajorReportByUsrClntIdAndCodeContaAndDate(vm.usrCliId, vm.codeContaOne, vm.codeContaTwo, vm.datePeriod).then(function(response) {
+                contableService.getGenMajorReportByUsrClntIdAndCodeContaAndDate(vm.usrCliId, vm.codeContaOne, vm.codeContaTwo, vm.dateOne, vm.dateTwo).then(function(response) {
                     vm.reportList = response;
                     vm.loading = false;
                 }).catch(function(error) {
