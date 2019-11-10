@@ -143,11 +143,13 @@ angular.module('integridadUiApp')
           if(vm.billOfflineBarCode.length === 13){
 
             productService.getLazyBySusidiaryIdBarCode($localStorage.user.subsidiary.id, vm.billOfflineBarCode).then(function(response) {
-              vm.quantity = 1;
-              vm.toAdd = response[0];
-              vm.toAddExistency = _.last(vm.toAdd.productBySubsidiaries).quantity;
-              vm.toAddPrice = vm.getCost(vm.toAdd[vm.priceType.cod], vm.toAdd.averageCost);
-              document.getElementById("submitAdd").focus();
+              if(!_.isEmpty(response)){
+                vm.quantity = 1;
+                vm.toAdd = response[0];
+                vm.toAddExistency = _.last(vm.toAdd.productBySubsidiaries).quantity;
+                vm.toAddPrice = vm.getCost(vm.toAdd[vm.priceType.cod], vm.toAdd.averageCost);
+                document.getElementById("submitAdd").focus();
+              }
             });
           }
         };
@@ -352,7 +354,6 @@ angular.module('integridadUiApp')
                         if (sub) {
                             response.content[i].quantity = sub.quantity
                             vm.productList.push(response.content[i]);
-                            console.log(response.content[i])
                         };
                     };
                 };
@@ -401,11 +402,13 @@ angular.module('integridadUiApp')
         };
 
         vm.addProdBarCode = function(){
-          vm.productToAdd = angular.copy(vm.toAdd);
-          vm.selectProductToAdd(vm.productToAdd);
-          vm.acceptProduct(true);
-          vm.billOfflineBarCode = undefined;
-          vm.toAdd = undefined;
+          if(vm.toAdd !== undefined){
+            vm.productToAdd = angular.copy(vm.toAdd);
+            vm.selectProductToAdd(vm.productToAdd);
+            vm.acceptProduct(true);
+            vm.billOfflineBarCode = undefined;
+            vm.toAdd = undefined;
+          }
         };
 
         vm.cancelBarCode = function(){
