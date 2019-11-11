@@ -33,14 +33,14 @@
         </div>
     </div>
 
-    <div class="table-responsive" ng-show="vm.clientSelected === undefined && vm.billOfflineList === undefined && vm.newClient === undefined">
+    <div class="table-responsive" ng-show="vm.clientSelected === undefined && vm.clientList !== undefined && vm.billOfflineList === undefined && vm.newClient === undefined">
         <div class="row">
             <div class="form-group col-md-10">
                 <input ng-model="searchText" class="form-control" placeholder="Buscar">
             </div>
             <div class="form-group col-md-2">
                 <button type="button" title="Agregar Nuevo Cliente" class="btn btn-primary" ng-click="vm.createClient()">
-                        <span class = "glyphicon glyphicon-user" aria-hidden = "true"></span>
+                        <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
                 </button>
             </div>
         </div>
@@ -63,11 +63,11 @@
                     <td>{{clientPreSelect.name}}</td>
                     <td>{{clientPreSelect.typeId}} - {{clientPreSelect.identification}}</td>
                     <td>
-                        <button type="button" title="Nueva Factura" class="btn btn-primary btn-sm" ng-click="vm.clientSelect(clientPreSelect)">
-                                <span class = "glyphicon glyphicon-file" aria-hidden = "true"></span>
+                        <button type="button" title="Seleccionar Cliente" class="btn btn-primary btn-sm" ng-click="vm.clientSelect(clientPreSelect)">
+                                <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
                         </button>
                         <button type="button" title="Consultar Facturas" class="btn btn-primary btn-sm" ng-click="vm.clientConsult(clientPreSelect)">
-                                <span class = "glyphicon glyphicon-search" aria-hidden = "true"></span>
+                                <span class="glyphicon glyphicon-search" aria-hidden = "true"></span>
                         </button>
                     </td>
                 </tr>
@@ -75,8 +75,8 @@
         </table>
         <div class="row">
             <div class="form-group col-md-12">
-                <button type="button" title="Volver a Inicio" class="btn btn-danger btn-sm"
-                        ng-click="vm.exit()">
+                <button type="button" title="Volver a Facturación" class="btn btn-primary btn-sm"
+                        ng-click="vm.volver()">
                         <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
                 </button>
             </div>
@@ -84,105 +84,107 @@
     </div>
 
     <!--CREACIÓN DE NUEVO CLIENTE-->
-    <div class = "panel panel-primary" ng-show = "vm.newClient === true">
+    <div class="panel panel-primary" ng-show="vm.newClient === true">
         <div class="panel-heading" print-remove>
             <b>Datos del Cliente</b>
         </div>
-        <div class = "panel-body">
-            <div class = "row">
-                <div class = "form-group col-md-12">
-                    <label>Nombre *: </label>
-                    <input type = "text" ng-model = "vm.client.name" class = "form-control">
+        <div class="panel-body">
+            <div class="row">
+                <div class="form-group col-md-12">
+                    <label>Nombre: </label>
+                    <input type="text" ng-model="vm.client.name" class="form-control">
                 </div>
             </div>
-            <div class = "row">
-                <div class = "form-group col-md-6">
+            <div class="row">
+                <div class="form-group col-md-6">
                     <label>Tel&eacute;fono: (incluir c&oacute;digo de provincia ej: 02) </label>
-                    <input type = "text" onkeypress = "return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
-                            ng-model = "vm.client.phone" class = "form-control" maxlength = "9">
+                    <input type="text" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+                           ng-model="vm.client.phone" class="form-control" maxlength="9">
                 </div>
-                <div class = "form-group col-md-6">
+                <div class="form-group col-md-6">
                     <label>Tel&eacute;fono celular: </label>
-                    <input type = "text" onkeypress = "return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
-                            ng-model = "vm.client.celPhone" class = "form-control" maxlength = "10">
+                    <input type="text" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+                           ng-model="vm.client.celPhone" class="form-control" maxlength="10">
                 </div>
             </div>
-            <div class = "row">
-                <div class = "form-group col-md-6">
+            <div class="row">
+                <div class="form-group col-md-6">
                     <label>Pa&iacute;s: </label>
-                    <select ng-options = "country for country in vm.countryList"
-                            ng-model = "vm.client.country" class = "form-control" ng-change = "vm.validateEcuador()"></select>
-                </div>
-                <div class = "form-group col-md-6" ng-show = "vm.client.country === 'Ecuador'">
-                    <label>Ciudad: </label>
-                    <select ng-options = "city for city in vm.citiesList"
-                            ng-model = "vm.client.city" class = "form-control"></select>
-                </div>
-                <div class = "form-group col-md-6" ng-show = "vm.client.country !== 'Ecuador'">
-                    <label>Ciudad: </label>
-                    <input type = "text" ng-model = "vm.client.city" class = "form-control">
-                </div>
-            </div>
-            <div class = "row">
-                <div class = "form-group col-md-6">
-                    <label>Tipo de Identificacion: </label>
-                    <select ng-options = "item.code as item.name for item in [{code:'CED', name:'CEDULA'}, {code:'RUC', name:'RUC'}, {code:'IEX', name:'IDENTIFICACIÓN EXTERIOR'}]"
-                            ng-model = "vm.client.typeId" class = "form-control">
+                    <select ng-options="country for country in vm.countryList"
+                            ng-model="vm.client.country" class="form-control" ng-change="vm.validateEcuador()">
                     </select>
                 </div>
-                <div class = "form-group col-md-6" ng-show = "vm.client.typeId === 'CED'">
+                <div class="form-group col-md-6" ng-show="vm.client.country === 'Ecuador'">
+                    <label>Ciudad: </label>
+                    <select ng-options = "city for city in vm.citiesList"
+                            ng-model="vm.client.city" class="form-control">
+                    </select>
+                </div>
+                <div class="form-group col-md-6" ng-show="vm.client.country !== 'Ecuador'">
+                    <label>Ciudad: </label>
+                    <input type="text" ng-model="vm.client.city" class="form-control">
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label>Tipo de Identificacion: </label>
+                    <select ng-options="item.code as item.name for item in [{code:'CED', name:'CEDULA'}, {code:'RUC', name:'RUC'}, {code:'IEX', name:'IDENTIFICACIÓN EXTERIOR'}]"
+                            ng-model="vm.client.typeId" class="form-control">
+                    </select>
+                </div>
+                <div class="form-group col-md-6" ng-show="vm.client.typeId === 'CED'">
                     <label>C&eacute;dula: </label>
-                    <input type = "text" onkeypress = "return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
-                           ng-model = "vm.client.identification" class = "form-control" maxlength = "10">
+                    <input type="text" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+                           ng-model="vm.client.identification" class="form-control" maxlength="10">
                 </div>
-                <div class = "form-group col-md-6" ng-show = "vm.client.typeId === 'RUC'">
+                <div class="form-group col-md-6" ng-show="vm.client.typeId === 'RUC'">
                     <label>RUC: </label>
-                    <input type = "text" onkeypress = "return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
-                           ng-model = "vm.client.identification" class = "form-control" maxlength = "13">
+                    <input type="text" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+                           ng-model="vm.client.identification" class="form-control" maxlength="13">
                 </div>
-                <div class = "form-group col-md-6" ng-show = "vm.client.typeId === 'IEX'">
+                <div class="form-group col-md-6" ng-show="vm.client.typeId === 'IEX'">
                     <label>ID. Exterior: </label>
-                    <input type = "text" onkeypress = "return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
-                           ng-model = "vm.client.identification" class = "form-control" maxlength = "10">
+                    <input type="text" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+                           ng-model="vm.client.identification" class="form-control" maxlength="10">
                 </div>
             </div>
-            <div class = "row">
-                <div class = "form-group col-md-12">
+            <div class="row">
+                <div class="form-group col-md-12">
                     <label>E-mail: </label>
-                    <input type = "text" ng-model = "vm.client.email" class = "form-control">
+                    <input type="text" ng-model="vm.client.email" class="form-control">
                 </div>
             </div>
-            <div class = "row">
-                <div class = "form-group col-md-12">
+            <div class="row">
+                <div class="form-group col-md-12">
                     <label>Direcci&oacute;n: </label>
-                    <input type = "text" ng-model = "vm.client.address" class = "form-control">
+                    <input type="text" ng-model="vm.client.address" class="form-control">
                 </div>
             </div>
-            <div class = "row">
-                <div class = "form-group col-md-6">
+            <div class="row">
+                <div class="form-group col-md-6">
                     <label>C&oacute;digo Contabilidad: </label>
-                    <input type = "text" ng-model = "vm.client.codConta" class = "form-control">
+                    <input type="text" ng-model="vm.client.codConta" class="form-control">
                 </div>
-                <div class = "form-group col-md-6">
+                <div class="form-group col-md-6">
                     <label>Contacto: </label>
-                    <input type = "text" ng-model = "vm.client.contact" class = "form-control">
+                    <input type="text" ng-model="vm.client.contact" class="form-control">
                 </div>
             </div>
-            <div class = "row">
-                <div class = "form-group col-md-6">
+            <div class="row">
+                <div class="form-group col-md-6">
                     <label>C&oacute;digo : </label>
-                    <input type = "text" ng-model = "vm.client.codApp" class = "form-control">
+                    <input type="text" ng-model="vm.client.codApp" class="form-control">
                 </div>
             </div>
         </div>
-        <div class = "panel-footer">
-            <button type = "button" title = "Guardar Cliente" class = "btn btn-success btn-sm" ng-click = "vm.saveClient()"
-                    ng-disabled = "vm.client.name === undefined || vm.client.identification === undefined || vm.client.codApp === undefined">
-                    <span class = "glyphicon glyphicon-floppy-save" aria-hidden = "true"></span>
+        <div class="panel-footer">
+            <button type="button" title="Guardar Cliente" class="btn btn-success btn-sm" ng-click="vm.saveClient()"
+                    ng-disabled="vm.client.name === undefined || vm.client.identification === undefined || vm.client.codApp === undefined">
+                    <span class="glyphicon glyphicon-floppy-save" aria-hidden="true"></span>
             </button>
-            <button type = "button" title = "Salir" class = "btn btn-primary btn-sm"
-                    ng-click = "vm.cancelCreateClient()">
-                    <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
+            <button type="button" title="Salir" class="btn btn-primary btn-sm"
+                    ng-click="vm.cancelCreateClient()">
+                    <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
             </button>
         </div>
     </div>
@@ -214,11 +216,11 @@
                     <td>{{billOffline.total}}</td>
                     <td>
                         <button type="button" title="Ver Factura" class="btn btn-primary btn-sm" ng-click="vm.billOfflineSelect(billOffline)">
-                                <span class = "glyphicon glyphicon-eye-open" aria-hidden = "true"></span>
+                                <span class="glyphicon glyphicon-eye-open" aria-hidden = "true"></span>
                         </button>
                         <button type="button" title="Anular Factura" class="btn btn-warning btn-sm" ng-click="vm.cancelaBillOffline = billOffline"
                                 data-toggle="modal" data-target="#modalAnular">
-                                <span class = "glyphicon glyphicon-warning-sign" aria-hidden = "true"></span>
+                                <span class="glyphicon glyphicon-warning-sign" aria-hidden = "true"></span>
                         </button>
                     </td>
                 </tr>
@@ -227,7 +229,7 @@
         <div class="row">
             <div class="form-group col-md-12">
                 <button type="button" title="Salir" class="btn btn-primary btn-sm" ng-click="vm.billOfflineList = undefined">
-                        <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
+                        <span class="glyphicon glyphicon-log-out" aria-hidden = "true"></span>
                 </button>
             </div>
         </div>
@@ -244,8 +246,8 @@
                     <div class="form-group col-md-12">
                         <table width="100%">
                             <tr>
-                                <td width="30%" align="center"><img src="images/{{vm.companyData.userClient.logo}}"><br></td>
-                                <td width="70%">
+                                <td width="20%" align="center"><img src="images/{{vm.companyData.userClient.logo}}"><br></td>
+                                <td width="80%">
                                     <b>{{vm.companyData.userClient.name}}</b><br/></br>
                                     <b>Matriz: {{vm.companyData.userClient.address1}}</b><br/>
                                     <b>Establecimiento: {{vm.companyData.address1}}</b><br/><br/>
@@ -331,16 +333,14 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="form-group col-md-6">
+                    <div class="form-group col-md-9">
+                        <b>OBSERVACIONES:</b>
+                        <input type="text" ng-model="vm.billOffline.observation" class="form-control">
+                    </div>
+                    <div class="form-group col-md-3">
                         <b>DESCUENTO &#37;: </b>
                         <input type="text" ng-change="vm.reCalculateTotal()" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
                                ng-model="vm.billOffline.discountPercentage" class="form-control" maxlength="9" ng-disabled="!vm.newBillOffline">
-                    </div>
-                </div>
-                <div class="row" ng-if="vm.companyData.userClient.espTemp != 'A-1'" print-if="vm.companyData.userClient.espTemp != 'A-1'">
-                    <div class="form-group col-md-12">
-                        <b>OBSERVACIONES:</b>
-                        <input type="text" ng-model="vm.billOffline.observation" class="form-control">
                     </div>
                 </div>
             </div>
@@ -350,49 +350,38 @@
                 <b>Detalles</b>
             </div>
             <div class="panel-body table-responsive">
-
-              <div class="row" print-if="false">
-                  <div class="form-group col-md-4">
-                      <b>CODIGO DE BARRAS:</b>
-                      <input type="text" id="input4" ng-model="vm.billOfflineBarCode" class="form-control" ng-change="vm.filterBarCode()" ng-keypress="vm.fill($event)"
-                      onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))">
-                  </div>
-                  <div class="form-group col-md-8">
-                      <b>NOMBRE: </b>
-                      <input type="text" ng-model="vm.toAdd.name" ng-disabled="true" class="form-control">
-                  </div>
-              </div>
-              <form ng-submit="vm.addProdBarCode()">
-                <div class="row" print-if="false">
-                  <div class="form-group col-md-3">
-                      <b>CANTIDAD: </b>
-                      <input type="text" ng-model="vm.quantity" ng-attr-tabindex="2" class="form-control">
-                  </div>
-                  <div class="form-group col-md-3">
-                      <b>EXISTENCIA: </b>
-                      <input type="text" ng-model="vm.toAddExistency" ng-disabled="true" class="form-control">
-                  </div>
-                  <div class="form-group col-md-3">
-                      <b>PRECIO: </b>
-                      <input type="text" ng-model="vm.toAddPrice" ng-disabled="true" class="form-control">
-                  </div>
-                  <div class="form-group col-md-3">
-                      <b>CODIGO: </b>
-                      <input type="text" ng-model="vm.toAdd.codeIntegridad" ng-disabled="true" class="form-control">
-                  </div>
+                <div class="row" ng-if="vm.newBillOffline" print-remove>
+                    <div class="form-group col-md-4">
+                        <b>CODIGO DE BARRAS:</b>
+                        <input type="text" id="input4" ng-model="vm.billOfflineBarCode" class="form-control" ng-change="vm.filterBarCode()" ng-keypress="vm.fill($event)"
+                               onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))">
+                    </div>
+                    <div class="form-group col-md-8">
+                        <b>NOMBRE: </b>
+                        <input type="text" ng-model="vm.toAdd.name" ng-disabled="true" class="form-control">
+                    </div>
                 </div>
-                <div class="row" print-if="false">
-                  <div class="form-group col-md-12" ng-disabled="vm.toAdd === undefined">
-                      <input id="submitAdd" ng-attr-tabindex="1" type="submit" value="Aceptar">
-                      <input id="cancel" ng-attr-tabindex="3" type="button" value="Cancelar" ng-click="vm.cancelBarCode()">
-                  </div>
-                </div>
-              </form>
-
-
-
-
-
+                <form ng-submit="vm.addProdBarCode()" ng-if="vm.newBillOffline" print-remove>
+                    <div class="row" print-if="false">
+                        <div class="form-group col-md-3">
+                            <b>EXISTENCIA: </b>
+                            <input type="text" ng-model="vm.toAddExistency" ng-disabled="true" class="form-control">
+                        </div>
+                        <div class="form-group col-md-3">
+                            <b>PRECIO: </b>
+                            <input type="text" ng-model="vm.toAddPrice" ng-disabled="true" class="form-control">
+                        </div>
+                        <div class="form-group col-md-3">
+                            <b>CANTIDAD: </b>
+                            <input type="text" ng-model="vm.quantity" ng-attr-tabindex="2" class="form-control">
+                        </div>
+                        <div class="form-group col-md-3" ng-disabled="vm.toAdd === undefined">
+                            </br>
+                            <input id="submitAdd" ng-attr-tabindex="1" type="submit" value="Aceptar">
+                            <input id="cancel" ng-attr-tabindex="3" type="button" value="Cancelar" ng-click="vm.cancelBarCode()">
+                        </div>
+                    </div>
+                </form>
                 <div class="row">
                     <div class="form-group col-md-12">
                         <table class="table table-striped">
@@ -502,33 +491,9 @@
                         ng-show="vm.billOffline.claveDeAcceso === undefined">
                         <span class = "glyphicon glyphicon-usd" aria-hidden = "true"></span>
                 </button>
-                <button type="button" title = "Imprimir a Epson LX-350" class="btn btn-primary btn-sm" ng-if="vm.userClientId === vm.laQuinta"
-                        ng-show="vm.newBillOffline" ng-disabled="vm.billOffline.claveDeAcceso === undefined"
-                        ng-click="vm.printToCartAndCancel('printMatrixBillOfflineId')">
-                        <span class = "glyphicon glyphicon-print" aria-hidden = "true"></span>
-                </button>
-                <button type="button" title = "Imprimir a Epson LX-350" class="btn btn-primary btn-sm" ng-if="vm.userClientId === vm.valParra"
-                        ng-show="vm.newBillOffline" ng-disabled="vm.billOffline.claveDeAcceso === undefined"
-                        ng-click="vm.printToCartAndCancelParra('printMatrixBillOfflineParra')">
-                        <span class = "glyphicon glyphicon-print" aria-hidden = "true"></span>
-                </button>
-                <button type="button" title = "Imprimir a Epson TM-U220" class="btn btn-primary btn-sm" ng-if="vm.userClientId === vm.pineda"
-                        ng-show="vm.newBillOffline" ng-disabled="vm.billOffline.claveDeAcceso === undefined"
-                        ng-click="vm.printToCartAndCancelPineda('printMatrixBillIdPineda')">
-                        <span class = "glyphicon glyphicon-print" aria-hidden = "true"></span>
-                </button>
-                <!-- <button type="button" title="Salir" class="btn btn-primary btn-sm" ng-if="vm.newBillOffline"
-                        ng-click="vm.cancelBillOffline()">
+                <button type="button" title="Volver a Inicio" class="btn btn-danger btn-sm" ng-if="vm.newBillOffline"
+                        ng-click="vm.exit()">
                         <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
-                </button> -->
-                <button type="button" title="Salir" class="btn btn-primary btn-sm" ng-if="vm.newBillOffline"
-                        ng-click="vm.clientSelected = undefined">
-                        <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
-                </button>
-                <button type="button" title = "Imprimir a ThermalPrint P58" class="btn btn-danger btn-sm" ng-if="vm.userClientId === vm.laQuinta"
-                        ng-show="vm.newBillOffline" ng-disabled="vm.billOffline.claveDeAcceso === undefined"
-                        ng-click="vm.printBillThermal('billPrint')">
-                        <span class = "glyphicon glyphicon-print" aria-hidden = "true"></span>
                 </button>
             </div>
         </div>
@@ -573,25 +538,26 @@
                 </div>
             </div>
             <div class="panel-footer">
+                <button type="button" title="Nueva Factura" class="btn btn-primary btn-sm"
+                        ng-if="!vm.newBillOffline && !vm.user.cashier.specialPrint"
+                        ng-click="vm.nuevaBillOffline()">
+                        <span class="glyphicon glyphicon-file" aria-hidden="true"></span>
+                </button>
                 <button type="button" title = "Imprimir a Epson LX-300" class="btn btn-primary btn-sm" ng-if="vm.userClientId === vm.laQuinta"
                         ng-show="!vm.newBillOffline" ng-click="vm.printToCart('printMatrixBillOfflineId')">
-                        <span class = "glyphicon glyphicon-print" aria-hidden = "true"></span>
-                </button>
-                <button type="button" title = "Imprimir a Epson LX-300" class="btn btn-primary btn-sm" ng-if="vm.userClientId === vm.valParra"
-                        ng-show="!vm.newBillOffline" ng-click="vm.printToCartParra('printMatrixBillOfflineParra')">
-                        <span class = "glyphicon glyphicon-print" aria-hidden = "true"></span>
+                        <span class="glyphicon glyphicon-print" aria-hidden="true"></span>
                 </button>
                 <button type="button" title = "Imprimir a Epson TM-U220" class="btn btn-primary btn-sm" ng-if="vm.userClientId === vm.pineda"
                         ng-if="!vm.newBillOffline" ng-click="vm.printToCartPineda('printMatrixBillIdPineda')">
-                        <span class = "glyphicon glyphicon-print" aria-hidden = "true"></span>
-                </button>
-                <button type="button" title="Salir" class="btn btn-primary btn-sm"
-                        ng-click="vm.clientSelected = undefined">
-                        <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
+                        <span class="glyphicon glyphicon-print" aria-hidden="true"></span>
                 </button>
                 <button type="button" title = "Imprimir a ThermalPrint P58" class="btn btn-danger btn-sm" ng-if="vm.userClientId === vm.laQuinta"
                         ng-show="!vm.newBillOffline" ng-click="vm.printBillThermal('billPrint')">
-                        <span class = "glyphicon glyphicon-print" aria-hidden = "true"></span>
+                        <span class="glyphicon glyphicon-print" aria-hidden="true"></span>
+                </button>
+                <button type="button" title="Volver a Inicio" class="btn btn-primary btn-sm"
+                        ng-if="!vm.newBillOffline" ng-click="vm.exit()">
+                        <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
                 </button>
             </div>
         </div>
@@ -789,10 +755,10 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" title="Anular Factura" class="btn btn-danger btn-sm" ng-click="vm.billOfflineDeactivate()" data-dismiss="modal">
-                            <span class = "glyphicon glyphicon-screenshot" aria-hidden = "true"></span>
+                            <span class="glyphicon glyphicon-screenshot" aria-hidden="true"></span>
                     </button>
                     <button type="button" title = "Salir" class="btn btn-primary btn-sm" data-dismiss="modal">
-                            <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
+                            <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
                     </button>
                 </div>
             </div>
@@ -862,9 +828,9 @@
                         </div>
                         <div class="form-group col-md-4">
                             <br/>
-                            <button type="button" title = "Agregar Pago" class="btn btn-primary btn-sm" ng-click="vm.addPago()" id="addPaymentBtn"
+                            <button type="button" title="Agregar Pago" class="btn btn-primary btn-sm" ng-click="vm.addPago()" id="addPaymentBtn"
                                     ng-disabled="vm.medio === undefined || vm.medio.total === undefined">
-                                    <span class = "glyphicon glyphicon-plus" aria-hidden = "true"></span>
+                                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                             </button>
                         </div>
                     </div>
@@ -888,8 +854,8 @@
                                         <td>{{pago.medio}}</td>
                                         <td>{{pago.total}}</td>
                                         <td>
-                                            <button type="button" title = "Eliminar Pago" class="btn btn-primary btn-sm" ng-click="vm.removePago($index)">
-                                                    <span class = "glyphicon glyphicon-trash" aria-hidden = "true"></span>
+                                            <button type="button" title="Eliminar Pago" class="btn btn-primary btn-sm" ng-click="vm.removePago($index)">
+                                                    <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
                                             </button>
                                         </td>
                                     </tr>
@@ -905,12 +871,12 @@
                   </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" title = "Facturar" class="btn btn-success btn-sm" ng-click="vm.saveBillOffline()" id="processBillBtn"
+                    <button type="button" title="Facturar" class="btn btn-success btn-sm" ng-click="vm.saveBillOffline()" id="processBillBtn"
                             ng-disabled="(vm.pagosOffline.length === 0 || vm.getCambio < 0) || vm.billedOffline" print-remove>
-                            <span class = "glyphicon glyphicon-credit-card" aria-hidden = "true"></span>
+                            <span class="glyphicon glyphicon-credit-card" aria-hidden="true"></span>
                     </button>
-                    <button type="button" title = "Cancelar Facturación" class="btn btn-primary btn-sm" data-dismiss="modal">
-                            <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
+                    <button type="button" title="Cancelar Facturación" class="btn btn-primary btn-sm" data-dismiss="modal">
+                            <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
                     </button>
                 </div>
             </div>
@@ -934,7 +900,7 @@
                                 </div>
                                 <div class="form-group col-md-2">
                                     <button type="button" title="Buscar" class="btn btn-primary btn-sm" ng-click="vm.filter()">
-                                            <span class = "glyphicon glyphicon-search" aria-hidden = "true"></span>
+                                            <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
                                     </button>
                                 </div>
                             </div>
@@ -961,7 +927,7 @@
                                         <td>{{vm.getCost(productSelect[vm.priceType.cod], productSelect.averageCost)}}</td>
                                         <td>
                                             <button type="button" title="Seleccionar" class="btn btn-primary btn-sm" ng-click="vm.selectProductToAdd(productSelect)">
-                                                    <span class = "glyphicon glyphicon-check" aria-hidden = "true"></span>
+                                                    <span class="glyphicon glyphicon-check" aria-hidden="true"></span>
                                             </button>
                                         </td>
                                     </tr>
@@ -1016,14 +982,14 @@
                 <div class="modal-footer">
                     <button type="button" title="Aceptar y Cerrar" class="btn btn-success btn-sm" ng-click="vm.acceptProduct(true)"
                             ng-disabled="vm.productToAdd === undefined">
-                            <span class = "glyphicon glyphicon-thumbs-up" aria-hidden = "true"></span>
+                            <span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span>
                     </button>
                     <button type="button" title="Aceptar y Agregar Mas productos" class="btn btn-primary btn-sm" ng-click="vm.acceptProduct(false)"
                             ng-disabled="vm.productToAdd === undefined">
-                            <span class = "glyphicon glyphicon-ok-sign" aria-hidden = "true"></span>
+                            <span class="glyphicon glyphicon-ok-sign" aria-hidden="true"></span>
                     </button>
                     <button type="button" title="Salir" class="btn btn-primary btn-sm" data-dismiss = "modal">
-                            <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
+                            <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
                     </button>
                 </div>
             </div>
@@ -1053,7 +1019,7 @@
                     <div class="row">
                         <div class="form-group col-md-12">
                             <button type="button" title="Validar" class="btn btn-primary btn-sm" ng-click="vm.validateAdm()" ng-disabled="vm.passwordAdm === undefined">
-                                    <span class = "glyphicon glyphicon-tags" aria-hidden = "true"></span>
+                                    <span class="glyphicon glyphicon-tags" aria-hidden="true"></span>
                             </button>
                         </div>
                     </div>
@@ -1087,10 +1053,10 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" title="Aceptar" class="btn btn-success btn-sm" ng-click="vm.acceptNewSeq()">
-                            <span class = "glyphicon glyphicon-thumbs-up" aria-hidden = "true"></span>
+                            <span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span>
                     </button>
                     <button type="button" title = "Salir" class="btn btn-primary btn-sm" data-dismiss="modal">
-                            <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
+                            <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
                     </button>
                 </div>
             </div>

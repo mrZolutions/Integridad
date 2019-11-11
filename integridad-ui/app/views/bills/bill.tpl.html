@@ -68,8 +68,8 @@
                     <td>{{clientPreSelect.name}}</td>
                     <td>{{clientPreSelect.typeId}} - {{clientPreSelect.identification}}</td>
                     <td>
-                        <button type="button" title="Nueva Factura" class="btn btn-primary btn-sm" ng-click="vm.clientSelect(clientPreSelect)">
-                                <span class = "glyphicon glyphicon-file" aria-hidden = "true"></span>
+                        <button type="button" title="Seleccionar Cliente" class="btn btn-primary btn-sm" ng-click="vm.clientSelect(clientPreSelect)">
+                                <span class = "glyphicon glyphicon-ok" aria-hidden = "true"></span>
                         </button>
                         <button type="button" title="Consultar Facturas" class="btn btn-primary btn-sm" ng-click="vm.clientConsult(clientPreSelect)">
                                 <span class = "glyphicon glyphicon-search" aria-hidden = "true"></span>
@@ -80,8 +80,8 @@
         </table>
         <div class="row">
             <div class="form-group col-md-12">
-                <button type="button" title="Volver a Inicio" class="btn btn-danger btn-sm"
-                        ng-click="vm.exit()">
+                <button type="button" title="Volver a Facturación" class="btn btn-primary btn-sm"
+                        ng-click="vm.volver()">
                         <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
                 </button>
             </div>
@@ -185,8 +185,8 @@
                     <div class="form-group col-md-12">
                         <table width="100%">
                             <tr>
-                                <td width="30%" align="center"><img src="images/{{vm.companyData.userClient.logo}}"><br></td>
-                                <td width="70%">
+                                <td width="20%" align="center"><img src="images/{{vm.companyData.userClient.logo}}"><br></td>
+                                <td width="80%">
                                     <b>{{vm.companyData.userClient.name}}</b><br/></br>
                                     <b>Matriz: {{vm.companyData.userClient.address1}}</b><br/>
                                     <b>Establecimiento: {{vm.companyData.address1}}</b><br/><br/>
@@ -317,17 +317,15 @@
                         </table>
                     </div>
                 </div>
-                <div class="row" print-remove>
-                    <div class="form-group col-md-6">
+                <div class="row">
+                    <div class="form-group col-md-9">
+                        <b>OBSERVACIONES:</b>
+                        <input type="text" ng-model="vm.bill.observation" class="form-control">
+                    </div>
+                    <div class="form-group col-md-3">
                         <b>DESCUENTO &#37;: </b>
                         <input type="text" ng-change="vm.reCalculateTotal()" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
                                ng-model="vm.bill.discountPercentage" class="form-control" maxlength="9" ng-change="vm.getFechaCobro()" ng-disabled="!vm.newBill">
-                    </div>
-                </div>
-                <div class="row" ng-if="vm.companyData.userClient.espTemp != 'A-1'" print-if="vm.companyData.userClient.espTemp != 'A-1'">
-                    <div class="form-group col-md-12">
-                        <b>OBSERVACIONES:</b>
-                        <input type="text" ng-model="vm.bill.observation" class="form-control">
                     </div>
                 </div>
             </div>
@@ -337,46 +335,38 @@
                 <b>Detalle</b>
             </div>
             <div class="panel-body table-responsive">
-
-              <div class="row" print-if="false">
-                  <div class="form-group col-md-4">
-                      <b>CODIGO DE BARRAS:</b>
-                      <input type="text" id="input4" ng-model="vm.billOfflineBarCode" class="form-control" ng-change="vm.filterBarCode()" ng-keypress="vm.fill($event)"
-                      onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))">
-                  </div>
-                  <div class="form-group col-md-8">
-                      <b>NOMBRE: </b>
-                      <input type="text" ng-model="vm.toAdd.name" ng-disabled="true" class="form-control">
-                  </div>
-              </div>
-              <form ng-submit="vm.addProdBarCode()">
-                <div class="row" print-if="false">
-                  <div class="form-group col-md-3">
-                      <b>CANTIDAD: </b>
-                      <input type="text" ng-model="vm.quantity" ng-attr-tabindex="2" class="form-control">
-                  </div>
-                  <div class="form-group col-md-3">
-                      <b>EXISTENCIA: </b>
-                      <input type="text" ng-model="vm.toAddExistency" ng-disabled="true" class="form-control">
-                  </div>
-                  <div class="form-group col-md-3">
-                      <b>PRECIO: </b>
-                      <input type="text" ng-model="vm.toAddPrice" ng-disabled="true" class="form-control">
-                  </div>
-                  <div class="form-group col-md-3">
-                      <b>CODIGO: </b>
-                      <input type="text" ng-model="vm.toAdd.codeIntegridad" ng-disabled="true" class="form-control">
-                  </div>
+                <div class="row" ng-if="vm.newBill" print-remove>
+                    <div class="form-group col-md-4">
+                        <b>CODIGO DE BARRAS:</b>
+                        <input type="text" id="input4" ng-model="vm.billOfflineBarCode" class="form-control" ng-change="vm.filterBarCode()" ng-keypress="vm.fill($event)"
+                               onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))">
+                    </div>
+                    <div class="form-group col-md-8">
+                        <b>NOMBRE: </b>
+                        <input type="text" ng-model="vm.toAdd.name" ng-disabled="true" class="form-control">
+                    </div>
                 </div>
-                <div class="row" print-if="false">
-                  <div class="form-group col-md-12" ng-disabled="vm.toAdd === undefined">
-                      <input id="submitAdd" ng-attr-tabindex="1" type="submit" value="Aceptar">
-                      <input id="cancel" ng-attr-tabindex="3" type="button" value="Cancelar" ng-click="vm.cancelBarCode()">
-                  </div>
-                </div>
-              </form>
-
-
+                <form ng-submit="vm.addProdBarCode()" ng-if="vm.newBill" print-remove>
+                    <div class="row" print-if="false">
+                        <div class="form-group col-md-3">
+                            <b>EXISTENCIA: </b>
+                            <input type="text" ng-model="vm.toAddExistency" ng-disabled="true" class="form-control">
+                        </div>
+                        <div class="form-group col-md-3">
+                            <b>PRECIO: </b>
+                            <input type="text" ng-model="vm.toAddPrice" ng-disabled="true" class="form-control">
+                        </div>
+                        <div class="form-group col-md-3">
+                            <b>CANTIDAD: </b>
+                            <input type="text" ng-model="vm.quantity" ng-attr-tabindex="2" class="form-control">
+                        </div>
+                        <div class="form-group col-md-3" ng-disabled="vm.toAdd === undefined">
+                            </br>
+                            <input id="submitAdd" ng-attr-tabindex="1" type="submit" value="Aceptar">
+                            <input id="cancel" ng-attr-tabindex="3" type="button" value="Cancelar" ng-click="vm.cancelBarCode()">
+                        </div>
+                    </div>
+                </form>
                 <div class="row">
                     <div class="form-group col-md-12">
                         <table class="table table-striped">
@@ -508,30 +498,8 @@
                         ng-show="vm.bill.claveDeAcceso === undefined">
                         <span class = "glyphicon glyphicon-usd" aria-hidden = "true"></span>
                 </button>
-                <button print-btn type="button" title = "Imprimir Factura" class="btn btn-primary btn-sm"
-                        ng-if="vm.newBill && !vm.user.cashier.specialPrint"
-                        ng-disabled="vm.bill.claveDeAcceso === undefined"
-                        ng-click="vm.cancelBill()">
-                        <span class = "glyphicon glyphicon-print" aria-hidden = "true"></span>
-                </button>
-                <button type="button" title = "Descargar Factura EpsonTM20" class="btn btn-success btn-sm"
-                        ng-if="vm.newBill && !vm.user.cashier.specialPrint"
-                        ng-disabled="vm.bill.claveDeAcceso === undefined"
-                        ng-click="vm.downloadBillTxtTM20('billToDownloadEpsonTM20')" print-remove>
-                        <span class = "glyphicon glyphicon-save-file" aria-hidden = "true"></span>
-                </button>
-                <button type="button" title = "Imprimir Ticket-Factura" class="btn btn-danger btn-sm"
-                        ng-if="vm.newBill && !vm.user.cashier.specialPrint"
-                        ng-disabled="vm.bill.claveDeAcceso === undefined"
-                        ng-click="vm.printToCartAndCancel('printMatrixBillId')" print-remove>
-                        <span class = "glyphicon glyphicon-print" aria-hidden = "true"></span>
-                </button>
-                <!-- <button type="button" title="Salir" class="btn btn-primary btn-sm" ng-if="vm.newBill"
-                        ng-click="vm.cancelBill(); searchText = undefined">
-                        <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
-                </button> -->
-                <button type="button" title="Salir" class="btn btn-primary btn-sm" ng-if="vm.newBill"
-                        ng-click="vm.clientSelected = undefined; searchText = undefined">
+                <button type="button" title="Volver a Inicio" class="btn btn-danger btn-sm" ng-if="vm.newBill"
+                        ng-click="vm.exit()">
                         <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
                 </button>
             </div>
@@ -655,22 +623,23 @@
                 </div>
             </div>
             <div class="panel-footer" print-remove>
+                <button type="button" title="Nueva Factura" class="btn btn-primary btn-sm"
+                        ng-if="!vm.newBill && !vm.user.cashier.specialPrint"
+                        ng-click="vm.nuevaBill()">
+                        <span class="glyphicon glyphicon-file" aria-hidden="true"></span>
+                </button>
                 <button print-btn type="button" title = "Imprimir Factura" class="btn btn-primary btn-sm"
                         ng-if="!vm.newBill && !vm.user.cashier.specialPrint">
                         <span class = "glyphicon glyphicon-print" aria-hidden = "true"></span>
-                </button>
-                <button type="button" title = "Descargar Factura EpsonTM20" class="btn btn-success btn-sm"
-                        ng-if="!vm.newBill && !vm.user.cashier.specialPrint"
-                        ng-click="vm.downloadBillTxtTM20('billToDownloadEpsonTM20')">
-                        <span class = "glyphicon glyphicon-save-file" aria-hidden = "true"></span>
                 </button>
                 <button type="button" title = "Imprimir Ticket-Factura" class="btn btn-danger btn-sm"
                         ng-if="!vm.newBill && !vm.user.cashier.specialPrint"
                         ng-click="vm.printToCart('printMatrixBillId')">
                         <span class = "glyphicon glyphicon-print" aria-hidden = "true"></span>
                 </button>
-                <button type="button" title="Salir" class="btn btn-primary btn-sm"
-                        ng-click="vm.clientSelected = undefined; searchText = undefined">
+                <button type="button" title="Volver a Inicio" class="btn btn-primary btn-sm"
+                        ng-if="!vm.newBill && !vm.user.cashier.specialPrint"
+                        ng-click="vm.exit()">
                         <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
                 </button>
             </div>

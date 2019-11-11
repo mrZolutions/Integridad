@@ -60,9 +60,10 @@ angular.module('integridadUiApp')
             vm.pineda = '6e663299-d61c-44de-b42c-a3d6595b46d2';
 
             vm.error = undefined;
+            vm.success = undefined;
             vm.aux = undefined;
             vm.newClient = undefined;
-            vm.newBillOffline = undefined;
+            vm.newBillOffline = true;
             vm.billedOffline = false;
             vm.clientSelected = undefined;
             vm.dateBillOffline = undefined;
@@ -115,6 +116,14 @@ angular.module('integridadUiApp')
             });
         };
 
+        vm.volver = function() {
+            _activate();
+        };
+
+        vm.nuevaBillOffline = function() {
+            _activate();
+        };
+
         function _getSeqNumber() {
             vm.numberAddedOne = parseInt(vm.user.cashier.billOfflineNumberSeq) + 1;
             vm.seqNumberFirstPart = vm.user.subsidiary.threeCode + '-' + vm.user.cashier.threeCode;
@@ -139,22 +148,21 @@ angular.module('integridadUiApp')
         };
 
         vm.filterBarCode = function(){
-
-          if(vm.billOfflineBarCode.length === 13){
-
-            productService.getLazyBySusidiaryIdBarCode($localStorage.user.subsidiary.id, vm.billOfflineBarCode).then(function(response) {
-              if(!_.isEmpty(response)){
-                vm.quantity = 1;
-                vm.toAdd = response[0];
-                vm.toAddExistency = _.last(vm.toAdd.productBySubsidiaries).quantity;
-                vm.toAddPrice = vm.getCost(vm.toAdd[vm.priceType.cod], vm.toAdd.averageCost);
-                document.getElementById("submitAdd").focus();
-              }
-            });
-          }
+            if(vm.billOfflineBarCode.length === 13){
+                productService.getLazyBySusidiaryIdBarCode($localStorage.user.subsidiary.id, vm.billOfflineBarCode).then(function(response) {
+                    if(!_.isEmpty(response)) {
+                        vm.quantity = 1;
+                        vm.toAdd = response[0];
+                        vm.toAddExistency = _.last(vm.toAdd.productBySubsidiaries).quantity;
+                        vm.toAddPrice = vm.getCost(vm.toAdd[vm.priceType.cod], vm.toAdd.averageCost);
+                        document.getElementById("submitAdd").focus();
+                    };
+                });
+            };
         };
 
         vm.clientSelect = function(client) {
+            vm.success = undefined;
             vm.companyData = $localStorage.user.subsidiary;
             vm.dateBillOffline = new Date();
             vm.clientSelected = client;
@@ -164,8 +172,8 @@ angular.module('integridadUiApp')
             var today = new Date();
             $('#pickerBillOfflineDate').data("DateTimePicker").date(today);
             vm.newBillOffline = true;
-            setTimeout(function(){
-              document.getElementById("input4").focus();
+            setTimeout(function() {
+                document.getElementById("input4").focus();
             }, 500);
         };
 
@@ -225,9 +233,10 @@ angular.module('integridadUiApp')
             clientService.getClientByUserClientAndIdentification(vm.userClientId, vm.client.identification).then(function(response) {
                 if (response.length === 0) {
                     clientService.create(vm.client).then(function(response) {
-                        _activate();
+                        vm.newClient = undefined;
                         vm.error = undefined;
                         vm.success = 'Registro realizado con exito';
+                        setInterval(_activate(), 500);
                     }).catch(function(error) {
                         vm.loading = false;
                         vm.error = error.data;
@@ -595,7 +604,6 @@ angular.module('integridadUiApp')
 
         vm.printToCartAndCancel = function(printBillOffline) {
             var innerContents = document.getElementById(printBillOffline).innerHTML;
-
             var popupWinindow = window.open('', 'printMatrixBillOffline', 'width=300,height=400');
             popupWinindow.document.write('<html><head><title></title>');
             popupWinindow.document.write('</head><body>');
@@ -608,7 +616,6 @@ angular.module('integridadUiApp')
 
         vm.printToCart = function(printBillOffline) {
             var innerContents = document.getElementById(printBillOffline).innerHTML;
-
             var popupWinindow = window.open('', 'printMatrixBillOffline', 'width=300,height=400');
             popupWinindow.document.write('<html><body>');
             popupWinindow.document.write(innerContents);
@@ -713,6 +720,9 @@ angular.module('integridadUiApp')
             $('#modalAddPago').modal('hide');
             vm.impuestosTotales = [];
             vm.billOffline.detailsKardexOffline = [];
+            if (vm.billOffline.observation === null || vm.billOffline.observation === undefined || vm.billOffline.observation === '') {
+                vm.billOffline.observation = '--';
+            };
             if (vm.impuestoIVA.base_imponible > 0) {
                 vm.impuestosTotales.push(vm.impuestoIVA);
             };
@@ -787,6 +797,7 @@ angular.module('integridadUiApp')
                 if (response.length === 0) {
                     billOfflineService.createBillOffline(vm.billOffline, 1).then(function(respBill) {
                         vm.billedOffline = true;
+                        vm.newBillOffline = false;
                         vm.billOfflineCreated = respBill;
                         $localStorage.user.cashier.billOfflineNumberSeq = vm.billOffline.billSeq;
                         if (vm.seqChanged) {
@@ -797,7 +808,6 @@ angular.module('integridadUiApp')
                                 vm.error = error.data;
                             });
                         };
-                        _activate();
                         vm.loading = false;
                     }).catch(function(error) {
                         vm.loading = false;
