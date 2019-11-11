@@ -43,6 +43,12 @@ angular
             });
         };
 
+        this.getLazyBySusidiaryIdBarCode = function(subsidiaryId, variable) {
+            return securityService.get('/product/actives/subsidiary/bar/' + subsidiaryId + '?var=' + variable).then(function successCallback(response) {
+                return response.data;
+            });
+        };
+
         this.getProductsForExistencyReport = function(userClientId) {
             return securityService.get('/product/rep/existency/' + userClientId).then(function successCallback(response) {
                 return response.data;
@@ -54,7 +60,7 @@ angular
                 return response.data;
             });
         };
-        
+
         this.getLazyBySusidiaryIdForBill = function(subsidiaryId, page, variable) {
             return securityService.get('/product/actives/subsidiary/bill/' + subsidiaryId + '/' + page + '?var=' + variable).then(function successCallback(response) {
                 return response.data;
