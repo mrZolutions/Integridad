@@ -128,6 +128,19 @@ public class ProductController {
         log.info("ProductController getAllActivesBySubsidiaryId DONE");
         return new ResponseEntity<Page>(response, HttpStatus.CREATED);
     }
+
+    @RequestMapping(method = RequestMethod.GET, value="/actives/subsidiary/bar/{subsidiaryId}")
+    public ResponseEntity getAllActivesBySubsidiaryIdBarCode(@PathVariable("subsidiaryId") UUID subsidiaryId, @RequestParam(required = false, name = "var") String variable) {
+        List<Product> response = null;
+        try {
+            response = service.getAllActivesBySubsidiaryIdBarCodeAndActive(subsidiaryId, variable);
+        } catch (BadRequestException e) {
+            log.error("ProductController getAllActivesBySubsidiaryIdBarCode Exception thrown: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+        log.info("ProductController getAllActivesBySubsidiaryIdBarCode DONE");
+        return new ResponseEntity<List>(response, HttpStatus.CREATED);
+    }
     
     @RequestMapping(method = RequestMethod.GET, value="/rep/existency/{userClientId}")
     public ResponseEntity getProductsForExistencyReport(@PathVariable("userClientId") UUID userClientId) {
