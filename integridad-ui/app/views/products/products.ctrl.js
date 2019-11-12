@@ -170,6 +170,7 @@ angular.module('integridadUiApp')
             _.each(vm.productBySubsidiaries, function(psNew) {
                 vm.product.productBySubsidiaries.push(psNew);
             });
+            vm.product.barCode = vm.productBarCode;
             productService.update(vm.product).then(function(response) {
                 vm.product = undefined;
                 vm.selectedGroup = undefined;
