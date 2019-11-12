@@ -152,6 +152,7 @@ angular.module('integridadUiApp')
                 productService.getLazyBySusidiaryIdBarCode($localStorage.user.subsidiary.id, vm.billOfflineBarCode).then(function(response) {
                     if(!_.isEmpty(response)) {
                         vm.quantity = 1;
+                        vm.paraticularDiscount = undefined;
                         vm.toAdd = response[0];
                         vm.toAddExistency = _.last(vm.toAdd.productBySubsidiaries).quantity;
                         vm.toAddPrice = vm.getCost(vm.toAdd[vm.priceType.cod], vm.toAdd.averageCost);
@@ -417,6 +418,7 @@ angular.module('integridadUiApp')
             vm.acceptProduct(true);
             vm.billOfflineBarCode = undefined;
             vm.toAdd = undefined;
+            vm.paraticularDiscount = undefined;
           }
         };
 
@@ -454,7 +456,7 @@ angular.module('integridadUiApp')
                 vm.billOffline.discountPercentage = 0;
             };
             var detail = {
-                discount: vm.billOffline.discountPercentage? vm.billOffline.discountPercentage : 0,
+                discount: vm.billOffline.discountPercentage? vm.billOffline.discountPercentage : vm.paraticularDiscount ? vm.paraticularDiscount : 0,
                 product: angular.copy(vm.productToAdd),
                 quantity: vm.quantity,
                 costEach: vm.productToAdd.costEachCalculated,
@@ -540,6 +542,10 @@ angular.module('integridadUiApp')
         vm.getCost = function(textCost, averageCost) {
             var aC = 1 + ((parseFloat(textCost)) / 100);
             var cost = aC * averageCost;
+            if((vm.paraticularDiscount !== null || vm.paraticularDiscount !== undefined) && !isNaN(vm.paraticularDiscount)) {
+              cost = parseFloat(cost);
+              cost = cost - ((parseFloat(vm.paraticularDiscount) / 100) * cost);
+            }
             return parseFloat(cost.toFixed(2));
         };
 
