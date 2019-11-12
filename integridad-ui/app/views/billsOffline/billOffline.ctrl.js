@@ -438,7 +438,7 @@ angular.module('integridadUiApp')
                 };
             };
 
-            if (event.keyCode === 102 || event.charCode === 102) {
+            if (event.keyCode === 102 || event.charCode === 102 || event.keyCode === 70 || event.charCode === 70) {
                 $('#modalAddPago').modal('show');
                 vm.medio = vm.medList[0];
                 vm.loadMedio();

@@ -389,7 +389,7 @@ angular.module('integridadUiApp')
                 };
             };
 
-            if (event.keyCode === 102 || event.charCode === 102) {
+            if (event.keyCode === 102 || event.charCode === 102 || event.keyCode === 70 || event.charCode === 70) {
                 $('#modalAddPago').modal('show');
                 vm.medio = vm.medList[0];
                 vm.loadMedio();
@@ -774,8 +774,8 @@ angular.module('integridadUiApp')
                 if (vm.bill.discountPercentage === undefined) {
                     vm.bill.discountPercentage = 0;
                 };
-                //var obj = JSON.parse(resp.data);
-                var obj = {clave_acceso: '1234560', id:'id12345'};
+                var obj = JSON.parse(resp.data);
+                //var obj = {clave_acceso: '1234560', id:'id12345'};
                 if (obj.errors === undefined) {
                     vm.bill.claveDeAcceso = obj.clave_acceso;
                     vm.bill.idSri = obj.id;
