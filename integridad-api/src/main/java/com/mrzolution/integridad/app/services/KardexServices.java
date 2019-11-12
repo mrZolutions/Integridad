@@ -48,7 +48,7 @@ public class KardexServices {
     public double totalCompra;
     
     public List<KardexOfProductReport> getKardexActivesByUserClientIdAndProductIdAndDates(String id, UUID prodID, long dateOne, long dateTwo) {
-        log.info("KardexServices getKardexActivesByUserClientIdAndProductIdAndDates");
+        log.info("KardexServices getKardexActivesByUserClientIdAndProductIdAndDates: {}, {}, {}", prodID, dateOne, dateTwo);
         Iterable<Kardex> detaKardex = kardexRepository.findKardexActivesByUserClientIdAndProductIdAndDates(id, prodID, dateOne, dateTwo);
         List<KardexOfProductReport> kardexOfProductReportList = new ArrayList<>();
         
