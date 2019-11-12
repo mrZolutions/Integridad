@@ -390,7 +390,7 @@ angular.module('integridadUiApp')
 
             if (event.keyCode === 102 || event.charCode === 102 || event.keyCode === 70 || event.charCode === 70) {
                 $('#modalAddPago').modal('show');
-                vm.medio = vm.medList[0];
+                vm.medio.medio = vm.medList[0];
                 vm.loadMedio();
                 setTimeout(function() {
                     document.getElementById("addPaymentBtn").focus();
@@ -476,14 +476,14 @@ angular.module('integridadUiApp')
             _.each(vm.pagos, function(pago) {
                 payed += parseFloat(pago.total);
             });
-            if (vm.medio.code === 'efectivo' || vm.medio.code === 'dinero_electronico_ec' || vm.medio.code === 'transferencia') {
+            if (vm.medio.medio === 'efectivo' || vm.medio.medio === 'dinero_electronico_ec' || vm.medio.medio === 'transferencia') {
                 vm.medio.payForm = '20 - OTROS CON UTILIZACION DEL SISTEMA FINANCIERO';
                 vm.medio.statusPago = 'PAGADO';
                 vm.medio.total = parseFloat((vm.bill.total - payed).toFixed(4));
                 // CAMBIO SRI POR CONFIRMAR
                 // vm.medio.payForm = '01 - SIN UTILIZACION DEL SISTEMA FINANCIERO';
             };
-            if (vm.medio.code === 'credito') {
+            if (vm.medio.medio === 'credito') {
                 vm.medio.payForm = '20 - OTROS CON UTILIZACION DEL SISTEMA FINANCIERO';
                 // CAMBIO SRI POR CONFIRMAR
                 // vm.medio.payForm = '01 - SIN UTILIZACION DEL SISTEMA FINANCIERO';
@@ -494,12 +494,12 @@ angular.module('integridadUiApp')
                     vm.medio.statusPago = 'PAGADO';
                 };
             };
-            if (vm.medio.code === 'cheque' || vm.medio.code === 'cheque_posfechado') {
+            if (vm.medio.medio === 'cheque' || vm.medio.medio === 'cheque_posfechado') {
                 vm.medio.payForm = '20 - OTROS CON UTILIZACION DEL SISTEMA FINANCIERO';
                 vm.medio.statusPago = 'PAGADO';
                 vm.medio.total = parseFloat((vm.bill.total - payed).toFixed(4));
             };
-            if (vm.medio.code === 'tarjeta_credito' || vm.medio.code === 'tarjeta_debito') {
+            if (vm.medio.medio === 'tarjeta_credito' || vm.medio.medio === 'tarjeta_debito') {
                 vm.medio.payForm = '19 - TARJETA DE CREDITO';
                 vm.medio.total = parseFloat((vm.bill.total - payed).toFixed(4));
                 vm.medio.statusPago = 'PAGADO';

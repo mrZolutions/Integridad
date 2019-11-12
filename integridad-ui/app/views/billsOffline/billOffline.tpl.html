@@ -338,7 +338,7 @@
                         <input type="text" ng-model="vm.billOffline.observation" class="form-control">
                     </div>
                     <div class="form-group col-md-3">
-                        <b>Descuento &#37;: </b>
+                        <b>Descuento: </b>
                         <input type="text" ng-change="vm.reCalculateTotal()" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
                                ng-model="vm.billOffline.discountPercentage" class="form-control" maxlength="9" ng-disabled="!vm.newBillOffline">
                     </div>
@@ -376,7 +376,7 @@
                             <input type="text" ng-model="vm.quantity" ng-attr-tabindex="2" class="form-control">
                         </div>
                         <!--<div class="form-group col-md-2">
-                            <b>Descuento &#37;: </b>
+                            <b>Descuento: </b>
                             <input type="text" ng-model="vm.paraticularDiscount" ng-attr-tabindex="3" class="form-control">
                         </div>-->
                         <div class="form-group col-md-3" ng-disabled="vm.toAdd === undefined">
@@ -446,7 +446,7 @@
                                     <td></td>
                                     <td></td>
                                     <td></td>
-                                    <td><b>SubTotal &#37;: </b></td>
+                                    <td><b>SubTotal: </b></td>
                                     <td>{{(vm.billOffline.subTotal).toFixed(2)}}</td>
                                     <td></td>
                                 </tr>
@@ -457,7 +457,7 @@
                                     <td></td>
                                     <td></td>
                                     <td></td>
-                                    <td><b>Descuento &#37;: </b></td>
+                                    <td><b>Descuento: </b></td>
                                     <td>{{(vm.billOffline.discount).toFixed(2)}}</td>
                                     <td></td>
                                 </tr>
@@ -468,7 +468,7 @@
                                     <td></td>
                                     <td></td>
                                     <td></td>
-                                    <td><b>Iva &#37;: </b></td>
+                                    <td><b>Iva: </b></td>
                                     <td>{{(vm.billOffline.iva).toFixed(2)}}</td>
                                     <td></td>
                                 </tr>
@@ -479,7 +479,7 @@
                                     <td></td>
                                     <td></td>
                                     <td></td>
-                                    <td><b>Total &#37;: </b></td>
+                                    <td><b>Total: </b></td>
                                     <td>{{(vm.billOffline.total).toFixed(2)}}</td>
                                     <td></td>
                                 </tr>
@@ -532,9 +532,9 @@
                                     <td></td>
                                 </tr>
                                 <tr>
-                                    <td><b>Total &#37;:</b></td>
+                                    <td><b>Total:</b></td>
                                     <td>{{vm.getTotalPagoB()}}</td>
-                                    <td>Vuelto &#37;: {{vm.getCambioB}}</td>
+                                    <td>Vuelto: {{vm.getCambioB}}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -822,12 +822,12 @@
                     </div>
                     <div class="row">
                         <div class="form-group col-md-4">
-                            <b>Valor &#37;: </b>
+                            <b>Valor: </b>
                             <input type="text" onkeypress="return ((event.which >= 46 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
                                    ng-model="vm.medio.total" class="form-control" maxlength="9">
                         </div>
                         <div class="form-group col-md-4">
-                            <b>Valor &#37;: </b><br />
+                            <b>Valor: </b><br />
                             $ {{vm.medio.total}}
                         </div>
                         <div class="form-group col-md-4">
@@ -864,9 +864,9 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td><b>Total &#37;:</b></td>
+                                        <td><b>Total:</b></td>
                                         <td>{{vm.getTotalPago()}}</td>
-                                        <td>Vuelto &#37;: {{vm.getCambio}}</td>
+                                        <td>Vuelto: {{vm.getCambio}}</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -914,7 +914,7 @@
                                         <th>C&oacute;digo </th>
                                         <th>Nombre </th>
                                         <th>Cantidad Disponible</th>
-                                        <th>Precio Unitario &#37;</th>
+                                        <th>Precio Unitario</th>
                                         <th></th>
                                     </tr>
                                 </thead>
@@ -973,7 +973,7 @@
                                                    ng-model="vm.adicional" class="form-control">
                                         </div>
                                         <div class="form-group col-md-6">
-                                            <b>Precio Unitario &#37;: </b>
+                                            <b>Precio Unitario: </b>
                                                 <input type="text"
                                                        ng-model="vm.productToAdd.costEachCalculated" class="form-control">
                                         </div>
