@@ -14,9 +14,7 @@ angular.module('integridadUiApp')
         vm.error = undefined;
         vm.success = undefined;
         vm.loading = false;
-        vm.clientList = undefined;
         vm.isEmp = true;
-        vm.pagoTot = undefined;
         vm.prices = [
             {name: 'EFECTIVO', cod: 'cashPercentage'}, {name: 'MAYORISTA', cod: 'majorPercentage'},
             {name: 'CREDITO', cod: 'creditPercentage'}, {name: 'TARJETA', cod: 'cardPercentage'}
@@ -50,6 +48,7 @@ angular.module('integridadUiApp')
         vm.seqChanged = false;
 
         function _activate() {
+            vm.clientList = undefined;
             vm.error = undefined;
             vm.aux = undefined;
             vm.estado = undefined;
@@ -539,9 +538,6 @@ angular.module('integridadUiApp')
         vm.addPago = function() {
             vm.pagos.push(angular.copy(vm.medio));
             vm.medio = {};
-            setTimeout(function(){
-              document.getElementById("processBillBtn").focus();
-            }, 500);
         };
 
         vm.removePago = function(index) {
