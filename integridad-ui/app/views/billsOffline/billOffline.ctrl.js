@@ -407,7 +407,6 @@ angular.module('integridadUiApp')
             vm.productToAdd = angular.copy(productSelect);
             var costEachCalculated = vm.getCost(productSelect[vm.priceType.cod], productSelect.averageCost);
             vm.productToAdd.costEachCalculated = costEachCalculated;
-            vm.quantity = 1;
         };
 
         vm.addProdBarCode = function() {

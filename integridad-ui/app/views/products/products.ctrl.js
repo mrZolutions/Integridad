@@ -33,6 +33,7 @@ angular.module('integridadUiApp')
         
         function _activate() {
             vm.searchText = undefined;
+            vm.productBarCode = undefined;
             vm.loading = true;
             vm.userClientId = $localStorage.user.subsidiary.userClient.id;
             vm.messurements = messurementListService.getMessurementList();
@@ -104,6 +105,18 @@ angular.module('integridadUiApp')
                 vm.error = error.data;
             });
         };
+
+        vm.fillBarCode = function(event){
+            if (event.keyCode === 32 || event.charCode === 32) {
+                if (vm.productBarCode.length < 13) {
+                    vm.productBarCodeFixed = vm.productBarCode;
+                    for (var i = vm.productBarCode.length; i < 13; i++) {
+                        vm.productBarCodeFixed = vm.productBarCodeFixed.concat('0');
+                    };
+                    vm.productBarCode = vm.productBarCodeFixed.trim();
+                };
+            };
+        };
                                             
         function _getBrands() {
             brandService.getBrandsLazy($localStorage.user.subsidiary.userClient.id).then(function(response) {
@@ -127,6 +140,7 @@ angular.module('integridadUiApp')
             vm.product.productBySubsidiaries = vm.productBySubsidiaries;
             productService.getProdByUserClientIdAndCodeIntegActive(vm.userClientId, vm.product.codeIntegridad).then(function(response) {
                 if (response.length === 0) {
+                    vm.product.barCode = vm.productBarCode;
                     productService.create(vm.product).then(function(response) {
                         vm.product = undefined;
                         vm.selectedGroup = undefined;

@@ -155,8 +155,8 @@ angular.module('integridadUiApp')
         };
 
         vm.filterBarCode = function(){
-            if(vm.billOfflineBarCode.length === 13){
-                productService.getLazyBySusidiaryIdBarCode($localStorage.user.subsidiary.id, vm.billOfflineBarCode).then(function(response) {
+            if(vm.billBarCode.length === 13){
+                productService.getLazyBySusidiaryIdBarCode($localStorage.user.subsidiary.id, vm.billBarCode).then(function(response) {
                     if(!_.isEmpty(response)) {
                         vm.quantity = 1;
                         vm.toAdd = response[0];
@@ -366,37 +366,37 @@ angular.module('integridadUiApp')
             vm.productToAdd = angular.copy(vm.toAdd);
             vm.selectProductToAdd(vm.productToAdd);
             vm.acceptProduct(true);
-            vm.billOfflineBarCode = undefined;
+            vm.billBarCode = undefined;
             vm.toAdd = undefined;
           }
         };
 
         vm.cancelBarCode = function(){
-          vm.billOfflineBarCode = undefined;
-          vm.toAdd = undefined;
-          vm.quantity = undefined;
+            vm.billBarCode = undefined;
+            vm.toAdd = undefined;
+            vm.quantity = undefined;
         };
 
         vm.fill = function(event){
-           if (event.keyCode === 32 || event.charCode === 32) {
-             if(vm.billOfflineBarCode.length < 13){
-               vm.billOfflineBarCodeFixed = vm.billOfflineBarCode;
-               for (var i = vm.billOfflineBarCode.length; i < 13; i++) {
-                 vm.billOfflineBarCodeFixed = vm.billOfflineBarCodeFixed.concat('0');
-               }
-               vm.billOfflineBarCode = vm.billOfflineBarCodeFixed.trim();
-               vm.filterBarCode();
-             }
-           }
+            if (event.keyCode === 32 || event.charCode === 32) {
+                if (vm.billBarCode.length < 13) {
+                    vm.billBarCodeFixed = vm.billBarCode;
+                    for (var i = vm.billBarCode.length; i < 13; i++) {
+                        vm.billBarCodeFixed = vm.billBarCodeFixed.concat('0');
+                    };
+                    vm.billBarCode = vm.billBarCodeFixed.trim();
+                    vm.filterBarCode();
+                };
+            };
 
-           if (event.keyCode === 102 || event.charCode === 102) {
-             $('#modalAddPago').modal('show');
-             vm.medio = vm.medList[0];
-             vm.loadMedio();
-             setTimeout(function(){
-               document.getElementById("addPaymentBtn").focus();
-             }, 500);
-           }
+            if (event.keyCode === 102 || event.charCode === 102) {
+                $('#modalAddPago').modal('show');
+                vm.medio = vm.medList[0];
+                vm.loadMedio();
+                setTimeout(function() {
+                    document.getElementById("addPaymentBtn").focus();
+                }, 500);
+            };
         };
 
         vm.acceptProduct = function(closeModal) {
@@ -426,7 +426,7 @@ angular.module('integridadUiApp')
                 vm.toAdd = undefined;
                 vm.toAddExistency = undefined;
                 vm.toAddPrice = undefined;
-                vm.billOfflineBarCode = undefined;
+                vm.billBarCode = undefined;
                 document.getElementById("input4").focus();
             } else {
                 var newProductList = _.filter(vm.productList, function(prod) {
