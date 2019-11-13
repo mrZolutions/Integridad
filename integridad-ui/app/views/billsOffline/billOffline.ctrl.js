@@ -453,12 +453,20 @@ angular.module('integridadUiApp')
             if (vm.billOffline.discountPercentage == null || vm.billOffline.discountPercentage == undefined) {
                 vm.billOffline.discountPercentage = 0;
             };
+
+            var discount = 1;
+            if((vm.paraticularDiscount !== null || vm.paraticularDiscount !== undefined) && !isNaN(vm.paraticularDiscount)) {
+              discount = (parseFloat(vm.paraticularDiscount) / 100);
+            } else if((vm.billOffline.discountPercentage !== null || vm.billOffline.discountPercentage !== undefined) && !isNaN(vm.billOffline.discountPercentage)) {
+              discount = (parseFloat(vm.billOffline.discountPercentage) / 100);
+            }
+
             var detail = {
                 discount: vm.billOffline.discountPercentage? vm.billOffline.discountPercentage : vm.paraticularDiscount ? vm.paraticularDiscount : 0,
                 product: angular.copy(vm.productToAdd),
                 quantity: vm.quantity,
                 costEach: vm.productToAdd.costEachCalculated,
-                total: parseFloat(((vm.quantity * vm.productToAdd.costEachCalculated) - (vm.quantity * (vm.productToAdd.costEachCalculated) * (vm.billOffline.discountPercentage / 100))).toFixed(2)),
+                total: parseFloat(((vm.quantity * vm.productToAdd.costEachCalculated) - (vm.quantity * (vm.productToAdd.costEachCalculated) * discount)).toFixed(2)),
                 adicional: vm.adicional
             };
             if (vm.indexDetail !== undefined) {
@@ -540,10 +548,6 @@ angular.module('integridadUiApp')
         vm.getCost = function(textCost, averageCost) {
             var aC = 1 + ((parseFloat(textCost)) / 100);
             var cost = aC * averageCost;
-            if((vm.paraticularDiscount !== null || vm.paraticularDiscount !== undefined) && !isNaN(vm.paraticularDiscount)) {
-              cost = parseFloat(cost);
-              cost = cost - ((parseFloat(vm.paraticularDiscount) / 100) * cost);
-            }
             return parseFloat(cost.toFixed(2));
         };
 
