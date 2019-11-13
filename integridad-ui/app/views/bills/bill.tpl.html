@@ -36,7 +36,7 @@
     <div class="table-responsive" ng-show="vm.clientSelected === undefined && vm.billList === undefined && vm.detailList === undefined">
         <div class="row">
             <div class="form-group col-md-10">
-                <input ng-model="searchText" class="form-control" placeholder="Buscar">
+                <input id="inputCl0" ng-model="searchText" class="form-control" placeholder="Buscar">
             </div>
             <div class="form-group col-md-2">
                 <button type="button" title="Agregar Nuevo Cliente" class="btn btn-primary" ng-click="vm.clientCreate()">
@@ -244,7 +244,7 @@
                             <tr>
                                 <td>
                                     <b>Nombre: </b>{{vm.clientSelected.name}} &nbsp;
-                                    <button type="button" title="Cambiar" class="btn btn-primary btn-sm" ng-click="vm.clientSelected = undefined">
+                                    <button type="button" title="Cambiar" class="btn btn-primary btn-sm" ng-click="vm.clientChange()">
                                             Cambiar
                                     </button>
                                     <br/>
@@ -293,25 +293,21 @@
                             <tr>
                                 <td width="50%">
                                     <b>Orden de Compra: </b>
-                                    <input type="text" ng-disabled="!vm.newBill"
-                                           ng-model="vm.bill.ordenDecompra" class="form-control">
+                                    <input type="text" ng-disabled="!vm.newBill" ng-model="vm.bill.ordenDecompra" class="form-control">
                                 </td>
                                 <td width="50%">
                                     <b>Srevices Receipts Register: </b>
-                                    <input type="text" ng-disabled="!vm.newBill"
-                                           ng-model="vm.bill.srr" class="form-control">
+                                    <input type="text" ng-disabled="!vm.newBill" ng-model="vm.bill.srr" class="form-control">
                                 </td>
                             </tr>
                             <tr>
                                 <td width="50%">
                                     <b>Lugar: </b>
-                                    <input type="text" ng-disabled="!vm.newBill"
-                                           ng-model="vm.bill.lugar" class="form-control">
+                                    <input type="text" ng-disabled="!vm.newBill" ng-model="vm.bill.lugar" class="form-control">
                                 </td>
                                 <td width="50%">
                                     <b>OTI/OTIR: </b>
-                                    <input type="text" ng-disabled="!vm.newBill"
-                                           ng-model="vm.bill.otir" class="form-control">
+                                    <input type="text" ng-disabled="!vm.newBill" ng-model="vm.bill.otir" class="form-control">
                                 </td>
                             </tr>
                         </table>
@@ -347,7 +343,7 @@
                     </div>
                 </div>
                 <form ng-submit="vm.addProdBarCode()" ng-if="vm.newBill" print-remove>
-                    <div class="row" print-if="false">
+                    <div class="row">
                         <div class="form-group col-md-3">
                             <b>Existencia: </b>
                             <input type="text" ng-model="vm.toAddExistency" ng-disabled="true" class="form-control">
@@ -506,7 +502,7 @@
         </div>
         <div class="panel panel-primary" print-only print-avoid-break>
             <div class="panel-heading">
-              <b>Forma de Pago</b>
+                <b>Forma de Pago</b>
             </div>
             <div class="panel-body">
                 <div class="row">
@@ -632,12 +628,12 @@
                         ng-if="!vm.newBill && !vm.user.cashier.specialPrint">
                         <span class = "glyphicon glyphicon-print" aria-hidden = "true"></span>
                 </button>
-                <button type="button" title = "Imprimir Ticket-Factura" class="btn btn-danger btn-sm"
+                <button type="button" title = "Imprimir Ticket-Recibo" class="btn btn-success btn-sm"
                         ng-if="!vm.newBill && !vm.user.cashier.specialPrint"
                         ng-click="vm.printToCart('printMatrixBillId')">
                         <span class = "glyphicon glyphicon-print" aria-hidden = "true"></span>
                 </button>
-                <button type="button" title="Volver a Inicio" class="btn btn-primary btn-sm"
+                <button type="button" title="Volver a Inicio" class="btn btn-danger btn-sm"
                         ng-if="!vm.newBill && !vm.user.cashier.specialPrint"
                         ng-click="vm.exit()">
                         <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
@@ -653,63 +649,51 @@
         <p>RUC: {{vm.companyData.userClient.ruc}}</p><br>
         <p>DIRECCION MATRIZ: {{vm.companyData.userClient.address1}}</p><br>
         <p>FACTURA No. {{vm.seqNumber}}</p><br>
-        <p>CLAVE ACCESO: {{vm.bill.claveDeAcceso}}</p><br>
-        <b>AMBIENTE: PRODUCCIÓN</b><br/>
-        <b>EMISIÓN: NORMAL</b><br/><br>
-        <p>RAZON SOCIAL: {{vm.clientSelected.name}}</p><br>
-        <p>IDENTIFICACION: {{vm.clientSelected.identification}}</p><br>
-        <p>FECHA: {{vm.getDateToPrint() | date:  "dd/MM/yyyy"}}</p><br><br>
-        <p>CANT... DESCRIP... P.UNT... TOTAL</p><br>
+        <p>CLAVE ACCESO: {{vm.bill.claveDeAcceso}}</p><br/>
+        <p>AMBIENTE: PRODUCCIÓN</p><br/>
+        <p>EMISIÓN: NORMAL</p><br/><br/>
+        <p>RAZON SOCIAL: {{vm.clientSelected.name}}</p><br/>
+        <p>IDENTIFICACION: {{vm.clientSelected.identification}}</p><br/>
+        <p>FECHA: {{vm.getDateToPrint() | date:  "dd/MM/yyyy"}}</p><br/><br/>
+        <p>CANT... DESCRIP... P.UNT... TOTAL</p><br/>
         <table width="100%">
             <tr ng-repeat="detail in vm.bill.details">
-                <td>{{detail.quantity}} {{(detail.product.name).substr(0,16)}} &#36;{{detail.costEach}} &#36;{{detail.total}}<br></br></td>
+                <td>{{detail.quantity}} {{(detail.product.name).substr(0,16)}} &#36;{{detail.costEach}} &#36;{{detail.total}}<br/></td>
             </tr>
-        </table><br>
-        <p>SUBTOTAL: {{vm.bill.subTotal}}</p><br>
-        <p>BASE 0%: {{vm.bill.baseNoTaxes}}</p><br>
-        <p>BASE 12%: {{vm.bill.baseTaxes}}</p><br>
-        <p>IVA: {{vm.bill.iva}}</p><br>
-        <p>TOTAL: {{vm.bill.total}}</p><br>
+        </table>
+        <br/>
+        <p>SUBTOTAL: {{vm.bill.subTotal}}</p><br/>
+        <p>BASE 0%: {{vm.bill.baseNoTaxes}}</p><br/>
+        <p>BASE 12%: {{vm.bill.baseTaxes}}</p><br/>
+        <p>IVA: {{vm.bill.iva}}</p><br/>
+        <p>TOTAL: {{vm.bill.total}}</p><br/>
         <p>------------------------------</p>
     </div>
 
     <!--IMPRIME TICKET FACTURA-->
     <div id="printMatrixBillId" ng-show='false'>
         ------------------------------<br/>
-        <b>{{vm.companyData.userClient.name}}</b><br/>
-        <b>RUC: {{vm.companyData.userClient.ruc}}</b><br/>
-        <b>DIRECCION MATRIZ:</b><br/>
-        <b>{{vm.companyData.userClient.address1}} </b></br>
-        <b>TELÉFONO: {{vm.companyData.userClient.phone}}</b><br/>
-        <b>E-MAIL: {{vm.companyData.userClient.email}}</b><br/>
+        <p>{{vm.companyData.userClient.name}}</p><br/>
+        <p>RUC: {{vm.companyData.userClient.ruc}}</p><br/>
+        <p>DIRECCION MATRIZ:</b><br/>
+        <p>{{vm.companyData.userClient.address1}}</p></br>
+        <p>TELÉFONO: {{vm.companyData.userClient.phone}}</p><br/>
+        <p>E-MAIL: {{vm.companyData.userClient.email}}</p><br/>
 
-        <b>FACTURA No. {{vm.seqNumber}}</b><br/>
-        <b>CLAVE ACCESO: {{vm.bill.claveDeAcceso}}</b><br/>
-        <b>AMBIENTE: PRODUCCIÓN</b><br/>
-        <b>EMISIÓN: NORMAL</b><br/>
+        <p>FACTURA No. {{vm.seqNumber}}</p><br/>
+        <p>CLAVE ACCESO: {{vm.bill.claveDeAcceso}}</p><br/>
+        <p>AMBIENTE: PRODUCCIÓN</p><br/>
+        <p>EMISIÓN: NORMAL</p><br/>
 
-        <b>RAZON SOCIAL:</b><br/>
-        <b>{{vm.clientSelected.name}}</b><br/>
-        <b>IDENTIFICACION: {{vm.clientSelected.identification}}</b><br/>
-        <b>FECHA: {{vm.getDateToPrint() | date :  "dd/MM/yyyy"}}</b><br/>
-
+        <p>RAZON SOCIAL:</p><br/>
+        <p>{{vm.clientSelected.name}}</p><br/>
+        <p>IDENTIFICACION: {{vm.clientSelected.identification}}</p><br/>
+        <p>FECHA: {{vm.getDateToPrint() | date :  "dd/MM/yyyy"}}</p><br/>
+        <p>>DESCRIPCIÓN &nbsp;&nbsp;CANTIDAD &nbsp;&nbsp;P.UNIT &nbsp;&nbsp;TOTAL</p>
         <table width="100%">
-            <thead>
-                <tr>
-                    <th align="left">DESCRIP&nbsp;</th>
-                    <th align="left">&nbsp;CANT&nbsp;</th>
-                    <th align="left">&nbsp;P.UNIT</th>
-                    <th align="right">&nbsp;TOTAL</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr ng-repeat="detail in vm.bill.details">
-                    <td align="left">{{detail.product.name}}</td>
-                    <td align="left">&nbsp;{{detail.quantity}}&nbsp;</td>
-                    <td align="left"> &#36;{{detail.costEach}}&nbsp;</td>
-                    <td align="right">&#36;{{detail.total}}</td>
-                </tr>
-            </tbody>
+            <tr ng-repeat="detail in vm.bill.details">
+                <td>{{(detail.product.name).substr(0,18)}} &nbsp;{{detail.quantity}}&nbsp; &#36;{{detail.costEach}}&nbsp;&nbsp; &#36;{{detail.total}}<br/></td>
+            </tr>
         </table>
         <br/>
         <table width="100%">
@@ -766,8 +750,7 @@
                         </div>
                         <div class="form-group col-md-4">
                             <b>Número de Cheque: </b>
-                            <input type="text"
-                                   ng-model="vm.medio.chequeNumber" class="form-control" maxlength="9">
+                            <input type="text" ng-model="vm.medio.chequeNumber" class="form-control" maxlength="9">
                         </div>
                     </div>
                     <div class="row" ng-show="vm.medio.medio === 'cheque_posfechado'">
@@ -914,7 +897,7 @@
                         <div class="col-md-12" ng-if="vm.productToAdd === undefined">
                             <div class="row">
                                 <div class="form-group col-md-8">
-                                    <input ng-model="vm.searchText" class="form-control" placeholder="Buscar" />
+                                    <input ng-model="vm.searchText" class="form-control" placeholder="Buscar">
                                 </div>
                                 <div class="form-group col-md-4">
                                     <button type="button" title="Buscar" class="btn btn-primary btn-sm" ng-click="vm.filter()">
@@ -983,13 +966,11 @@
                                     <div class="row">
                                         <div class="form-group col-md-6">
                                             <b>Descripción: </b>
-                                            <input type="text"
-                                                ng-model="vm.adicional" class="form-control">
+                                            <input type="text" ng-model="vm.adicional" class="form-control">
                                         </div>
                                         <div class="form-group col-md-6">
                                             <b>Precio Unitario: </b>
-                                            <input type="text"
-                                                   ng-model="vm.productToAdd.costEachCalculated" class="form-control">
+                                            <input type="text" ng-model="vm.productToAdd.costEachCalculated" class="form-control">
                                         </div>
                                     </div>
                                 </div>
