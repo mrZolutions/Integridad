@@ -196,10 +196,10 @@
         <table class="table table-striped">
             <thead>
                 <tr>
-                    <th> N&uacute;mero </th>
-                    <th> Fecha </th>
-                    <th> Cliente </th>
-                    <th> Total </th>
+                    <th>N&uacute;mero</th>
+                    <th>Fecha</th>
+                    <th>Cliente</th>
+                    <th>Total</th>
                     <th></th>
                 </tr>
             </thead>
@@ -353,7 +353,7 @@
                 <div class="row" ng-if="vm.newBillOffline" print-remove>
                     <div class="form-group col-md-3">
                         <b>Código de Barras:</b>
-                        <input type="text" id="input4" ng-model="vm.billOfflineBarCode" class="form-control" ng-change="vm.filterBarCode()" ng-keypress="vm.fill($event)"
+                        <input type="text" id="input4" ng-model="vm.billOfflineBarCode" class="form-control" ng-change="vm.filterBarCode()" ng-keypress="vm.fill($event)"  maxlength="13"
                                onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))">
                     </div>
                     <div class="form-group col-md-9">

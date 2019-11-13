@@ -53,7 +53,7 @@ public class CreditNoteServices {
 
     public String getDatil(com.mrzolution.integridad.app.domain.ecreditNote.CreditNote requirement, UUID userClientId) throws Exception {
         UserClient userClient = userClientRepository.findOne(userClientId);
-        if (userClient == null) {
+        if (userClient.getApiKey() == null || "".equals(userClient.getApiKey())) {
             throw new BadRequestException("Empresa Invalida");
         }
         log.info("CreditNoteServices getDatil Empresa valida: {}", userClient.getName());

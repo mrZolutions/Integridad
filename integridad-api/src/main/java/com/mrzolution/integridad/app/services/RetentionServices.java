@@ -42,7 +42,7 @@ public class RetentionServices {
 
     public String getDatil(com.mrzolution.integridad.app.domain.eretention.Retention requirement, UUID userClientId) throws Exception {
         UserClient userClient = userClientRepository.findOne(userClientId);
-        if (userClient == null) {
+        if (userClient.getApiKey() == null || "".equals(userClient.getApiKey())) {
             throw new BadRequestException("Empresa Invalida");
         }
         log.info("RetentionServices getDatil Empresa valida: {}", userClient.getName());

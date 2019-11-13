@@ -334,7 +334,7 @@
                 <div class="row" ng-if="vm.newBill" print-remove>
                     <div class="form-group col-md-3">
                         <b>Código de Barras:</b>
-                        <input type="text" id="input4" ng-model="vm.billBarCode" class="form-control" ng-change="vm.filterBarCode()" ng-keypress="vm.fill($event)"
+                        <input type="text" id="input4" ng-model="vm.billBarCode" class="form-control" ng-change="vm.filterBarCode()" ng-keypress="vm.fill($event)" maxlength="13"
                                onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))">
                     </div>
                     <div class="form-group col-md-9">

@@ -52,7 +52,7 @@ public class BillServices {
             
     public String getDatil(Requirement requirement, UUID userClientId) throws Exception {
         UserClient userClient = userClientRepository.findOne(userClientId);
-        if (userClient == null) {
+        if (userClient.getApiKey() == null || "".equals(userClient.getApiKey())) {
             throw new BadRequestException("Empresa Invalida");
         }
         log.info("BillServices getDatil Empresa valida: {}", userClient.getName());
