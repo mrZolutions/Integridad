@@ -39,6 +39,9 @@ angular.module('integridadUiApp')
             vm.messurements = messurementListService.getMessurementList();
             productTypeService.getproductTypesLazy().then(function(response) {
                 vm.productTypes = response;
+                setTimeout(function() {
+                    document.getElementById("input40").focus();
+                }, 200);
             }).catch(function(error) {
                 vm.loading = false;
                 vm.error = error.data;
@@ -57,7 +60,7 @@ angular.module('integridadUiApp')
                     vm.totalPages = response.totalPages;
                     vm.totalElements = response.totalElements;
                     _getProductQuantities(response.content);
-                  vm.loading = false;
+                    vm.loading = false;
                 }).catch(function(error) {
                     vm.loading = false;
                     vm.error = error.data;
@@ -249,6 +252,7 @@ angular.module('integridadUiApp')
         vm.editProduct = function(productEdit) {
             vm.success = undefined;
             vm.error = undefined;
+            vm.productBarCode = productEdit.barCode;
             vm.selectedGroup = productEdit.subgroup.groupLine;
             vm.selectedLine = productEdit.subgroup.groupLine.line;
             vm.averageC = productEdit.averageCost;

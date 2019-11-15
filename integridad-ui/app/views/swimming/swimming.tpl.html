@@ -1,0 +1,149 @@
+<div style="width: 100%;height: 100%;top: 0px;left: 0px;position: fixed;display: block; z-index: 99; background: rgba(255, 255, 255, 0.3)" ng-show="vm.loading">
+    <div style="position: absolute;top: 15%;z-index: 100; width: 100%; text-align: center;">
+        <div class="sk-circle">
+            <div class="sk-circle1 sk-child"></div>
+            <div class="sk-circle2 sk-child"></div>
+            <div class="sk-circle3 sk-child"></div>
+            <div class="sk-circle4 sk-child"></div>
+            <div class="sk-circle5 sk-child"></div>
+            <div class="sk-circle6 sk-child"></div>
+            <div class="sk-circle7 sk-child"></div>
+            <div class="sk-circle8 sk-child"></div>
+            <div class="sk-circle9 sk-child"></div>
+            <div class="sk-circle10 sk-child"></div>
+            <div class="sk-circle11 sk-child"></div>
+            <div class="sk-circle12 sk-child"></div>
+        </div>
+    </div>
+</div>
+
+<div class="form-group col-md-12">
+    <div class="header">
+        <h4><b>Ticket Piscina</b></h4>
+    </div>
+    
+    <div class="row" ng-show="vm.error !== undefined">
+        <div class="form-group col-md-12">
+            <div class="alert alert-danger">{{vm.error}}</div>
+        </div>
+    </div>
+    <div class="row" ng-show="vm.success !== undefined">
+        <div class="form-group col-md-12">
+            <div class="alert alert-success">{{vm.success}}</div>
+        </div>
+    </div>
+
+    <div class="row" ng-show="vm.selectedTypeOption === undefined">
+        <div class="form-group col-md-6">
+            <button type="button" class="btn btn-primary btn-block" ng-click="vm.loadTypeOption('1')">
+                CREACIÓN DE TICKET -- PISCINA
+            </button>
+        </div>
+        <div class="form-group col-md-6">
+            <button type="button" class="btn btn-primary btn-block" ng-click="vm.loadTypeOption('2')">
+                CONTROL DE TICKET -- PISCINA
+            </button>
+        </div>
+        <div class="form-group col-md-12">
+            <button type="button" title="Volver a Inicio" class="btn btn-danger btn-sm"
+                    ng-click="vm.exit()">
+                    <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
+            </button>
+        </div>
+    </div>
+
+    <div class="table-responsive" ng-show="vm.selectedTypeOption === '1' && vm.clientSelected === undefined && vm.swimmList === undefined">
+        <div class="row">
+            <div class="form-group col-md-10">
+                <input id="inputTP0" ng-model="searchText" class="form-control" placeholder="Buscar">
+            </div>
+            <div class="form-group col-md-2">
+                <button type="button" title="Volver a Inicio" class="btn btn-danger btn-sm"
+                        ng-click="vm.exit()">
+                        <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
+                </button>
+            </div>
+        </div>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>C&oacute;digo</th>
+                    <th>Nombre</th>
+                    <th>No. Identidad</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-show="vm.clientList == 0">
+                    <td colspan="4">
+                        No hay clientes ingresados
+                    </td>
+                </tr>
+                <tr ng-repeat="clientTkSelect in vm.clientList | orderBy:'name' | filter:searchText">
+                    <td>{{clientTkSelect.codApp}}</td>
+                    <td>{{clientTkSelect.name}}</td>
+                    <td>{{clientTkSelect.typeId}} - {{clientPreSelect.identification}}</td>
+                    <td>
+                        <button type="button" title="Crear Ticket Piscina" class="btn btn-primary btn-sm" ng-click="vm.clientSelect(clientTkSelect)">
+                                <span class = "glyphicon glyphicon-ok" aria-hidden = "true"></span>
+                        </button>
+                        <button type="button" title="Consultar Tickets Piscina del Cliente" class="btn btn-primary btn-sm" ng-click="">
+                                <span class = "glyphicon glyphicon-search" aria-hidden = "true"></span>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="row">
+            <div class="form-group col-md-12">
+                <button type="button" title="Volver a Inicio" class="btn btn-danger btn-sm"
+                        ng-click="vm.exit()">
+                        <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!--TICKET PISCINA-->
+    <div class="table-responsive" ng-show="vm.newTicket === true">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h4>Creación de Ticket para Piscina</h4>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="form-group col-md-6">
+                        <b>Ticket de Piscina Nro: </b>{{vm.swimmPool.stringSeq}}
+                    </div>
+                </div>
+            </div>
+            <div class="panel-footer">
+                <button type = "button" title = "Salir" class = "btn btn-primary btn-sm"
+                        ng-click = "vm.cancel()">
+                        <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!--ADVERTENCIA-->
+    <div class="table-responsive" ng-show="vm.advertencia === true">
+        <div class="row">
+            <div class="col-md-12">
+                <h2>¡¡¡Advertencia!!!</h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <h4>SU EMPRESA O USUARIO NO ESTAN AUTORIZADOS PARA EJECUTAR ESTA OPCIÓN DEL MENÚ</h4>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <button type="button" title = "Aceptar y Salir" class="btn btn-success btn-sm" ng-click="vm.exit()">
+                        <span class = "glyphicon glyphicon-thumbs-down" aria-hidden = "true"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

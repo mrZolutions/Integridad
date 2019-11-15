@@ -22,6 +22,7 @@ public class SwimmingPool {
     
     private long fecha;
     private String barCode;
+    private String stringSeq;
     private String clntName;
     private String clntIdent;
     private boolean active;

@@ -19,7 +19,7 @@
 
 <div class="form-group col-md-12">
     <div class="header">
-        <h4><b>Factura</b></h4>
+        <h4><b>Factura Online</b></h4>
     </div>
 
     <div class="row" ng-show="vm.error !== undefined">
@@ -39,8 +39,12 @@
                 <input id="inputCl0" ng-model="searchText" class="form-control" placeholder="Buscar">
             </div>
             <div class="form-group col-md-2">
-                <button type="button" title="Agregar Nuevo Cliente" class="btn btn-primary" ng-click="vm.clientCreate()">
+                <button type="button" title="Agregar Nuevo Cliente" class="btn btn-primary btn-sm" ng-click="vm.clientCreate()">
                         <span class = "glyphicon glyphicon-user" aria-hidden = "true"></span>
+                </button>
+                <button type="button" title="Volver a Facturación" class="btn btn-primary btn-sm"
+                        ng-click="vm.volver()">
+                        <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
                 </button>
             </div>
         </div>
@@ -692,7 +696,7 @@
         <p>>DESCRIPCIÓN &nbsp;&nbsp;CANTIDAD &nbsp;&nbsp;P.UNIT &nbsp;&nbsp;TOTAL</p>
         <table width="100%">
             <tr ng-repeat="detail in vm.bill.details">
-                <td>{{(detail.product.name).substr(0,18)}} &nbsp;{{detail.quantity}}&nbsp; &#36;{{detail.costEach}}&nbsp;&nbsp; &#36;{{detail.total}}<br/></td>
+                <td>{{(detail.product.name).substr(0,15)}} &nbsp;{{detail.quantity}}&nbsp; &#36;{{detail.costEach}}&nbsp;&nbsp; &#36;{{detail.total}}<br/></td>
             </tr>
         </table>
         <br/>

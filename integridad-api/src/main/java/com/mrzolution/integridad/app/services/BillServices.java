@@ -269,7 +269,7 @@ public class BillServices {
         populateChildren(saved);
         updateKardexOfDeactivatedBill(saved);
         updatePSOfDeactivatedBill(saved, saved.getDetails());
-        log.info("BillServices deactivateBill: {}, {}", saved.getId(), saved.getStringSeq());
+        log.info("BillServices deactivateBill: {}, {}", billToDeactivate.getId(), billToDeactivate.getStringSeq());
         return billToDeactivate;
     }
     
