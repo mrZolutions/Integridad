@@ -87,7 +87,7 @@ public class SwimmingPoolController {
             log.error("SwimmingPoolController createSwimmPool Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
-        log.info("PaymentController createPayment DONE");
+        log.info("SwimmingPoolController createSwimmPool DONE");
         return new ResponseEntity<SwimmingPool>(response, HttpStatus.CREATED);
     }
     

@@ -3,7 +3,6 @@ package com.mrzolution.integridad.app.services;
 import com.mrzolution.integridad.app.domain.SwimmingPool;
 import com.mrzolution.integridad.app.exceptions.BadRequestException;
 import com.mrzolution.integridad.app.repositories.SwimmingPoolRepository;
-import java.util.Date;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,12 +23,16 @@ public class SwimmingPoolServices {
     //Bucar SwimmingPool por ID
     public SwimmingPool getSwimmPoolById(UUID id) {
         SwimmingPool retrieved = swimmingPoolRepository.findOne(id);
+        populateChildren(retrieved);
         log.info("SwimmingPoolServices getSwimmPoolById: {}", id);
         return retrieved;
     }
     
     public Iterable<SwimmingPool> getSwimmPoolByClientId(UUID id) {
         Iterable<SwimmingPool> swimmingPool = swimmingPoolRepository.findSwimmPoolByClientId(id);
+        swimmingPool.forEach(swimm -> {
+            swimm.setFatherListToNull();
+        });
         log.info("SwimmingPoolServices getSwimmPoolByClientId: {}", id);
         return swimmingPool;
     }
@@ -41,9 +44,9 @@ public class SwimmingPoolServices {
     }
     
     public SwimmingPool getSwimmPoolBySubIdAndBarCodeAll(UUID subId, String barCode) {
-        SwimmingPool swimm = swimmingPoolRepository.findSwimmPoolBySubIdAndBarCodeAll(subId, barCode);
+        SwimmingPool swimmingPool = swimmingPoolRepository.findSwimmPoolBySubIdAndBarCodeAll(subId, barCode);
         log.info("SwimmingPoolServices getSwimmPoolByBarCode: {}", barCode);
-        return swimm;
+        return swimmingPool;
     }
     
     public SwimmingPool createSwimmPool(SwimmingPool swimmPool) {
@@ -55,7 +58,7 @@ public class SwimmingPoolServices {
     
     @Async("asyncExecutor")
     public SwimmingPool deactivateSwimmPool(SwimmingPool swimmPool) throws BadRequestException {
-        if (swimmPool == null) {
+        if (swimmPool.getId() == null) {
             throw new BadRequestException("Invalid Id");
         }
         SwimmingPool swimmToDeactivate = swimmingPoolRepository.findOne(swimmPool.getId());
@@ -63,6 +66,10 @@ public class SwimmingPoolServices {
         swimmingPoolRepository.save(swimmToDeactivate);
         log.info("SwimmingPoolServices deactivateSwimmPool: {}, {}", swimmToDeactivate.getId(), swimmToDeactivate.getStringSeq());
         return swimmToDeactivate;
+    }
+    
+    private void populateChildren(SwimmingPool swimmPool) {
+        swimmPool.setFatherListToNull();
     }
 
 }
