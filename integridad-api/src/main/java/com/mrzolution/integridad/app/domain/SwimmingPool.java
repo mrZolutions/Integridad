@@ -30,6 +30,7 @@ public class SwimmingPool {
     private double subTotal;
     private double iva;
     private double total;
+    private String tipoClnt;
     
     @ManyToOne
     @JoinColumn(name = "client_id")
@@ -42,4 +43,13 @@ public class SwimmingPool {
     @ManyToOne
     @JoinColumn(name = "subsidiary_id")
     private Subsidiary subsidiary;
+    
+    public void setFatherListToNull(){
+    	client.setListsNull();
+    	client.setFatherListToNull();
+    	userIntegridad.setListsNull();
+    	userIntegridad.setFatherListToNull();
+    	subsidiary.setListsNull();
+    	subsidiary.setFatherListToNull();
+    }
 }

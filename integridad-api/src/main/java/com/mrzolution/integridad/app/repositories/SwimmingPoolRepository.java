@@ -22,7 +22,7 @@ public interface SwimmingPoolRepository extends CrudRepository<SwimmingPool, UUI
     
     Iterable<SwimmingPool> findByUserIntegridad(UserIntegridad user);
     
-    @Query("SELECT s FROM SwimmingPool s WHERE s.client.id = (:id) AND s.active = true ORDER BY s.stringSeq")
+    @Query("SELECT s FROM SwimmingPool s WHERE s.client.id = (:id) AND s.active = true ORDER BY s.fecha")
     Iterable<SwimmingPool> findSwimmPoolByClientId(@Param("id") UUID id);
     
     @Query("SELECT s FROM SwimmingPool s WHERE s.subsidiary.id = (:subId) AND s.barCode = (:barCode) AND s.active = true")

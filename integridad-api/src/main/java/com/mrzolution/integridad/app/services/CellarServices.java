@@ -131,15 +131,11 @@ public class CellarServices {
         // Excepción PPE, Dental, Lozada, VallParra, Pineda NO actualizan Kardex
         if ("A-1".equals(cellar.getProvider().getUserClient().getEspTemp()) || "A-2".equals(cellar.getProvider().getUserClient().getEspTemp()) || "A-N".equals(cellar.getProvider().getUserClient().getEspTemp())) {
             saveDetailsCellar(saved, detailsCellar);
-            if ("INGRESADO".equals(saved.getStatusIngreso())) {
-                updateProductBySubsidiary(saved, detailsCellar);
-            }
+            updateProductBySubsidiary(saved, detailsCellar);
         } else {
             saveDetailsCellar(saved, detailsCellar);
             saveKardex(saved, detailsKardex);
-            if ("INGRESADO".equals(saved.getStatusIngreso())) {
-                updateProductBySubsidiary(saved, detailsCellar);
-            }
+            updateProductBySubsidiary(saved, detailsCellar);
         }
         log.info("CellarServices createCellar: {}, {}", saved.getId(), saved.getWhNumberSeq());
         return saved;
@@ -152,6 +148,7 @@ public class CellarServices {
             detail.setCellar(null);
         });
         saved.setDetailsCellar(detailsCellar);
+        log.info("CellarServices saveDetailsCellar DONE");
     }
     
     public void saveKardex(Cellar saved, List<Kardex> detailsKardex) {
@@ -162,18 +159,15 @@ public class CellarServices {
             detail.setCellar(null);
         });
         saved.setDetailsKardex(detailsKardex);
+        log.info("CellarServices saveKardex DONE");
     }
 
     public void updateProductBySubsidiary(Cellar cellar, List<DetailCellar> detailsCellar) {
         detailsCellar.forEach(detail -> {
             if (!detail.getProduct().getProductType().getCode().equals("SER")) {
                 ProductBySubsidiary psCl = productBySubsidiairyRepository.findBySubsidiaryIdAndProductId(cellar.getSubsidiary().getId(), detail.getProduct().getId());
-                if(psCl != null){
-                    psCl.setQuantity(psCl.getQuantity() + detail.getQuantity());
-                    psCl.setListsNull();
-                    psCl.setFatherListToNull();
-                    productBySubsidiairyRepository.save(psCl);
-                }
+                psCl.setQuantity(psCl.getQuantity() + detail.getQuantity());
+                productBySubsidiairyRepository.save(psCl);
             }
         });
         log.info("CellarServices updateProductBySubsidiary DONE");

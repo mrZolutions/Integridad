@@ -169,8 +169,6 @@ public class ConsumptionServices {
             if (!detail.getProduct().getProductType().getCode().equals("SER")) {
                 ProductBySubsidiary psCn = productBySubsidiairyRepository.findBySubsidiaryIdAndProductId(consumption.getSubsidiary().getId(), detail.getProduct().getId());
                 psCn.setQuantity(psCn.getQuantity() - detail.getQuantity());
-                psCn.setListsNull();
-                psCn.setFatherListToNull();
                 productBySubsidiairyRepository.save(psCn);
             }
         });

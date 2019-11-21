@@ -65,80 +65,80 @@ public class ProductController {
     }
 
     @RequestMapping(method = RequestMethod.GET, value="/{productId}")
-    public ResponseEntity getAllProductById(@PathVariable(value = "productId") UUID productId) {
+    public ResponseEntity getProductById(@PathVariable(value = "productId") UUID productId) {
         Product response = null;
 	try {
             response = service.getProductById(productId);
 	} catch (BadRequestException e) {
-            log.error("ProductController getAllProductById Exception thrown: {}", e.getMessage());	    
+            log.error("ProductController getProductById Exception thrown: {}", e.getMessage());	    
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
-        log.info("ProductController getAllProductById DONE");
+        log.info("ProductController getProductById DONE");
 	return new ResponseEntity<Product>(response, HttpStatus.CREATED);
     }
 
     @RequestMapping(method = RequestMethod.GET, value="/actives")
-    public ResponseEntity getAllActives() {
+    public ResponseEntity getProductsActives() {
         Iterable<Product> response = null;
 	try {
-            response = service.getAllActives();
+            response = service.getProductsActives();
 	} catch (BadRequestException e) {
-            log.error("ProductController getAllActives Exception thrown: {}", e.getMessage());	    
+            log.error("ProductController getProductsActives Exception thrown: {}", e.getMessage());	    
 	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
-        log.info("ProductController getAllActives DONE");
+        log.info("ProductController getProductsActives DONE");
 	return new ResponseEntity<Iterable>(response, HttpStatus.CREATED);
     }
     
     @RequestMapping(method = RequestMethod.GET, value="/prod/{userClientId}/{code}")
-    public ResponseEntity getProdByUserClientIdAndCodeIntegActive(@PathVariable("userClientId") UUID userClientId, @PathVariable("code") String code) {
+    public ResponseEntity getProductsActivesByUserClientIdAndCodeInteg(@PathVariable("userClientId") UUID userClientId, @PathVariable("code") String code) {
         Iterable<Product> response = null;
         try {
-            response = service.getProdByUserClientIdAndCodeIntegActive(userClientId, code);
+            response = service.getProductsActivesByUserClientIdAndCodeInteg(userClientId, code);
         } catch (BadRequestException e) {
-            log.error("ProductController getProdByUserClientIdAndCodeIntegActive Exception thrown: {}", e.getMessage());	    
+            log.error("ProductController getProductsActivesByUserClientIdAndCodeInteg Exception thrown: {}", e.getMessage());	    
 	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
-        log.info("ProductController getProdByUserClientIdAndCodeIntegActive DONE");
+        log.info("ProductController getProductsActivesByUserClientIdAndCodeInteg DONE");
 	return new ResponseEntity<Iterable>(response, HttpStatus.CREATED);
     }
 
     @RequestMapping(method = RequestMethod.GET, value="/actives/user_client/{userClientId}")
-    public ResponseEntity getAllActivesByUserClientId(@PathVariable("userClientId") UUID userClientId) {
+    public ResponseEntity getProductsActivesByUserClientId(@PathVariable("userClientId") UUID userClientId) {
         Iterable<Product> response = null;
 	try {
-            response = service.getAllActivesByUserClientIdAndActive(userClientId);
+            response = service.getProductsActivesByUserClientId(userClientId);
 	} catch (BadRequestException e) {
-            log.error("ProductController getAllActivesByUserClientId Exception thrown: {}", e.getMessage());	    
+            log.error("ProductController getProductsActivesByUserClientId Exception thrown: {}", e.getMessage());	    
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
-        log.info("ProductController getAllActivesByUserClientId DONE");
+        log.info("ProductController getProductsActivesByUserClientId DONE");
 	return new ResponseEntity<Iterable>(response, HttpStatus.CREATED);
     }
 
     @RequestMapping(method = RequestMethod.GET, value="/actives/subsidiary/{subsidiaryId}/{page}")
-    public ResponseEntity getAllActivesBySubsidiaryId(@PathVariable("subsidiaryId") UUID subsidiaryId, @PathVariable("page") int page, @RequestParam(required = false, name = "var") String variable) {
+    public ResponseEntity getProductsActivesBySubsidiaryId(@PathVariable("subsidiaryId") UUID subsidiaryId, @PathVariable("page") int page, @RequestParam(required = false, name = "var") String variable) {
         Page<Product> response = null;
 	try {
-            response = service.getAllActivesBySubsidiaryIdAndActive(subsidiaryId, variable, new PageRequest(page, 50, Sort.Direction.ASC, "product"));
+            response = service.getProductsActivesBySubsidiaryId(subsidiaryId, variable, new PageRequest(page, 50, Sort.Direction.ASC, "product"));
 	} catch (BadRequestException e) {
-            log.error("ProductController getAllActivesBySubsidiaryId Exception thrown: {}", e.getMessage());	    
+            log.error("ProductController getProductsActivesBySubsidiaryId Exception thrown: {}", e.getMessage());	    
 	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
-        log.info("ProductController getAllActivesBySubsidiaryId DONE");
+        log.info("ProductController getProductsActivesBySubsidiaryId DONE");
         return new ResponseEntity<Page>(response, HttpStatus.CREATED);
     }
 
     @RequestMapping(method = RequestMethod.GET, value="/actives/subsidiary/bar/{subsidiaryId}")
-    public ResponseEntity getAllActivesBySubsidiaryIdBarCode(@PathVariable("subsidiaryId") UUID subsidiaryId, @RequestParam(required = false, name = "var") String variable) {
+    public ResponseEntity getProductsActivesBySubsidiaryIdBarCode(@PathVariable("subsidiaryId") UUID subsidiaryId, @RequestParam(required = false, name = "var") String variable) {
         List<Product> response = null;
         try {
-            response = service.getAllActivesBySubsidiaryIdBarCodeAndActive(subsidiaryId, variable);
+            response = service.getProductsActivesBySubsidiaryIdBarCode(subsidiaryId, variable);
         } catch (BadRequestException e) {
-            log.error("ProductController getAllActivesBySubsidiaryIdBarCode Exception thrown: {}", e.getMessage());
+            log.error("ProductController getProductsActivesBySubsidiaryIdBarCode Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
-        log.info("ProductController getAllActivesBySubsidiaryIdBarCode DONE");
+        log.info("ProductController getProductsActivesBySubsidiaryIdBarCode DONE");
         return new ResponseEntity<List>(response, HttpStatus.CREATED);
     }
     
@@ -169,13 +169,13 @@ public class ProductController {
     }
 
     @RequestMapping(method = RequestMethod.GET, value="/actives/subsidiary/bill/{subsidiaryId}/{page}")
-    public ResponseEntity getAllActivesBySubsidiaryIdForBill(@PathVariable("subsidiaryId") UUID subsidiaryId, @PathVariable("page") int page, @RequestParam(required = false, name = "var") String variable) {
+    public ResponseEntity getProductsActivesBySubsidiaryIdForBill(@PathVariable("subsidiaryId") UUID subsidiaryId, @PathVariable("page") int page, @RequestParam(required = false, name = "var") String variable) {
         log.info("ProductController getAllActivesBySubsidiaryId: {}", subsidiaryId);
         Page<Product> response = null;
         try {
-            response = service.getAllActivesBySubsidiaryIdForBill(subsidiaryId, variable, new PageRequest(page, 50, Sort.Direction.ASC, "product"));
+            response = service.getProductsActivesBySubsidiaryIdForBill(subsidiaryId, variable, new PageRequest(page, 50, Sort.Direction.ASC, "product"));
         } catch (BadRequestException e) {
-            log.error("ProductController getAllActivesBySubsidiaryId Exception thrown: {}", e.getMessage());
+            log.error("ProductController getProductsActivesBySubsidiaryIdForBill Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
         return new ResponseEntity<Page>(response, HttpStatus.CREATED);

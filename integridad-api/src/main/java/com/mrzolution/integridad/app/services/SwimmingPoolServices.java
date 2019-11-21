@@ -3,11 +3,9 @@ package com.mrzolution.integridad.app.services;
 import com.mrzolution.integridad.app.domain.SwimmingPool;
 import com.mrzolution.integridad.app.exceptions.BadRequestException;
 import com.mrzolution.integridad.app.repositories.SwimmingPoolRepository;
-import java.util.Date;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 /**
@@ -24,26 +22,36 @@ public class SwimmingPoolServices {
     //Bucar SwimmingPool por ID
     public SwimmingPool getSwimmPoolById(UUID id) {
         SwimmingPool retrieved = swimmingPoolRepository.findOne(id);
+        populateChildren(retrieved);
         log.info("SwimmingPoolServices getSwimmPoolById: {}", id);
         return retrieved;
     }
     
     public Iterable<SwimmingPool> getSwimmPoolByClientId(UUID id) {
         Iterable<SwimmingPool> swimmingPool = swimmingPoolRepository.findSwimmPoolByClientId(id);
+        swimmingPool.forEach(swimm -> {
+            swimm.setFatherListToNull();
+        });
         log.info("SwimmingPoolServices getSwimmPoolByClientId: {}", id);
         return swimmingPool;
     }
     
-    public SwimmingPool getSwimmPoolBySubIdAndBarCodeActive(UUID subId, String barCode) {
-        SwimmingPool swimm = swimmingPoolRepository.findSwimmPoolBySubIdAndBarCodeActive(subId, barCode);
+    public SwimmingPool getSwimmPoolBySubIdAndBarCodeActive(UUID subId, String barCode) throws BadRequestException {
+        SwimmingPool swimmingPool = swimmingPoolRepository.findSwimmPoolBySubIdAndBarCodeActive(subId, barCode);
+        if (swimmingPool == null) {
+            throw new BadRequestException("TICKET INVALIDO O YA USADO");
+        } else {
+            populateChildren(swimmingPool);
+        }
         log.info("SwimmingPoolServices getSwimmPoolByBarCodeActive: {}", barCode);
-        return swimm;
+        return swimmingPool;
     }
     
     public SwimmingPool getSwimmPoolBySubIdAndBarCodeAll(UUID subId, String barCode) {
-        SwimmingPool swimm = swimmingPoolRepository.findSwimmPoolBySubIdAndBarCodeAll(subId, barCode);
+        SwimmingPool swimmingPool = swimmingPoolRepository.findSwimmPoolBySubIdAndBarCodeAll(subId, barCode);
+        populateChildren(swimmingPool);
         log.info("SwimmingPoolServices getSwimmPoolByBarCode: {}", barCode);
-        return swimm;
+        return swimmingPool;
     }
     
     public SwimmingPool createSwimmPool(SwimmingPool swimmPool) {
@@ -53,16 +61,17 @@ public class SwimmingPoolServices {
         return saved;
     }
     
-    @Async("asyncExecutor")
-    public SwimmingPool deactivateSwimmPool(SwimmingPool swimmPool) throws BadRequestException {
-        if (swimmPool == null) {
-            throw new BadRequestException("Invalid Id");
-        }
-        SwimmingPool swimmToDeactivate = swimmingPoolRepository.findOne(swimmPool.getId());
+    public SwimmingPool deactivateSwimmPool(UUID subId, String barCode) {
+        SwimmingPool swimmToDeactivate = swimmingPoolRepository.findSwimmPoolBySubIdAndBarCodeAll(subId, barCode);
+        swimmToDeactivate.setFatherListToNull();
         swimmToDeactivate.setActive(false);
+        swimmToDeactivate.setStatus("TICKET USADO -- ANULADO");
         swimmingPoolRepository.save(swimmToDeactivate);
-        log.info("SwimmingPoolServices deactivateSwimmPool: {}, {}", swimmToDeactivate.getId(), swimmToDeactivate.getStringSeq());
+        log.info("SwimmingPoolServices deactivateSwimmPool: {}", swimmToDeactivate.getStringSeq());
         return swimmToDeactivate;
     }
-
+    
+    private void populateChildren(SwimmingPool swimmPool) {
+        swimmPool.setFatherListToNull();
+    }
 }

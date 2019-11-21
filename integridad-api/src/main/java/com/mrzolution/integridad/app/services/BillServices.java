@@ -190,6 +190,7 @@ public class BillServices {
             detail.setBill(null);
         });
         saved.setDetails(details);
+        log.info("BillServices saveDetailsBill DONE");
     }
     
     //Almacena los Detalles en Kardex
@@ -201,6 +202,7 @@ public class BillServices {
             detailk.setBill(null);
         });
         saved.setDetailsKardex(detailsKardex);
+        log.info("BillServices saveKardex DONE");
     }
     
     //Almacena los Detalles de la Cotización
@@ -239,6 +241,7 @@ public class BillServices {
                 productBySubsidiairyRepository.save(ps);
             }
         });
+        log.info("BillServices updateProductBySubsidiary DONE");
     }
     //Fin de Creación de las Bills
     
