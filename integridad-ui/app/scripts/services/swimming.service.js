@@ -7,8 +7,8 @@ angular
             });
         };
 
-        this.deactivateSwimmPool = function(swimmPool) {
-            return securityService.put('/swimm', swimmPool).then(function successCallback(response) {
+        this.deactivateSwimmPool = function(subId, barCode) {
+            return securityService.put('/swimm/' + subId + '/' + barCode).then(function successCallback(response) {
                 return response.data;
             });
         };
