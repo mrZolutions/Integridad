@@ -52,7 +52,10 @@
         </div>
     </div>
 
+<<<<<<< HEAD
     <!--TICKET PISCINA -- CREACIÓN DE TICKET-->
+=======
+>>>>>>> 7d74a1909fb0d37b9a02c8cd6501d492b53dbb7a
     <div class="table-responsive" ng-show="vm.selectedTypeOption === '1' && vm.clientSelected === undefined && vm.swimmList === undefined && vm.newClient === undefined">
         <div class="row">
             <div class="form-group col-md-10">
@@ -265,22 +268,52 @@
             </div>
             <div class="panel-body">
                 <div class="row">
+<<<<<<< HEAD
                     <div class="form-group col-md-8">
                         <label>Nombre del Cliente: </label>
                         <p>{{vm.swimmPool.clntName}}</p>
                     </div>
                     <div class="form-group col-md-4">
+=======
+                    <div class="form-group col-md-6">
+                        <label>Nombre del Cliente: </label>
+                        <p>{{vm.swimmPool.clntName}}</p>
+                    </div>
+                    <div class="form-group col-md-6">
+>>>>>>> 7d74a1909fb0d37b9a02c8cd6501d492b53dbb7a
                         <label>Identificación: </label>
                         <p>{{vm.swimmPool.clntIdent}}</p>
                     </div>
                 </div>
                 <div class="row">
+<<<<<<< HEAD
                     <hr>
+=======
+                    <div class="form-group col-md-6">
+                        <label>Fecha: </label>
+                        <div class="input-group date" id="pickerSwimmDate" ng-disabled="vm.newTicket === true">
+                            <input type="text" class="form-control input-group-addon"/>
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
+                        </div>
+                        <script>
+                            $('#pickerSwimmDate').datetimepicker({format: "DD/MM/YY HH:mm",});
+                        </script>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label>Ticket de Piscina Nro: </label>
+                        <p><b>{{vm.swimmPool.stringSeq}}</b></p>
+                    </div>
+>>>>>>> 7d74a1909fb0d37b9a02c8cd6501d492b53dbb7a
                 </div>
                 <div class="row">
                     <div class="form-group col-md-4">
                         <label>Costo sin Iva $: </label>
+<<<<<<< HEAD
                         <p>{{vm.subTotal}}</p>
+=======
+                        <input type="text" ng-change="vm.calcIvaAndTotal()" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+                               ng-model="vm.swimmPool.subTotal" class="form-control">
+>>>>>>> 7d74a1909fb0d37b9a02c8cd6501d492b53dbb7a
                     </div>
                     <div class="form-group col-md-4">
                         <label>Iva $: </label>
@@ -289,6 +322,7 @@
                     <div class="form-group col-md-4">
                         <label>Total $: </label>
                         <p>{{vm.totalTicket}}</p>
+<<<<<<< HEAD
                     </div>
                 </div>
                 <div class="row">
@@ -314,6 +348,8 @@
                         <select ng-options="item.code as item.name for item in [{code: 'adulto', name: 'ADULTOS'}, {code: 'menor', name: 'NIÑOS'}, {code: 'edad3ra', name: 'TERCERA EDAD'}]"
                                 ng-model="vm.tipoClnt" ng-change="vm.calcIvaAndSubTotal()" class="form-control">
                         </select>
+=======
+>>>>>>> 7d74a1909fb0d37b9a02c8cd6501d492b53dbb7a
                     </div>
                 </div>
             </div>
@@ -338,6 +374,7 @@
             </div>
             <div class="panel-body">
                 <div class="row">
+<<<<<<< HEAD
                     <div class="form-group col-md-4">
                         <table width="100%">
                             <tr>
@@ -345,13 +382,26 @@
                                     <img src="images/{{vm.userData.subsidiary.userClient.logo}}" width="50" height="50"/>
                                     <h5><b>INGRESO A PISCINA</b></h5>
                                     <h5><b>Válido para el: {{vm.swimmPool.fecha | date: "dd-MM-yyyy"}}</b></h5>
+=======
+                    <div class="form-group col-md-6">
+                        <table width="100%">
+                            <tr>
+                                <td align="center">
+                                    <img src="images/{{vm.userData.subsidiary.userClient.logo}}" width="60" height="60"/>
+                                    <h4><b>INGRESO A PISCINA</b></h4>
+                                    <h4><b>Válido para el: {{vm.swimmPool.fecha | date : "dd-MM-yyyy"}}</b></h4>
+>>>>>>> 7d74a1909fb0d37b9a02c8cd6501d492b53dbb7a
                                     <p><b>Horarios:</b> Miercoles a Domingo</p>
                                     <p>de 9:00hrs a 17:00hrs</p>
                                 </td>
                             </tr>
                             <tr>
                                 <td align="center">
+<<<<<<< HEAD
                                     <img id="barcode" width="160" height="80"/>
+=======
+                                    <img id="barcode" width="200" height="100"/>
+>>>>>>> 7d74a1909fb0d37b9a02c8cd6501d492b53dbb7a
                                 </td>
                             </tr>
                             <tr>
