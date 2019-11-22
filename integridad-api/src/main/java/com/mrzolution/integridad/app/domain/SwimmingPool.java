@@ -20,21 +20,16 @@ public class SwimmingPool {
     @GeneratedValue
     private UUID id;
     
+    private boolean active;
     private long fecha;
     private String barCode;
     private String stringSeq;
-    private String clntName;
-    private String clntIdent;
-    private boolean active;
+    private String tipoClnt;
+    private String codTipoClnt;
     private String status;
     private double subTotal;
     private double iva;
     private double total;
-    private String tipoClnt;
-    
-    @ManyToOne
-    @JoinColumn(name = "client_id")
-    private Client client;
     
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -45,8 +40,6 @@ public class SwimmingPool {
     private Subsidiary subsidiary;
     
     public void setFatherListToNull(){
-    	client.setListsNull();
-    	client.setFatherListToNull();
     	userIntegridad.setListsNull();
     	userIntegridad.setFatherListToNull();
     	subsidiary.setListsNull();

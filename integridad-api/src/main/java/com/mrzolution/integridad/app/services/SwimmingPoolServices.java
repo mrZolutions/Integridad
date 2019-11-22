@@ -27,13 +27,12 @@ public class SwimmingPoolServices {
         return retrieved;
     }
     
-    public Iterable<SwimmingPool> getSwimmPoolByClientId(UUID id) {
-        Iterable<SwimmingPool> swimmingPool = swimmingPoolRepository.findSwimmPoolByClientId(id);
-        swimmingPool.forEach(swimm -> {
+    public Iterable<SwimmingPool> getSwimmPoolBySubIdAndDates(UUID subId, long dateOne, long dateTwo) {
+        Iterable<SwimmingPool> swimmingPools = swimmingPoolRepository.findSwimmPoolBySubIdAndDates(subId, dateOne, dateTwo);
+        swimmingPools.forEach(swimm -> {
             swimm.setFatherListToNull();
         });
-        log.info("SwimmingPoolServices getSwimmPoolByClientId: {}", id);
-        return swimmingPool;
+        return swimmingPools;
     }
     
     public SwimmingPool getSwimmPoolBySubIdAndBarCodeActive(UUID subId, String barCode) throws BadRequestException {

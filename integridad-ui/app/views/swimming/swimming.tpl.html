@@ -34,14 +34,29 @@
     </div>
 
     <div class="row" ng-show="vm.selectedTypeOption === undefined">
-        <div class="form-group col-md-6">
+        <div class="form-group col-md-4">
             <button type="button" class="btn btn-primary btn-block" ng-click="vm.loadTypeOption('1')">
-                TICKET PISCINA -- CREACIÓN DE TICKET
+                TICKET PISCINA -- ADULTOS
             </button>
         </div>
-        <div class="form-group col-md-6">
+        <div class="form-group col-md-4">
             <button type="button" class="btn btn-primary btn-block" ng-click="vm.loadTypeOption('2')">
-                TICKET PISCINA -- CONTROL DE ACCESO A PISCINA
+                TICKET PISCINA -- NIÑOS (AS)
+            </button>
+        </div>
+        <div class="form-group col-md-4">
+            <button type="button" class="btn btn-primary btn-block" ng-click="vm.loadTypeOption('3')">
+                TICKET PISCINA -- TERCERA EDAD
+            </button>
+        </div>
+        <div class="form-group col-md-4">
+            <button type="button" class="btn btn-primary btn-block" ng-click="vm.loadTypeOption('4')">
+                CONSULTA DE TICKETS VENDIDOS
+            </button>
+        </div>
+        <div class="form-group col-md-4">
+            <button type="button" class="btn btn-primary btn-block" ng-click="vm.loadTypeOption('5')">
+                CONTROL DE ACCESO A PISCINA
             </button>
         </div>
         <div class="form-group col-md-12">
@@ -49,284 +64,6 @@
                     ng-click="vm.exit()">
                     <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
             </button>
-        </div>
-    </div>
-
-    <!--TICKET PISCINA -- CREACIÓN DE TICKET-->
-    <div class="table-responsive" ng-show="vm.selectedTypeOption === '1' && vm.clientSelected === undefined && vm.swimmList === undefined && vm.newClient === undefined">
-        <div class="row">
-            <div class="form-group col-md-10">
-                <input id="inputTp0" ng-model="searchText" class="form-control" placeholder="Buscar">
-            </div>
-            <div class="form-group col-md-2">
-                <button type="button" title="Agregar Nuevo Cliente" class="btn btn-primary btn-sm" ng-click="vm.createClient()">
-                        <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
-                </button>
-                <button type="button" title="Volver a Inicio" class="btn btn-danger btn-sm"
-                        ng-click="vm.exit()">
-                        <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
-                </button>
-            </div>
-        </div>
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>C&oacute;digo</th>
-                    <th>Nombre</th>
-                    <th>No. Identidad</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr ng-show="vm.clientList == 0">
-                    <td colspan="4">
-                        No hay clientes ingresados
-                    </td>
-                </tr>
-                <tr ng-repeat="clientTkSelect in vm.clientList | orderBy:'name' | filter:searchText">
-                    <td>{{clientTkSelect.codApp}}</td>
-                    <td>{{clientTkSelect.name}}</td>
-                    <td>{{clientTkSelect.typeId}} - {{clientTkSelect.identification}}</td>
-                    <td>
-                        <button type="button" title="Crear Ticket Piscina" class="btn btn-primary btn-sm" ng-click="vm.clientSelect(clientTkSelect)">
-                                <span class = "glyphicon glyphicon-ok" aria-hidden = "true"></span>
-                        </button>
-                        <button type="button" title="Consultar Tickets Piscina del Cliente" class="btn btn-primary btn-sm" ng-click="vm.clientTkConsult(clientTkSelect)">
-                                <span class = "glyphicon glyphicon-search" aria-hidden = "true"></span>
-                        </button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-        <div class="row">
-            <div class="form-group col-md-12">
-                <button type="button" title="Volver a Inicio" class="btn btn-danger btn-sm"
-                        ng-click="vm.exit()">
-                        <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!--CONSULTA DE TICKET POR CLIENTES-->
-    <div class="panel panel-primary" ng-show="vm.swimmList !== undefined">
-        <div class="panel-heading" print-remove>
-            <b>Consulta de Tickets por Cliente</b>
-        </div>
-        <div class="panel-body">
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>Fecha</th>
-                        <th>Código Barras</th>
-                        <th>Status</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr ng-show="vm.swimmList == 0">
-                        <td colspan="4">
-                            No hay Tickets ingresados para este Cliente
-                        </td>
-                    </tr>
-                        <tr ng-repeat="ticket in vm.swimmList | orderBy:'name' | filter:searchText">
-                            <td>{{ticket.fecha | date : "dd-MM-yyyy"}}</td>
-                            <td>{{ticket.barCode}}</td>
-                            <td>{{ticket.status}}</td>
-                            <td>
-                                <button type="button" title="Ver Ticket Piscina" class="btn btn-primary btn-sm" ng-click="vm.consultTkSwimmPool(ticket)">
-                                        <span class = "glyphicon glyphicon-eye-open" aria-hidden = "true"></span>
-                                </button>
-                            </td>
-                        </tr>
-                </tbody>
-            </table>
-        </div>
-        <div class="panel-footer">
-            <button type="button" title="Salir" class="btn btn-primary btn-sm"
-                    ng-click="vm.cancel()">
-                    <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
-            </button>
-        </div>
-    </div>
-
-    <!--CREACIÓN DE NUEVO CLIENTE-->
-    <div class="panel panel-primary" ng-show="vm.newClient === true">
-        <div class="panel-heading" print-remove>
-            <b>Datos del Cliente</b>
-        </div>
-        <div class="panel-body">
-            <div class="row">
-                <div class="form-group col-md-12">
-                    <label>Nombre: </label>
-                    <input type="text" ng-model="vm.client.name" class="form-control">
-                </div>
-            </div>
-            <div class="row">
-                <div class="form-group col-md-6">
-                    <label>Tel&eacute;fono: (incluir c&oacute;digo de provincia ej: 02) </label>
-                    <input type="text" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
-                           ng-model="vm.client.phone" class="form-control" maxlength="9">
-                </div>
-                <div class="form-group col-md-6">
-                    <label>Tel&eacute;fono celular: </label>
-                    <input type="text" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
-                           ng-model="vm.client.celPhone" class="form-control" maxlength="10">
-                </div>
-            </div>
-            <div class="row">
-                <div class="form-group col-md-6">
-                    <label>Pa&iacute;s: </label>
-                    <select ng-options="country for country in vm.countryList"
-                            ng-model="vm.client.country" class="form-control" ng-change="vm.validateEcuador()">
-                    </select>
-                </div>
-                <div class="form-group col-md-6" ng-show="vm.client.country === 'Ecuador'">
-                    <label>Ciudad: </label>
-                    <select ng-options = "city for city in vm.citiesList"
-                            ng-model="vm.client.city" class="form-control">
-                    </select>
-                </div>
-                <div class="form-group col-md-6" ng-show="vm.client.country !== 'Ecuador'">
-                    <label>Ciudad: </label>
-                    <input type="text" ng-model="vm.client.city" class="form-control">
-                </div>
-            </div>
-            <div class="row">
-                <div class="form-group col-md-6">
-                    <label>Tipo de Identificacion: </label>
-                    <select ng-options="item.code as item.name for item in [{code:'CED', name:'CEDULA'}, {code:'RUC', name:'RUC'}, {code:'IEX', name:'IDENTIFICACIÓN EXTERIOR'}]"
-                            ng-model="vm.client.typeId" class="form-control">
-                    </select>
-                </div>
-                <div class="form-group col-md-6" ng-show="vm.client.typeId === 'CED'">
-                    <label>C&eacute;dula: </label>
-                    <input type="text" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
-                           ng-model="vm.client.identification" class="form-control" maxlength="10">
-                </div>
-                <div class="form-group col-md-6" ng-show="vm.client.typeId === 'RUC'">
-                    <label>RUC: </label>
-                    <input type="text" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
-                            ng-model="vm.client.identification" class="form-control" maxlength="13">
-                </div>
-                <div class="form-group col-md-6" ng-show="vm.client.typeId === 'IEX'">
-                    <label>ID. Exterior: </label>
-                    <input type="text" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
-                           ng-model="vm.client.identification" class="form-control" maxlength="10">
-                </div>
-            </div>
-            <div class="row">
-                <div class="form-group col-md-12">
-                    <label>E-mail: </label>
-                    <input type="text" ng-model="vm.client.email" class="form-control">
-                </div>
-            </div>
-            <div class="row">
-                <div class="form-group col-md-12">
-                    <label>Direcci&oacute;n: </label>
-                    <input type="text" ng-model="vm.client.address" class="form-control">
-                </div>
-            </div>
-            <div class="row">
-                <div class="form-group col-md-6">
-                    <label>C&oacute;digo Contabilidad: </label>
-                    <input type="text" ng-model="vm.client.codConta" class="form-control">
-                </div>
-                <div class="form-group col-md-6">
-                    <label>Contacto: </label>
-                    <input type="text" ng-model="vm.client.contact" class="form-control">
-                </div>
-            </div>
-            <div class="row">
-                <div class="form-group col-md-6">
-                    <label>C&oacute;digo : </label>
-                    <input type="text" ng-model="vm.client.codApp" class="form-control">
-                </div>
-            </div>
-        </div>
-        <div class="panel-footer">
-            <button type="button" title="Guardar Cliente" class="btn btn-success btn-sm" ng-click="vm.saveClient()"
-                    ng-disabled="vm.client.name === undefined || vm.client.identification === undefined || vm.client.codApp === undefined">
-                    <span class="glyphicon glyphicon-floppy-save" aria-hidden="true"></span>
-            </button>
-            <button type="button" title="Salir" class="btn btn-primary btn-sm"
-                    ng-click="vm.cancelCreateClient()">
-                    <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
-            </button>
-        </div>
-    </div>
-    <!--FIN DE CREACIÓN DE NUEVO CLIENTE-->
-
-    <!--TICKET PISCINA-->
-    <div class="table-responsive" ng-show="vm.newTicket === true">
-        <div class="panel panel-primary">
-            <div class="panel-heading">
-                <h4>Creación de Ticket para Piscina</h4>
-            </div>
-            <div class="panel-body">
-                <div class="row">
-                    <div class="form-group col-md-8">
-                        <label>Nombre del Cliente: </label>
-                        <p>{{vm.swimmPool.clntName}}</p>
-                    </div>
-                    <div class="form-group col-md-4">
-                        <label>Identificación: </label>
-                        <p>{{vm.swimmPool.clntIdent}}</p>
-                    </div>
-                </div>
-                <div class="row">
-                    <hr>
-                </div>
-                <div class="row">
-                    <div class="form-group col-md-4">
-                        <label>Costo sin Iva $: </label>
-                        <p>{{vm.subTotal}}</p>
-                    </div>
-                    <div class="form-group col-md-4">
-                        <label>Iva $: </label>
-                        <p>{{vm.iva}}</p>
-                    </div>
-                    <div class="form-group col-md-4">
-                        <label>Total $: </label>
-                        <p>{{vm.totalTicket}}</p>
-                    </div>
-                </div>
-                <div class="row">
-                    <hr>
-                </div>
-                <div class="row">
-                    <div class="form-group col-md-4">
-                        <label>Fecha: </label>
-                        <div class="input-group date" id="pickerSwimmDate" ng-disabled="vm.newTicket === true">
-                                <input type="text" class="form-control input-group-addon"/>
-                                <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
-                        </div>
-                        <script>
-                            $('#pickerSwimmDate').datetimepicker({format: "DD/MM/YY HH:mm",});
-                        </script>
-                    </div>
-                    <div class="form-group col-md-4">
-                        <label>Ticket de Piscina Nro: </label>
-                        <p><b>{{vm.swimmPool.stringSeq}}</b></p>
-                    </div>
-                    <div class="form-group col-md-4">
-                        <label>Tipo Cliente: </label>
-                        <select ng-options="item.code as item.name for item in [{code: 'adulto', name: 'ADULTOS'}, {code: 'menor', name: 'NIÑOS'}, {code: 'edad3ra', name: 'TERCERA EDAD'}]"
-                                ng-model="vm.tipoClnt" ng-change="vm.calcIvaAndSubTotal()" class="form-control">
-                        </select>
-                    </div>
-                </div>
-            </div>
-            <div class="panel-footer">
-                <button type="button" title="Guardar Ticket" class="btn btn-success btn-sm"
-                        ng-click="vm.saveSwimmPool()">
-                        <span class="glyphicon glyphicon-floppy-save" aria-hidden="true"></span>
-                </button>
-                <button type="button" title="Salir" class="btn btn-primary btn-sm"
-                        ng-click="vm.cancel()">
-                        <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
-                </button>
-            </div>
         </div>
     </div>
 
@@ -344,6 +81,7 @@
                                 <td align="center">
                                     <img src="images/{{vm.userData.subsidiary.userClient.logo}}" width="50" height="50"/>
                                     <h5><b>INGRESO A PISCINA</b></h5>
+                                    <h5><b>{{vm.swimmPool.tipoClnt}}</b></h5>
                                     <h5><b>Válido para el: {{vm.swimmPool.fecha | date: "dd-MM-yyyy"}}</b></h5>
                                     <p><b>Horarios:</b> Miercoles a Domingo</p>
                                     <p>de 9:00hrs a 17:00hrs</p>
@@ -359,6 +97,8 @@
                                     <p><b>Indicaciones:</b></p>
                                     <p>Obligatorio el uso de gorro de baño</p>
                                     <p>Favor usar traje de baño</p>
+                                    <p>DE REQUERIR FACTURA, FAVOR</p>
+                                    <p>SOLICITAR EN ADMINISTRACIÓN</p><br/><br/>
                                 </td>
                             </tr>
                         </table>
@@ -366,8 +106,8 @@
                 </div>
             </div>
             <div class="panel-footer" print-remove>
-                <button print-btn type="button" title = "Imprimir Ticket" class="btn btn-danger btn-sm">
-                        <span class = "glyphicon glyphicon-print" aria-hidden = "true"></span>
+                <button print-btn type="button" title="Imprimir Ticket" class="btn btn-danger btn-sm">
+                        <span class="glyphicon glyphicon-print" aria-hidden="true"></span>
                 </button>
                 <button type="button" title="Salir" class="btn btn-primary btn-sm"
                         ng-click="vm.cancel()">
@@ -377,8 +117,79 @@
         </div>
     </div>
 
+    <!--CONSULTA DE TICKETS VENDIDOS-->
+    <div class="table-responsive" ng-show="vm.selectedTypeOption === '4'">
+        <div class="panel panel-primary">
+            <div class="panel-heading" print-remove>
+                <b>Consulta de Tickets Vendidos</b>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="form-group col-md-12">
+                        <input id="inputTp0" ng-model="searchText" class="form-control" placeholder="Buscar">
+                    </div>
+                    <div class="form-group col-md-12">
+                        <hr>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label>Seleccione la Fecha de Búsqueda: </label>
+                        <div class="input-group date" id="pickerSwimmDate">
+                            <input type="text" class="form-control input-group-addon"/>
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"/></span>
+                        </div>
+                        <script>
+                            $('#pickerSwimmDate').datetimepicker({
+                                format: "DD/MM/YY",
+                            });
+                        </script>
+                    </div>
+                    <div class="form-group col-md-2">
+                        <br/>
+                        <button type="button" title="Buscar Tickets Vendidos" class="btn btn-primary btn-sm" ng-click="vm.getTicketSold()">
+                                <span class = "glyphicon glyphicon-search" aria-hidden = "true"></span>
+                        </button>
+                    </div>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>C&oacute;digo Barras</th>
+                                <th>Tipo de Cliente</th>
+                                <th>Fecha</th>
+                                <th>Estado Ticket</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-show="vm.swimmList == 0">
+                                <td colspan="4">
+                                    No hay Tickets Encontrados en la busqueda...
+                                </td>
+                            </tr>
+                            <tr ng-repeat="ticket in vm.swimmList | orderBy:'fecha' | filter:searchText">
+                                <td>{{ticket.barCode}}</td>
+                                <td>{{ticket.tipoClnt}}</td>
+                                <td>{{ticket.fecha | date : "dd/MM/yyyy"}}</td>
+                                <td>{{ticket.status}}</td>
+                                <td>
+                                    <button type="button" title="Ver Ticket" class="btn btn-primary btn-sm" ng-click="vm.consultTkSwimmPool(ticket)">
+                                            <span class = "glyphicon glyphicon-ok" aria-hidden = "true"></span>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="panel-footer" print-remove>
+                <button type="button" title="Salir" class="btn btn-primary btn-sm"
+                        ng-click="vm.cancel()">
+                        <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!--TICKET PISCINA -- CONTROL DE ACCESO A PISCINA-->
-    <div class="table-responsive" ng-show="vm.selectedTypeOption === '2'">
+    <div class="table-responsive" ng-show="vm.selectedTypeOption === '5'">
         <div class="panel panel-primary">
             <div class="panel-heading" print-remove>
                 <b>Control de Tickets -- Acceso a Piscina</b>
@@ -391,19 +202,11 @@
                                onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))">
                     </div>
                     <div class="form-group col-md-9">
-                        <label>Estado del Ticket</label>
+                        <label>Estado del Ticket: </label>
                         <p>{{vm.status}}</p>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="form-group col-md-6">
-                        <label>Nombre del Cliente: </label>
-                        <p>{{vm.swimmPool.clntName}}</p>
-                    </div>
-                    <div class="form-group col-md-3">
-                        <label>Identificación: </label>
-                        <p>{{vm.swimmPool.clntIdent}}</p>
-                    </div>
                     <div class="form-group col-md-3">
                         <label>Tipo Cliente: </label>
                         <p>{{vm.tipoClnt}}</p>
@@ -411,7 +214,7 @@
                 </div>
             </div>
             <div class="panel-footer">
-                <button type="button" title="Validar Ticket" ng-disabled="vm.status === undefined" class="btn btn-success btn-sm"
+                <button type="button" id="btnSave" title="Validar Ticket" ng-disabled="vm.status === undefined" class="btn btn-success btn-sm"
                         ng-click="vm.validateAndSaveSwimmPool()">
                         <span class="glyphicon glyphicon-floppy-save" aria-hidden="true"></span>
                 </button>

@@ -19,8 +19,8 @@ angular
             });
         };
 
-        this.getSwimmPoolByClientId = function(id) {
-            return securityService.get('/swimm/client/' + id).then(function successCallback(response) {
+        this.getSwimmPoolBySubIdAndDates = function(subId, dateOne, dateTwo) {
+            return securityService.get('/swimm/rep/' + subId + '/' + dateOne + '/' + dateTwo).then(function successCallback(response) {
                 return response.data;
             });
         };

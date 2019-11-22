@@ -39,16 +39,16 @@ public class SwimmingPoolController {
         return new ResponseEntity<SwimmingPool>(response, HttpStatus.ACCEPTED);
     }
     
-    @RequestMapping(method = RequestMethod.GET, value="/client/{id}")
-    public ResponseEntity getSwimmPoolByClientId(@PathVariable("id") UUID id) {
+    @RequestMapping(method = RequestMethod.GET, value="/rep/{subId}/{dateOne}/{dateTwo}")
+    public ResponseEntity getSwimmPoolBySubIdAndDates(@PathVariable("subId") UUID subId, @PathVariable("dateOne") long dateOne, @PathVariable("dateTwo") long dateTwo) {
         Iterable<SwimmingPool> response = null;
         try {
-            response = service.getSwimmPoolByClientId(id);
+            response = service.getSwimmPoolBySubIdAndDates(subId, dateOne, dateTwo);
         } catch (BadRequestException e) {
-            log.error("SwimmingPoolController getSwimmPoolByClientId Exception thrown: {}", e.getMessage());
+            log.error("SwimmingPoolController getSwimmPoolBySubIdAndDates Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
-        log.info("SwimmingPoolController getSwimmPoolByClientId DONE");
+        log.info("SwimmingPoolController getSwimmPoolBySubIdAndDates DONE");
         return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
     }
     
