@@ -88,6 +88,10 @@ function routes($routeProvider) {
             templateUrl: 'views/billsOffline/billOffline.tpl.html',
             controller: 'BillOfflineCtrl',
             controllerAs: 'vm'
+        }).when('/swimming', {
+            templateUrl: 'views/swimming/swimming.tpl.html',
+            controller: 'SwimmingCtrl',
+            controllerAs: 'vm'
         }).otherwise({
             redirectTo: '/'
     });

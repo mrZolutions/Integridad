@@ -176,9 +176,9 @@ public class CreditNoteCellarServices {
     public void updateProductBySubsidiary(CreditNoteCellar creditNoteCellar, List<DetailCellar> detailsCellar) {
         detailsCellar.forEach(detail -> {
             if (!detail.getProduct().getProductType().getCode().equals("SER")) {
-                ProductBySubsidiary ps = productBySubsidiairyRepository.findBySubsidiaryIdAndProductId(creditNoteCellar.getSubsidiary().getId(), detail.getProduct().getId());
-                ps.setQuantity(ps.getQuantity() - detail.getQuantity());
-                productBySubsidiairyRepository.save(ps);
+                ProductBySubsidiary psNCl = productBySubsidiairyRepository.findBySubsidiaryIdAndProductId(creditNoteCellar.getSubsidiary().getId(), detail.getProduct().getId());
+                psNCl.setQuantity(psNCl.getQuantity() - detail.getQuantity());
+                productBySubsidiairyRepository.save(psNCl);
             }
         });
         log.info("CreditNoteCellarServices updateProductBySubsidiary DONE");

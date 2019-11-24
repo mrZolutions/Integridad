@@ -63,6 +63,9 @@ angular.module('integridadUiApp')
             vm.selectedForSetting = undefined;
             vm.reportList = undefined;
             vm.isProductReportList = undefined;
+            vm.dateOne = undefined;
+            vm.dateTwo = undefined;
+            vm.systemOur = undefined;
 
             vm.impuestosTotales = [];
             vm.impuestoICE = {
@@ -394,11 +397,11 @@ angular.module('integridadUiApp')
             vm.isProductReportList = '1';
             vm.reportList = undefined;
             vm.loading = true;
-            var dateOne = $('#pickerKardexDateOne').data("DateTimePicker").date().toDate().getTime();
-            var dateTwo = $('#pickerKardexDateTwo').data("DateTimePicker").date().toDate().getTime();
-            dateTwo += 86399000;
+            vm.dateOne = $('#pickerKardexDateOne').data("DateTimePicker").date().toDate().getTime();
+            vm.dateTwo = $('#pickerKardexDateTwo').data("DateTimePicker").date().toDate().getTime();
+            vm.dateTwo += 86399000;
         
-            productService.getKardexActivesByUserClientIdAndProductIdAndDates(vm.usrCliId, vm.prodKarId, dateOne, dateTwo).then(function(response) {
+            productService.getKardexActivesByUserClientIdAndProductIdAndDates(vm.usrCliId, vm.prodKarId, vm.dateOne, vm.dateTwo).then(function(response) {
                 vm.reportList = response;
                 vm.loading = false;
             }).catch(function(error) {

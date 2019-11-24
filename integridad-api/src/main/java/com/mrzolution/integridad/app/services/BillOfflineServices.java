@@ -229,7 +229,7 @@ public class BillOfflineServices {
             String status = billOff.isActive() ? "ACTIVA" : "ANULADA";
 
             SalesOfflineReport saleOfflineReport= new SalesOfflineReport(date, billOff.getClient().getCodApp(), billOff.getClient().getName(), billOff.getClient().getIdentification(),
-			billOff.getStringSeq(), status, billOff.getBaseTaxes(), billOff.getDiscount(),billOff.getBaseNoTaxes(), billOff.getIva(), billOff.getTotal(), billOff.getUserIntegridad().getCashier().getNameNumber(),
+			billOff.getStringSeq(), status, billOff.getBaseTaxes(), billOff.getDiscount(), billOff.getBaseNoTaxes(), billOff.getIva(), billOff.getTotal(), billOff.getUserIntegridad().getCashier().getNameNumber(),
 			billOff.getSubsidiary().getName(), billOff.getUserIntegridad().getFirstName() + " " + billOff.getUserIntegridad().getLastName());
 
             salesOfflineReportList.add(saleOfflineReport);

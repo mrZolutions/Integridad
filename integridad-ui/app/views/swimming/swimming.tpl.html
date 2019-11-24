@@ -1,0 +1,249 @@
+<div style="width: 100%;height: 100%;top: 0px;left: 0px;position: fixed;display: block; z-index: 99; background: rgba(255, 255, 255, 0.3)" ng-show="vm.loading">
+    <div style="position: absolute;top: 15%;z-index: 100; width: 100%; text-align: center;">
+        <div class="sk-circle">
+            <div class="sk-circle1 sk-child"></div>
+            <div class="sk-circle2 sk-child"></div>
+            <div class="sk-circle3 sk-child"></div>
+            <div class="sk-circle4 sk-child"></div>
+            <div class="sk-circle5 sk-child"></div>
+            <div class="sk-circle6 sk-child"></div>
+            <div class="sk-circle7 sk-child"></div>
+            <div class="sk-circle8 sk-child"></div>
+            <div class="sk-circle9 sk-child"></div>
+            <div class="sk-circle10 sk-child"></div>
+            <div class="sk-circle11 sk-child"></div>
+            <div class="sk-circle12 sk-child"></div>
+        </div>
+    </div>
+</div>
+
+<div class="form-group col-md-12">
+    <div class="header">
+        <h4><b>Ticket Piscina</b></h4>
+    </div>
+    
+    <div class="row" ng-show="vm.error !== undefined">
+        <div class="form-group col-md-12">
+            <div class="alert alert-danger">{{vm.error}}</div>
+        </div>
+    </div>
+    <div class="row" ng-show="vm.success !== undefined">
+        <div class="form-group col-md-12">
+            <div class="alert alert-success">{{vm.success}}</div>
+        </div>
+    </div>
+
+    <div class="row" ng-show="vm.selectedTypeOption === undefined">
+        <div class="form-group col-md-4">
+            <button type="button" class="btn btn-primary btn-block" ng-click="vm.loadTypeOption('1')">
+                TICKET PISCINA -- ADULTOS
+            </button>
+        </div>
+        <div class="form-group col-md-4">
+            <button type="button" class="btn btn-primary btn-block" ng-click="vm.loadTypeOption('2')">
+                TICKET PISCINA -- NIÑOS (AS)
+            </button>
+        </div>
+        <div class="form-group col-md-4">
+            <button type="button" class="btn btn-primary btn-block" ng-click="vm.loadTypeOption('3')">
+                TICKET PISCINA -- TERCERA EDAD
+            </button>
+        </div>
+        <div class="form-group col-md-4">
+            <button type="button" class="btn btn-primary btn-block" ng-click="vm.loadTypeOption('4')">
+                CONSULTA DE TICKETS VENDIDOS
+            </button>
+        </div>
+        <div class="form-group col-md-4">
+            <button type="button" class="btn btn-primary btn-block" ng-click="vm.loadTypeOption('5')">
+                CONTROL DE ACCESO A PISCINA
+            </button>
+        </div>
+        <div class="form-group col-md-12">
+            <button type="button" title="Volver a Inicio" class="btn btn-danger btn-sm"
+                    ng-click="vm.exit()">
+                    <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
+            </button>
+        </div>
+    </div>
+
+    <!--IMPRESIÓN DEL TICKET DE PISCINA-->
+    <div class="table-responsive" ng-show="vm.savedSwimmPool" id="printArea" print-section>
+        <div class="panel panel-primary">
+            <div class="panel-heading" print-remove>
+                <b>Datos del Ticket</b>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="form-group col-md-4">
+                        <table width="100%">
+                            <tr>
+                                <td align="center">
+                                    <img src="images/{{vm.userData.subsidiary.userClient.logo}}" width="50" height="50"/>
+                                    <h5><b>INGRESO A PISCINA</b></h5>
+                                    <h5><b>{{vm.swimmPool.tipoClnt}}</b></h5>
+                                    <h5><b>Válido para el: {{vm.swimmPool.fecha | date: "dd-MM-yyyy"}}</b></h5>
+                                    <p><b>Horarios:</b> Miercoles a Domingo</p>
+                                    <p>de 9:00hrs a 17:00hrs</p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="center">
+                                    <img id="barcode" width="160" height="80"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="center">
+                                    <p><b>Indicaciones:</b></p>
+                                    <p>Obligatorio el uso de gorro de baño</p>
+                                    <p>Favor usar traje de baño</p>
+                                    <p>DE REQUERIR FACTURA, FAVOR</p>
+                                    <p>SOLICITAR EN ADMINISTRACIÓN</p><br/><br/>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="panel-footer" print-remove>
+                <button print-btn type="button" title="Imprimir Ticket" class="btn btn-danger btn-sm">
+                        <span class="glyphicon glyphicon-print" aria-hidden="true"></span>
+                </button>
+                <button type="button" title="Salir" class="btn btn-primary btn-sm"
+                        ng-click="vm.cancel()">
+                        <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!--CONSULTA DE TICKETS VENDIDOS-->
+    <div class="table-responsive" ng-show="vm.selectedTypeOption === '4'">
+        <div class="panel panel-primary">
+            <div class="panel-heading" print-remove>
+                <b>Consulta de Tickets Vendidos</b>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="form-group col-md-12">
+                        <input id="inputTp0" ng-model="searchText" class="form-control" placeholder="Buscar">
+                    </div>
+                    <div class="form-group col-md-12">
+                        <hr>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label>Seleccione la Fecha de Búsqueda: </label>
+                        <div class="input-group date" id="pickerSwimmDate">
+                            <input type="text" class="form-control input-group-addon"/>
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"/></span>
+                        </div>
+                        <script>
+                            $('#pickerSwimmDate').datetimepicker({
+                                format: "DD/MM/YY",
+                            });
+                        </script>
+                    </div>
+                    <div class="form-group col-md-2">
+                        <br/>
+                        <button type="button" title="Buscar Tickets Vendidos" class="btn btn-primary btn-sm" ng-click="vm.getTicketSold()">
+                                <span class = "glyphicon glyphicon-search" aria-hidden = "true"></span>
+                        </button>
+                    </div>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>C&oacute;digo Barras</th>
+                                <th>Tipo de Cliente</th>
+                                <th>Fecha</th>
+                                <th>Estado Ticket</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-show="vm.swimmList == 0">
+                                <td colspan="4">
+                                    No hay Tickets Encontrados en la busqueda...
+                                </td>
+                            </tr>
+                            <tr ng-repeat="ticket in vm.swimmList | orderBy:'fecha' | filter:searchText">
+                                <td>{{ticket.barCode}}</td>
+                                <td>{{ticket.tipoClnt}}</td>
+                                <td>{{ticket.fecha | date : "dd/MM/yyyy"}}</td>
+                                <td>{{ticket.status}}</td>
+                                <td>
+                                    <button type="button" title="Ver Ticket" class="btn btn-primary btn-sm" ng-click="vm.consultTkSwimmPool(ticket)">
+                                            <span class = "glyphicon glyphicon-ok" aria-hidden = "true"></span>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="panel-footer" print-remove>
+                <button type="button" title="Salir" class="btn btn-primary btn-sm"
+                        ng-click="vm.cancel()">
+                        <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!--TICKET PISCINA -- CONTROL DE ACCESO A PISCINA-->
+    <div class="table-responsive" ng-show="vm.selectedTypeOption === '5'">
+        <div class="panel panel-primary">
+            <div class="panel-heading" print-remove>
+                <b>Control de Tickets -- Acceso a Piscina</b>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="form-group col-md-3">
+                        <label>Código de Barras Ticket: </label>
+                        <input type="text" id="inputTp1" ng-model="vm.ticketBarCode" class="form-control" ng-keypress="vm.filterTkBarCode($event)" maxlength="13"
+                               onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))">
+                    </div>
+                    <div class="form-group col-md-9">
+                        <label>Estado del Ticket: </label>
+                        <p>{{vm.status}}</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-3">
+                        <label>Tipo Cliente: </label>
+                        <p>{{vm.tipoClnt}}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="panel-footer">
+                <button type="button" id="btnSave" title="Validar Ticket" ng-disabled="vm.status === undefined" class="btn btn-success btn-sm"
+                        ng-click="vm.validateAndSaveSwimmPool()">
+                        <span class="glyphicon glyphicon-floppy-save" aria-hidden="true"></span>
+                </button>
+                <button type="button" title="Salir" class="btn btn-primary btn-sm"
+                        ng-click="vm.cancel()">
+                        <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
+                </button>
+            </div>
+        </div>
+    </div>    
+
+    <!--ADVERTENCIA-->
+    <div class="table-responsive" ng-show="vm.advertencia === true">
+        <div class="row">
+            <div class="col-md-12">
+                <h2>¡¡¡Advertencia!!!</h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <h4>SU EMPRESA O USUARIO NO ESTAN AUTORIZADOS PARA EJECUTAR ESTA OPCIÓN DEL MENÚ</h4>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <button type="button" title = "Aceptar y Salir" class="btn btn-success btn-sm" ng-click="vm.exit()">
+                        <span class = "glyphicon glyphicon-thumbs-down" aria-hidden = "true"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

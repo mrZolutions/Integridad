@@ -52,7 +52,7 @@ public class BillServices {
             
     public String getDatil(Requirement requirement, UUID userClientId) throws Exception {
         UserClient userClient = userClientRepository.findOne(userClientId);
-        if (userClient == null) {
+        if (userClient.getApiKey() == null || "".equals(userClient.getApiKey())) {
             throw new BadRequestException("Empresa Invalida");
         }
         log.info("BillServices getDatil Empresa valida: {}", userClient.getName());
@@ -190,6 +190,7 @@ public class BillServices {
             detail.setBill(null);
         });
         saved.setDetails(details);
+        log.info("BillServices saveDetailsBill DONE");
     }
     
     //Almacena los Detalles en Kardex
@@ -201,6 +202,7 @@ public class BillServices {
             detailk.setBill(null);
         });
         saved.setDetailsKardex(detailsKardex);
+        log.info("BillServices saveKardex DONE");
     }
     
     //Almacena los Detalles de la Cotización
@@ -239,6 +241,7 @@ public class BillServices {
                 productBySubsidiairyRepository.save(ps);
             }
         });
+        log.info("BillServices updateProductBySubsidiary DONE");
     }
     //Fin de Creación de las Bills
     
@@ -269,7 +272,7 @@ public class BillServices {
         populateChildren(saved);
         updateKardexOfDeactivatedBill(saved);
         updatePSOfDeactivatedBill(saved, saved.getDetails());
-        log.info("BillServices deactivateBill: {}, {}", saved.getId(), saved.getStringSeq());
+        log.info("BillServices deactivateBill: {}, {}", billToDeactivate.getId(), billToDeactivate.getStringSeq());
         return billToDeactivate;
     }
     

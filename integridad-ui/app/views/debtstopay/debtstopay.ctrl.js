@@ -278,6 +278,9 @@ angular.module('integridadUiApp')
             providerService.getLazyByUserClientId(vm.usrCliId).then(function(response) {
                 vm.providerList = response;
                 vm.loading = false;
+                setTimeout(function() {
+                    document.getElementById("input41").focus();
+                }, 200);
             }).catch(function(error) {
                 vm.loading = false;
                 vm.error = error.data;

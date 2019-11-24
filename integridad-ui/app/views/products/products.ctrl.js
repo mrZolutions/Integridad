@@ -33,11 +33,15 @@ angular.module('integridadUiApp')
         
         function _activate() {
             vm.searchText = undefined;
+            vm.productBarCode = undefined;
             vm.loading = true;
             vm.userClientId = $localStorage.user.subsidiary.userClient.id;
             vm.messurements = messurementListService.getMessurementList();
             productTypeService.getproductTypesLazy().then(function(response) {
                 vm.productTypes = response;
+                setTimeout(function() {
+                    document.getElementById("input40").focus();
+                }, 200);
             }).catch(function(error) {
                 vm.loading = false;
                 vm.error = error.data;
@@ -56,7 +60,7 @@ angular.module('integridadUiApp')
                     vm.totalPages = response.totalPages;
                     vm.totalElements = response.totalElements;
                     _getProductQuantities(response.content);
-                  vm.loading = false;
+                    vm.loading = false;
                 }).catch(function(error) {
                     vm.loading = false;
                     vm.error = error.data;
@@ -104,6 +108,18 @@ angular.module('integridadUiApp')
                 vm.error = error.data;
             });
         };
+
+        vm.fillBarCode = function(event){
+            if (event.keyCode === 32 || event.charCode === 32) {
+                if (vm.productBarCode.length < 13) {
+                    vm.productBarCodeFixed = vm.productBarCode;
+                    for (var i = vm.productBarCode.length; i < 13; i++) {
+                        vm.productBarCodeFixed = vm.productBarCodeFixed.concat('0');
+                    };
+                    vm.productBarCode = vm.productBarCodeFixed.trim();
+                };
+            };
+        };
                                             
         function _getBrands() {
             brandService.getBrandsLazy($localStorage.user.subsidiary.userClient.id).then(function(response) {
@@ -127,6 +143,7 @@ angular.module('integridadUiApp')
             vm.product.productBySubsidiaries = vm.productBySubsidiaries;
             productService.getProdByUserClientIdAndCodeIntegActive(vm.userClientId, vm.product.codeIntegridad).then(function(response) {
                 if (response.length === 0) {
+                    vm.product.barCode = vm.productBarCode;
                     productService.create(vm.product).then(function(response) {
                         vm.product = undefined;
                         vm.selectedGroup = undefined;
@@ -156,6 +173,7 @@ angular.module('integridadUiApp')
             _.each(vm.productBySubsidiaries, function(psNew) {
                 vm.product.productBySubsidiaries.push(psNew);
             });
+            vm.product.barCode = vm.productBarCode;
             productService.update(vm.product).then(function(response) {
                 vm.product = undefined;
                 vm.selectedGroup = undefined;
@@ -234,6 +252,7 @@ angular.module('integridadUiApp')
         vm.editProduct = function(productEdit) {
             vm.success = undefined;
             vm.error = undefined;
+            vm.productBarCode = productEdit.barCode;
             vm.selectedGroup = productEdit.subgroup.groupLine;
             vm.selectedLine = productEdit.subgroup.groupLine.line;
             vm.averageC = productEdit.averageCost;

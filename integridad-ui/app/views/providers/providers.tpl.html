@@ -36,7 +36,7 @@
     <div class="table-responsive" ng-show="vm.provider === undefined && vm.retention === undefined && vm.debtsToPay === undefined && vm.retentionList === undefined && vm.reportStatementProviderSelected === undefined">
         <div class="row">
             <div class="form-group col-md-10">
-                <input ng-model="searchText" class="form-control" placeholder="Buscar">
+                <input id="inputPr0" ng-model="searchText" class="form-control" placeholder="Buscar">
             </div>
             <div class="form-group col-md-1">
                 <button type="button" title = "Agregar Nuevo Proveedor" class="btn btn-primary" ng-click="vm.providerCreate()">
@@ -75,9 +75,6 @@
                         </button>
                         <button type="button" title = "Consultar Retenciones" class="btn btn-primary btn-sm" ng-click="vm.providerConsultRetention(providerEdit)">
                                 <span class = "glyphicon glyphicon-search" aria-hidden = "true"></span>
-                        </button>
-                        <button type="button" title = "Estado de Cuenta del Proveedor" class="btn btn-primary btn-sm" ng-click="vm.statementProvider(providerEdit)">
-                            <span class = "glyphicon glyphicon-briefcase" aria-hidden = "true"></span>
                         </button>
                     </td>
                 </tr>

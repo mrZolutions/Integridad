@@ -10,7 +10,6 @@ angular.module('integridadUiApp')
     .controller('BillOfflineCtrl', function(_, $location, utilStringService, $localStorage, projectService,
                                             clientService, productService, authService, billOfflineService,
                                             cashierService, utilSeqService, validatorService, countryListService) {
-
         var vm = this;
         vm.error = undefined;
         vm.success = undefined;
@@ -60,9 +59,10 @@ angular.module('integridadUiApp')
             vm.pineda = '6e663299-d61c-44de-b42c-a3d6595b46d2';
 
             vm.error = undefined;
+            vm.success = undefined;
             vm.aux = undefined;
             vm.newClient = undefined;
-            vm.newBillOffline = undefined;
+            vm.newBillOffline = true;
             vm.billedOffline = false;
             vm.clientSelected = undefined;
             vm.dateBillOffline = undefined;
@@ -106,13 +106,21 @@ angular.module('integridadUiApp')
                 var finalConsumer = _.filter(vm.clientList, function(client){ return client.identification === '9999999999999'})
                 vm.clientSelect(finalConsumer[0]);
                 vm.loading = false;
-                setTimeout(function(){
-                  document.getElementById("input4").focus();
+                setTimeout(function() {
+                    document.getElementById("input4").focus();
                 }, 500);
             }).catch(function(error) {
                 vm.loading = false;
                 vm.error = error.data;
             });
+        };
+
+        vm.volver = function() {
+            _activate();
+        };
+
+        vm.nuevaBillOffline = function() {
+            _activate();
         };
 
         function _getSeqNumber() {
@@ -139,22 +147,22 @@ angular.module('integridadUiApp')
         };
 
         vm.filterBarCode = function(){
-
-          if(vm.billOfflineBarCode.length === 13){
-
-            productService.getLazyBySusidiaryIdBarCode($localStorage.user.subsidiary.id, vm.billOfflineBarCode).then(function(response) {
-              if(!_.isEmpty(response)){
-                vm.quantity = 1;
-                vm.toAdd = response[0];
-                vm.toAddExistency = _.last(vm.toAdd.productBySubsidiaries).quantity;
-                vm.toAddPrice = vm.getCost(vm.toAdd[vm.priceType.cod], vm.toAdd.averageCost);
-                document.getElementById("submitAdd").focus();
-              }
-            });
-          }
+            if (vm.billOfflineBarCode.length === 13) {
+                productService.getLazyBySusidiaryIdBarCode($localStorage.user.subsidiary.id, vm.billOfflineBarCode).then(function(response) {
+                    if (!_.isEmpty(response)) {
+                        vm.quantity = 1;
+                        vm.paraticularDiscount = undefined;
+                        vm.toAdd = response[0];
+                        vm.toAddExistency = _.last(vm.toAdd.productBySubsidiaries).quantity;
+                        vm.toAddPrice = vm.getCost(vm.toAdd[vm.priceType.cod], vm.toAdd.averageCost);
+                        document.getElementById("submitAdd").focus();
+                    };
+                });
+            };
         };
 
         vm.clientSelect = function(client) {
+            vm.success = undefined;
             vm.companyData = $localStorage.user.subsidiary;
             vm.dateBillOffline = new Date();
             vm.clientSelected = client;
@@ -164,8 +172,8 @@ angular.module('integridadUiApp')
             var today = new Date();
             $('#pickerBillOfflineDate').data("DateTimePicker").date(today);
             vm.newBillOffline = true;
-            setTimeout(function(){
-              document.getElementById("input4").focus();
+            setTimeout(function() {
+                document.getElementById("input4").focus();
             }, 500);
         };
 
@@ -178,6 +186,13 @@ angular.module('integridadUiApp')
                 vm.loading = false;
                 vm.error = error.data;
             });
+        };
+
+        vm.clientChange = function() {
+            vm.clientSelected = undefined;
+            setTimeout(function() {
+                document.getElementById("inputCl1").focus();
+            }, 200);
         };
 
         vm.createClient = function() {
@@ -225,9 +240,10 @@ angular.module('integridadUiApp')
             clientService.getClientByUserClientAndIdentification(vm.userClientId, vm.client.identification).then(function(response) {
                 if (response.length === 0) {
                     clientService.create(vm.client).then(function(response) {
-                        _activate();
+                        vm.newClient = undefined;
                         vm.error = undefined;
                         vm.success = 'Registro realizado con exito';
+                        setInterval(_activate(), 500);
                     }).catch(function(error) {
                         vm.loading = false;
                         vm.error = error.data;
@@ -328,10 +344,10 @@ angular.module('integridadUiApp')
                     detail.discount = vm.billOffline.discountPercentage;
                 } else {
                     detail.discount = 0;
-              };
-              var costEachCalculated = vm.getCost(detail.product[vm.priceType.cod], detail.product.averageCost);
-              detail.costEach = costEachCalculated;
-              detail.total = parseFloat((parseFloat(detail.quantity) * (parseFloat(detail.costEach) - (parseFloat(detail.costEach) * parseFloat(detail.discount / 100)))).toFixed(2));
+                };
+                var costEachCalculated = vm.getCost(detail.product[vm.priceType.cod], detail.product.averageCost);
+                detail.costEach = costEachCalculated;
+                detail.total = parseFloat((parseFloat(detail.quantity) * (parseFloat(detail.costEach) - (parseFloat(detail.costEach) * parseFloat(detail.discount / 100)))).toFixed(2));
             });
             _getTotalSubtotal();
         };
@@ -392,51 +408,54 @@ angular.module('integridadUiApp')
         };
 
         vm.selectProductToAdd = function(productSelect) {
+            if (vm.quantity == 0 || vm.quantity == undefined) {
+                vm.quantity = 1;
+            };
             if (productSelect.productType.code === 'SER') {
                 productSelect.quantity = 1;
             };
             vm.productToAdd = angular.copy(productSelect);
             var costEachCalculated = vm.getCost(productSelect[vm.priceType.cod], productSelect.averageCost);
             vm.productToAdd.costEachCalculated = costEachCalculated;
-            // vm.quantity = 1;
         };
 
-        vm.addProdBarCode = function(){
-          if(vm.toAdd !== undefined){
-            vm.productToAdd = angular.copy(vm.toAdd);
-            vm.selectProductToAdd(vm.productToAdd);
-            vm.acceptProduct(true);
-            vm.billOfflineBarCode = undefined;
-            vm.toAdd = undefined;
-          }
+        vm.addProdBarCode = function() {
+            if (vm.toAdd !== undefined) {
+                vm.productToAdd = angular.copy(vm.toAdd);
+                vm.selectProductToAdd(vm.productToAdd);
+                vm.acceptProduct(true);
+                vm.billOfflineBarCode = undefined;
+                vm.toAdd = undefined;
+                vm.paraticularDiscount = undefined;
+            };
         };
 
         vm.cancelBarCode = function(){
-          vm.billOfflineBarCode = undefined;
-          vm.toAdd = undefined;
-          vm.quantity = undefined;
+            vm.billOfflineBarCode = undefined;
+              vm.toAdd = undefined;
+              vm.quantity = undefined;
         };
 
-        vm.fill = function(event){
-           if (event.keyCode === 32 || event.charCode === 32) {
-             if(vm.billOfflineBarCode.length < 13){
-               vm.billOfflineBarCodeFixed = vm.billOfflineBarCode;
-               for (var i = vm.billOfflineBarCode.length; i < 13; i++) {
-                 vm.billOfflineBarCodeFixed = vm.billOfflineBarCodeFixed.concat('0');
-               }
-               vm.billOfflineBarCode = vm.billOfflineBarCodeFixed.trim();
-               vm.filterBarCode();
-             }
-           }
+        vm.fill = function(event) {
+            if (event.keyCode === 32 || event.charCode === 32) {
+                if (vm.billOfflineBarCode.length < 13) {
+                    vm.billOfflineBarCodeFixed = vm.billOfflineBarCode;
+                    for (var i = vm.billOfflineBarCode.length; i < 13; i++) {
+                        vm.billOfflineBarCodeFixed = vm.billOfflineBarCodeFixed.concat('0');
+                    };
+                    vm.billOfflineBarCode = vm.billOfflineBarCodeFixed.trim();
+                    vm.filterBarCode();
+                };
+            };
 
-           if (event.keyCode === 102 || event.charCode === 102) {
-             $('#modalAddPago').modal('show');
-             vm.medio = vm.medList[0];
-             vm.loadMedio();
-             setTimeout(function(){
-               document.getElementById("addPaymentBtn").focus();
-             }, 500);
-           }
+            if (event.keyCode === 102 || event.charCode === 102 || event.keyCode === 70 || event.charCode === 70) {
+                $('#modalAddPago').modal('show');
+                vm.medio = vm.medList[0];
+                vm.loadMedio();
+                setTimeout(function() {
+                    document.getElementById("addPaymentBtn").focus();
+                }, 500);
+            };
         };
 
         vm.acceptProduct = function(closeModal) {
@@ -444,23 +463,34 @@ angular.module('integridadUiApp')
             if (vm.billOffline.discountPercentage == null || vm.billOffline.discountPercentage == undefined) {
                 vm.billOffline.discountPercentage = 0;
             };
+
+            var discount = 1;
+            if ((vm.paraticularDiscount !== null || vm.paraticularDiscount !== undefined) && !isNaN(vm.paraticularDiscount)) {
+                discount = (parseFloat(vm.paraticularDiscount) / 100);
+            } else if ((vm.billOffline.discountPercentage !== null || vm.billOffline.discountPercentage !== undefined) && !isNaN(vm.billOffline.discountPercentage)) {
+                discount = (parseFloat(vm.billOffline.discountPercentage) / 100);
+            };
+
             var detail = {
-                discount: vm.billOffline.discountPercentage? vm.billOffline.discountPercentage : 0,
+                discount: vm.billOffline.discountPercentage? vm.billOffline.discountPercentage : vm.paraticularDiscount ? vm.paraticularDiscount : 0,
                 product: angular.copy(vm.productToAdd),
                 quantity: vm.quantity,
                 costEach: vm.productToAdd.costEachCalculated,
-                total: parseFloat(((vm.quantity * vm.productToAdd.costEachCalculated) - (vm.quantity * (vm.productToAdd.costEachCalculated) * (vm.billOffline.discountPercentage / 100))).toFixed(2)),
+                total: parseFloat(((vm.quantity * vm.productToAdd.costEachCalculated) - (vm.quantity * (vm.productToAdd.costEachCalculated) * discount)).toFixed(2)),
                 adicional: vm.adicional
             };
+
             if (vm.indexDetail !== undefined) {
                 vm.billOffline.detailsOffline[vm.indexDetail] = detail;
             } else {
                 vm.billOffline.detailsOffline.push(detail);
             };
+
             vm.productToAdd = undefined;
             vm.quantity = undefined;
             vm.adicional = undefined;
             _getTotalSubtotal();
+
             if (closeModal) {
                 $('#modalAddProduct').modal('hide');
                 vm.toAdd = undefined;
@@ -474,6 +504,7 @@ angular.module('integridadUiApp')
                 });
                 vm.productList = newProductList;
             };
+            vm.paraticularDiscount = undefined;
         };
 
         vm.editDetail = function(detail, index) {
@@ -595,7 +626,6 @@ angular.module('integridadUiApp')
 
         vm.printToCartAndCancel = function(printBillOffline) {
             var innerContents = document.getElementById(printBillOffline).innerHTML;
-
             var popupWinindow = window.open('', 'printMatrixBillOffline', 'width=300,height=400');
             popupWinindow.document.write('<html><head><title></title>');
             popupWinindow.document.write('</head><body>');
@@ -608,7 +638,6 @@ angular.module('integridadUiApp')
 
         vm.printToCart = function(printBillOffline) {
             var innerContents = document.getElementById(printBillOffline).innerHTML;
-
             var popupWinindow = window.open('', 'printMatrixBillOffline', 'width=300,height=400');
             popupWinindow.document.write('<html><body>');
             popupWinindow.document.write(innerContents);
@@ -713,6 +742,9 @@ angular.module('integridadUiApp')
             $('#modalAddPago').modal('hide');
             vm.impuestosTotales = [];
             vm.billOffline.detailsKardexOffline = [];
+            if (vm.billOffline.observation === null || vm.billOffline.observation === undefined || vm.billOffline.observation === '') {
+                vm.billOffline.observation = '--';
+            };
             if (vm.impuestoIVA.base_imponible > 0) {
                 vm.impuestosTotales.push(vm.impuestoIVA);
             };
@@ -787,6 +819,7 @@ angular.module('integridadUiApp')
                 if (response.length === 0) {
                     billOfflineService.createBillOffline(vm.billOffline, 1).then(function(respBill) {
                         vm.billedOffline = true;
+                        vm.newBillOffline = false;
                         vm.billOfflineCreated = respBill;
                         $localStorage.user.cashier.billOfflineNumberSeq = vm.billOffline.billSeq;
                         if (vm.seqChanged) {
@@ -797,7 +830,6 @@ angular.module('integridadUiApp')
                                 vm.error = error.data;
                             });
                         };
-                        _activate();
                         vm.loading = false;
                     }).catch(function(error) {
                         vm.loading = false;

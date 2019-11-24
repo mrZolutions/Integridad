@@ -104,35 +104,35 @@ public class ProductServices {
 	return findOne;
     }
 	
-    public Iterable<Product> getAllActives() {
+    public Iterable<Product> getProductsActives() {
 	Iterable<Product> actives = productRepository.findByActive(true);
 	actives.forEach(this::populateChildren);
-        log.info("ProductServices getAllActives");
+        log.info("ProductServices getProductsActives");
 	return actives;
     }
 	
-    public Iterable<Product> getAllActivesByUserClientIdAndActive(UUID userClientId) {
+    public Iterable<Product> getProductsActivesByUserClientId(UUID userClientId) {
 	Iterable<Product> actives = productRepository.findByUserClientIdAndActive(userClientId);
 	actives.forEach(product -> {
             product.setFatherListToNull();
             populateChildren(product);
 	});
-        log.info("ProductServices getAllActivesByUserClientIdAndActive");
+        log.info("ProductServices getProductsActivesByUserClientId");
 	return actives;
     }
     
-    public Iterable<Product> getProdByUserClientIdAndCodeIntegActive(UUID userClientId, String code) {
+    public Iterable<Product> getProductsActivesByUserClientIdAndCodeInteg(UUID userClientId, String code) {
         Iterable<Product> products = productRepository.findProdByUserClientIdAndCodeIntegActive(userClientId, code);
         products.forEach(prod ->{
             prod.setListsNull();
             prod.setFatherListToNull();
         });
-        log.info("ProductServices getProdByUserClientIdAndCodeIntegActive: {}, {}", userClientId, code);
+        log.info("ProductServices getProductsActivesByUserClientIdAndCodeInteg: {}, {}", userClientId, code);
         return products;
     }
         
-    public Page<Product> getAllActivesBySubsidiaryIdAndActive(UUID subsidiaryId, String variable, Pageable pageable) {
-	log.info("ProductServices getAllActivesBySubsidiaryIdAndActive");
+    public Page<Product> getProductsActivesBySubsidiaryId(UUID subsidiaryId, String variable, Pageable pageable) {
+	log.info("ProductServices getProductsActivesBySubsidiaryId");
 	Page<UUID> productIdList;
 	if (variable.equals("null")) {
             productIdList = productBySubsidiairyRepository.findBySubsidiaryIdAndProductActive(subsidiaryId, pageable);
@@ -149,8 +149,8 @@ public class ProductServices {
 	return products;
     }
 
-    public List<Product> getAllActivesBySubsidiaryIdBarCodeAndActive(UUID subsidiaryId, String variable) {
-        log.info("ProductServices getAllActivesBySubsidiaryIdBarCodeAndActive: " + subsidiaryId + " - " + variable);
+    public List<Product> getProductsActivesBySubsidiaryIdBarCode(UUID subsidiaryId, String variable) {
+        log.info("ProductServices getProductsActivesBySubsidiaryIdBarCode: " + subsidiaryId + " - " + variable);
         Iterable<Product> productIdList;
         productIdList = productBySubsidiairyRepository.findBySubsidiaryIdAndBarCodedAndProductActive(subsidiaryId, variable);
         List<Product> listReturn = new ArrayList<>();
@@ -163,14 +163,14 @@ public class ProductServices {
         return listReturn;
     }
     
-    public Page<Product> getAllActivesBySubsidiaryIdForBill(UUID subsidiaryId, String variable, Pageable pageable) {
-        log.info("ProductServices getAllActivesBySubsidiaryIdForBill");
+    public Page<Product> getProductsActivesBySubsidiaryIdForBill(UUID subsidiaryId, String variable, Pageable pageable) {
+        log.info("ProductServices getProductsActivesBySubsidiaryIdForBill");
         Page<UUID> productIdList;
         if (variable.equals("null")) {
-            log.info("ProductServices getAllActivesBySubsidiaryIdForBill without variable");
+            log.info("ProductServices getProductsActivesBySubsidiaryIdForBill without variable");
             productIdList = productBySubsidiairyRepository.findBySubsidiaryIdAndProductActiveForBill(subsidiaryId, pageable);
         } else {
-            log.info("ProductServices getAllActivesBySubsidiaryIdForBill with variable");
+            log.info("ProductServices getProductsActivesBySubsidiaryIdForBill with variable");
             productIdList = productBySubsidiairyRepository.findBySubsidiaryIdAndVariabledAndProductActiveForBill(subsidiaryId, variable, new PageRequest(0, 150, Sort.Direction.ASC, "product"));
         }
         List<Product> listReturn = new ArrayList<>();

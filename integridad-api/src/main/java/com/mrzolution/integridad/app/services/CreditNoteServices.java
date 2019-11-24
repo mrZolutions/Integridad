@@ -53,7 +53,7 @@ public class CreditNoteServices {
 
     public String getDatil(com.mrzolution.integridad.app.domain.ecreditNote.CreditNote requirement, UUID userClientId) throws Exception {
         UserClient userClient = userClientRepository.findOne(userClientId);
-        if (userClient == null) {
+        if (userClient.getApiKey() == null || "".equals(userClient.getApiKey())) {
             throw new BadRequestException("Empresa Invalida");
         }
         log.info("CreditNoteServices getDatil Empresa valida: {}", userClient.getName());
@@ -159,8 +159,6 @@ public class CreditNoteServices {
             if (!detail.getProduct().getProductType().getCode().equals("SER")) {
                 ProductBySubsidiary psNc = productBySubsidiairyRepository.findBySubsidiaryIdAndProductId(creditNote.getSubsidiary().getId(), detail.getProduct().getId());
                 psNc.setQuantity(psNc.getQuantity() + detail.getQuantity());
-                psNc.setListsNull();
-                psNc.setFatherListToNull();
                 productBySubsidiairyRepository.save(psNc);
             }
         });
