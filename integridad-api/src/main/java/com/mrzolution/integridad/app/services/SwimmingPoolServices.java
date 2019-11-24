@@ -27,8 +27,8 @@ public class SwimmingPoolServices {
         return retrieved;
     }
     
-    public Iterable<SwimmingPool> getSwimmPoolBySubIdAndDates(UUID subId, long dateOne, long dateTwo) {
-        Iterable<SwimmingPool> swimmingPools = swimmingPoolRepository.findSwimmPoolBySubIdAndDates(subId, dateOne, dateTwo);
+    public Iterable<SwimmingPool> getSwimmPoolActivesBySubIdAndDates(UUID subId, long dateOne, long dateTwo) {
+        Iterable<SwimmingPool> swimmingPools = swimmingPoolRepository.findSwimmPoolActivesBySubIdAndDates(subId, dateOne, dateTwo);
         swimmingPools.forEach(swimm -> {
             swimm.setFatherListToNull();
         });
@@ -38,7 +38,7 @@ public class SwimmingPoolServices {
     public SwimmingPool getSwimmPoolBySubIdAndBarCodeActive(UUID subId, String barCode) throws BadRequestException {
         SwimmingPool swimmingPool = swimmingPoolRepository.findSwimmPoolBySubIdAndBarCodeActive(subId, barCode);
         if (swimmingPool == null) {
-            throw new BadRequestException("TICKET INVALIDO O YA USADO");
+            throw new BadRequestException("TICKET ANULADO");
         } else {
             populateChildren(swimmingPool);
         }
@@ -60,13 +60,24 @@ public class SwimmingPoolServices {
         return saved;
     }
     
-    public SwimmingPool deactivateSwimmPool(UUID subId, String barCode) {
-        SwimmingPool swimmToDeactivate = swimmingPoolRepository.findSwimmPoolBySubIdAndBarCodeAll(subId, barCode);
+    public SwimmingPool validateSwimmPool(UUID subId, String barCode) {
+        SwimmingPool swimmToValidate = swimmingPoolRepository.findSwimmPoolBySubIdAndBarCodeActive(subId, barCode);
+        swimmToValidate.setFatherListToNull();
+        swimmToValidate.setStatus("TICKET USADO -- VALIDADO");
+        swimmingPoolRepository.save(swimmToValidate);
+        log.info("SwimmingPoolServices deactivateSwimmPool: {}", swimmToValidate.getStringSeq());
+        return swimmToValidate;
+    }
+    
+    public SwimmingPool deactivateSwimmPool(SwimmingPool swimmPool) throws BadRequestException {
+        if (swimmPool.getId() == null) {
+            throw new BadRequestException("Invalid Ticket");
+        }
+        SwimmingPool swimmToDeactivate = swimmingPoolRepository.findOne(swimmPool.getId());
         swimmToDeactivate.setFatherListToNull();
         swimmToDeactivate.setActive(false);
-        swimmToDeactivate.setStatus("TICKET USADO -- ANULADO");
+        swimmToDeactivate.setStatus("TICKET ANULADO");
         swimmingPoolRepository.save(swimmToDeactivate);
-        log.info("SwimmingPoolServices deactivateSwimmPool: {}", swimmToDeactivate.getStringSeq());
         return swimmToDeactivate;
     }
     

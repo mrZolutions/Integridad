@@ -19,8 +19,8 @@ import org.springframework.stereotype.Repository;
 public interface SwimmingPoolRepository extends CrudRepository<SwimmingPool, UUID> {  
     Iterable<SwimmingPool> findByUserIntegridad(UserIntegridad user);
     
-    @Query("SELECT s FROM SwimmingPool s WHERE s.subsidiary.id = (:subId) AND s.fecha >= (:dateOne) AND s.fecha <= (:dateTwo) ORDER BY s.fecha")
-    Iterable<SwimmingPool> findSwimmPoolBySubIdAndDates(@Param("subId") UUID subId, @Param("dateOne") long dateOne, @Param("dateTwo") long dateTwo);
+    @Query("SELECT s FROM SwimmingPool s WHERE s.subsidiary.id = (:subId) AND s.fecha >= (:dateOne) AND s.fecha <= (:dateTwo) AND s.active = true ORDER BY s.fecha")
+    Iterable<SwimmingPool> findSwimmPoolActivesBySubIdAndDates(@Param("subId") UUID subId, @Param("dateOne") long dateOne, @Param("dateTwo") long dateTwo);
     
     @Query("SELECT s FROM SwimmingPool s WHERE s.subsidiary.id = (:subId) AND s.barCode = (:barCode) AND s.active = true")
     SwimmingPool findSwimmPoolBySubIdAndBarCodeActive(@Param("subId") UUID subId, @Param("barCode") String barCode);

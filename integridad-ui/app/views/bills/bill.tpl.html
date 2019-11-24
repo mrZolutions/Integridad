@@ -248,7 +248,7 @@
                             <tr>
                                 <td>
                                     <b>Nombre: </b>{{vm.clientSelected.name}} &nbsp;
-                                    <button type="button" title="Cambiar" class="btn btn-primary btn-sm" ng-click="vm.clientChange()">
+                                    <button type="button" title="Cambiar" class="btn btn-primary btn-sm" ng-if="vm.newBill" ng-click="vm.clientChange()">
                                             Cambiar
                                     </button>
                                     <br/>
@@ -322,7 +322,7 @@
                         <b>Observaciones:</b>
                         <input type="text" ng-model="vm.bill.observation" class="form-control">
                     </div>
-                    <div class="form-group col-md-3">
+                    <div class="form-group col-md-3" ng-if="vm.newBill">
                         <b>Descuento %: </b>
                         <input type="text" ng-change="vm.reCalculateTotal()" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
                                ng-model="vm.bill.discountPercentage" class="form-control" maxlength="9" ng-change="vm.getFechaCobro()" ng-disabled="!vm.newBill">

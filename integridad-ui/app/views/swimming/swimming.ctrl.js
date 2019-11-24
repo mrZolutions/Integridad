@@ -22,6 +22,7 @@ angular.module('integridadUiApp')
         vm.totalTk3raEdad = 3.5;
 
         function _activate() {
+            vm.loading = true;
             vm.error = undefined;
             vm.usrClntId = $localStorage.user.subsidiary.userClient.id;
             vm.subsidiaryId = $localStorage.user.subsidiary.id;
@@ -43,7 +44,6 @@ angular.module('integridadUiApp')
             vm.hoy = undefined;
             vm.ticketBarCode = undefined;
             vm.success = undefined;
-            vm.loading = true;
             if (vm.usrClntId !== vm.laQuinta) {
                 vm.advertencia = true;
                 vm.selectedTypeOption = 'advert';
@@ -81,7 +81,7 @@ angular.module('integridadUiApp')
                     vm.subTotal = parseFloat((vm.totalTicket / 1.12).toFixed(2));
                     vm.iva = parseFloat((vm.subTotal * 0.12).toFixed(2));
                     _initializeTicket();
-                    setInterval(vm.saveSwimmPool(), 500);
+                    vm.savedSwimmPool = true;
                 break;
                 case '2':
                     vm.success = undefined;
@@ -94,7 +94,7 @@ angular.module('integridadUiApp')
                     vm.subTotal = parseFloat((vm.totalTicket / 1.12).toFixed(2));
                     vm.iva = parseFloat((vm.subTotal * 0.12).toFixed(2));
                     _initializeTicket();
-                    setInterval(vm.saveSwimmPool(), 500);
+                    vm.savedSwimmPool = true;
                 break;
                 case '3':
                     vm.success = undefined;
@@ -107,7 +107,7 @@ angular.module('integridadUiApp')
                     vm.subTotal = parseFloat((vm.totalTicket / 1.12).toFixed(3));
                     vm.iva = parseFloat((vm.subTotal * 0.12).toFixed(3));
                     _initializeTicket();
-                    setInterval(vm.saveSwimmPool(), 500);
+                    vm.savedSwimmPool = true;
                 break;
                 case '4':
                     vm.success = undefined;
@@ -131,7 +131,7 @@ angular.module('integridadUiApp')
             dateOne -= 6399000;
             var dateTwo = $('#pickerSwimmDate').data("DateTimePicker").date().toDate().getTime();
             dateTwo += 86399000;
-            swimmingService.getSwimmPoolBySubIdAndDates(vm.subsidiaryId, dateOne, dateTwo).then(function(response) {
+            swimmingService.getSwimmPoolActivesBySubIdAndDates(vm.subsidiaryId, dateOne, dateTwo).then(function(response) {
                 vm.swimmList = response;
                 vm.loading = false;
             }).catch(function(error) {
@@ -144,7 +144,6 @@ angular.module('integridadUiApp')
             vm.loading = true;
             swimmingService.createSwimmPool(vm.swimmPool).then(function(response) {
                 vm.newTicket = false;
-                vm.savedSwimmPool = true;
                 vm.barcode = response.barCode;
                 vm.swimmPool = response;
                 $('#barcode').JsBarcode(vm.barcode + "", {format:'CODE128', displayValue:true, fontSize:15, textAlign:"center", textPosition:"bottom",
@@ -160,6 +159,7 @@ angular.module('integridadUiApp')
         vm.consultTkSwimmPool = function(ticket) {
             vm.loading = true;
             vm.selectedTypeOption = '0';
+            vm.newTicket = false;
             swimmingService.getSwimmPoolById(ticket.id).then(function(response) {
                 vm.swimmList = undefined;
                 vm.savedSwimmPool = true;
@@ -225,7 +225,7 @@ angular.module('integridadUiApp')
 
         vm.validateAndSaveSwimmPool = function() {
             vm.loading = true;
-            swimmingService.deactivateSwimmPool(vm.subsidiaryId, vm.ticketBarCode).then(function(response) {
+            swimmingService.validateSwimmPool(vm.subsidiaryId, vm.ticketBarCode).then(function(response) {
                 vm.success = "TICKET VALIDADO";
                 vm.loading = false;
             }).catch(function(error) {
@@ -233,6 +233,22 @@ angular.module('integridadUiApp')
                 vm.error = error.data;
             });
             _activate();
+        };
+
+        vm.swimmPoolDeactivate = function() {
+            vm.loading = true;
+            var index = vm.swimmList.indexOf(vm.deactivateSwimmPool);
+            swimmingService.deactivateSwimmPool(vm.deactivateSwimmPool).then(function(response) {
+                var index = vm.swimmList.indexOf(vm.deactivateSwimmPool);
+                if (index > -1) {
+                    vm.swimmList.splice(index, 1);
+                };
+                vm.deactivateSwimmPool = undefined;
+                vm.loading = false;
+            }).catch(function(error) {
+                vm.loading = false;
+                vm.error = error.data;
+            });
         };
 
         vm.cancel = function() {

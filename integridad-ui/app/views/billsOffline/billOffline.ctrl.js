@@ -105,6 +105,10 @@ angular.module('integridadUiApp')
                 vm.clientList = response;
                 var finalConsumer = _.filter(vm.clientList, function(client){ return client.identification === '9999999999999'})
                 vm.clientSelect(finalConsumer[0]);
+                _getSeqNumber();
+                _initializeBillOffline();
+                var today = new Date();
+                $('#pickerBillOfflineDate').data("DateTimePicker").date(today);
                 vm.loading = false;
                 setTimeout(function() {
                     document.getElementById("input4").focus();
@@ -137,10 +141,10 @@ angular.module('integridadUiApp')
                 subsidiary: $localStorage.user.subsidiary,
                 dateCreated: vm.dateBillOffline.getTime(),
                 discount: 0,
-                total: 0.0,
-                subTotal: 0.0,
-                iva: 0.0,
-                ice: 0.0,
+                total: 0,
+                subTotal: 0,
+                iva: 0,
+                ice: 0,
                 detailsOffline: [],
                 pagosOffline: []
             };
@@ -167,11 +171,6 @@ angular.module('integridadUiApp')
             vm.dateBillOffline = new Date();
             vm.clientSelected = client;
             vm.pagosOffline = [];
-            _getSeqNumber();
-            _initializeBillOffline();
-            var today = new Date();
-            $('#pickerBillOfflineDate').data("DateTimePicker").date(today);
-            vm.newBillOffline = true;
             setTimeout(function() {
                 document.getElementById("input4").focus();
             }, 500);

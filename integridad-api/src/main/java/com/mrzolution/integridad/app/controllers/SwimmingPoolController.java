@@ -40,10 +40,10 @@ public class SwimmingPoolController {
     }
     
     @RequestMapping(method = RequestMethod.GET, value="/rep/{subId}/{dateOne}/{dateTwo}")
-    public ResponseEntity getSwimmPoolBySubIdAndDates(@PathVariable("subId") UUID subId, @PathVariable("dateOne") long dateOne, @PathVariable("dateTwo") long dateTwo) {
+    public ResponseEntity getSwimmPoolActivesBySubIdAndDates(@PathVariable("subId") UUID subId, @PathVariable("dateOne") long dateOne, @PathVariable("dateTwo") long dateTwo) {
         Iterable<SwimmingPool> response = null;
         try {
-            response = service.getSwimmPoolBySubIdAndDates(subId, dateOne, dateTwo);
+            response = service.getSwimmPoolActivesBySubIdAndDates(subId, dateOne, dateTwo);
         } catch (BadRequestException e) {
             log.error("SwimmingPoolController getSwimmPoolBySubIdAndDates Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
@@ -92,12 +92,24 @@ public class SwimmingPoolController {
     }
     
     @RequestMapping(method = RequestMethod.PUT, value="/{id}/{barCode}")
-    public ResponseEntity deactivateSwimmPool(@PathVariable("id") UUID id, @PathVariable("barCode") String barCode) {
+    public ResponseEntity validateSwimmPool(@PathVariable("id") UUID id, @PathVariable("barCode") String barCode) {
         try {
-            service.deactivateSwimmPool(id, barCode);
+            service.validateSwimmPool(id, barCode);
+        } catch (BadRequestException e) {
+            log.error("SwimmingPoolController validateSwimmPool Exception thrown: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+        log.info("SwimmingPoolController validateSwimmPool DONE");
+        return new ResponseEntity<Void>(HttpStatus.ACCEPTED);
+    }
+    
+    @RequestMapping(method = RequestMethod.PUT)
+    public ResponseEntity deactivateSwimmPool(@RequestBody SwimmingPool swimmPool) {
+        try {
+            service.deactivateSwimmPool(swimmPool);
         } catch (BadRequestException e) {
             log.error("SwimmingPoolController deactivateSwimmPool Exception thrown: {}", e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+    	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
         log.info("SwimmingPoolController deactivateSwimmPool DONE");
         return new ResponseEntity<Void>(HttpStatus.ACCEPTED);

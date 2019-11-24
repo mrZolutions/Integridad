@@ -97,8 +97,9 @@
                                     <p><b>Indicaciones:</b></p>
                                     <p>Obligatorio el uso de gorro de baño</p>
                                     <p>Favor usar traje de baño</p>
-                                    <p>DE REQUERIR FACTURA, FAVOR</p>
-                                    <p>SOLICITAR EN ADMINISTRACIÓN</p><br/><br/>
+                                    <p><b>DE REQUERIR FACTURA, FAVOR</b></p>
+                                    <p><b>SOLICITAR EN ADMINISTRACIÓN</b></p>
+                                    <p>Valor: {{vm.swimmPool.total}} $</p><br/><br/>
                                 </td>
                             </tr>
                         </table>
@@ -106,7 +107,11 @@
                 </div>
             </div>
             <div class="panel-footer" print-remove>
-                <button print-btn type="button" title="Imprimir Ticket" class="btn btn-danger btn-sm">
+                <button type="button" title="Crear Ticket" class="btn btn-primary btn-sm"
+                        ng-click="vm.saveSwimmPool()" ng-if="vm.newTicket">
+                        <span class="glyphicon glyphicon-floppy-save" aria-hidden="true"></span>
+                </button>
+                <button print-btn type="button" title="Imprimir Ticket" class="btn btn-danger btn-sm" ng-if="!vm.newTicket">
                         <span class="glyphicon glyphicon-print" aria-hidden="true"></span>
                 </button>
                 <button type="button" title="Salir" class="btn btn-primary btn-sm"
@@ -156,6 +161,7 @@
                                 <th>Tipo de Cliente</th>
                                 <th>Fecha</th>
                                 <th>Estado Ticket</th>
+                                <th>Valor $</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -169,9 +175,14 @@
                                 <td>{{ticket.tipoClnt}}</td>
                                 <td>{{ticket.fecha | date : "dd/MM/yyyy"}}</td>
                                 <td>{{ticket.status}}</td>
+                                <td>{{ticket.total}} $</td>
                                 <td>
                                     <button type="button" title="Ver Ticket" class="btn btn-primary btn-sm" ng-click="vm.consultTkSwimmPool(ticket)">
-                                            <span class = "glyphicon glyphicon-ok" aria-hidden = "true"></span>
+                                            <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+                                    </button>
+                                    <button type="button" title="Anular Ticket" class="btn btn-warning btn-sm" ng-click="vm.deactivateSwimmPool = ticket"
+                                            data-toggle="modal" data-target="#modalAnularSwimmPool">
+                                            <span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span>
                                     </button>
                                 </td>
                             </tr>
@@ -184,6 +195,33 @@
                         ng-click="vm.cancel()">
                         <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
                 </button>
+            </div>
+        </div>
+    </div>
+
+    <!--ANULAR TICKET DE PISCINA-->
+    <div id="modalAnularSwimmPool" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h3 class="modal-title">¡¡¡Advertencia!!!</h3>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12" >
+                            <p>¿Est&aacute; seguro que desea Anular el Ticket No. <b>{{vm.deactivateSwimmPool.barCode}}</b>?</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" title="Anular Ticket" class="btn btn-danger btn-sm" ng-click="vm.swimmPoolDeactivate()" data-dismiss="modal">
+                            <span class="glyphicon glyphicon-screenshot" aria-hidden="true"></span>
+                    </button>
+                    <button type="button" title = "Salir" class="btn btn-primary btn-sm" data-dismiss="modal">
+                            <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
+                    </button>
+                </div>
             </div>
         </div>
     </div>

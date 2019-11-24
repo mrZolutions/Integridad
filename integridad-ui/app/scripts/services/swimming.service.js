@@ -7,8 +7,14 @@ angular
             });
         };
 
-        this.deactivateSwimmPool = function(subId, barCode) {
+        this.validateSwimmPool = function(subId, barCode) {
             return securityService.put('/swimm/' + subId + '/' + barCode).then(function successCallback(response) {
+                return response.data;
+            });
+        };
+
+        this.deactivateSwimmPool = function(swimmPool) {
+            return securityService.put('/swimm', swimmPool).then(function successCallback(response) {
                 return response.data;
             });
         };
@@ -19,7 +25,7 @@ angular
             });
         };
 
-        this.getSwimmPoolBySubIdAndDates = function(subId, dateOne, dateTwo) {
+        this.getSwimmPoolActivesBySubIdAndDates = function(subId, dateOne, dateTwo) {
             return securityService.get('/swimm/rep/' + subId + '/' + dateOne + '/' + dateTwo).then(function successCallback(response) {
                 return response.data;
             });
