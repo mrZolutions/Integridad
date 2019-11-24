@@ -81,6 +81,9 @@ angular.module('integridadUiApp')
                     vm.subTotal = parseFloat((vm.totalTicket / 1.12).toFixed(2));
                     vm.iva = parseFloat((vm.subTotal * 0.12).toFixed(2));
                     _initializeTicket();
+                    vm.barcode = vm.dateSwimmPool.getTime();
+                    $('#barcode').JsBarcode(vm.barcode + "", {format:'CODE128', displayValue:true, fontSize:15, textAlign:"center", textPosition:"bottom",
+                                                          textMargin:2, fontSize:20, background:"#ffffff", lineColor:"#000000", margin:10});
                     vm.savedSwimmPool = true;
                 break;
                 case '2':
@@ -94,6 +97,9 @@ angular.module('integridadUiApp')
                     vm.subTotal = parseFloat((vm.totalTicket / 1.12).toFixed(2));
                     vm.iva = parseFloat((vm.subTotal * 0.12).toFixed(2));
                     _initializeTicket();
+                    vm.barcode = vm.dateSwimmPool.getTime();
+                    $('#barcode').JsBarcode(vm.barcode + "", {format:'CODE128', displayValue:true, fontSize:15, textAlign:"center", textPosition:"bottom",
+                                                          textMargin:2, fontSize:20, background:"#ffffff", lineColor:"#000000", margin:10});
                     vm.savedSwimmPool = true;
                 break;
                 case '3':
@@ -107,6 +113,9 @@ angular.module('integridadUiApp')
                     vm.subTotal = parseFloat((vm.totalTicket / 1.12).toFixed(3));
                     vm.iva = parseFloat((vm.subTotal * 0.12).toFixed(3));
                     _initializeTicket();
+                    vm.barcode = vm.dateSwimmPool.getTime();
+                    $('#barcode').JsBarcode(vm.barcode + "", {format:'CODE128', displayValue:true, fontSize:15, textAlign:"center", textPosition:"bottom",
+                                                          textMargin:2, fontSize:20, background:"#ffffff", lineColor:"#000000", margin:10});
                     vm.savedSwimmPool = true;
                 break;
                 case '4':
@@ -142,7 +151,6 @@ angular.module('integridadUiApp')
 
         vm.saveSwimmPool = function() {
             vm.loading = true;
-            vm.barcode = vm.swimmPool.barCode;
             swimmingService.createSwimmPool(vm.swimmPool).then(function(response) {
                 vm.newTicket = false;
                 vm.swimmPool = response;
