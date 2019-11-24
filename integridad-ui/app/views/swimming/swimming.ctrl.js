@@ -142,10 +142,11 @@ angular.module('integridadUiApp')
 
         vm.saveSwimmPool = function() {
             vm.loading = true;
+            vm.barcode = vm.swimmPool.barCode;
             swimmingService.createSwimmPool(vm.swimmPool).then(function(response) {
                 vm.newTicket = false;
-                vm.barcode = response.barCode;
                 vm.swimmPool = response;
+                vm.barcode = response.barCode;
                 $('#barcode').JsBarcode(vm.barcode + "", {format:'CODE128', displayValue:true, fontSize:15, textAlign:"center", textPosition:"bottom",
                                                           textMargin:2, fontSize:20, background:"#ffffff", lineColor:"#000000", margin:10});
                 vm.success = 'TICKET CREADO';
