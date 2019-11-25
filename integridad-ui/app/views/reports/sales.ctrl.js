@@ -7,8 +7,10 @@
  * Controller of the menu
  */
 angular.module('integridadUiApp')
-    .controller('ReportSalesCtrl', function(_, $localStorage, creditsbillService, billService, eretentionService, eretentionClientService, cellarService, creditNoteCellarService, billOfflineService,
-                                            paymentService, paymentDebtsService, creditsDebtsService, $location, debtsToPayService, consumptionService, creditNoteService, productService) {
+    .controller('ReportSalesCtrl', function(_, $localStorage, creditsbillService, billService, eretentionService, eretentionClientService,
+                                            cellarService, creditNoteCellarService, billOfflineService, paymentService, paymentDebtsService,
+                                            creditsDebtsService, $location, debtsToPayService, consumptionService, creditNoteService,
+                                            productService, clientService, providerService) {
         var vm = this;
         var today = new Date();
         $('#pickerBillDateOne').data("DateTimePicker").date(today);
@@ -320,6 +322,32 @@ angular.module('integridadUiApp')
                 vm.error = error.data;
             });
         };
+
+        vm.getReportClients = function() {
+            vm.isProductReportList = '19';
+            vm.reportList = undefined;
+            vm.loading = true;
+            clientService.getClientsReport(vm.userClientId).then(function(response) {
+                vm.reportList = response;
+                vm.loading = false;
+            }).catch(function(error) {
+                vm.loading = false;
+                vm.error = error.data;
+            });
+        };
+
+        vm.getReportProviders = function() {
+            vm.isProductReportList = '20';
+            vm.reportList = undefined;
+            vm.loading = true;
+            providerService.getProvidersReport(vm.userClientId).then(function(response) {
+                vm.reportList = response;
+                vm.loading = false;
+            }).catch(function(error) {
+                vm.loading = false;
+                vm.error = error.data;
+            });
+        }
 
         vm.getTotal = function(total, subTotal) {
             var total = total - subTotal;
@@ -701,7 +729,41 @@ angular.module('integridadUiApp')
                             COST_TARJ: parseFloat(existency.costCard.toFixed(2)),
                             COST_CRED: parseFloat(existency.costCredit.toFixed(2)),
                             COST_MAYOR: parseFloat(existency.costMajor.toFixed(2)),
-                            CANTIDAD: parseInt(existency.quantity),
+                            CANTIDAD: parseInt(existency.quantity)
+                        };
+                
+                        dataReport.push(data);
+                    });
+                break;
+                case '19':
+                    _.each(vm.reportList, function(clnt) {
+                        var data = {
+                            TIP_IDENT: clnt.typeId,
+                            IDENTIFICACION: clnt.identification,
+                            NOMBRE: clnt.name,
+                            DIRECCION: clnt.address,
+                            NRO_TELEF: clnt.phone,
+                            NRO_CEL: clnt.celPhone,
+                            CORREO: clnt.email,
+                            PERS_CONTAC: clnt.contact
+                        };
+                
+                        dataReport.push(data);
+                    });
+                break;
+                case '20':
+                    _.each(vm.reportList, function(prov) {
+                        var data = {
+                            TIP_IDENT: prov.ruc_type,
+                            IDENTIFICACION: prov.ruc,
+                            NOMBRE: prov.name,
+                            RAZON_SOC: prov.razonSocial,
+                            DIRECCION: prov.address1,
+                            NRO_TELEF: prov.phone,
+                            NRO_CEL: prov.celPhone,
+                            CORREO: prov.email,
+                            TIP_PROV: prov.providerType,
+                            PERS_CONTAC: prov.contact
                         };
                 
                         dataReport.push(data);

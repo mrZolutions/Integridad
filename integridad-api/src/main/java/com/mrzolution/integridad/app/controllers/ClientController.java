@@ -5,8 +5,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.mrzolution.integridad.app.domain.Client;
+import com.mrzolution.integridad.app.domain.report.ClientReport;
 import com.mrzolution.integridad.app.exceptions.BadRequestException;
 import com.mrzolution.integridad.app.services.ClientServices;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import java.util.UUID;
 
@@ -80,5 +82,18 @@ public class ClientController {
         }
         log.info("ClientController getClientByUserClientAndIdentification DONE");
         return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
+    }
+    
+    @RequestMapping(method = RequestMethod.GET, value="/rep/client/{userClientId}")
+    public ResponseEntity getClientsReport(@PathVariable("userClientId") UUID userClientId) {
+        List<ClientReport> response = null;
+        try {
+            response = service.getClientsReport(userClientId);
+	} catch (BadRequestException e) {
+            log.error("ClientController getClientsReport Exception thrown: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+	}
+        log.info("ClientController getClientsReport DONE");
+        return new ResponseEntity<List>(response, HttpStatus.ACCEPTED);
     }
 }

@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import com.mrzolution.integridad.app.domain.Bill;
 import com.mrzolution.integridad.app.domain.Client;
+import com.mrzolution.integridad.app.domain.report.ClientReport;
 import com.mrzolution.integridad.app.exceptions.BadRequestException;
 import com.mrzolution.integridad.app.repositories.BillRepository;
 import com.mrzolution.integridad.app.repositories.ClientRepository;
@@ -92,6 +93,19 @@ public class ClientServices {
         }
         log.info("ClientServices getAllLazyByUserClientid: {}", userClientId);
         return clients;
+    }
+    
+    public List<ClientReport> getClientsReport(UUID userClientId) {
+        log.info("ClientServices getClientsReport");
+        Iterable<Client> clients = clientRepository.findActivesByUserClientId(userClientId);
+        List<ClientReport> clientsReportList = new ArrayList<>();
+        clients.forEach(clnt -> {
+            ClientReport clientsReport = new ClientReport(clnt.getTypeId(), clnt.getIdentification(), clnt.getName(), clnt.getAddress(), clnt.getPhone(),
+                                                          clnt.getCelPhone(), clnt.getEmail(), clnt.getContact());
+            
+            clientsReportList.add(clientsReport);
+        });
+        return clientsReportList;
     }
 	
     private void populateChildren(Client client) {

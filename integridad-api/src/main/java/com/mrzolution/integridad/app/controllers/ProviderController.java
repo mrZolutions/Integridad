@@ -1,8 +1,10 @@
 package com.mrzolution.integridad.app.controllers;
 
 import com.mrzolution.integridad.app.domain.Provider;
+import com.mrzolution.integridad.app.domain.report.ProviderReport;
 import com.mrzolution.integridad.app.exceptions.BadRequestException;
 import com.mrzolution.integridad.app.services.ProviderServices;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -93,5 +95,18 @@ public class ProviderController {
         }
         log.info("ProviderController getProviderByUserClientIdAndRuc DONE");
         return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
+    }
+    
+    @RequestMapping(method = RequestMethod.GET, value="/rep/provider/{userClientId}")
+    public ResponseEntity getProvidersReport(@PathVariable("userClientId") UUID userClientId) {
+        List<ProviderReport> response = null;
+        try {
+            response = service.getProvidersReport(userClientId);
+	} catch (BadRequestException e) {
+            log.error("ProviderController getProvidersReport Exception thrown: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+	}
+        log.info("ProviderController getProvidersReport DONE");
+        return new ResponseEntity<List>(response, HttpStatus.ACCEPTED);
     }
 }

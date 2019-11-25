@@ -1,13 +1,16 @@
 package com.mrzolution.integridad.app.services;
 
 import com.mrzolution.integridad.app.domain.Provider;
+import com.mrzolution.integridad.app.domain.report.ProviderReport;
 import com.mrzolution.integridad.app.exceptions.BadRequestException;
 import com.mrzolution.integridad.app.repositories.ProviderRepository;
+import java.util.ArrayList;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 @Slf4j
@@ -67,14 +70,26 @@ public class ProviderServices {
         return providers;
     }
 
-    public Iterable<Provider> getLazyByUserClient(UUID id) {
-	Iterable<Provider> providers = providerRepository.findProviderByUserClientId(id);
+    public Iterable<Provider> getLazyByUserClient(UUID userClientId) {
+	Iterable<Provider> providers = providerRepository.findProviderByUserClientId(userClientId);
 	for (Provider provider : providers) {
             provider.setListsNull();
             provider.setFatherListToNull();
 	}
-	log.info("ProviderServices getLazyByUserClient: {}", id);
+	log.info("ProviderServices getLazyByUserClient: {}", userClientId);
 	return providers;
     }
     
+    public List<ProviderReport> getProvidersReport(UUID userClientId) {
+        log.info("ProviderServices getProvidersReport");
+        Iterable<Provider> providers = providerRepository.findProviderByUserClientId(userClientId);
+        List<ProviderReport> providersReportList = new ArrayList<>();
+        providers.forEach(prov -> {
+            ProviderReport providersReport = new ProviderReport(prov.getRucType(), prov.getRuc(), prov.getName(), prov.getRazonSocial(), prov.getAddress1(), prov.getPhone(),
+                                                                prov.getCelPhone(), prov.getEmail(), prov.getProviderType(), prov.getContact());
+            
+            providersReportList.add(providersReport);
+        });
+        return providersReportList;
+    }
 }

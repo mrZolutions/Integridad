@@ -30,4 +30,10 @@ angular
                 return response.data;
             });
         };
+
+        this.getClientsReport = function(userClientId) {
+            return securityService.get('/client/rep/client/' + userClientId).then(function successCallback(response) {
+                return response.data;
+            });
+        };
 });

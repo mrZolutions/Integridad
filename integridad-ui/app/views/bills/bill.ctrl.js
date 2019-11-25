@@ -105,10 +105,10 @@ angular.module('integridadUiApp')
                 _initializeBill();
                 var today = new Date();
                 $('#pickerBillDate').data("DateTimePicker").date(today);
-                vm.loading = false;
                 setTimeout(function() {
                     document.getElementById("input4").focus();
                 }, 500);
+                vm.loading = false;
             }).catch(function(error) {
                 vm.loading = false;
                 vm.error = error.data;

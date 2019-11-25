@@ -169,6 +169,17 @@
                             Ventas
                     </button>
                 </div>
+                <div class="form-group col-md-6">
+                    <p><b>Clientes y Proveedores</b></p>
+                    <button type="button" class="btn btn-primary btn-sm"
+                            ng-click="vm.getReportClients()">
+                            Reporte Clientes
+                    </button>
+                    <button type="button" class="btn btn-primary btn-sm"
+                            ng-click="vm.getReportProviders()">
+                            Reporte Proveedores
+                    </button>
+                </div>
             </div>
             <div ng-show="vm.reportList.length === 0">
                 <br/>
@@ -894,6 +905,70 @@
                     <td>{{data.costCredit.toFixed(2)}}</td>
                     <td>{{data.costMajor.toFixed(2)}}</td>
                     <td>{{data.quantity}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!--Reporte de Clientes-->
+    <div class="table-responsive" ng-if="vm.isProductReportList === '19'">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Tipo de Identificacion</th>
+                    <th>Identificacion</th>
+                    <th>Nombre</th>
+                    <th>Dirección</th>
+                    <th>Nro. Teléfono</th>
+                    <th>Nro. Celular</th>
+                    <th>Correo</th>
+                    <th>Persona Contacto</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="data in vm.reportList | orderBy:'name'">
+                    <td>{{data.typeId}}</td>
+                    <td>{{data.identification}}</td>
+                    <td>{{data.name}}</td>
+                    <td>{{data.address}}</td>
+                    <td>{{data.phone}}</td>
+                    <td>{{data.celPhone}}</td>
+                    <td>{{data.email}}</td>
+                    <td>{{data.contact}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!--Reporte de Proveedores-->
+    <div class="table-responsive" ng-if="vm.isProductReportList === '20'">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Tipo de Identificacion</th>
+                    <th>Identificacion</th>
+                    <th>Nombre</th>
+                    <th>Razón Social</th>
+                    <th>Dirección</th>
+                    <th>Nro. Teléfono</th>
+                    <th>Nro. Celular</th>
+                    <th>Correo</th>
+                    <th>Tipo de Proveedor</th>
+                    <th>Persona Contacto</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="data in vm.reportList | orderBy:'name'">
+                    <td>{{data.ruc_type}}</td>
+                    <td>{{data.ruc}}</td>
+                    <td>{{data.name}}</td>
+                    <td>{{data.razonSocial}}</td>
+                    <td>{{data.address1}}</td>
+                    <td>{{data.phone}}</td>
+                    <td>{{data.celPhone}}</td>
+                    <td>{{data.email}}</td>
+                    <td>{{data.providerType}}</td>
+                    <td>{{data.contact}}</td>
                 </tr>
             </tbody>
         </table>

@@ -15,7 +15,7 @@ import com.mrzolution.integridad.app.domain.Client;
 public interface ClientRepository extends CrudRepository<Client, UUID> {
     Iterable<Client> findByActive(boolean active);
 
-    @Query("SELECT c FROM Client c WHERE c.userClient.id = (:id) AND c.active = true")
+    @Query("SELECT c FROM Client c WHERE c.userClient.id = (:id) AND c.active = true ORDER BY c.name")
     Iterable<Client> findActivesByUserClientId(@Param("id") UUID id);
         
     @Query("SELECT c FROM Client c WHERE c.userClient.id = (:id) AND c.identification = (:ident) AND c.active = true")

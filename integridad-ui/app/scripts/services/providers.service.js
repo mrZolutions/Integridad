@@ -36,4 +36,10 @@ angular
                 return response.data;
             });
         };
+
+        this.getProvidersReport = function(userClientId) {
+            return securityService.get('/provider/rep/provider/' + userClientId).then(function successCallback(response) {
+                return response.data;
+            });
+        };
 });

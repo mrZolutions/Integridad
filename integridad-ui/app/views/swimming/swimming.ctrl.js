@@ -137,7 +137,6 @@ angular.module('integridadUiApp')
 
         vm.getTicketSold = function() {
             var dateOne = $('#pickerSwimmDate').data("DateTimePicker").date().toDate().getTime();
-            dateOne -= 6399000;
             var dateTwo = $('#pickerSwimmDate').data("DateTimePicker").date().toDate().getTime();
             dateTwo += 86399000;
             swimmingService.getSwimmPoolActivesBySubIdAndDates(vm.subsidiaryId, dateOne, dateTwo).then(function(response) {
@@ -184,9 +183,10 @@ angular.module('integridadUiApp')
         };
 
         vm.filterTkBarCode = function(event) {
-            vm.success = undefined;
-            vm.error = undefined;
             if (event.keyCode === 32 || event.charCode === 32) {
+                vm.success = undefined;
+                vm.error = undefined;
+                vm.status = undefined;
                 if (vm.ticketBarCode.length === 13) {
                     swimmingService.getSwimmPoolActivesBySubIdAndBarCode(vm.subsidiaryId, vm.ticketBarCode).then(function(response) {
                         if (response.length === 0) {
@@ -229,6 +229,9 @@ angular.module('integridadUiApp')
                         vm.error = error.data;
                     });
                 };
+            };
+            if (event.keyCode === 13 || event.charCode === 13) {
+                vm.validateAndSaveSwimmPool();
             };
         };
 
