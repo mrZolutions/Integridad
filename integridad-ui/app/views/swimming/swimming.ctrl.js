@@ -221,19 +221,19 @@ angular.module('integridadUiApp')
                                 };
                             };
                         };
+                        document.getElementById("btnSave").focus();
                     }).catch(function(error) {
                         vm.loading = false;
                         vm.error = error.data;
                     });
                 };
-                setTimeout(function() {
-                    document.getElementById("btnSave").focus();
-                }, 200);
             };
         };
 
         vm.validateAndSaveSwimmPool = function() {
             vm.loading = true;
+            vm.success = undefined;
+            vm.error = undefined;
             swimmingService.validateSwimmPool(vm.subsidiaryId, vm.ticketBarCode).then(function(response) {
                 vm.success = "TICKET VALIDADO";
                 vm.loading = false;
