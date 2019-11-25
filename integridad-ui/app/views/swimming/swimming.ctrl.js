@@ -226,10 +226,10 @@ angular.module('integridadUiApp')
                         vm.error = error.data;
                     });
                 };
+                setTimeout(function() {
+                    document.getElementById("btnSave").focus();
+                }, 200);
             };
-            setTimeout(function() {
-                document.getElementById("btnSave").focus();
-            }, 200);
         };
 
         vm.validateAndSaveSwimmPool = function() {
@@ -241,7 +241,10 @@ angular.module('integridadUiApp')
                 vm.loading = false;
                 vm.error = error.data;
             });
-            _activate();
+            vm.ticketBarCode = undefined;
+            setTimeout(function() {
+                document.getElementById("inputTp1").focus();
+            }, 200);
         };
 
         vm.swimmPoolDeactivate = function() {
