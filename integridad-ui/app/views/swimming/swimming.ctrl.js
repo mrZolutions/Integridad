@@ -184,6 +184,8 @@ angular.module('integridadUiApp')
         };
 
         vm.filterTkBarCode = function(event) {
+            vm.success = undefined;
+            vm.error = undefined;
             if (event.keyCode === 32 || event.charCode === 32) {
                 if (vm.ticketBarCode.length === 13) {
                     swimmingService.getSwimmPoolActivesBySubIdAndBarCode(vm.subsidiaryId, vm.ticketBarCode).then(function(response) {
@@ -220,8 +222,8 @@ angular.module('integridadUiApp')
                                     };
                                 };
                             };
+                            document.getElementById("btnSave").focus();
                         };
-                        document.getElementById("btnSave").focus();
                     }).catch(function(error) {
                         vm.loading = false;
                         vm.error = error.data;
