@@ -31,13 +31,13 @@ angular
             });
         };
 
-        this.getSwimmPoolBySubIdAndBarCodeActive = function(subId, barCode) {
+        this.getSwimmPoolActivesBySubIdAndBarCode = function(subId, barCode) {
             return securityService.get('/swimm/barcode/active/' + subId + '/' + barCode).then(function successCallback(response) {
                 return response.data;
             });
         };
 
-        this.getSwimmPoolBySubIdAndBarCodeAll = function(subId, barCode) {
+        this.getAllSwimmPoolBySubIdAndBarCode = function(subId, barCode) {
             return securityService.get('/swimm/barcode/all/' + subId + '/' + barCode).then(function successCallback(response) {
                 return response.data;
             });

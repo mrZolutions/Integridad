@@ -186,7 +186,7 @@ angular.module('integridadUiApp')
         vm.filterTkBarCode = function(event) {
             if (event.keyCode === 32 || event.charCode === 32) {
                 if (vm.ticketBarCode.length === 13) {
-                    swimmingService.getSwimmPoolBySubIdAndBarCodeActive(vm.subsidiaryId, vm.ticketBarCode).then(function(response) {
+                    swimmingService.getSwimmPoolActivesBySubIdAndBarCode(vm.subsidiaryId, vm.ticketBarCode).then(function(response) {
                         if (response.length === 0) {
                             vm.status = undefined;
                         } else {

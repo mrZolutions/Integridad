@@ -22,9 +22,9 @@ public interface SwimmingPoolRepository extends CrudRepository<SwimmingPool, UUI
     @Query("SELECT s FROM SwimmingPool s WHERE s.subsidiary.id = (:subId) AND s.fecha >= (:dateOne) AND s.fecha <= (:dateTwo) AND s.active = true ORDER BY s.fecha")
     Iterable<SwimmingPool> findSwimmPoolActivesBySubIdAndDates(@Param("subId") UUID subId, @Param("dateOne") long dateOne, @Param("dateTwo") long dateTwo);
     
-    @Query("SELECT s FROM SwimmingPool s WHERE s.subsidiary.id = (:subId) AND s.barCode = (:barCode) AND s.active = true")
-    SwimmingPool findSwimmPoolBySubIdAndBarCodeActive(@Param("subId") UUID subId, @Param("barCode") String barCode);
+    @Query("SELECT s FROM SwimmingPool s WHERE s.subsidiary.id = (:subId) AND s.barCode = (:barCode) AND s.status = 'NUEVO' AND s.active = true")
+    SwimmingPool findSwimmPoolActivesBySubIdAndBarCodeWithStatus(@Param("subId") UUID subId, @Param("barCode") String barCode);
     
     @Query("SELECT s FROM SwimmingPool s WHERE s.subsidiary.id = (:subId) AND s.barCode = (:barCode)")
-    SwimmingPool findSwimmPoolBySubIdAndBarCodeAll(@Param("subId") UUID subId, @Param("barCode") String barCode);
+    SwimmingPool findAllSwimmPoolBySubIdAndBarCode(@Param("subId") UUID subId, @Param("barCode") String barCode);
 }

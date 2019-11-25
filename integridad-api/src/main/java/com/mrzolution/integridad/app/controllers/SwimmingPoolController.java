@@ -53,28 +53,28 @@ public class SwimmingPoolController {
     }
     
     @RequestMapping(method = RequestMethod.GET, value="/barcode/active/{id}/{barCode}")
-    public ResponseEntity getSwimmPoolBySubIdAndBarCodeActive(@PathVariable("id") UUID id, @PathVariable("barCode") String barCode) {
+    public ResponseEntity getSwimmPoolActivesBySubIdAndBarCode(@PathVariable("id") UUID id, @PathVariable("barCode") String barCode) {
         SwimmingPool response = null;
         try {
-            response = service.getSwimmPoolBySubIdAndBarCodeActive(id, barCode);
+            response = service.getSwimmPoolActivesBySubIdAndBarCode(id, barCode);
         } catch (BadRequestException e) {
-            log.error("SwimmingPoolController getSwimmPoolByBarCodeActive Exception thrown: {}", e.getMessage());
+            log.error("SwimmingPoolController getSwimmPoolActivesBySubIdAndBarCode Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
-        log.info("SwimmingPoolController getSwimmPoolByBarCodeActive DONE");
+        log.info("SwimmingPoolController getSwimmPoolActivesBySubIdAndBarCode DONE");
         return new ResponseEntity<SwimmingPool>(response, HttpStatus.ACCEPTED);
     }
     
     @RequestMapping(method = RequestMethod.GET, value="/barcode/all/{id}/{barCode}")
-    public ResponseEntity getSwimmPoolBySubIdAndBarCodeAll(@PathVariable("id") UUID id, @PathVariable("barCode") String barCode) {
+    public ResponseEntity getAllSwimmPoolBySubIdAndBarCode(@PathVariable("id") UUID id, @PathVariable("barCode") String barCode) {
         SwimmingPool response = null;
         try {
-            response = service.getSwimmPoolBySubIdAndBarCodeAll(id, barCode);
+            response = service.getAllSwimmPoolBySubIdAndBarCode(id, barCode);
         } catch (BadRequestException e) {
-            log.error("SwimmingPoolController getSwimmPoolByBarCodeAll Exception thrown: {}", e.getMessage());
+            log.error("SwimmingPoolController getAllSwimmPoolBySubIdAndBarCode Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
-        log.info("SwimmingPoolController getSwimmPoolByBarCodeAll DONE");
+        log.info("SwimmingPoolController getAllSwimmPoolBySubIdAndBarCode DONE");
         return new ResponseEntity<SwimmingPool>(response, HttpStatus.ACCEPTED);
     }
     
@@ -91,10 +91,10 @@ public class SwimmingPoolController {
         return new ResponseEntity<SwimmingPool>(response, HttpStatus.CREATED);
     }
     
-    @RequestMapping(method = RequestMethod.PUT, value="/{id}/{barCode}")
-    public ResponseEntity validateSwimmPool(@PathVariable("id") UUID id, @PathVariable("barCode") String barCode) {
+    @RequestMapping(method = RequestMethod.PUT, value="/{subId}/{barCode}")
+    public ResponseEntity validateSwimmPool(@PathVariable("subId") UUID subId, @PathVariable("barCode") String barCode) {
         try {
-            service.validateSwimmPool(id, barCode);
+            service.validateSwimmPool(subId, barCode);
         } catch (BadRequestException e) {
             log.error("SwimmingPoolController validateSwimmPool Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
