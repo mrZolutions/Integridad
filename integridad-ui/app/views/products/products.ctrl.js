@@ -212,20 +212,31 @@ angular.module('integridadUiApp')
         };
                                           
         vm.costPreview = function() {
-            var avrCost = 0.0;
-            var gEfectivo = 0.0;
-            var avrCost = vm.product.averageCost;
-            var gEfectivo = 1 + ((vm.product.cashPercentage) / 100.00);
+            var avrCost = 0;
+            var gEfectivo = 0;
+            if (vm.product === null || vm.product === undefined) {
+                var avrCost = 0;
+                var gEfectivo = 0;
+            } else {
+                var avrCost = vm.product.averageCost;
+                var gEfectivo = 1 + ((vm.product.cashPercentage) / 100.00);
+            };
+            
             var preview = avrCost * gEfectivo;
             return (preview).toFixed(4);
         };
                                             
         vm.costIvaPreview = function() {
-            var avrCost = 0.0;
-            var gEfectivo = 0.0;
+            var avrCost = 0;
+            var gEfectivo = 0;
             var iva = 1.12;
-            var avrCost = vm.product.averageCost;
-            var gEfectivo = 1 + ((vm.product.cashPercentage) / 100.00);
+            if (vm.product === null || vm.product === undefined) {
+                var avrCost = 0;
+                var gEfectivo = 0;
+            } else {
+                var avrCost = vm.product.averageCost;
+                var gEfectivo = 1 + ((vm.product.cashPercentage) / 100.00);
+            };
             var preview = avrCost * gEfectivo * iva;
             return (preview).toFixed(4);
         };

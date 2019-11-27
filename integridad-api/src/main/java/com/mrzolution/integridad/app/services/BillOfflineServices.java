@@ -156,6 +156,7 @@ public class BillOfflineServices {
             detailOffline.setBillOffline(null);
         });
         saved.setDetailsOffline(detailsOffline);
+        log.info("BillOfflineServices saveDetailsOfflineOfBillOffline DONE");
     }
     
     //Almacena los Detalles en Kardex
@@ -167,6 +168,7 @@ public class BillOfflineServices {
             detailkoff.setBillOffline(null);
         });
         saved.setDetailsKardexOffline(detailsKardexOffline);
+        log.info("BillOfflineServices saveKardexOfBillOffline DONE");
     }
     
     //Guarda el tipo de Pago y Credits
