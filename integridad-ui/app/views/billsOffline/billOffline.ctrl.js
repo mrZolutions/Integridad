@@ -103,8 +103,8 @@ angular.module('integridadUiApp')
             vm.userId = $localStorage.user.id;
             clientService.getLazyByUserClientId(vm.userClientId).then(function(response) {
                 vm.clientList = response;
-                var finalConsumer = _.filter(vm.clientList, function(client){ return client.identification === '9999999999999'})
-                vm.clientSelect(finalConsumer[0]);
+                var finalConsumer = _.filter(vm.clientList, function(client){ return client.identification === '9999999999999'});
+                vm.clientSelectOffline(finalConsumer[0]);
                 _getSeqNumber();
                 _initializeBillOffline();
                 var today = new Date();
@@ -165,11 +165,20 @@ angular.module('integridadUiApp')
             };
         };
 
-        vm.clientSelect = function(client) {
+        vm.clientSelectOffline = function(client) {
             vm.success = undefined;
             vm.companyData = $localStorage.user.subsidiary;
             vm.dateBillOffline = new Date();
             vm.clientSelected = client;
+            vm.pagosOffline = [];
+            setTimeout(function() {
+                document.getElementById("input4").focus();
+            }, 500);
+        };
+
+        vm.clientSelectOfflineChanged = function(client) {
+            vm.clientSelected = client;
+            vm.billOffline.client = vm.clientSelected;
             vm.pagosOffline = [];
             setTimeout(function() {
                 document.getElementById("input4").focus();
@@ -187,7 +196,7 @@ angular.module('integridadUiApp')
             });
         };
 
-        vm.clientChange = function() {
+        vm.clientChangeOffline = function() {
             vm.clientSelected = undefined;
             setTimeout(function() {
                 document.getElementById("inputCl1").focus();

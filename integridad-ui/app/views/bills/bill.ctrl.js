@@ -99,7 +99,7 @@ angular.module('integridadUiApp')
             vm.userSubsidiary = $localStorage.user.subsidiary;
             clientService.getLazyByUserClientId(vm.userClientId).then(function(response) {
                 vm.clientList = response;
-                var finalConsumer = _.filter(vm.clientList, function(client){ return client.identification === '9999999999999'})
+                var finalConsumer = _.filter(vm.clientList, function(client){ return client.identification === '9999999999999'});
                 vm.clientSelect(finalConsumer[0]);
                 _getSeqNumber();
                 _initializeBill();
@@ -176,6 +176,15 @@ angular.module('integridadUiApp')
             vm.companyData = vm.userSubsidiary;
             vm.dateBill = new Date();
             vm.clientSelected = client;
+            vm.pagos = [];
+            setTimeout(function() {
+                document.getElementById("input4").focus();
+            }, 500);
+        };
+
+        vm.clientSelectChanged = function(client) {
+            vm.clientSelected = client;
+            vm.bill.client = vm.clientSelected;
             vm.pagos = [];
             setTimeout(function() {
                 document.getElementById("input4").focus();

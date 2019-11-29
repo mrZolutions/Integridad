@@ -177,8 +177,12 @@ public class CreditNoteCellarServices {
         detailsCellar.forEach(detail -> {
             if (!detail.getProduct().getProductType().getCode().equals("SER")) {
                 ProductBySubsidiary psNCl = productBySubsidiairyRepository.findBySubsidiaryIdAndProductId(creditNoteCellar.getSubsidiary().getId(), detail.getProduct().getId());
-                psNCl.setQuantity(psNCl.getQuantity() - detail.getQuantity());
-                productBySubsidiairyRepository.save(psNCl);
+                if (psNCl == null) {
+                    throw new BadRequestException("ERROR: Producto NO encontrado");
+                } else {
+                    psNCl.setQuantity(psNCl.getQuantity() - detail.getQuantity());
+                    productBySubsidiairyRepository.save(psNCl);
+                }
             }
         });
         log.info("CreditNoteCellarServices updateProductBySubsidiary DONE");

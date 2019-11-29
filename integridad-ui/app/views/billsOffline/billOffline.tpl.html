@@ -67,7 +67,7 @@
                     <td>{{clientPreSelect.name}}</td>
                     <td>{{clientPreSelect.typeId}} - {{clientPreSelect.identification}}</td>
                     <td>
-                        <button type="button" title="Seleccionar Cliente" class="btn btn-primary btn-sm" ng-click="vm.clientSelect(clientPreSelect)">
+                        <button type="button" title="Seleccionar Cliente" class="btn btn-primary btn-sm" ng-click="vm.clientSelectOfflineChanged(clientPreSelect)">
                                 <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
                         </button>
                         <button type="button" title="Consultar Facturas" class="btn btn-primary btn-sm" ng-click="vm.clientConsult(clientPreSelect)">
@@ -293,7 +293,7 @@
                                 <td>
                                     <b>Nombre: </b>
                                     {{vm.clientSelected.name}} &nbsp;
-                                    <button type="button" title="Cambiar" class="btn btn-primary btn-sm" ng-if="vm.newBillOffline" ng-click="vm.clientChange()">
+                                    <button type="button" title="Cambiar" class="btn btn-primary btn-sm" ng-if="vm.newBillOffline" ng-click="vm.clientChangeOffline()">
                                             Cambiar
                                     </button>
                                     <br/>

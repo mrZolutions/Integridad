@@ -184,8 +184,12 @@ public class BillOfflineServices {
         detailsOffline.forEach(detailOffline-> {
             if (!detailOffline.getProduct().getProductType().getCode().equals("SER") && typeDocument == 1) {
                 ProductBySubsidiary ps = productBySubsidiairyRepository.findBySubsidiaryIdAndProductId(billOffline.getSubsidiary().getId(), detailOffline.getProduct().getId());
-                ps.setQuantity(ps.getQuantity() - detailOffline.getQuantity());
-                productBySubsidiairyRepository.save(ps);
+                if (ps == null) {
+                    throw new BadRequestException("ERROR: Producto NO encontrado");
+                } else {
+                    ps.setQuantity(ps.getQuantity() - detailOffline.getQuantity());
+                    productBySubsidiairyRepository.save(ps);
+                }
             }
         });
         log.info("BillOfflineServices updateProductBySubsidiary");

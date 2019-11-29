@@ -237,8 +237,12 @@ public class BillServices {
         details.forEach(detail -> {
             if (!detail.getProduct().getProductType().getCode().equals("SER") && typeDocument == 1) {
                 ProductBySubsidiary ps = productBySubsidiairyRepository.findBySubsidiaryIdAndProductId(bill.getSubsidiary().getId(), detail.getProduct().getId());
-                ps.setQuantity(ps.getQuantity() - detail.getQuantity());
-                productBySubsidiairyRepository.save(ps);
+                if (ps == null) {
+                    throw new BadRequestException("ERROR: Producto NO encontrado");
+                } else {
+                    ps.setQuantity(ps.getQuantity() - detail.getQuantity());
+                    productBySubsidiairyRepository.save(ps);
+                }
             }
         });
         log.info("BillServices updateProductBySubsidiary DONE");

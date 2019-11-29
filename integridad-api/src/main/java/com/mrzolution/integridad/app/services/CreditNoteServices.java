@@ -158,8 +158,12 @@ public class CreditNoteServices {
         details.forEach(detail -> {
             if (!detail.getProduct().getProductType().getCode().equals("SER")) {
                 ProductBySubsidiary psNc = productBySubsidiairyRepository.findBySubsidiaryIdAndProductId(creditNote.getSubsidiary().getId(), detail.getProduct().getId());
-                psNc.setQuantity(psNc.getQuantity() + detail.getQuantity());
-                productBySubsidiairyRepository.save(psNc);
+                if (psNc == null) {
+                    throw new BadRequestException("ERROR: Producto NO encontrado");
+                } else {
+                    psNc.setQuantity(psNc.getQuantity() + detail.getQuantity());
+                    productBySubsidiairyRepository.save(psNc);
+                }
             }
         });
     }
