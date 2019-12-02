@@ -290,9 +290,6 @@ public class ProductServices {
             
             Double costoCatReal = Double.valueOf(0);
             Double costoCatCash = Double.valueOf(0);
-            Double costoCatCard = Double.valueOf(0);
-            Double costoCatCredit = Double.valueOf(0);
-            Double costoCatMayor = Double.valueOf(0);
             
             for (ProductBySubsidiary pss : productCat.getProductBySubsidiaries()) {
                 if (pss.isActive()) {
@@ -304,38 +301,16 @@ public class ProductServices {
                 }
             }
             
-            if (productCat.getAverageCost() != null) {
-                costoCatReal = productCat.getAverageCost();
-            } else {
-                costoCatReal = 0.0;
-            }
-            
             if (productCat.getCashPercentage() != null) {
+                costoCatReal = productCat.getAverageCost();
                 costoCatCash = costoCatReal + (costoCatReal * (productCat.getCashPercentage() / 100));
             } else {
+                costoCatReal = 0.0;
                 costoCatCash = 0.0;
             }
             
-            if (productCat.getCardPercentage() != null) {
-                costoCatCard = costoCatReal + (costoCatReal * (productCat.getCardPercentage() / 100));
-            } else {
-                costoCatCard = 0.0;
-            }
-            
-            if (productCat.getCreditPercentage() != null) {
-                costoCatCredit = costoCatReal + (costoCatReal * (productCat.getCreditPercentage() / 100));
-            } else {
-                costoCatCredit = 0.0;
-            }
-            
-            if (productCat.getMajorPercentage() != null) {
-                costoCatMayor = costoCatReal + (costoCatReal * (productCat.getMajorPercentage() / 100));
-            } else {
-                costoCatMayor = 0.0;
-            }
-            
-            ExistencyCatReport existencyCatReport = new ExistencyCatReport(productCat.getCodeIntegridad(), productCat.getName(), costoCatReal, costoCatCash,
-                                                                           costoCatCard, costoCatCredit, costoCatMayor, cantidad);
+            ExistencyCatReport existencyCatReport = new ExistencyCatReport(productCat.getCodeIntegridad(), productCat.getName(), costoCatCash, cantidad,
+                                                                           productCat.getAverageCostSuggested(), productCat.getMaxMinimun());
             existencyCatReportList.add(existencyCatReport);
         });
         return existencyCatReportList;

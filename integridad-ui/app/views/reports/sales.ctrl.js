@@ -724,12 +724,10 @@ angular.module('integridadUiApp')
                         var data = {
                             CODIGO: existency.code,
                             NOMBRE: existency.name,
-                            COST_REAL: parseFloat(existency.costReal.toFixed(2)),
                             COST_EFEC: parseFloat(existency.costCash.toFixed(2)),
-                            COST_TARJ: parseFloat(existency.costCard.toFixed(2)),
-                            COST_CRED: parseFloat(existency.costCredit.toFixed(2)),
-                            COST_MAYOR: parseFloat(existency.costMajor.toFixed(2)),
-                            CANTIDAD: parseInt(existency.quantity)
+                            CANTIDAD: parseInt(existency.quantity),
+                            COST_PROMED: parseFloat(existency.averageCost.toFixed(2)),
+                            COST_CRED: parseFloat(existency.minorQuantity)
                         };
                 
                         dataReport.push(data);
