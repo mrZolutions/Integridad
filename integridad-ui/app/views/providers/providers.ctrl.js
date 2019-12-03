@@ -15,6 +15,7 @@ angular.module('integridadUiApp')
 
         vm.loading = false;
         vm.userData = $localStorage.user;
+        vm.subOnlineActive = $localStorage.user.subsidiary.online;
         vm.provider = undefined;
         vm.providerToUse = undefined;
         vm.providerList = undefined;

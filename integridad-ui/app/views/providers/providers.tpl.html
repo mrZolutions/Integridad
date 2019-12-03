@@ -70,10 +70,12 @@
                                 data-toggle="modal" data-target="#modalEliminar">
                                 <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
                         </button>
-                        <button type="button" title = "Nueva Retención" class="btn btn-success btn-sm" ng-click="vm.createRetention(providerEdit)">
+                        <button type="button" title = "Nueva Retención" class="btn btn-success btn-sm" ng-click="vm.createRetention(providerEdit)"
+                                ng-if="vm.subOnlineActive">
                                 <span class = "glyphicon glyphicon-tasks" aria-hidden = "true"></span>
                         </button>
-                        <button type="button" title = "Consultar Retenciones" class="btn btn-primary btn-sm" ng-click="vm.providerConsultRetention(providerEdit)">
+                        <button type="button" title = "Consultar Retenciones" class="btn btn-primary btn-sm" ng-click="vm.providerConsultRetention(providerEdit)"
+                                ng-if="vm.subOnlineActive">
                                 <span class = "glyphicon glyphicon-search" aria-hidden = "true"></span>
                         </button>
                     </td>
