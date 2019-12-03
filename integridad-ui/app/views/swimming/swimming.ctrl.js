@@ -16,6 +16,7 @@ angular.module('integridadUiApp')
         vm.client = undefined;
         vm.clientList = undefined;
         vm.laQuinta = '758dea84-74f5-4209-b218-9b84c10621fc';
+        vm.riseQuinta = '988a3fa5-8efe-4a9d-b388-bbac203b7c4f';
         vm.userData = $localStorage.user;
         vm.totalTkAdulto = 5;
         vm.totalTkMenor = 3;
@@ -44,7 +45,7 @@ angular.module('integridadUiApp')
             vm.hoy = undefined;
             vm.ticketBarCode = undefined;
             vm.success = undefined;
-            if (vm.usrClntId !== vm.laQuinta) {
+            if (vm.usrClntId !== vm.laQuinta || vm.usrClntId !== vm.riseQuinta) {
                 vm.advertencia = true;
                 vm.selectedTypeOption = 'advert';
             };
