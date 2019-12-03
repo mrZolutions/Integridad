@@ -166,8 +166,12 @@ public class CellarServices {
         detailsCellar.forEach(detail -> {
             if (!detail.getProduct().getProductType().getCode().equals("SER")) {
                 ProductBySubsidiary psCl = productBySubsidiairyRepository.findBySubsidiaryIdAndProductId(cellar.getSubsidiary().getId(), detail.getProduct().getId());
-                psCl.setQuantity(psCl.getQuantity() + detail.getQuantity());
-                productBySubsidiairyRepository.save(psCl);
+                if (psCl == null) {
+                    throw new BadRequestException("ERROR: Producto NO encontrado");
+                } else {
+                    psCl.setQuantity(psCl.getQuantity() + detail.getQuantity());
+                    productBySubsidiairyRepository.save(psCl);
+                }
             }
         });
         log.info("CellarServices updateProductBySubsidiary DONE");

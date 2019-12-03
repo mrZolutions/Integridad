@@ -33,7 +33,7 @@
         </div>
     </div>
 
-    <div class="table-responsive" ng-show="vm.clientSelected === undefined && vm.billList === undefined && vm.detailList === undefined">
+    <div class="table-responsive" ng-show="vm.clientSelected === undefined && vm.billList === undefined && vm.detailList === undefined && vm.advertencia === false">
         <div class="row">
             <div class="form-group col-md-10">
                 <input id="inputCl0" ng-model="searchText" class="form-control" placeholder="Buscar">
@@ -1140,6 +1140,30 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!--ADVERTENCIA-->
+    <div ng-show="vm.advertencia === true">
+        <div class="row">
+            <div class="col-md-8 col-md-offset-3">
+                <img src="images/advertencia.png" style="height: 250px; width: 340px; margin-top: 10px;">
+            </div>
+        </div>
+        <br/>
+        <br/>
+        <div class="row">
+            <div class="col-md-10 col-md-offset-1">
+                <h4><b>SU USUARIO NO ESTÁ AUTORIZADO PARA EJECUTAR ESTA OPCIÓN DEL MENÚ</b></h4>
+            </div>
+        </div>
+        <br/>
+        <div class="row">
+            <div class="col-md-12">
+                <button type="button" title = "Aceptar y Salir" class="btn btn-success btn-sm" ng-click="vm.exit()">
+                        <span class = "glyphicon glyphicon-thumbs-down" aria-hidden = "true"></span>
+                </button>
             </div>
         </div>
     </div>

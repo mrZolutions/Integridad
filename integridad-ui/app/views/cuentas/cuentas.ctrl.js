@@ -27,18 +27,24 @@ angular.module('integridadUiApp')
         ];
 
         function _activate() {
-            vm.loading = true;
+            vm.advertencia = false;
             vm.error = undefined;
             vm.success = undefined;
             vm.cuentaSelected = undefined;
             vm.user = $localStorage.user;
-            cuentaContableService.getCuentaContableByUserClient(vm.user.subsidiary.userClient.id).then(function(response) {
-                vm.cuentasContablesList = response;
-                vm.loading = false;
-            }).catch(function(error) {
-                vm.loading = false;
-                vm.error = error.data;
-            });
+            vm.subContabActive = $localStorage.user.subsidiary.contab;
+            if (vm.subContabActive) {
+                vm.loading = true;
+                cuentaContableService.getCuentaContableByUserClient(vm.user.subsidiary.userClient.id).then(function(response) {
+                    vm.cuentasContablesList = response;
+                    vm.loading = false;
+                }).catch(function(error) {
+                    vm.loading = false;
+                    vm.error = error.data;
+                });
+            } else {
+                vm.advertencia = true;
+            };
         };
 
         function _initializeCuenta() {

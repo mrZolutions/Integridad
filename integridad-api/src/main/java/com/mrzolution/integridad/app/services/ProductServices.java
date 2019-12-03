@@ -155,7 +155,6 @@ public class ProductServices {
         productIdList = productBySubsidiairyRepository.findBySubsidiaryIdAndBarCodedAndProductActive(subsidiaryId, variable);
         List<Product> listReturn = new ArrayList<>();
         productIdList.forEach(ps -> {
-//            System.out.println(ps.getId());
             populateChildren(ps);
             ps.setCuentaContableByProducts(null);
             listReturn.add(ps);
@@ -290,6 +289,8 @@ public class ProductServices {
             
             Double costoCatReal = Double.valueOf(0);
             Double costoCatCash = Double.valueOf(0);
+            long minimo = 0;
+            Double promedio = Double.valueOf(0);
             
             for (ProductBySubsidiary pss : productCat.getProductBySubsidiaries()) {
                 if (pss.isActive()) {
@@ -301,6 +302,18 @@ public class ProductServices {
                 }
             }
             
+            if (productCat.getAverageCostSuggested() != null) {
+                promedio = productCat.getAverageCostSuggested();
+            } else {
+                promedio = 0.0;
+            }
+            
+            if (productCat.getMaxMinimun() != null) {
+                minimo = productCat.getMaxMinimun();
+            } else {
+                minimo = 0;
+            }
+            
             if (productCat.getCashPercentage() != null) {
                 costoCatReal = productCat.getAverageCost();
                 costoCatCash = costoCatReal + (costoCatReal * (productCat.getCashPercentage() / 100));
@@ -309,8 +322,8 @@ public class ProductServices {
                 costoCatCash = 0.0;
             }
             
-            ExistencyCatReport existencyCatReport = new ExistencyCatReport(productCat.getCodeIntegridad(), productCat.getName(), costoCatCash, cantidad,
-                                                                           productCat.getAverageCostSuggested(), productCat.getMaxMinimun());
+            ExistencyCatReport existencyCatReport = new ExistencyCatReport(productCat.getCodeIntegridad(), productCat.getName(),
+                                                                           costoCatCash, cantidad, promedio, minimo);
             existencyCatReportList.add(existencyCatReport);
         });
         return existencyCatReportList;

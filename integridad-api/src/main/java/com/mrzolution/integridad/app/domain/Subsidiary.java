@@ -43,6 +43,10 @@ public class Subsidiary implements Child{
     
     private boolean active;
     
+    private boolean online;
+    private boolean offline;
+    private boolean contab;
+    
     @ManyToOne
     @JoinColumn(name = "user_client_id")
     private UserClient userClient;

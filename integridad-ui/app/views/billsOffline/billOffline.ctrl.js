@@ -53,6 +53,7 @@ angular.module('integridadUiApp')
         vm.seqChanged = false;
 
         function _activate() {
+            vm.advertencia = false;
             vm.valParra = '2455e4bf-68f3-4071-b5c9-833d62512b00';
             vm.laQuinta = '758dea84-74f5-4209-b218-9b84c10621fc';
             vm.mrZolutions = '4907601b-6e54-4675-80a8-ab6503e1dfeb';
@@ -72,7 +73,6 @@ angular.module('integridadUiApp')
             vm.pagoTot = undefined;
             vm.quantity = undefined;
             vm.adicional = undefined;
-            vm.loading = true;
             vm.indexDetail = undefined;
             vm.priceType = vm.prices[0];
             vm.seqChanged = false;
@@ -100,23 +100,29 @@ angular.module('integridadUiApp')
             vm.user = $localStorage.user;
             vm.userClientId = $localStorage.user.subsidiary.userClient.id;
             vm.subsidiaryId = $localStorage.user.subsidiary.id;
+            vm.subOfflineActive = $localStorage.user.subsidiary.offline;
             vm.userId = $localStorage.user.id;
-            clientService.getLazyByUserClientId(vm.userClientId).then(function(response) {
-                vm.clientList = response;
-                var finalConsumer = _.filter(vm.clientList, function(client){ return client.identification === '9999999999999'});
-                vm.clientSelectOffline(finalConsumer[0]);
-                _getSeqNumber();
-                _initializeBillOffline();
-                var today = new Date();
-                $('#pickerBillOfflineDate').data("DateTimePicker").date(today);
-                vm.loading = false;
-                setTimeout(function() {
-                    document.getElementById("input4").focus();
-                }, 500);
-            }).catch(function(error) {
-                vm.loading = false;
-                vm.error = error.data;
-            });
+            if (vm.subOfflineActive) {
+                vm.loading = true;
+                clientService.getLazyByUserClientId(vm.userClientId).then(function(response) {
+                    vm.clientList = response;
+                    var finalConsumer = _.filter(vm.clientList, function(client){ return client.identification === '9999999999999'});
+                    vm.clientSelectOffline(finalConsumer[0]);
+                    _getSeqNumber();
+                    _initializeBillOffline();
+                    var today = new Date();
+                    $('#pickerBillOfflineDate').data("DateTimePicker").date(today);
+                    vm.loading = false;
+                    setTimeout(function() {
+                        document.getElementById("input4").focus();
+                    }, 500);
+                }).catch(function(error) {
+                    vm.loading = false;
+                    vm.error = error.data;
+                });
+            } else {
+                vm.advertencia = true;    
+            };
         };
 
         vm.volver = function() {

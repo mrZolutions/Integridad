@@ -265,17 +265,20 @@
     </div>    
 
     <!--ADVERTENCIA-->
-    <div class="table-responsive" ng-show="vm.advertencia === true">
+    <div ng-show="vm.advertencia === true">
         <div class="row">
-            <div class="col-md-12">
-                <h2>¡¡¡Advertencia!!!</h2>
+            <div class="col-md-8 col-md-offset-3">
+                <img src="images/advertencia.png" style="height: 250px; width: 340px; margin-top: 10px;">
             </div>
         </div>
+        <br/>
+        <br/>
         <div class="row">
-            <div class="col-md-12">
-                <h4>SU EMPRESA O USUARIO NO ESTAN AUTORIZADOS PARA EJECUTAR ESTA OPCIÓN DEL MENÚ</h4>
+            <div class="col-md-10 col-md-offset-1">
+                <h4><b>SU USUARIO NO ESTÁ AUTORIZADO PARA EJECUTAR ESTA OPCIÓN DEL MENÚ</b></h4>
             </div>
         </div>
+        <br/>
         <div class="row">
             <div class="col-md-12">
                 <button type="button" title = "Aceptar y Salir" class="btn btn-success btn-sm" ng-click="vm.exit()">

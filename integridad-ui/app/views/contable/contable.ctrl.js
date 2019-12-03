@@ -192,8 +192,13 @@ angular.module('integridadUiApp')
             vm.retenCodeIva = undefined;
             vm.retenTotalIva = undefined;
             vm.usrCliId = $localStorage.user.subsidiary.userClient.id;
+            vm.subContabActive = $localStorage.user.subsidiary.contab;
             vm.selectedTypeBook = undefined;
             vm.error = undefined;
+            if (!vm.subContabActive) {
+                vm.advertencia = true;
+                vm.selectedTypeBook = 'advert';
+            };
             vm.loading = false;
         };
 

@@ -168,8 +168,12 @@ public class ConsumptionServices {
         detailsConsumption.forEach(detail-> {
             if (!detail.getProduct().getProductType().getCode().equals("SER")) {
                 ProductBySubsidiary psCn = productBySubsidiairyRepository.findBySubsidiaryIdAndProductId(consumption.getSubsidiary().getId(), detail.getProduct().getId());
-                psCn.setQuantity(psCn.getQuantity() - detail.getQuantity());
-                productBySubsidiairyRepository.save(psCn);
+                if (psCn == null) {
+                    throw new BadRequestException("ERROR: Producto NO encontrado");
+                } else {
+                    psCn.setQuantity(psCn.getQuantity() - detail.getQuantity());
+                    productBySubsidiairyRepository.save(psCn);
+                }
             }
         });
         log.info("ConsumptionServices updateProductBySubsidiary DONE");

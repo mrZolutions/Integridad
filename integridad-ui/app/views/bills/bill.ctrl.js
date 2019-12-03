@@ -48,6 +48,7 @@ angular.module('integridadUiApp')
         vm.seqChanged = false;
 
         function _activate() {
+            vm.advertencia = false;
             vm.clientList = undefined;
             vm.error = undefined;
             vm.aux = undefined;
@@ -63,7 +64,6 @@ angular.module('integridadUiApp')
             vm.quantity = undefined;
             vm.userClientId = undefined;
             vm.adicional = undefined;
-            vm.loading = true;
             vm.detailList = undefined;
             vm.indexDetail = undefined;
             vm.priceType = vm.prices[0];
@@ -95,24 +95,30 @@ angular.module('integridadUiApp')
             vm.userId = $localStorage.user.id;
             vm.userClientId = $localStorage.user.subsidiary.userClient.id;
             vm.subsidiaryId = $localStorage.user.subsidiary.id;
+            vm.subOnlineActive = $localStorage.user.subsidiary.online;
             vm.userCashier = $localStorage.user.cashier;
             vm.userSubsidiary = $localStorage.user.subsidiary;
-            clientService.getLazyByUserClientId(vm.userClientId).then(function(response) {
-                vm.clientList = response;
-                var finalConsumer = _.filter(vm.clientList, function(client){ return client.identification === '9999999999999'});
-                vm.clientSelect(finalConsumer[0]);
-                _getSeqNumber();
-                _initializeBill();
-                var today = new Date();
-                $('#pickerBillDate').data("DateTimePicker").date(today);
-                setTimeout(function() {
-                    document.getElementById("input4").focus();
-                }, 500);
-                vm.loading = false;
-            }).catch(function(error) {
-                vm.loading = false;
-                vm.error = error.data;
-            });
+            if (vm.subOnlineActive) {
+                vm.loading = true;
+                clientService.getLazyByUserClientId(vm.userClientId).then(function(response) {
+                    vm.clientList = response;
+                    var finalConsumer = _.filter(vm.clientList, function(client){ return client.identification === '9999999999999'});
+                    vm.clientSelect(finalConsumer[0]);
+                    _getSeqNumber();
+                    _initializeBill();
+                    var today = new Date();
+                    $('#pickerBillDate').data("DateTimePicker").date(today);
+                    setTimeout(function() {
+                        document.getElementById("input4").focus();
+                    }, 500);
+                    vm.loading = false;
+                }).catch(function(error) {
+                    vm.loading = false;
+                    vm.error = error.data;
+                });
+            } else {
+                vm.advertencia = true;
+            };
         };
 
         vm.getDetailsOfBills = function() {
