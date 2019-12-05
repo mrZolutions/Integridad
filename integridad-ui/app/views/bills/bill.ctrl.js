@@ -411,7 +411,6 @@ angular.module('integridadUiApp')
                     vm.filterBarCode();
                 };
             };
-
             if (event.keyCode === 102 || event.charCode === 102 || event.keyCode === 70 || event.charCode === 70) {
                 $('#modalAddPago').modal('show');
                 vm.medio.medio = vm.medList[0];
@@ -427,27 +426,23 @@ angular.module('integridadUiApp')
             if (vm.bill.discountPercentage == null || vm.bill.discountPercentage == undefined) {
                 vm.bill.discountPercentage = 0;
             };
-
             var detail = {
-                discount: vm.bill.discountPercentage? vm.bill.discountPercentage : 0,
+                discount: vm.bill.discountPercentage ? vm.bill.discountPercentage : 0,
                 product: angular.copy(vm.productToAdd),
                 quantity: vm.quantity,
                 costEach: vm.productToAdd.costEachCalculated,
                 total: parseFloat(((vm.quantity * vm.productToAdd.costEachCalculated) - (vm.quantity * (vm.productToAdd.costEachCalculated) * (vm.bill.discountPercentage / 100))).toFixed(4)),
                 adicional: vm.adicional
             };
-
             if (vm.indexDetail !== undefined) {
                 vm.bill.details[vm.indexDetail] = detail;
             } else {
                 vm.bill.details.push(detail);
             };
-
             vm.productToAdd = undefined;
             vm.quantity = undefined;
             vm.adicional = undefined;
             _getTotalSubtotal();
-
             if (closeModal) {
                 $('#modalAddProduct').modal('hide');
                 vm.toAdd = undefined;

@@ -74,6 +74,7 @@ angular.module('integridadUiApp')
             vm.quantity = undefined;
             vm.adicional = undefined;
             vm.indexDetail = undefined;
+            vm.discount = undefined;
             vm.priceType = vm.prices[0];
             vm.seqChanged = false;
             vm.impuestosTotales = [];
@@ -283,6 +284,7 @@ angular.module('integridadUiApp')
             vm.billOffline.ice = 0.0;
             vm.billOffline.baseTaxes = 0.0;
             vm.billOffline.baseNoTaxes = 0.0;
+            vm.billOffline.discount = 0.0;
             var discountWithIva = 0.0;
             var discountWithNoIva = 0.0;
             _.each(vm.billOffline.detailsOffline, function(detail) {
@@ -315,9 +317,18 @@ angular.module('integridadUiApp')
                 w = parseFloat((100 - vm.billOffline.discountPercentage).toFixed(2));
                 x = parseFloat(((vm.billOffline.subTotal * 100) / w).toFixed(2));
                 vm.billOffline.discount = parseFloat((x * (vm.billOffline.discountPercentage / 100)).toFixed(2));
+            } else if (vm.paraticularDiscount) {
+                _.each(vm.billOffline.detailsOffline, function(detail) {
+                    vm.billOffline.discount = vm.billOffline.discount + (detail.quantity * (detail.costEach * (detail.discount / 100)));
+                });
             } else {
                 vm.billOffline.discount = 0;
+                _.each(vm.billOffline.detailsOffline, function(detail) {
+                    vm.billOffline.discount = vm.billOffline.discount - (detail.quantity * (detail.costEach * (detail.discount / 100)));
+                });
+                vm.billOffline.discount = vm.billOffline.discount * -1;
             };
+
             vm.impuestoICE.base_imponible = 0.0;
             vm.impuestoIVA.base_imponible = parseFloat((vm.billOffline.baseTaxes).toFixed(2));
             vm.impuestoIVAZero.base_imponible = parseFloat((vm.billOffline.baseNoTaxes).toFixed(2));
@@ -350,19 +361,6 @@ angular.module('integridadUiApp')
         };
 
         vm.reCalculateTotal = function() {
-            if (vm.billOffline.discountPercentage == null || vm.billOffline.discountPercentage == undefined) {
-                vm.billOffline.discountPercentage = 0;
-            };
-            _.map(vm.billOffline.detailsOffline, function(detail) {
-                if (vm.billOffline.discountPercentage) {
-                    detail.discount = vm.billOffline.discountPercentage;
-                } else {
-                    detail.discount = 0;
-                };
-                var costEachCalculated = vm.getCost(detail.product[vm.priceType.cod], detail.product.averageCost);
-                detail.costEach = costEachCalculated;
-                detail.total = parseFloat((parseFloat(detail.quantity) * (parseFloat(detail.costEach) - (parseFloat(detail.costEach) * parseFloat(detail.discount / 100)))).toFixed(2));
-            });
             _getTotalSubtotal();
         };
 
@@ -461,7 +459,6 @@ angular.module('integridadUiApp')
                     vm.filterBarCode();
                 };
             };
-
             if (event.keyCode === 102 || event.charCode === 102 || event.keyCode === 70 || event.charCode === 70) {
                 $('#modalAddPago').modal('show');
                 vm.medio = vm.medList[0];
@@ -477,34 +474,32 @@ angular.module('integridadUiApp')
             if (vm.billOffline.discountPercentage == null || vm.billOffline.discountPercentage == undefined) {
                 vm.billOffline.discountPercentage = 0;
             };
-
+            if (vm.paraticularDiscount == null || vm.paraticularDiscount == undefined) {
+                vm.paraticularDiscount = 0;
+            };
             var discount = 1;
             if ((vm.paraticularDiscount !== null || vm.paraticularDiscount !== undefined) && !isNaN(vm.paraticularDiscount)) {
                 discount = (parseFloat(vm.paraticularDiscount) / 100);
             } else if ((vm.billOffline.discountPercentage !== null || vm.billOffline.discountPercentage !== undefined) && !isNaN(vm.billOffline.discountPercentage)) {
                 discount = (parseFloat(vm.billOffline.discountPercentage) / 100);
             };
-
             var detail = {
-                discount: vm.billOffline.discountPercentage? vm.billOffline.discountPercentage : vm.paraticularDiscount ? vm.paraticularDiscount : 0,
+                discount: vm.billOffline.discountPercentage ? vm.billOffline.discountPercentage : vm.paraticularDiscount ? vm.paraticularDiscount : 0,
                 product: angular.copy(vm.productToAdd),
                 quantity: vm.quantity,
                 costEach: vm.productToAdd.costEachCalculated,
                 total: parseFloat(((vm.quantity * vm.productToAdd.costEachCalculated) - (vm.quantity * (vm.productToAdd.costEachCalculated) * discount)).toFixed(2)),
                 adicional: vm.adicional
             };
-
             if (vm.indexDetail !== undefined) {
                 vm.billOffline.detailsOffline[vm.indexDetail] = detail;
             } else {
                 vm.billOffline.detailsOffline.push(detail);
             };
-
             vm.productToAdd = undefined;
             vm.quantity = undefined;
             vm.adicional = undefined;
             _getTotalSubtotal();
-
             if (closeModal) {
                 $('#modalAddProduct').modal('hide');
                 vm.toAdd = undefined;
