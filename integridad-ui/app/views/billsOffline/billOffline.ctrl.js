@@ -367,7 +367,12 @@ angular.module('integridadUiApp')
         function _filterProduct() {
             vm.totalPages = 0;
             var variable = vm.searchText? vm.searchText : null;
-            productService.getLazyBySusidiaryId($localStorage.user.subsidiary.id, vm.page, variable).then(function(response) {
+            if (variable == null) {
+                var busqueda = variable;
+            } else {
+                var busqueda = variable.toUpperCase();
+            };
+            productService.getLazyBySusidiaryId($localStorage.user.subsidiary.id, vm.page, busqueda).then(function(response) {
                 vm.loading = false;
                 vm.totalPages = response.totalPages;
                 vm.productList = [];

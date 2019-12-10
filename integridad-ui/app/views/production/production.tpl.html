@@ -541,7 +541,7 @@
                         <div class="col-md-12" ng-if="vm.productToAdd === undefined">
                             <div class="row">
                                 <div class="form-group col-md-8">
-                                    <input ng-model="vm.searchText" class="form-control" placeholder="Buscar" />
+                                    <input ng-model="vm.searchText" ng-change="vm.filter()" class="form-control" placeholder="Buscar" />
                                 </div>
                                 <div class="form-group col-md-4">
                                     <button type="button" title="Buscar" class="btn btn-primary btn-sm" ng-click="vm.filter()">
@@ -1307,7 +1307,7 @@
                         <div class="col-md-12" ng-if="vm.productToAdd === undefined">
                             <div class="row">
                                 <div class="form-group col-md-8">
-                                    <input ng-model="vm.searchText" class="form-control" placeholder="Buscar" />
+                                    <input ng-model="vm.searchText" ng-change="vm.filterCsm()" class="form-control" placeholder="Buscar" />
                                 </div>
                                 <div class="form-group col-md-4">
                                     <button type="button" title="Buscar" class="btn btn-primary btn-sm" ng-click="vm.filterCsm()">
@@ -2226,7 +2226,7 @@
         <div class="row" ng-show="vm.productListKar !== undefined">
             <div class="form-group col-md-12">
                 <div class="form-group col-md-10">
-                    <input ng-model="vm.searchTextKar" class="form-control" placeholder="Buscar" />
+                    <input ng-model="vm.searchTextKar" ng-change="vm.filterKar()" class="form-control" placeholder="Buscar" />
                 </div>
                 <div class="form-group col-md-2">
                     <button type="button" title="Buscar Producto" class="btn btn-primary" ng-click="vm.filterKar()">
@@ -2366,7 +2366,7 @@
         <div class="row" ng-show="vm.productListSet !== undefined">
             <div class="form-group col-md-12">
                 <div class="form-group col-md-10">
-                    <input ng-model="vm.searchTextSet" class="form-control" placeholder="Buscar" />
+                    <input ng-model="vm.searchTextSet" ng-change="vm.filterSet()" class="form-control" placeholder="Buscar" />
                 </div>
                 <div class="form-group col-md-2">
                     <button type="button" title="Buscar Producto" class="btn btn-primary" ng-click="vm.filterSet()">

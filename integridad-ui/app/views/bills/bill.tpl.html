@@ -901,7 +901,7 @@
                         <div class="col-md-12" ng-if="vm.productToAdd === undefined">
                             <div class="row">
                                 <div class="form-group col-md-8">
-                                    <input ng-model="vm.searchText" class="form-control" placeholder="Buscar">
+                                    <input ng-model="vm.searchText" ng-change="vm.filter()" class="form-control" placeholder="Buscar">
                                 </div>
                                 <div class="form-group col-md-4">
                                     <button type="button" title="Buscar" class="btn btn-primary btn-sm" ng-click="vm.filter()">

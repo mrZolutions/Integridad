@@ -11,17 +11,17 @@ import lombok.Data;
 public class ExistencyCatReport {
     private String code;
     private String name;
-    private Double costCash;
+    private Double costReal;
     private long quantity;
-    private Double averageCost;
+    private Double averCost;
     private long minorQuantity;
     
-    public ExistencyCatReport(String code, String name, Double costCash, long quantity, Double averageCost, long minorQuantity) {
+    public ExistencyCatReport(String code, String name, Double costReal, long quantity, Double averCost, long minorQuantity) {
         this.code = code;
         this.name = name;
-        this.costCash = costCash;
+        this.costReal = costReal;
         this.quantity = quantity;
-        this.averageCost = averageCost;
+        this.averCost = averCost;
         this.minorQuantity = minorQuantity;
     }
 }

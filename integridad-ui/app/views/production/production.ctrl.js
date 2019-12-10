@@ -279,8 +279,13 @@ angular.module('integridadUiApp')
             vm.totalPagesSet = 0;
             vm.productListSet = [];
             var variableSet = vm.searchTextSet? vm.searchTextSet : null;
+            if (variableSet == null) {
+                var busquedaSet = variableSet;
+            } else {
+                var busquedaSet = variableSet.toUpperCase();
+            };
             if ($routeParams.subsidiaryId) {
-                productService.getLazyBySusidiaryId($routeParams.subsidiaryId, vm.pageSet, variableSet).then(function(response) {
+                productService.getLazyBySusidiaryId($routeParams.subsidiaryId, vm.pageSet, busquedaSet).then(function(response) {
                     vm.totalPagesSet = response.totalPages;
                     vm.totalElementsSet = response.totalElements;
                     _getProductQuantitiesSet(response.content);
@@ -290,7 +295,7 @@ angular.module('integridadUiApp')
                     vm.loading = false;
                 });
             } else {
-                productService.getLazyBySusidiaryId($localStorage.user.subsidiary.id, vm.pageSet, variableSet).then(function(response) {
+                productService.getLazyBySusidiaryId($localStorage.user.subsidiary.id, vm.pageSet, busquedaSet).then(function(response) {
                     vm.totalElementsSet = response.totalElements;
                     vm.totalPagesSet = response.totalPages;
                     _getProductQuantitiesSet(response.content);
@@ -300,6 +305,11 @@ angular.module('integridadUiApp')
                     vm.loading = false;
                 });
             };
+        };
+
+        vm.filterSet = function() {
+            vm.pageSet = 0;
+            _filterSet();
         };
 
         function _getProductQuantitiesSet(listResponse) {
@@ -312,11 +322,6 @@ angular.module('integridadUiApp')
                     vm.productListSet.push(listResponse[i]);
                 };
             };
-        };
-
-        vm.filterSet = function() {
-            vm.pageSet = 0;
-            _filterSet();
         };
         
         vm.paginateSet = function(page) {
@@ -447,8 +452,13 @@ angular.module('integridadUiApp')
             vm.totalPagesKar = 0;
             vm.productListKar = [];
             var variableKar = vm.searchTextKar? vm.searchTextKar : null;
+            if (variableKar == null) {
+                var busquedaKar = variableKar;
+            } else {
+                var busquedaKar = variableKar.toUpperCase();
+            };
             if ($routeParams.subsidiaryId) {
-                productService.getLazyBySusidiaryId($routeParams.subsidiaryId, vm.pageKar, variableKar).then(function(response) {
+                productService.getLazyBySusidiaryId($routeParams.subsidiaryId, vm.pageKar, busquedaKar).then(function(response) {
                     vm.totalPagesKar = response.totalPages;
                     vm.totalElementsKar = response.totalElements;
                     _getProductQuantitiesKar(response.content);
@@ -458,7 +468,7 @@ angular.module('integridadUiApp')
                     vm.loading = false;
                 });
             } else {
-                productService.getLazyBySusidiaryId($localStorage.user.subsidiary.id, vm.pageKar, variableKar).then(function(response) {
+                productService.getLazyBySusidiaryId($localStorage.user.subsidiary.id, vm.pageKar, busquedaKar).then(function(response) {
                     vm.totalElementsKar = response.totalElements;
                     vm.totalPagesKar = response.totalPages;
                     _getProductQuantitiesKar(response.content);
@@ -468,6 +478,11 @@ angular.module('integridadUiApp')
                     vm.loading = false;
                 });
             };
+        };
+
+        vm.filterKar = function() {
+            vm.pageKar = 0;
+            _filterKar();
         };
         
         function _getProductQuantitiesKar(listResponse) {
@@ -480,11 +495,6 @@ angular.module('integridadUiApp')
                     vm.productListKar.push(listResponse[i]);
                 };
             };
-        };
-        
-        vm.filterKar = function() {
-            vm.pageKar = 0;
-            _filterKar();
         };
                 
         vm.paginateKar = function(page) {
@@ -1005,7 +1015,12 @@ angular.module('integridadUiApp')
         function _filterProductCsm() {
             vm.totalPages = 0;
             var variable = vm.searchText? vm.searchText : null;
-            productService.getLazyBySusidiaryId($localStorage.user.subsidiary.id, vm.page, variable).then(function(response) {
+            if (variable == null) {
+                var busquedaCsm = variable;
+            } else {
+                var busquedaCsm = variable.toUpperCase();
+            };
+            productService.getLazyBySusidiaryId($localStorage.user.subsidiary.id, vm.page, busquedaCsm).then(function(response) {
                 vm.loading = false;
                 vm.totalPages = response.totalPages;
                 vm.productList = [];
@@ -1027,6 +1042,11 @@ angular.module('integridadUiApp')
             vm.loading = false;
             vm.error = error.data;
             });
+        };
+
+        vm.filterCsm = function() {
+            vm.page = 0;
+            _filterProductCsm();
         };
 
         vm.printToCartAndCancelCsm = function(printMatrixConsumptionId) {
@@ -1094,11 +1114,6 @@ angular.module('integridadUiApp')
             return new Array(vm.totalPages);
         };
 
-        vm.filterCsm = function() {
-            vm.page = 0;
-            _filterProductCsm();
-        };
-
         vm.paginateCsm = function(page) {
             vm.page = page;
             _filterProductCsm();
@@ -1113,7 +1128,12 @@ angular.module('integridadUiApp')
         function _filterProduct() {
             vm.totalPages = 0;
             var variable = vm.searchText? vm.searchText : null;
-            productService.getLazyBySusidiaryId($localStorage.user.subsidiary.id, vm.page, variable).then(function(response) {
+            if (variable == null) {
+                var busqueda = variable;
+            } else {
+                var busqueda = variable.toUpperCase();
+            };
+            productService.getLazyBySusidiaryId($localStorage.user.subsidiary.id, vm.page, busqueda).then(function(response) {
                 vm.loading = false;
                 vm.totalPages = response.totalPages;
                 vm.productList = [];

@@ -314,16 +314,14 @@ public class ProductServices {
                 minimo = 0;
             }
             
-            if (productCat.getCashPercentage() != null) {
+            if (productCat.getAverageCost() != null) {
                 costoCatReal = productCat.getAverageCost();
-                costoCatCash = costoCatReal + (costoCatReal * (productCat.getCashPercentage() / 100));
             } else {
                 costoCatReal = 0.0;
-                costoCatCash = 0.0;
             }
             
             ExistencyCatReport existencyCatReport = new ExistencyCatReport(productCat.getCodeIntegridad(), productCat.getName(),
-                                                                           costoCatCash, cantidad, promedio, minimo);
+                                                                           costoCatReal, cantidad, promedio, minimo);
             existencyCatReportList.add(existencyCatReport);
         });
         return existencyCatReportList;
