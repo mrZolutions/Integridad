@@ -492,13 +492,13 @@
                 </div>
             </div>
             <div class="panel-footer" print-remove>
-                <button type="button" title = "Forma de Pago" class="btn btn-primary btn-sm" ng-if="vm.newBill"
+                <button type="button" title = "Forma de Pago" class="btn btn-primary btn-sm" ng-if="vm.newBuy"
                         data-toggle="modal" data-target="#modalAddPago"
                         ng-disabled="vm.bill.total <= 0 || vm.billed"
                         ng-show="vm.bill.claveDeAcceso === undefined">
                         <span class = "glyphicon glyphicon-usd" aria-hidden = "true"></span>
                 </button>
-                <button type="button" title="Volver a Inicio" class="btn btn-danger btn-sm" ng-if="vm.newBill"
+                <button type="button" title="Volver a Inicio" class="btn btn-danger btn-sm" ng-if="vm.newBuy"
                         ng-click="vm.exit()">
                         <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
                 </button>
@@ -644,6 +644,61 @@
                 </button>
             </div>
         </div>
+        <div class="panel panel-primary" ng-if="!vm.newConsumptionOn">
+            <div class="panel-heading">
+                <b>Forma de Pago</b>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Medio</th>
+                                    <th>Valor</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="pago in vm.pagos">
+                                    <td>
+                                        {{pago.medio}}<br/>
+                                            <span ng-if="pago.medio === 'cheque'">
+                                                {{pago.chequeBank}} - {{pago.chequeAccount}} - {{pago.chequeNumber}}<br/>
+                                            </span>
+                                            <span ng-if="pago.medio === 'tarjeta_credito' || pago.medio === 'tarjeta_debito'">
+                                                {{pago.cardBrand}}<br/>
+                                            </span>
+                                        {{pago.payForm}}
+                                    </td>
+                                    <td>{{pago.total}}</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td><b>Total:</b></td>
+                                    <td>{{vm.getTotalPagoB()}}</td>
+                                    <td>Vuelto: {{vm.getCambioB}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="panel-footer">
+                <button type="button" title="Nueva Factura" class="btn btn-primary btn-sm"
+                        ng-click="vm.nuevaBill()">
+                        <span class="glyphicon glyphicon-file" aria-hidden="true"></span>
+                </button>
+                <button type="button" title = "Imprimir Ticket Consumo" class="btn btn-primary btn-sm"
+                        ng-click="vm.printToCart('printMatrixConsumptionId')">
+                        <span class="glyphicon glyphicon-print" aria-hidden="true"></span>
+                </button>
+                <button type="button" title="Volver a Inicio" class="btn btn-danger btn-sm"
+                        ng-click="vm.exit()">
+                        <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
+                </button>
+            </div>
+        </div>
     </div>
 
     <!--CREA Y DESCARGA TICKET FACTURA PARA EPSON TM20-->
@@ -693,7 +748,7 @@
         <p>{{vm.clientSelected.name}}</p><br/>
         <p>IDENTIFICACION: {{vm.clientSelected.identification}}</p><br/>
         <p>FECHA: {{vm.getDateToPrint() | date :  "dd/MM/yyyy"}}</p><br/>
-        <p>>DESCRIPCIÓN &nbsp;&nbsp;CANTIDAD &nbsp;&nbsp;P.UNIT &nbsp;&nbsp;TOTAL</p>
+        <p>DESCRIPCIÓN &nbsp;&nbsp;CANTIDAD &nbsp;&nbsp;P.UNIT &nbsp;&nbsp;TOTAL</p>
         <table width="100%">
             <tr ng-repeat="detail in vm.bill.details">
                 <td>{{(detail.product.name).substr(0,15)}} &nbsp;{{detail.quantity}}&nbsp; &#36;{{detail.costEach}}&nbsp;&nbsp; &#36;{{detail.total}}<br/></td>
@@ -719,6 +774,45 @@
         </table>
 
         ------------------------------------
+    </div>
+
+    <!--IMPRIME TICKET DE CONSUMO-->
+    <div id="printMatrixConsumptionId" ng-show='false'>
+        ----------------------<br/>
+        <p>CONSUMO No. {{vm.csmSeqNumber}}</p><br/>
+        <p>SUPERVISOR: {{vm.consumption.nameSupervisor}}</p><br/>
+        <p>OBSERVACIONES: {{vm.consumption.observation}}</p><br/>
+        
+        <p>RAZON SOCIAL:</p><br/>
+        <p>{{vm.consumption.client.name}}</p><br/>
+        <p>IDENTIFICACION: {{vm.consumption.client.identification}}</p><br/>
+        <p>FECHA: {{vm.getDateToPrintCsm() | date :  "dd/MM/yyyy"}}</p><br/>
+        <p>DESCRIPCIÓN &nbsp;&nbsp;CANTIDAD &nbsp;&nbsp;P.UNIT &nbsp;&nbsp;TOTAL</p>
+        <table width="100%">
+            <tr ng-repeat="detail in vm.consumption.detailsConsumption">
+                <td>{{(detail.product.name).substr(0,15)}} &nbsp;{{detail.quantity}}&nbsp; &#36;{{detail.costEach}}&nbsp;&nbsp; &#36;{{detail.total}}<br/></td>
+            </tr>
+        </table>
+        <br/>
+        <table width="100%">
+            <tr>
+                <td>SUBTOTAL: &#36;{{vm.consumption.subTotal}}</td>
+            </tr>
+            <tr>
+                <td>BASE 0%: &#36;{{vm.consumption.baseNoTaxes}}</td>
+            </tr>
+            <tr>
+                <td>BASE 12%: &#36;{{vm.consumption.baseTaxes}}</td>
+            </tr>
+            <tr>
+                <td>IVA:   &#36;{{vm.consumption.iva}}</td>
+            </tr>
+            <tr>
+                <td>TOTAL: &#36;{{vm.consumption.total}}</td>
+            </tr>
+        </table>
+
+        ---------------------
     </div>
 
     <!--AGREGAR TIPO DE PAGO A LA FACTURA Y FACTURAR-->
@@ -880,8 +974,12 @@
                             ng-disabled="(vm.pagos.length === 0 || vm.getCambio < 0) || vm.billed" print-remove>
                             <span class = "glyphicon glyphicon-credit-card" aria-hidden = "true"></span>
                     </button>
-                    <button type="button" title = "Cancelar Facturación" class="btn btn-primary btn-sm" data-dismiss="modal">
+                    <button type="button" title = "Cancelar Facturación" class="btn btn-warning btn-sm" data-dismiss="modal">
                             <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
+                    </button>
+                    <button type="button" title="Generar Consumo" class="btn btn-primary btn-sm" ng-click="vm.saveConsumption(vm.consumption)"
+                            ng-disabled="(vm.pagos.length === 0 || vm.getCambio < 0) || vm.billed">
+                            <span class="glyphicon glyphicon-glass" aria-hidden="true"></span>
                     </button>
                 </div>
             </div>
@@ -1154,9 +1252,9 @@
         <br/>
         <br/>
         <div class="row">
-            <div class="col-md-10 col-md-offset-1">
-                <h4><b>MR. ZOLUTIONS LE INFORMA: ESTIMADO CLIENTE SU USUARIO</b></h4>
-                <h4><b>NO ESTÁ AUTORIZADO PARA EJECUTAR ESTA OPCIÓN DEL MENÚ</b></h4>
+            <div class="col-md-10 col-md-offset-2">
+                <h4><b>MR. ZOLUTIONS LE INFORMA:</b> ESTIMADO CLIENTE, SU USUARIO</h4>
+                <h4><b>NO ESTÁ AUTORIZADO</b> PARA EJECUTAR ESTA OPCIÓN DEL MENÚ</h4>
             </div>
         </div>
         <br/>

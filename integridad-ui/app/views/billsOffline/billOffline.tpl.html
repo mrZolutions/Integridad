@@ -493,13 +493,13 @@
                 </div>
             </div>
             <div class="panel-footer">
-                <button type="button" title = "Forma de Pago" class="btn btn-primary btn-sm" ng-if="vm.newBillOffline"
+                <button type="button" title = "Forma de Pago" class="btn btn-primary btn-sm" ng-if="vm.newBuyOff"
                         data-toggle="modal" data-target="#modalAddPago"
                         ng-disabled="vm.billOffline.total <= 0 || vm.billedOffline"
                         ng-show="vm.billOffline.claveDeAcceso === undefined">
                         <span class = "glyphicon glyphicon-usd" aria-hidden = "true"></span>
                 </button>
-                <button type="button" title="Volver a Inicio" class="btn btn-danger btn-sm" ng-if="vm.newBillOffline"
+                <button type="button" title="Volver a Inicio" class="btn btn-danger btn-sm" ng-if="vm.newBuyOff"
                         ng-click="vm.exit()">
                         <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
                 </button>
@@ -551,6 +551,10 @@
                         ng-click="vm.nuevaBillOffline()">
                         <span class="glyphicon glyphicon-file" aria-hidden="true"></span>
                 </button>
+                <button type="button" title = "Imprimir a Epson LX-300" class="btn btn-primary btn-sm" ng-if="vm.userClientId === vm.mrZolutions"
+                        ng-show="!vm.newBillOffline" ng-click="vm.printToCart('printMatrixBillOfflineId')">
+                        <span class="glyphicon glyphicon-print" aria-hidden="true"></span>
+                </button>
                 <button type="button" title = "Imprimir a Epson LX-300" class="btn btn-primary btn-sm" ng-if="vm.userClientId === vm.laQuinta"
                         ng-show="!vm.newBillOffline" ng-click="vm.printToCart('printMatrixBillOfflineId')">
                         <span class="glyphicon glyphicon-print" aria-hidden="true"></span>
@@ -565,6 +569,61 @@
                 </button>
                 <button type="button" title="Volver a Inicio" class="btn btn-danger btn-sm"
                         ng-if="!vm.newBillOffline" ng-click="vm.exit()">
+                        <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
+                </button>
+            </div>
+        </div>
+        <div class="panel panel-primary" ng-if="!vm.newConsumptionOff">
+            <div class="panel-heading">
+                <b>Forma de Pago</b>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Medio</th>
+                                    <th>Valor</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="pago in vm.pagos">
+                                    <td>
+                                        {{pago.medio}}<br/>
+                                            <span ng-if="pago.medio === 'cheque'">
+                                                {{pago.chequeBank}} - {{pago.chequeAccount}} - {{pago.chequeNumber}}<br/>
+                                            </span>
+                                            <span ng-if="pago.medio === 'tarjeta_credito' || pago.medio === 'tarjeta_debito'">
+                                                {{pago.cardBrand}}<br/>
+                                            </span>
+                                        {{pago.payForm}}
+                                    </td>
+                                    <td>{{pago.total}}</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td><b>Total:</b></td>
+                                    <td>{{vm.getTotalPagoB()}}</td>
+                                    <td>Vuelto: {{vm.getCambioB}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="panel-footer">
+                <button type="button" title="Nueva Factura" class="btn btn-primary btn-sm"
+                        ng-click="vm.nuevaBillOffline()">
+                        <span class="glyphicon glyphicon-file" aria-hidden="true"></span>
+                </button>
+                <button type="button" title = "Imprimir Ticket Consumo" class="btn btn-primary btn-sm"
+                        ng-click="vm.printToCart('printMatrixConsumptionId')">
+                        <span class="glyphicon glyphicon-print" aria-hidden="true"></span>
+                </button>
+                <button type="button" title="Volver a Inicio" class="btn btn-danger btn-sm"
+                        ng-click="vm.exit()">
                         <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
                 </button>
             </div>
@@ -675,6 +734,45 @@
         S.TOT: {{(vm.billOffline.subTotal).toFixed(2)}}<br/>
         TOT: {{vm.billOffline.total}}<br/>
         --------------------
+    </div>
+
+    <!--IMPRIME TICKET DE CONSUMO-->
+    <div id="printMatrixConsumptionId" ng-show='false'>
+        ----------------------<br/>
+        <p>CONSUMO No. {{vm.csmSeqNumber}}</p><br/>
+        <p>SUPERVISOR: {{vm.consumption.nameSupervisor}}</p><br/>
+        <p>OBSERVACIONES: {{vm.consumption.observation}}</p><br/>
+    
+        <p>RAZON SOCIAL:</p><br/>
+        <p>{{vm.consumption.client.name}}</p><br/>
+        <p>IDENTIFICACION: {{vm.consumption.client.identification}}</p><br/>
+        <p>FECHA: {{vm.getDateToPrintCsm() | date :  "dd/MM/yyyy"}}</p><br/>
+        <p>DESCRIPCIÓN &nbsp;&nbsp;CANTIDAD &nbsp;&nbsp;P.UNIT &nbsp;&nbsp;TOTAL</p>
+        <table width="100%">
+            <tr ng-repeat="detail in vm.consumption.detailsConsumption">
+                <td>{{(detail.product.name).substr(0,15)}} &nbsp;{{detail.quantity}}&nbsp; &#36;{{detail.costEach}}&nbsp;&nbsp; &#36;{{detail.total}}<br/></td>
+            </tr>
+        </table>
+        <br/>
+        <table width="100%">
+            <tr>
+                <td>SUBTOTAL: &#36;{{vm.consumption.subTotal}}</td>
+            </tr>
+            <tr>
+                <td>BASE 0%: &#36;{{vm.consumption.baseNoTaxes}}</td>
+            </tr>
+            <tr>
+                <td>BASE 12%: &#36;{{vm.consumption.baseTaxes}}</td>
+            </tr>
+            <tr>
+                <td>IVA:   &#36;{{vm.consumption.iva}}</td>
+            </tr>
+            <tr>
+                <td>TOTAL: &#36;{{vm.consumption.total}}</td>
+            </tr>
+        </table>
+
+        ---------------------
     </div>
 
     <!--ANULAR FACTURA-->
@@ -812,11 +910,15 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" title="Facturar" class="btn btn-success btn-sm" ng-click="vm.saveBillOffline()" id="processBillBtn"
-                            ng-disabled="(vm.pagosOffline.length === 0 || vm.getCambio < 0) || vm.billedOffline" print-remove>
+                            ng-disabled="(vm.pagosOffline.length === 0 || vm.getCambio < 0) || vm.billedOffline">
                             <span class="glyphicon glyphicon-credit-card" aria-hidden="true"></span>
                     </button>
-                    <button type="button" title="Cancelar Facturación" class="btn btn-primary btn-sm" data-dismiss="modal">
+                    <button type="button" title="Cancelar Facturación" class="btn btn-warning btn-sm" data-dismiss="modal">
                             <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
+                    </button>
+                    <button type="button" title="Generar Consumo" class="btn btn-primary btn-sm" ng-click="vm.saveConsumptionOff(vm.consumption)"
+                            ng-disabled="(vm.pagosOffline.length === 0 || vm.getCambio < 0) || vm.billedOffline">
+                            <span class="glyphicon glyphicon-glass" aria-hidden="true"></span>
                     </button>
                 </div>
             </div>
@@ -1015,9 +1117,9 @@
         <br/>
         <br/>
         <div class="row">
-            <div class="col-md-10 col-md-offset-1">
-                <h4><b>MR. ZOLUTIONS LE INFORMA: ESTIMADO CLIENTE SU USUARIO</b></h4>
-                <h4><b>NO ESTÁ AUTORIZADO PARA EJECUTAR ESTA OPCIÓN DEL MENÚ</b></h4>
+            <div class="col-md-10 col-md-offset-2">
+                <h4><b>MR. ZOLUTIONS LE INFORMA:</b> ESTIMADO CLIENTE, SU USUARIO</h4>
+                <h4><b>NO ESTÁ AUTORIZADO</b> PARA EJECUTAR ESTA OPCIÓN DEL MENÚ</h4>
             </div>
         </div>
         <br/>

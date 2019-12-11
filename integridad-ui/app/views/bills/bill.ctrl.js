@@ -7,8 +7,8 @@
  * Controller of the integridadUiApp
  */
 angular.module('integridadUiApp')
-    .controller('BillCtrl', function(_, $location, utilStringService, $localStorage,
-                                     clientService, productService, authService, billService, $window,
+    .controller('BillCtrl', function(_, $location, utilStringService, $localStorage, consumptionService,
+                                     clientService, productService, authService, billService, warehouseService,
                                      cashierService, requirementService, utilSeqService) {
         var vm = this;
         vm.error = undefined;
@@ -54,10 +54,13 @@ angular.module('integridadUiApp')
             vm.aux = undefined;
             vm.estado = undefined;
             vm.newBill = true;
+            vm.newConsumptionOn = true;
+            vm.newBuy = true;
             vm.billed = false;
             vm.clientSelected = undefined;
             vm.dateBill = undefined;
             vm.seqNumber = undefined;
+            vm.csmSeqNumber = undefined;
             vm.productList = undefined;
             vm.productToAdd = undefined;
             vm.pagoTot = undefined;
@@ -106,6 +109,7 @@ angular.module('integridadUiApp')
                     vm.clientSelect(finalConsumer[0]);
                     _getSeqNumber();
                     _initializeBill();
+                    _initializeConsumption();
                     var today = new Date();
                     $('#pickerBillDate').data("DateTimePicker").date(today);
                     setTimeout(function() {
@@ -191,6 +195,7 @@ angular.module('integridadUiApp')
         vm.clientSelectChanged = function(client) {
             vm.clientSelected = client;
             vm.bill.client = vm.clientSelected;
+            vm.consumption.client = vm.clientSelected;
             vm.pagos = [];
             setTimeout(function() {
                 document.getElementById("input4").focus();
@@ -222,23 +227,36 @@ angular.module('integridadUiApp')
             vm.bill.ice = 0.0;
             vm.bill.baseTaxes = 0.0;
             vm.bill.baseNoTaxes = 0.0;
+            //Calculos para Consumos
+            vm.consumption.subTotal = 0;
+            vm.consumption.iva = 0;
+            vm.consumption.ivaZero = 0;
+            vm.consumption.ice = 0;
+            vm.consumption.baseTaxes = 0;
+            vm.consumption.baseNoTaxes = 0;
+
             var discountWithIva = 0.0;
             var discountWithNoIva = 0.0;
             _.each(vm.bill.details, function(detail) {
                 vm.bill.subTotal = parseFloat((parseFloat(vm.bill.subTotal) + parseFloat(detail.total)).toFixed(4));
+                vm.consumption.subTotal = vm.bill.subTotal;
                 var tot = parseFloat((detail.total).toFixed(4));
                 if (vm.bill.discountPercentage) {
                     tot = parseFloat((detail.total).toFixed(4));
                 };
                 if (detail.product.iva) {
                     vm.bill.baseTaxes += parseFloat((detail.total).toFixed(4));
+                    vm.consumption.baseTaxes = vm.bill.baseTaxes;
                     vm.bill.iva = parseFloat((parseFloat(vm.bill.iva) + (parseFloat(tot) * 0.12)).toFixed(4));
+                    vm.consumption.iva = vm.bill.iva;
                     if (vm.bill.discountPercentage) {
                         discountWithIva = parseFloat((parseFloat(discountWithIva) + (parseFloat(detail.total) * parseFloat((vm.bill.discountPercentage) / 100))).toFixed(4));
                     };
                 } else {
                     vm.bill.baseNoTaxes += parseFloat((detail.total).toFixed(4));
+                    vm.consumption.baseNoTaxes = vm.bill.baseNoTaxes;
                     vm.bill.ivaZero = parseFloat((parseFloat(vm.bill.ivaZero) + parseFloat(tot)).toFixed(4));
+                    vm.consumption.ivaZero = vm.bill.ivaZero;
                     if (vm.bill.discountPercentage) {
                         discountWithNoIva = parseFloat((parseFloat(discountWithNoIva) + ((parseFloat(vm.bill.discountPercentage) / 100) * parseFloat(detail.total))).toFixed(4));
                     };
@@ -268,6 +286,9 @@ angular.module('integridadUiApp')
                 +  parseFloat(vm.bill.baseNoTaxes)
                 +  parseFloat(vm.bill.iva)
                 +  parseFloat(vm.bill.ice)).toFixed(2));
+            vm.consumption.total = (parseFloat(vm.consumption.baseTaxes)
+                + parseFloat(vm.consumption.baseNoTaxes)
+                + parseFloat(vm.consumption.iva)).toFixed(2);
         };
 
         function _addDays(date, days) {
@@ -441,8 +462,10 @@ angular.module('integridadUiApp')
             };
             if (vm.indexDetail !== undefined) {
                 vm.bill.details[vm.indexDetail] = detail;
+                vm.consumption.detailsConsumption[vm.indexDetail] = detail;
             } else {
                 vm.bill.details.push(detail);
+                vm.consumption.detailsConsumption.push(detail);
             };
             vm.productToAdd = undefined;
             vm.quantity = undefined;
@@ -479,6 +502,7 @@ angular.module('integridadUiApp')
 
         vm.removeDetail = function(index) {
             vm.bill.details.splice(index,1);
+            vm.consumption.detailsConsumption.splice(index,1);
             _getTotalSubtotal();
         };
 
@@ -781,6 +805,7 @@ angular.module('integridadUiApp')
                 var kardex = {
                     bill: vm.bill.id,
                     product: det.product,
+                    codeWarehouse: '--',
                     dateRegister: $('#pickerBillDate').data("DateTimePicker").date().toDate().getTime(),
                     details: 'FACTURA-VENTA Nro. ' + vm.seqNumber,
                     observation: 'EGRESO',
@@ -820,6 +845,7 @@ angular.module('integridadUiApp')
                     billService.create(vm.bill, 1).then(function(respBill) {
                         vm.billed = true;
                         vm.newBill = false;
+                        vm.newBuy = false;
                         $localStorage.user.cashier.billNumberSeq = vm.bill.billSeq;
                         if (vm.seqChanged) {
                             cashierService.update($localStorage.user.cashier).then(function(resp) {
@@ -838,6 +864,81 @@ angular.module('integridadUiApp')
                     vm.loading = false;
                     vm.error = "Error al obtener Clave de Acceso: " + JSON.stringify(obj.errors);
                 };
+            }).catch(function(error) {
+                vm.loading = false;
+                vm.error = error.data;
+            });
+        };
+
+        //Consumption Code
+        function _getCsmSeqNumber() {
+            vm.numberCsmAddedOne = parseInt($localStorage.user.cashier.csmNumberSeq) + 1;
+            vm.csmSeqNumber = utilSeqService._pad_with_zeroes(vm.numberCsmAddedOne, 6);
+        };
+        
+        function _initializeConsumption() {
+            vm.consumption = {
+                client: vm.clientSelected,
+                userIntegridad: $localStorage.user,
+                subsidiary: $localStorage.user.subsidiary,
+                dateConsumption: vm.dateBill.getTime(),
+                total: 0,
+                subTotal: 0,
+                iva: 0,
+                ice: 0,
+                baseNoTaxes: 0,
+                baseTaxes: 0,
+                detailsConsumption: []
+            };
+        };
+        
+        vm.saveConsumption = function(consumption) {
+            vm.loading = true;
+            $('#modalAddPago').modal('hide');
+            _getCsmSeqNumber();
+            warehouseService.getAllWarehouseByUserClientId(vm.userClientId).then(function(response) {
+                vm.warehouseList = response;
+                var finalWarehouse = _.filter(vm.warehouseList, function(warehouse) { return warehouse.subsidiary.id === vm.subsidiaryId});
+                vm.consumption.warehouse = finalWarehouse[0];
+                vm.consumption.dateConsumption = $('#pickerBillDate').data("DateTimePicker").date().toDate().getTime();
+                vm.consumption.csmSeq = parseInt(vm.numberCsmAddedOne);
+                vm.consumption.csmNumberSeq = vm.csmSeqNumber;
+                vm.consumption.clientName = vm.clientSelected.name;
+                vm.consumption.codeWarehouse = '--';
+                vm.consumption.nameSupervisor = '--';
+                vm.consumption.observation = 'CONSUMO INTERNO';
+                vm.consumption.detailsKardex = [];
+                _.each(vm.consumption.detailsConsumption, function(item) {
+                    var kardex = {
+                        consumption: consumption.id,
+                        product: item.product,
+                        codeWarehouse: '--',
+                        dateRegister: $('#pickerBillDate').data("DateTimePicker").date().toDate().getTime(),
+                        details: 'CONSUMO INTERNO Nro. ' + vm.csmSeqNumber,
+                        observation: 'EGRESO',
+                        detalle: vm.consumption.observation,
+                        prodCostEach: item.costEach,
+                        prodName: item.product.name,
+                        prodQuantity: item.quantity,
+                        prodTotal: item.total,
+                        subsidiaryId: vm.subsidiaryId,
+                        userClientId: vm.userClientId,
+                        userId: vm.userId
+                    };
+                    vm.consumption.detailsKardex.push(kardex);
+                });
+                consumptionService.create(consumption).then(function(respConsumption) {
+                    $localStorage.user.cashier.csmNumberSeq = vm.numberCsmAddedOne;
+                    vm.consumptionCreated = respConsumption;
+                    vm.consumptioned = true;
+                    vm.newBuy = false;
+                    vm.newConsumptionOn = false;
+                    vm.loading = false;
+                }).catch(function(error) {
+                    vm.loading = false;
+                    vm.error = error.data;
+                });
+                vm.loading = false;
             }).catch(function(error) {
                 vm.loading = false;
                 vm.error = error.data;

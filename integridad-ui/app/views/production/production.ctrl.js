@@ -17,10 +17,25 @@ angular.module('integridadUiApp')
         vm.loading = false;
         vm.userData = $localStorage.user;
         vm.clientList = undefined;
+        vm.catedral = '1e2049c3-a3bc-4231-a0de-dded8020dc1b';
 
         vm.prices = [
             { name: 'EFECTIVO', cod: 'cashPercentage'}, { name: 'MAYORISTA', cod: 'majorPercentage'},
             { name: 'CREDITO', cod: 'creditPercentage'}, { name: 'TARJETA', cod: 'cardPercentage'}
+        ];
+
+        vm.providerType = [
+            'PROVEEDORES LOCALES O NACIONALES 01',
+            'PROVEEDORES DEL EXTERIOR 02',
+        ];
+    
+        vm.purchaseType = [
+            {code: 'BIEN', name: 'BIENES'},
+            {code: 'SERV', name: 'SERVICIOS'},
+            {code: 'MATP', name: 'MATERIA PRIMA'},
+            {code: 'CONS', name: 'CONSUMIBLES'},
+            {code: 'RMBG', name: 'REEMBOLSO DE GASTOS'},
+            {code: 'TKAE', name: 'TIKETS AEREOS'}
         ];
 
         function _activate() {
@@ -48,6 +63,7 @@ angular.module('integridadUiApp')
             vm.warehouseList = undefined;
             vm.aux = undefined;
             vm.loading = true;
+            vm.csmObservation = undefined;
             vm.priceType = vm.prices[0];
             vm.success = undefined;
             vm.error = undefined;
@@ -66,7 +82,6 @@ angular.module('integridadUiApp')
             vm.dateOne = undefined;
             vm.dateTwo = undefined;
             vm.systemOur = undefined;
-
             vm.impuestosTotales = [];
             vm.impuestoICE = {
                 "base_imponible": 0.0,
@@ -86,21 +101,6 @@ angular.module('integridadUiApp')
                 "codigo": "2",
                 "codigo_porcentaje": 0
             };
-        
-            vm.providerType = [
-                'PROVEEDORES LOCALES O NACIONALES 01',
-                'PROVEEDORES DEL EXTERIOR 02',
-            ];
-        
-            vm.purchaseType = [
-                {code: 'BIEN', name: 'BIENES'},
-                {code: 'SERV', name: 'SERVICIOS'},
-                {code: 'MATP', name: 'MATERIA PRIMA'},
-                {code: 'CONS', name: 'CONSUMIBLES'},
-                {code: 'RMBG', name: 'REEMBOLSO DE GASTOS'},
-                {code: 'TKAE', name: 'TIKETS AEREOS'}
-            ];
-
             vm.usrCliId = $localStorage.user.subsidiary.userClient.id;
             vm.subsidiaryId = $localStorage.user.subsidiary.id;
             vm.userCode = $localStorage.user.userType.code;
@@ -672,7 +672,7 @@ angular.module('integridadUiApp')
             vm.adicional = undefined;
             _getCellarTotalSubtotal();
             if (closeModal) {
-                $('#modalAddProduct').modal('hide');
+                $('#modalAddProductCellar').modal('hide');
             } else {
                 var newProductList = _.filter(vm.productList, function(prod) {
                     return prod.id !== detail.product.id;
@@ -850,11 +850,11 @@ angular.module('integridadUiApp')
             vm.cellarList = undefined;
             vm.providerList = undefined;
             consumptionService.getAllConsumptionByClientId(client.id).then(function(response) {
-            vm.consumptionList = response;
-            vm.loading = false;
+                vm.consumptionList = response;
+                vm.loading = false;
             }).catch(function(error) {
-            vm.loading = false;
-            vm.error = error.data;
+                vm.loading = false;
+                vm.error = error.data;
             });
         };
 
@@ -946,6 +946,7 @@ angular.module('integridadUiApp')
             vm.consumption.csmNumberSeq = vm.csmSeqNumber;
             vm.consumption.clientName = vm.clientSelected.name;
             vm.consumption.codeWarehouse = vm.warehouse.codeWarehouse;
+            vm.consumption.observation = 'EGRESO -- ' + vm.csmObservation;
             vm.consumption.detailsKardex = [];
             _.each(vm.consumption.detailsConsumption, function(item) {
                 var kardex = {
@@ -953,7 +954,7 @@ angular.module('integridadUiApp')
                     product: item.product,
                     codeWarehouse: vm.warehouse.codeWarehouse,
                     dateRegister: $('#pickerDateConsumption').data("DateTimePicker").date().toDate().getTime(),
-                    details: 'CONSUMO INTERNO Nro. ' + vm.csmSeqNumber,
+                    details: 'EGRESO INTERNO Nro. ' + vm.csmSeqNumber,
                     observation: 'EGRESO',
                     detalle: vm.consumption.observation,
                     prodCostEach: item.costEach,
@@ -1127,13 +1128,13 @@ angular.module('integridadUiApp')
         //Product Code
         function _filterProduct() {
             vm.totalPages = 0;
-            var variable = vm.searchText? vm.searchText : null;
-            if (variable == null) {
-                var busqueda = variable;
+            var variableCellar = vm.searchText? vm.searchText : null;
+            if (variableCellar == null) {
+                var busquedaCellar = variableCellar;
             } else {
-                var busqueda = variable.toUpperCase();
+                var busquedaCellar = variableCellar.toUpperCase();
             };
-            productService.getLazyBySusidiaryId($localStorage.user.subsidiary.id, vm.page, busqueda).then(function(response) {
+            productService.getLazyBySusidiaryId($localStorage.user.subsidiary.id, vm.page, busquedaCellar).then(function(response) {
                 vm.loading = false;
                 vm.totalPages = response.totalPages;
                 vm.productList = [];
@@ -1155,6 +1156,11 @@ angular.module('integridadUiApp')
                 vm.loading = false;
                 vm.error = error.data;
             });
+        };
+
+        vm.filter = function() {
+            vm.page = 0;
+            _filterProduct();
         };
 
         vm.addProduct = function() {
@@ -1181,11 +1187,6 @@ angular.module('integridadUiApp')
 
         vm.range = function() {
             return new Array(vm.totalPages);
-        };
-
-        vm.filter = function() {
-            vm.page = 0;
-            _filterProduct();
         };
 
         vm.paginate = function(page) {

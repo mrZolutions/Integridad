@@ -64,13 +64,16 @@
                                 ng-disabled="vm.userCode === 'EMP'" ng-click="vm.findCellarPending(warehouse)">
                                 <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
                         </button>
-                        <button type="button" title="Egresos" class="btn btn-primary btn-sm" ng-click="vm.consumptionFromWarehouse(warehouse)">
+                        <button type="button" title="Egresos" class="btn btn-primary btn-sm"
+                                ng-click="vm.consumptionFromWarehouse(warehouse)">
                                 <span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
                         </button>
-                        <button type="button" title="Reporte Kardex por Producto" class="btn btn-success btn-sm" ng-click="vm.reportKardex(warehouse)">
+                        <button type="button" title="Reporte Kardex por Producto" class="btn btn-success btn-sm"
+                                ng-click="vm.reportKardex(warehouse)">
                                 <span class="glyphicon glyphicon-film" aria-hidden="true"></span>
                         </button>
-                        <button type="button" title="Ajuste Kardex por Producto" class="btn btn-primary btn-sm" ng-click="vm.settingForKardex(warehouse)">
+                        <button type="button" title="Ajuste Kardex por Producto" class="btn btn-primary btn-sm"
+                                ng-click="vm.settingForKardex(warehouse)">
                                 <span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
                         </button>
                     </td>
@@ -365,7 +368,7 @@
                                     <th>V. Total.</th>
                                     <th ng-if="vm.newCellar">
                                         <button type="button" title="Agregar Productos" class="btn btn-primary" ng-click="vm.addProduct()"
-                                                data-toggle="modal" data-target="#modalAddProduct">
+                                                data-toggle="modal" data-target="#modalAddProductCellar">
                                                 <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                                         </button>
                                     </th>
@@ -529,7 +532,7 @@
     </div>
 
     <!--MODAL PARA AGREGAR PRODUCTOS-->
-    <div id="modalAddProduct" class="modal fade" role="dialog">
+    <div id="modalAddProductCellar" class="modal fade" role="dialog">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -1085,7 +1088,7 @@
                     </div>
                     <div class="form-group col-md-6">
                         <label>Observaciones:</label><br/>
-                        <input type="text" class="form-control" ng-model="vm.consumption.observation">
+                        <input type="text" class="form-control" ng-model="vm.csmObservation">
                     </div>
                 </div>
             </div>
