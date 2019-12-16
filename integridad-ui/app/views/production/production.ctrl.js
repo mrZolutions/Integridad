@@ -307,6 +307,13 @@ angular.module('integridadUiApp')
             };
         };
 
+        vm.filterEventSet = function(event) {
+            vm.pageSet = 0;
+            if (event.keyCode === 13 || event.charCode === 13) {
+                _filterSet();
+            };
+        };
+
         vm.filterSet = function() {
             vm.pageSet = 0;
             _filterSet();
@@ -477,6 +484,13 @@ angular.module('integridadUiApp')
                     vm.error = error.data;
                     vm.loading = false;
                 });
+            };
+        };
+
+        vm.filterEventKar = function(event) {
+            vm.pageKar = 0;
+            if (event.keyCode === 13 || event.charCode === 13) {
+                _filterKar();
             };
         };
 
@@ -1045,6 +1059,13 @@ angular.module('integridadUiApp')
             });
         };
 
+        vm.filterEventCsm = function(event) {
+            vm.page = 0;
+            if (event.keyCode === 13 || event.charCode === 13) {
+                _filterProductCsm();
+            };
+        };
+
         vm.filterCsm = function() {
             vm.page = 0;
             _filterProductCsm();
@@ -1158,8 +1179,15 @@ angular.module('integridadUiApp')
             });
         };
 
-        vm.filter = function() {
+        vm.filterEvent = function(event) {
             vm.page = 0;
+            if (event.keyCode === 13 || event.charCode === 13) {
+                _filterProduct();
+            };
+        };
+
+        vm.filter = function() {
+            vm.page = 0;        
             _filterProduct();
         };
 

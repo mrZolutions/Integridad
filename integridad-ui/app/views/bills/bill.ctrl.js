@@ -370,6 +370,13 @@ angular.module('integridadUiApp')
             });
         };
 
+        vm.filterEvent = function(event) {
+            vm.page = 0;
+            if (event.keyCode === 13 || event.charCode === 13) {
+                _filterProduct();
+            };
+        };
+
         vm.filter = function() {
             vm.page = 0;
             _filterProduct();
