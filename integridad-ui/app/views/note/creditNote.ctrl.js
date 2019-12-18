@@ -27,6 +27,8 @@ angular.module('integridadUiApp')
             vm.userClientId = $localStorage.user.subsidiary.userClient.id;
             vm.userCashier = $localStorage.user.cashier;
             vm.userSubsidiary = $localStorage.user.subsidiary;
+            vm.subOnlineActive = $localStorage.user.subsidiary.online;
+            vm.subCxPActive = $localStorage.user.subsidiary.cxp;
             vm.newCNCellar = undefined;
 
             vm.clientList = undefined;
@@ -437,13 +439,21 @@ angular.module('integridadUiApp')
             vm.errorQuantity = undefined;
             vm.page = 0;
             vm.searchText = undefined;
+            setTimeout(function() {
+                document.getElementById("prod011").focus();
+            }, 200);
             _filterProductServices();
         };
 
         function _filterProductServices() {
             vm.totalPages = 0;
             var variable = vm.searchText? vm.searchText : null;
-            productService.getLazyBySusidiaryId($localStorage.user.subsidiary.id, vm.page, variable).then(function(response) {
+            if (variable == null) {
+                var busqueda = variable;
+            } else {
+                var busqueda = variable.toUpperCase();
+            };
+            productService.getLazyBySusidiaryId($localStorage.user.subsidiary.id, vm.page, busqueda).then(function(response) {
                 vm.loading = false;
                 vm.totalPages = response.totalPages;
                 vm.productServicesList = [];
@@ -465,6 +475,13 @@ angular.module('integridadUiApp')
                 vm.loading = false;
                 vm.error = error.data;
             });
+        };
+
+        vm.filterEvent = function(event) {
+            vm.page = 0;
+            if (event.keyCode === 13 || event.charCode === 13) {
+                _filterProductServices();
+            };
         };
 
         vm.filter = function() {

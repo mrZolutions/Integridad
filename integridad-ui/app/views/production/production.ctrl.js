@@ -270,6 +270,9 @@ angular.module('integridadUiApp')
                 vm.error = error.data;
                 vm.loading = false;
             });
+            setTimeout(function() {
+                document.getElementById("prod013").focus();
+            }, 200);            
             vm.pageSet = 0;
             _filterSet();
         };
@@ -1105,6 +1108,9 @@ angular.module('integridadUiApp')
             vm.errorQuantity = undefined;
             vm.page = 0;
             vm.searchText = undefined;
+            setTimeout(function() {
+                document.getElementById("prod012").focus();
+            }, 200);
             _filterProductCsm();
         };
 
@@ -1197,6 +1203,9 @@ angular.module('integridadUiApp')
             vm.errorQuantity = undefined;
             vm.page = 0;
             vm.searchText = undefined;
+            setTimeout(function() {
+                document.getElementById("prod011").focus();
+            }, 200);
             _filterProduct();
         };
 

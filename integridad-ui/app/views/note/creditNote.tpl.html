@@ -44,12 +44,12 @@
 
     <div class="row" ng-show="vm.selectedTypeCreditNote === undefined">
         <div class="form-group col-md-6">
-            <button type="button" class="btn btn-primary btn-block" ng-click="vm.loadTypeCreditNote('1')">
+            <button type="button" class="btn btn-primary btn-block" ng-click="vm.loadTypeCreditNote('1')" ng-if="vm.subOnlineActive">
                 NOTA DE CRÉDITO - FACTURAS DE VENTAS        
             </button>
         </div>
         <div class="form-group col-md-6">
-            <button type="button" class="btn btn-primary btn-block" ng-click="vm.loadTypeCreditNote('2')">
+            <button type="button" class="btn btn-primary btn-block" ng-click="vm.loadTypeCreditNote('2')" ng-if="vm.subCxPActive">
                 NOTA DE CRÉDITO - FACTURAS DE COMPRAS        
             </button>
         </div>
@@ -1226,7 +1226,7 @@
                         <div class="col-md-12" ng-if="vm.productToAdd === undefined">
                             <div class="row">
                                 <div class="form-group col-md-10">
-                                    <input ng-model="vm.searchText" class="form-control" placeholder="Buscar" />
+                                    <input id="prod011" ng-model="vm.searchText" ng-keypress="vm.filterEvent($event)" class="form-control" placeholder="Buscar" />
                                 </div>
                                 <div class="form-group col-md-2">
                                     <button type="button" title="Buscar" class="btn btn-primary btn-sm" ng-click="vm.filter()">

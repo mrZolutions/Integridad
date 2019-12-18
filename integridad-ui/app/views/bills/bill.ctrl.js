@@ -402,6 +402,9 @@ angular.module('integridadUiApp')
             vm.errorQuantity = undefined;
             vm.page = 0;
             vm.searchText = undefined;
+            setTimeout(function() {
+                document.getElementById("prod011").focus();
+            }, 200);
             _filterProduct();
         };
 
@@ -504,6 +507,9 @@ angular.module('integridadUiApp')
             vm.productToAdd = detail.product;
             vm.quantity = detail.quantity;
             vm.adicional = detail.adicional;
+            setTimeout(function() {
+                document.getElementById("prod011").focus();
+            }, 200);
             _getTotalSubtotal();
         };
 

@@ -55,8 +55,13 @@ angular.module('integridadUiApp')
             vm.totalPages = 0;
             vm.productList = [];
             var variable = vm.searchText? vm.searchText : null;
+            if (variable == null) {
+                var busqueda = variable;
+            } else {
+                var busqueda = variable.toUpperCase();
+            };
             if ($routeParams.subsidiaryId) {
-                productService.getLazyBySusidiaryId($routeParams.subsidiaryId, vm.page, variable).then(function(response) {
+                productService.getLazyBySusidiaryId($routeParams.subsidiaryId, vm.page, busqueda).then(function(response) {
                     vm.totalPages = response.totalPages;
                     vm.totalElements = response.totalElements;
                     _getProductQuantities(response.content);
@@ -66,7 +71,7 @@ angular.module('integridadUiApp')
                     vm.error = error.data;
                 });
             } else {
-                productService.getLazyBySusidiaryId($localStorage.user.subsidiary.id, vm.page, variable).then(function(response) {
+                productService.getLazyBySusidiaryId($localStorage.user.subsidiary.id, vm.page, busqueda).then(function(response) {
                     vm.totalElements = response.totalElements;
                     vm.totalPages = response.totalPages;
                     _getProductQuantities(response.content);
@@ -190,6 +195,13 @@ angular.module('integridadUiApp')
                 vm.loading = false;
                 vm.error = error.data;
             });
+        };
+
+        vm.filterEvent = function(event) {
+            vm.page = 0;
+            if (event.keyCode === 13 || event.charCode === 13) {
+                _filter();
+            };
         };
 
         vm.filter = function() {

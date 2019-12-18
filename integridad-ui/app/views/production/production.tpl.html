@@ -544,7 +544,7 @@
                         <div class="col-md-12" ng-if="vm.productToAdd === undefined">
                             <div class="row">
                                 <div class="form-group col-md-8">
-                                    <input ng-model="vm.searchText" ng-keypress="vm.filterEvent($event)" class="form-control" placeholder="Buscar" />
+                                    <input id="prod011" ng-model="vm.searchText" ng-keypress="vm.filterEvent($event)" class="form-control" placeholder="Buscar" />
                                 </div>
                                 <div class="form-group col-md-4">
                                     <button type="button" title="Buscar" class="btn btn-primary btn-sm" ng-click="vm.filter()">
@@ -1310,7 +1310,7 @@
                         <div class="col-md-12" ng-if="vm.productToAdd === undefined">
                             <div class="row">
                                 <div class="form-group col-md-8">
-                                    <input ng-model="vm.searchText" ng-keypress="vm.filterEventCsm($event)" class="form-control" placeholder="Buscar" />
+                                    <input id="prod012" ng-model="vm.searchText" ng-keypress="vm.filterEventCsm($event)" class="form-control" placeholder="Buscar" />
                                 </div>
                                 <div class="form-group col-md-4">
                                     <button type="button" title="Buscar" class="btn btn-primary btn-sm" ng-click="vm.filterCsm()">
@@ -2369,7 +2369,7 @@
         <div class="row" ng-show="vm.productListSet !== undefined">
             <div class="form-group col-md-12">
                 <div class="form-group col-md-10">
-                    <input ng-model="vm.searchTextSet" ng-keypress="vm.filterEventSet($event)" class="form-control" placeholder="Buscar" />
+                    <input id="prod013" ng-model="vm.searchTextSet" ng-keypress="vm.filterEventSet($event)" class="form-control" placeholder="Buscar" />
                 </div>
                 <div class="form-group col-md-2">
                     <button type="button" title="Buscar Producto" class="btn btn-primary" ng-click="vm.filterSet()">

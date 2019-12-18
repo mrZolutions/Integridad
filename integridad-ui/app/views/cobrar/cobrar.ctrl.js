@@ -135,7 +135,7 @@ angular.module('integridadUiApp')
         vm.typeContabCi = 'COMP. DE INGRESO'
 
         function _activate() {
-            vm.loading = true;
+            vm.advertencia = false;
             vm.error = undefined;
             vm.today = new Date();
             vm.clientBill = undefined;
@@ -174,14 +174,20 @@ angular.module('integridadUiApp')
 
             vm.userCashier = $localStorage.user.cashier;
             vm.usrCliId = $localStorage.user.subsidiary.userClient.id;
-
-            clientService.getLazyByUserClientId(vm.usrCliId).then(function(response) {
-                vm.clientList = response;
-                vm.loading = false;
-            }).catch(function(error) {
-                vm.loading = false;
-                vm.error = error.data;
-            });
+            vm.subCxCActive = $localStorage.user.subsidiary.cxc;
+            
+            if (vm.subCxCActive) {
+                vm.loading = true;
+                clientService.getLazyByUserClientId(vm.usrCliId).then(function(response) {
+                    vm.clientList = response;
+                    vm.loading = false;
+                }).catch(function(error) {
+                    vm.loading = false;
+                    vm.error = error.data;
+                });
+            } else {
+                vm.advertencia = true;
+            };
         };
 
         //Sección de Comprobante de Ingreso para el Asiento Automático

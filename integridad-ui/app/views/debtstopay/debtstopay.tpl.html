@@ -34,7 +34,7 @@
     </div>
 
     <!--SECCIÓN DE CARGA DE PROVEEDORES POR USERCLIENT-->
-    <div class="table-responsive" ng-show="vm.providerSelected === undefined && vm.debtsToPayList === undefined && vm.providerDebtsList === undefined && vm.debtsProviderSelected === undefined && vm.debtsToPaySelectedToUpdate === undefined && vm.allDebtsToPayList === undefined && vm.multipleSelected === undefined && vm.paymentDebtsList === undefined && vm.comprobantePagoList === undefined && vm.comprobantePagoCreated === undefined">
+    <div class="table-responsive" ng-show="vm.providerSelected === undefined && vm.debtsToPayList === undefined && vm.providerDebtsList === undefined && vm.debtsProviderSelected === undefined && vm.debtsToPaySelectedToUpdate === undefined && vm.allDebtsToPayList === undefined && vm.multipleSelected === undefined && vm.paymentDebtsList === undefined && vm.comprobantePagoList === undefined && vm.comprobantePagoCreated === undefined && vm.advertencia === false">
         <div class="row">
             <div class="form-group col-md-12">
                 <input id="input41" ng-model="searchText" class="form-control" placeholder="Buscar Proveedores">
@@ -2326,6 +2326,31 @@
                             <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
                     </button>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!--ADVERTENCIA-->
+    <div ng-show="vm.advertencia === true">
+        <div class="row">
+            <div class="col-md-8 col-md-offset-3">
+                <img src="images/advertencia.png" style="height: 250px; width: 340px; margin-top: 10px;">
+            </div>
+        </div>
+        <br/>
+        <br/>
+        <div class="row">
+            <div class="col-md-10 col-md-offset-2">
+                <h4><b>MR. ZOLUTIONS LE INFORMA:</b> ESTIMADO CLIENTE, SU USUARIO</h4>
+                <h4><b>NO ESTÁ AUTORIZADO</b> PARA EJECUTAR ESTA OPCIÓN DEL MENÚ</h4>
+            </div>
+        </div>
+        <br/>
+        <div class="row">
+            <div class="col-md-12">
+                <button type="button" title = "Aceptar y Salir" class="btn btn-success btn-sm" ng-click="vm.exit()">
+                        <span class = "glyphicon glyphicon-thumbs-down" aria-hidden = "true"></span>
+                </button>
             </div>
         </div>
     </div>
