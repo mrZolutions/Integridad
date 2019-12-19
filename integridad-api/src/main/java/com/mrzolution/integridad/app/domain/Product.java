@@ -37,18 +37,10 @@ public class Product implements Child {
     private boolean ice;
     private boolean iva;
     
-    @Column(nullable = true)
     private Long quantityCellar;
-    @Column(nullable = true)
     private Double costCellar;
-
-    @Column(nullable = true)
-    private String wareHouseType;
-    @Column(nullable = true)
     private Double costEach;
-    @Column(nullable = true)
     private Double averageCostSuggested;
-
 
     @ManyToOne
     @JoinColumn(name = "product_type_id")
@@ -77,7 +69,7 @@ public class Product implements Child {
         if (productBySubsidiaries != null) {
             productBySubsidiaries = null;
         }
-        if(cuentaContableByProducts !=null){
+        if (cuentaContableByProducts != null) {
             cuentaContableByProducts = null;
         }
     }

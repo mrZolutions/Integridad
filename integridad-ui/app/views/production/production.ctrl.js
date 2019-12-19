@@ -40,6 +40,7 @@ angular.module('integridadUiApp')
 
         function _activate() {
             vm.newCellar = undefined;
+            vm.errorCalc = false;
             vm.celled = false;
             vm.cellarList = undefined;
             vm.cellarSavedList = undefined;
@@ -242,6 +243,276 @@ angular.module('integridadUiApp')
         vm.cancelConsultSavedCellar = function() {
             vm.cellarSavedList = undefined;
             vm.warehouseSelected = undefined;
+        };
+
+        vm.printToCartAndCancel = function(printMatrixCellarId) {
+            var innerContents = document.getElementById(printMatrixCellarId).innerHTML;
+            var popupWinindow = window.open('', 'printMatrixCellarId', 'width=300,height=400');
+            popupWinindow.document.write('<html><head><title>printMatrixCellarId</title>');
+            popupWinindow.document.write('</head><body>');
+            popupWinindow.document.write(innerContents);
+            popupWinindow.document.write('</body></html>');
+            popupWinindow.print();
+            popupWinindow.close();
+            _activate();
+        };
+
+        vm.getDateToPrint = function() {
+            if (vm.cellar != undefined) {
+                return $('#pickerDateEnterCellar').data("DateTimePicker").date().toDate();
+            };
+        };
+
+        vm.findCellarPending = function(warehouse) {
+            vm.loading = true;
+            vm.success = undefined;
+            vm.error = undefined;
+            vm.clientList = undefined;
+            vm.warehouseSelected = warehouse;
+            vm.warehouseName = warehouse.nameNumber;
+            vm.warehouseSubsidiaryName = warehouse.subsidiary.name;
+            cellarService.getAllCellarsPendingOfWarehouse(warehouse.id).then(function(response) {
+                vm.cellarList = response;
+                vm.cellarPendingSelected = response.id;
+                vm.loading = false;
+            }).catch(function(error) {
+                vm.loading = false;
+                vm.error = error.data;
+            });
+        };
+
+        vm.cancelFindCellars = function() {
+            vm.warehouseSelected = undefined;
+        };
+
+        function _getCellarTotalSubtotal() {
+            vm.cellar.subTotal = 0;
+            vm.cellar.iva = 0;
+            vm.cellar.ivaZero = 0;
+            vm.cellar.ice = 0;
+            vm.cellar.baseTaxes = 0;
+            vm.cellar.baseNoTaxes = 0;
+            var ivac = 0;
+            var discountWithIva = 0;
+            var discountWithNoIva = 0;
+            if (vm.cellar.descuento == null || vm.cellar.descuento == undefined) {
+                vm.cellar.descuento = 0;
+            };
+            _.each(vm.cellar.detailsCellar, function(detail) {
+                vm.cellar.subTotal = (parseFloat(vm.cellar.subTotal) + parseFloat(detail.total)).toFixed(2);
+                var tot = detail.total;
+                if (detail.product.iva) {
+                    vm.cellar.baseTaxes += parseFloat(detail.total);
+                    ivac = (vm.cellar.baseTaxes - parseFloat(vm.cellar.descuento)) * 0.12;
+                    vm.cellar.iva = ivac.toFixed(2);
+                    if (vm.cellar.discountPercentage) {
+                        discountWithIva = (parseFloat(discountWithIva) + ((parseInt(vm.cellar.discountPercentage) / 100) * detail.total)).toFixed(2);
+                    };
+                } else {
+                    vm.cellar.baseNoTaxes += parseFloat(detail.total);
+                    vm.cellar.ivaZero = (parseFloat(vm.cellar.ivaZero) + parseFloat(tot)).toFixed(2);
+                    if (vm.cellar.discountPercentage) {
+                        discountWithNoIva = (parseFloat(discountWithNoIva) + ((parseInt(vm.cellar.discountPercentage) / 100) * detail.total)).toFixed(2);
+                    };
+                };
+                if (detail.product.ice) {
+                    vm.cellar.ice = (parseFloat(vm.cellar.ice) + (parseFloat(tot) * 0.10)).toFixed(2);
+                };
+            });
+            vm.impuestoICE.base_imponible = vm.cellar.subTotal;
+            vm.impuestoIVA.base_imponible = vm.cellar.baseTaxes;
+            vm.impuestoIVAZero.base_imponible = vm.cellar.baseNoTaxes;
+            vm.impuestoICE.valor = vm.cellar.ice;
+            vm.impuestoIVA.valor = vm.cellar.iva;
+            vm.impuestoIVAZero.valor = 0;
+            vm.cellar.baseTaxes = (parseFloat(vm.cellar.baseTaxes - discountWithIva) - parseFloat(vm.cellar.descuento)).toFixed(2);
+            vm.cellar.baseNoTaxes = (vm.cellar.baseNoTaxes - discountWithNoIva).toFixed(2);
+            vm.cellar.total = (parseFloat(vm.cellar.baseTaxes)
+                + parseFloat(vm.cellar.baseNoTaxes)
+                + parseFloat(vm.cellar.iva)
+                + parseFloat(vm.cellar.ice)).toFixed(2);
+        };
+
+        vm.recalculateTotalCellar = function() {
+            if (vm.cellar.descuento == null || vm.cellar.descuento == undefined) {
+                vm.cellar.descuento = 0;
+            };
+            _getCellarTotalSubtotal();
+        };
+
+        vm.selectProductToAdd = function(productSelect) {
+            if (productSelect.productType.code === 'SER') {
+                productSelect.quantity = 1;
+            };
+            vm.productToAdd = angular.copy(productSelect);
+            if (vm.productToAdd.costEach === null) {
+                var costEachCalculated = vm.getCost(productSelect.cashPercentage, productSelect.averageCost);
+                vm.productToAdd.costEach = costEachCalculated;
+                vm.productToAdd.averageCostSuggested = vm.productToAdd.averageCost
+            };
+            vm.quantity = 1;
+        };
+
+        vm.calcAvg = function() {
+            vm.errorCalc = false;
+            if (vm.productToAdd.averageCost === null || vm.productToAdd.averageCost === '' || vm.productToAdd.averageCost <= 0) {
+                vm.productToAdd.averageCostSuggested = vm.productToAdd.costEach;
+            } else {
+                var costCellar = 0;
+                var quantityCellar = parseInt(vm.productToAdd.quantityCellar) + parseInt(vm.quantity);
+                costCellar = parseFloat((vm.quantity * vm.productToAdd.costEach).toFixed(4));
+                if (quantityCellar <= 0) {
+                    quantityCellar = parseInt(vm.quantity);
+                };
+                vm.productToAdd.averageCostSuggested = ((vm.productToAdd.costCellar + costCellar) / quantityCellar).toFixed(4);
+            };
+            if (isNaN(vm.productToAdd.averageCostSuggested)) {
+                vm.errorCalc = true;
+            };
+        };
+
+        vm.acceptCellarProduct = function(closeModal) {
+            var detail = {
+                product: angular.copy(vm.productToAdd),
+                quantity: vm.quantity,
+                costEach: vm.productToAdd.costEach,
+                total: (parseFloat(vm.quantity) * parseFloat(vm.productToAdd.costEach)).toFixed(4),
+                adicional: vm.adicional
+            };
+
+            vm.productToAdd.quantityCellar = parseInt(vm.productToAdd.quantityCellar) + parseInt(vm.quantity);
+            vm.productToAdd.costCellar = vm.productToAdd.costCellar + (vm.productToAdd.costEach * detail.quantity);
+
+            if (vm.indexDetail !== undefined) {
+                vm.cellar.detailsCellar[vm.indexDetail] = detail;
+            } else {
+                vm.cellar.detailsCellar.push(detail);
+            };
+
+            productService.update(vm.productToAdd).then(function(response) {
+                vm.productToAdd = undefined;
+                vm.selectedGroup = undefined;
+                vm.selectedLine = undefined;
+                vm.wizard = undefined;
+                vm.error = undefined;
+            }).catch(function(error) {
+                vm.loading = false;
+                vm.error = error.data;
+            });
+
+            vm.quantity = undefined;
+            vm.adicional = undefined;
+            _getCellarTotalSubtotal();
+            if (closeModal) {
+                $('#modalAddProductCellar').modal('hide');
+            } else {
+                var newProductList = _.filter(vm.productList, function(prod) {
+                    return prod.id !== detail.product.id;
+                });
+                vm.productList = newProductList;
+            };
+        };
+
+        vm.removeDetail = function(index) {
+            vm.cellar.detailsCellar.splice(index,1);
+            _getCellarTotalSubtotal();
+        };
+
+        vm.saveCellar = function(cellar) {
+            vm.loading = true;
+            vm.newCellar = false;
+            vm.cellar.dateBill = $('#pickerDateBill').data("DateTimePicker").date().toDate().getTime();
+            vm.cellar.dateCellar = $('#pickerDateEnterCellar').data("DateTimePicker").date().toDate().getTime();
+            vm.cellar.cellarSeq = parseInt(vm.numberAddedOne);
+            vm.cellar.whNumberSeq = vm.cellSeqNumber;
+            vm.cellar.detailsKardex = [];
+            if (vm.userCode === 'EMP') {
+                vm.cellar.statusIngreso = 'PENDIENTE';
+            } else {
+                vm.cellar.statusIngreso = 'INGRESADO';
+            };
+            _.each(vm.cellar.detailsCellar, function(item) {
+                var kardex = {
+                    cellar: cellar.id,
+                    product: item.product,
+                    codeWarehouse: vm.warehouse.codeWarehouse,
+                    dateRegister: $('#pickerDateEnterCellar').data("DateTimePicker").date().toDate().getTime(),
+                    details: 'INGRESO A BODEGA Nro. ' + vm.cellSeqNumber + ', Fact. ' + vm.cellar.billNumber,
+                    observation: 'INGRESO',
+                    detalle: '--',
+                    prodCostEach: item.costEach,
+                    prodName: item.product.name,
+                    prodQuantity: item.quantity,
+                    prodTotal: item.total,
+                    subsidiaryId: vm.subsidiaryId,
+                    userClientId: vm.usrCliId,
+                    userId: vm.userId
+                };
+                vm.cellar.detailsKardex.push(kardex);
+            });
+            cellarService.getByUserClientIdAndBillNumberActive(vm.usrCliId, vm.cellar.billNumber).then(function(response) {
+                if (response.length === 0) {
+                    cellarService.create(vm.cellar).then(function(respCellar) {
+                        vm.celled = true;
+                        vm.cellarCreated = respCellar;
+                        $localStorage.user.cashier.whNumberSeq = vm.numberAddedOne;
+                        vm.loading = false;
+                    }).catch(function(error) {
+                        vm.loading = false;
+                        vm.error = error.data;
+                    });
+                } else {
+                    vm.error = 'El Nro. de Documento (Factura) Ya Existe y no puede repetirse';
+                    vm.loading = false;
+                };
+            }).catch(function(error) {
+                vm.loading = false;
+                vm.error = error.data;
+            });
+        };
+
+        vm.cancelCellar = function() {
+            vm.warehouseSelected = undefined;
+            vm.providerSelected = undefined;
+            vm.error = undefined;
+        };
+
+        vm.cellarSelected = function(cellar) {
+            vm.loading = true;
+            vm.cellarPendingSelected = cellar.id;
+            cellarService.getAllCellarById(cellar.id).then(function(response) {
+                vm.cellar = response;
+                vm.cellarDetails = response.detailsCellar;
+                vm.cellarProviderSelected = response.provider;
+                vm.billNumber = response.billNumber;
+                vm.cellSeqNumber = response.whNumberSeq;
+                vm.loading = false;
+            }).catch(function(error) {
+                vm.loading = false;
+                vm.error = error.data;
+            });
+        };
+
+        vm.cancelCellarSelected = function() {
+            vm.cellarPendingSelected = undefined;
+        };
+
+        vm.validateEnterCellar = function() {
+            vm.loading = true;
+            vm.error = undefined;
+            vm.success = undefined;
+            cellarService.validateCellar(vm.validateCellar).then(function(response) {
+                var index = vm.cellarList.indexOf(vm.validateCellar);
+                if (index > -1) {
+                    vm.cellarList.splice(index, 1);
+                };
+                vm.validateCellar = undefined;
+                vm.loading = false;
+            }).catch(function(error) {
+                vm.success = 'Ingreso a Bodega realizado con exito';
+                vm.loading = false;
+                vm.error = error.data;
+            });
         };
 
         //Ajuste por Kardex
@@ -528,277 +799,6 @@ angular.module('integridadUiApp')
             return classActiveKar;
         };
         //Fin Reporte Kardex
-
-        vm.printToCartAndCancel = function(printMatrixCellarId) {
-            var innerContents = document.getElementById(printMatrixCellarId).innerHTML;
-            var popupWinindow = window.open('', 'printMatrixCellarId', 'width=300,height=400');
-            popupWinindow.document.write('<html><head><title>printMatrixCellarId</title>');
-            popupWinindow.document.write('</head><body>');
-            popupWinindow.document.write(innerContents);
-            popupWinindow.document.write('</body></html>');
-            popupWinindow.print();
-            popupWinindow.close();
-            _activate();
-        };
-
-        vm.getDateToPrint = function() {
-            if (vm.cellar != undefined) {
-                return $('#pickerDateEnterCellar').data("DateTimePicker").date().toDate();
-            };
-        };
-
-        vm.findCellarPending = function(warehouse) {
-            vm.loading = true;
-            vm.success = undefined;
-            vm.error = undefined;
-            vm.clientList = undefined;
-            vm.warehouseSelected = warehouse;
-            vm.warehouseName = warehouse.nameNumber;
-            vm.warehouseSubsidiaryName = warehouse.subsidiary.name;
-            cellarService.getAllCellarsPendingOfWarehouse(warehouse.id).then(function(response) {
-                vm.cellarList = response;
-                vm.cellarPendingSelected = response.id;
-                vm.loading = false;
-            }).catch(function(error) {
-                vm.loading = false;
-                vm.error = error.data;
-            });
-        };
-
-        vm.cancelFindCellars = function() {
-            vm.warehouseSelected = undefined;
-        };
-
-        function _getCellarTotalSubtotal() {
-            vm.cellar.subTotal = 0;
-            vm.cellar.iva = 0;
-            vm.cellar.ivaZero = 0;
-            vm.cellar.ice = 0;
-            vm.cellar.baseTaxes = 0;
-            vm.cellar.baseNoTaxes = 0;
-            var ivac = 0;
-            var discountWithIva = 0;
-            var discountWithNoIva = 0;
-            if (vm.cellar.descuento == null || vm.cellar.descuento == undefined) {
-                vm.cellar.descuento = 0;
-            };
-            _.each(vm.cellar.detailsCellar, function(detail) {
-                vm.cellar.subTotal = (parseFloat(vm.cellar.subTotal) + parseFloat(detail.total)).toFixed(2);
-                var tot = detail.total;
-                if (detail.product.iva) {
-                    vm.cellar.baseTaxes += parseFloat(detail.total);
-                    ivac = (vm.cellar.baseTaxes - parseFloat(vm.cellar.descuento)) * 0.12;
-                    vm.cellar.iva = ivac.toFixed(2);
-                    if (vm.cellar.discountPercentage) {
-                        discountWithIva = (parseFloat(discountWithIva) + ((parseInt(vm.cellar.discountPercentage) / 100) * detail.total)).toFixed(2);
-                    };
-                } else {
-                    vm.cellar.baseNoTaxes += parseFloat(detail.total);
-                    vm.cellar.ivaZero = (parseFloat(vm.cellar.ivaZero) + parseFloat(tot)).toFixed(2);
-                    if (vm.cellar.discountPercentage) {
-                        discountWithNoIva = (parseFloat(discountWithNoIva) + ((parseInt(vm.cellar.discountPercentage) / 100) * detail.total)).toFixed(2);
-                    };
-                };
-                if (detail.product.ice) {
-                    vm.cellar.ice = (parseFloat(vm.cellar.ice) + (parseFloat(tot) * 0.10)).toFixed(2);
-                };
-            });
-            vm.impuestoICE.base_imponible = vm.cellar.subTotal;
-            vm.impuestoIVA.base_imponible = vm.cellar.baseTaxes;
-            vm.impuestoIVAZero.base_imponible = vm.cellar.baseNoTaxes;
-            vm.impuestoICE.valor = vm.cellar.ice;
-            vm.impuestoIVA.valor = vm.cellar.iva;
-            vm.impuestoIVAZero.valor = 0;
-            vm.cellar.baseTaxes = (parseFloat(vm.cellar.baseTaxes - discountWithIva) - parseFloat(vm.cellar.descuento)).toFixed(2);
-            vm.cellar.baseNoTaxes = (vm.cellar.baseNoTaxes - discountWithNoIva).toFixed(2);
-            vm.cellar.total = (parseFloat(vm.cellar.baseTaxes)
-                + parseFloat(vm.cellar.baseNoTaxes)
-                + parseFloat(vm.cellar.iva)
-                + parseFloat(vm.cellar.ice)).toFixed(2);
-        };
-
-        vm.recalculateTotalCellar = function() {
-            if (vm.cellar.descuento == null || vm.cellar.descuento == undefined) {
-                vm.cellar.descuento = 0;
-            };
-            _getCellarTotalSubtotal();
-        };
-
-        vm.selectProductToAdd = function(productSelect) {
-            if (productSelect.productType.code === 'SER') {
-                productSelect.quantity = 1;
-            };
-            vm.productToAdd = angular.copy(productSelect);
-            if (vm.productToAdd.costEach === null) {
-                var costEachCalculated = vm.getCost(productSelect.cashPercentage, productSelect.averageCost);
-                vm.productToAdd.costEach = costEachCalculated;
-                vm.productToAdd.averageCostSuggested = vm.productToAdd.averageCost
-            };
-            vm.quantity = 1;
-        };
-
-        vm.calcAvg = function() {
-            if (vm.productToAdd.averageCost === null || vm.productToAdd.averageCost === '' || vm.productToAdd.averageCost <= 0) {
-                vm.productToAdd.averageCostSuggested = vm.productToAdd.costEach;
-            } else {
-                var costCellar = 0;
-                var quantityCellar = parseInt(vm.productToAdd.quantityCellar) + parseInt(vm.quantity);
-                costCellar = parseFloat((vm.quantity * vm.productToAdd.costEach).toFixed(4));
-                if (quantityCellar <= 0) {
-                    quantityCellar = parseInt(vm.quantity);
-                };
-                vm.productToAdd.averageCostSuggested = ((vm.productToAdd.costCellar + costCellar) / quantityCellar).toFixed(4);
-            };
-        };
-
-        vm.acceptCellarProduct = function(closeModal) {
-            var detail = {
-                product: angular.copy(vm.productToAdd),
-                quantity: vm.quantity,
-                costEach: vm.productToAdd.costEach,
-                total: (parseFloat(vm.quantity) * parseFloat(vm.productToAdd.costEach)).toFixed(4),
-                adicional: vm.adicional
-            };
-
-            vm.productToAdd.quantityCellar = parseInt(vm.productToAdd.quantityCellar) + parseInt(vm.quantity);
-            vm.productToAdd.costCellar = vm.productToAdd.costCellar + (vm.productToAdd.costEach * detail.quantity);
-
-            if (vm.indexDetail !== undefined) {
-                vm.cellar.detailsCellar[vm.indexDetail] = detail;
-            } else {
-                vm.cellar.detailsCellar.push(detail);
-            };
-
-            productService.update(vm.productToAdd).then(function(response) {
-                vm.productToAdd = undefined;
-                vm.selectedGroup = undefined;
-                vm.selectedLine = undefined;
-                vm.wizard = undefined;
-                vm.error = undefined;
-                if (isRemove) {
-                    vm.success = 'Registro eliminado con exito';
-                } else {
-                    vm.success = 'Registro actualizado con exito';
-                };
-            }).catch(function(error) {
-                vm.loading = false;
-                vm.error = error.data;
-            });
-
-            vm.quantity = undefined;
-            vm.adicional = undefined;
-            _getCellarTotalSubtotal();
-            if (closeModal) {
-                $('#modalAddProductCellar').modal('hide');
-            } else {
-                var newProductList = _.filter(vm.productList, function(prod) {
-                    return prod.id !== detail.product.id;
-                });
-                vm.productList = newProductList;
-            };
-        };
-
-        vm.removeDetail = function(index) {
-            vm.cellar.detailsCellar.splice(index,1);
-            _getCellarTotalSubtotal();
-        };
-
-        vm.saveCellar = function(cellar) {
-            vm.loading = true;
-            vm.newCellar = false;
-            vm.cellar.dateBill = $('#pickerDateBill').data("DateTimePicker").date().toDate().getTime();
-            vm.cellar.dateCellar = $('#pickerDateEnterCellar').data("DateTimePicker").date().toDate().getTime();
-            vm.cellar.cellarSeq = parseInt(vm.numberAddedOne);
-            vm.cellar.whNumberSeq = vm.cellSeqNumber;
-            vm.cellar.detailsKardex = [];
-            if (vm.userCode === 'EMP') {
-                vm.cellar.statusIngreso = 'PENDIENTE';
-            } else {
-                vm.cellar.statusIngreso = 'INGRESADO';
-            };
-            _.each(vm.cellar.detailsCellar, function(item) {
-                var kardex = {
-                    cellar: cellar.id,
-                    product: item.product,
-                    codeWarehouse: vm.warehouse.codeWarehouse,
-                    dateRegister: $('#pickerDateEnterCellar').data("DateTimePicker").date().toDate().getTime(),
-                    details: 'INGRESO A BODEGA Nro. ' + vm.cellSeqNumber + ', Fact. ' + vm.cellar.billNumber,
-                    observation: 'INGRESO',
-                    detalle: '--',
-                    prodCostEach: item.costEach,
-                    prodName: item.product.name,
-                    prodQuantity: item.quantity,
-                    prodTotal: item.total,
-                    subsidiaryId: vm.subsidiaryId,
-                    userClientId: vm.usrCliId,
-                    userId: vm.userId
-                };
-                vm.cellar.detailsKardex.push(kardex);
-            });
-            cellarService.getByUserClientIdAndBillNumberActive(vm.usrCliId, vm.cellar.billNumber).then(function(response) {
-                if (response.length === 0) {
-                    cellarService.create(vm.cellar).then(function(respCellar) {
-                        vm.celled = true;
-                        vm.cellarCreated = respCellar;
-                        $localStorage.user.cashier.whNumberSeq = vm.numberAddedOne;
-                        vm.loading = false;
-                    }).catch(function(error) {
-                        vm.loading = false;
-                        vm.error = error.data;
-                    });
-                } else {
-                    vm.error = 'El Nro. de Documento (Factura) Ya Existe y no puede repetirse';
-                    vm.loading = false;
-                };
-            }).catch(function(error) {
-                vm.loading = false;
-                vm.error = error.data;
-            });
-        };
-
-        vm.cancelCellar = function() {
-            vm.warehouseSelected = undefined;
-            vm.providerSelected = undefined;
-            vm.error = undefined;
-        };
-
-        vm.cellarSelected = function(cellar) {
-            vm.loading = true;
-            vm.cellarPendingSelected = cellar.id;
-            cellarService.getAllCellarById(cellar.id).then(function(response) {
-                vm.cellar = response;
-                vm.cellarDetails = response.detailsCellar;
-                vm.cellarProviderSelected = response.provider;
-                vm.billNumber = response.billNumber;
-                vm.cellSeqNumber = response.whNumberSeq;
-                vm.loading = false;
-            }).catch(function(error) {
-                vm.loading = false;
-                vm.error = error.data;
-            });
-        };
-
-        vm.cancelCellarSelected = function() {
-            vm.cellarPendingSelected = undefined;
-        };
-
-        vm.validateEnterCellar = function() {
-            vm.loading = true;
-            vm.error = undefined;
-            vm.success = undefined;
-            cellarService.validateCellar(vm.validateCellar).then(function(response) {
-                var index = vm.cellarList.indexOf(vm.validateCellar);
-                if (index > -1) {
-                    vm.cellarList.splice(index, 1);
-                };
-                vm.validateCellar = undefined;
-                vm.loading = false;
-            }).catch(function(error) {
-                vm.success = 'Ingreso a Bodega realizado con exito';
-                vm.loading = false;
-                vm.error = error.data;
-            });
-        };
 
         //Consumption Code
         function _getCsmSeqNumber() {

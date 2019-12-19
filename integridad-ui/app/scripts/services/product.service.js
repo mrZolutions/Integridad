@@ -13,6 +13,12 @@ angular
             });
         };
 
+        this.updateEdited = function(product) {
+            return securityService.put('/product/edted', product).then(function successCallback(response) {
+                return response.data;
+            });
+        };
+
         this.delete = function(productId) {
             return securityService.delete('/product/' + productId).then(function successCallback(response) {
                 return response.data;

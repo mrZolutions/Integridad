@@ -34,8 +34,10 @@ angular.module('integridadUiApp')
         function _activate() {
             vm.searchText = undefined;
             vm.productBarCode = undefined;
+            vm.errorCalc = false;
             vm.loading = true;
             vm.userClientId = $localStorage.user.subsidiary.userClient.id;
+            vm.subKarActive = $localStorage.user.subsidiary.kar;
             vm.messurements = messurementListService.getMessurementList();
             productTypeService.getproductTypesLazy().then(function(response) {
                 vm.productTypes = response;
@@ -171,6 +173,32 @@ angular.module('integridadUiApp')
             });
         };
                                             
+        function updateEdited(isRemove) {
+            _.each(vm.product.productBySubsidiaries, function(ps) {
+                ps.active=false;
+            });
+            _.each(vm.productBySubsidiaries, function(psNew) {
+                vm.product.productBySubsidiaries.push(psNew);
+            });
+            vm.product.barCode = vm.productBarCode;
+            productService.updateEdited(vm.product).then(function(response) {
+                vm.product = undefined;
+                vm.selectedGroup = undefined;
+                vm.selectedLine = undefined;
+                vm.wizard = 0;
+                _activate();
+                vm.error = undefined;
+                if (isRemove) {
+                    vm.success = 'Registro eliminado con exito';
+                } else {
+                    vm.success = 'Registro actualizado con exito';
+                };
+            }).catch(function(error) {
+                vm.loading = false;
+                vm.error = error.data;
+            });
+        };
+
         function update(isRemove) {
             _.each(vm.product.productBySubsidiaries, function(ps) {
                 ps.active=false;
@@ -224,6 +252,7 @@ angular.module('integridadUiApp')
         };
                                           
         vm.costPreview = function() {
+            vm.errorCalc = false;
             var avrCost = 0;
             var gEfectivo = 0;
             if (vm.product === null || vm.product === undefined) {
@@ -233,8 +262,10 @@ angular.module('integridadUiApp')
                 var avrCost = vm.product.averageCost;
                 var gEfectivo = 1 + ((vm.product.cashPercentage) / 100.00);
             };
-            
             var preview = avrCost * gEfectivo;
+            if (isNaN(preview)) {
+                vm.errorCalc = true;
+            };
             return (preview).toFixed(4);
         };
                                             
@@ -492,6 +523,20 @@ angular.module('integridadUiApp')
             });
         };
                                             
+        vm.saveEdited = function() {
+            var validationError = utilStringService.isAnyInArrayStringEmpty([vm.product.name]);
+            if (validationError) {
+                vm.error = 'Debe ingresar Nombre del producto';
+            } else {
+                vm.loading = true;
+                if (vm.product.id === undefined) {
+                    create();
+                } else {
+                    updateEdited(false);
+                };
+            };
+        };
+
         vm.save = function() {
             var validationError = utilStringService.isAnyInArrayStringEmpty([vm.product.name]);
             if (validationError) {

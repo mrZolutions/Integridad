@@ -78,15 +78,22 @@ public class ProductServices {
     @Async("asyncExecutor")
     public void updateProduct(Product product) {
 	product.setLastDateUpdated(new Date().getTime());
-	Father<Product, ProductBySubsidiary> father =
-			new Father<>(product, product.getProductBySubsidiaries());
-	FatherManageChildren fatherUpdateChildren =
-			new FatherManageChildren(father, productBySubsidiaryChildRepository, productBySubsidiairyRepository);
-	fatherUpdateChildren.updateChildren();
 	product.setListsNull();
 	product.setFatherListToNull();
 	Product updated = productRepository.save(product);
         log.info("ProductServices updateProduct: {}", updated.getId());
+    }
+    
+    @Async("asyncExecutor")
+    public void updateProductEdited(Product product) {
+	product.setLastDateUpdated(new Date().getTime());
+	Father<Product, ProductBySubsidiary> father = new Father<>(product, product.getProductBySubsidiaries());
+	FatherManageChildren fatherUpdateChildren = new FatherManageChildren(father, productBySubsidiaryChildRepository, productBySubsidiairyRepository);
+	fatherUpdateChildren.updateChildren();
+	product.setListsNull();
+	product.setFatherListToNull();
+	Product updated = productRepository.save(product);
+        log.info("ProductServices updateProductEdited: {}", updated.getId());
     }
 	
     public Product getProductById(UUID id) {

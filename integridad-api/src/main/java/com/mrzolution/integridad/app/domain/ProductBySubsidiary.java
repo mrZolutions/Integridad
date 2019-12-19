@@ -11,7 +11,7 @@ import java.util.UUID;
  */
 @Entity
 @Data
-public class ProductBySubsidiary implements Child{
+public class ProductBySubsidiary implements Child {
 
     @Id
     @GeneratedValue
@@ -31,23 +31,23 @@ public class ProductBySubsidiary implements Child{
     @JoinColumn(name = "subsidiary_id")
     private Subsidiary subsidiary;
     
-    public void setListsNull(){
+    public void setListsNull() {
     }
     
-    public void setFatherListToNull(){
-        if(subsidiary != null){
+    public void setFatherListToNull() {
+        if (subsidiary != null) {
             subsidiary.setListsNull();
             subsidiary.setFatherListToNull();
         }
 
-        if(product != null){
+        if (product != null) {
             product.setFatherListToNull();
             product.setListsNull();
         }
     }
 
     @Transient
-    public static ProductBySubsidiary newProductBySubsidiaryTest(){
+    public static ProductBySubsidiary newProductBySubsidiaryTest() {
         ProductBySubsidiary product = new ProductBySubsidiary();
         product.setSubsidiary(Subsidiary.newSubsidiaryTest());
         product.setProduct(Product.newProducTest());

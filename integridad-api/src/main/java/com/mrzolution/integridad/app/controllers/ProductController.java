@@ -50,6 +50,18 @@ public class ProductController {
         log.info("ProductController updateProduct DONE");
 	return new ResponseEntity<Void>(HttpStatus.ACCEPTED);
     }
+    
+    @RequestMapping(method = RequestMethod.PUT, value="/edted")
+    public ResponseEntity updateProductEdited(@RequestBody Product product) {
+        try {
+            service.updateProductEdited(product);
+	} catch (BadRequestException e) {
+            log.error("ProductController updateProductEdited Exception thrown: {}", e.getMessage());	    
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+        log.info("ProductController updateProductEdited DONE");
+	return new ResponseEntity<Void>(HttpStatus.ACCEPTED);
+    }
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/{productId}")
     public ResponseEntity deleteProduct(@PathVariable("productId") UUID productId) {

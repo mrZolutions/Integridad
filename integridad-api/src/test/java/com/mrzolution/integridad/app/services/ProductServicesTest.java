@@ -92,7 +92,7 @@ public class ProductServicesTest {
 		Mockito.when(productBySubsidiaryChildRepository.findByFather(product)).thenReturn(detailListOld);
 		Mockito.when(productRepository.save(product)).thenReturn(product);
 
-		service.updateProduct(product);
+		service.updateProductEdited(product);
 
 		Mockito.verify(productBySubsidiaryRepository, Mockito.times(1)).save(Mockito.any(Iterable.class));
 //		Mockito.verify(productBySubsidiaryRepository, Mockito.times(1)).save(prodBySubU);

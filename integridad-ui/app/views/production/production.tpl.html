@@ -60,10 +60,10 @@
                                 ng-click="vm.selectWarehouse(warehouse)">
                                 <span class = "glyphicon glyphicon-check" aria-hidden = "true"></span>
                         </button>
-                        <button type="button" title="Consulta de Ingresos Pendientes" class="btn btn-success btn-sm"
+                        <!--<button type="button" title="Consulta de Ingresos Pendientes" class="btn btn-success btn-sm"
                                 ng-disabled="vm.userCode === 'EMP'" ng-click="vm.findCellarPending(warehouse)">
                                 <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
-                        </button>
+                        </button>-->
                         <button type="button" title="Egresos" class="btn btn-primary btn-sm"
                                 ng-click="vm.consumptionFromWarehouse(warehouse)">
                                 <span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
@@ -674,11 +674,11 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" title="Aceptar y Cerrar" class="btn btn-success btn-sm" ng-click="vm.acceptCellarProduct(true)"
-                            ng-disabled="vm.productToAdd === undefined">
+                            ng-disabled="vm.quantity === undefined || vm.quantity === '' || vm.errorCalc">
                             <span class = "glyphicon glyphicon-thumbs-up" aria-hidden = "true"></span>
                     </button>
                     <button type="button" title="Aceptar y Agregar Mas productos" class="btn btn-primary btn-sm" ng-click="vm.acceptCellarProduct(false)"
-                            ng-disabled="vm.productToAdd === undefined">
+                            ng-disabled="vm.quantity === undefined || vm.quantity === '' || vm.errorCalc">
                             <span class = "glyphicon glyphicon-ok-sign" aria-hidden = "true"></span>
                     </button>
                     <button type="button" title="Salir" class="btn btn-primary btn-sm" data-dismiss = "modal">
@@ -1825,7 +1825,8 @@
                     <span class = "glyphicon glyphicon-arrow-left" aria-hidden = "true"></span>
             </button>
             <button type="button" title = "Guardar Producto" class="btn btn-success btn-sm" ng-click="vm.saveProduct()"
-                    data-toggle="modal" data-target="#modalAddProduct">
+                    data-toggle="modal" data-target="#modalAddProduct"
+                    ng-disabled="vm.product.brand === undefined || vm.selectedLine === undefined || vm.selectedGroup === undefined || vm.product.subgroup === undefined">
                     <span class = "glyphicon glyphicon-floppy-save" aria-hidden = "true"></span>
             </button>
             <button type="button" title = "Salir" class="btn btn-primary btn-sm" ng-click="vm.cancelProduct()">
