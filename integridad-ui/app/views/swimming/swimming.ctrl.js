@@ -6,7 +6,6 @@
  * # SwimmingCtrl
  * Controller of the integridadUiApp
  */
-
 angular.module('integridadUiApp')
     .controller('SwimmingCtrl', function (_, $location, $localStorage, swimmingService) {
         var vm = this;
@@ -44,8 +43,9 @@ angular.module('integridadUiApp')
             vm.status = undefined;
             vm.hoy = undefined;
             vm.ticketBarCode = undefined;
+            vm.subTicketActive = $localStorage.user.subsidiary.swimm;
             vm.success = undefined;
-            if (vm.usrClntId !== vm.laQuinta || vm.usrClntId !== vm.riseQuinta) {
+            if (!vm.subTicketActive) {
                 vm.advertencia = true;
                 vm.selectedTypeOption = 'advert';
             };

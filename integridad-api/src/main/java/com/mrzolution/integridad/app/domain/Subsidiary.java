@@ -49,6 +49,7 @@ public class Subsidiary implements Child{
     private boolean cxc;
     private boolean cxp;
     private boolean kar;
+    private boolean swimm;
     
     @ManyToOne
     @JoinColumn(name = "user_client_id")
