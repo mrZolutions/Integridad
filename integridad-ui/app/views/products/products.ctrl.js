@@ -151,6 +151,10 @@ angular.module('integridadUiApp')
             productService.getProdByUserClientIdAndCodeIntegActive(vm.userClientId, vm.product.codeIntegridad).then(function(response) {
                 if (response.length === 0) {
                     vm.product.barCode = vm.productBarCode;
+                    vm.product.costEach = 0;
+                    vm.product.costCellar = 0;
+                    vm.product.quantityCellar = 0;
+                    vm.product.averageCostSuggested = 0;
                     productService.create(vm.product).then(function(response) {
                         vm.product = undefined;
                         vm.selectedGroup = undefined;

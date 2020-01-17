@@ -7,9 +7,9 @@
  * Controller of the integridadUiApp
  */
 angular.module('integridadUiApp')
-    .controller('ProductionCtrl', function( _, $localStorage, providerService, productService, warehouseService, validatorService, subsidiaryService, $routeParams,
-                                            productTypeService, messurementListService, clientService, cellarService, consumptionService, utilSeqService, $location,
-                                            cuentaContableService,brandService, lineService, groupService, subgroupService, utilStringService) {
+    .controller('ProductionCtrl', function(_, $localStorage, providerService, productService, warehouseService, validatorService, subsidiaryService, $routeParams,
+                                           productTypeService, messurementListService, clientService, cellarService, consumptionService, utilSeqService, $location,
+                                           cuentaContableService,brandService, lineService, groupService, subgroupService, utilStringService) {
 
         var vm = this;
         vm.error = undefined;
@@ -82,7 +82,6 @@ angular.module('integridadUiApp')
             vm.isProductReportList = undefined;
             vm.dateOne = undefined;
             vm.dateTwo = undefined;
-            vm.systemOur = undefined;
             vm.impuestosTotales = [];
             vm.impuestoICE = {
                 "base_imponible": 0.0,
@@ -1351,34 +1350,38 @@ angular.module('integridadUiApp')
             vm.productBySubsidiaries.push(productBySubsidiary);
             vm.product.productBySubsidiaries = vm.productBySubsidiaries;
             vm.product.cuentaContableByProducts = [];
-            _.each(vm.cuentasContablesForProductSale, function (cc){
+            _.each(vm.cuentasContablesForProductSale, function(cc) {
                 var cuentaContableByProduct = {
                     cuentaContable: cc,
                     type: 'VENTA'
                 };
                 vm.product.cuentaContableByProducts.push(cuentaContableByProduct);
             });
-            _.each(vm.cuentasContablesForProductConsume, function (cc){
+            _.each(vm.cuentasContablesForProductConsume, function(cc) {
                 var cuentaContableByProduct = {
                     cuentaContable: cc,
                     type: 'CONSUMO'
                 };
                 vm.product.cuentaContableByProducts.push(cuentaContableByProduct);
             });
-            _.each(vm.cuentasContablesForProductFinished, function (cc){
+            _.each(vm.cuentasContablesForProductFinished, function(cc) {
                 var cuentaContableByProduct = {
                     cuentaContable: cc,
                     type: 'PRODUCTO_TERMINADO'
                 };
                 vm.product.cuentaContableByProducts.push(cuentaContableByProduct);
             });
-            _.each(vm.cuentasContablesForProductCost, function (cc){
+            _.each(vm.cuentasContablesForProductCost, function(cc) {
                 var cuentaContableByProduct = {
                     cuentaContable: cc,
                     type: 'COSTO_DE_VENTA'
                 };
                 vm.product.cuentaContableByProducts.push(cuentaContableByProduct);
             });
+            vm.product.costEach = 0;
+            vm.product.costCellar = 0;
+            vm.product.quantityCellar = 0;
+            vm.product.averageCostSuggested = 0;
             productService.create(vm.product).then(function(response) {
                 vm.product = undefined;
                 vm.selectedGroup = undefined;

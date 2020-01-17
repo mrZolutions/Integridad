@@ -74,8 +74,7 @@ public class ProductServices {
         log.info("ProductServices createProduct id: {}", saved.getId());
         return saved;
     }
-	
-    @Async("asyncExecutor")
+    
     public void updateProduct(Product product) {
 	product.setLastDateUpdated(new Date().getTime());
 	product.setListsNull();
