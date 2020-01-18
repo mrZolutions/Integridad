@@ -851,7 +851,7 @@ angular.module('integridadUiApp')
                     billOfflineService.createBillOffline(vm.billOffline, 1).then(function(respBill) {
                         vm.billedOffline = true;
                         vm.newBillOffline = false;
-                        vm.newBuy = false;
+                        vm.newBuyOff = false;
                         vm.billOfflineCreated = respBill;
                         $localStorage.user.cashier.billOfflineNumberSeq = vm.billOffline.billSeq;
                         if (vm.seqChanged) {
@@ -938,7 +938,7 @@ angular.module('integridadUiApp')
                     $localStorage.user.cashier.csmNumberSeq = vm.numberCsmAddedOne;
                     vm.consumptionCreated = respConsumption;
                     vm.consumptioned = true;
-                    vm.newBuy = false;
+                    vm.newBuyOff = false;
                     vm.newConsumptionOff = false;
                     vm.loading = false;
                 }).catch(function(error) {
