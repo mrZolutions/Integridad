@@ -455,12 +455,15 @@ angular.module('integridadUiApp')
                                             
         vm.wiz2 = function() {
             vm.productBySubsidiaries = [];
+            var isSubsidiarySelected = false;
+            vm.error = undefined;
             if (vm.product.productType.code !== 'SER') {
                 vm.product.unitOfMeasurementAbbr = vm.messurementSelected.shortName;
                 vm.product.unitOfMeasurementFull = vm.messurementSelected.name;
             };
             _.each(vm.subsidiaries, function(sub) {
                 if (sub.selected) {
+                    isSubsidiarySelected = true;
                     var productBySubsidiary = {
                         dateCreated: new Date().getTime(),
                         quantity: sub.cantidad,
@@ -472,7 +475,7 @@ angular.module('integridadUiApp')
             });
             _getBrands();
             _getLines();
-            vm.wizard = 2;
+            isSubsidiarySelected ? vm.wizard = 2 : vm.error = 'Debe Seleccionar por lo menos una matriz.'
         };
                                             
         vm.wiz3 = function() {
