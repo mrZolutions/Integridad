@@ -41,6 +41,6 @@ public interface ProductRepository extends CrudRepository<Product, UUID> {
     @Query("SELECT p FROM Product p WHERE p.userClient.id = (:userClientId) AND p.id = (:id) AND p.active = true")
     Product findPrdByUsrClntAndId(@Param("userClientId") UUID userClientId, @Param("id") UUID id);
 
-    @Query("SELECT p FROM Product p WHERE p.userClient.id = (:id) AND p.active = true order by p.lastDateUpdated desc")
+    @Query("SELECT p FROM Product p WHERE p.userClient.id = (:id) AND p.active = true order by p.dateCreated desc")
     Page<Product> findFirstByUserClientIdAndActive(@Param("id") UUID userClientId, Pageable pageable);
 }
