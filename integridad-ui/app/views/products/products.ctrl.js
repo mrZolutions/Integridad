@@ -30,6 +30,7 @@ angular.module('integridadUiApp')
         vm.cashP = undefined;
         vm.productBySubsidiaries = [];
         vm.wizard = 0;
+        vm.maxCode = undefined;
         
         function _activate() {
             vm.searchText = undefined;
@@ -49,6 +50,7 @@ angular.module('integridadUiApp')
                 vm.error = error.data;
             });
             vm.page = 0;
+            vm.maxCode = undefined;
             _filter();
         };
                                             
@@ -334,6 +336,13 @@ angular.module('integridadUiApp')
             vm.error = undefined
             vm.productBySubsidiaries = [];
             vm.wizard = 1;
+
+            productService.getLastCodeByUserClientIdActive(vm.userClientId).then(
+                function(response){
+                    vm.maxCode = response || '';
+                }
+            );
+
             vm.product = {
                 userClient: $localStorage.user.subsidiary.userClient,
                 productBySubsidiaries: []
@@ -529,20 +538,6 @@ angular.module('integridadUiApp')
                 vm.error = error.data;
             });
         };
-                                            
-        vm.saveEdited = function() {
-            var validationError = utilStringService.isAnyInArrayStringEmpty([vm.product.name]);
-            if (validationError) {
-                vm.error = 'Debe ingresar Nombre del producto';
-            } else {
-                vm.loading = true;
-                if (vm.product.id === undefined) {
-                    create();
-                } else {
-                    updateEdited(false);
-                };
-            };
-        };
 
         vm.save = function() {
             var validationError = utilStringService.isAnyInArrayStringEmpty([vm.product.name]);
@@ -553,7 +548,7 @@ angular.module('integridadUiApp')
                 if (vm.product.id === undefined) {
                     create();
                 } else {
-                    update(false);
+                    vm.subKarActive ? update(false) : updateEdited(false);
                 };
             };
         };

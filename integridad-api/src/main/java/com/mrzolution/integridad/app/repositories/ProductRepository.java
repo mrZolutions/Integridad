@@ -3,6 +3,8 @@ package com.mrzolution.integridad.app.repositories;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
@@ -38,4 +40,7 @@ public interface ProductRepository extends CrudRepository<Product, UUID> {
     
     @Query("SELECT p FROM Product p WHERE p.userClient.id = (:userClientId) AND p.id = (:id) AND p.active = true")
     Product findPrdByUsrClntAndId(@Param("userClientId") UUID userClientId, @Param("id") UUID id);
+
+    @Query("SELECT p FROM Product p WHERE p.userClient.id = (:id) AND p.active = true order by p.dateCreated desc")
+    Page<Product> findFirstByUserClientIdAndActive(@Param("id") UUID userClientId, Pageable pageable);
 }

@@ -192,4 +192,17 @@ public class ProductController {
         }
         return new ResponseEntity<Page>(response, HttpStatus.CREATED);
     }
+
+    @RequestMapping(method = RequestMethod.GET, value="/active/code/user_client/{userClientId}")
+    public ResponseEntity getLastCodeActiveByUserClientId(@PathVariable("userClientId") UUID userClientId) {
+        String response = null;
+        try {
+            response = service.getLastCodeBySubsidiaryId(userClientId);
+        } catch (BadRequestException e) {
+            log.error("ProductController getLastCodeActiveByUserClientId Exception thrown: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+        log.info("ProductController getLastCodeActiveByUserClientId DONE");
+        return new ResponseEntity<String>(response, HttpStatus.OK);
+    }
 }
