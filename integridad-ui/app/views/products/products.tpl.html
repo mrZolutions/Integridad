@@ -107,7 +107,7 @@
             </div>
             <div class="row">
                 <div class="form-group col-md-4">
-                    <label>C&oacute;digo: </label>
+                    <label>C&oacute;digo: <span style="color:gray;" title="Ultimo c&oacute;digo">{{vm.maxCode}}</span> </label>
                     <input type="text" ng-model="vm.product.codeIntegridad" class="form-control">
                 </div>
                 <div class="form-group col-md-4">
@@ -336,11 +336,6 @@
         <div class="panel-footer">
             <button type="button" title="Atrás" class="btn btn-primary btn-sm" ng-click="vm.wizard = 2">
                     <span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span>
-            </button>
-            <button type="button" title="Guardar Producto" class="btn btn-success btn-sm"
-                    ng-click="vm.saveEdited()" ng-if="!vm.subKarActive"
-                    ng-disabled="vm.product.maxMinimun === undefined || vm.product.maxMinimun === '' || vm.product.averageCost === undefined || vm.product.averageCost === '' || vm.errorCalc">
-                    <span class="glyphicon glyphicon-floppy-save" aria-hidden="true"></span>
             </button>
             <button type="button" title="Guardar Producto" class="btn btn-success btn-sm"
                     ng-click="vm.save()" ng-if="vm.subKarActive"
