@@ -373,6 +373,9 @@ angular.module('integridadUiApp')
         };
 
         vm.acceptCellarProduct = function(closeModal) {
+            vm.productToAdd.quantityCellar = parseInt(vm.productToAdd.quantityCellar) + parseInt(vm.quantity);
+            vm.productToAdd.costCellar = vm.productToAdd.costCellar + (vm.productToAdd.costEach * vm.quantity);
+
             var detail = {
                 product: angular.copy(vm.productToAdd),
                 quantity: vm.quantity,
@@ -381,25 +384,11 @@ angular.module('integridadUiApp')
                 adicional: vm.adicional
             };
 
-            vm.productToAdd.quantityCellar = parseInt(vm.productToAdd.quantityCellar) + parseInt(vm.quantity);
-            vm.productToAdd.costCellar = vm.productToAdd.costCellar + (vm.productToAdd.costEach * detail.quantity);
-
             if (vm.indexDetail !== undefined) {
                 vm.cellar.detailsCellar[vm.indexDetail] = detail;
             } else {
                 vm.cellar.detailsCellar.push(detail);
             };
-
-            productService.update(vm.productToAdd).then(function(response) {
-                vm.productToAdd = undefined;
-                vm.selectedGroup = undefined;
-                vm.selectedLine = undefined;
-                vm.wizard = undefined;
-                vm.error = undefined;
-            }).catch(function(error) {
-                vm.loading = false;
-                vm.error = error.data;
-            });
 
             vm.quantity = undefined;
             vm.adicional = undefined;
@@ -1199,6 +1188,12 @@ angular.module('integridadUiApp')
         };
 
         vm.addProduct = function() {
+            vm.productToAdd = undefined;
+            vm.selectedGroup = undefined;
+            vm.selectedLine = undefined;
+            vm.wizard = undefined;
+            vm.error = undefined;
+
             vm.indexDetail = undefined;
             vm.loading = true;
             vm.errorQuantity = undefined;
