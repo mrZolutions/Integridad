@@ -178,7 +178,8 @@ angular.module('integridadUiApp')
                 ice: 0,
                 baseNoTaxes: 0,
                 baseTaxes: 0,
-                detailsCellar: []
+                detailsCellar: [],
+                descuento: 0,
             };
         };
 
@@ -295,7 +296,7 @@ angular.module('integridadUiApp')
             var ivac = 0;
             var discountWithIva = 0;
             var discountWithNoIva = 0;
-            if (vm.cellar.descuento == null || vm.cellar.descuento == undefined) {
+            if (!vm.cellar.descuento || vm.cellar.descuento.trim() === '') {
                 vm.cellar.descuento = 0;
             };
             _.each(vm.cellar.detailsCellar, function(detail) {

@@ -332,6 +332,13 @@ public class ProductServices {
         });
         return existencyCatReportList;
     }
+
+    public String getLastCodeBySubsidiaryId(UUID subsidiaryId) {
+        log.info("ProductServices getLastCodeBySubsidiaryId");
+        Page<Product> products = productRepository.findFirstByUserClientIdAndActive(subsidiaryId, new PageRequest(0, 1));
+        Product product = products.getContent().get(0);
+        return product.getCodeIntegridad();
+    }
     
     private void populateForExistency(Product products) {
         List<ProductBySubsidiary> psList = new ArrayList<>();
