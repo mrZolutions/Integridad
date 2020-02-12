@@ -31,17 +31,14 @@ public class CellarServices {
     @Autowired
     DetailCellarRepository detailCellarRepository;
     @Autowired
-    DetailCellarChildRepository detailCellarChildRepository;
-    @Autowired
     CashierRepository cashierRepository;
-    @Autowired
-    UserClientRepository userClientRepository;
     @Autowired
     ProductBySubsidiairyRepository productBySubsidiairyRepository;
     @Autowired
     KardexRepository kardexRepository;
+
     @Autowired
-    ProductRepository productRepository;
+    ProductServices productServices;
     
     public Iterable<Cellar> getByUserLazy(UserIntegridad user) {
         Iterable<Cellar> cellars = cellarRepository.findCellarByUserIntegridad(user);
@@ -143,6 +140,7 @@ public class CellarServices {
     
     public void saveDetailsCellar(Cellar saved, List<DetailCellar> detailsCellar) {
         detailsCellar.forEach(detail -> {
+            productServices.updateProduct(detail.getProduct());
             detail.setCellar(saved);
             detailCellarRepository.save(detail);
             detail.setCellar(null);
