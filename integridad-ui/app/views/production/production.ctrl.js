@@ -346,6 +346,8 @@ angular.module('integridadUiApp')
                 productSelect.quantity = 1;
             };
             vm.productToAdd = angular.copy(productSelect);
+            vm.productToAdd.costCellarPersisted = productSelect.costCellar;
+            vm.productToAdd.quantityCellarPersisted = productSelect.quantityCellar;
             if (vm.productToAdd.costEach === null) {
                 var costEachCalculated = vm.getCost(productSelect.cashPercentage, productSelect.averageCost);
                 vm.productToAdd.costEach = costEachCalculated;
@@ -360,12 +362,12 @@ angular.module('integridadUiApp')
                 vm.productToAdd.averageCostSuggested = vm.productToAdd.costEach;
             } else {
                 var costCellar = 0;
-                var quantityCellar = parseInt(vm.productToAdd.quantityCellar) + parseInt(vm.quantity);
+                var quantityCellar = parseInt(vm.productToAdd.quantityCellarPersisted) + parseInt(vm.quantity);
                 costCellar = parseFloat((vm.quantity * vm.productToAdd.costEach).toFixed(4));
                 if (quantityCellar <= 0) {
                     quantityCellar = parseInt(vm.quantity);
                 };
-                vm.productToAdd.averageCostSuggested = ((vm.productToAdd.costCellar + costCellar) / quantityCellar).toFixed(4);
+                vm.productToAdd.averageCostSuggested = ((vm.productToAdd.costCellarPersisted + costCellar) / quantityCellar).toFixed(4);
             };
             if (isNaN(vm.productToAdd.averageCostSuggested)) {
                 vm.errorCalc = true;
