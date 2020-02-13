@@ -27,6 +27,10 @@ angular.module('integridadUiApp')
             $scope.logout();
         });
 
+        $scope.setLayout = function(){
+            return $scope.nameType ? 'col-md-10' : 'col-md-10';
+        }
+        
         if ($localStorage.timeloged) {
             var dateNow = new Date();
             var timeNow = dateNow.getTime()

@@ -38,37 +38,42 @@
             <a class="navbar-brand inner">
               <img src="images/SVG INTEGRIDAD.svg" width="40" height="40" class="d-inline-block align-top" alt="">
             </a>
-            <a class="navbar-brand atext">
+            <a class="navbar-brand atext-brand">
               Integridad
             </a>
-          </div>
-          <div class="collapse navbar-collapse" id="js-navbar-collapse" ng-controller="MenuCtrl">
-            <ul class="nav navbar-nav">
-              <li ng-repeat="option in permissions">
-                <a class = "atext" href="{{option.path}}">{{option.menuName}}</a>
-              </li>
-              <li ng-show="nameType != undefined">
-                <a class = "atext" href="" ng-click="logout()">Salir</a>
-              </li>
-              <li ng-show="nameType != undefined">
-                <a class = "atext"><b>{{nameType}}</b></a>
-              </li>
-            </ul>
           </div>
         </div>
       </nav>
     </header>
     
-    <div class="container div-princip">
-      <div class="row">
-        <div class="col-md-12">
-          <div ng-view=""></div>
+    <div class="container" style="width: 100%; max-width: 100%; padding: 0;">
+      <div class="div-princip"  style="border-style: solid; border-color: blueviolet; border-width: 1px">
+        <div class="row" ng-controller="MenuCtrl">
+          <div class="col-md-2" style="background-color: black; height: 100%; border-style: solid; border-color: red; border-width: 1px" ng-if="nameType != undefined">
+            <div class="collapse navbar-collapse navbar-inverse nav-back" id="js-navbar-collapse">
+              <ul class="nav navbar-nav">
+                <li ng-show="nameType != undefined">
+                  <a class = "atext-user"><b>{{nameType}}</b></a>
+                </li>
+                <li ng-repeat="option in permissions">
+                  <a class = "atext" style="padding-top: 4%; padding-bottom: 4%;" href="{{option.path}}">{{option.menuName}}</a>
+                </li>
+                <li ng-show="nameType != undefined">
+                  <a class = "atext" href="" ng-click="logout()">Salir</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+  
+          <div ng-class="setLayout()" style="border-style: solid; border-color: green; border-width: 1px">
+            <div ng-view=""></div>
+          </div>
         </div>
       </div>
     </div>
     
     <div class="container-fluid footer">
-      <p class = "pull-right footer-text"><span class="glyphicon glyphicon-copyright-mark"></span> Developed by Mr. Zolutions</p>
+      <p class = "footer-text"><span class="glyphicon glyphicon-copyright-mark"></span> Developed by Mr. Zolutions</p>
     </div>
     
     <!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
