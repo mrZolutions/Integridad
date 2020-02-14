@@ -7,13 +7,14 @@
 
 body {
   padding: 0;
-  background: url("../images/mrz-01.jpg") no-repeat fixed center;
-   -webkit-background-size: cover;
-   -moz-background-size: cover;
-   -o-background-size: cover;
-   background-size: cover;
-   height: 100%;
-   width: 100% ;
+  background-color: black;
+  /* background: url("../images/mrz-01.jpg") no-repeat fixed center; */
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  height: 100%;
+  width: 100% ;
 }
 
 /* Everything but the jumbotron gets side spacing for mobile first views */
@@ -29,11 +30,21 @@ body {
   margin-top: 0;
   margin-bottom: 0;
   line-height: 40px;
-  padding-bottom: 19px;
 }
 
 .nav-back {
-  background-color: #000;
+  background-color: black;
+  font-size: small;
+  width: 100%;
+}
+
+.nav-back-head {
+  background-color:#E2E2E2;
+  font-size: small;
+  width: 100%;
+  margin-bottom: 0;
+  border-radius: 0;
+  border: #E2E2E2;
 }
 
 html {
@@ -47,13 +58,15 @@ body {
 }
 
 .footer {
-  padding-top: 15px;
+  padding: 0.5%;
   background-color: white;
   position: absolute;
   bottom: 0;
   width: 100%;
-  height: 50px;
+  height: 36px;
   color: black;
+  vertical-align: middle;
+  text-align: right;
 }
 
 h1, h2, h3, h4, h5, p, a {
@@ -75,17 +88,34 @@ h1, h2, h3, h4, h5, p, a {
   font-size: 15px;
 }
 
+.li-nav {
+  padding: 0px;
+  margin: 0px;
+}
+
 .atext {
-  color: white;
-  font-size: 15px;
+  color: black;
+  font-size: small;
+  font-weight: bold;
+}
+
+.atext-brand {
+  color: #6094D6;
+  font-size: large;
+  font-weight: bold;
+  margin-top: 12px;
+  float: left;
+}
+
+.atext-user {
+  color: black;
+  font-size: medium;
   font-weight: bold;
 }
 
 .div-princip {
-  border-radius: 3px;
-  background: white;
-  margin-bottom: 25px;
-  max-width: 790px !important;
+  margin-top: 0px;
+  position: relative;
 }
 
 .trasluz {
@@ -95,7 +125,7 @@ h1, h2, h3, h4, h5, p, a {
 
 #cajon2 {
   margin-top: 30px;
-  float:left;
+  text-align: center;
 }
 
 .container-narrow > hr {
@@ -139,11 +169,18 @@ h1, h2, h3, h4, h5, p, a {
   display: block;
 }
 
+.table-responsive {
+  overflow-x: hidden;
+}
+
+.navbar-collapse {
+  padding-left:0 !important;
+}
 
 /* Responsive: Portrait tablets and up */
-@media screen and (min-width: 768px) {
+@media screen and (min-width: 1200px) {
   .container {
-    max-width: 730px;
+    max-width: 100%;
   }
 
   /* Remove the padding we set earlier */
@@ -153,12 +190,48 @@ h1, h2, h3, h4, h5, p, a {
     padding-left: 0;
     padding-right: 0;
   }
-  /* Space out the masthead */
-  .header {
-    margin-bottom: 30px;
-  }
+
   /* Remove the bottom border on the jumbotron for visual effect */
   .jumbotron {
     border-bottom: 0;
+  }
+}
+
+@media (min-width: 1200px) {
+  .navbar-collapse {
+    height: 100%;
+    border-top: 0;
+    box-shadow: none;
+    max-height: none;
+    padding-left:0 !important;
+    padding-right:0;
+  }
+  .navbar-collapse.collapse {
+    display: block !important;
+    width: auto !important;
+    padding-bottom: 0;
+    overflow: visible !important;
+  }
+  .navbar-collapse.in {
+    overflow-x: visible;
+  }
+
+  .navbar {
+    margin-right: 0;
+    margin-left: 0;
+  }	
+
+  .navbar-nav,
+  .navbar-nav > li,
+  .navbar-left,
+  .navbar-right,
+  .navbar-header
+  {
+    float:none !important;
+  }
+
+  .navbar-right .dropdown-menu {left:0;right:auto;}
+  .navbar-collapse .navbar-nav.navbar-right:last-child {
+    margin-right: 0;
   }
 }
