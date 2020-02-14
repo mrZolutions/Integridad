@@ -28,7 +28,7 @@ angular.module('integridadUiApp')
         });
 
         $scope.setLayout = function(){
-            return $scope.nameType ? 'col-md-10' : 'col-md-10';
+            return $scope.nameType ? 'col-md-10' : 'col-md-12';
         }
         
         if ($localStorage.timeloged) {

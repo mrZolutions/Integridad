@@ -7,7 +7,8 @@
 
 body {
   padding: 0;
-  background: url("../images/mrz-01.jpg") no-repeat fixed center;
+  background-color: black;
+  /* background: url("../images/mrz-01.jpg") no-repeat fixed center; */
    -webkit-background-size: cover;
    -moz-background-size: cover;
    -o-background-size: cover;
@@ -29,13 +30,21 @@ body {
   margin-top: 0;
   margin-bottom: 0;
   line-height: 40px;
-  /* padding-bottom: 19px; */
 }
 
 .nav-back {
-  background-color: #000;
+  background-color: black;
   font-size: small;
   width: 100%;
+}
+
+.nav-back-head {
+  background-color:#E2E2E2;
+  font-size: small;
+  width: 100%;
+  margin-bottom: 0;
+  border-radius: 0;
+  border: #E2E2E2;
 }
 
 html {
@@ -85,31 +94,28 @@ h1, h2, h3, h4, h5, p, a {
 }
 
 .atext {
-  color: white;
+  color: black;
   font-size: small;
   font-weight: bold;
 }
 
 .atext-brand {
-  color: white;
+  color: #6094D6;
   font-size: large;
   font-weight: bold;
+  margin-top: 12px;
+  float: left;
 }
 
 .atext-user {
-  color: white;
+  color: black;
   font-size: medium;
   font-weight: bold;
 }
 
 .div-princip {
-  border-radius: 3px;
-  background: white;
-  margin-bottom: 25px;
-  margin-top: -17px;
+  margin-top: 0px;
   position: relative;
-  /* max-width: 790px !important; */
-  width: 90%;
 }
 
 .trasluz {
@@ -163,11 +169,18 @@ h1, h2, h3, h4, h5, p, a {
   display: block;
 }
 
+.table-responsive {
+  overflow-x: hidden;
+}
+
+.navbar-collapse {
+  padding-left:0 !important;
+}
 
 /* Responsive: Portrait tablets and up */
-@media screen and (min-width: 768px) {
+@media screen and (min-width: 1200px) {
   .container {
-    max-width: 730px;
+    max-width: 100%;
   }
 
   /* Remove the padding we set earlier */
@@ -177,10 +190,7 @@ h1, h2, h3, h4, h5, p, a {
     padding-left: 0;
     padding-right: 0;
   }
-  /* Space out the masthead */
-  .header {
-    /* margin-bottom: 30px; */
-  }
+
   /* Remove the bottom border on the jumbotron for visual effect */
   .jumbotron {
     border-bottom: 0;
@@ -193,7 +203,7 @@ h1, h2, h3, h4, h5, p, a {
     border-top: 0;
     box-shadow: none;
     max-height: none;
-    padding-left:0;
+    padding-left:0 !important;
     padding-right:0;
   }
   .navbar-collapse.collapse {
