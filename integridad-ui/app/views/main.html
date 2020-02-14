@@ -17,9 +17,9 @@
   </div>
 </div>
 
-<div class="container-fluid" ng-show="vm.init && !vm.recover">
+<div ng-show="vm.init && !vm.recover" style="height: 100%;">
   <div id="cajon2">
-    <img src="images/TituloIntegridad.png" width="100%">
+    <img src="images/TituloIntegridad.png" width="57%" >
   </div>
   
   <form>
@@ -58,7 +58,12 @@
         </div>
       </div>
     </div>
-
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <br/> 
+    <br/> 
     <div class="panel-footer">
       <button class="btn btn-primary" ng-click="vm.login()"
               ng-disabled="vm.email === undefined || vm.password === undefined">
