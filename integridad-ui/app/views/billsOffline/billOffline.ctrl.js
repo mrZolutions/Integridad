@@ -172,7 +172,11 @@ angular.module('integridadUiApp')
                         vm.toAdd = response[0];
                         vm.toAddExistency = _.last(vm.toAdd.productBySubsidiaries).quantity;
                         vm.toAddPrice = vm.getCost(vm.toAdd[vm.priceType.cod], vm.toAdd.averageCost);
-                        document.getElementById("submitAdd").focus();
+                        setTimeout(function() {
+                            var input = document.getElementById("productQuantity");
+                            input.focus();
+                            input.select();
+                        }, 200);
                     };
                 });
             };
