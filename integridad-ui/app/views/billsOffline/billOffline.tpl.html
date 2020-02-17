@@ -377,16 +377,16 @@
                         </div>
                         <div class="form-group col-md-2">
                             <b>% Descuento: </b>
-                            <input type="text" ng-model="vm.paraticularDiscount" ng-attr-tabindex="3" class="form-control">
+                            <input type="text" ng-model="vm.paraticularDiscount" ng-attr-tabindex="2" class="form-control">
                         </div>
                         <div class="form-group col-md-2">
                             <b>Cantidad: </b>
-                            <input type="text" ng-model="vm.quantity" ng-attr-tabindex="2" class="form-control">
+                            <input type="text" ng-model="vm.quantity" ng-attr-tabindex="1" class="form-control" id="productQuantity">
                         </div>
                         <div class="form-group col-md-4" ng-disabled="vm.toAdd === undefined">
                             <br/>
-                            <input id="submitAdd" ng-attr-tabindex="1" type="submit" value="Aceptar">
-                            <input id="cancel" ng-attr-tabindex="3" type="button" value="Cancelar" ng-click="vm.cancelBarCode()">
+                            <input id="submitAdd" ng-attr-tabindex="3" type="submit" value="Aceptar">
+                            <input id="cancel" ng-attr-tabindex="4" type="button" value="Cancelar" ng-click="vm.cancelBarCode()">
                         </div>
                     </div>
                 </form>
