@@ -358,17 +358,15 @@ angular.module('integridadUiApp')
 
         vm.calcAvg = function() {
             vm.errorCalc = false;
-            if (vm.productToAdd.averageCost === null || vm.productToAdd.averageCost === '' || vm.productToAdd.averageCost <= 0) {
-                vm.productToAdd.averageCostSuggested = vm.productToAdd.costEach;
-            } else {
-                var costCellar = 0;
-                var quantityCellar = parseInt(vm.productToAdd.quantityCellarPersisted) + parseInt(vm.quantity);
-                costCellar = parseFloat((vm.quantity * vm.productToAdd.costEach).toFixed(4));
-                if (quantityCellar <= 0) {
-                    quantityCellar = parseInt(vm.quantity);
-                };
-                vm.productToAdd.averageCostSuggested = ((vm.productToAdd.costCellarPersisted + costCellar) / quantityCellar).toFixed(4);
+            var costCellar = 0;
+            var quantityCellar = parseInt(vm.productToAdd.quantityCellarPersisted) + parseInt(vm.quantity);
+            costCellar = parseFloat((vm.quantity * vm.productToAdd.costEach).toFixed(4));
+
+            if (quantityCellar <= 0) {
+                quantityCellar = parseInt(vm.quantity);
             };
+
+            vm.productToAdd.averageCostSuggested = ((vm.productToAdd.costCellarPersisted + costCellar) / quantityCellar).toFixed(4);
             if (isNaN(vm.productToAdd.averageCostSuggested)) {
                 vm.errorCalc = true;
             };
