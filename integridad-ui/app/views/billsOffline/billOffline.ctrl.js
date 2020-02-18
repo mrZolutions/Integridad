@@ -866,6 +866,11 @@ angular.module('integridadUiApp')
                                 vm.error = error.data;
                             });
                         };
+
+                        if(!_.contains([vm.mrZolutions, vm.laQuinta, vm.pineda], vm.userClientId)){
+                            _activate();
+                        }
+
                         vm.loading = false;
                     }).catch(function(error) {
                         vm.loading = false;
