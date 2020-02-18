@@ -43,20 +43,10 @@ public class ProductServices {
     public String codigo;
     public long cantidad;
     public long minimo;
-        
+
     @Async("asyncExecutor")
-    public Product createProduct(Product product) throws BadRequestException {
-    	Iterable<Product> products = productRepository.findByCodeIntegridadAndClientId(product.getCodeIntegridad(), product.getUserClient().getId());
-        if (Iterables.size(products) > 0) {
-            throw new BadRequestException("CODIGO DUPLICADO");
-        }
-        product.setActive(true);
-        product.setDateCreated(new Date().getTime());
-        product.setLastDateUpdated(new Date().getTime());
-        List<ProductBySubsidiary> productBySubsidiaryList = product.getProductBySubsidiaries();
-        List<CuentaContableByProduct> cuentaContableByProductList = product.getCuentaContableByProducts();
-        product.setListsNull();
-        Product saved = productRepository.save(product);
+    private void createProductChildren(Product saved, List<ProductBySubsidiary> productBySubsidiaryList, List<CuentaContableByProduct> cuentaContableByProductList){
+        log.info("ProductServices createProductChildren STARTED");
         productBySubsidiaryList.forEach(productBySubsidiary -> {
             productBySubsidiary.setProduct(saved);
             productBySubsidiary.setFatherListToNull();
@@ -70,6 +60,23 @@ public class ProductServices {
                 cuentaContableByProductRepository.save(cc)  ;
             });
         }
+        log.info("ProductServices createProductChildren FINISHED");
+    }
+
+    public Product createProduct(Product product) throws BadRequestException {
+    	Iterable<Product> products = productRepository.findByCodeIntegridadAndClientId(product.getCodeIntegridad(), product.getUserClient().getId());
+        if (Iterables.size(products) > 0) {
+            throw new BadRequestException("CODIGO DUPLICADO");
+        }
+        product.setActive(true);
+        product.setDateCreated(new Date().getTime());
+        product.setLastDateUpdated(new Date().getTime());
+        List<ProductBySubsidiary> productBySubsidiaryList = product.getProductBySubsidiaries();
+        List<CuentaContableByProduct> cuentaContableByProductList = product.getCuentaContableByProducts();
+        product.setListsNull();
+        Product saved = productRepository.save(product);
+
+        createProductChildren(saved, productBySubsidiaryList, cuentaContableByProductList);
 
         log.info("ProductServices createProduct id: {}", saved.getId());
         return saved;
