@@ -150,30 +150,20 @@ angular.module('integridadUiApp')
                                             
         function create() {
             vm.product.productBySubsidiaries = vm.productBySubsidiaries;
-            productService.getProdByUserClientIdAndCodeIntegActive(vm.userClientId, vm.product.codeIntegridad).then(function(response) {
-                if (response.length === 0) {
-                    vm.product.barCode = vm.productBarCode;
-                    vm.product.costEach = 0;
-                    vm.product.costCellar = 0;
-                    vm.product.quantityCellar = 0;
-                    vm.product.averageCostSuggested = 0;
-                    productService.create(vm.product).then(function(response) {
-                        vm.product = undefined;
-                        vm.selectedGroup = undefined;
-                        vm.selectedLine = undefined;
-                        vm.wizard = 0;
-                        _activate();
-                        vm.error = undefined;
-                        vm.success = 'Registro realizado con exito';
-                    }).catch(function(error) {
-                        vm.loading = false;
-                        vm.error = error.data;
-                    });
-                } else {
-                    vm.error = "Código de Producto ya existente, favor Ingrese otro...";
-                    vm.loading = false;
-                };
-            }).catch(function(error) {
+            vm.product.barCode = vm.productBarCode;
+            vm.product.costEach = 0;
+            vm.product.costCellar = 0;
+            vm.product.quantityCellar = 0;
+            vm.product.averageCostSuggested = 0;
+            productService.create(vm.product).then(function (response) {
+                vm.product = undefined;
+                vm.selectedGroup = undefined;
+                vm.selectedLine = undefined;
+                vm.wizard = 0;
+                _activate();
+                vm.error = undefined;
+                vm.success = 'Registro realizado con exito';
+            }).catch(function (error) {
                 vm.loading = false;
                 vm.error = error.data;
             });
@@ -464,27 +454,39 @@ angular.module('integridadUiApp')
                                             
         vm.wiz2 = function() {
             vm.productBySubsidiaries = [];
+            vm.product.codeIntegridad = vm.product.codeIntegridad.trim();
             var isSubsidiarySelected = false;
             vm.error = undefined;
-            if (vm.product.productType.code !== 'SER') {
-                vm.product.unitOfMeasurementAbbr = vm.messurementSelected.shortName;
-                vm.product.unitOfMeasurementFull = vm.messurementSelected.name;
-            };
-            _.each(vm.subsidiaries, function(sub) {
-                if (sub.selected) {
-                    isSubsidiarySelected = true;
-                    var productBySubsidiary = {
-                        dateCreated: new Date().getTime(),
-                        quantity: sub.cantidad,
-                        subsidiary: sub,
-                        active: true
+
+            productService.getProdByUserClientIdAndCodeIntegActive(vm.userClientId, vm.product.codeIntegridad).then(function(response) {
+                if (response.length === 0) {
+                    if (vm.product.productType.code !== 'SER') {
+                        vm.product.unitOfMeasurementAbbr = vm.messurementSelected.shortName;
+                        vm.product.unitOfMeasurementFull = vm.messurementSelected.name;
                     };
-                    vm.productBySubsidiaries.push(productBySubsidiary);
+                    _.each(vm.subsidiaries, function(sub) {
+                        if (sub.selected) {
+                            isSubsidiarySelected = true;
+                            var productBySubsidiary = {
+                                dateCreated: new Date().getTime(),
+                                quantity: sub.cantidad,
+                                subsidiary: sub,
+                                active: true
+                            };
+                            vm.productBySubsidiaries.push(productBySubsidiary);
+                        };
+                    });
+                    _getBrands();
+                    _getLines();
+                    isSubsidiarySelected ? vm.wizard = 2 : vm.error = 'Debe Seleccionar por lo menos una matriz.'
+                } else {
+                    vm.error = "Código de Producto ya existente, favor Ingrese otro...";
+                    vm.loading = false;
                 };
+            }).catch(function(error) {
+                vm.loading = false;
+                vm.error = error.data;
             });
-            _getBrands();
-            _getLines();
-            isSubsidiarySelected ? vm.wizard = 2 : vm.error = 'Debe Seleccionar por lo menos una matriz.'
         };
                                             
         vm.wiz3 = function() {
