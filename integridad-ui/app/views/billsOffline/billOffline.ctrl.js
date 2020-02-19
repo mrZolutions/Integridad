@@ -491,6 +491,17 @@ angular.module('integridadUiApp')
               vm.quantity = undefined;
         };
 
+        vm.openPayMode = function(event){
+            if (event.keyCode === 102 || event.charCode === 102 || event.keyCode === 70 || event.charCode === 70) {
+                $('#modalAddPago').modal('show');
+                vm.medio.medio = vm.medList[0];
+                vm.loadMedio();
+                setTimeout(function() {
+                    document.getElementById("addPaymentBtn").focus();
+                }, 500);
+            };
+        };
+
         vm.fill = function(event) {
             if (event.keyCode === 32 || event.charCode === 32) {
                 if (vm.billOfflineBarCode.length < 13) {
@@ -501,14 +512,6 @@ angular.module('integridadUiApp')
                     vm.billOfflineBarCode = vm.billOfflineBarCodeFixed.trim();
                     vm.filterBarCode();
                 };
-            };
-            if (event.keyCode === 102 || event.charCode === 102 || event.keyCode === 70 || event.charCode === 70) {
-                $('#modalAddPago').modal('show');
-                vm.medio = vm.medList[0];
-                vm.loadMedio();
-                setTimeout(function() {
-                    document.getElementById("addPaymentBtn").focus();
-                }, 500);
             };
         };
 

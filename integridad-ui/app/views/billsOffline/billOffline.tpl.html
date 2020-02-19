@@ -240,7 +240,7 @@
     </div>
 
     <!--FACTURA HOJA COMPLETA-->
-    <div class="panel-group table-responsive" ng-show="vm.clientSelected !== undefined">
+    <div class="panel-group table-responsive" ng-show="vm.clientSelected !== undefined" ng-keypress="vm.openPayMode($event)">
         <div class="panel panel-primary">
             <div class="panel-heading">
                 <b>Datos del Cliente</b>
@@ -381,11 +381,12 @@
                         </div>
                         <div class="form-group col-md-2">
                             <b>Cantidad: </b>
-                            <input type="text" ng-model="vm.quantity" ng-attr-tabindex="1" class="form-control" id="productQuantity">
+                            <input type="text" ng-model="vm.quantity" ng-attr-tabindex="1" class="form-control" id="productQuantity"
+                            onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.which === 13) || (event.keyCode == 9 || event.keyCode == 8))">
                         </div>
                         <div class="form-group col-md-4" ng-disabled="vm.toAdd === undefined">
                             <br/>
-                            <input id="submitAdd" ng-attr-tabindex="3" type="submit" value="Aceptar">
+                            <input id="submitAdd" ng-attr-tabindex="3" type="submit" value="Aceptar" ng-if="vm.toAdd !== undefined">
                             <input id="cancel" ng-attr-tabindex="4" type="button" value="Cancelar" ng-click="vm.cancelBarCode()">
                         </div>
                     </div>
