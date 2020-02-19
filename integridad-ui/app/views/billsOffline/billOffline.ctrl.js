@@ -685,50 +685,26 @@ angular.module('integridadUiApp')
             });
         };
 
-        vm.printToCartAndCancel = function(printBillOffline) {
-            var innerContents = document.getElementById(printBillOffline).innerHTML;
-            var popupWinindow = window.open('', 'printMatrixBillOffline', 'width=300,height=400');
-            popupWinindow.document.write('<html><head><title></title>');
-            popupWinindow.document.write('</head><body>');
-            popupWinindow.document.write(innerContents);
-            popupWinindow.document.write('</body></html>');
-            popupWinindow.print();
-            popupWinindow.close();
-            _activate();
-        };
-
         vm.printToCart = function(printBillOffline) {
+
+            var contentToPrint = 'printMatrixBillOfflineId';
+            switch (vm.userClientId) {
+                case vm.pineda:
+                    contentToPrint = 'printMatrixBillIdPineda';
+                    break;
+                default:
+                    contentToPrint = 'printMatrixBillOfflineId';
+            }
+
             var innerContents = document.getElementById(printBillOffline).innerHTML;
             var popupWinindow = window.open('', 'printMatrixBillOffline', 'width=300,height=400');
-            popupWinindow.document.write('<html><body>');
+            popupWinindow.document.write('<html><head><title></title>');
+            popupWinindow.document.write('</head><body>');
             popupWinindow.document.write(innerContents);
             popupWinindow.document.write('</body></html>');
             popupWinindow.print();
             popupWinindow.close();
-        };
-
-        vm.printToCartAndCancelPineda = function(printBillOffline) {
-            var innerContents = document.getElementById(printBillOffline).innerHTML;
-            var texto = innerContents;
-            var popupWinindow = window.open('', 'printMatrixBillOffline', 'width=300,height=400');
-            popupWinindow.document.write('<html><head><title></title>');
-            popupWinindow.document.write('</head><body>');
-            popupWinindow.document.write(texto);
-            popupWinindow.document.write('</body></html>');
-            popupWinindow.print();
-            popupWinindow.close();
-            _activate();
-        };
-
-        vm.printToCartPineda = function(printBillOffline) {
-            var innerContents = document.getElementById(printBillOffline).innerHTML;
-            var texto = innerContents;
-            var popupWinindow = window.open('', 'printMatrixBillOffline', 'width=300,height=400');
-            popupWinindow.document.write('<html><body>');
-            popupWinindow.document.write(texto);
-            popupWinindow.document.write('</body></html>');
-            popupWinindow.print();
-            popupWinindow.close();
+            _activate()
         };
 
         vm.printBillThermal = function(billPrint) {
@@ -740,6 +716,7 @@ angular.module('integridadUiApp')
             popupWinindow.document.write('</body></html>');
             popupWinindow.print();
             popupWinindow.close();
+            _activate()
         };
 
         vm.cancelBillOffline = function() {
@@ -869,10 +846,6 @@ angular.module('integridadUiApp')
                                 vm.error = error.data;
                             });
                         };
-
-                        if(!_.contains([vm.mrZolutions, vm.laQuinta, vm.pineda], vm.userClientId)){
-                            _activate();
-                        }
 
                         vm.loading = false;
                     }).catch(function(error) {
