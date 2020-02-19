@@ -495,7 +495,7 @@
             </div>
             <div class="panel-footer">
                 <button type="button" title = "Forma de Pago" class="btn btn-primary btn-sm" ng-if="vm.newBuyOff"
-                        data-toggle="modal" data-target="#modalAddPago"
+                        ng-click="vm.openModalPayMode()"
                         ng-disabled="vm.billOffline.total <= 0 || vm.billedOffline"
                         ng-show="vm.billOffline.claveDeAcceso === undefined">
                         <span class = "glyphicon glyphicon-usd" aria-hidden = "true"></span>
@@ -806,52 +806,52 @@
                     Total: {{vm.billOffline.total}}
                 </div>
                 <div class="modal-body">
-                    <form ng-submit="vm.addPago()">
-                        <div class="row">
-                            <div class="form-group col-md-6">
-                                <b>Tipo de Pago: </b>
-                                <select ng-options="med.name for med in vm.medList  | orderBy:'name'  track by med.code"
-                                        ng-model="vm.medio" class="form-control" ng-change="vm.loadMedio()">
-                                </select>
-                            </div>
-                            <div class="form-group col-md-6">
-                                <b>Forma de Pago: </b><br />
-                                {{vm.medio.payForm}}
-                            </div>
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            <b>Tipo de Pago: </b>
+                            <select ng-options="med.name for med in vm.medList  | orderBy:'name'  track by med.code"
+                                    ng-model="vm.medio" class="form-control" ng-change="vm.loadMedio()">
+                            </select>
                         </div>
-                        <div class="row" ng-show="vm.medio.code === 'cheque'">
-                            <div class="form-group col-md-4">
-                                <b>Banco: </b>
-                                <input type="text" ng-model="vm.medio.chequeBank" class="form-control" maxlength="9">
-                            </div>
-                            <div class="form-group col-md-4">
-                                <b>Cuenta: </b>
-                                <input type="text" ng-model="vm.medio.chequeAccount" class="form-control" maxlength="9">
-                            </div>
-                            <div class="form-group col-md-4">
-                                <b>Número de Cheque: </b>
-                                <input type="text"
-                                       ng-model="vm.medio.chequeNumber" class="form-control" maxlength="9">
-                            </div>
+                        <div class="form-group col-md-6">
+                            <b>Forma de Pago: </b><br />
+                            {{vm.medio.payForm}}
                         </div>
-                        <div class="row" ng-show="vm.medio.code === 'tarjeta_credito' || vm.medio.code === 'tarjeta_debito'">
-                            <div class="form-group col-md-6">
-                                <b>Tarjeta: </b>
-                                <select ng-options="card as card for card in vm.creditCardList"
-                                        ng-model="vm.medio.cardBrand" class="form-control">
-                                </select>
-                            </div>
-                            <div class="form-group col-md-6">
-                                <b>No. Lote: </b>
-                                <input type="text" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
-                                       ng-model="vm.medio.numeroLote" class="form-control" maxlength="5">
-                            </div>
+                    </div>
+                    <div class="row" ng-show="vm.medio.code === 'cheque'">
+                        <div class="form-group col-md-4">
+                            <b>Banco: </b>
+                            <input type="text" ng-model="vm.medio.chequeBank" class="form-control" maxlength="9">
                         </div>
-                        <div class="row">
+                        <div class="form-group col-md-4">
+                            <b>Cuenta: </b>
+                            <input type="text" ng-model="vm.medio.chequeAccount" class="form-control" maxlength="9">
+                        </div>
+                        <div class="form-group col-md-4">
+                            <b>Número de Cheque: </b>
+                            <input type="text"
+                                   ng-model="vm.medio.chequeNumber" class="form-control" maxlength="9">
+                        </div>
+                    </div>
+                    <div class="row" ng-show="vm.medio.code === 'tarjeta_credito' || vm.medio.code === 'tarjeta_debito'">
+                        <div class="form-group col-md-6">
+                            <b>Tarjeta: </b>
+                            <select ng-options="card as card for card in vm.creditCardList"
+                                    ng-model="vm.medio.cardBrand" class="form-control">
+                            </select>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <b>No. Lote: </b>
+                            <input type="text" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+                                   ng-model="vm.medio.numeroLote" class="form-control" maxlength="5">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <form ng-submit="vm.addPago()">
                             <div class="form-group col-md-4">
                                 <b>Valor: </b>
-                                <input type="text" onkeypress="return ((event.which >= 46 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
-                                       ng-model="vm.medio.total" class="form-control" maxlength="9">
+                                <input type="text" onkeypress="return ((event.which >= 46 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8) || (event.which === 13))"
+                                       ng-model="vm.medio.total" class="form-control" maxlength="9" id="medioTotal">
                             </div>
                             <div class="form-group col-md-4">
                                 <b>Valor: </b><br />
@@ -859,47 +859,45 @@
                             </div>
                             <div class="form-group col-md-4">
                                 <br/>
-                                <button type="button" title="Agregar Pago" class="btn btn-primary btn-sm" ng-click="vm.addPago()" id="addPaymentBtn"
-                                        ng-disabled="vm.medio === undefined || vm.medio.total === undefined">
-                                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                                </button>
+                                <input type="submit" value="Agregar Pago" class="btn btn-primary btn-sm" id="addPaymentBtn"
+                                ng-disabled="vm.medio === undefined || vm.medio.total === undefined">
                             </div>
+                        </form>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Medio</th>
+                                        <th>Valor</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-show="vm.pagosOffline == 0">
+                                        <td colspan="4">
+                                            No hay pagos ingresados
+                                        </td>
+                                    </tr>
+                                    <tr ng-repeat="pago in vm.pagosOffline">
+                                        <td>{{pago.medio.name}}</td>
+                                        <td>{{pago.total}}</td>
+                                        <td>
+                                            <button type="button" title="Eliminar Pago" class="btn btn-primary btn-sm" ng-click="vm.removePago($index)">
+                                                    <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>Total:</b></td>
+                                        <td>{{vm.getTotalPago()}}</td>
+                                        <td><h3>Vuelto: {{vm.getCambio <= 0 ? 0 : vm.getCambio}}</h3></td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <table class="table table-striped">
-                                    <thead>
-                                        <tr>
-                                            <th>Medio</th>
-                                            <th>Valor</th>
-                                            <th></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr ng-show="vm.pagosOffline == 0">
-                                            <td colspan="4">
-                                                No hay pagos ingresados
-                                            </td>
-                                        </tr>
-                                        <tr ng-repeat="pago in vm.pagosOffline">
-                                            <td>{{pago.medio}}</td>
-                                            <td>{{pago.total}}</td>
-                                            <td>
-                                                <button type="button" title="Eliminar Pago" class="btn btn-primary btn-sm" ng-click="vm.removePago($index)">
-                                                        <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
-                                                </button>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td><b>Total:</b></td>
-                                            <td>{{vm.getTotalPago()}}</td>
-                                            <td>Vuelto: {{vm.getCambio}}</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </form>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" title="Facturar" class="btn btn-success btn-sm" ng-click="vm.saveBillOffline()" id="processBillBtn"

@@ -491,14 +491,20 @@ angular.module('integridadUiApp')
               vm.quantity = undefined;
         };
 
+        vm.openModalPayMode = function(){
+            $('#modalAddPago').modal('show');
+                vm.medio = vm.medList[0];
+                vm.loadMedio();
+                var elementToSelect = document.getElementById("medioTotal");
+                setTimeout(function() {
+                    elementToSelect.focus();
+                    elementToSelect.select();
+                }, 500);
+        }
+
         vm.openPayMode = function(event){
             if (event.keyCode === 102 || event.charCode === 102 || event.keyCode === 70 || event.charCode === 70) {
-                $('#modalAddPago').modal('show');
-                vm.medio.medio = vm.medList[0];
-                vm.loadMedio();
-                setTimeout(function() {
-                    document.getElementById("addPaymentBtn").focus();
-                }, 500);
+                vm.openModalPayMode();
             };
         };
 

@@ -440,14 +440,20 @@ angular.module('integridadUiApp')
             vm.quantity = undefined;
         };
 
+        vm.openModalPayMode = function(){
+            $('#modalAddPago').modal('show');
+                vm.medio = vm.medList[0];
+                vm.loadMedio();
+                var elementToSelect = document.getElementById("medioTotal");
+                setTimeout(function() {
+                    elementToSelect.focus();
+                    elementToSelect.select();
+                }, 500);
+        }
+
         vm.openPayMode = function(event){
             if (event.keyCode === 102 || event.charCode === 102 || event.keyCode === 70 || event.charCode === 70) {
-                $('#modalAddPago').modal('show');
-                vm.medio.medio = vm.medList[0];
-                vm.loadMedio();
-                setTimeout(function() {
-                    document.getElementById("addPaymentBtn").focus();
-                }, 500);
+                vm.openModalPayMode();
             };
         };
 
@@ -548,14 +554,14 @@ angular.module('integridadUiApp')
             _.each(vm.pagos, function(pago) {
                 payed += parseFloat(pago.total);
             });
-            if (vm.medio.medio === 'efectivo' || vm.medio.medio === 'dinero_electronico_ec' || vm.medio.medio === 'transferencia') {
+            if (vm.medio.code === 'efectivo' || vm.medio.code === 'dinero_electronico_ec' || vm.medio.code === 'transferencia') {
                 vm.medio.payForm = '20 - OTROS CON UTILIZACION DEL SISTEMA FINANCIERO';
                 vm.medio.statusPago = 'PAGADO';
                 vm.medio.total = parseFloat((vm.bill.total - payed).toFixed(4));
                 // CAMBIO SRI POR CONFIRMAR
                 // vm.medio.payForm = '01 - SIN UTILIZACION DEL SISTEMA FINANCIERO';
             };
-            if (vm.medio.medio === 'credito') {
+            if (vm.medio.code === 'credito') {
                 vm.medio.payForm = '20 - OTROS CON UTILIZACION DEL SISTEMA FINANCIERO';
                 // CAMBIO SRI POR CONFIRMAR
                 // vm.medio.payForm = '01 - SIN UTILIZACION DEL SISTEMA FINANCIERO';
@@ -566,12 +572,12 @@ angular.module('integridadUiApp')
                     vm.medio.statusPago = 'PAGADO';
                 };
             };
-            if (vm.medio.medio === 'cheque' || vm.medio.medio === 'cheque_posfechado') {
+            if (vm.medio.code === 'cheque' || vm.medio.code === 'cheque_posfechado') {
                 vm.medio.payForm = '20 - OTROS CON UTILIZACION DEL SISTEMA FINANCIERO';
                 vm.medio.statusPago = 'PAGADO';
                 vm.medio.total = parseFloat((vm.bill.total - payed).toFixed(4));
             };
-            if (vm.medio.medio === 'tarjeta_credito' || vm.medio.medio === 'tarjeta_debito') {
+            if (vm.medio.code === 'tarjeta_credito' || vm.medio.code === 'tarjeta_debito') {
                 vm.medio.payForm = '19 - TARJETA DE CREDITO';
                 vm.medio.total = parseFloat((vm.bill.total - payed).toFixed(4));
                 vm.medio.statusPago = 'PAGADO';
@@ -610,6 +616,9 @@ angular.module('integridadUiApp')
         vm.addPago = function() {
             vm.pagos.push(angular.copy(vm.medio));
             vm.medio = {};
+            setTimeout(function(){
+                document.getElementById("processBillBtn").focus();
+            }, 500);
         };
 
         vm.removePago = function(index) {
