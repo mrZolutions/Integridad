@@ -552,16 +552,8 @@
                         ng-click="vm.nuevaBillOffline()">
                         <span class="glyphicon glyphicon-file" aria-hidden="true"></span>
                 </button>
-                <button type="button" title = "Imprimir a Epson LX-300" class="btn btn-primary btn-sm" ng-if="vm.userClientId === vm.mrZolutions"
+                <button type="button" title = "Imprimir a Epson LX-300" class="btn btn-primary btn-sm"
                         ng-show="!vm.newBillOffline" ng-click="vm.printToCart('printMatrixBillOfflineId')">
-                        <span class="glyphicon glyphicon-print" aria-hidden="true"></span>
-                </button>
-                <button type="button" title = "Imprimir a Epson LX-300" class="btn btn-primary btn-sm" ng-if="vm.userClientId === vm.laQuinta"
-                        ng-show="!vm.newBillOffline" ng-click="vm.printToCart('printMatrixBillOfflineId')">
-                        <span class="glyphicon glyphicon-print" aria-hidden="true"></span>
-                </button>
-                <button type="button" title = "Imprimir a Epson TM-U220" class="btn btn-primary btn-sm" ng-if="vm.userClientId === vm.pineda"
-                        ng-if="!vm.newBillOffline" ng-click="vm.printToCartPineda('printMatrixBillIdPineda')">
                         <span class="glyphicon glyphicon-print" aria-hidden="true"></span>
                 </button>
                 <button type="button" title = "Imprimir a ThermalPrint P58" class="btn btn-success btn-sm" ng-if="vm.userClientId === vm.laQuinta"
