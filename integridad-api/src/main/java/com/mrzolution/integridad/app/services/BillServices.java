@@ -13,6 +13,8 @@ import com.mrzolution.integridad.app.domain.report.CashClosureReport;
 import com.mrzolution.integridad.app.domain.report.ItemReport;
 import com.mrzolution.integridad.app.domain.report.SalesReport;
 import com.mrzolution.integridad.app.repositories.*;
+import org.json.simple.parser.ContainerFactory;
+import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -49,7 +51,7 @@ public class BillServices {
     KardexRepository kardexRepository;
     @Autowired
     KardexChildRepository kardexChildRepository;
-            
+
     public String getDatil(Requirement requirement, UUID userClientId) throws Exception {
         UserClient userClient = userClientRepository.findOne(userClientId);
         if (userClient.getApiKey() == null || "".equals(userClient.getApiKey())) {
@@ -66,9 +68,16 @@ public class BillServices {
         ObjectMapper mapper = new ObjectMapper();
         String data = mapper.writeValueAsString(requirement);
         log.info("BillServices getDatil MAPPER creado");
-                        
-        String response = httpCallerService.post(Constants.DATIL_LINK, data, userClient);
-        //String response = "OK";
+
+//        String response = httpCallerService.post(Constants.DATIL_LINK, data, userClient);
+        String response ="{\n" +
+                "  \"id\": \"abcdef09876123cea56784f01\",\n" +
+                "  \"ambiente\":1,\n" +
+                "  \"tipo_emision\":1,\n" +
+                "  \"secuencial\":148,\n" +
+                "  \"fecha_emision\":\"2019-09-28T11:28:56.782Z\",\n" +
+                "  \"clave_acceso\": \"2802201501091000000000120010010000100451993736618\"}";
+
         log.info("BillServices getDatil httpcall DONE");
         return response;
     }
@@ -134,7 +143,7 @@ public class BillServices {
         return retrieved;
     }
 
-    //Inicio de Creación de las Bills    
+    //Inicio de Creación de las Bills
     @Async("asyncExecutor")
     public Bill createBill(Bill bill, int typeDocument) throws BadRequestException {
         List<Detail> details = bill.getDetails();
@@ -156,28 +165,8 @@ public class BillServices {
         bill.setListsNull();
         Bill saved = billRepository.save(bill);
 
-        // typeDocument 1 is Bill 0 is Quotation
-        if (typeDocument == 1) {
-            Cashier cashier = cashierRepository.findOne(bill.getUserIntegridad().getCashier().getId());
-            cashier.setBillNumberSeq(cashier.getBillNumberSeq() + 1);
-            cashierRepository.save(cashier);
-            // Excepción PPE, Dental, Lozada NO actualizan Kardex
-            if ("A-1".equals(bill.getClient().getUserClient().getEspTemp()) || "A-2".equals(bill.getClient().getUserClient().getEspTemp()) || "A-N".equals(bill.getClient().getUserClient().getEspTemp())) {
-                saveDetailsBill(saved, details);
-                savePagosAndCreditsBill(saved, pagos);
-                updateProductBySubsidiary(bill, typeDocument, details);
-            } else {
-                saveDetailsBill(saved, details);
-                saveKardex(saved, detailsKardex);
-                savePagosAndCreditsBill(saved, pagos);
-                updateProductBySubsidiary(bill, typeDocument, details);
-            }
-        } else {
-            Cashier cashier = cashierRepository.findOne(bill.getUserIntegridad().getCashier().getId());
-            cashier.setQuotationNumberSeq(cashier.getQuotationNumberSeq() + 1);
-            cashierRepository.save(cashier);
-            saveDetailsQuotation(saved, details);
-        }
+        saveChildrenOnCreation(bill, saved, typeDocument, details, pagos, detailsKardex);
+
         log.info("BillServices createBill: {}, {}", saved.getId(), saved.getStringSeq());
         return saved;
     }
@@ -420,6 +409,32 @@ public class BillServices {
             cashClosureReportList.add(cashClosureReport);
         });
         return cashClosureReportList;
+    }
+
+    @Async("asyncExecutor")
+    private void saveChildrenOnCreation(Bill bill, Bill saved, int typeDocument, List<Detail> details, List<Pago> pagos, List<Kardex> detailsKardex){
+        // typeDocument 1 is Bill 0 is Quotation
+        if (typeDocument == 1) {
+            Cashier cashier = cashierRepository.findOne(bill.getUserIntegridad().getCashier().getId());
+            cashier.setBillNumberSeq(cashier.getBillNumberSeq() + 1);
+            cashierRepository.save(cashier);
+            // Excepción PPE, Dental, Lozada NO actualizan Kardex
+            if ("A-1".equals(bill.getClient().getUserClient().getEspTemp()) || "A-2".equals(bill.getClient().getUserClient().getEspTemp()) || "A-N".equals(bill.getClient().getUserClient().getEspTemp())) {
+                saveDetailsBill(saved, details);
+                savePagosAndCreditsBill(saved, pagos);
+                updateProductBySubsidiary(bill, typeDocument, details);
+            } else {
+                saveDetailsBill(saved, details);
+                saveKardex(saved, detailsKardex);
+                savePagosAndCreditsBill(saved, pagos);
+                updateProductBySubsidiary(bill, typeDocument, details);
+            }
+        } else {
+            Cashier cashier = cashierRepository.findOne(bill.getUserIntegridad().getCashier().getId());
+            cashier.setQuotationNumberSeq(cashier.getQuotationNumberSeq() + 1);
+            cashierRepository.save(cashier);
+            saveDetailsQuotation(saved, details);
+        }
     }
        
     private void populateChildren(Bill bill) {

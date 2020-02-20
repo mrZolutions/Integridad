@@ -1,16 +1,16 @@
 angular
     .module('app.services')
     .service('billService', function(securityService) {
-        this.getClaveDeAcceso = function(req, id) {
-            return securityService.post('/bill/clave_acceso/' + id, req).then(function successCallback(response) {
+        this.getClaveDeAccesoSaveBill = function(req, id, type) {
+            return securityService.post('/bill/clave_acceso/' + id +'/' + type, req).then(function successCallback(response) {
                 return response;
             });
         };
 
         this.create = function(bill, type) {
-            return securityService.post('/bill/' + type, bill).then(function successCallback(response) {
-                return response.data;
-            });
+          return securityService.post('/bill/' + type, bill).then(function successCallback(response) {
+            return response.data;
+          });
         };
 
         this.getAllBillsByClientId = function(id) {
