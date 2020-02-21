@@ -322,15 +322,11 @@ angular.module('integridadUiApp')
         };
 
         vm.reCalculateTotal = function() {
-            if (vm.bill.discountPercentage == null || vm.bill.discountPercentage == undefined) {
+            if (vm.bill.discountPercentage == null || vm.bill.discountPercentage == undefined || vm.bill.discountPercentage == '') {
                 vm.bill.discountPercentage = 0;
             };
             _.map(vm.bill.details, function(detail) {
-                if (vm.bill.discountPercentage) {
-                    detail.discount = vm.bill.discountPercentage;
-                } else {
-                    detail.discount = 0;
-                };
+                detail.discount = parseFloat(vm.bill.discountPercentage) + parseFloat(detail.discountData);
                 var costEachCalculated = vm.getCost(detail.product[vm.priceType.cod], detail.product.averageCost);
                 detail.costEach = costEachCalculated;
                 detail.total = parseFloat((parseFloat(detail.quantity) * (parseFloat(detail.costEach) - (parseFloat(detail.costEach) * parseFloat(detail.discount / 100)))).toFixed(4));
@@ -475,12 +471,14 @@ angular.module('integridadUiApp')
             if (vm.bill.discountPercentage == null || vm.bill.discountPercentage == undefined) {
                 vm.bill.discountPercentage = 0;
             };
+            var discountDetail = vm.toAddDiscount ? parseFloat(vm.toAddDiscount) + parseFloat(vm.bill.discountPercentage) : parseFloat(vm.bill.discountPercentage);
             var detail = {
-                discount: vm.bill.discountPercentage ? vm.bill.discountPercentage : 0,
+                discountData: vm.toAddDiscount,
+                discount: discountDetail,
                 product: angular.copy(vm.productToAdd),
                 quantity: vm.quantity,
                 costEach: vm.productToAdd.costEachCalculated,
-                total: parseFloat(((vm.quantity * vm.productToAdd.costEachCalculated) - (vm.quantity * (vm.productToAdd.costEachCalculated) * (vm.bill.discountPercentage / 100))).toFixed(4)),
+                total: parseFloat(((vm.quantity * vm.productToAdd.costEachCalculated) - (vm.quantity * (vm.productToAdd.costEachCalculated) * (discountDetail / 100))).toFixed(4)),
                 adicional: vm.adicional
             };
             if (vm.indexDetail !== undefined) {
@@ -507,6 +505,7 @@ angular.module('integridadUiApp')
                 });
                 vm.productList = newProductList;
             };
+            vm.toAddDiscount = undefined;
         };
 
         vm.getCost = function(textCost, averageCost) {
