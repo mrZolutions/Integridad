@@ -466,6 +466,10 @@ angular.module('integridadUiApp')
             };
         };
 
+        vm.getTextCambio = function(){
+            return vm.getCambio <= 0 ? 0 : vm.getCambio;
+        }
+
         vm.acceptProduct = function(closeModal) {
             vm.errorQuantity = undefined;
             if (vm.bill.discountPercentage == null || vm.bill.discountPercentage == undefined) {
