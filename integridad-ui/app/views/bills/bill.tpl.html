@@ -179,7 +179,7 @@
     </div>
 
     <!--FACTURA HOJA COMPLETA-->
-    <div class="panel-group table-responsive" ng-show="vm.clientSelected !== undefined" id="printArea" print-section>
+    <div class="panel-group table-responsive" ng-show="vm.clientSelected !== undefined" id="printArea" print-section ng-keypress="vm.openPayMode($event)">
         <div class="panel panel-primary">
             <div class="panel-heading">
                 <b>Datos del Cliente</b>
@@ -324,7 +324,7 @@
                     </div>
                     <div class="form-group col-md-3" ng-if="vm.newBill">
                         <b>Descuento %: </b>
-                        <input type="text" ng-change="vm.reCalculateTotal()" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+                        <input type="text" ng-blur="vm.reCalculateTotal()" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
                                ng-model="vm.bill.discountPercentage" class="form-control" maxlength="9" ng-change="vm.getFechaCobro()" ng-disabled="!vm.newBill">
                     </div>
                 </div>
@@ -348,17 +348,22 @@
                 </div>
                 <form ng-submit="vm.addProdBarCode()" ng-if="vm.newBill" print-remove>
                     <div class="row">
-                        <div class="form-group col-md-3">
-                            <b>Existencia: </b>
+                        <div class="form-group col-md-2">
+                            <b>Existencias: </b>
                             <input type="text" ng-model="vm.toAddExistency" ng-disabled="true" class="form-control">
                         </div>
                         <div class="form-group col-md-3">
-                            <b>Valor Unit: </b>
+                            <b>Valor Unitario: </b>
                             <input type="text" ng-model="vm.toAddPrice" ng-disabled="true" class="form-control">
                         </div>
-                        <div class="form-group col-md-3">
+                        <div class="form-group col-md-2">
+                            <b>Descuento Unitario: </b>
+                            <input type="text" ng-model="vm.toAddDiscount" ng-attr-tabindex="2" class="form-control">
+                        </div>
+                        <div class="form-group col-md-2">
                             <b>Cantidad: </b>
-                            <input type="text" ng-model="vm.quantity" ng-attr-tabindex="1" class="form-control" id="productQuantity" >
+                            <input type="text" ng-model="vm.quantity" ng-attr-tabindex="1" class="form-control" id="productQuantity"
+                            onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.which === 13) || (event.keyCode == 9 || event.keyCode == 8))">
                         </div>
                         <div class="form-group col-md-3" ng-disabled="vm.toAdd === undefined">
                             <br/>
@@ -493,7 +498,7 @@
             </div>
             <div class="panel-footer" print-remove>
                 <button type="button" title = "Forma de Pago" class="btn btn-primary btn-sm" ng-if="vm.newBuy"
-                        data-toggle="modal" data-target="#modalAddPago"
+                        ng-click="vm.openModalPayMode()"
                         ng-disabled="vm.bill.total <= 0 || vm.billed"
                         ng-show="vm.bill.claveDeAcceso === undefined">
                         <span class = "glyphicon glyphicon-usd" aria-hidden = "true"></span>
@@ -782,7 +787,7 @@
         <p>CONSUMO No. {{vm.csmSeqNumber}}</p><br/>
         <p>SUPERVISOR: {{vm.consumption.nameSupervisor}}</p><br/>
         <p>OBSERVACIONES: {{vm.consumption.observation}}</p><br/>
-        
+
         <p>RAZON SOCIAL:</p><br/>
         <p>{{vm.consumption.client.name}}</p><br/>
         <p>IDENTIFICACION: {{vm.consumption.client.identification}}</p><br/>
@@ -828,8 +833,8 @@
                     <div class="row">
                         <div class="form-group col-md-6">
                             <b>Tipo de Pago: </b>
-                            <select ng-options="med.code as med.name for med in vm.medList  | orderBy:'name'  track by med.code"
-                                    ng-model="vm.medio.medio" class="form-control" ng-change="vm.loadMedio()">
+                            <select ng-options="med.name for med in vm.medList  | orderBy:'name'  track by med.code"
+                                    ng-model="vm.medio" class="form-control" ng-change="vm.loadMedio()">
                             </select>
                         </div>
                         <div class="form-group col-md-6">
@@ -837,7 +842,7 @@
                             {{vm.medio.payForm}}
                         </div>
                     </div>
-                    <div class="row" ng-show="vm.medio.medio === 'cheque' || vm.medio.medio === 'cheque_posfechado'">
+                    <div class="row" ng-show="vm.medio.code === 'cheque' || vm.medio.code === 'cheque_posfechado'">
                         <div class="form-group col-md-4">
                             <b>Banco: </b>
                             <input type="text" ng-model="vm.medio.chequeBank" class="form-control" maxlength="9">
@@ -851,7 +856,7 @@
                             <input type="text" ng-model="vm.medio.chequeNumber" class="form-control" maxlength="9">
                         </div>
                     </div>
-                    <div class="row" ng-show="vm.medio.medio === 'cheque_posfechado'">
+                    <div class="row" ng-show="vm.medio.code === 'cheque_posfechado'">
                         <div class="form-group col-md-6">
                             <b>Días Plazo: </b>
                             <input type="text" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
@@ -862,7 +867,7 @@
                             {{vm.medio.fechaCobro | date :  "dd/MM/yyyy"}}
                         </div>
                     </div>
-                    <div class="row" ng-show="vm.medio.medio === 'credito'">
+                    <div class="row" ng-show="vm.medio.code === 'credito'">
                         <div class="form-group col-md-4">
                             <b>Número de Pagos: </b>
                             <input type="text" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
@@ -881,7 +886,7 @@
                             </button>
                         </div>
                     </div>
-                    <div class="row" ng-show="vm.medio.medio === 'credito'">
+                    <div class="row" ng-show="vm.medio.code === 'credito'">
                         <div class="form-group col-md-12">
                             <table class="table table-striped">
                                 <thead>
@@ -903,7 +908,7 @@
                             </table>
                         </div>
                     </div>
-                    <div class="row" ng-show="vm.medio.medio === 'tarjeta_credito' || vm.medio.medio === 'tarjeta_debito'">
+                    <div class="row" ng-show="vm.medio.code === 'tarjeta_credito' || vm.medio.code === 'tarjeta_debito'">
                         <div class="form-group col-md-6">
                             <b>Tarjeta: </b>
                             <select ng-options="card as card for card in vm.creditCardList"
@@ -917,22 +922,22 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="form-group col-md-4" ng-if="vm.medio.medio !== 'credito'">
-                            <b>Valor: </b>
-                            <input type="text" onkeypress="return ((event.which >= 46 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
-                                   ng-model="vm.medio.total" class="form-control" maxlength="9">
-                        </div>
-                        <div class="form-group col-md-4" ng-if="vm.medio.medio !== 'credito'">
-                            <b>Valor: </b><br />
-                            $ {{vm.medio.total}}
-                        </div>
-                        <div class="form-group col-md-4">
-                            <br/>
-                            <button type="button" title = "Agregar Pago" class="btn btn-primary btn-sm" ng-click="vm.addPago()" id="addPaymentBtn"
-                                    ng-disabled="vm.medio === undefined || vm.medio.total === undefined">
-                                    <span class = "glyphicon glyphicon-plus" aria-hidden = "true"></span>
-                            </button>
-                        </div>
+                        <form ng-submit="vm.addPago()">
+                            <div class="form-group col-md-4" ng-if="vm.medio.code !== 'credito'">
+                                <b>Valor: </b>
+                                <input type="text" onkeypress="return ((event.which >= 46 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8) || (event.which === 13))"
+                                       ng-model="vm.medio.total" class="form-control" maxlength="9" id="medioTotal">
+                            </div>
+                            <div class="form-group col-md-4" ng-if="vm.medio.code !== 'credito'">
+                                <b>Valor: </b><br />
+                                $ {{vm.medio.total}}
+                            </div>
+                            <div class="form-group col-md-4">
+                                <br/>
+                                <input type="submit" value = "Agregar Pago" class="btn btn-primary btn-sm" id="addPaymentBtn"
+                                ng-disabled="vm.medio === undefined || vm.medio.total === undefined">
+                            </div>
+                        </form>
                     </div>
                     <div class="row">
                         <div class="col-md-12">
@@ -951,7 +956,7 @@
                                         </td>
                                     </tr>
                                     <tr ng-repeat="pago in vm.pagos">
-                                        <td>{{pago.medio}}</td>
+                                        <td>{{pago.medio.name}}</td>
                                         <td>{{pago.total}}</td>
                                         <td>
                                             <button type="button" title = "Eliminar Pago" class="btn btn-primary btn-sm" ng-click="vm.removePago($index)">
@@ -962,7 +967,7 @@
                                     <tr>
                                         <td><b>Total:</b></td>
                                         <td>{{vm.getTotalPago()}}</td>
-                                        <td>Vuelto: {{vm.getCambio}}</td>
+                                        <td><h3>Vuelto: {{vm.getTextCambio()}}</h3></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -1066,13 +1071,17 @@
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <div class="form-group col-md-6">
+                                        <div class="form-group col-md-4">
                                             <b>Descripción: </b>
                                             <input type="text" ng-model="vm.adicional" class="form-control">
                                         </div>
-                                        <div class="form-group col-md-6">
+                                        <div class="form-group col-md-4">
                                             <b>Precio Unitario: </b>
                                             <input type="text" ng-model="vm.productToAdd.costEachCalculated" class="form-control">
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <b>% Descuento: </b>
+                                            <input type="text" ng-model="vm.toAddDiscount" class="form-control">
                                         </div>
                                     </div>
                                 </div>

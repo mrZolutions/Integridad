@@ -389,6 +389,15 @@ angular.module('integridadUiApp')
         };
 
         vm.reCalculateTotal = function() {
+            if (vm.billOffline.discountPercentage == null || vm.billOffline.discountPercentage == undefined || vm.billOffline.discountPercentage == '') {
+                vm.billOffline.discountPercentage = 0;
+            };
+            _.map(vm.billOffline.detailsOffline, function(detail) {
+                detail.discount = parseFloat(vm.billOffline.discountPercentage) + parseFloat(detail.discountData);
+                var costEachCalculated = vm.getCost(detail.product[vm.priceType.cod], detail.product.averageCost);
+                detail.costEach = costEachCalculated;
+                detail.total = parseFloat((parseFloat(detail.quantity) * (parseFloat(detail.costEach) - (parseFloat(detail.costEach) * parseFloat(detail.discount / 100)))).toFixed(4));
+            });
             _getTotalSubtotal();
         };
 
@@ -491,6 +500,23 @@ angular.module('integridadUiApp')
               vm.quantity = undefined;
         };
 
+        vm.openModalPayMode = function(){
+            $('#modalAddPago').modal('show');
+                vm.medio = vm.medList[0];
+                vm.loadMedio();
+                var elementToSelect = document.getElementById("medioTotal");
+                setTimeout(function() {
+                    elementToSelect.focus();
+                    elementToSelect.select();
+                }, 500);
+        }
+
+        vm.openPayMode = function(event){
+            if (event.keyCode === 102 || event.charCode === 102 || event.keyCode === 70 || event.charCode === 70) {
+                vm.openModalPayMode();
+            };
+        };
+
         vm.fill = function(event) {
             if (event.keyCode === 32 || event.charCode === 32) {
                 if (vm.billOfflineBarCode.length < 13) {
@@ -502,36 +528,25 @@ angular.module('integridadUiApp')
                     vm.filterBarCode();
                 };
             };
-            if (event.keyCode === 102 || event.charCode === 102 || event.keyCode === 70 || event.charCode === 70) {
-                $('#modalAddPago').modal('show');
-                vm.medio = vm.medList[0];
-                vm.loadMedio();
-                setTimeout(function() {
-                    document.getElementById("addPaymentBtn").focus();
-                }, 500);
-            };
         };
+
+        vm.getTextCambio = function(){
+            return vm.getCambio <= 0 ? 0 : vm.getCambio;
+        }
 
         vm.acceptProduct = function(closeModal) {
             vm.errorQuantity = undefined;
             if (vm.billOffline.discountPercentage == null || vm.billOffline.discountPercentage == undefined) {
                 vm.billOffline.discountPercentage = 0;
             };
-            if (vm.paraticularDiscount == null || vm.paraticularDiscount == undefined) {
-                vm.paraticularDiscount = 0;
-            };
-            var discount = 1;
-            if ((vm.paraticularDiscount !== null || vm.paraticularDiscount !== undefined) && !isNaN(vm.paraticularDiscount)) {
-                discount = (parseFloat(vm.paraticularDiscount) / 100);
-            } else if ((vm.billOffline.discountPercentage !== null || vm.billOffline.discountPercentage !== undefined) && !isNaN(vm.billOffline.discountPercentage)) {
-                discount = (parseFloat(vm.billOffline.discountPercentage) / 100);
-            };
+            var discountDetail = vm.paraticularDiscount ? parseFloat(vm.paraticularDiscount) + parseFloat(vm.billOffline.discountPercentage) : parseFloat(vm.billOffline.discountPercentage);
             var detail = {
-                discount: vm.billOffline.discountPercentage ? vm.billOffline.discountPercentage : vm.paraticularDiscount ? vm.paraticularDiscount : 0,
+                discountData: vm.paraticularDiscount,
+                discount: discountDetail,
                 product: angular.copy(vm.productToAdd),
                 quantity: vm.quantity,
                 costEach: vm.productToAdd.costEachCalculated,
-                total: parseFloat(((vm.quantity * vm.productToAdd.costEachCalculated) - (vm.quantity * (vm.productToAdd.costEachCalculated) * discount)).toFixed(2)),
+                total: parseFloat(((vm.quantity * vm.productToAdd.costEachCalculated) - (vm.quantity * (vm.productToAdd.costEachCalculated) * (discountDetail/100))).toFixed(2)),
                 adicional: vm.adicional
             };
             if (vm.indexDetail !== undefined) {
@@ -682,50 +697,26 @@ angular.module('integridadUiApp')
             });
         };
 
-        vm.printToCartAndCancel = function(printBillOffline) {
-            var innerContents = document.getElementById(printBillOffline).innerHTML;
-            var popupWinindow = window.open('', 'printMatrixBillOffline', 'width=300,height=400');
-            popupWinindow.document.write('<html><head><title></title>');
-            popupWinindow.document.write('</head><body>');
-            popupWinindow.document.write(innerContents);
-            popupWinindow.document.write('</body></html>');
-            popupWinindow.print();
-            popupWinindow.close();
-            _activate();
-        };
-
         vm.printToCart = function(printBillOffline) {
+
+            var contentToPrint = 'printMatrixBillOfflineId';
+            switch (vm.userClientId) {
+                case vm.pineda:
+                    contentToPrint = 'printMatrixBillIdPineda';
+                    break;
+                default:
+                    contentToPrint = 'printMatrixBillOfflineId';
+            }
+
             var innerContents = document.getElementById(printBillOffline).innerHTML;
             var popupWinindow = window.open('', 'printMatrixBillOffline', 'width=300,height=400');
-            popupWinindow.document.write('<html><body>');
+            popupWinindow.document.write('<html><head><title></title>');
+            popupWinindow.document.write('</head><body>');
             popupWinindow.document.write(innerContents);
             popupWinindow.document.write('</body></html>');
             popupWinindow.print();
             popupWinindow.close();
-        };
-
-        vm.printToCartAndCancelPineda = function(printBillOffline) {
-            var innerContents = document.getElementById(printBillOffline).innerHTML;
-            var texto = innerContents;
-            var popupWinindow = window.open('', 'printMatrixBillOffline', 'width=300,height=400');
-            popupWinindow.document.write('<html><head><title></title>');
-            popupWinindow.document.write('</head><body>');
-            popupWinindow.document.write(texto);
-            popupWinindow.document.write('</body></html>');
-            popupWinindow.print();
-            popupWinindow.close();
-            _activate();
-        };
-
-        vm.printToCartPineda = function(printBillOffline) {
-            var innerContents = document.getElementById(printBillOffline).innerHTML;
-            var texto = innerContents;
-            var popupWinindow = window.open('', 'printMatrixBillOffline', 'width=300,height=400');
-            popupWinindow.document.write('<html><body>');
-            popupWinindow.document.write(texto);
-            popupWinindow.document.write('</body></html>');
-            popupWinindow.print();
-            popupWinindow.close();
+            _activate()
         };
 
         vm.printBillThermal = function(billPrint) {
@@ -737,6 +728,7 @@ angular.module('integridadUiApp')
             popupWinindow.document.write('</body></html>');
             popupWinindow.print();
             popupWinindow.close();
+            _activate()
         };
 
         vm.cancelBillOffline = function() {
@@ -866,6 +858,7 @@ angular.module('integridadUiApp')
                                 vm.error = error.data;
                             });
                         };
+
                         vm.loading = false;
                     }).catch(function(error) {
                         vm.loading = false;

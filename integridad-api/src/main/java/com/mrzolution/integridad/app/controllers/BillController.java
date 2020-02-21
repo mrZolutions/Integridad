@@ -2,19 +2,21 @@ package com.mrzolution.integridad.app.controllers;
 
 import com.mrzolution.integridad.app.domain.Bill;
 import com.mrzolution.integridad.app.domain.ebill.Requirement;
+import com.mrzolution.integridad.app.domain.ebill.RequirementBill;
 import com.mrzolution.integridad.app.domain.report.CashClosureReport;
 import com.mrzolution.integridad.app.domain.report.ItemReport;
 import com.mrzolution.integridad.app.domain.report.SalesReport;
 import com.mrzolution.integridad.app.exceptions.BadRequestException;
 import com.mrzolution.integridad.app.services.BillServices;
 import lombok.extern.slf4j.Slf4j;
+import org.json.simple.parser.ContainerFactory;
+import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Slf4j
 @RestController
@@ -23,17 +25,36 @@ public class BillController {
     @Autowired
     BillServices service;
 
-    @RequestMapping(method = RequestMethod.POST, value="/clave_acceso/{id}")
-    public ResponseEntity getDatil(@RequestBody Requirement requirement, @PathVariable("id") UUID userClientId) {
-        String response = null;
+    @RequestMapping(method = RequestMethod.POST, value="/clave_acceso/{id}/{typeDocument}")
+    public ResponseEntity saveDatilBill(@RequestBody RequirementBill requirement, @PathVariable("id") UUID userClientId, @PathVariable("typeDocument") int typeDocument) {
+        Bill response = null;
         try {
-            response = service.getDatil(requirement, userClientId);
+            Bill bill = requirement.getBill();
+            String responseDatil = service.getDatil(requirement.getRequirement(), userClientId);
+
+            JSONParser parser = new JSONParser();
+            ContainerFactory containerFactory = new ContainerFactory(){
+                public List creatArrayContainer() { return new LinkedList(); }
+                public Map createObjectContainer() { return new LinkedHashMap(); }
+            };
+
+            Map json = (Map)parser.parse(responseDatil, containerFactory);
+            Iterator iter = json.entrySet().iterator();
+            while(iter.hasNext()){
+                Map.Entry entry = (Map.Entry)iter.next();
+                if(entry.getKey().equals("id")) bill.setIdSri((String) entry.getValue());
+                if(entry.getKey().equals("clave_acceso")) bill.setClaveDeAcceso((String) entry.getValue());
+//              System.out.println(entry.getKey() + "=>" + entry.getValue());
+            }
+
+            service.createBill(bill, typeDocument);
+            response = bill;
         } catch (Exception e) {
-            log.error("BillController getDatil Exception thrown: {}", e.getMessage());
+            log.error("BillController saveDatilBill Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
         log.info("BillController getDatil DONE");
-        return new ResponseEntity<String>(response, HttpStatus.ACCEPTED);
+        return new ResponseEntity<Bill>(response, HttpStatus.ACCEPTED);
     }
      
     //Selecciona todas las Facturas del Cliente
