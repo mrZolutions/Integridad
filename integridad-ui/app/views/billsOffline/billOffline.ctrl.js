@@ -389,6 +389,15 @@ angular.module('integridadUiApp')
         };
 
         vm.reCalculateTotal = function() {
+            if (vm.billOffline.discountPercentage == null || vm.billOffline.discountPercentage == undefined || vm.billOffline.discountPercentage == '') {
+                vm.billOffline.discountPercentage = 0;
+            };
+            _.map(vm.billOffline.detailsOffline, function(detail) {
+                detail.discount = parseFloat(vm.billOffline.discountPercentage) + parseFloat(detail.discountData);
+                var costEachCalculated = vm.getCost(detail.product[vm.priceType.cod], detail.product.averageCost);
+                detail.costEach = costEachCalculated;
+                detail.total = parseFloat((parseFloat(detail.quantity) * (parseFloat(detail.costEach) - (parseFloat(detail.costEach) * parseFloat(detail.discount / 100)))).toFixed(4));
+            });
             _getTotalSubtotal();
         };
 
@@ -526,21 +535,14 @@ angular.module('integridadUiApp')
             if (vm.billOffline.discountPercentage == null || vm.billOffline.discountPercentage == undefined) {
                 vm.billOffline.discountPercentage = 0;
             };
-            if (vm.paraticularDiscount == null || vm.paraticularDiscount == undefined) {
-                vm.paraticularDiscount = 0;
-            };
-            var discount = 1;
-            if ((vm.paraticularDiscount !== null || vm.paraticularDiscount !== undefined) && !isNaN(vm.paraticularDiscount)) {
-                discount = (parseFloat(vm.paraticularDiscount) / 100);
-            } else if ((vm.billOffline.discountPercentage !== null || vm.billOffline.discountPercentage !== undefined) && !isNaN(vm.billOffline.discountPercentage)) {
-                discount = (parseFloat(vm.billOffline.discountPercentage) / 100);
-            };
+            var discountDetail = vm.paraticularDiscount ? parseFloat(vm.paraticularDiscount) + parseFloat(vm.billOffline.discountPercentage) : parseFloat(vm.billOffline.discountPercentage);
             var detail = {
-                discount: vm.billOffline.discountPercentage ? vm.billOffline.discountPercentage : vm.paraticularDiscount ? vm.paraticularDiscount : 0,
+                discountData: vm.paraticularDiscount,
+                discount: discountDetail,
                 product: angular.copy(vm.productToAdd),
                 quantity: vm.quantity,
                 costEach: vm.productToAdd.costEachCalculated,
-                total: parseFloat(((vm.quantity * vm.productToAdd.costEachCalculated) - (vm.quantity * (vm.productToAdd.costEachCalculated) * discount)).toFixed(2)),
+                total: parseFloat(((vm.quantity * vm.productToAdd.costEachCalculated) - (vm.quantity * (vm.productToAdd.costEachCalculated) * (discountDetail/100))).toFixed(2)),
                 adicional: vm.adicional
             };
             if (vm.indexDetail !== undefined) {
