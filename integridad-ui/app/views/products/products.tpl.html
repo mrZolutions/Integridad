@@ -671,4 +671,81 @@
             </div>
         </div>
     </div>
+
+    <div id="modalEditProduct" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type = "button" class = "close" data-dismiss = "modal">&times;</button>
+                    <h4 class = "modal-title"><b>Editar Producto</b></h4>
+                    <h5 class = "modal-title">{{vm.product.name}}</h5>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="form-group col-md-5 ">
+                            <label>FECHA: </label>
+                            <div class="input-group date" id="pickerSettingKardexDate">
+                                <input type="text" class="form-control input-group-addon"/>
+                                <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"/></span>
+                            </div>
+                            <script>
+                                $('#pickerSettingKardexDate').datetimepicker({
+                                    format: "DD/MM/YY",
+                                });
+                            </script>
+                        </div>                        
+                        <div class="form-group col-md-5">
+                            <label>Tipo de Ajuste:</label>
+                            <select ng-options="setprod.name as setprod.name for setprod in [{code: 'ING' ,name:'INGRESO'}, {code: 'EGR', name:'EGRESO'}]"
+                                    ng-model="vm.setObserva" class="form-control">
+                            </select>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label>Cantidad para Ajuste:</label>
+                            <input type="text" ng-model="vm.kardex.prodQuantity" class="form-control">
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label>Costo Unitario:</label>
+                            <input type="text" ng-model="vm.prodSetCostEach" class="form-control">
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group col-md-10">
+                                <label>Sucursales: </label>
+                                <span ng-repeat="sub in vm.subsidiaries" class="list-group-item">
+                                    <div class="row">
+                                        <div class="form-group col-sm-7">
+                                            <input class="pull-right" ng-model="sub.selected" type="checkbox" ng-change="vm.changeSub(sub)">
+                                            {{sub.name}}
+                                        </div>
+                                        <div class="form-group col-sm-2" ng-if="!vm.subKarActive">
+                                            Cantidad:
+                                        </div>
+                                        <div class="form-group col-sm-3" ng-if="!vm.subKarActive">
+                                            <input type="text" onkeypress="return ((event.which >= 46 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+                                                   ng-model="sub.cantidad" class="form-control" ng-disabled="!sub.selected || vm.product.productType.code === 'SER'">
+                                        </div>
+                                    </div>
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="form-group col-md-10">
+                            <label>Observación:</label>
+                            <input type="text" ng-model="vm.setDetalle" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" title="Aceptar" class="btn btn-success btn-sm" ng-disabled="vm.setDetalle === undefined"
+                            ng-click="vm.saveKardex()" data-dismiss="modal">
+                            <span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span>
+                    </button>
+                    <button type="button" title="Salir" class="btn btn-primary btn-sm" data-dismiss="modal">
+                            <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

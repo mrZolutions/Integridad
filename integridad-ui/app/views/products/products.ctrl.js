@@ -316,8 +316,9 @@ angular.module('integridadUiApp')
             vm.getGroups();
             vm.getSubGroups();
             _getSubsidiaries(true);
-            vm.wizard = 1;
+            // vm.wizard = 1;
             vm.product = productEdit;
+            $('#modalEditProduct').modal('show');
         };
 
         vm.productCreate = function() {
