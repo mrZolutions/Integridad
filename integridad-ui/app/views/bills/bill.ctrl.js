@@ -875,6 +875,10 @@ angular.module('integridadUiApp')
               vm.newBuy = false;
               $localStorage.user.cashier.billNumberSeq = vm.bill.billSeq;
               vm.loading = false;
+              setTimeout(function() {
+                document.getElementById("printBtnBill").click();
+                vm.nuevaBill();
+            }, 300);
               if (vm.seqChanged) {
                   cashierService.update($localStorage.user.cashier).then(function(resp) {
                       // cashier updated
