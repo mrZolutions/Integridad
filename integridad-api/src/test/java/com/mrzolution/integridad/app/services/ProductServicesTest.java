@@ -9,6 +9,7 @@ import com.mrzolution.integridad.app.repositories.ProductBySubsidiairyRepository
 import com.mrzolution.integridad.app.repositories.ProductBySubsidiaryChildRepository;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -63,6 +64,7 @@ public class ProductServicesTest {
 	//	Assert.assertNotNull(retrieved);
 	//}
 
+	@Ignore
 	@Test
 	public void onUpdateShouldCallRightChildrenRepository(){
 		UUID id = UUID.randomUUID();
