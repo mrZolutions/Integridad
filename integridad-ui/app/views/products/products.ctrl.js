@@ -173,8 +173,16 @@ angular.module('integridadUiApp')
             _.each(vm.product.productBySubsidiaries, function(ps) {
                 ps.active=false;
             });
-            _.each(vm.productBySubsidiaries, function(psNew) {
-                vm.product.productBySubsidiaries.push(psNew);
+            _.each(vm.subsidiaries, function(sub) {
+                if (sub.selected) {
+                  var productBySubsidiary = {
+                    dateCreated: new Date().getTime(),
+                    quantity: sub.cantidad,
+                    subsidiary: sub,
+                    active: true
+                  };
+                  vm.product.productBySubsidiaries.push(productBySubsidiary);
+                };
             });
             vm.product.barCode = vm.productBarCode;
             productService.updateEdited(vm.product).then(function(response) {
@@ -316,7 +324,7 @@ angular.module('integridadUiApp')
             vm.getGroups();
             vm.getSubGroups();
             _getSubsidiaries(true);
-            vm.wizard = 1;
+            vm.wizard = 3;
             vm.product = productEdit;
         };
 

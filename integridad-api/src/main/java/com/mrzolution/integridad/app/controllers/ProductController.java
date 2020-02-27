@@ -55,6 +55,7 @@ public class ProductController {
     public ResponseEntity updateProductEdited(@RequestBody Product product) {
         try {
             service.updateProductEdited(product);
+            service.updateProductChildrenEdited(product);
 	} catch (BadRequestException e) {
             log.error("ProductController updateProductEdited Exception thrown: {}", e.getMessage());	    
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
