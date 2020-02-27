@@ -225,6 +225,7 @@ angular.module('integridadUiApp')
         };
 
         function _getTotalSubtotal() {
+            vm.bill.discount = 0;
             vm.bill.subTotal = 0.0;
             vm.bill.iva = 0.0;
             vm.bill.ivaZero = 0.0;
@@ -268,16 +269,9 @@ angular.module('integridadUiApp')
                 if (detail.product.ice) {
                     vm.bill.ice = parseFloat((parseFloat(vm.bill.ice) + (parseFloat(tot) * 0.10)).toFixed(4));
                 };
+                vm.bill.discount += parseFloat(detail.discountValue);
             });
-            if (vm.bill.discountPercentage) {
-                var w = 0.0;
-                var x = 0.0;
-                w = parseFloat((100 - vm.bill.discountPercentage).toFixed(4));
-                x = parseFloat(((vm.bill.subTotal * 100) / w).toFixed(4));
-                vm.bill.discount = parseFloat((x * (vm.bill.discountPercentage / 100)).toFixed(4));
-            } else {
-                vm.bill.discount = 0;
-            };
+
             vm.impuestoICE.base_imponible = parseFloat((vm.bill.subTotal).toFixed(4));
             vm.impuestoIVA.base_imponible = parseFloat((vm.bill.baseTaxes).toFixed(4));
             vm.impuestoIVAZero.base_imponible = parseFloat((vm.bill.baseNoTaxes).toFixed(4));
@@ -329,7 +323,9 @@ angular.module('integridadUiApp')
                 detail.discount = parseFloat(vm.bill.discountPercentage) + parseFloat(detail.discountData);
                 var costEachCalculated = vm.getCost(detail.product[vm.priceType.cod], detail.product.averageCost);
                 detail.costEach = costEachCalculated;
-                detail.total = parseFloat((parseFloat(detail.quantity) * (parseFloat(detail.costEach) - (parseFloat(detail.costEach) * parseFloat(detail.discount / 100)))).toFixed(4));
+                var discountValue =  (parseFloat(detail.costEach) * parseFloat(detail.discount / 100)).toFixed(4);
+                detail.discountValue = discountValue;
+                detail.total = parseFloat((parseFloat(detail.quantity) * (parseFloat(detail.costEach) - discountValue)).toFixed(4));
             });
             _getTotalSubtotal();
         };
@@ -468,7 +464,7 @@ angular.module('integridadUiApp')
 
         vm.getTextCambio = function(){
             return vm.getCambio <= 0 ? 0 : vm.getCambio;
-        }
+        };
 
         vm.acceptProduct = function(closeModal) {
             vm.errorQuantity = undefined;
@@ -476,13 +472,15 @@ angular.module('integridadUiApp')
                 vm.bill.discountPercentage = 0;
             };
             var discountDetail = vm.toAddDiscount ? parseFloat(vm.toAddDiscount) + parseFloat(vm.bill.discountPercentage) : parseFloat(vm.bill.discountPercentage);
+            var discountValue = (vm.quantity * (vm.productToAdd.costEachCalculated) * (discountDetail / 100));
             var detail = {
-                discountData: vm.toAddDiscount,
+                discountData: vm.toAddDiscount ? vm.toAddDiscount : 0,
                 discount: discountDetail,
                 product: angular.copy(vm.productToAdd),
                 quantity: vm.quantity,
                 costEach: vm.productToAdd.costEachCalculated,
-                total: parseFloat(((vm.quantity * vm.productToAdd.costEachCalculated) - (vm.quantity * (vm.productToAdd.costEachCalculated) * (discountDetail / 100))).toFixed(4)),
+                discountValue :  discountValue,
+                total: parseFloat(((vm.quantity * vm.productToAdd.costEachCalculated) - discountValue).toFixed(4)),
                 adicional: vm.adicional
             };
             if (vm.indexDetail !== undefined) {
@@ -877,6 +875,10 @@ angular.module('integridadUiApp')
               vm.newBuy = false;
               $localStorage.user.cashier.billNumberSeq = vm.bill.billSeq;
               vm.loading = false;
+              setTimeout(function() {
+                document.getElementById("printBtnBill").click();
+                vm.nuevaBill();
+            }, 300);
               if (vm.seqChanged) {
                   cashierService.update($localStorage.user.cashier).then(function(resp) {
                       // cashier updated
