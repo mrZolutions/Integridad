@@ -2,6 +2,8 @@ package com.mrzolution.integridad.app.controllers;
 
 import java.util.UUID;
 
+import com.mrzolution.integridad.app.domain.CuentaContableByProduct;
+import com.mrzolution.integridad.app.domain.ProductBySubsidiary;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -54,7 +56,12 @@ public class ProductController {
     @RequestMapping(method = RequestMethod.PUT, value="/edted")
     public ResponseEntity updateProductEdited(@RequestBody Product product) {
         try {
+            List<ProductBySubsidiary> productBySubsidiaries = product.getProductBySubsidiaries();
+            List<CuentaContableByProduct> cuentaContableByProducts = product.getCuentaContableByProducts();
             service.updateProductEdited(product);
+            product.setProductBySubsidiaries(productBySubsidiaries);
+            product.setCuentaContableByProducts(cuentaContableByProducts);
+            service.updateProductChildrenEdited(product);
 	} catch (BadRequestException e) {
             log.error("ProductController updateProductEdited Exception thrown: {}", e.getMessage());	    
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
