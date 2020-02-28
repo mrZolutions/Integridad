@@ -876,7 +876,9 @@ angular.module('integridadUiApp')
               $localStorage.user.cashier.billNumberSeq = vm.bill.billSeq;
               vm.loading = false;
               setTimeout(function() {
-                document.getElementById("printBtnBill").click();
+                vm.user.cashier.specialPrint ? vm.printToCart('printMatrixBillId') : document.getElementById("printBtnBill").click();
+                // document.getElementById("printBtnBill").click();
+                // vm.printToCart('printMatrixBillId')
                 vm.nuevaBill();
             }, 300);
               if (vm.seqChanged) {

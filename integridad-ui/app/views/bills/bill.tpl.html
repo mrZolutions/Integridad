@@ -629,21 +629,21 @@
             </div>
             <div class="panel-footer" print-remove>
                 <button type="button" title="Nueva Factura" class="btn btn-primary btn-sm"
-                        ng-if="!vm.newBill && !vm.user.cashier.specialPrint"
+                        ng-if="!vm.newBill"
                         ng-click="vm.nuevaBill()">
                         <span class="glyphicon glyphicon-file" aria-hidden="true"></span>
                 </button>
                 <button print-btn type="button" title = "Imprimir Factura" class="btn btn-primary btn-sm"
-                        id="printBtnBill" ng-if="!vm.newBill && !vm.user.cashier.specialPrint">
+                        id="printBtnBill" ng-if="!vm.newBill">
                         <span class = "glyphicon glyphicon-print" aria-hidden = "true"></span>
                 </button>
                 <button type="button" title = "Imprimir Ticket-Recibo" class="btn btn-success btn-sm"
-                        ng-if="!vm.newBill && !vm.user.cashier.specialPrint"
+                        ng-if="!vm.newBill && vm.user.cashier.specialPrint" id="printBtnBillTicket"
                         ng-click="vm.printToCart('printMatrixBillId')">
                         <span class = "glyphicon glyphicon-print" aria-hidden = "true"></span>
                 </button>
                 <button type="button" title="Volver a Inicio" class="btn btn-danger btn-sm"
-                        ng-if="!vm.newBill && !vm.user.cashier.specialPrint"
+                        ng-if="!vm.newBill"
                         ng-click="vm.exit()">
                         <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
                 </button>
