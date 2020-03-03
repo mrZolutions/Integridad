@@ -66,6 +66,19 @@ public class CellarController {
         log.info("CellarController validateCellar DONE");
         return new ResponseEntity<Cellar>(response, HttpStatus.ACCEPTED);
     }
+
+    @RequestMapping(method = RequestMethod.PUT, value = "/inactivate")
+    public ResponseEntity inactivate(@RequestBody Cellar cellar) {
+        Cellar response = null;
+        try {
+            response = service.inactivateCellar(cellar);
+        } catch (BadRequestException e) {
+            log.error("CellarController inactivate Exception thrown: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+        log.info("CellarController inactivate DONE");
+        return new ResponseEntity<Cellar>(response, HttpStatus.ACCEPTED);
+    }
     
     @RequestMapping(method = RequestMethod.GET, value="/warehouse/pending/{id}")
     public ResponseEntity getCellarsPendingOfWarehouse(@PathVariable("id") UUID id) {
