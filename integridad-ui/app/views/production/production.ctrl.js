@@ -222,9 +222,9 @@ angular.module('integridadUiApp')
             });
         };
 
-        vm.cellarSelect = function(cellar) {
+        vm.cellarSelect = function(cellar, isView) {
             vm.loading = true;
-            vm.cellarSavedList = undefined;
+            if(isView) vm.cellarSavedList = undefined;
             cellarService.getAllCellarById(cellar.id).then(function(response) {
                 vm.cellar = response;
                 vm.cellSeqNumber = response.whNumberSeq;
@@ -233,9 +233,26 @@ angular.module('integridadUiApp')
                 var dateBillToShow = new Date(response.dateBill);
                 $('#pickerDateBill').data("DateTimePicker").date(dateBillToShow);
                 vm.newCellar = false;
-                vm.providerSelected = response.provider;
+                vm.providerSelected = isView ? response.provider : undefined;
                 vm.loading = false;
             }).catch(function(error) {
+                vm.loading = false;
+                vm.error = error.data;
+            });
+        };
+
+        vm.inactivateCellar = function (){
+            vm.loading = true;
+            cellarService.inactivateCellar(vm.cellar).then(function(response) {
+                _.each(vm.cellarSavedList, function(item) {
+                    if(item.id === vm.cellar.id)
+                    item.statusIngreso = 'ANULADO';
+                    item.active = false;
+                });
+
+                vm.cellar = undefined;
+                vm.loading = false;
+            }).catch(function(error){
                 vm.loading = false;
                 vm.error = error.data;
             });

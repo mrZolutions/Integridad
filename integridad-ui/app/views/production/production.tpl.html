@@ -230,6 +230,7 @@
                     <th>N&uacute;mero</th>
                     <th>Fecha</th>
                     <th>Cliente</th>
+                    <th>Estatus</th>
                     <th>Total</th>
                     <th></th>
                 </tr>
@@ -244,11 +245,17 @@
                     <td>{{cellarSaved.whNumberSeq}}</td>
                     <td>{{cellarSaved.dateEnterCellar | date : "dd/MM/yyyy"}}</td>
                     <td>{{cellarSaved.provider.name}}</td>
+                    <td>{{cellarSaved.statusIngreso}}</td>
                     <td>{{cellarSaved.total}}</td>
                     <td>
-                        <button type="button" title="Ver Ingreso a Bodega" class="btn btn-primary btn-sm" ng-click="vm.cellarSelect(cellarSaved)">
+                        <button type="button" title="Ver Ingreso a Bodega" class="btn btn-primary btn-sm" ng-click="vm.cellarSelect(cellarSaved, true)"
+                        ng-disabled="!cellarSaved.active">
                                 <span class = "glyphicon glyphicon-eye-open" aria-hidden = "true"></span>
                         </button>
+                        <button type="button" title="Anular Ingreso a Bodega" class="btn btn-primary btn-sm" ng-click="vm.cellarSelect(cellarSaved, false)"
+                        data-toggle="modal" data-target="#modalAnular" ng-disabled="!cellarSaved.active">
+                            <span class = "glyphicon glyphicon-remove   " aria-hidden = "true"></span>
+                    </button>
                     </td>
                 </tr>
             </tbody>
@@ -2477,6 +2484,30 @@
                     </button>
                     <button type="button" title="Salir" class="btn btn-primary btn-sm" data-dismiss="modal">
                             <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--MODAL ANULAR INGRESO-->
+    <div id="modalAnular" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" ng-click="vm.product=undefined">&times;</button>
+                    <h4 class="modal-title">Advertencia</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12" >
+                            Esta seguro que desea Anular el Ingreso a Bodega No. {{vm.cellar.whNumberSeq}}
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" title="Anular" class="btn btn-primary btn-sm" ng-click="vm.inactivateCellar()" data-dismiss="modal">
+                            <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
                     </button>
                 </div>
             </div>

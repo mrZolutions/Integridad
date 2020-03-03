@@ -67,9 +67,44 @@ public class CellarServices {
         cellarToValidate.setStatusIngreso("INGRESADO");
         Cellar saved = cellarRepository.save(cellarToValidate);
         saveDetailsCellar(saved, cellarToValidate.getDetailsCellar());
-        updateProductBySubsidiary(cellar, cellarToValidate.getDetailsCellar());
+        updateProductBySubsidiary(cellar, cellarToValidate.getDetailsCellar(), true);
         log.info("CellarServices validateCellar DONE");
         return cellarToValidate;
+    }
+
+    @Async("asyncExecutor")
+    public Cellar inactivateCellar(Cellar cellar) throws BadRequestException {
+        if (cellar.getId() == null) {
+            throw new BadRequestException("Cellar NOT FOUND");
+        }
+        Cellar cellarToInnactivate = cellarRepository.findOne(cellar.getId());
+        populateChildren(cellarToInnactivate);
+        cellarToInnactivate.setStatusIngreso("ANULADO");
+        cellarToInnactivate.setActive(false);
+        Cellar saved = cellarRepository.save(cellarToInnactivate);
+
+        updateProductBySubsidiary(cellar, cellarToInnactivate.getDetailsCellar(), false);
+        cellar.getDetailsKardex().forEach(detail ->{
+
+            Product productToUpdate = detail.getProduct();
+            productToUpdate.setQuantityCellar(productToUpdate.getQuantityCellar() - detail.getProdQuantity());
+            productToUpdate.setCostCellar(productToUpdate.getCostCellar() - detail.getProdCostEach());
+            productToUpdate.setAverageCostSuggested(productToUpdate.getCostCellar()/productToUpdate.getQuantityCellar());
+
+            Iterable<Kardex> lastKardexActive = kardexRepository.findLastKardexActivesByProductId(detail.getId(), productToUpdate.getId());
+            ArrayList<Kardex> lastKardex = Lists.newArrayList(lastKardexActive);
+            if(lastKardex.isEmpty()){
+                productToUpdate.setCostEach(new Double(0));
+            } else {
+                productToUpdate.setCostEach(lastKardex.get(0).getProdCostEach());
+            }
+            productServices.updateProduct(productToUpdate);
+
+            detail.setActive(false);
+            kardexRepository.save(detail);
+        });
+        log.info("CellarServices inactivateCellar DONE");
+        return cellarToInnactivate;
     }
     
     private void populateChildren(Cellar cellar) {
@@ -128,11 +163,11 @@ public class CellarServices {
         // Excepción PPE, Dental, Lozada, VallParra, Pineda NO actualizan Kardex
         if ("A-1".equals(cellar.getProvider().getUserClient().getEspTemp()) || "A-2".equals(cellar.getProvider().getUserClient().getEspTemp()) || "A-N".equals(cellar.getProvider().getUserClient().getEspTemp())) {
             saveDetailsCellar(saved, detailsCellar);
-            updateProductBySubsidiary(saved, detailsCellar);
+            updateProductBySubsidiary(saved, detailsCellar, true);
         } else {
             saveDetailsCellar(saved, detailsCellar);
             saveKardex(saved, detailsKardex);
-            updateProductBySubsidiary(saved, detailsCellar);
+            updateProductBySubsidiary(saved, detailsCellar, true);
         }
         log.info("CellarServices createCellar: {}, {}", saved.getId(), saved.getWhNumberSeq());
         return saved;
@@ -160,14 +195,18 @@ public class CellarServices {
         log.info("CellarServices saveKardex DONE");
     }
 
-    public void updateProductBySubsidiary(Cellar cellar, List<DetailCellar> detailsCellar) {
+    public void updateProductBySubsidiary(Cellar cellar, List<DetailCellar> detailsCellar, boolean isAdding) {
         detailsCellar.forEach(detail -> {
             if (!detail.getProduct().getProductType().getCode().equals("SER")) {
                 ProductBySubsidiary psCl = productBySubsidiairyRepository.findBySubsidiaryIdAndProductId(cellar.getSubsidiary().getId(), detail.getProduct().getId());
                 if (psCl == null) {
                     throw new BadRequestException("ERROR: Producto NO encontrado");
                 } else {
-                    psCl.setQuantity(psCl.getQuantity() + detail.getQuantity());
+                    if(isAdding){
+                        psCl.setQuantity(psCl.getQuantity() + detail.getQuantity());
+                    } else {
+                        psCl.setQuantity(psCl.getQuantity() - detail.getQuantity());
+                    }
                     productBySubsidiairyRepository.save(psCl);
                 }
             }
