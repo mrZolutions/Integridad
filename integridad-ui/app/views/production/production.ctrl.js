@@ -245,9 +245,10 @@ angular.module('integridadUiApp')
             vm.loading = true;
             cellarService.inactivateCellar(vm.cellar).then(function(response) {
                 _.each(vm.cellarSavedList, function(item) {
-                    if(item.id === vm.cellar.id)
-                    item.statusIngreso = 'ANULADO';
-                    item.active = false;
+                    if(item.id === vm.cellar.id){
+                        item.statusIngreso = 'ANULADO';
+                        item.active = false;
+                    }
                 });
 
                 vm.cellar = undefined;
