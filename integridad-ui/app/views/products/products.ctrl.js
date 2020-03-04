@@ -182,16 +182,6 @@ angular.module('integridadUiApp')
 
         function updateEdited(isRemove) {
             var warehouse = _.first(vm.warehouseList)
-            vm.kardex = {
-                codeWarehouse: warehouse.codeWarehouse,
-                product: vm.product,
-                subsidiaryId: vm.subsidiaryMain.id,
-                userClientId: vm.userClientId,
-                userId: vm.userId,
-                prodCostEach: vm.product.costEach,
-                prodQuantity: 0,
-                prodName: vm.product.name,
-            };
             _.each(vm.product.productBySubsidiaries, function(ps) {
                 ps.active=false;
             });
