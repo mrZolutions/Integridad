@@ -229,8 +229,9 @@
                 <tr>
                     <th>N&uacute;mero</th>
                     <th>Fecha Ingreso</th>
-                    <th>Cliente</th>
-                    <th>Estatus</th>
+                    <th>Proveedor</th>
+                    <th>Factura</th>
+                    <th>Estado</th>
                     <th>Total</th>
                     <th></th>
                 </tr>
@@ -245,6 +246,7 @@
                     <td>{{cellarSaved.whNumberSeq}}</td>
                     <td>{{cellarSaved.dateEnterCellar | date : "dd/MM/yyyy"}}</td>
                     <td>{{cellarSaved.provider.name}}</td>
+                    <td>{{cellarSaved.billNumber}}</td>
                     <td>{{cellarSaved.statusIngreso}}</td>
                     <td>{{cellarSaved.total}}</td>
                     <td>
