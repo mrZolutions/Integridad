@@ -9,7 +9,7 @@
 angular.module('integridadUiApp')
     .controller('ProductsCtrl', function(_, $localStorage, $location, productService, utilStringService, projectService,
                                           subsidiaryService, productTypeService, messurementListService, brandService, lineService, groupService,
-                                          subgroupService, $routeParams) {
+                                          subgroupService, warehouseService, $routeParams) {
 
         var vm = this;
         vm.error = undefined;
@@ -31,14 +31,17 @@ angular.module('integridadUiApp')
         vm.productBySubsidiaries = [];
         vm.wizard = 0;
         vm.maxCode = undefined;
+        vm.warehouseList = undefined;
 
         function _activate() {
             vm.searchText = undefined;
             vm.productBarCode = undefined;
             vm.errorCalc = false;
             vm.loading = true;
+            vm.userId = $localStorage.user.id;
             vm.userClientId = $localStorage.user.subsidiary.userClient.id;
             vm.subKarActive = $localStorage.user.subsidiary.kar;
+            vm.subsidiaryMain = $localStorage.user.subsidiary;
             vm.messurements = messurementListService.getMessurementList();
             productTypeService.getproductTypesLazy().then(function(response) {
                 vm.productTypes = response;
@@ -51,6 +54,14 @@ angular.module('integridadUiApp')
             });
             vm.page = 0;
             vm.maxCode = undefined;
+
+            warehouseService.getAllWarehouseByUserClientId(vm.userClientId).then(function(response) {
+                vm.warehouseList = response;
+            }).catch(function(error) {
+                vm.loading = false;
+                vm.error = error.data;
+            });
+
             _filter();
         };
 
@@ -170,6 +181,17 @@ angular.module('integridadUiApp')
         };
 
         function updateEdited(isRemove) {
+            var warehouse = _.first(vm.warehouseList)
+            vm.kardex = {
+                codeWarehouse: warehouse.codeWarehouse,
+                product: vm.product,
+                subsidiaryId: vm.subsidiaryMain.id,
+                userClientId: vm.userClientId,
+                userId: vm.userId,
+                prodCostEach: vm.product.costEach,
+                prodQuantity: 0,
+                prodName: vm.product.name,
+            };
             _.each(vm.product.productBySubsidiaries, function(ps) {
                 ps.active=false;
             });
@@ -182,6 +204,28 @@ angular.module('integridadUiApp')
                     active: true
                   };
                   vm.product.productBySubsidiaries.push(productBySubsidiary);
+
+                  vm.kardex = {
+                    codeWarehouse: warehouse.codeWarehouse,
+                    product: vm.product,
+                    subsidiaryId: vm.subsidiaryMain.id,
+                    userClientId: vm.userClientId,
+                    userId: vm.userId,
+                    prodCostEach: vm.product.costEach,
+                    prodQuantity: sub.cantidad,
+                    prodName: vm.product.name,
+                    dateRegister: new Date().getTime(),
+                    prodTotal: parseFloat((vm.product.costEach * sub.cantidad).toFixed(2)),
+                    observation: 'AJUSTE GENERADO AUTOMATICO',
+                    details: 'AJUSTE DESDE MODULO PRODUCTO',
+                  };
+
+                  productService.createKardex(vm.kardex).then(function(respKar) {
+                    vm.kardexCreated = respKar;
+                  }).catch(function(error) {
+                    vm.loading = false;
+                    vm.error = error.data;
+                  });
                 };
             });
             vm.product.barCode = vm.productBarCode;
