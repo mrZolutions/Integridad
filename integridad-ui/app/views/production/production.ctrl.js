@@ -430,7 +430,7 @@ angular.module('integridadUiApp')
             vm.loading = true;
             vm.newCellar = false;
             vm.cellar.dateBill = $('#pickerDateBill').data("DateTimePicker").date().toDate().getTime();
-            vm.cellar.dateCellar = $('#pickerDateEnterCellar').data("DateTimePicker").date().toDate().getTime();
+            vm.cellar.dateEnterCellar = $('#pickerDateEnterCellar').data("DateTimePicker").date().toDate().getTime();
             vm.cellar.cellarSeq = parseInt(vm.numberAddedOne);
             vm.cellar.whNumberSeq = vm.cellSeqNumber;
             vm.cellar.detailsKardex = [];
