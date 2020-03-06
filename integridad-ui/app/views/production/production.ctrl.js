@@ -426,6 +426,10 @@ angular.module('integridadUiApp')
             _getCellarTotalSubtotal();
         };
 
+        vm.disableSave = function(){
+            return vm.cellar.total <= 0 || $('#pickerDateBill').data("DateTimePicker").date() === null || vm.cellar.billNumber === undefined;
+        }
+
         vm.saveCellar = function(cellar) {
             vm.loading = true;
             vm.newCellar = false;
