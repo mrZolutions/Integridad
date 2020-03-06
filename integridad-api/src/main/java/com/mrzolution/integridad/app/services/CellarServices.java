@@ -6,6 +6,8 @@ import com.mrzolution.integridad.app.domain.report.CellarEntryReport;
 import com.mrzolution.integridad.app.exceptions.BadRequestException;
 import com.mrzolution.integridad.app.repositories.*;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -88,8 +90,10 @@ public class CellarServices {
 
             Product productToUpdate = detail.getProduct();
             productToUpdate.setQuantityCellar(productToUpdate.getQuantityCellar() - detail.getProdQuantity());
-            productToUpdate.setCostCellar(productToUpdate.getCostCellar() - detail.getProdCostEach());
-            productToUpdate.setAverageCostSuggested(productToUpdate.getCostCellar()/productToUpdate.getQuantityCellar());
+            productToUpdate.setCostCellar(productToUpdate.getCostCellar() - (detail.getProdQuantity() * detail.getProdCostEach()));
+            BigDecimal bd = new BigDecimal(Double.toString(productToUpdate.getCostCellar()/productToUpdate.getQuantityCellar()));
+            bd = bd.setScale(4, RoundingMode.HALF_UP);
+            productToUpdate.setAverageCostSuggested(bd.doubleValue());
 
             Iterable<Kardex> lastKardexActive = kardexRepository.findLastKardexActivesByProductId(detail.getId(), productToUpdate.getId());
             ArrayList<Kardex> lastKardex = Lists.newArrayList(lastKardexActive);
