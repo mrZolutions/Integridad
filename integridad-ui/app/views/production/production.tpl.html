@@ -328,12 +328,12 @@
                         </script>
                     </div>
                     <div class="form-group col-md-4">
-                        <label>N&uacute;mero de Factura:</label><br/>
+                        <label>&#42; N&uacute;mero de Factura:</label><br/>
                         <input type="text" ng-model="vm.cellar.billNumber"
                                class="form-control" maxlength="17">
                     </div>
                     <div class="form-group col-md-4">
-                        <label>Fecha de Factura: </label>
+                        <label>&#42; Fecha de Factura: </label>
                         <div class="input-group date" id="pickerDateBill">
                             <input type="text" class="form-control input-group-addon"/>
                             <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"/></span>
@@ -473,7 +473,7 @@
             <div class="panel-footer">
                 <button type="button" title="Guardar Ingreso a Bodega" class="btn btn-primary btn-sm" ng-if="vm.newCellar"
                         ng-click="vm.saveCellar(vm.cellar)"
-                        ng-disabled="vm.cellar.total <= 0">
+                        ng-disabled="vm.disableSave()">
                         <span class="glyphicon glyphicon-floppy-saved" aria-hidden="true"></span>
                 </button>
                 <button type="button" title = "Imprimir Ticket-Ingreso Bodega" class="btn btn-primary btn-sm"
