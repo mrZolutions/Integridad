@@ -857,7 +857,7 @@ angular.module('integridadUiApp')
                         $localStorage.user.cashier.billOfflineNumberSeq = vm.billOffline.billSeq;
                         vm.loading = false;
                         vm.rowsToFill = [];
-                        for (var i = vm.billOffline.detailsOffline.length; i < 9; i++) {
+                        for (var i = vm.billOffline.detailsOffline.length; i < 10; i++) {
                             vm.rowsToFill.push(i)
                         }
 
