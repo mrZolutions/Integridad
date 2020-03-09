@@ -36,6 +36,12 @@ angular
             });
         };
 
+        this.inactivateCellar = function(cellar) {
+            return securityService.put('/cellar/inactivate', cellar).then(function successCallback(response) {
+                return response.data;
+            });
+        };
+
         this.getDetailsOfCellarsByUserClientId = function(id) {
             return securityService.get('/cellar/details/details/' + id).then(function successCallback(response) {
                 return response.data;

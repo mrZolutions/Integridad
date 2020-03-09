@@ -553,7 +553,7 @@
                         <span class="glyphicon glyphicon-file" aria-hidden="true"></span>
                 </button>
                 <button type="button" title = "Imprimir a Epson LX-300" class="btn btn-primary btn-sm"
-                        ng-show="!vm.newBillOffline" ng-click="vm.printToCart('printMatrixBillOfflineId')">
+                        ng-show="!vm.newBillOffline" ng-click="vm.printToCart()">
                         <span class="glyphicon glyphicon-print" aria-hidden="true"></span>
                 </button>
                 <button type="button" title = "Imprimir a ThermalPrint P58" class="btn btn-success btn-sm" ng-if="vm.userClientId === vm.laQuinta"
@@ -653,6 +653,88 @@
                 </td>
             </tr>
         </table>
+    </div>
+
+    <!-- IMPRIME FACTURA ORDONEZ -->
+    <div id="printMatrixBillIdOrdonez" style="width: 450px" ng-show='false'>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <div style="width: 460px; display: table; clear: both; 
+        border-top: solid 1px grey; border-left: solid 1px grey; border-right: solid 1px grey;
+        padding: 5px 5px 0 5px;">
+            <b>CLIENTE:</b>&nbsp;{{vm.clientSelected.name}}
+        </div>
+        <div style="width: 460px; display: table; clear: both; 
+        border-left: solid 1px grey; border-right: solid 1px grey;
+        padding: 5px 5px 0 5px;">
+            <div style="width: 33%; float: left;"><b>RUC:&nbsp;</b>{{vm.clientSelected.identification}}</div>
+            <div style="width: 33%; float: left;"><b>TELEFONO:&nbsp;</b>{{vm.clientSelected.phone}}</div>
+            <div style="width: 33%; float: left"><b>FECHA:&nbsp;</b> {{vm.getDateToPrint() | date :  "dd/MM/yyyy"}}</div>
+        </div>
+        <div style="width: 460px; display: table; clear: both; 
+        border-bottom: solid 1px grey; border-left: solid 1px grey; border-right: solid 1px grey;
+        padding: 5px;">
+            <b>DIRECCION:</b>&nbsp;{{vm.clientSelected.address}}
+        </div>
+        <br/>
+        <div style="width: 460px; display: table; clear: both; 
+        border-top: solid 1px grey; border-left: solid 1px grey; border-right: solid 1px grey;
+        padding: 2px; background-color: #bbb;">
+            <div style="width: 41px; float: left; text-align: center; font-size: 8px;"><b>Cantidad</b></div>
+            <div style="width: 321px; float: left; text-align: center; font-size: 8px; border-left: solid 1px grey;"><b>DESCRIPCION</b></div>
+            <div style="width: 41px; float: left; text-align: center; font-size: 8px; border-left: solid 1px grey;"><b>V.Unitario</b></div>
+            <div style="width: 41px; float: left; text-align: center; font-size: 8px; border-left: solid 1px grey;"><b>V. Total</b></div>
+        </div>
+        <div style="width: 460px; display: table; clear: both; 
+        border-top: solid 1px grey; border-left: solid 1px grey; border-right: solid 1px grey;" 
+        ng-repeat="detailOffline in vm.billOffline.detailsOffline">
+            <div style="width: 43px; float: left; text-align: center; border-right: solid 1px grey; margin-top: 0;">{{detailOffline.quantity}}<br/>&nbsp;</div>
+            <div style="width: 321px;float: left; text-align: center; margin-top: 0;">{{(detailOffline.product.name).substring(0,45)}}.<br/>{{(detailOffline.adicional).substring(0,45)}}</div>
+            <div style="width: 41px; float: left; text-align: center; border-left: solid 1px grey; margin-top: 0; margin-bottom: 0;">{{detailOffline.costEach}}<br/>&nbsp;</div>
+            <div style="width: 45px; float: left; text-align: center; border-left: solid 1px grey; margin-top: 0; margin-bottom: 0;">{{detailOffline.total}}<br/>&nbsp;</div>
+        </div>
+        <div style="width: 460px; display: table; clear: both; 
+        border-top: solid 1px grey; border-left: solid 1px grey; border-right: solid 1px grey;" 
+        ng-repeat="fillRow in vm.rowsToFill">
+            <div style="width: 43px; float: left; text-align: center; margin-top: 0;">&nbsp;</div>
+            <div style="width: 321px;float: left; text-align: center; border-left: solid 1px grey; margin-top: 0;">&nbsp;<br/>&nbsp;</div>
+            <div style="width: 41px; float: left; text-align: center; border-left: solid 1px grey; margin-top: 0; margin-bottom: 0;">&nbsp;<br/>&nbsp;</div>
+            <div style="width: 45px; float: left; text-align: center; border-left: solid 1px grey; margin-top: 0; margin-bottom: 0;">&nbsp;<br/>&nbsp;</div>
+        </div>
+        <div style="width: 460px; display: table; clear: both; 
+        border-top: solid 1px grey; border-left: solid 1px grey; border-right: solid 1px grey;" >
+            <div style="min-width: 405px; float: left; text-align: right; margin-top: 0; margin-bottom: 0; font-size: 8px;"><b>SUB-TOTAL 12%&nbsp;</b></div>
+            <div style="width: 53px; float: left; text-align: center; border-left: solid 1px grey; margin-top: 0; margin-bottom: 0;">{{vm.billOffline.baseTaxes.toFixed(2)}}</div>
+        </div>
+        <div style="width: 460px; display: table; clear: both; border-left: solid 1px grey; border-right: solid 1px grey;" >
+            <div style="min-width: 405px; float: left; text-align: right; margin-top: 0; margin-bottom: 0; font-size: 8px;"><b>SUB-TOTAL 0%&nbsp;</b></div>
+            <div style="width: 53px; float: left; text-align: center; border-left: solid 1px grey; border-top: solid 1px grey; margin-top: 0; margin-bottom: 0;">{{vm.billOffline.baseNoTaxes.toFixed(2)}}</div>
+        </div>
+        <div style="width: 460px; display: table; clear: both; border-left: solid 1px grey; border-right: solid 1px grey;" >
+            <div style="min-width: 405px; float: left; text-align: right; margin-top: 0; margin-bottom: 0; font-size: 8px;"><b>SUB-TOTAL&nbsp;</b></div>
+            <div style="width: 53px; float: left; text-align: center; border-left: solid 1px grey; border-top: solid 1px grey; margin-top: 0; margin-bottom: 0;">{{vm.billOffline.subTotal.toFixed(2)}}</div>
+        </div>
+        <div style="width: 460px; display: table; clear: both; border-left: solid 1px grey; border-right: solid 1px grey;" >
+            <div style="min-width: 405px; float: left; text-align: right; margin-top: 0; margin-bottom: 0; font-size: 8px;"><b>IVA&nbsp;</b></div>
+            <div style="width: 53px; float: left; text-align: center; border-left: solid 1px grey; border-top: solid 1px grey; margin-top: 0; margin-bottom: 0;">{{vm.billOffline.iva.toFixed(2)}}</div>
+        </div>
+        <div style="width: 460px; display: table; clear: both; 
+        border-bottom: solid 1px grey; border-left: solid 1px grey; border-right: solid 1px grey;" >
+            <div style="min-width: 405px; float: left; text-align: right; margin-top: 0; margin-bottom: 0; font-size: 8px;"><b>TOTAL&nbsp;</b></div>
+            <div style="width: 53px; float: left; text-align: center; border-left: solid 1px grey; border-top: solid 1px grey; margin-top: 0; margin-bottom: 0;">{{vm.billOffline.total.toFixed(2)}}</div>
+        </div>
+        <br/>
+        <div style="width: 460px; display: table; clear: both; 
+        border: solid 1px grey; padding: 5px 5px 0 5px;">
+            <b>FORMA DE PAGO:</b>&nbsp;{{vm.pagosOffline[0].code.toUpperCase()}}
+        </div>
     </div>
 
     <!--IMPRIME TICKET FACTURA-->

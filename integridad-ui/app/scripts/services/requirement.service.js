@@ -87,6 +87,7 @@ angular
                 };
                 req.informacion_adicional = informAdicional;
             } else if (user.cashier.subsidiary.userClient.espTemp === 'A-3') {
+                req.comprador.email = req.comprador.email + ', facturacion@mrzolutions.com';
                 var informAdicional = {
                     observ: ' ' + bill.observation
                 };
