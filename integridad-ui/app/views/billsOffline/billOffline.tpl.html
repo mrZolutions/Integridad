@@ -664,6 +664,7 @@
         <br/>
         <br/>
         <br/>
+        <br/>
         <div style="width: 460px; display: table; clear: both; 
         border-top: solid 1px grey; border-left: solid 1px grey; border-right: solid 1px grey;
         padding: 5px 5px 0 5px;">
@@ -693,37 +694,45 @@
         <div style="width: 460px; display: table; clear: both; 
         border-top: solid 1px grey; border-left: solid 1px grey; border-right: solid 1px grey;" 
         ng-repeat="detailOffline in vm.billOffline.detailsOffline">
-            <div style="width: 43px; float: left; text-align: center; margin-top: 0;">{{detailOffline.quantity}}</div>
-            <div style="width: 321px;float: left; text-align: center; border-left: solid 1px grey; margin-top: 0;">{{(detailOffline.product.name)}}</div>
-            <div style="width: 41px; float: left; text-align: center; border-left: solid 1px grey; margin-top: 0; margin-bottom: 0;">{{detailOffline.costEach}}</div>
-            <div style="width: 45px; float: left; text-align: center; border-left: solid 1px grey; margin-top: 0; margin-bottom: 0;">{{detailOffline.total}}</div>
+            <div style="width: 43px; float: left; text-align: center; border-right: solid 1px grey; margin-top: 0;">{{detailOffline.quantity}}<br/>&nbsp;</div>
+            <div style="width: 321px;float: left; text-align: center; margin-top: 0;">{{(detailOffline.product.name).substring(0,45)}}.<br/>{{(detailOffline.adicional).substring(0,45)}}</div>
+            <div style="width: 41px; float: left; text-align: center; border-left: solid 1px grey; margin-top: 0; margin-bottom: 0;">{{detailOffline.costEach}}<br/>&nbsp;</div>
+            <div style="width: 45px; float: left; text-align: center; border-left: solid 1px grey; margin-top: 0; margin-bottom: 0;">{{detailOffline.total}}<br/>&nbsp;</div>
+        </div>
+        <div style="width: 460px; display: table; clear: both; 
+        border-top: solid 1px grey; border-left: solid 1px grey; border-right: solid 1px grey;" 
+        ng-repeat="fillRow in vm.rowsToFill">
+            <div style="width: 43px; float: left; text-align: center; margin-top: 0;">&nbsp;</div>
+            <div style="width: 321px;float: left; text-align: center; border-left: solid 1px grey; margin-top: 0;">&nbsp;<br/>&nbsp;</div>
+            <div style="width: 41px; float: left; text-align: center; border-left: solid 1px grey; margin-top: 0; margin-bottom: 0;">&nbsp;<br/>&nbsp;</div>
+            <div style="width: 45px; float: left; text-align: center; border-left: solid 1px grey; margin-top: 0; margin-bottom: 0;">&nbsp;<br/>&nbsp;</div>
         </div>
         <div style="width: 460px; display: table; clear: both; 
         border-top: solid 1px grey; border-left: solid 1px grey; border-right: solid 1px grey;" >
-            <div style="min-width: 200px; float: left; text-align: center; margin-top: 0; margin-bottom: 0; border-right: solid 1px grey;"><b>FORMA DE PAGO</b></div>
-            <div style="min-width: 205px; float: left; text-align: right; margin-top: 0; margin-bottom: 0; font-size: 8px;"><b>SUB-TOTAL 12%&nbsp;</b></div>
-            <div style="width: 45px; float: left;; text-align: center; border-left: solid 1px grey; margin-top: 0; margin-bottom: 0;">{{vm.billOffline.baseTaxes.toFixed(2)}}</div>
+            <div style="min-width: 405px; float: left; text-align: right; margin-top: 0; margin-bottom: 0; font-size: 8px;"><b>SUB-TOTAL 12%&nbsp;</b></div>
+            <div style="width: 53px; float: left; text-align: center; border-left: solid 1px grey; margin-top: 0; margin-bottom: 0;">{{vm.billOffline.baseTaxes.toFixed(2)}}</div>
         </div>
-        <div style="width: 460px; display: table; clear: both; 
-        border-top: solid 1px grey; border-left: solid 1px grey; border-right: solid 1px grey;" >
-            <div style="min-width: 200px; float: left; text-align: center; margin-top: 0; margin-bottom: 0; border-right: solid 1px grey;">{{vm.pagosOffline[0].code.toUpperCase()}}</div>
-            <div style="min-width: 205px; float: left; text-align: right; margin-top: 0; margin-bottom: 0; font-size: 8px;"><b>SUB-TOTAL 0%&nbsp;</b></div>
-            <div style="width: 45px; float: left;; text-align: center; border-left: solid 1px grey; margin-top: 0; margin-bottom: 0;">{{vm.billOffline.baseNoTaxes.toFixed(2)}}</div>
+        <div style="width: 460px; display: table; clear: both; border-left: solid 1px grey; border-right: solid 1px grey;" >
+            <div style="min-width: 405px; float: left; text-align: right; margin-top: 0; margin-bottom: 0; font-size: 8px;"><b>SUB-TOTAL 0%&nbsp;</b></div>
+            <div style="width: 53px; float: left; text-align: center; border-left: solid 1px grey; border-top: solid 1px grey; margin-top: 0; margin-bottom: 0;">{{vm.billOffline.baseNoTaxes.toFixed(2)}}</div>
         </div>
-        <div style="width: 460px; display: table; clear: both; 
-        border-top: solid 1px grey; border-left: solid 1px grey; border-right: solid 1px grey;" >
+        <div style="width: 460px; display: table; clear: both; border-left: solid 1px grey; border-right: solid 1px grey;" >
             <div style="min-width: 405px; float: left; text-align: right; margin-top: 0; margin-bottom: 0; font-size: 8px;"><b>SUB-TOTAL&nbsp;</b></div>
-            <div style="width: 45px; float: left;; text-align: center; border-left: solid 1px grey; margin-top: 0; margin-bottom: 0;">{{vm.billOffline.subTotal.toFixed(2)}}</div>
+            <div style="width: 53px; float: left; text-align: center; border-left: solid 1px grey; border-top: solid 1px grey; margin-top: 0; margin-bottom: 0;">{{vm.billOffline.subTotal.toFixed(2)}}</div>
         </div>
-        <div style="width: 460px; display: table; clear: both; 
-        border-top: solid 1px grey; border-left: solid 1px grey; border-right: solid 1px grey;" >
+        <div style="width: 460px; display: table; clear: both; border-left: solid 1px grey; border-right: solid 1px grey;" >
             <div style="min-width: 405px; float: left; text-align: right; margin-top: 0; margin-bottom: 0; font-size: 8px;"><b>IVA&nbsp;</b></div>
-            <div style="width: 45px; float: left;; text-align: center; border-left: solid 1px grey; margin-top: 0; margin-bottom: 0;">{{vm.billOffline.iva.toFixed(2)}}</div>
+            <div style="width: 53px; float: left; text-align: center; border-left: solid 1px grey; border-top: solid 1px grey; margin-top: 0; margin-bottom: 0;">{{vm.billOffline.iva.toFixed(2)}}</div>
         </div>
         <div style="width: 460px; display: table; clear: both; 
-        border: solid 1px grey;" >
+        border-bottom: solid 1px grey; border-left: solid 1px grey; border-right: solid 1px grey;" >
             <div style="min-width: 405px; float: left; text-align: right; margin-top: 0; margin-bottom: 0; font-size: 8px;"><b>TOTAL&nbsp;</b></div>
-            <div style="width: 45px; float: left;; text-align: center; border-left: solid 1px grey; margin-top: 0; margin-bottom: 0;">{{vm.billOffline.total.toFixed(2)}}</div>
+            <div style="width: 53px; float: left; text-align: center; border-left: solid 1px grey; border-top: solid 1px grey; margin-top: 0; margin-bottom: 0;">{{vm.billOffline.total.toFixed(2)}}</div>
+        </div>
+        <br/>
+        <div style="width: 460px; display: table; clear: both; 
+        border: solid 1px grey; padding: 5px 5px 0 5px;">
+            <b>FORMA DE PAGO:</b>&nbsp;{{vm.pagosOffline[0].code.toUpperCase()}}
         </div>
     </div>
 

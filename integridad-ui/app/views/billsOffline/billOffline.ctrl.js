@@ -856,6 +856,13 @@ angular.module('integridadUiApp')
                         vm.billOfflineCreated = respBill;
                         $localStorage.user.cashier.billOfflineNumberSeq = vm.billOffline.billSeq;
                         vm.loading = false;
+                        vm.rowsToFill = [];
+                        for (var i = vm.billOffline.detailsOffline.length; i < 9; i++) {
+                            console.log('-*-*-*-*-*-*-*-*-*-*-*-* : ', i)
+                            vm.rowsToFill.push(i)
+                        }
+
+                        console.log('-*-*-*-*-*-*-*-*-*-*-*-* PRE: ', vm.rowsToFill);
                         setTimeout(function() {
                             // vm.user.cashier.specialPrint ? vm.printToCart('printMatrixBillId') : document.getElementById("printBtnBill").click();
                             // document.getElementById("printBtnBill").click();
