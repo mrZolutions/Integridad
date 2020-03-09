@@ -39,4 +39,8 @@ public interface KardexRepository extends CrudRepository<Kardex, UUID> {
     
     @Query("SELECT k FROM Kardex k WHERE k.userClientId = (:id) AND k.product.id = (:provID) AND k.dateRegister >= (:dateOne) AND k.dateRegister <= (:dateTwo) AND k.active = true ORDER BY k.dateRegister")
     Iterable<Kardex> findKardexActivesByUserClientIdAndProductIdAndDates(@Param("id") String id, @Param("provID") UUID provID, @Param("dateOne") long dateOne, @Param("dateTwo") long dateTwo);
+
+    @Query("SELECT k FROM Kardex k WHERE k.dateRegister = (SELECT max(x.dateRegister) FROM Kardex x where x.product.id = (:productId)" +
+            " and x.active = true and id <> (:id)) AND k.product.id = (:productId)")
+    Iterable<Kardex> findLastKardexActivesByProductId(@Param("id") UUID id, @Param("productId") UUID productId);
 }

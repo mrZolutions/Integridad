@@ -58,6 +58,7 @@ angular.module('integridadUiApp')
             vm.laQuinta = '758dea84-74f5-4209-b218-9b84c10621fc';
             vm.mrZolutions = '4907601b-6e54-4675-80a8-ab6503e1dfeb';
             vm.pineda = '6e663299-d61c-44de-b42c-a3d6595b46d2';
+            vm.ordonez = '366cfcb7-195c-4622-b8f2-09cb021e7609';
 
             vm.error = undefined;
             vm.success = undefined;
@@ -697,23 +698,27 @@ angular.module('integridadUiApp')
             });
         };
 
-        vm.printToCart = function(printBillOffline) {
+        vm.printToCart = function() {
 
             var contentToPrint = 'printMatrixBillOfflineId';
             switch (vm.userClientId) {
                 case vm.pineda:
                     contentToPrint = 'printMatrixBillIdPineda';
                     break;
+                case vm.ordonez:
+                    contentToPrint = 'printMatrixBillIdOrdonez';
+                    break;
                 default:
                     contentToPrint = 'printMatrixBillOfflineId';
             }
 
-            var innerContents = document.getElementById(printBillOffline).innerHTML;
+            var innerContents = document.getElementById(contentToPrint).innerHTML;
             var popupWinindow = window.open('', 'printMatrixBillOffline', 'width=300,height=400');
             popupWinindow.document.write('<html><head><title></title>');
             popupWinindow.document.write('</head><body>');
             popupWinindow.document.write(innerContents);
             popupWinindow.document.write('</body></html>');
+            popupWinindow.document.body.style.cssText = 'font-family:Arial, Helvetica, sans-serif !important; font-size: 12px';
             popupWinindow.print();
             popupWinindow.close();
             _activate()
@@ -850,6 +855,18 @@ angular.module('integridadUiApp')
                         vm.newBuyOff = false;
                         vm.billOfflineCreated = respBill;
                         $localStorage.user.cashier.billOfflineNumberSeq = vm.billOffline.billSeq;
+                        vm.loading = false;
+                        vm.rowsToFill = [];
+                        for (var i = vm.billOffline.detailsOffline.length; i < 10; i++) {
+                            vm.rowsToFill.push(i)
+                        }
+
+                        setTimeout(function() {
+                            // vm.user.cashier.specialPrint ? vm.printToCart('printMatrixBillId') : document.getElementById("printBtnBill").click();
+                            // document.getElementById("printBtnBill").click();
+                            vm.printToCart('printMatrixBillId')
+                            // vm.nuevaBill();
+                        }, 300);
                         if (vm.seqChanged) {
                             cashierService.update($localStorage.user.cashier).then(function(resp) {
                                 // cashier updated
@@ -858,8 +875,6 @@ angular.module('integridadUiApp')
                                 vm.error = error.data;
                             });
                         };
-
-                        vm.loading = false;
                     }).catch(function(error) {
                         vm.loading = false;
                         vm.error = error.data;
