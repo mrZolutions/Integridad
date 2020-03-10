@@ -69,14 +69,14 @@ public class BillServices {
         String data = mapper.writeValueAsString(requirement);
         log.info("BillServices getDatil MAPPER creado");
 
-        String response = httpCallerService.post(Constants.DATIL_LINK, data, userClient);
-//        String response ="{\n" +
-//                "  \"id\": \"abcdef09876123cea56784f01\",\n" +
-//                "  \"ambiente\":1,\n" +
-//                "  \"tipo_emision\":1,\n" +
-//                "  \"secuencial\":148,\n" +
-//                "  \"fecha_emision\":\"2019-09-28T11:28:56.782Z\",\n" +
-//                "  \"clave_acceso\": \"2802201501091000000000120010010000100451993736618\"}";
+//        String response = httpCallerService.post(Constants.DATIL_LINK, data, userClient);
+        String response ="{\n" +
+                "  \"id\": \"abcdef09876123cea56784f01\",\n" +
+                "  \"ambiente\":1,\n" +
+                "  \"tipo_emision\":1,\n" +
+                "  \"secuencial\":148,\n" +
+                "  \"fecha_emision\":\"2019-09-28T11:28:56.782Z\",\n" +
+                "  \"clave_acceso\": \"2802201501091000000000120010010000100451993736618\"}";
 
         log.info("BillServices getDatil httpcall DONE");
         return response;

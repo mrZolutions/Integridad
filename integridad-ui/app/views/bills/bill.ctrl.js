@@ -125,6 +125,12 @@ angular.module('integridadUiApp')
             };
         };
 
+        function _getComprobanteCobroSeqNumber() {
+            vm.numbAddedOne = parseInt($localStorage.user.cashier.compCobroNumberSeq) + 1;
+            vm.comprobanteCobroSeq = vm.numbAddedOne;
+            vm.comprobanteCobroStringSeq = utilSeqService._pad_with_zeroes(vm.numbAddedOne, 6);
+        };
+
         vm.getDetailsOfBills = function() {
             vm.loading = true;
             billService.getDetailsOfBillsByUserClientId(vm.userClientId).then(function(response) {
@@ -867,6 +873,53 @@ angular.module('integridadUiApp')
             var req = requirementService.createRequirement(vm.clientSelected, vm.bill, $localStorage.user, vm.impuestosTotales, vm.items, vm.pagos);
             var reqBill = {requirement : req, bill: vm.bill}
 
+
+
+
+            vm.comprobanteCobro = {};
+
+            if(vm.pagos.length === 1){
+                if(vm.pagos[0].code === 'efectivo'){
+                    vm.comprobanteCobro = {
+                        client: vm.clientSelected,
+                        userIntegridad: $localStorage.user,
+                        subsidiary: $localStorage.user.subsidiary,
+                        clientName: vm.clientSelected.name,
+                        clientRuc: vm.clientSelected.identification,
+                        subTotalDoce: 0,
+                        iva: 0,
+                        total: 0,
+                        detailComprobanteCobro: []
+                    };
+                    
+                    vm.itemBill = {
+                        numCheque: '-',
+                        cuenta: '-',
+                        banco: '-',
+                        tipoAbono: 'EFC',
+                        totalAbono: vm.bill.total,
+                        billNumber: vm.bill.stringSeq,
+                        dateBill: vm.bill.dateCreated
+                    };
+        
+                    _getComprobanteCobroSeqNumber();
+        
+                    vm.comprobanteCobro.detailComprobanteCobro.push(vm.itemBill);
+                    vm.comprobanteCobro.billNumber = vm.bill.stringSeq;
+                    vm.comprobanteCobro.dateComprobante = vm.bill.dateCreated;
+                    vm.comprobanteCobro.comprobanteSeq = vm.comprobanteCobroSeq;
+                    vm.comprobanteCobro.comprobanteStringSeq = vm.comprobanteCobroStringSeq;
+                    vm.comprobanteCobro.comprobanteConcep = 'Cancela Fact. ' + vm.bill.stringSeq;
+                    vm.comprobanteCobro.comprobanteEstado = 'PROCESADO';
+                    vm.comprobanteCobro.total = vm.bill.total;
+                    vm.comprobanteCobro.subTotalDoce = parseFloat((vm.bill.total / 1.12).toFixed(2));
+                    vm.comprobanteCobro.iva = parseFloat((vm.bill.total * 0.12).toFixed(2));
+                    vm.comprobanteCobro.paymentId = '-';
+                }
+            }
+
+            reqBill.comprobanteCobro = vm.comprobanteCobro;
+            
             // 1 is typeDocument Bill **************!!!
             billService.getClaveDeAccesoSaveBill(reqBill, vm.companyData.userClient.id, 1).then(function(resp) {
               vm.bill.claveDeAcceso = resp.data.claveDeAcceso;
@@ -874,6 +927,7 @@ angular.module('integridadUiApp')
               vm.newBill = false;
               vm.newBuy = false;
               $localStorage.user.cashier.billNumberSeq = vm.bill.billSeq;
+              $localStorage.user.cashier.compCobroNumberSeq = vm.comprobanteCobro.comprobanteSeq;
               vm.loading = false;
               setTimeout(function() {
                 vm.user.cashier.specialPrint ? vm.printToCart('printMatrixBillId') : document.getElementById("printBtnBill").click();

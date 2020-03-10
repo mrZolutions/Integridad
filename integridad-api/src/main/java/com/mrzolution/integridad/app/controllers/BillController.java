@@ -1,6 +1,7 @@
 package com.mrzolution.integridad.app.controllers;
 
 import com.mrzolution.integridad.app.domain.Bill;
+import com.mrzolution.integridad.app.domain.ComprobanteCobro;
 import com.mrzolution.integridad.app.domain.ebill.Requirement;
 import com.mrzolution.integridad.app.domain.ebill.RequirementBill;
 import com.mrzolution.integridad.app.domain.report.CashClosureReport;
@@ -8,6 +9,7 @@ import com.mrzolution.integridad.app.domain.report.ItemReport;
 import com.mrzolution.integridad.app.domain.report.SalesReport;
 import com.mrzolution.integridad.app.exceptions.BadRequestException;
 import com.mrzolution.integridad.app.services.BillServices;
+import com.mrzolution.integridad.app.services.ComprobanteCobroServices;
 import lombok.extern.slf4j.Slf4j;
 import org.json.simple.parser.ContainerFactory;
 import org.json.simple.parser.JSONParser;
@@ -24,6 +26,8 @@ import java.util.*;
 public class BillController {
     @Autowired
     BillServices service;
+    @Autowired
+    ComprobanteCobroServices comprobanteCobroService;
 
     @RequestMapping(method = RequestMethod.POST, value="/clave_acceso/{id}/{typeDocument}")
     public ResponseEntity saveDatilBill(@RequestBody RequirementBill requirement, @PathVariable("id") UUID userClientId, @PathVariable("typeDocument") int typeDocument) {
@@ -31,6 +35,7 @@ public class BillController {
         try {
             Bill bill = requirement.getBill();
             String responseDatil = service.getDatil(requirement.getRequirement(), userClientId);
+            ComprobanteCobro comprobante = requirement.getComprobanteCobro();
 
             JSONParser parser = new JSONParser();
             ContainerFactory containerFactory = new ContainerFactory(){
@@ -48,6 +53,7 @@ public class BillController {
             }
 
             service.createBill(bill, typeDocument);
+            comprobanteCobroService.createComprobanteCobro(comprobante);
             response = bill;
         } catch (Exception e) {
             log.error("BillController saveDatilBill Exception thrown: {}", e.getMessage());
