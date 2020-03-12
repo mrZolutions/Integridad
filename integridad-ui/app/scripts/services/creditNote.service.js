@@ -67,6 +67,8 @@ angular
                 req.comprador.email = req.comprador.email + ', facturacion@catedral.com.ec';
             } else if (user.cashier.subsidiary.userClient.espTemp === 'A-QTA') {
                 req.comprador.email = req.comprador.email + ', facturaslaquintarm@hotmail.com';
+            }else if (user.cashier.subsidiary.userClient.espTemp === 'A-3') {
+                req.comprador.email = req.comprador.email + ', facturacion@mrzolutions.com';
             };
             return req;
         };

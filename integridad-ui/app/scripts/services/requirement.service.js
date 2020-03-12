@@ -14,7 +14,7 @@ angular
             var pagosDatil = [];
             var credito = undefined;
             _.each(pagos, function(pago){
-                if (pago.medio !== 'credito') {
+                if (pago.code !== 'credito') {
                     pago.medio = pago.code;
                     pagosDatil.push(pago);
                 } else {
