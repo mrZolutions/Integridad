@@ -580,12 +580,6 @@ angular.module('integridadUiApp')
         vm.multipleAbono = function(credits) {
             vm.loading = true;
             vm.creditsBillsSelected = credits;
-            vm.loading = false;
-        };
-
-        vm.aceptaAbono = function() {
-            vm.loading = true;
-            $('#modalFindBills').modal('hide');
             vm.itemBillsMulti = {
                 credit_bill: vm.creditsBillsSelected,
                 bill_number: vm.billNumber,
@@ -593,6 +587,12 @@ angular.module('integridadUiApp')
                 bill_pending: vm.billPending
             };
             vm.itemCobroBill = {};
+            vm.loading = false;
+        };
+
+        vm.aceptaAbono = function() {
+            vm.loading = true;
+            $('#modalFindBills').modal('hide');
             vm.creditsBillsSelected = undefined;
             vm.itemBillsMulti.bill_abono = vm.valorAbono;
             vm.itemsMultiplePayments.push(vm.itemBillsMulti);
