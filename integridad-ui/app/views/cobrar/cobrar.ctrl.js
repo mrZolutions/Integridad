@@ -363,7 +363,7 @@ angular.module('integridadUiApp')
         };
 
         vm.selectCtaCtableBank = function(cuenta) {
-            vm.ctaCtableBankList = undefined;
+            // vm.ctaCtableBankList = undefined;
             vm.ctaCtableBankCode = cuenta.code;
             vm.bankName = cuenta.description;
         };
@@ -530,10 +530,14 @@ angular.module('integridadUiApp')
             vm.clientCodConta = client.codConta;
             vm.clientId = client.id;
             vm.clientIdentification = client.identification;
+            vm.typePayment = 'PAC';
+            vm.typePaymentName = 'PAGO CORRIENTE';
             _initializeDailybookCi();
             _initializeComprobanteCobro();
             cuentaContableService.getCuentaContableByUserClientAndBank(vm.usrCliId).then(function(response) {
                 vm.ctaCtableBankList = response;
+                vm.findBills();
+                $('#modalFindBills').modal('show');
                 vm.loading = false;
             }).catch(function(error) {
                 vm.loading = false;
@@ -545,6 +549,8 @@ angular.module('integridadUiApp')
             vm.loading = true;
             vm.success = undefined;
             vm.valorAbono = 0;
+            vm.creditsMultiBillsList = undefined; 
+            vm.creditsBillsSelected = undefined
             billService.getAllBillsByClientIdWithSaldo(vm.clientId).then(function(response) {
                 vm.billMultipleList = response;
                 vm.loading = false;
@@ -573,28 +579,20 @@ angular.module('integridadUiApp')
 
         vm.multipleAbono = function(credits) {
             vm.loading = true;
-            vm.creditsMultiBillsList = undefined;
             vm.creditsBillsSelected = credits;
-            vm.itemBillsMulti = {
-                credit_bill: vm.creditsBillsSelected,
-                bill_number: vm.billNumber,
-                bill_total: vm.billValue,
-                bill_pending: vm.billPending
-            };
-            vm.itemCobroBill = {
-                banco: vm.bankName,
-                billNumber: vm.billNumber,
-                dateBill: vm.billDate,
-                cuenta: vm.noAccount,
-                numCheque: vm.noDocument,
-                tipoAbono: vm.modePayment,
-            };
             vm.loading = false;
         };
 
         vm.aceptaAbono = function() {
             vm.loading = true;
             $('#modalFindBills').modal('hide');
+            vm.itemBillsMulti = {
+                credit_bill: vm.creditsBillsSelected,
+                bill_number: vm.billNumber,
+                bill_total: vm.billValue,
+                bill_pending: vm.billPending
+            };
+            vm.itemCobroBill = {};
             vm.creditsBillsSelected = undefined;
             vm.itemBillsMulti.bill_abono = vm.valorAbono;
             vm.itemsMultiplePayments.push(vm.itemBillsMulti);
@@ -671,6 +669,15 @@ angular.module('integridadUiApp')
 
         function _asientoComprobanteMultipleCobro() {
             _getComprobanteCobroSeqNumber();
+            _.each(vm.itemsMultipleCobros, function (item) {
+                item.banco = vm.bankName;
+                item.billNumber = vm.billNumber;
+                item.dateBill = vm.billDate;
+                item.cuenta = vm.noAccount;
+                item.numCheque = vm.noDocument;
+                item.tipoAbono = vm.modePayment;
+            });
+
             vm.comprobanteCobro.billNumber = vm.billsNumberPayed;
             vm.comprobanteCobro.dateComprobante = $('#pickerDateOfMultiplePayment').data("DateTimePicker").date().toDate().getTime();
             vm.comprobanteCobro.comprobanteSeq = vm.comprobanteCobroSeq;

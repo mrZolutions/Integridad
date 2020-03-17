@@ -620,23 +620,20 @@
             </div>
             <div class = "panel-body">
                 <div class = "row">
-                    <div class = "form-group col-md-6">
+                    <div class = "form-group col-md-4">
                         <label>Nombre del Cliente:</label><br/>
                         <b>{{vm.clientName}}</b>
                     </div>
-                    <div class = "form-group col-md-6">
+                    <div class = "form-group col-md-4">
                         <label>Identificaci&oacute;n del Cliente:</label><br/>
                         <b>{{vm.clientIdentification}}</b><br/>
                     </div>
+                    <div class = "form-group col-md-4">
+                        <label>Tipo de Abono:&nbsp;</label>{{vm.typePaymentName}}
+                    </div>
                 </div>
                 <div class = "row">
-                    <div class = "form-group col-md-6">
-                        <label>Seleccione el Tipo de Abono:</label><br/>
-                        <select ng-options = "item.code as item.name for item in [{code:'PAC', name:'PAGO CORRIENTE'}]"
-                                ng-model = "vm.typePayment" class = "form-control">
-                        </select>
-                    </div>
-                    <div class = "form-group col-md-6" ng-show = "vm.typePayment === 'PAC'">
+                    <div class = "form-group col-md-4" >
                         <label>Seleccione Modalidad de Pago:</label><br/>
                         <label class = "radio-inline"><input type="radio" ng-model = "vm.modePayment" 
                                value = "CHQ" name = "cheque">Cheque</label>
@@ -645,21 +642,32 @@
                         <label class = "radio-inline"><input type="radio" ng-model="vm.modePayment" 
                                value = "DEP" name = "deposito">Depósito Bancario</label>
                     </div>
-                </div>
-                <div class = "row">
-                    <div class = "form-group col-md-6" ng-show = "vm.typePayment === 'PAC'">
+
+                    <div class = "form-group col-md-4" ng-show = "vm.typePayment === 'PAC'">
                         <label>Fecha de Pago: </label>
                         <div class = "input-group date" id="pickerDateOfMultiplePayment">
                             <input type = "text" class="form-control input-group-addon"/>
                             <span class = "input-group-addon"><span class = "glyphicon glyphicon-calendar"/></span>
                         </div>
                         <script>
-                            $('#pickerDateOfMultiplePayment').datetimepicker({format: "DD/MM/YY",});
+                            var defaultDate = new Date();
+                            $('#pickerDateOfMultiplePayment').datetimepicker({format: "DD/MM/YY", defaultDate: defaultDate});
                         </script>
                     </div>
+
+                    <div class="form-group col-md-4">
+                        <br/>
+                        <button type = "button" title = "Buscar Facturas Pendientes" class = "btn btn-primary btn-sm"
+                            ng-click = "vm.findBills()" data-toggle = "modal" data-target = "#modalFindBills">
+                            Facturas Pendientes
+                        </button>
+                    </div>
+
+                </div>
+                <div class = "row">
                     <div class = "form-group col-md-12">
                         <div class = "row" ng-show = "vm.modePayment === 'CHQ'">
-                            <div class="form-group col-md-12" ng-show="vm.ctaCtableBankList !== undefined">
+                            <div class="form-group col-md-12" ng-show="vm.ctaCtableBankCode === undefined">
                                 <table class="table table-striped">
                                     <thead>
                                         <tr>
@@ -708,13 +716,6 @@
                                 <select ng-options = "deta.name as deta.code for deta in [{code: 'ABONO PARCIAL DE CUOTA' ,name:'ABONO PARCIAL DE CUOTA'}, {code: 'ABONO COMPLEMENTARIO DE CUOTA', name:'ABONO COMPLEMENTARIO DE CUOTA'}, {code: 'PAGO TOTAL DE CUOTA', name:'PAGO TOTAL DE CUOTA'}]"
                                         ng-model = "vm.details" class = "form-control">
                                 </select>
-                            </div>
-                            <div class = "form-group col-md-3">
-                                <br/>
-                                <button type = "button" title = "Buscar Facturas Pendientes" class = "btn btn-primary btn-sm"
-                                        ng-click = "vm.findBills()" data-toggle = "modal" data-target = "#modalFindBills">
-                                        Facturas Pendientes
-                                </button>
                             </div>
                         </div>
                         <div class = "row" ng-show = "vm.modePayment === 'TRF'">
@@ -770,13 +771,6 @@
                                         ng-model = "vm.details" class = "form-control">
                                 </select>
                             </div>
-                            <div class = "form-group col-md-3">
-                                <br/>
-                                <button type = "button" title = "Buscar Facturas Pendientes" class = "btn btn-primary btn-sm"
-                                        ng-click = "vm.findBills()" data-toggle = "modal" data-target = "#modalFindBills">
-                                        Facturas Pendientes
-                                </button>
-                            </div>
                         </div>
                         <div class = "row" ng-show="vm.modePayment === 'DEP'">
                             <div class="form-group col-md-12" ng-show="vm.ctaCtableBankList !== undefined">
@@ -830,13 +824,6 @@
                                 <select ng-options = "deta.name as deta.code for deta in [{code: 'ABONO PARCIAL DE CUOTA' ,name:'ABONO PARCIAL DE CUOTA'}, {code: 'ABONO COMPLEMENTARIO DE CUOTA', name:'ABONO COMPLEMENTARIO DE CUOTA'}, {code: 'PAGO TOTAL DE CUOTA', name:'PAGO TOTAL DE CUOTA'}]"
                                         ng-model = "vm.details" class = "form-control">
                                 </select>
-                            </div>
-                            <div class = "form-group col-md-3">
-                                <br/>
-                                <button type = "button" title = "Buscar Facturas Pendientes" class = "btn btn-primary btn-sm"
-                                        ng-click = "vm.findBills()" data-toggle = "modal" data-target = "#modalFindBills">
-                                        Facturas Pendientes
-                                </button>
                             </div>
                         </div>
                     </div>
@@ -902,41 +889,12 @@
                     </div>
                 </div>
                 <div class = "modal-body">
-                    <div class ="row">
-                        <div class = "col-md-12" ng-if = "vm.creditsMultiBillsList === undefined && vm.creditsBillsSelected === undefined">
-                            <table class = "table table-striped">
-                                <thead>
-                                    <tr>
-                                        <th>No. Factura</th>
-                                        <th>Fecha</th>
-                                        <th>Total</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr ng-show = "vm.billMultipleList == 0">
-                                        <td colspan = "4">
-                                            El Cliente <b>No Presenta</b> Facturas Pendientes...
-                                        </td>
-                                    </tr>
-                                    <tr ng-repeat = "bills in vm.billMultipleList">
-                                        <td>{{bills.stringSeq}}</td>
-                                        <td>{{bills.dateCreated | date : "dd/MM/yyyy"}}</td>
-                                        <td>{{bills.total.toFixed(2)}}</td>
-                                        <td>
-                                            <button type = "button" title = "Consultar Créditos Pendientes" class = "btn btn-primary btn-sm" 
-                                                    ng-click = "vm.creditsMultiByBills(bills)">
-                                                    <span class = "glyphicon glyphicon-ok" aria-hidden = "true"></span>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            <div>
-                                <button type = "button" title = "Salir" class = "btn btn-primary btn-sm" data-dismiss = "modal">
-                                        <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
-                                </button>
-                            </div>
+                    <div class="row">
+                        <div class = "col-md-12" ng-if = "vm.creditsMultiBillsList !== undefined">
+                            <label>xxxxxxxxFactura Nro:&nbsp;{{vm.billNumber}}</label>
                         </div>
+                    </div>
+                    <div class ="row">
                         <div class = "col-md-12" ng-if = "vm.creditsMultiBillsList !== undefined">
                             <table class = "table table-striped">
                                 <thead>
@@ -965,27 +923,24 @@
                                     </tr>
                                 </tbody>
                             </table>
-                            <div>
-                                <button type = "button" title = "Anterior" class = "btn btn-primary btn-sm" ng-click = "vm.creditsMultiBillsList = undefined">
-                                        <span class = "glyphicon glyphicon-arrow-left" aria-hidden = "true"></span>
-                                </button>
-                                <button type = "button" title = "Salir" class = "btn btn-primary btn-sm" data-dismiss = "modal">
-                                        <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
-                                </button>
-                            </div>
                         </div>
+
                         <div class = "col-md-12" ng-if = "vm.creditsBillsSelected !== undefined">
                             <div>
-                                <div class="form-group col-md-6">
-                                    <label>Factura Nro:</label><br/>
-                                    {{vm.billNumber}}
+                                <div class="form-group col-md-4">
+                                    <label>PAGO NUMERO </label>
+                                    {{vm.creditsBillsSelected.payNumber}}
                                 </div>
-                                <div class="form-group col-md-6">
-                                    <label>Valor Abono:</label><br/>
+                                <div class="form-group col-md-8">
+                                    <label>Valor Abono &#36;:</label><br/>
                                     <input type = "text" class = "form-control" ng-model = "vm.valorAbono"/>
                                 </div>
                             </div>
                             <div>
+                                <button type = "button" title = "Anterior" class = "btn btn-primary btn-sm" 
+                                ng-click = "vm.creditsMultiBillsList = undefined; vm.creditsBillsSelected = undefined">
+                                    <span class = "glyphicon glyphicon-arrow-left" aria-hidden = "true"></span>
+                                </button>
                                 <button type = "button" title = "Aceptar" class = "btn btn-success btn-sm" ng-click = "vm.aceptaAbono()">
                                         <span class = "glyphicon glyphicon-thumbs-up" aria-hidden = "true"></span>
                                 </button>
@@ -994,6 +949,56 @@
                                 </button>
                             </div>
                         </div>
+
+
+
+
+
+
+
+
+
+
+
+
+                        <div class = "col-md-12" ng-if = "vm.creditsMultiBillsList === undefined && vm.creditsBillsSelected === undefined"  >
+                            <table class = "table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>No. Factura</th>
+                                        <th>Fecha</th>
+                                        <th>Total</th>
+                                        <th>Saldo</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-show = "vm.billMultipleList == 0">
+                                        <td colspan = "4">
+                                            El Cliente <b>No Presenta</b> Facturas Pendientes...
+                                        </td>
+                                    </tr>
+                                    <tr ng-repeat = "bills in vm.billMultipleList">
+                                        <td>{{bills.stringSeq}}</td>
+                                        <td>{{bills.dateCreated | date : "dd/MM/yyyy"}}</td>
+                                        <td>{{bills.total.toFixed(2)}}</td>
+                                        <td>{{bills.saldo}}</td>
+                                        <td>
+                                            <input class="pull-right" ng-model="bills.selected" type="checkbox" ng-change="vm.creditsMultiByBills(bills)">
+                                            <!-- <button type = "button" title = "Consultar Créditos Pendientes" class = "btn btn-primary btn-sm" 
+                                                    ng-click = "vm.creditsMultiByBills(bills)">
+                                                    <span class = "glyphicon glyphicon-ok" aria-hidden = "true"></span>
+                                            </button> -->
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div>
+                                <button type = "button" title = "Salir" class = "btn btn-primary btn-sm" data-dismiss = "modal">
+                                        <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
+                                </button>
+                            </div>
+                        </div>
+                        
                     </div>
                 </div>
             </div>
@@ -1087,6 +1092,11 @@
                 <b>Listado de Comprobantes de Cobros Pertenecientes a: {{vm.clientName}}</b>
             </div>
             <div class="panel-body">
+                <div class="row">
+                    <div class="form-group col-md-12">
+                        <input ng-model="searchTextComproante" class="form-control" placeholder="Buscar Comprobantes">
+                    </div>
+                </div>
                 <table class="table table-striped">
                     <thead>
                         <tr>
@@ -1104,7 +1114,7 @@
                                 El Cliente <b>No Presenta</b> Comprobantes de Cobros realizados...
                             </td>
                         </tr>
-                        <tr ng-repeat="comprobanteCobro in vm.comprobanteCobroList">
+                        <tr ng-repeat="comprobanteCobro in vm.comprobanteCobroList | filter:searchTextComproante">
                             <td>{{comprobanteCobro.comprobanteStringSeq}}</td>
                             <td>{{comprobanteCobro.billNumber}}</td>
                             <td>{{comprobanteCobro.dateComprobante | date : "dd/MM/yyyy"}}</td>
