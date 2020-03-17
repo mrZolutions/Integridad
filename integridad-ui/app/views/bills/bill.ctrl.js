@@ -621,6 +621,20 @@ angular.module('integridadUiApp')
         };
 
         vm.addPago = function() {
+            if(vm.medio.code === 'efectivo'){
+                var credit = {
+                    payNumber: 1,
+	                diasPlazo: 1,
+	                fecha: new Date().getTime(),
+	                statusCredits: "PAGADO",
+	                documentNumber: vm.seqNumber,
+	                valor: vm.bill.total,
+                };
+                vm.medio.creditoNumeroPagos= 1,
+                vm.medio.creditoIntervalos= 1,
+                vm.medio.credits=[credit];
+            }
+            console.log(vm.medio)
             vm.pagos.push(angular.copy(vm.medio));
             vm.medio = {};
             setTimeout(function(){
@@ -872,9 +886,6 @@ angular.module('integridadUiApp')
 
             var req = requirementService.createRequirement(vm.clientSelected, vm.bill, $localStorage.user, vm.impuestosTotales, vm.items, vm.pagos);
             var reqBill = {requirement : req, bill: vm.bill}
-
-
-
 
             vm.comprobanteCobro = {};
 

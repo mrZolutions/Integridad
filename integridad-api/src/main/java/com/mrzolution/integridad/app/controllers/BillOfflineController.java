@@ -9,7 +9,6 @@ import com.mrzolution.integridad.app.services.BillOfflineServices;
 import java.util.List;
 import java.util.UUID;
 
-import com.mrzolution.integridad.app.services.ComprobanteCobroServices;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -31,15 +30,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class BillOfflineController {
     @Autowired
     BillOfflineServices service;
-    @Autowired
-    ComprobanteCobroServices comprobanteCobroServices;
     
     @RequestMapping(method = RequestMethod.POST, value="/{typeDocument}" )
     public ResponseEntity createBillOffline(@RequestBody RequirementBillOffline requirement, @PathVariable("typeDocument") int typeDocument) {
         BillOffline response = null;
         try {
-            response = service.createBillOffline(requirement.getBill(), typeDocument);
-            comprobanteCobroServices.createComprobanteCobro(requirement.getComprobanteCobro());
+            response = service.createBillOffline(requirement.getBill(), requirement.getComprobanteCobro(), typeDocument);
         } catch (BadRequestException e) {
             log.error("BillOfflineController createBillOffline Exception thrown: {}", e.getMessage());
 	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());

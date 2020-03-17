@@ -51,6 +51,10 @@ public class BillServices {
     KardexRepository kardexRepository;
     @Autowired
     KardexChildRepository kardexChildRepository;
+    @Autowired
+    PaymentRepository paymentRepository;
+    @Autowired
+    ComprobanteCobroServices comprobanteCobroService;
 
     public String getDatil(Requirement requirement, UUID userClientId) throws Exception {
         UserClient userClient = userClientRepository.findOne(userClientId);
@@ -145,7 +149,7 @@ public class BillServices {
 
     //Inicio de Creación de las Bills
     @Async("asyncExecutor")
-    public Bill createBill(Bill bill, int typeDocument) throws BadRequestException {
+    public Bill createBill(Bill bill, ComprobanteCobro comprobante, int typeDocument) throws BadRequestException {
         List<Detail> details = bill.getDetails();
         List<Pago> pagos = bill.getPagos();
         List<Kardex> detailsKardex = bill.getDetailsKardex();
@@ -166,6 +170,31 @@ public class BillServices {
         Bill saved = billRepository.save(bill);
 
         saveChildrenOnCreation(bill, saved, typeDocument, details, pagos, detailsKardex);
+
+        if(pagos.size() ==1 && pagos.get(0).getMedio().equals("efectivo")){
+            //************************************************************************************
+            Credits credit = creditsRepository.findByBillId(saved.getId().toString());
+
+            Payment payment = new Payment();
+            payment.setTypePayment("PAC");
+            payment.setModePayment("EFC");
+            payment.setDetail("PAGO TOTAL EFECTIVO");
+            payment.setDatePayment(new Date().getTime());
+            payment.setNoDocument(saved.getStringSeq());
+            payment.setDocumentNumber(saved.getStringSeq());
+            payment.setValorAbono(saved.getTotal());
+            payment.setValorNotac(Double.valueOf(0));
+            payment.setValorReten(Double.valueOf(0));
+            payment.setActive(true);
+            payment.setCredits(credit);
+
+            Payment paymentSaved = paymentRepository.save(payment);
+
+            comprobante.setPaymentId(paymentSaved.getId().toString());
+            comprobanteCobroService.createComprobanteCobro(comprobante);
+
+            //************************************************************************************
+        }
 
         log.info("BillServices createBill: {}, {}", saved.getId(), saved.getStringSeq());
         return saved;

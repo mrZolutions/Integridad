@@ -26,8 +26,7 @@ import java.util.*;
 public class BillController {
     @Autowired
     BillServices service;
-    @Autowired
-    ComprobanteCobroServices comprobanteCobroService;
+
 
     @RequestMapping(method = RequestMethod.POST, value="/clave_acceso/{id}/{typeDocument}")
     public ResponseEntity saveDatilBill(@RequestBody RequirementBill requirement, @PathVariable("id") UUID userClientId, @PathVariable("typeDocument") int typeDocument) {
@@ -52,8 +51,7 @@ public class BillController {
 //              System.out.println(entry.getKey() + "=>" + entry.getValue());
             }
 
-            service.createBill(bill, typeDocument);
-            comprobanteCobroService.createComprobanteCobro(comprobante);
+            service.createBill(bill, comprobante, typeDocument);
             response = bill;
         } catch (Exception e) {
             log.error("BillController saveDatilBill Exception thrown: {}", e.getMessage());
@@ -176,7 +174,7 @@ public class BillController {
     public ResponseEntity createBill(@RequestBody Bill bill, @PathVariable("typeDocument") int typeDocument) {
         Bill response = null;
         try {
-            response = service.createBill(bill, typeDocument);
+            response = service.createBill(bill, null, typeDocument);
         } catch (BadRequestException e) {
             log.error("BillController createBill Exception thrown: {}", e.getMessage());
 	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());

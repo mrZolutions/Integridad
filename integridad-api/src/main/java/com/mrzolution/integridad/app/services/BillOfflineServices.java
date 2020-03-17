@@ -1,25 +1,12 @@
 package com.mrzolution.integridad.app.services;
 
 import com.google.common.collect.Lists;
-import com.mrzolution.integridad.app.domain.BillOffline;
-import com.mrzolution.integridad.app.domain.Cashier;
-import com.mrzolution.integridad.app.domain.DetailOffline;
-import com.mrzolution.integridad.app.domain.Kardex;
-import com.mrzolution.integridad.app.domain.PagoOffline;
-import com.mrzolution.integridad.app.domain.ProductBySubsidiary;
-import com.mrzolution.integridad.app.domain.UserIntegridad;
+import com.mrzolution.integridad.app.domain.*;
 import com.mrzolution.integridad.app.domain.report.ItemOfflineReport;
 import com.mrzolution.integridad.app.domain.report.SalesOfflineReport;
 import com.mrzolution.integridad.app.exceptions.BadRequestException;
-import com.mrzolution.integridad.app.repositories.BillOfflineRepository;
-import com.mrzolution.integridad.app.repositories.CashierRepository;
-import com.mrzolution.integridad.app.repositories.DetailOfflineChildRepository;
-import com.mrzolution.integridad.app.repositories.DetailOfflineRepository;
-import com.mrzolution.integridad.app.repositories.KardexChildRepository;
-import com.mrzolution.integridad.app.repositories.KardexRepository;
-import com.mrzolution.integridad.app.repositories.PagoOfflineRepository;
-import com.mrzolution.integridad.app.repositories.ProductBySubsidiairyRepository;
-import com.mrzolution.integridad.app.repositories.UserClientRepository;
+import com.mrzolution.integridad.app.repositories.*;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -58,6 +45,12 @@ public class BillOfflineServices {
     KardexRepository kardexRepository;
     @Autowired
     KardexChildRepository kardexChildRepository;
+    @Autowired
+    PaymentRepository paymentRepository;
+    @Autowired
+    ComprobanteCobroServices comprobanteCobroService;
+    @Autowired
+    CreditsRepository creditsRepository;
     
     public Iterable<BillOffline> getBillsOfflineByTypeDocument(int value) {
         Iterable<BillOffline> billsOffline = billOfflineRepository.findBillsOfflineByTypeDocument(value);
@@ -116,7 +109,7 @@ public class BillOfflineServices {
        
     //Inicio de Creación de las BillsOffline    
     @Async("asyncExecutor")
-    public BillOffline createBillOffline(BillOffline billOffline, int typeDocument) throws BadRequestException {
+    public BillOffline createBillOffline(BillOffline billOffline, ComprobanteCobro comprobante, int typeDocument) throws BadRequestException {
         List<DetailOffline> detailsOffline = billOffline.getDetailsOffline();
         List<PagoOffline> pagosOffline = billOffline.getPagosOffline();
         List<Kardex> detailsKardexOffline = billOffline.getDetailsKardexOffline();
@@ -144,6 +137,32 @@ public class BillOfflineServices {
         saveKardexOfBillOffline(saved, detailsKardexOffline);
         savePagosOfflineOfBillOffline(saved, pagosOffline);
         updateProductBySubsidiary(billOffline, typeDocument, detailsOffline);
+
+        if(pagosOffline.size() ==1 && pagosOffline.get(0).getMedio().equals("efectivo")){
+            //************************************************************************************
+            Credits credit = creditsRepository.findByBillId(saved.getId().toString());
+
+            Payment payment = new Payment();
+            payment.setTypePayment("PAC");
+            payment.setModePayment("EFC");
+            payment.setDetail("PAGO TOTAL EFECTIVO");
+            payment.setDatePayment(new Date().getTime());
+            payment.setNoDocument(saved.getStringSeq());
+            payment.setDocumentNumber(saved.getStringSeq());
+            payment.setValorAbono(saved.getTotal());
+            payment.setValorNotac(Double.valueOf(0));
+            payment.setValorReten(Double.valueOf(0));
+            payment.setActive(true);
+            payment.setCredits(credit);
+
+            Payment paymentSaved = paymentRepository.save(payment);
+
+            comprobante.setPaymentId(paymentSaved.getId().toString());
+            comprobanteCobroService.createComprobanteCobro(comprobante);
+
+            //************************************************************************************
+        }
+
         log.info("BillOfflineServices createBillOffline: {}, {}", saved.getId(), saved.getStringSeq());
         return saved;
     }
@@ -174,8 +193,17 @@ public class BillOfflineServices {
     //Guarda el tipo de Pago y Credits
     public void savePagosOfflineOfBillOffline(BillOffline saved, List<PagoOffline> pagosOffline) {
         pagosOffline.forEach(pagoOffline -> {
+            List<Credits> creditsList = pagoOffline.getCredits();
+            pagoOffline.setCredits(null);
             pagoOffline.setBillOffline(saved);
-            PagoOffline pagoSaved = pagoOfflineRepository.save(pagoOffline);		
+            PagoOffline pagoSaved = pagoOfflineRepository.save(pagoOffline);
+            if (creditsList != null) {
+                creditsList.forEach(credit -> {
+                    credit.setPagoOffline(pagoSaved);
+                    credit.setBillId(saved.getId().toString());
+                    creditsRepository.save(credit);
+                });
+            }
         });
     }
     

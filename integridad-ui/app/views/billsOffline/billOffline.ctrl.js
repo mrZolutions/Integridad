@@ -646,6 +646,21 @@ angular.module('integridadUiApp')
         };
 
         vm.addPago = function() {
+            vm.medio.medio = vm.medio.code;
+            if(vm.medio.code === 'efectivo'){
+                var credit = {
+                    payNumber: 1,
+	                diasPlazo: 1,
+	                fecha: new Date().getTime(),
+	                statusCredits: "PAGADO",
+	                documentNumber: vm.seqNumber,
+	                valor: vm.billOffline.total,
+                };
+                vm.medio.creditoNumeroPagos= 1,
+                vm.medio.creditoIntervalos= 1,
+                vm.medio.credits=[credit];
+            }
+            console.log(vm.medio)
             vm.pagosOffline.push(angular.copy(vm.medio));
             vm.medio = {};
             setTimeout(function(){
