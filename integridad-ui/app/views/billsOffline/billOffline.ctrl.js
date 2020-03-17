@@ -133,6 +133,12 @@ angular.module('integridadUiApp')
             };
         };
 
+        function _getComprobanteCobroSeqNumber() {
+            vm.numbAddedOne = parseInt($localStorage.user.cashier.compCobroNumberSeq) + 1;
+            vm.comprobanteCobroSeq = vm.numbAddedOne;
+            vm.comprobanteCobroStringSeq = utilSeqService._pad_with_zeroes(vm.numbAddedOne, 6);
+        };
+
         vm.volver = function() {
             _activate();
         };
@@ -640,6 +646,21 @@ angular.module('integridadUiApp')
         };
 
         vm.addPago = function() {
+            vm.medio.medio = vm.medio.code;
+            if(vm.medio.code === 'efectivo'){
+                var credit = {
+                    payNumber: 1,
+	                diasPlazo: 1,
+	                fecha: new Date().getTime(),
+	                statusCredits: "PAGADO",
+	                documentNumber: vm.seqNumber,
+	                valor: vm.billOffline.total,
+                };
+                vm.medio.creditoNumeroPagos= 1,
+                vm.medio.creditoIntervalos= 1,
+                vm.medio.credits=[credit];
+            }
+            console.log(vm.medio)
             vm.pagosOffline.push(angular.copy(vm.medio));
             vm.medio = {};
             setTimeout(function(){
@@ -849,12 +870,59 @@ angular.module('integridadUiApp')
 
             billOfflineService.getBillsOfflineByStringSeq(vm.seqNumber, vm.companyData.id).then(function(response) {
                 if (response.length === 0) {
-                    billOfflineService.createBillOffline(vm.billOffline, 1).then(function(respBill) {
+                    vm.comprobanteCobro = {};
+
+                    if(vm.pagosOffline.length === 1){
+                        if(vm.pagosOffline[0].code === 'efectivo'){
+                            vm.comprobanteCobro = {
+                                client: vm.clientSelected,
+                                userIntegridad: $localStorage.user,
+                                subsidiary: $localStorage.user.subsidiary,
+                                clientName: vm.clientSelected.name,
+                                clientRuc: vm.clientSelected.identification,
+                                subTotalDoce: 0,
+                                iva: 0,
+                                total: 0,
+                                detailComprobanteCobro: []
+                            };
+                            
+                            vm.itemBill = {
+                                numCheque: '-',
+                                cuenta: '-',
+                                banco: '-',
+                                tipoAbono: 'EFC',
+                                totalAbono: vm.billOffline.total,
+                                billNumber: vm.billOffline.stringSeq,
+                                dateBill: vm.billOffline.dateCreated
+                            };
+                
+                            _getComprobanteCobroSeqNumber();
+                
+                            vm.comprobanteCobro.detailComprobanteCobro.push(vm.itemBill);
+                            vm.comprobanteCobro.billNumber = vm.billOffline.stringSeq;
+                            vm.comprobanteCobro.dateComprobante = vm.billOffline.dateCreated;
+                            vm.comprobanteCobro.comprobanteSeq = vm.comprobanteCobroSeq;
+                            vm.comprobanteCobro.comprobanteStringSeq = vm.comprobanteCobroStringSeq;
+                            vm.comprobanteCobro.comprobanteConcep = 'Cancela Fact. ' + vm.billOffline.stringSeq;
+                            vm.comprobanteCobro.comprobanteEstado = 'PROCESADO';
+                            vm.comprobanteCobro.total = vm.billOffline.total;
+                            vm.comprobanteCobro.subTotalDoce = parseFloat((vm.billOffline.total / 1.12).toFixed(2));
+                            vm.comprobanteCobro.iva = parseFloat((vm.billOffline.total * 0.12).toFixed(2));
+                            vm.comprobanteCobro.paymentId = '-';
+                        }
+                    }
+                    var requirement = {
+                        bill:vm.billOffline,
+                        comprobanteCobro: vm.comprobanteCobro,
+                    }
+
+                    billOfflineService.createBillOffline(requirement, 1).then(function(respBill) {
                         vm.billedOffline = true;
                         vm.newBillOffline = false;
                         vm.newBuyOff = false;
                         vm.billOfflineCreated = respBill;
                         $localStorage.user.cashier.billOfflineNumberSeq = vm.billOffline.billSeq;
+                        $localStorage.user.cashier.compCobroNumberSeq = vm.comprobanteCobro.comprobanteSeq;
                         vm.loading = false;
                         vm.rowsToFill = [];
                         for (var i = vm.billOffline.detailsOffline.length; i < 10; i++) {

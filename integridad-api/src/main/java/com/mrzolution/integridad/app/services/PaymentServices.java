@@ -65,14 +65,23 @@ public class PaymentServices {
 	return payments;
     }
     
-    public Iterable<Payment> getPaymentsByClientId(UUID id) {
-        Iterable<Payment> payments = paymentRepository.findPaymentsByClientId(id);
+    public List<Payment> getPaymentsByClientId(UUID id) {
+        List<Payment> listToReturn = new ArrayList<>();
+        Iterable<Payment> payments = paymentRepository.findPaymentsByClientIdOnLine(id);
         payments.forEach(payment -> {
             payment.setFatherListToNull();
             payment.setListsNull();
+            listToReturn.add(payment);
+        });
+
+        payments = paymentRepository.findPaymentsByClientIdOffline(id);
+        payments.forEach(payment -> {
+            payment.setFatherListToNull();
+            payment.setListsNull();
+            listToReturn.add(payment);
         });
         log.info("PaymentServices getPaymentsByClientId: {}", id);
-	return payments;
+	    return listToReturn;
     }
     
     public Payment createPayment(Payment payment) {

@@ -69,7 +69,7 @@ public class PaymentController {
     
     @RequestMapping(method = RequestMethod.GET, value="/client/{id}")
     public ResponseEntity getPaymentsByClientId(@PathVariable("id") UUID id) {
-        Iterable<Payment> response = null;
+        List<Payment> response = null;
         try {
             response = service.getPaymentsByClientId(id);
         } catch (BadRequestException e) {

@@ -30,6 +30,10 @@ public class Credits implements Child {
     @JoinColumn(name = "pago_id")
     private Pago pago;
 
+    @ManyToOne
+    @JoinColumn(name = "pago_offline_id")
+    private PagoOffline pagoOffline;
+
     @OneToMany(mappedBy = "credits", cascade = CascadeType.ALL)
     private List<Payment> payments;
 
@@ -38,8 +42,14 @@ public class Credits implements Child {
     }
 
     public void setFatherListToNull() {
-        pago.setListsNull();
-        pago.setFatherListToNull();
+        if(pago != null){
+            pago.setListsNull();
+            pago.setFatherListToNull();
+        }
+        if (pagoOffline != null){
+            pagoOffline.setListsNull();
+            pagoOffline.setFatherListToNull();
+        }
     }
 
     public static Credits newCreditsTest() {
