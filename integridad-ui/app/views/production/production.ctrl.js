@@ -737,7 +737,7 @@ angular.module('integridadUiApp')
             var wb = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(wb, ws, "Kardex_Producto");
             /* write workbook and force a download */
-            XLSX.writeFile(wb, "Reporte_Kardex.xlsx");
+            XLSX.writeFile(wb, 'Reporte_Kardex_'.concat(vm.prodKarName, '.xlsx'));
         };
 
         function _filterKar() {

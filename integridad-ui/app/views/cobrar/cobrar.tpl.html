@@ -93,6 +93,11 @@
                 <b>Listado de Facturas Pertenecientes a: {{vm.clientName}}</b>
             </div>
             <div class="panel-body">
+                <div class="row">
+                    <div class="form-group col-md-12">
+                        <input ng-model="searchTextBills" class="form-control" placeholder="Buscar Factura">
+                    </div>
+                </div>
                 <table class="table table-striped">
                     <thead>
                         <tr>
@@ -109,7 +114,7 @@
                                 El Cliente <b>No Presenta</b> Facturas por Cobrar...
                             </td>
                         </tr>
-                        <tr ng-repeat="bill in vm.billList">
+                        <tr ng-repeat="bill in vm.billList | filter:searchTextBills">
                             <td>{{bill.stringSeq}}</td>
                             <td>{{bill.dateCreated | date : "dd/MM/yyyy"}}</td>
                             <td>{{bill.total.toFixed(2)}}</td>
@@ -1001,6 +1006,11 @@
                 <b>Listado de Cobros de Facturas Pertenecientes a: {{vm.clientName}}</b>
             </div>
             <div class="panel-body">
+                <div class="row">
+                    <div class="form-group col-md-12">
+                        <input ng-model="searchTextPayments" class="form-control" placeholder="Buscar Factura">
+                    </div>
+                </div>
                 <table class="table table-striped">
                     <thead>
                         <tr>
@@ -1017,7 +1027,7 @@
                                 El Cliente <b>No Presenta</b> Facturas con Cobros realizados...
                             </td>
                         </tr>
-                        <tr ng-repeat="payment in vm.paymentList">
+                        <tr ng-repeat="payment in vm.paymentList | filter:searchTextPayments">
                             <td>{{payment.documentNumber}}</td>
                             <td>{{payment.datePayment | date : "dd/MM/yyyy"}}</td>
                             <td>{{payment.detail}}</td>
