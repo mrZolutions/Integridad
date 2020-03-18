@@ -660,7 +660,6 @@ angular.module('integridadUiApp')
                 vm.medio.creditoIntervalos= 1,
                 vm.medio.credits=[credit];
             }
-            console.log(vm.medio)
             vm.pagosOffline.push(angular.copy(vm.medio));
             vm.medio = {};
             setTimeout(function(){

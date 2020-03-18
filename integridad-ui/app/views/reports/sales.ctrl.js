@@ -24,8 +24,10 @@ angular.module('integridadUiApp')
         vm.mrZolutions = '4907601b-6e54-4675-80a8-ab6503e1dfeb';
         vm.pineda = '6e663299-d61c-44de-b42c-a3d6595b46d2';
         vm.catedral = '1e2049c3-a3bc-4231-a0de-dded8020dc1b';
+        vm.reportName = 'Report';
 
         vm.getReportProducts = function() {
+            vm.reportName = 'Productos Vendidos';
             vm.isProductReportList = '1';
             vm.reportList = undefined;
             vm.loading = true;
@@ -43,6 +45,7 @@ angular.module('integridadUiApp')
         };
 
         vm.getReportSales = function() {
+            vm.reportName = 'Ventas';
             vm.isProductReportList = '2';
             vm.reportList = undefined;
             vm.loading = true;
@@ -60,6 +63,7 @@ angular.module('integridadUiApp')
         };
 
         vm.getReportRetention = function() {
+            vm.reportName = 'Retencion en Compras';
             vm.isProductReportList = '3';
             vm.reportList = undefined;
             vm.loading = true;
@@ -77,6 +81,7 @@ angular.module('integridadUiApp')
         };
 
         vm.getCreditsPendingReport = function() {
+            vm.reportName = 'Cuentas Pendientes Por Cobrar';
             vm.isProductReportList = '4';
             vm.reportList = undefined;
             vm.loading = true;
@@ -93,6 +98,7 @@ angular.module('integridadUiApp')
         };
 
         vm.getReportRetentionClient = function() {
+            vm.reportName = 'Retencion Ventas';
             vm.isProductReportList = '5';
             vm.reportList = undefined;
             vm.loading = true;
@@ -110,6 +116,7 @@ angular.module('integridadUiApp')
         };
 
         vm.getCCResumenReport = function() {
+            vm.reportName = 'Abonos y Otros';
             vm.isProductReportList = '6';
             vm.reportList = undefined;
             vm.loading = true;
@@ -127,6 +134,7 @@ angular.module('integridadUiApp')
         };
 
         vm.getCreditsDebtsPendingReport = function() {
+            vm.reportName = 'Cuentas Pendientes Por Pagar';
             vm.isProductReportList = '7';
             vm.reportList = undefined;
             vm.loading = true;
@@ -143,6 +151,7 @@ angular.module('integridadUiApp')
         };
 
         vm.getReportDebts = function() {
+            vm.reportName = 'Cuentas Por Pagar de Compras';
             vm.isProductReportList = '8';
             vm.reportList = undefined;
             vm.loading = true;
@@ -160,6 +169,7 @@ angular.module('integridadUiApp')
         };
 
         vm.getReportCierreCaja = function() {
+            vm.reportName = 'Cierre de Caja';
             vm.isProductReportList = '9';
             vm.reportList = undefined;
             vm.loading = true;
@@ -177,6 +187,7 @@ angular.module('integridadUiApp')
         };
 
         vm.getReportCsmProducts = function() {
+            vm.reportName = 'Bodega Egresos';
             vm.isProductReportList = '10';
             vm.reportList = undefined;
             vm.loading = true;
@@ -194,6 +205,7 @@ angular.module('integridadUiApp')
         };
 
         vm.getCPResumenPaymentDebtsReport = function() {
+            vm.reportName = 'Abonos y Otros Por Pagar';
             vm.isProductReportList = '11';
             vm.reportList = undefined;
             vm.loading = true;
@@ -211,6 +223,7 @@ angular.module('integridadUiApp')
         };
 
         vm.getCellarEntryReport = function() {
+            vm.reportName = 'Bodega Ingresos';
             vm.isProductReportList = '12';
             vm.reportList = undefined;
             vm.loading = true;
@@ -228,6 +241,7 @@ angular.module('integridadUiApp')
         };
 
         vm.getReportCreditNote = function() {
+            vm.reportName = 'Notas de Credito Ventas';
             vm.isProductReportList = '13';
             vm.reportList = undefined;
             vm.loading = true;
@@ -245,6 +259,7 @@ angular.module('integridadUiApp')
         };
 
         vm.getReportCreditNoteCompras = function() {
+            vm.reportName = 'Notas de Credito Compras';
             vm.isProductReportList = '14';
             vm.reportList = undefined;
             vm.loading = true;
@@ -262,6 +277,7 @@ angular.module('integridadUiApp')
         };
 
         vm.getReportExistency = function() {
+            vm.reportName = 'Inventario';
             vm.isProductReportList = '15';
             vm.reportList = undefined;
             vm.loading = true;
@@ -276,6 +292,7 @@ angular.module('integridadUiApp')
         };
 
         vm.getReportSalesOffline = function() {
+            vm.reportName = 'Ventas';
             vm.isProductReportList = '16';
             vm.reportList = undefined;
             vm.loading = true;
@@ -293,6 +310,7 @@ angular.module('integridadUiApp')
         };
 
         vm.getReportProductsOffline = function() {
+            vm.reportName = 'Productos Vendidos';
             vm.isProductReportList = '17';
             vm.reportList = undefined;
             vm.loading = true;
@@ -310,6 +328,7 @@ angular.module('integridadUiApp')
         };
 
         vm.getReportExistencyCat = function() {
+            vm.reportName = 'Inventario';
             vm.isProductReportList = '18';
             vm.reportList = undefined;
             vm.loading = true;
@@ -324,6 +343,7 @@ angular.module('integridadUiApp')
         };
 
         vm.getReportClients = function() {
+            vm.reportName = 'Reporte Clientes';
             vm.isProductReportList = '19';
             vm.reportList = undefined;
             vm.loading = true;
@@ -337,6 +357,7 @@ angular.module('integridadUiApp')
         };
 
         vm.getReportProviders = function() {
+            vm.reportName = 'Reporte Proveedores';
             vm.isProductReportList = '20';
             vm.reportList = undefined;
             vm.loading = true;
@@ -775,7 +796,8 @@ angular.module('integridadUiApp')
             XLSX.utils.book_append_sheet(wb, ws, "Ventas");
 
             /* write workbook and force a download */
-            XLSX.writeFile(wb, "Reporte.xlsx");
+            // XLSX.writeFile(wb, 'Reporte_Kardex_'.concat(vm.prodKarName, '.xlsx'));
+            XLSX.writeFile(wb, vm.reportName.concat('.xlsx'));
         };
 
         vm.exit = function() {

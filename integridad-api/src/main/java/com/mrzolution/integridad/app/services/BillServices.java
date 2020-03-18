@@ -171,7 +171,7 @@ public class BillServices {
 
         saveChildrenOnCreation(bill, saved, typeDocument, details, pagos, detailsKardex);
 
-        if(pagos.size() ==1 && pagos.get(0).getMedio().equals("efectivo")){
+        if(pagos.size() ==1 && pagos.get(0).getMedio() != null && pagos.get(0).getMedio().equals("efectivo")){
             //************************************************************************************
             Credits credit = creditsRepository.findByBillId(saved.getId().toString());
 

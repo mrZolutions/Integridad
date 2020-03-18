@@ -634,7 +634,6 @@ angular.module('integridadUiApp')
                 vm.medio.creditoIntervalos= 1,
                 vm.medio.credits=[credit];
             }
-            console.log(vm.medio)
             vm.pagos.push(angular.copy(vm.medio));
             vm.medio = {};
             setTimeout(function(){
