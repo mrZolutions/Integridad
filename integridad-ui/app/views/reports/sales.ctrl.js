@@ -412,6 +412,7 @@ angular.module('integridadUiApp')
                             BASE_CERO: bill.status === 'ACTIVA' ? parseFloat(bill.baseNoTaxes.toFixed(2)) : parseFloat(0),
                             IVA: bill.status === 'ACTIVA' ? parseFloat(bill.iva.toFixed(2)) : parseFloat(0),
                             TOTAL: bill.status === 'ACTIVA' ? parseFloat(bill.total.toFixed(2)) : parseFloat(0),
+                            FORMA_DE_PAGO: bill.paymentMode,
                             FECHA_VENCIMIENTO: bill.endDate,
                             CAJA: bill.cashier,
                             BODEGA: bill.warehouse,

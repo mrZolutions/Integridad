@@ -398,7 +398,12 @@ public class BillServices {
             bill.setListsNull();
             Long endDateLong = bill.getDateCreated();
             List<Pago> pagos = getPagosByBill(bill);
+            String paymentMode = "";
             for (Pago pago: pagos) {
+                if(pago.getMedio() != null){
+                    paymentMode = pago.getMedio().toUpperCase();
+                }
+
                 if (pago.getCredits() != null) {
                     for (Credits credit: pago.getCredits()) {
                         if (endDateLong < credit.getFecha()) {
@@ -414,7 +419,7 @@ public class BillServices {
 
             SalesReport saleReport= new SalesReport(date, bill.getClient().getCodApp(), bill.getClient().getName(), bill.getClient().getIdentification(),
 			bill.getStringSeq(), bill.getClaveDeAcceso(), status, bill.getOtir(), bill.getBaseTaxes(), bill.getDiscount(),bill.getBaseNoTaxes(), bill.getIva(), bill.getTotal(), endDate, bill.getUserIntegridad().getCashier().getNameNumber(),
-			null, bill.getSubsidiary().getName(), bill.getUserIntegridad().getFirstName() + " " + bill.getUserIntegridad().getLastName());
+			null, bill.getSubsidiary().getName(), bill.getUserIntegridad().getFirstName() + " " + bill.getUserIntegridad().getLastName(), paymentMode);
 
             salesReportList.add(saleReport);
         });
