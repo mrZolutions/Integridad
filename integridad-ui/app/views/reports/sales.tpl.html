@@ -240,6 +240,7 @@
                     <th>Base 0%</th>
                     <th>Iva</th>
                     <th>Total</th>
+                    <th>Forma de Pago</th>
                     <th>Fecha-Vencimiento</th>
                     <th>Caja</th>
                     <th>Bodega</th>
@@ -262,6 +263,7 @@
                     <td>{{data.status === 'ACTIVA' ? data.baseNoTaxes.toFixed(2) : '0'}}</td>
                     <td>{{data.status === 'ACTIVA' ? data.iva.toFixed(2) : '0'}}</td>
                     <td>{{data.status === 'ACTIVA' ? data.total.toFixed(2) : '0'}}</td>
+                    <td>{{data.paymentMode}}</td>
                     <td>{{data.endDate}}</td>
                     <td>{{data.cashier}}</td>
                     <td>{{data.warehouse}}</td>
