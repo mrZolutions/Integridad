@@ -60,13 +60,13 @@
                     <td>{{client.name}}</td>
                     <td>{{client.typeId}} - {{client.identification}}</td>
                     <td>
-                        <button type = "button" title = "Seleccionar Cliente" class = "btn btn-primary btn-sm" ng-click = "vm.clientConsult(client)">
+                        <button type = "button" title = "Facturas Pendientes" class = "btn btn-primary btn-sm" ng-click = "vm.clientConsult(client)">
                                 <span class = "glyphicon glyphicon-check" aria-hidden = "true"></span>
                         </button>
-                        <button type = "button" title = "Consultar Comprobantes de Cobros" class = "btn btn-primary btn-sm" ng-click = "vm.comprobanteCobroByClient(client)">
+                        <!-- <button type = "button" title = "Consultar Comprobantes de Cobros" class = "btn btn-primary btn-sm" ng-click = "vm.comprobanteCobroByClient(client)">
                                 <span class = "glyphicon glyphicon-search" aria-hidden = "true"></span>
-                        </button>
-                        <button type = "button" title = "Pago Múltiple de Facturas" class = "btn btn-success btn-sm" ng-click = "vm.clientMultiplePayment(client)">
+                        </button> -->
+                        <button type = "button" title = "Realizar Pago" class = "btn btn-success btn-sm" ng-click = "vm.clientMultiplePayment(client)">
                                 <span class = "glyphicon glyphicon-credit-card" aria-hidden = "true"></span>
                         </button>
                         <button type = "button" title = "Consultar Cobros por Cliente" class = "btn btn-primary btn-sm" ng-click = "vm.paymentsByClient(client)">
@@ -120,10 +120,10 @@
                             <td>{{bill.total.toFixed(2)}}</td>
                             <td>{{bill.saldo}}</td>
                             <td>
-                                <button type="button" title = "Pago Individual de Factura" class="btn btn-primary btn-sm" 
+                                <!-- <button type="button" title = "Pago Individual de Factura" class="btn btn-primary btn-sm" 
                                         ng-click="vm.creditsByBill(bill)" data-toggle="modal" data-target="#modalCuotas">
                                         <span class = "glyphicon glyphicon-usd" aria-hidden = "true"></span>
-                                </button> 
+                                </button>  -->
                                 <button type="button" title = "Nueva Retención" class="btn btn-success btn-sm" ng-click="vm.createRetentionClient(bill)">
                                         <span class = "glyphicon glyphicon-tasks" aria-hidden = "true"></span>
                                 </button>
@@ -1000,7 +1000,7 @@
     </div>
 
     <!--CONSULTA DE COBROS REALIZADOS POR CLIENTE-->
-    <div class="table-responsive" ng-show="vm.paymentList !== undefined">
+    <div class="table-responsive" ng-show="vm.paymentList !== undefined && vm.comprobanteCobroCreated === undefined">
         <div class="panel panel-primary">
             <div class="panel-heading">
                 <b>Listado de Cobros de Facturas Pertenecientes a: {{vm.clientName}}</b>
@@ -1036,6 +1036,10 @@
                                 <button type="button" title = "Anular Cobro de Factura" class="btn btn-warning btn-sm" 
                                         ng-click="vm.deactivatePayment = payment" data-toggle="modal" data-target="#modalAnularPayment">
                                         <span class = "glyphicon glyphicon-warning-sign" aria-hidden = "true"></span>
+                                </button>
+                                <button type="button" title = "Ver Comprobante de Cobro" class="btn btn-primary btn-sm" 
+                                        ng-click="vm.getComprobanteByPayment(payment)">
+                                        <span class = "glyphicon glyphicon-eye-open" aria-hidden = "true"></span>
                                 </button>
                             </td>
                         </tr>
