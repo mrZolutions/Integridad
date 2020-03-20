@@ -329,6 +329,23 @@ angular.module('integridadUiApp')
             });
         };
 
+        vm.getComprobanteByPayment = function(payment) {
+            vm.loading = true;
+            comprobanteService.getComprobanteCobroByPaymentId(payment.id).then(function(response) {
+                if(response !== ''){
+                    vm.error = undefined;
+                    vm.activecmpC = response.active;
+                    vm.comprobanteCobroCreated = response;
+                } else {
+                    vm.error = 'Pago no tiene comprobante';    
+                }
+                vm.loading = false;
+            }).catch(function(error) {
+                vm.loading = false;
+                vm.error = error.data;
+            })
+        };
+
         vm.creditsByBill = function(bill) {
             vm.loading = true;
             vm.success = undefined;

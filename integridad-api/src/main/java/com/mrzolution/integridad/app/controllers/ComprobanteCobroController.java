@@ -38,6 +38,19 @@ public class ComprobanteCobroController {
         log.info("ComprobanteCobroController getComprobanteCobroById DONE");
         return new ResponseEntity<ComprobanteCobro>(response, HttpStatus.ACCEPTED);
     }
+
+    @RequestMapping(method = RequestMethod.GET, value="/payment/{id}")
+    public ResponseEntity getComprobanteCobroByPaymentId(@PathVariable("id") String paymentId) {
+        ComprobanteCobro response = null;
+        try {
+            response = service.getComprobanteCobroByPaymentId(paymentId);
+        } catch (BadRequestException e) {
+            log.error("ComprobanteCobroController getComprobanteCobroByPaymentId Exception thrown: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+        log.info("ComprobanteCobroController getComprobanteCobroByPaymentIdDONE");
+        return new ResponseEntity<ComprobanteCobro>(response, HttpStatus.ACCEPTED);
+    }
     
     @RequestMapping(method = RequestMethod.GET, value="/client/{id}")
     public ResponseEntity getComprobanteCobroByClientId(@PathVariable("id") UUID id) {

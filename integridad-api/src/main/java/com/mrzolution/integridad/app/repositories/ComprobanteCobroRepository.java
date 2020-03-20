@@ -21,4 +21,6 @@ public interface ComprobanteCobroRepository extends CrudRepository<ComprobanteCo
     
     @Query("SELECT c FROM ComprobanteCobro c WHERE c.subsidiary.userClient.id = (:userClientId)")
     Iterable<ComprobanteCobro> findComprobanteCobroByUserClientId(@Param("userClientId") UUID id);
+
+    ComprobanteCobro findComprobanteCobroByPaymentId(@Param("paymentId") String paymentId);
 }
