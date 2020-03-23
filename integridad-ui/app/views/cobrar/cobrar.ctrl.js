@@ -171,6 +171,8 @@ angular.module('integridadUiApp')
             vm.comprobanteCobroSeq = undefined;
             vm.comprobanteCobroStringSeq = undefined;
             vm.itemsMultipleCobros = [];
+            vm.tipoPago = undefined;
+            vm.billsSelected = [];
 
             vm.userCashier = $localStorage.user.cashier;
             vm.usrCliId = $localStorage.user.subsidiary.userClient.id;
@@ -553,6 +555,7 @@ angular.module('integridadUiApp')
             _initializeComprobanteCobro();
             cuentaContableService.getCuentaContableByUserClientAndBank(vm.usrCliId).then(function(response) {
                 vm.ctaCtableBankList = response;
+                vm.tipoPago = undefined;
                 vm.findBills();
                 $('#modalFindBills').modal('show');
                 vm.loading = false;
@@ -577,45 +580,70 @@ angular.module('integridadUiApp')
             });
         };
 
-        vm.creditsMultiByBills = function(bills) {
+        vm.creditsMultiByBills = function() {
             vm.loading = true;
             vm.success = undefined;
             vm.error = undefined;
-            vm.billNumber = bills.stringSeq;
-            vm.billDate = bills.dateCreated;
-            vm.billValue = (bills.total).toFixed(2);
-            vm.billPending = parseFloat(bills.saldo);
-            creditsbillService.getAllCreditsOfBillById(bills.id).then(function(response) {
-                vm.creditsMultiBillsList = response;
-                vm.loading = false;
-            }).catch(function(error) {
-                vm.loading = false;
-                vm.error = error.data;
+
+            _.each(vm.billMultipleList, function(bill){
+                if(bill.selectedTotal || bill.selectedParcial){
+                    vm.billsSelected.push(bill);
+                    creditsbillService.getAllCreditsOfBillById(bill.id).then(function(response) {
+                        if(bill.selectedTotal){
+                            _.each(response, function(cuota) {
+                                vm.itemCobroBill = {};
+                                var itemBillsMulti = {
+                                    credit_bill: cuota,
+                                    bill_number: bill.stringSeq,
+                                    bill_total: (bill.total).toFixed(2),
+                                    bill_pending: parseFloat(bill.saldo),
+                                    bill_abono: cuota.valor.toFixed(2),
+                                    tipo: 'PAGO TOTAL DE CUOTA',
+                                };
+                                vm.itemsMultiplePayments.push(itemBillsMulti);
+                                vm.itemCobroBill.totalAbono = cuota.valorAbono;
+                                vm.itemsMultipleCobros.push(vm.itemCobroBill);
+                            });
+                        } else {
+                            bill.creditsMultiBillsList = response;
+                            _.each(bill.creditsMultiBillsList, function(cred){
+                                cred.valorAbono = undefined;
+                            });
+                        }
+                        vm.loading = false;
+                    }).catch(function(error) {
+                        vm.loading = false;
+                        vm.error = error.data;
+                    });
+                }
+            });         
+        };
+
+        vm.multipleAbono = function() {
+            vm.loading = true;
+            _.each(vm.billsSelected, function(bill){
+                if(bill.selectedParcial){
+                    _.each(bill.creditsMultiBillsList, function(cuota) {
+                        if(cuota.valorAbono !== undefined){
+                            vm.itemCobroBill = {};
+                            var itemBillsMulti = {
+                                credit_bill: cuota,
+                                bill_number: bill.stringSeq,
+                                bill_total: (bill.total).toFixed(2),
+                                bill_pending: parseFloat(bill.saldo),
+                                bill_abono: cuota.valorAbono,
+                                tipo: parseFloat(cuota.valorAbono) < parseFloat(cuota.valor).toFixed(2) ? 'ABONO PARCIAL DE CUOTA' :  'PAGO TOTAL DE CUOTA',
+                            };
+                            vm.itemsMultiplePayments.push(itemBillsMulti);
+                            vm.itemCobroBill.totalAbono = cuota.valorAbono;
+                            vm.itemsMultipleCobros.push(vm.itemCobroBill);
+                        }
+                    });
+                }
             });
-        };
 
-        vm.multipleAbono = function(credits) {
-            vm.loading = true;
-            vm.creditsBillsSelected = credits;
-            vm.itemBillsMulti = {
-                credit_bill: vm.creditsBillsSelected,
-                bill_number: vm.billNumber,
-                bill_total: vm.billValue,
-                bill_pending: vm.billPending
-            };
-            vm.itemCobroBill = {};
             vm.loading = false;
-        };
-
-        vm.aceptaAbono = function() {
-            vm.loading = true;
             $('#modalFindBills').modal('hide');
-            vm.creditsBillsSelected = undefined;
-            vm.itemBillsMulti.bill_abono = vm.valorAbono;
-            vm.itemsMultiplePayments.push(vm.itemBillsMulti);
-            vm.itemCobroBill.totalAbono = vm.valorAbono;
-            vm.itemsMultipleCobros.push(vm.itemCobroBill);
-            vm.loading = false;
         };
 
         vm.eliminaAbono = function(index) {
@@ -646,13 +674,13 @@ angular.module('integridadUiApp')
                 if (response.length === 0) {
                     _.each(vm.itemsMultiplePayments, function(detail) { 
                         vm.payment = {
-                            credits: detail.credit_bill
+                            credits: detail.credit_bill,
                         };
                         vm.payment.typePayment = vm.typePayment;
                         vm.payment.datePayment = $('#pickerDateOfMultiplePayment').data("DateTimePicker").date().toDate().getTime();
                         vm.payment.documentNumber = detail.bill_number;
                         vm.payment.modePayment = vm.modePayment;
-                        vm.payment.detail = vm.details;
+                        vm.payment.detail = detail.tipo;
                         vm.payment.valorAbono = detail.bill_abono;
                         vm.payment.valorNotac = 0;
                         vm.payment.valorReten = 0;

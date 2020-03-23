@@ -120,10 +120,10 @@
                             <td>{{bill.total.toFixed(2)}}</td>
                             <td>{{bill.saldo}}</td>
                             <td>
-                                <!-- <button type="button" title = "Pago Individual de Factura" class="btn btn-primary btn-sm" 
+                                <button type="button" title = "Pago Individual de Factura" class="btn btn-primary btn-sm" 
                                         ng-click="vm.creditsByBill(bill)" data-toggle="modal" data-target="#modalCuotas">
                                         <span class = "glyphicon glyphicon-usd" aria-hidden = "true"></span>
-                                </button>  -->
+                                </button> 
                                 <button type="button" title = "Nueva Retención" class="btn btn-success btn-sm" ng-click="vm.createRetentionClient(bill)">
                                         <span class = "glyphicon glyphicon-tasks" aria-hidden = "true"></span>
                                 </button>
@@ -381,12 +381,6 @@
                         <div class="form-group col-md-12">
                             <div class="row" ng-show="vm.payment.modePayment === 'EFC'">
                                 <div class="form-group col-md-6">
-                                    <label>Detalle:</label><br/>
-                                    <select ng-options="deta.name as deta.code for deta in [{code: 'ABONO PARCIAL DE CUOTA' ,name:'ABONO PARCIAL DE CUOTA'}, {code: 'ABONO COMPLEMENTARIO DE CUOTA', name:'ABONO COMPLEMENTARIO DE CUOTA'}, {code: 'PAGO TOTAL DE CUOTA', name:'PAGO TOTAL DE CUOTA'}]"
-                                            ng-model="vm.payment.detail" class="form-control">
-                                    </select>
-                                </div>
-                                <div class="form-group col-md-6">
                                     <label>Monto a Abonar:</label><br/>
                                     <input type="text" class="form-control" ng-model="vm.payment.valorAbono" placeholder="{{vm.creditValue}}"/>
                                 </div>
@@ -433,12 +427,6 @@
                                 <div class="form-group col-md-6" ng-show="vm.ctaCtableBankList === undefined">
                                     <label>N&uacute;mero de Cuenta:</label><br/>
                                     <input type="text" class="form-control" ng-model="vm.payment.noAccount"/>
-                                </div>
-                                <div class="form-group col-md-6" ng-show="vm.ctaCtableBankList === undefined">
-                                    <label>Detalle:</label><br/>
-                                    <select ng-options="deta.name as deta.code for deta in [{code: 'ABONO PARCIAL DE CUOTA' ,name:'ABONO PARCIAL DE CUOTA'}, {code: 'ABONO COMPLEMENTARIO DE CUOTA', name:'ABONO COMPLEMENTARIO DE CUOTA'}, {code: 'PAGO TOTAL DE CUOTA', name:'PAGO TOTAL DE CUOTA'}]"
-                                            ng-model="vm.payment.detail" class="form-control">
-                                    </select>
                                 </div>
                                 <div class="form-group col-md-6" ng-show="vm.ctaCtableBankList === undefined">
                                     <label>Monto a Abonar:</label><br/>
@@ -489,12 +477,6 @@
                                     <input type="text" class="form-control" ng-model="vm.payment.noAccount"/>
                                 </div>
                                 <div class="form-group col-md-6" ng-show="vm.ctaCtableBankList === undefined">
-                                    <label>Detalle:</label><br/>
-                                    <select ng-options="deta.name as deta.code for deta in [{code: 'ABONO PARCIAL DE CUOTA' ,name:'ABONO PARCIAL DE CUOTA'}, {code: 'ABONO COMPLEMENTARIO DE CUOTA', name:'ABONO COMPLEMENTARIO DE CUOTA'}, {code: 'PAGO TOTAL DE CUOTA', name:'PAGO TOTAL DE CUOTA'}]"
-                                            ng-model="vm.payment.detail" class="form-control">
-                                    </select>
-                                </div>
-                                <div class="form-group col-md-6" ng-show="vm.ctaCtableBankList === undefined">
                                     <label>Monto a Abonar:</label><br/>
                                     <input type="text" class="form-control" ng-model="vm.payment.valorAbono" placeholder="{{vm.creditValue}}"/>
                                 </div>
@@ -514,12 +496,6 @@
                                     <label>No. Lote:</label><br/>
                                     <input type="text" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
                                            ng-model="vm.payment.numeroLote" class="form-control" maxlength="5">
-                                </div>
-                                <div class="form-group col-md-6">
-                                    <label>Detalle:</label><br/>
-                                    <select ng-options="deta.name as deta.code for deta in [{code: 'ABONO PARCIAL DE CUOTA' ,name:'ABONO PARCIAL DE CUOTA'}, {code: 'ABONO COMPLEMENTARIO DE CUOTA', name:'ABONO COMPLEMENTARIO DE CUOTA'}, {code: 'PAGO TOTAL DE CUOTA', name:'PAGO TOTAL DE CUOTA'}]"
-                                            ng-model="vm.payment.detail" class="form-control">
-                                    </select>
                                 </div>
                                 <div class="form-group col-md-6">
                                     <label>Monto a Abonar:</label><br/>
@@ -570,12 +546,6 @@
                                     <input type="text" class="form-control" ng-model="vm.payment.noAccount"/>
                                 </div>
                                 <div class="form-group col-md-6" ng-show="vm.ctaCtableBankList === undefined">
-                                    <label>Detalle:</label><br/>
-                                    <select ng-options="deta.name as deta.code for deta in [{code: 'ABONO PARCIAL DE CUOTA' ,name:'ABONO PARCIAL DE CUOTA'}, {code: 'ABONO COMPLEMENTARIO DE CUOTA', name:'ABONO COMPLEMENTARIO DE CUOTA'}, {code: 'PAGO TOTAL DE CUOTA', name:'PAGO TOTAL DE CUOTA'}]"
-                                            ng-model="vm.payment.detail" class="form-control">
-                                    </select>
-                                </div>
-                                <div class="form-group col-md-6" ng-show="vm.ctaCtableBankList === undefined">
                                     <label>Monto a Abonar:</label><br/>
                                     <input type="text" class="form-control" ng-model="vm.payment.valorAbono" placeholder="{{vm.creditValue}}"/>
                                 </div>
@@ -588,12 +558,6 @@
                                 <div class="form-group col-md-6">
                                     <label>N&uacute;mero de Nota de Cr&eacute;dito:</label><br/>
                                     <input type="text" class="form-control" ng-model="vm.payment.noDocument" maxlength="17"/>
-                                </div>
-                                <div class="form-group col-md-6">
-                                    <label>Detalle:</label><br/>
-                                    <select ng-options="deta.name as deta.code for deta in [{code: 'ABONO POR NOTA DE CREDITO' ,name:'ABONO POR NOTA DE CREDITO'}]"
-                                            ng-model="vm.payment.detail" class="form-control">
-                                    </select>
                                 </div>
                                 <div class="form-group col-md-6">
                                     <label>Monto de la Nota de Cr&eacute;dito:</label><br/>
@@ -716,12 +680,6 @@
                                 <label>N&uacute;mero de Cuenta:</label><br/>
                                 <input type = "text" class = "form-control" ng-model = "vm.noAccount"/>
                             </div>
-                            <div class = "form-group col-md-6">
-                                <label>Detalle:</label><br/>
-                                <select ng-options = "deta.name as deta.code for deta in [{code: 'ABONO PARCIAL DE CUOTA' ,name:'ABONO PARCIAL DE CUOTA'}, {code: 'ABONO COMPLEMENTARIO DE CUOTA', name:'ABONO COMPLEMENTARIO DE CUOTA'}, {code: 'PAGO TOTAL DE CUOTA', name:'PAGO TOTAL DE CUOTA'}]"
-                                        ng-model = "vm.details" class = "form-control">
-                                </select>
-                            </div>
                         </div>
                         <div class = "row" ng-show = "vm.modePayment === 'TRF'">
                             <div class="form-group col-md-12" ng-show="vm.ctaCtableBankList !== undefined">
@@ -769,12 +727,6 @@
                             <div class = "form-group col-md-3">
                                 <label>N&uacute;mero de Cuenta:</label><br/>
                                 <input type = "text" class = "form-control" ng-model = "vm.noAccount"/>
-                            </div>
-                            <div class = "form-group col-md-6">
-                                <label>Detalle:</label><br/>
-                                <select ng-options = "deta.name as deta.code for deta in [{code: 'ABONO PARCIAL DE CUOTA' ,name:'ABONO PARCIAL DE CUOTA'}, {code: 'ABONO COMPLEMENTARIO DE CUOTA', name:'ABONO COMPLEMENTARIO DE CUOTA'}, {code: 'PAGO TOTAL DE CUOTA', name:'PAGO TOTAL DE CUOTA'}]"
-                                        ng-model = "vm.details" class = "form-control">
-                                </select>
                             </div>
                         </div>
                         <div class = "row" ng-show="vm.modePayment === 'DEP'">
@@ -824,12 +776,6 @@
                                 <label>N&uacute;mero de Cuenta:</label><br/>
                                 <input type = "text" class = "form-control" ng-model = "vm.noAccount"/>
                             </div>
-                            <div class = "form-group col-md-6">
-                                <label>Detalle:</label><br/>
-                                <select ng-options = "deta.name as deta.code for deta in [{code: 'ABONO PARCIAL DE CUOTA' ,name:'ABONO PARCIAL DE CUOTA'}, {code: 'ABONO COMPLEMENTARIO DE CUOTA', name:'ABONO COMPLEMENTARIO DE CUOTA'}, {code: 'PAGO TOTAL DE CUOTA', name:'PAGO TOTAL DE CUOTA'}]"
-                                        ng-model = "vm.details" class = "form-control">
-                                </select>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -839,9 +785,11 @@
                             <thead>
                                 <tr>
                                     <th>No. Factura</th>
+                                    <th>Tipo de Pago</th>
                                     <th>Total</th>
                                     <th>Pendiente</th>
                                     <th>Abono Realizado</th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -852,6 +800,7 @@
                                 </tr>
                                 <tr ng-repeat="mp in vm.itemsMultiplePayments">
                                     <td>{{mp.bill_number}}</td>
+                                    <td>{{mp.tipo}}</td>
                                     <td>{{mp.bill_total}}</td>
                                     <td>{{mp.bill_pending.toFixed(2)}}</td>
                                     <td>{{mp.bill_abono}}</td>
@@ -866,7 +815,9 @@
                                     <td></td>
                                     <td></td>
                                     <td></td>
-                                    <td><b>SALDO: {{vm.getTotalMultiAbonos()}}</b></td>
+                                    <td></td>
+                                    <td><b>TOTAL: {{vm.getTotalMultiAbonos()}}</b></td>
+                                    <td></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -893,69 +844,57 @@
                         <b>Facturas Pertenecientes a: {{vm.clientName}}</b>
                     </div>
                 </div>
-                <div class = "modal-body">
-                    <div class="row">
-                        <div class = "col-md-12" ng-if = "vm.creditsMultiBillsList !== undefined">
-                            <label>Factura Nro:&nbsp;{{vm.billNumber}}</label>
-                        </div>
-                    </div>
-                    <div class ="row">
-                        <div class = "col-md-12" ng-if = "vm.creditsMultiBillsList !== undefined">
-                            <table class = "table table-striped">
-                                <thead>
-                                    <tr>
-                                        <th>Fecha Limite</th>
-                                        <th>N&uacute;mero de Pagos</th>
-                                        <th>Saldo por Cancelar</th>
-                                        <th></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr ng-show = "vm.creditsMultiBillsList == 0">
-                                        <td colspan = "4">
-                                            La Factura <b>No Presenta</b> Cobros Pendientes por Cancelar...
-                                        </td>
-                                    </tr>
-                                    <tr ng-repeat = "credits in vm.creditsMultiBillsList | orderBy : 'payNumber' : true">
-                                        <td>{{credits.fecha | date : "dd/MM/yyyy"}}</td>
-                                        <td>{{credits.payNumber}}</td>
-                                        <td>{{credits.valor.toFixed(2)}}</td>
-                                        <td>
-                                            <button type = "button" title = "Seleccionar Factura" class = "btn btn-primary btn-sm" ng-click = "vm.multipleAbono(credits)">
-                                                    <span class = "glyphicon glyphicon-ok" aria-hidden = "true"></span>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
+                <div class = "modal-body">                   
+                    <div class ="row"> 
 
-                        <div class = "col-md-12" ng-if = "vm.creditsBillsSelected !== undefined">
-                            <div>
-                                <div class="form-group col-md-4">
-                                    <label>PAGO NUMERO </label>
-                                    {{vm.creditsBillsSelected.payNumber}}
+                        <div class = "col-md-12" ng-if = "vm.billsSelected.length > 0" ng-repeat = "bill in vm.billsSelected">
+                            <div ng-if="bill.selectedParcial">
+                                <div class="row">
+                                    <div class = "col-md-12" >
+                                        <label>Factura Nro:&nbsp;{{bill.stringSeq}}</label>
+                                    </div>
                                 </div>
-                                <div class="form-group col-md-8">
-                                    <label>Valor Abono &#36;:</label><br/>
-                                    <input type = "text" class = "form-control" ng-model = "vm.valorAbono"/>
+                                <div class="row">
+                                    <div class = "col-md-12" >
+                                        <table class = "table table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>Fecha Limite</th>
+                                                    <th>N&uacute;mero de Pagos</th>
+                                                    <th>Saldo por Cancelar</th>
+                                                    <th>Valor de la cuota</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr ng-show = "bill.creditsMultiBillsList == 0">
+                                                    <td colspan = "4">
+                                                        La Factura <b>No Presenta</b> Cobros Pendientes por Cancelar...
+                                                    </td>
+                                                </tr>
+                                                <tr ng-repeat = "credits in bill.creditsMultiBillsList | orderBy : 'payNumber' : false">
+                                                    <td>{{credits.fecha | date : "dd/MM/yyyy"}}</td>
+                                                    <td>{{credits.payNumber}}</td>
+                                                    <td>{{credits.valor.toFixed(2)}}</td>
+                                                    <td>
+                                                        <input type="text" class = "form-control" ng-model ="credits.valorAbono" 
+                                                        onkeypress="return ((event.which >= 46 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))">
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
-                            <div>
-                                <button type = "button" title = "Anterior" class = "btn btn-primary btn-sm" 
-                                ng-click = "vm.creditsMultiBillsList = undefined; vm.creditsBillsSelected = undefined">
-                                    <span class = "glyphicon glyphicon-arrow-left" aria-hidden = "true"></span>
-                                </button>
-                                <button type = "button" title = "Aceptar" class = "btn btn-success btn-sm" ng-click = "vm.aceptaAbono()">
-                                        <span class = "glyphicon glyphicon-thumbs-up" aria-hidden = "true"></span>
-                                </button>
-                                <button type = "button" title = "Salir" class = "btn btn-primary btn-sm" data-dismiss = "modal">
-                                        <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
-                                </button>
-                            </div>
+                            <hr/>
+                            
+                        </div>
+                        <div class = "col-md-12" ng-if = "vm.billsSelected.length > 0">
+                            <button type = "button" title = "Aceptar" class = "btn btn-primary btn-sm" ng-click="vm.multipleAbono()">
+                                <span class = "glyphicon glyphicon-check" aria-hidden = "true"></span>
+                            </button>
                         </div>
 
-                        <div class = "col-md-12" ng-if = "vm.creditsMultiBillsList === undefined && vm.creditsBillsSelected === undefined"  >
+                        <div class = "col-md-12" ng-if = "vm.billsSelected.length <= 0 && vm.creditsBillsSelected === undefined"  >
                             <table class = "table table-striped">
                                 <thead>
                                     <tr>
@@ -963,6 +902,7 @@
                                         <th>Fecha</th>
                                         <th>Total</th>
                                         <th>Saldo</th>
+                                        <th>Tipo de Pago</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -977,7 +917,8 @@
                                         <td>{{bills.total.toFixed(2)}}</td>
                                         <td>{{bills.saldo}}</td>
                                         <td>
-                                            <input class="pull-right" ng-model="bills.selected" type="checkbox" ng-change="vm.creditsMultiByBills(bills)">
+                                            TOTAL <input ng-model="bills.selectedTotal" type="checkbox">
+                                            PARCIAL <input ng-model="bills.selectedParcial" type="checkbox">
                                             <!-- <button type = "button" title = "Consultar Créditos Pendientes" class = "btn btn-primary btn-sm" 
                                                     ng-click = "vm.creditsMultiByBills(bills)">
                                                     <span class = "glyphicon glyphicon-ok" aria-hidden = "true"></span>
@@ -989,6 +930,9 @@
                             <div>
                                 <button type = "button" title = "Salir" class = "btn btn-primary btn-sm" data-dismiss = "modal">
                                         <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
+                                </button>
+                                <button type = "button" title = "Aceptar" class = "btn btn-primary btn-sm" ng-click="vm.creditsMultiByBills()">
+                                    <span class = "glyphicon glyphicon-check" aria-hidden = "true"></span>
                                 </button>
                             </div>
                         </div>
