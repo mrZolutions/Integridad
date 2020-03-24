@@ -1,6 +1,7 @@
 package com.mrzolution.integridad.app.services;
 
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 import com.mrzolution.integridad.app.domain.Bill;
 import com.mrzolution.integridad.app.domain.Credits;
 import com.mrzolution.integridad.app.domain.Payment;
@@ -11,11 +12,10 @@ import com.mrzolution.integridad.app.repositories.CreditsRepository;
 import com.mrzolution.integridad.app.repositories.PagoRepository;
 import com.mrzolution.integridad.app.repositories.PaymentRepository;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
@@ -101,11 +101,40 @@ public class PaymentServices {
         log.info("PaymentServices createPayment: {}, {}", saved.getId(), saved.getDocumentNumber());
 	return saved;
     }
+
+    public Void createPaymentList(List<Payment> payments) {
+        Set<String> billIds = new HashSet<>();
+        payments.forEach(payment -> {
+            payment.setActive(true);
+            payment.setFatherListToNull();
+            payment.setListsNull();
+            Payment saved = paymentRepository.save(payment);
+            if (saved.getCredits().getId() != null) {
+                if ("PAC".equals(saved.getTypePayment())){
+                    abono = saved.getValorAbono();
+                } else {
+                    abono = saved.getValorNotac();
+                }
+                updateCredits(saved);
+            }
+            billIds.add(payment.getCredits().getBillId());
+            log.info("PaymentServices createPayment LIST: {}, {}", saved.getId(), saved.getDocumentNumber());
+        });
+
+        updateBills(billIds);
+
+        return null;
+    }
     
     public void updateCredits(Payment saved) {
         Iterable<Credits> credits = creditsRepository.findCreditsById(saved.getCredits().getId());
         credits.forEach(credit -> {
-            credit.setValor(credit.getValor() - saved.getValorAbono());
+
+            BigDecimal bd = new BigDecimal(credit.getValor() - saved.getValorAbono()).setScale(2, RoundingMode.HALF_UP);
+            credit.setValor(bd.doubleValue());
+            if(credit.getValor() == 0){
+                credit.setStatusCredits("PAGADO");
+            }
             credit.setListsNull();
             credit.setFatherListToNull();
             creditsRepository.save(credit);
@@ -134,6 +163,23 @@ public class PaymentServices {
         log.info("PaymentServices updateBill DONE");
         resto = 0;
         saldo = "";
+    }
+
+    public void updateBills(Set<String> billIds) {
+        billIds.forEach(id ->{
+            final double[] saldo = {0};
+            Bill bill = billRepository.findOne(UUID.fromString(id));
+            Iterable<Credits> credits = creditsRepository.findCreditsByBillId(UUID.fromString(id));
+            List<Credits> creditsList = Lists.newArrayList(credits);
+            creditsList.forEach(cred ->{
+                saldo[0] = saldo[0] + cred.getValor();
+            });
+            bill.setSaldo(String.valueOf(saldo[0]));
+            bill.setListsNull();
+            bill.setFatherListToNull();
+            billRepository.save(bill);
+        });
+        log.info("PaymentServices updateBills DONE");
     }
     
     public List<CCResumenReport> getPaymentsByUserClientIdAndDates(UUID id, long dateOne, long dateTwo) {
