@@ -9,7 +9,7 @@
 angular.module('integridadUiApp')
     .controller('BillCtrl', function(_, $location, utilStringService, $localStorage, consumptionService,
                                      clientService, productService, authService, billService, warehouseService,
-                                     cashierService, requirementService, utilSeqService) {
+                                     cashierService, requirementService, utilSeqService, contableService) {
         var vm = this;
         vm.error = undefined;
         vm.success = undefined;
@@ -129,6 +129,12 @@ angular.module('integridadUiApp')
             vm.numbAddedOne = parseInt($localStorage.user.cashier.compCobroNumberSeq) + 1;
             vm.comprobanteCobroSeq = vm.numbAddedOne;
             vm.comprobanteCobroStringSeq = utilSeqService._pad_with_zeroes(vm.numbAddedOne, 6);
+        };
+
+        function _getDailyCiSeqNumber() {
+            vm.numberAddedOne = parseInt($localStorage.user.cashier.dailyCiNumberSeq) + 1;
+            vm.dailyCiSeq = vm.numberAddedOne;
+            vm.dailyCiStringSeq = utilSeqService._pad_with_zeroes(vm.numberAddedOne, 6);
         };
 
         vm.getDetailsOfBills = function() {
@@ -887,6 +893,7 @@ angular.module('integridadUiApp')
             var reqBill = {requirement : req, bill: vm.bill}
 
             vm.comprobanteCobro = {};
+            vm.dailybookCi = {};
 
             if(vm.pagos.length === 1){
                 if(vm.pagos[0].code === 'efectivo'){
@@ -925,10 +932,73 @@ angular.module('integridadUiApp')
                     vm.comprobanteCobro.subTotalDoce = parseFloat((vm.bill.total / 1.12).toFixed(2));
                     vm.comprobanteCobro.iva = parseFloat((vm.bill.total * 0.12).toFixed(2));
                     vm.comprobanteCobro.paymentId = '-';
+
+                    vm.dailybookCi = {
+                        client: vm.clientSelected,
+                        userIntegridad: $localStorage.user,
+                        subsidiary: $localStorage.user.subsidiary,
+                        clientProvName: vm.clientSelected.name,
+                        subTotalDoce: 0,
+                        iva: 0,
+                        subTotalCero: 0,
+                        total: 0,
+                        detailDailybookContab: []
+                    };
+                    _getDailyCiSeqNumber();
+                    vm.selectedTypeBook = '3';
+                    vm.generalDetailCi_1 = vm.clientSelected.name + ' Cancela Facts. ' + vm.bill.stringSeq;
+                    vm.typeContabCi = 'COMP. DE INGRESO';
+                    vm.itema = {
+                        typeContab: vm.typeContabCi,
+                        codeConta: vm.clientSelected.codConta,
+                        descrip: 'CLIENTES NO RELACIONADOS',
+                        tipo: 'CREDITO (C)',
+                        baseImponible: parseFloat(vm.bill.total),
+                        name: vm.generalDetailCi_1,
+                        haber: parseFloat(vm.bill.total)
+                    };
+                    vm.itema.numCheque = '--';
+                    vm.itema.dailybookNumber = vm.dailyCiStringSeq;
+                    vm.itema.userClientId = vm.userClientId;
+                    vm.itema.dateDetailDailybook = vm.bill.dateCreated;
+                    vm.dailybookCi.detailDailybookContab.push(vm.itema);
+                    vm.generalDetailCi_2 = 'Cobro de Facts. ' + vm.bill.stringSeq + ' en EFECTIVO';
+                    // Todo DEFINIR CAMPOS DE CODE CONTA Y DESCRIPCION
+                    vm.itemb = {
+                        typeContab: vm.typeContabCi,
+                        codeConta: '--',
+                        descrip: '--',
+                        tipo: 'DEBITO (D)',
+                        baseImponible: parseFloat(vm.bill.total),
+                        name: vm.generalDetailCi_2,
+                        deber: parseFloat(vm.bill.total)
+                    };
+                    vm.itemb.numCheque = '--';
+                    vm.itemb.dailybookNumber = vm.dailyCiStringSeq;
+                    vm.itemb.userClientId = vm.userClientId;
+                    vm.itemb.dateDetailDailybook = vm.bill.dateCreated;
+                    vm.dailybookCi.detailDailybookContab.push(vm.itemb);
+                    vm.dailybookCi.codeTypeContab = vm.selectedTypeBook;
+                    vm.dailybookCi.nameBank = '--';
+                    vm.dailybookCi.billNumber = vm.bill.stringSeq;
+                    vm.dailybookCi.numCheque = '--';
+                    vm.dailybookCi.typeContab = vm.typeContabCi;
+                    vm.dailybookCi.dailyCiSeq = vm.dailyCiSeq;
+                    vm.dailybookCi.dailyCiStringSeq = vm.dailyCiStringSeq;
+                    vm.dailybookCi.dailyCiStringUserSeq = 'PAGO GENERADO ' + vm.dailyCiStringSeq;
+                    vm.dailybookCi.clientProvName = vm.clientSelected.name;
+                    vm.dailybookCi.generalDetail = vm.generalDetailCi_1;
+                    vm.dailybookCi.total = vm.bill.total;
+                    vm.dailybookCi.iva = parseFloat((vm.bill.total * 0.12).toFixed(2));
+                    vm.dailybookCi.subTotalDoce = parseFloat((vm.bill.total / 1.12).toFixed(2));
+                    vm.dailybookCi.subTotalCero = 0;
+                    vm.dailybookCi.dateRecordBook = vm.bill.dateCreated;
+                    
                 }
             }
 
             reqBill.comprobanteCobro = vm.comprobanteCobro;
+            reqBill.dailybookCi = vm.dailybookCi;
             
             // 1 is typeDocument Bill **************!!!
             billService.getClaveDeAccesoSaveBill(reqBill, vm.companyData.userClient.id, 1).then(function(resp) {
@@ -939,6 +1009,7 @@ angular.module('integridadUiApp')
               $localStorage.user.cashier.billNumberSeq = vm.bill.billSeq;
               if(vm.comprobanteCobro.comprobanteSeq !== undefined){
                 $localStorage.user.cashier.compCobroNumberSeq = vm.comprobanteCobro.comprobanteSeq;
+                $localStorage.user.cashier.dailyCiNumberSeq = vm.dailybookCi.dailyCiSeq;
               }
               vm.loading = false;
               setTimeout(function() {

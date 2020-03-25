@@ -35,7 +35,7 @@ public class BillOfflineController {
     public ResponseEntity createBillOffline(@RequestBody RequirementBillOffline requirement, @PathVariable("typeDocument") int typeDocument) {
         BillOffline response = null;
         try {
-            response = service.createBillOffline(requirement.getBill(), requirement.getComprobanteCobro(), typeDocument);
+            response = service.createBillOffline(requirement.getBill(), requirement.getComprobanteCobro(), requirement.getDailybookCi(), typeDocument);
         } catch (BadRequestException e) {
             log.error("BillOfflineController createBillOffline Exception thrown: {}", e.getMessage());
 	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());

@@ -51,6 +51,8 @@ public class BillOfflineServices {
     ComprobanteCobroServices comprobanteCobroService;
     @Autowired
     CreditsRepository creditsRepository;
+    @Autowired
+    DailybookCiServices dailybookCiServices;
     
     public Iterable<BillOffline> getBillsOfflineByTypeDocument(int value) {
         Iterable<BillOffline> billsOffline = billOfflineRepository.findBillsOfflineByTypeDocument(value);
@@ -109,7 +111,7 @@ public class BillOfflineServices {
        
     //Inicio de Creación de las BillsOffline    
     @Async("asyncExecutor")
-    public BillOffline createBillOffline(BillOffline billOffline, ComprobanteCobro comprobante, int typeDocument) throws BadRequestException {
+    public BillOffline createBillOffline(BillOffline billOffline, ComprobanteCobro comprobante, DailybookCi dailybookCi, int typeDocument) throws BadRequestException {
         List<DetailOffline> detailsOffline = billOffline.getDetailsOffline();
         List<PagoOffline> pagosOffline = billOffline.getPagosOffline();
         List<Kardex> detailsKardexOffline = billOffline.getDetailsKardexOffline();
@@ -138,7 +140,7 @@ public class BillOfflineServices {
         savePagosOfflineOfBillOffline(saved, pagosOffline);
         updateProductBySubsidiary(billOffline, typeDocument, detailsOffline);
 
-        if(pagosOffline.size() ==1 && pagosOffline.get(0).getMedio().equals("efectivo")){
+        if(pagosOffline.size() ==1 && pagosOffline.get(0).getMedio() != null  && pagosOffline.get(0).getMedio().equals("efectivo")){
             //************************************************************************************
             Credits credit = creditsRepository.findByBillId(saved.getId().toString());
 
@@ -160,6 +162,7 @@ public class BillOfflineServices {
             comprobante.setPaymentId(paymentSaved.getId().toString());
             comprobanteCobroService.createComprobanteCobro(comprobante);
 
+            dailybookCiServices.createDailybookAsinCi(dailybookCi);
             //************************************************************************************
         }
 
