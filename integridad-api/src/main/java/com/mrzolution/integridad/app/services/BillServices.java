@@ -55,6 +55,8 @@ public class BillServices {
     PaymentRepository paymentRepository;
     @Autowired
     ComprobanteCobroServices comprobanteCobroService;
+    @Autowired
+    DailybookCiServices dailybookCiServices;
 
     public String getDatil(Requirement requirement, UUID userClientId) throws Exception {
         UserClient userClient = userClientRepository.findOne(userClientId);
@@ -149,7 +151,7 @@ public class BillServices {
 
     //Inicio de Creación de las Bills
     @Async("asyncExecutor")
-    public Bill createBill(Bill bill, ComprobanteCobro comprobante, int typeDocument) throws BadRequestException {
+    public Bill createBill(Bill bill, ComprobanteCobro comprobante, DailybookCi dailybookCi, int typeDocument) throws BadRequestException {
         List<Detail> details = bill.getDetails();
         List<Pago> pagos = bill.getPagos();
         List<Kardex> detailsKardex = bill.getDetailsKardex();
@@ -193,6 +195,7 @@ public class BillServices {
             comprobante.setPaymentId(paymentSaved.getId().toString());
             comprobanteCobroService.createComprobanteCobro(comprobante);
 
+            dailybookCiServices.createDailybookAsinCi(dailybookCi);
             //************************************************************************************
         }
 

@@ -139,6 +139,12 @@ angular.module('integridadUiApp')
             vm.comprobanteCobroStringSeq = utilSeqService._pad_with_zeroes(vm.numbAddedOne, 6);
         };
 
+        function _getDailyCiSeqNumber() {
+            vm.numberAddedOne = parseInt($localStorage.user.cashier.dailyCiNumberSeq) + 1;
+            vm.dailyCiSeq = vm.numberAddedOne;
+            vm.dailyCiStringSeq = utilSeqService._pad_with_zeroes(vm.numberAddedOne, 6);
+        };
+
         vm.volver = function() {
             _activate();
         };
@@ -870,6 +876,7 @@ angular.module('integridadUiApp')
             billOfflineService.getBillsOfflineByStringSeq(vm.seqNumber, vm.companyData.id).then(function(response) {
                 if (response.length === 0) {
                     vm.comprobanteCobro = {};
+                    vm.dailybookCi = {};
 
                     if(vm.pagosOffline.length === 1){
                         if(vm.pagosOffline[0].code === 'efectivo'){
@@ -908,11 +915,73 @@ angular.module('integridadUiApp')
                             vm.comprobanteCobro.subTotalDoce = parseFloat((vm.billOffline.total / 1.12).toFixed(2));
                             vm.comprobanteCobro.iva = parseFloat((vm.billOffline.total * 0.12).toFixed(2));
                             vm.comprobanteCobro.paymentId = '-';
+
+                            vm.dailybookCi = {
+                                client: vm.clientSelected,
+                                userIntegridad: $localStorage.user,
+                                subsidiary: $localStorage.user.subsidiary,
+                                clientProvName: vm.clientSelected.name,
+                                subTotalDoce: 0,
+                                iva: 0,
+                                subTotalCero: 0,
+                                total: 0,
+                                detailDailybookContab: []
+                            };
+                            _getDailyCiSeqNumber();
+                            vm.selectedTypeBook = '3';
+                            vm.generalDetailCi_1 = vm.clientSelected.name + ' Cancela Facts. ' + vm.billOffline.stringSeq;
+                            vm.typeContabCi = 'COMP. DE INGRESO';
+                            vm.itema = {
+                                typeContab: vm.typeContabCi,
+                                codeConta: vm.clientSelected.codConta,
+                                descrip: 'CLIENTES NO RELACIONADOS',
+                                tipo: 'CREDITO (C)',
+                                baseImponible: parseFloat(vm.billOffline.total),
+                                name: vm.generalDetailCi_1,
+                                haber: parseFloat(vm.billOffline.total)
+                            };
+                            vm.itema.numCheque = '--';
+                            vm.itema.dailybookNumber = vm.dailyCiStringSeq;
+                            vm.itema.userClientId = vm.userClientId;
+                            vm.itema.dateDetailDailybook = vm.billOffline.dateCreated;
+                            vm.dailybookCi.detailDailybookContab.push(vm.itema);
+                            vm.generalDetailCi_2 = 'Cobro de Facts. ' + vm.billOffline.stringSeq + ' en EFECTIVO';
+                            // Todo DEFINIR CAMPOS DE CODE CONTA Y DESCRIPCION
+                            vm.itemb = {
+                                typeContab: vm.typeContabCi,
+                                codeConta: '--',
+                                descrip: '--',
+                                tipo: 'DEBITO (D)',
+                                baseImponible: parseFloat(vm.billOffline.total),
+                                name: vm.generalDetailCi_2,
+                                deber: parseFloat(vm.billOffline.total)
+                            };
+                            vm.itemb.numCheque = '--';
+                            vm.itemb.dailybookNumber = vm.dailyCiStringSeq;
+                            vm.itemb.userClientId = vm.userClientId;
+                            vm.itemb.dateDetailDailybook = vm.billOffline.dateCreated;
+                            vm.dailybookCi.detailDailybookContab.push(vm.itemb);
+                            vm.dailybookCi.codeTypeContab = vm.selectedTypeBook;
+                            vm.dailybookCi.nameBank = '--';
+                            vm.dailybookCi.billNumber = vm.billOffline.stringSeq;
+                            vm.dailybookCi.numCheque = '--';
+                            vm.dailybookCi.typeContab = vm.typeContabCi;
+                            vm.dailybookCi.dailyCiSeq = vm.dailyCiSeq;
+                            vm.dailybookCi.dailyCiStringSeq = vm.dailyCiStringSeq;
+                            vm.dailybookCi.dailyCiStringUserSeq = 'PAGO GENERADO ' + vm.dailyCiStringSeq;
+                            vm.dailybookCi.clientProvName = vm.clientSelected.name;
+                            vm.dailybookCi.generalDetail = vm.generalDetailCi_1;
+                            vm.dailybookCi.total = vm.billOffline.total;
+                            vm.dailybookCi.iva = parseFloat((vm.billOffline.total * 0.12).toFixed(2));
+                            vm.dailybookCi.subTotalDoce = parseFloat((vm.billOffline.total / 1.12).toFixed(2));
+                            vm.dailybookCi.subTotalCero = 0;
+                            vm.dailybookCi.dateRecordBook = vm.billOffline.dateCreated;
                         }
                     }
                     var requirement = {
                         bill:vm.billOffline,
                         comprobanteCobro: vm.comprobanteCobro,
+                        dailybookCi: vm.dailybookCi,
                     }
 
                     billOfflineService.createBillOffline(requirement, 1).then(function(respBill) {
@@ -923,6 +992,7 @@ angular.module('integridadUiApp')
                         $localStorage.user.cashier.billOfflineNumberSeq = vm.billOffline.billSeq;
                         if(vm.comprobanteCobro.comprobanteSeq !== undefined){
                             $localStorage.user.cashier.compCobroNumberSeq = vm.comprobanteCobro.comprobanteSeq;
+                            $localStorage.user.cashier.dailyCiNumberSeq = vm.dailybookCi.dailyCiSeq;
                         }
                         vm.loading = false;
                         vm.rowsToFill = [];
