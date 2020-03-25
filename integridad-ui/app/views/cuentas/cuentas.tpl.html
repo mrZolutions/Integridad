@@ -91,27 +91,31 @@
             <div class="row">
                 <div class="form-group col-md-3">
                     <label>Tipo:</label>
-                    <select ng-options="tipe.code as tipe.name for tipe in vm.tipoCtaCtable"
-                            ng-model="vm.cuentaSelected.type" class="form-control">
+                    <select ng-options="tipe as tipe.name for tipe in vm.tipoCtaCtable" ng-change="vm.typeChange()"
+                            ng-model="vm.typeSelected" class="form-control">
                     </select>
                 </div>
                 <div class="form-group col-md-3">
                     <label>C&oacute;digo:</label>
                     <input type="text" ng-model="vm.cuentaSelected.code" class="form-control">
                 </div>
-                <div class="form-group col-md-6">
-                    <label>Descripci&oacute;n:</label>
-                    <input type="text" ng-model="vm.cuentaSelected.description" class="form-control">
-                </div>
-            </div>
-            <div class="row">
-                <div class="form-group col-md-4">
+                <div class="form-group col-md-3">
                     <label>Tipo de Cuenta:</label>
                     <select ng-options="tip.name as tip.name for tip in [{code: 'DEB' ,name:'DEBITO (D)'}, {code: 'CRD', name:'CREDITO (C)'}]"
                             ng-model="vm.cuentaSelected.accountType" class="form-control">
                     </select>
                 </div>
-                <div class="form-group col-md-8">
+                <div class="form-group col-md-3" ng-if="vm.typeSelected.showNumber">
+                    <label>N&uacute;mero de Cuenta:</label>
+                    <input type="text" ng-model="vm.cuentaSelected.number" class="form-control">
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label>Descripci&oacute;n:</label>
+                    <input type="text" ng-model="vm.cuentaSelected.description" class="form-control">
+                </div>
+                <div class="form-group col-md-6">
                     <label>Nombre Gen&eacute;rico:</label>
                     <input type="text" ng-model="vm.cuentaSelected.name" class="form-control">
                 </div>

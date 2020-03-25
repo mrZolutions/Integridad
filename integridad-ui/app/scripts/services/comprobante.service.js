@@ -12,8 +12,8 @@ angular
                 return response.data;
             });
         };
-        this.getComprobanteCobroByPaymentId = function(paymentId) {
-            return securityService.get('/compcobro//payment/' + paymentId).then(function successCallback(response) {
+        this.getComprobanteCobroByBillNumberAndUserClient = function(billNumber, userclientId) {
+            return securityService.get('/compcobro/bill/' + billNumber + '/userclient/' + userclientId).then(function successCallback(response) {
                 return response.data;
             });
         };

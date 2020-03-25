@@ -921,7 +921,9 @@ angular.module('integridadUiApp')
                         vm.newBuyOff = false;
                         vm.billOfflineCreated = respBill;
                         $localStorage.user.cashier.billOfflineNumberSeq = vm.billOffline.billSeq;
-                        $localStorage.user.cashier.compCobroNumberSeq = vm.comprobanteCobro.comprobanteSeq;
+                        if(vm.comprobanteCobro.comprobanteSeq !== undefined){
+                            $localStorage.user.cashier.compCobroNumberSeq = vm.comprobanteCobro.comprobanteSeq;
+                        }
                         vm.loading = false;
                         vm.rowsToFill = [];
                         for (var i = vm.billOffline.detailsOffline.length; i < 10; i++) {

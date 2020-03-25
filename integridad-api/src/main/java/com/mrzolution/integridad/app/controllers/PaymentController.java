@@ -40,6 +40,18 @@ public class PaymentController {
         log.info("PaymentController createPayment DONE");
         return new ResponseEntity<Payment>(response, HttpStatus.CREATED);
     }
+
+    @RequestMapping(method = RequestMethod.POST, value = "/paymentList")
+    public ResponseEntity createPayment(@RequestBody List<Payment> payments) {
+        try {
+            service.createPaymentList(payments);
+        } catch (BadRequestException e) {
+            log.error("PaymentController createPayment LIST Exception thrown: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+        log.info("PaymentController createPayment LIST DONE");
+        return new ResponseEntity<>(null, HttpStatus.CREATED);
+    }
     
     @RequestMapping(method = RequestMethod.GET, value="/rep/ccresreport/{userClientId}/{dateOne}/{dateTwo}")
     public ResponseEntity getPaymentsByUserClientIdAndDates(@PathVariable("userClientId") UUID userClientId, @PathVariable("dateOne") long dateOne, @PathVariable("dateTwo") long dateTwo) {

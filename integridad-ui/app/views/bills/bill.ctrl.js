@@ -937,7 +937,9 @@ angular.module('integridadUiApp')
               vm.newBill = false;
               vm.newBuy = false;
               $localStorage.user.cashier.billNumberSeq = vm.bill.billSeq;
-              $localStorage.user.cashier.compCobroNumberSeq = vm.comprobanteCobro.comprobanteSeq;
+              if(vm.comprobanteCobro.comprobanteSeq !== undefined){
+                $localStorage.user.cashier.compCobroNumberSeq = vm.comprobanteCobro.comprobanteSeq;
+              }
               vm.loading = false;
               setTimeout(function() {
                 vm.user.cashier.specialPrint ? vm.printToCart('printMatrixBillId') : document.getElementById("printBtnBill").click();
