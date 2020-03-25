@@ -20,6 +20,7 @@ public class CuentaContable {
     private String accountType;
     private String description;
     private String name;
+    private String number;
 
     @ManyToOne
     @JoinColumn(name = "user_client_id")

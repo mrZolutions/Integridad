@@ -333,6 +333,7 @@ angular.module('integridadUiApp')
 
         vm.selectCtaCtableBank = function(cuenta) {
             // vm.ctaCtableBankList = undefined;
+            vm.noAccount = cuenta.number;
             vm.ctaCtableBankCode = cuenta.code;
             vm.bankName = cuenta.description;
         };
@@ -384,6 +385,7 @@ angular.module('integridadUiApp')
             vm.valorAbono = 0;
             vm.creditsMultiBillsList = undefined; 
             vm.creditsBillsSelected = undefined
+            vm.billsSelected = [];
             billService.getAllBillsByClientIdWithSaldo(vm.clientId).then(function(response) {
                 vm.billMultipleList = response;
                 vm.loading = false;
@@ -487,6 +489,7 @@ angular.module('integridadUiApp')
             _.each(vm.itemsMultiplePayments, function(detail) {
                 totalMultiAbono = (parseFloat(totalMultiAbono) + parseFloat(detail.bill_abono)).toFixed(2);
             });
+            vm.valorDocumento = totalMultiAbono;
             return totalMultiAbono;
         };
 
