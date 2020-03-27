@@ -21,6 +21,7 @@ public class Payment implements Child {
     private String modePayment;
     private String detail;
     private long datePayment;
+    private String datePaymentCreated;
     private String noAccount;
     private String noDocument;
     private String documentNumber;

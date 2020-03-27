@@ -11,6 +11,11 @@ angular
                 return response.data;
             });
         };
+        this.getAllCreditsOfBillByUserClientIdResume = function(userClientId, dateTwo) {
+            return securityService.get('/creditsbybill/rep/pendingreport/resume/' + userClientId + '/' + dateTwo).then(function successCallback(response) {
+                return response.data;
+            });
+        };
         this.getAllPayedOfBillByUserClientId = function(userClientId) {
             return securityService.get('/creditsbybill/rep/payedreport/' + userClientId).then(function successCallback(response) {
                 return response.data;

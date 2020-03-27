@@ -88,7 +88,8 @@ angular.module('integridadUiApp')
             var dateTwo = $('#pickerBillDateTwo').data("DateTimePicker").date().toDate().getTime();
             dateTwo += 86399000;
             
-            creditsbillService.getAllCreditsOfBillByUserClientId(vm.userClientId, dateTwo).then(function(response) {
+            creditsbillService.getAllCreditsOfBillByUserClientIdResume(vm.userClientId, dateTwo).then(function(response) {
+                console.log(response);
                 vm.reportList = response;
                 vm.loading = false;
             }).catch(function(error) {
@@ -459,7 +460,6 @@ angular.module('integridadUiApp')
                             CLIENTE: creditsreport.clientName,
                             FACTURA: creditsreport.billNumber,
                             FECHA_VENTA: creditsreport.fechVenta,
-                            FECHA_VENCE: creditsreport.fechVence,
                             DIAS_CREDIT: creditsreport.diasCredit,
                             DIAS_VENCE: creditsreport.diasVencim,
                             VENTA: parseFloat(creditsreport.costo.toFixed(2)),
@@ -467,11 +467,6 @@ angular.module('integridadUiApp')
                             RETEN: parseFloat(creditsreport.valorReten.toFixed(2)),
                             N_C: parseFloat(creditsreport.valorNotac.toFixed(2)),
                             SALDO: parseFloat(creditsreport.saldo.toFixed(2)),
-                            PLZO_MEN_30: parseFloat(creditsreport.pplazo.toFixed(2)),
-                            PLZO_31_60: parseFloat(creditsreport.splazo.toFixed(2)),
-                            PLZO_61_90: parseFloat(creditsreport.tplazo.toFixed(2)),
-                            PLZO_91_120: parseFloat(creditsreport.cplazo.toFixed(2)),
-                            PLZO_MAY_120: parseFloat(creditsreport.qplazo.toFixed(2))
                         };      
                 
                         dataReport.push(data);
@@ -511,9 +506,9 @@ angular.module('integridadUiApp')
                             FACTURA: ccresumenreport.billNumber,
                             VENTA: ccresumenreport.billTotal,
                             TIPO_TRANSAC: ccresumenreport.tipTransac,
-                            MODO_PAGO: ccresumenreport.formPago,
+                            MODO_COBRO: ccresumenreport.formPago,
                             NUME_CHQ: ccresumenreport.numCheque,
-                            FECHA_PAGO: ccresumenreport.fechPago,
+                            FECHA_COBRO: ccresumenreport.fechPago,
                             VALOR_ABONO: parseFloat(ccresumenreport.valorAbono.toFixed(2)),
                             VALOR_RETEN: parseFloat(ccresumenreport.valorReten.toFixed(2)),
                             VALOR_NC: parseFloat(ccresumenreport.valorNotac.toFixed(2))

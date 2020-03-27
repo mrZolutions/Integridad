@@ -316,7 +316,7 @@ angular.module('integridadUiApp')
 
         vm.getComprobanteByPayment = function(payment) {
             vm.loading = true;
-            comprobanteService.getComprobanteCobroByBillNumberAndUserClient(payment.documentNumber, vm.usrCliId).then(function(response) {
+            comprobanteService.getComprobanteCobroByBillNumberAndUserClientAndDateCreated(payment.documentNumber, vm.usrCliId, payment.datePaymentCreated).then(function(response) {
                 if(response !== ''){
                     vm.error = undefined;
                     vm.activecmpC = response.active;
@@ -462,11 +462,11 @@ angular.module('integridadUiApp')
                                 bill_number: bill.stringSeq,
                                 bill_total: (bill.total).toFixed(2),
                                 bill_pending: parseFloat(bill.saldo),
-                                bill_abono: cuota.valorAbono,
+                                bill_abono: parseFloat(cuota.valorAbono).toFixed(2),
                                 tipo: parseFloat(cuota.valorAbono) < parseFloat(cuota.valor).toFixed(2) ? 'ABONO PARCIAL DE CUOTA' :  'PAGO TOTAL DE CUOTA',
                             };
                             vm.itemsMultiplePayments.push(itemBillsMulti);
-                            vm.itemCobroBill.totalAbono = cuota.valorAbono;
+                            vm.itemCobroBill.totalAbono = parseFloat(cuota.valorAbono).toFixed(2);
                             vm.itemCobroBill.dateBill = bill.dateCreated;
                             vm.itemCobroBill.billNumber = bill.stringSeq;
                             vm.itemsMultipleCobros.push(vm.itemCobroBill);
@@ -504,6 +504,7 @@ angular.module('integridadUiApp')
         vm.pagoMultiAbono = function() {
             vm.loading = true;
             vm.billsNumberPayed = vm.getBillNumberPayed();
+            vm.paymentCreatedDate = new Date().getTime();
             var paymentsListToSave = [];
             paymentService.getPaymentsByUserClientIdWithBankAndNroDocument(vm.usrCliId, vm.bankName, vm.noDocument).then(function(response) {
                 if (response.length === 0) {
@@ -525,6 +526,7 @@ angular.module('integridadUiApp')
                         vm.payment.ctaCtableClient = vm.clientCodConta;
                         vm.payment.clientName = vm.clientName;
                         vm.payment.banco = vm.bankName;
+                        vm.payment.datePaymentCreated = vm.paymentCreatedDate;
                         paymentsListToSave.push(vm.payment)
                         
                     });
@@ -568,6 +570,7 @@ angular.module('integridadUiApp')
             vm.comprobanteCobro.iva = parseFloat((vm.valorDocumento * 0.12).toFixed(2));
             vm.comprobanteCobro.detailComprobanteCobro = [];
             vm.comprobanteCobro.detailComprobanteCobro = vm.itemsMultipleCobros;
+            vm.comprobanteCobro.dateComprobanteCreated = vm.paymentCreatedDate;
             comprobanteService.createComprobanteCobro(vm.comprobanteCobro).then(function(response) {
                 vm.userCashier.compCobroNumberSeq = vm.comprobanteCobro.comprobanteSeq;
             }).catch(function(error) {
