@@ -161,7 +161,7 @@ public class BillServices {
         if (typeDocument == 1 && pagos == null) {
             throw new BadRequestException("Debe tener un pago por lo menos");
         }
-        bill.setDateCreated(new Date().getTime());
+//        bill.setDateCreated(new Date().getTime());
         bill.setTypeDocument(typeDocument);
         bill.setActive(true);
         bill.setDetails(null);
@@ -189,6 +189,7 @@ public class BillServices {
             payment.setValorReten(Double.valueOf(0));
             payment.setActive(true);
             payment.setCredits(credit);
+            payment.setDatePaymentCreated(String.valueOf(saved.getDateCreated()));
 
             Payment paymentSaved = paymentRepository.save(payment);
 

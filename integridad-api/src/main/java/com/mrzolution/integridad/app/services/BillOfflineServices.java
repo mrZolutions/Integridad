@@ -156,6 +156,7 @@ public class BillOfflineServices {
             payment.setValorReten(Double.valueOf(0));
             payment.setActive(true);
             payment.setCredits(credit);
+            payment.setDatePaymentCreated(String.valueOf(saved.getDateCreated()));
 
             Payment paymentSaved = paymentRepository.save(payment);
 

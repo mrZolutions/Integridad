@@ -907,6 +907,7 @@ angular.module('integridadUiApp')
                             vm.comprobanteCobro.detailComprobanteCobro.push(vm.itemBill);
                             vm.comprobanteCobro.billNumber = vm.billOffline.stringSeq;
                             vm.comprobanteCobro.dateComprobante = vm.billOffline.dateCreated;
+                            vm.comprobanteCobro.dateComprobanteCreated = vm.billOffline.dateCreated;
                             vm.comprobanteCobro.comprobanteSeq = vm.comprobanteCobroSeq;
                             vm.comprobanteCobro.comprobanteStringSeq = vm.comprobanteCobroStringSeq;
                             vm.comprobanteCobro.comprobanteConcep = 'Cancela Fact. ' + vm.billOffline.stringSeq;

@@ -339,7 +339,6 @@
                     <th>Cliente</th>
                     <th>Factura</th>
                     <th>Fecha Emision</th>
-                    <th>Fecha Vence</th>
                     <th>Dias Credito</th>
                     <th>Dias Vencidos</th>
                     <th>Venta</th>
@@ -347,11 +346,6 @@
                     <th>Retenciones</th>
                     <th>N/C</th>
                     <th>Saldo Pendiente</th>
-                    <th>&lt;30</th>
-                    <th>31-60 </th>
-                    <th>61-90</th>
-                    <th>91-120</th>
-                    <th>&gt;120</th>
                 </tr>
             </thead>
             <tbody>
@@ -360,7 +354,6 @@
                     <td>{{data.clientName}}</td>
                     <td>{{data.billNumber}}</td>
                     <td>{{data.fechVenta}}</td>
-                    <td>{{data.fechVence}}</td>
                     <td>{{data.diasCredit}}</td>
                     <td>{{data.diasVencim}}</td>
                     <td>{{data.costo.toFixed(2)}}</td>
@@ -368,11 +361,6 @@
                     <td>{{data.valorReten.toFixed(2)}}</td>
                     <td>{{data.valorNotac.toFixed(2)}}</td>
                     <td>{{data.saldo.toFixed(2)}}</td>
-                    <td>{{data.pplazo.toFixed(2)}}</td>
-                    <td>{{data.splazo.toFixed(2)}}</td>
-                    <td>{{data.tplazo.toFixed(2)}}</td>
-                    <td>{{data.cplazo.toFixed(2)}}</td>
-                    <td>{{data.qplazo.toFixed(2)}}</td>
                 </tr>
             </tbody>
         </table>
@@ -438,9 +426,9 @@
                     <th>N&uacute;mero Factura</th>
                     <th>Valor Factura</th>
                     <th>Tipo Transacci&oacute;n</th>
-                    <th>Forma de Pago</th>
+                    <th>Forma de Cobro</th>
                     <th>Nro. Transacci&oacute;n</th>
-                    <th>Fecha de Pago</th>
+                    <th>Fecha de Cobro</th>
                     <th>Abonos</th>
                     <th>Retenciones</th>
                     <th>N/C</th>

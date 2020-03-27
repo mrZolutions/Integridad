@@ -63,7 +63,7 @@
                         <button type = "button" title = "Facturas Pendientes" class = "btn btn-primary btn-sm" ng-click = "vm.clientConsult(client)">
                                 <span class = "glyphicon glyphicon-check" aria-hidden = "true"></span>
                         </button>
-                        <button type = "button" title = "Realizar Pago" class = "btn btn-success btn-sm" ng-click = "vm.clientMultiplePayment(client)">
+                        <button type = "button" title = "Realizar Cobro" class = "btn btn-success btn-sm" ng-click = "vm.clientMultiplePayment(client)">
                                 <span class = "glyphicon glyphicon-credit-card" aria-hidden = "true"></span>
                         </button>
                         <button type = "button" title = "Consultar Cobros por Cliente" class = "btn btn-primary btn-sm" ng-click = "vm.paymentsByClient(client)">
@@ -275,7 +275,7 @@
     <div class="table-responsive" ng-show="vm.multipleCobroSelected !== undefined">
         <div class = "panel panel-primary">
             <div class = "panel-heading">
-                <h4 class = "modal-title">Pago Multiple de Facturas</h4>
+                <h4 class = "modal-title">Cobro Multiple de Facturas</h4>
             </div>
             <div class = "panel-body">
                 <div class = "row">
@@ -293,7 +293,7 @@
                 </div>
                 <div class = "row">
                     <div class = "form-group col-md-4" >
-                        <label>Seleccione Modalidad de Pago:</label><br/>
+                        <label>Seleccione Modalidad de Cobro:</label><br/>
                         <label class = "radio-inline"><input type="radio" ng-model = "vm.modePayment" 
                                value = "CHQ" name = "cheque">Cheque</label>
                         <label class = "radio-inline"><input type="radio" ng-model = "vm.modePayment" 
@@ -303,7 +303,7 @@
                     </div>
 
                     <div class = "form-group col-md-4" ng-show = "vm.typePayment === 'PAC'">
-                        <label>Fecha de Pago: </label>
+                        <label>Fecha de Cobro: </label>
                         <div class = "input-group date" id="pickerDateOfMultiplePayment">
                             <input type = "text" class="form-control input-group-addon"/>
                             <span class = "input-group-addon"><span class = "glyphicon glyphicon-calendar"/></span>
@@ -360,7 +360,7 @@
                             </div>
                             <div class = "form-group col-md-3">
                                 <label>N&uacute;mero de Cheque:</label><br/>
-                                <input type = "text" class = "form-control" ng-model = "vm.noDocument"/>
+                                <input type = "text" class = "form-control" ng-model = "vm.noDocument" maxlength="13"/>
                             </div>
                             <div class = "form-group col-md-3">
                                 <label>Monto del Cheque:</label><br/>
@@ -475,7 +475,7 @@
                             <thead>
                                 <tr>
                                     <th>No. Factura</th>
-                                    <th>Tipo de Pago</th>
+                                    <th>Tipo de Cobro</th>
                                     <th>Total</th>
                                     <th>Pendiente</th>
                                     <th>Abono Realizado</th>
@@ -591,7 +591,7 @@
                                         <th>Fecha</th>
                                         <th>Total</th>
                                         <th>Saldo</th>
-                                        <th>Tipo de Pago</th>
+                                        <th>Tipo de Cobro</th>
                                     </tr>
                                 </thead>
                                 <tbody>

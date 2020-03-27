@@ -2,6 +2,7 @@ package com.mrzolution.integridad.app.controllers;
 
 import com.mrzolution.integridad.app.domain.Credits;
 import com.mrzolution.integridad.app.domain.report.CreditsReport;
+import com.mrzolution.integridad.app.domain.report.CreditsResumeReport;
 import com.mrzolution.integridad.app.exceptions.BadRequestException;
 import com.mrzolution.integridad.app.services.CreditsServices;
 import java.util.List;
@@ -51,6 +52,19 @@ public class CreditsController {
 	}
         log.info("CreditsControler getCreditsPendingOfBillByUserClientId DONE");
 	return new ResponseEntity<List>(response, HttpStatus.ACCEPTED);
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value="/rep/pendingreport/resume/{userClientId}/{dateTwo}")
+    public ResponseEntity getCreditsPendingResumeOfBillByUserClientIdResume(@PathVariable("userClientId") UUID userClientId, @PathVariable("dateTwo") long dateTwo) {
+        List<CreditsResumeReport> response = null;
+        try {
+            response = service.getCreditsPendingOfBillByUserClientIdResume(userClientId, dateTwo);
+        } catch (BadRequestException e) {
+            log.error("CreditsControler getCreditsPendingResumeOfBillByUserClientIdResume Exception thrown: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+        log.info("CreditsControler getCreditsPendingResumeOfBillByUserClientIdResume DONE");
+        return new ResponseEntity<List>(response, HttpStatus.ACCEPTED);
     }
     
 }   

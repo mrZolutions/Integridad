@@ -38,8 +38,8 @@ public class ComprobanteCobroServices {
         return comprobante;
     }
 
-    public ComprobanteCobro getComprobanteCobroByBillNumberAndUserClient(String billNumber, UUID userClientId) {
-        ComprobanteCobro comprobante = comprobanteCobroRepository.findComprobanteCobroByBillNumberAndUserClient(billNumber, userClientId);
+    public ComprobanteCobro getComprobanteCobroByBillNumberAndUserClientAndDateCreated(String billNumber, UUID userClientId, String dateCreated) {
+        ComprobanteCobro comprobante = comprobanteCobroRepository.findComprobanteCobroByBillNumberAndUserClientAndDateCreated(billNumber, userClientId, dateCreated);
         if(comprobante != null){
             populateChildren(comprobante);
         }
