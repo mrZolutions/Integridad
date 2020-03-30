@@ -350,17 +350,17 @@
             </thead>
             <tbody>
                 <tr ng-repeat="data in vm.reportList" >
-                    <td>{{data.identification}}</td>
+                    <td ng-style="vm.getBold(data)">{{data.identification}}</td>
                     <td>{{data.clientName}}</td>
                     <td>{{data.billNumber}}</td>
                     <td>{{data.fechVenta}}</td>
                     <td>{{data.diasCredit}}</td>
                     <td>{{data.diasVencim}}</td>
-                    <td>{{data.costo.toFixed(2)}}</td>
-                    <td>{{data.valorAbono.toFixed(2)}}</td>
-                    <td>{{data.valorReten.toFixed(2)}}</td>
-                    <td>{{data.valorNotac.toFixed(2)}}</td>
-                    <td>{{data.saldo.toFixed(2)}}</td>
+                    <td ng-style="vm.getBold(data)">{{data.costo.toFixed(2)}}</td>
+                    <td ng-style="vm.getBold(data)">{{data.valorAbono.toFixed(2)}}</td>
+                    <td ng-style="vm.getBold(data)">{{data.valorReten.toFixed(2)}}</td>
+                    <td ng-style="vm.getBold(data)">{{data.valorNotac.toFixed(2)}}</td>
+                    <td ng-style="vm.getBold(data)">{{data.saldo.toFixed(2)}}</td>
                 </tr>
             </tbody>
         </table>

@@ -89,7 +89,6 @@ angular.module('integridadUiApp')
             dateTwo += 86399000;
             
             creditsbillService.getAllCreditsOfBillByUserClientIdResume(vm.userClientId, dateTwo).then(function(response) {
-                console.log(response);
                 vm.reportList = response;
                 vm.loading = false;
             }).catch(function(error) {
@@ -795,6 +794,10 @@ angular.module('integridadUiApp')
             // XLSX.writeFile(wb, 'Reporte_Kardex_'.concat(vm.prodKarName, '.xlsx'));
             XLSX.writeFile(wb, vm.reportName.concat('.xlsx'));
         };
+
+        vm.getBold = function(data) {
+            return data.clientName === null ? {"font-weight": 'bold'} : {};
+        }
 
         vm.exit = function() {
             $location.path('/home');
