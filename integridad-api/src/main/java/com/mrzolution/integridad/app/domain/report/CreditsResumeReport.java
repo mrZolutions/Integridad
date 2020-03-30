@@ -21,6 +21,9 @@ public class CreditsResumeReport {
     private double valorReten;
     private double saldo;
 
+    public CreditsResumeReport(){
+    }
+
     public CreditsResumeReport(String identification, String clientName, String billNumber, String fechVenta, double costo, double saldo) {
         this.identification = identification;
         this.clientName = clientName;

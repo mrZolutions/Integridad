@@ -44,11 +44,16 @@ public class CreditsServices {
     private double sumTotalNotac = 0.0;
     private double sumTotalValor = 0.0;
     private double total = 0.0;
-    private double totalAbono = 0.0;
     private double totalReten = 0.0;
     private double totalNotac = 0.0;
     private double totalValor = 0.0;
 
+    private double totalAbonoSum = 0.0;
+    private double totalNCum = 0.0;
+    private double totalRetSum = 0.0;
+    private double totalSellSum = 0.0;
+    private double totalSaldoSum = 0.0;
+    private double totalAbono = 0.0;
     private double totalNC = 0;
     private double totalRet = 0;
     private int plazo = 0;
@@ -205,6 +210,7 @@ public class CreditsServices {
         List<CreditsResumeReport> creditsReportList = new ArrayList<>();
         List<Credits> creditsList = Lists.newArrayList(credits);
         Bill bill = null;
+        UUID clientId = null;
         CreditsResumeReport creditsToAdd = null;
         long today = new Date().getTime();
 
@@ -212,12 +218,16 @@ public class CreditsServices {
             credit = creditsList.get(0);
             creditsToAdd = setInitialToReport(credit);
             bill = credit.getPago().getBill();
+            clientId = bill.getClient().getId();
 
+            totalSellSum = bill.getTotal();
+            totalSaldoSum = Double.valueOf(bill.getSaldo());
         }
 
         for (int i = 0; i < creditsList.size(); i++){
             credit = creditsList.get(i);
             populateChildren(credit);
+
             if(bill.getId().equals(UUID.fromString(credit.getBillId()))){
                 if (plazo < credit.getDiasPlazo()){
                     plazo = credit.getDiasPlazo();
@@ -229,6 +239,29 @@ public class CreditsServices {
 
                 creditsToAdd = setInitialToReport(credit);
                 bill = credit.getPago().getBill();
+                //********************************************************************************************************************
+                if(!clientId.equals(bill.getClient().getId())){
+                    CreditsResumeReport totalClient = new CreditsResumeReport();
+                    totalClient.setIdentification("TOTAL");
+                    totalClient.setValorAbono(totalAbonoSum);
+                    totalClient.setValorReten(totalRetSum);
+                    totalClient.setValorNotac(totalNCum);
+                    totalClient.setSaldo(totalSaldoSum);
+                    totalClient.setCosto(totalSellSum);
+                    creditsReportList.add(totalClient);
+                    clientId = bill.getClient().getId();
+                    totalAbonoSum = 0.0;
+                    totalNCum = 0.0;
+                    totalRetSum = 0.0;
+
+                    totalSellSum = bill.getTotal();
+                    totalSaldoSum = Double.valueOf(bill.getSaldo());
+
+                } else {
+                    totalSellSum = totalSellSum + bill.getTotal();
+                    totalSaldoSum = totalSaldoSum + Double.valueOf(bill.getSaldo());
+                }
+                //********************************************************************************************************************
             }
 
             double partial = 0;
@@ -246,6 +279,14 @@ public class CreditsServices {
 
         setReportCalcedVariables(creditsToAdd, today);
         creditsReportList.add(creditsToAdd);
+        CreditsResumeReport totalClient = new CreditsResumeReport();
+        totalClient.setIdentification("TOTAL");
+        totalClient.setValorAbono(totalAbonoSum);
+        totalClient.setValorReten(totalRetSum);
+        totalClient.setValorNotac(totalNCum);
+        totalClient.setSaldo(totalSaldoSum);
+        totalClient.setCosto(totalSellSum);
+        creditsReportList.add(totalClient);
 
         log.info("CreditsServices getCreditsPendingOfBillByUserClientIdResume DONE size: {}", creditsReportList.size());
         return creditsReportList;
@@ -275,6 +316,10 @@ public class CreditsServices {
         creditsToAdd.setValorNotac(totalNC);
         creditsToAdd.setValorReten(totalRet);
         creditsToAdd.setDiasVencim((int)(TimeUnit.DAYS.convert(diasVenc, TimeUnit.MILLISECONDS)));
+
+        totalAbonoSum = totalAbonoSum + totalAbono;
+        totalNCum = totalNCum + totalNC;
+        totalRetSum = totalRetSum + totalRet;
     }
 
     private CreditsResumeReport setInitialToReport (Credits credit){
