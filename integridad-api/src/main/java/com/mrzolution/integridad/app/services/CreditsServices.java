@@ -268,9 +268,11 @@ public class CreditsServices {
             double partialNT = 0;
             double partialRet = 0;
             for(Payment pay : credit.getPayments()){
-                partial = partial + pay.getValorAbono();
-                partialNT = partialNT + pay.getValorNotac();
-                partialRet = partialRet + pay.getValorReten();
+                if(pay.isActive()){
+                    partial = partial + pay.getValorAbono();
+                    partialNT = partialNT + pay.getValorNotac();
+                    partialRet = partialRet + pay.getValorReten();
+                }
             }
             totalAbono = totalAbono + partial;
             totalNC = totalNC + partialNT;
