@@ -830,6 +830,20 @@ angular.module('integridadUiApp')
             _activate();
         };
 
+        vm.disableMultipleCobro = function(){
+            if(vm.noDocument === undefined || '' === vm.noDocument.trim()){
+                return true;
+            }
+            if(vm.modePayment === undefined){
+                return true;
+            }
+            if(vm.getTotalMultiAbonos() != vm.valorDocumento){
+                return true;
+            }
+        
+            return false;
+        }
+
         vm.exit = function() {
             $location.path('/home');
         };

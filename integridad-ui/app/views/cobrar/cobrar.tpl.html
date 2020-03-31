@@ -516,7 +516,7 @@
             </div>
             <div class = "panel-footer">
                 <button type = "button" title = "Aceptar" class = "btn btn-success btn-sm" ng-click = "vm.pagoMultiAbono()"
-                        ng-disabled ="vm.getTotalMultiAbonos() != vm.valorDocumento">
+                        ng-disabled ="vm.disableMultipleCobro()">
                         <span class = "glyphicon glyphicon-thumbs-up" aria-hidden = "true"></span>
                 </button>
                 <button type = "button" title = "Salir" class = "btn btn-primary btn-sm" ng-click = "vm.cancel()">

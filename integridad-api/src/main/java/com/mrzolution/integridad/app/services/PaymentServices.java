@@ -264,12 +264,14 @@ public class PaymentServices {
         BigDecimal vrestado = new BigDecimal(resto);
         vrestado = vrestado.setScale(2, BigDecimal.ROUND_HALF_UP);
         cambio.setValor(vrestado.doubleValue());
+        cambio.setStatusCredits("PENDIENTE");
         Credits creditSaved = creditsRepository.save(cambio);
         if (creditSaved != null) {
             Bill billed = billRepository.findOne(deactivated.getCredits().getPago().getBill().getId());
             String nbillId = billed.getId().toString();
             if (nbillId.equals(document)) {
-                BigDecimal vsumado = new BigDecimal(creditSaved.getValor());
+                double saldoOld = Double.valueOf(billed.getSaldo());
+                BigDecimal vsumado = new BigDecimal(saldoOld + abono);
                 vsumado = vsumado.setScale(2, BigDecimal.ROUND_HALF_UP);
                 saldo = String.valueOf(vsumado);
                 billed.setSaldo(saldo);
