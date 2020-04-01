@@ -567,7 +567,8 @@
                                                     <td>{{credits.valor.toFixed(2)}}</td>
                                                     <td>
                                                         <input type="text" class = "form-control" ng-model ="credits.valorAbono" 
-                                                        onkeypress="return ((event.which >= 46 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))">
+                                                        onkeypress="return ((event.which >= 46 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+                                                        onblur="this.value = parseFloat(this.value).toFixed(2)">
                                                     </td>
                                                 </tr>
                                             </tbody>
