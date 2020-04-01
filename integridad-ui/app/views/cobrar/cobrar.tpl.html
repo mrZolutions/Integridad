@@ -604,7 +604,7 @@
                                         <td>{{bills.stringSeq}}</td>
                                         <td>{{bills.dateCreated | date : "dd/MM/yyyy"}}</td>
                                         <td>{{bills.total.toFixed(2)}}</td>
-                                        <td>{{bills.saldo}}</td>
+                                        <td>{{parseFloat(bills.saldo).toFixed(4)}}</td>
                                         <td>
                                             TOTAL <input ng-model="bills.selectedTotal" type="checkbox">
                                             PARCIAL <input ng-model="bills.selectedParcial" type="checkbox">

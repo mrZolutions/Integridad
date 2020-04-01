@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.UUID;
 
 @Slf4j
@@ -24,6 +25,20 @@ public class CuentaContableServices {
 	CuentaContable saved = cuentaContableRepository.save(cuentaContable);
 	log.info("CuentaContableServices createCuentaContable: {}", saved.getId());
 	return saved;
+    }
+
+    public int createCuentaContableList(List<CuentaContable> cuentasContable) {
+        for(CuentaContable cuentaContable : cuentasContable){
+            if(cuentaContable.getCode() == null){
+                throw new BadRequestException("Debe tener el codigo de contabilidad");
+            }
+
+            cuentaContable.setActive(true);
+            cuentaContableRepository.save(cuentaContable);
+        }
+
+        log.info("CuentaContableServices createCuentaContableList cuentas created: {}", cuentasContable.size());
+        return cuentasContable.size();
     }
     
     public void updateCuentaContable(CuentaContable cuentaContable) throws BadRequestException {

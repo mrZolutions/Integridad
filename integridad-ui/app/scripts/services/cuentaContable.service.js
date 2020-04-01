@@ -25,6 +25,12 @@ angular
             });
         };
 
+        this.createList = function(cuentas) {
+            return securityService.post('/cuenta_contable/list', cuentas).then(function successCallback(response) {
+                return response.data;
+            });
+        };
+
         this.update = function(cuenta) {
             return securityService.put('/cuenta_contable', cuenta).then(function successCallback(response) {
                 return response.data;

@@ -149,11 +149,6 @@ public class RetentionClientServices {
                         if (nbillId.equals(document)) {
                             double valorTotal =  Double.valueOf(bill.getSaldo());
                             BigDecimal vsaldo = new BigDecimal(valorTotal - sum);
-//                            if (spCredits.getValor() == 0) {
-//                                vsaldo = vsaldo.setScale(0, BigDecimal.ROUND_HALF_UP);
-//                            } else {
-//                                vsaldo = vsaldo.setScale(2, BigDecimal.ROUND_HALF_UP);
-//                            }
                             saldo = String.valueOf(vsaldo);
                             bill.setSaldo(saldo);
                             billRepository.save(bill);
