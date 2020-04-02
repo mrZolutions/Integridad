@@ -18,6 +18,7 @@ angular.module('integridadUiApp')
         vm.userData = $localStorage.user;
         vm.clientList = undefined;
         vm.catedral = '1e2049c3-a3bc-4231-a0de-dded8020dc1b';
+        vm.maxCode = undefined;
 
         vm.prices = [
             { name: 'EFECTIVO', cod: 'cashPercentage'}, { name: 'MAYORISTA', cod: 'majorPercentage'},
@@ -83,6 +84,7 @@ angular.module('integridadUiApp')
             vm.isProductReportList = undefined;
             vm.dateOne = undefined;
             vm.dateTwo = undefined;
+            vm.maxCode = undefined;
             vm.impuestosTotales = [];
             vm.impuestoICE = {
                 "base_imponible": 0.0,
@@ -737,7 +739,7 @@ angular.module('integridadUiApp')
             var wb = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(wb, ws, "Kardex_Producto");
             /* write workbook and force a download */
-            XLSX.writeFile(wb, "Reporte_Kardex.xlsx");
+            XLSX.writeFile(wb, 'Reporte_Kardex_'.concat(vm.prodKarName, '.xlsx'));
         };
 
         function _filterKar() {
@@ -1439,6 +1441,13 @@ angular.module('integridadUiApp')
             vm.cuentasContablesForProductFinished = [];
             vm.cuentasContablesForProductCost = [];
             vm.wizard = 1;
+
+            productService.getLastCodeByUserClientIdActive(vm.usrCliId).then(
+                function(response){
+                    vm.maxCode = response || '';
+                }
+            );
+
             vm.product = {
                 userClient: $localStorage.user.subsidiary.userClient,
                 productBySubsidiaries: []

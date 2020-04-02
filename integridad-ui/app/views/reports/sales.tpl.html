@@ -129,7 +129,7 @@
                     </button>
                     <button type="button" title="Seleccione Fecha Inicio - Fecha Fin" class="btn btn-primary btn-sm"
                             ng-click="vm.getCCResumenReport()">
-                            Abonos y Otros
+                            Cobros Realizados
                     </button>
                 </div>
                 <div class="form-group col-md-6">
@@ -144,7 +144,7 @@
                     </button>
                     <button type="button" title="Seleccione Fecha Inicio - Fecha Fin" class="btn btn-primary btn-sm"
                             ng-click="vm.getCPResumenPaymentDebtsReport()">
-                            Abonos y Otros
+                            Pagos Realizados
                     </button>
                 </div>
                 <div class="form-group col-md-6">
@@ -240,6 +240,7 @@
                     <th>Base 0%</th>
                     <th>Iva</th>
                     <th>Total</th>
+                    <th>Forma de Pago</th>
                     <th>Fecha-Vencimiento</th>
                     <th>Caja</th>
                     <th>Bodega</th>
@@ -262,6 +263,7 @@
                     <td>{{data.status === 'ACTIVA' ? data.baseNoTaxes.toFixed(2) : '0'}}</td>
                     <td>{{data.status === 'ACTIVA' ? data.iva.toFixed(2) : '0'}}</td>
                     <td>{{data.status === 'ACTIVA' ? data.total.toFixed(2) : '0'}}</td>
+                    <td>{{data.paymentMode}}</td>
                     <td>{{data.endDate}}</td>
                     <td>{{data.cashier}}</td>
                     <td>{{data.warehouse}}</td>
@@ -337,7 +339,6 @@
                     <th>Cliente</th>
                     <th>Factura</th>
                     <th>Fecha Emision</th>
-                    <th>Fecha Vence</th>
                     <th>Dias Credito</th>
                     <th>Dias Vencidos</th>
                     <th>Venta</th>
@@ -345,32 +346,21 @@
                     <th>Retenciones</th>
                     <th>N/C</th>
                     <th>Saldo Pendiente</th>
-                    <th>&lt;30</th>
-                    <th>31-60 </th>
-                    <th>61-90</th>
-                    <th>91-120</th>
-                    <th>&gt;120</th>
                 </tr>
             </thead>
             <tbody>
                 <tr ng-repeat="data in vm.reportList" >
-                    <td>{{data.identification}}</td>
+                    <td ng-style="vm.getBold(data)">{{data.identification}}</td>
                     <td>{{data.clientName}}</td>
                     <td>{{data.billNumber}}</td>
                     <td>{{data.fechVenta}}</td>
-                    <td>{{data.fechVence}}</td>
                     <td>{{data.diasCredit}}</td>
                     <td>{{data.diasVencim}}</td>
-                    <td>{{data.costo.toFixed(2)}}</td>
-                    <td>{{data.valorAbono.toFixed(2)}}</td>
-                    <td>{{data.valorReten.toFixed(2)}}</td>
-                    <td>{{data.valorNotac.toFixed(2)}}</td>
-                    <td>{{data.saldo.toFixed(2)}}</td>
-                    <td>{{data.pplazo.toFixed(2)}}</td>
-                    <td>{{data.splazo.toFixed(2)}}</td>
-                    <td>{{data.tplazo.toFixed(2)}}</td>
-                    <td>{{data.cplazo.toFixed(2)}}</td>
-                    <td>{{data.qplazo.toFixed(2)}}</td>
+                    <td ng-style="vm.getBold(data)">{{data.costo.toFixed(2)}}</td>
+                    <td ng-style="vm.getBold(data)">{{data.valorAbono.toFixed(2)}}</td>
+                    <td ng-style="vm.getBold(data)">{{data.valorReten.toFixed(2)}}</td>
+                    <td ng-style="vm.getBold(data)">{{data.valorNotac.toFixed(2)}}</td>
+                    <td ng-style="vm.getBold(data)">{{data.saldo.toFixed(2)}}</td>
                 </tr>
             </tbody>
         </table>
@@ -436,9 +426,9 @@
                     <th>N&uacute;mero Factura</th>
                     <th>Valor Factura</th>
                     <th>Tipo Transacci&oacute;n</th>
-                    <th>Forma de Pago</th>
+                    <th>Forma de Cobro</th>
                     <th>Nro. Transacci&oacute;n</th>
-                    <th>Fecha de Pago</th>
+                    <th>Fecha de Cobro</th>
                     <th>Abonos</th>
                     <th>Retenciones</th>
                     <th>N/C</th>

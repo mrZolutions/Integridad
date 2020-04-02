@@ -37,6 +37,15 @@ public class ComprobanteCobroServices {
         log.info("ComprobanteCobroServices getComprobanteCobroById: {}", id);
         return comprobante;
     }
+
+    public ComprobanteCobro getComprobanteCobroByBillNumberAndUserClientAndDateCreated(String billNumber, UUID userClientId, String dateCreated) {
+        ComprobanteCobro comprobante = comprobanteCobroRepository.findComprobanteCobroByBillNumberAndUserClientAndDateCreated(billNumber, userClientId, dateCreated);
+        if(comprobante != null){
+            populateChildren(comprobante);
+        }
+        log.info("ComprobanteCobroServices getComprobanteCobroByBillNumberAndUserClient: {}", billNumber);
+        return comprobante;
+    }
     
     //Selecciona todos los COMPROBANTES DE COBRO por UserClientId
     public Iterable<ComprobanteCobro> getComprobanteCobroByUserClientId(UUID userClientId) {

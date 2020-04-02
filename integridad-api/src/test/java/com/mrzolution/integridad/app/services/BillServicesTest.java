@@ -165,7 +165,7 @@ public class BillServicesTest {
 		Mockito.when(billRepository.save(Mockito.any(Bill.class))).thenReturn(Bill.newBillTest());
 		Mockito.when(subsidiaryRepository.findOne(Mockito.any(UUID.class))).thenReturn(Subsidiary.newSubsidiaryTest());
 		
-		Bill response = service.createBill(bill, 1);
+		Bill response = service.createBill(bill, null, null,1);
 		
 		Mockito.verify(billRepository, Mockito.times(1)).save(Mockito.any(Bill.class));
 		Mockito.verify(detailRepository, Mockito.times(1)).save(detail);
@@ -201,7 +201,7 @@ public class BillServicesTest {
 		Mockito.when(billRepository.save(Mockito.any(Bill.class))).thenReturn(Bill.newBillTest());
 		Mockito.when(subsidiaryRepository.findOne(Mockito.any(UUID.class))).thenReturn(Subsidiary.newSubsidiaryTest());
 
-		Bill response = service.createBill(bill, 0);
+		Bill response = service.createBill(bill, null,null, 0);
 
 		Mockito.verify(billRepository, Mockito.times(1)).save(Mockito.any(Bill.class));
 		Mockito.verify(cashierRepository, Mockito.times(1)).save(cashier);
@@ -244,7 +244,7 @@ public class BillServicesTest {
 		Mockito.when(cashierRepository.findOne(idCashier)).thenReturn(cashier);
 //		Mockito.when(subsidiaryRepository.findOne(idSubsidiary)).thenReturn(subsidiary);
 		
-		service.createBill(bill, 1);
+		service.createBill(bill, null, null,1);
 
 		
 		Mockito.verify(cashierRepository, Mockito.times(1)).findOne(idCashier);
@@ -255,13 +255,13 @@ public class BillServicesTest {
 	@Test(expected=BadRequestException.class)
 	public void validateAtLeastOneDetail(){
 		bill.setDetails(null);
-		service.createBill(bill, 1);
+		service.createBill(bill, null, null,1);
 	}
 
 	@Test(expected=BadRequestException.class)
 	public void validateAtLeastOneDetailOnQutation(){
 		bill.setDetails(null);
-		service.createBill(bill, 0);
+		service.createBill(bill, null, null, 0);
 	}
 
 	@Test(expected=BadRequestException.class)
@@ -271,7 +271,7 @@ public class BillServicesTest {
 		detailList.add(detail);
 		bill.setDetails(detailList);
 		bill.setPagos(null);
-		service.createBill(bill, 1);
+		service.createBill(bill, null, null, 1);
 	}
 
 }

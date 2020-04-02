@@ -50,8 +50,14 @@ public class RetentionServices {
         String data = mapper.writeValueAsString(requirement);
         log.info("RetentionServices getDatil MAPPER creado");
 	
-        String response = httpCallerService.post(Constants.DATIL_RETENTION_LINK, data, userClient);
-        //String response = "OK";
+//        String response = httpCallerService.post(Constants.DATIL_RETENTION_LINK, data, userClient);
+        String response ="{\n" +
+                "  \"id\": \"abcdef09876123cea56784f01\",\n" +
+                "  \"ambiente\":1,\n" +
+                "  \"tipo_emision\":1,\n" +
+                "  \"secuencial\":148,\n" +
+                "  \"fecha_emision\":\"2019-09-28T11:28:56.782Z\",\n" +
+                "  \"clave_acceso\": \"2802201501091000000000120010010000100451993736618\"}";
         log.info("RetentionServices getDatil httpcall DONE");
         return response;
     }

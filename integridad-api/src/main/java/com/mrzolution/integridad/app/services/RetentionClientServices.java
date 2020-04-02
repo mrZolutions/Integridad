@@ -1,5 +1,6 @@
 package com.mrzolution.integridad.app.services;
 
+import com.google.common.collect.Lists;
 import com.mrzolution.integridad.app.domain.Bill;
 import com.mrzolution.integridad.app.domain.Credits;
 import com.mrzolution.integridad.app.domain.DetailRetentionClient;
@@ -108,44 +109,57 @@ public class RetentionClientServices {
     }
 
     public void updateBillAndCreditsAndPayment(RetentionClient saved, String document) {
-        Credits docNumber = creditsRepository.findByBillId(document);
-        doc = docNumber.getBillId();
-        
-        if (doc.equals(document) && docNumber.getPayNumber() == 1) {
-            valor = docNumber.getValor();
-            docNumber.setValor(valor - sum);
-            Credits spCredits =  creditsRepository.save(docNumber);
-            
-            Payment specialPayment = new Payment();
-            specialPayment.setCredits(spCredits);
-            specialPayment.setDatePayment(saved.getDateToday());
-            specialPayment.setNoDocument(saved.getRetentionNumber());
-            specialPayment.setNoAccount(null);
-            specialPayment.setDocumentNumber(saved.getDocumentNumber());
-            specialPayment.setTypePayment("RET");
-            specialPayment.setDetail("ABONO POR RETENCION");
-            specialPayment.setModePayment("RET");
-            specialPayment.setValorAbono(0.0);
-            specialPayment.setValorReten(sum);
-            specialPayment.setValorNotac(0.0);
-            specialPayment.setActive(true);
-            paymentRepository.save(specialPayment);
-            if (spCredits != null) {
-                Bill bill = billRepository.findOne(saved.getBill().getId());
-                String nbillId = bill.getId().toString();
-                if (nbillId.equals(document)) {
-                    BigDecimal vsaldo = new BigDecimal(spCredits.getValor());
-                    if (spCredits.getValor() == 0) {
-                        vsaldo = vsaldo.setScale(0, BigDecimal.ROUND_HALF_UP);
-                    } else {
-                        vsaldo = vsaldo.setScale(2, BigDecimal.ROUND_HALF_UP);
+        Iterable<Credits> credits = creditsRepository.findCreditsByBillId(UUID.fromString(document));
+        List<Credits> creditsList = Lists.newArrayList(credits);
+        if(!creditsList.isEmpty()){
+            Credits docNumber = null;
+            for (int i = 0; i < creditsList.size(); i++){
+                if(creditsList.get(i).getValor() >= sum){
+                    docNumber = creditsList.get(0);
+                    i = creditsList.size();
+                }
+            }
+
+            if(docNumber != null){
+                doc = docNumber.getBillId();
+
+                if (doc.equals(document)) {
+                    valor = docNumber.getValor();
+                    docNumber.setValor(valor - sum);
+                    Credits spCredits =  creditsRepository.save(docNumber);
+
+                    Payment specialPayment = new Payment();
+                    specialPayment.setCredits(spCredits);
+                    specialPayment.setDatePayment(saved.getDateToday());
+                    specialPayment.setNoDocument(saved.getRetentionNumber());
+                    specialPayment.setNoAccount(null);
+                    specialPayment.setDocumentNumber(saved.getDocumentNumber());
+                    specialPayment.setTypePayment("RET");
+                    specialPayment.setDetail("ABONO POR RETENCION");
+                    specialPayment.setModePayment("RET");
+                    specialPayment.setValorAbono(0.0);
+                    specialPayment.setValorReten(sum);
+                    specialPayment.setValorNotac(0.0);
+                    specialPayment.setActive(true);
+                    specialPayment.setDatePaymentCreated(String.valueOf(docNumber.getPago().getBill().getDateCreated()));
+                    paymentRepository.save(specialPayment);
+                    if (spCredits != null) {
+                        Bill bill = billRepository.findOne(saved.getBill().getId());
+                        String nbillId = bill.getId().toString();
+                        if (nbillId.equals(document)) {
+                            double valorTotal =  Double.valueOf(bill.getSaldo());
+                            BigDecimal vsaldo = new BigDecimal(valorTotal - sum);
+                            saldo = String.valueOf(vsaldo);
+                            bill.setSaldo(saldo);
+                            billRepository.save(bill);
+                        }
                     }
-                    saldo = String.valueOf(vsaldo);
-                    bill.setSaldo(saldo);
-                    billRepository.save(bill);
                 }
             }
         }
+
+        
+
         log.info("RetentionClientServices Bill, Credits and Payment UPDATED");
         sum = 0;
         valor = 0;

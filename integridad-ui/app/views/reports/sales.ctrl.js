@@ -24,8 +24,10 @@ angular.module('integridadUiApp')
         vm.mrZolutions = '4907601b-6e54-4675-80a8-ab6503e1dfeb';
         vm.pineda = '6e663299-d61c-44de-b42c-a3d6595b46d2';
         vm.catedral = '1e2049c3-a3bc-4231-a0de-dded8020dc1b';
+        vm.reportName = 'Report';
 
         vm.getReportProducts = function() {
+            vm.reportName = 'Productos Vendidos';
             vm.isProductReportList = '1';
             vm.reportList = undefined;
             vm.loading = true;
@@ -43,6 +45,7 @@ angular.module('integridadUiApp')
         };
 
         vm.getReportSales = function() {
+            vm.reportName = 'Ventas';
             vm.isProductReportList = '2';
             vm.reportList = undefined;
             vm.loading = true;
@@ -60,6 +63,7 @@ angular.module('integridadUiApp')
         };
 
         vm.getReportRetention = function() {
+            vm.reportName = 'Retencion en Compras';
             vm.isProductReportList = '3';
             vm.reportList = undefined;
             vm.loading = true;
@@ -77,13 +81,14 @@ angular.module('integridadUiApp')
         };
 
         vm.getCreditsPendingReport = function() {
+            vm.reportName = 'Cuentas Pendientes Por Cobrar';
             vm.isProductReportList = '4';
             vm.reportList = undefined;
             vm.loading = true;
             var dateTwo = $('#pickerBillDateTwo').data("DateTimePicker").date().toDate().getTime();
             dateTwo += 86399000;
             
-            creditsbillService.getAllCreditsOfBillByUserClientId(vm.userClientId, dateTwo).then(function(response) {
+            creditsbillService.getAllCreditsOfBillByUserClientIdResume(vm.userClientId, dateTwo).then(function(response) {
                 vm.reportList = response;
                 vm.loading = false;
             }).catch(function(error) {
@@ -93,6 +98,7 @@ angular.module('integridadUiApp')
         };
 
         vm.getReportRetentionClient = function() {
+            vm.reportName = 'Retencion Ventas';
             vm.isProductReportList = '5';
             vm.reportList = undefined;
             vm.loading = true;
@@ -110,6 +116,7 @@ angular.module('integridadUiApp')
         };
 
         vm.getCCResumenReport = function() {
+            vm.reportName = 'Abonos y Otros';
             vm.isProductReportList = '6';
             vm.reportList = undefined;
             vm.loading = true;
@@ -127,6 +134,7 @@ angular.module('integridadUiApp')
         };
 
         vm.getCreditsDebtsPendingReport = function() {
+            vm.reportName = 'Cuentas Pendientes Por Pagar';
             vm.isProductReportList = '7';
             vm.reportList = undefined;
             vm.loading = true;
@@ -143,6 +151,7 @@ angular.module('integridadUiApp')
         };
 
         vm.getReportDebts = function() {
+            vm.reportName = 'Cuentas Por Pagar de Compras';
             vm.isProductReportList = '8';
             vm.reportList = undefined;
             vm.loading = true;
@@ -160,6 +169,7 @@ angular.module('integridadUiApp')
         };
 
         vm.getReportCierreCaja = function() {
+            vm.reportName = 'Cierre de Caja';
             vm.isProductReportList = '9';
             vm.reportList = undefined;
             vm.loading = true;
@@ -177,6 +187,7 @@ angular.module('integridadUiApp')
         };
 
         vm.getReportCsmProducts = function() {
+            vm.reportName = 'Bodega Egresos';
             vm.isProductReportList = '10';
             vm.reportList = undefined;
             vm.loading = true;
@@ -194,6 +205,7 @@ angular.module('integridadUiApp')
         };
 
         vm.getCPResumenPaymentDebtsReport = function() {
+            vm.reportName = 'Abonos y Otros Por Pagar';
             vm.isProductReportList = '11';
             vm.reportList = undefined;
             vm.loading = true;
@@ -211,6 +223,7 @@ angular.module('integridadUiApp')
         };
 
         vm.getCellarEntryReport = function() {
+            vm.reportName = 'Bodega Ingresos';
             vm.isProductReportList = '12';
             vm.reportList = undefined;
             vm.loading = true;
@@ -228,6 +241,7 @@ angular.module('integridadUiApp')
         };
 
         vm.getReportCreditNote = function() {
+            vm.reportName = 'Notas de Credito Ventas';
             vm.isProductReportList = '13';
             vm.reportList = undefined;
             vm.loading = true;
@@ -245,6 +259,7 @@ angular.module('integridadUiApp')
         };
 
         vm.getReportCreditNoteCompras = function() {
+            vm.reportName = 'Notas de Credito Compras';
             vm.isProductReportList = '14';
             vm.reportList = undefined;
             vm.loading = true;
@@ -262,6 +277,7 @@ angular.module('integridadUiApp')
         };
 
         vm.getReportExistency = function() {
+            vm.reportName = 'Inventario';
             vm.isProductReportList = '15';
             vm.reportList = undefined;
             vm.loading = true;
@@ -276,6 +292,7 @@ angular.module('integridadUiApp')
         };
 
         vm.getReportSalesOffline = function() {
+            vm.reportName = 'Ventas';
             vm.isProductReportList = '16';
             vm.reportList = undefined;
             vm.loading = true;
@@ -293,6 +310,7 @@ angular.module('integridadUiApp')
         };
 
         vm.getReportProductsOffline = function() {
+            vm.reportName = 'Productos Vendidos';
             vm.isProductReportList = '17';
             vm.reportList = undefined;
             vm.loading = true;
@@ -310,6 +328,7 @@ angular.module('integridadUiApp')
         };
 
         vm.getReportExistencyCat = function() {
+            vm.reportName = 'Inventario';
             vm.isProductReportList = '18';
             vm.reportList = undefined;
             vm.loading = true;
@@ -324,6 +343,7 @@ angular.module('integridadUiApp')
         };
 
         vm.getReportClients = function() {
+            vm.reportName = 'Reporte Clientes';
             vm.isProductReportList = '19';
             vm.reportList = undefined;
             vm.loading = true;
@@ -337,6 +357,7 @@ angular.module('integridadUiApp')
         };
 
         vm.getReportProviders = function() {
+            vm.reportName = 'Reporte Proveedores';
             vm.isProductReportList = '20';
             vm.reportList = undefined;
             vm.loading = true;
@@ -391,6 +412,7 @@ angular.module('integridadUiApp')
                             BASE_CERO: bill.status === 'ACTIVA' ? parseFloat(bill.baseNoTaxes.toFixed(2)) : parseFloat(0),
                             IVA: bill.status === 'ACTIVA' ? parseFloat(bill.iva.toFixed(2)) : parseFloat(0),
                             TOTAL: bill.status === 'ACTIVA' ? parseFloat(bill.total.toFixed(2)) : parseFloat(0),
+                            FORMA_DE_PAGO: bill.paymentMode,
                             FECHA_VENCIMIENTO: bill.endDate,
                             CAJA: bill.cashier,
                             BODEGA: bill.warehouse,
@@ -437,7 +459,6 @@ angular.module('integridadUiApp')
                             CLIENTE: creditsreport.clientName,
                             FACTURA: creditsreport.billNumber,
                             FECHA_VENTA: creditsreport.fechVenta,
-                            FECHA_VENCE: creditsreport.fechVence,
                             DIAS_CREDIT: creditsreport.diasCredit,
                             DIAS_VENCE: creditsreport.diasVencim,
                             VENTA: parseFloat(creditsreport.costo.toFixed(2)),
@@ -445,11 +466,6 @@ angular.module('integridadUiApp')
                             RETEN: parseFloat(creditsreport.valorReten.toFixed(2)),
                             N_C: parseFloat(creditsreport.valorNotac.toFixed(2)),
                             SALDO: parseFloat(creditsreport.saldo.toFixed(2)),
-                            PLZO_MEN_30: parseFloat(creditsreport.pplazo.toFixed(2)),
-                            PLZO_31_60: parseFloat(creditsreport.splazo.toFixed(2)),
-                            PLZO_61_90: parseFloat(creditsreport.tplazo.toFixed(2)),
-                            PLZO_91_120: parseFloat(creditsreport.cplazo.toFixed(2)),
-                            PLZO_MAY_120: parseFloat(creditsreport.qplazo.toFixed(2))
                         };      
                 
                         dataReport.push(data);
@@ -489,9 +505,9 @@ angular.module('integridadUiApp')
                             FACTURA: ccresumenreport.billNumber,
                             VENTA: ccresumenreport.billTotal,
                             TIPO_TRANSAC: ccresumenreport.tipTransac,
-                            MODO_PAGO: ccresumenreport.formPago,
+                            MODO_COBRO: ccresumenreport.formPago,
                             NUME_CHQ: ccresumenreport.numCheque,
-                            FECHA_PAGO: ccresumenreport.fechPago,
+                            FECHA_COBRO: ccresumenreport.fechPago,
                             VALOR_ABONO: parseFloat(ccresumenreport.valorAbono.toFixed(2)),
                             VALOR_RETEN: parseFloat(ccresumenreport.valorReten.toFixed(2)),
                             VALOR_NC: parseFloat(ccresumenreport.valorNotac.toFixed(2))
@@ -775,8 +791,13 @@ angular.module('integridadUiApp')
             XLSX.utils.book_append_sheet(wb, ws, "Ventas");
 
             /* write workbook and force a download */
-            XLSX.writeFile(wb, "Reporte.xlsx");
+            // XLSX.writeFile(wb, 'Reporte_Kardex_'.concat(vm.prodKarName, '.xlsx'));
+            XLSX.writeFile(wb, vm.reportName.concat('.xlsx'));
         };
+
+        vm.getBold = function(data) {
+            return data.clientName === null ? {"font-weight": 'bold'} : {};
+        }
 
         vm.exit = function() {
             $location.path('/home');

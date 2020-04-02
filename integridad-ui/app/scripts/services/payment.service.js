@@ -7,6 +7,12 @@ angular
             });
         };
 
+        this.createPaymentList = function(payments) {
+            return securityService.post('/payment/paymentList', payments).then(function successCallback(response) {
+                return response.data;
+            });
+        };
+
         this.deactivatePayment = function(payment) {
             return securityService.put('/payment', payment).then(function successCallback(response) {
                 return response.data;
