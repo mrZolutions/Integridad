@@ -13,16 +13,16 @@ angular.module('integridadUiApp')
         vm.success = undefined;
         vm.loading = false;
         vm.cuentasContablesList = undefined;
-        vm.cuetaSelected = undefined;
+        vm.typeSelected = {};
 
         vm.tipoCtaCtable = [
             {code: 'GENE' ,name: 'GENERAL'}, {code: 'BIEN' ,name: 'BIENES'},
             {code: 'SERV', name: 'SERVICIOS'}, {code: 'MATP', name: 'MATERIA PRIMA'},
             {code: 'CONS', name: 'CONSUMIBLES'}, {code: 'RMBG', name: 'REEMBOLSO GASTOS'},
             {code: 'TKAE', name: 'TICKETS AEREOS'}, {code: 'ACTV', name: 'ACTIVOS'},
-            {code: 'PASV', name: 'PASIVOS'}, {code: 'INGR', name: 'INGRESOS'},
-            {code: 'EGRE', name: 'EGRESOS'}, {code: 'PATR', name: 'PATRIMONIOS'},
-            {code: 'BANC', name: 'DEFINIDA PARA BANCOS'}, {code: 'GADM', name: 'GASTOS ADMINISTRATIVOS'},
+            {code: 'PASV', name: 'PASIVOS'}, {code: 'INGR', name: 'INGRESOS', showNumber: true},
+            {code: 'EGRE', name: 'EGRESOS', showNumber: true}, {code: 'PATR', name: 'PATRIMONIOS'},
+            {code: 'BANC', name: 'DEFINIDA PARA BANCOS', showNumber: true}, {code: 'GADM', name: 'GASTOS ADMINISTRATIVOS'},
             {code: 'GEMP', name: 'GASTOS DE EMPLEADOS'}, {code: 'INVT', name: 'INVENTARIOS'}
         ];
 
@@ -80,9 +80,14 @@ angular.module('integridadUiApp')
             });
         };
 
+        vm.typeChange = function() {
+            vm.cuentaSelected.type = vm.typeSelected.code;
+        };
+
         vm.cuentaEdit = function(cuenta) {
             vm.error = undefined;
             vm.success = undefined;
+            vm.typeSelected = _.find(vm.tipoCtaCtable, function(tipo){ return tipo.code === cuenta.type; });
             vm.cuentaSelected = cuenta;
         };
 
@@ -94,6 +99,7 @@ angular.module('integridadUiApp')
         vm.cuentaCreate = function() {
             vm.error = undefined;
             vm.success = undefined;
+            vm.typeSelected = {};
             _initializeCuenta();
         };
 
@@ -110,6 +116,39 @@ angular.module('integridadUiApp')
         vm.cancel = function() {
             _activate();
         };
+
+        vm.import = function(){
+            var f = document.getElementById('file').files[0];
+            if(f){
+                var r = new FileReader();
+                r.onload = function(event) {
+                    var data = event.target.result;
+                    var workbook = XLSX.read(data, {
+                    type: "binary"
+                    });
+                    workbook.SheetNames.forEach(function(sheet) {
+                        var cuentas = XLSX.utils.sheet_to_row_object_array(
+                        workbook.Sheets[sheet]
+                        );
+                        
+                        _.each(cuentas, function(newCuenta){
+                            newCuenta.userClient = vm.user.subsidiary.userClient;
+                        })
+                        cuentaContableService.createList(cuentas).then(function(response) {
+                            _activate();
+                            vm.error = undefined;
+                            $('#modalUpload').modal('hide');
+                            vm.success = 'Registros creados con exito';
+                        }).catch(function(error) {
+                            vm.loading = false;
+                            vm.error = error.data;
+                        });
+
+                    });
+                };
+                r.readAsBinaryString(f);
+            } 
+        }
 
         vm.exit = function() {
             $location.path('/home');

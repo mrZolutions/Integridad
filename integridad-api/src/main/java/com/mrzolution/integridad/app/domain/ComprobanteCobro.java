@@ -36,6 +36,7 @@ public class ComprobanteCobro {
     private double subTotalDoce;
     private double iva;
     private double total;
+    private String dateComprobanteCreated;
         
     @ManyToOne
     @JoinColumn(name = "client_id")

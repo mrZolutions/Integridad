@@ -52,6 +52,7 @@
                     <th>C&oacute;digo</th>
                     <th>Nombre</th>
                     <th>Cantidad Disponible</th>
+                    <th>Costo Promedio</th>
                     <th>Precio sin IVA</th>
                     <th>P.V.P.</th>
                 </tr>
@@ -66,6 +67,7 @@
                     <td>{{productEdit.codeIntegridad}}</td>
                     <td>{{productEdit.name}}</td>
                     <td>{{productEdit.quantity}}</td>
+                    <td>{{productEdit.averageCostSuggested}}</td>
                     <td>{{vm.getCost(productEdit.cashPercentage, productEdit.averageCost)}}</td>
                     <td>{{vm.getPvp(productEdit.iva, productEdit.cashPercentage, productEdit.averageCost)}}</td>
                     <td>

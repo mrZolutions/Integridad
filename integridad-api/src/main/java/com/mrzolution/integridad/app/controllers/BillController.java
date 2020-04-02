@@ -1,6 +1,8 @@
 package com.mrzolution.integridad.app.controllers;
 
 import com.mrzolution.integridad.app.domain.Bill;
+import com.mrzolution.integridad.app.domain.ComprobanteCobro;
+import com.mrzolution.integridad.app.domain.DailybookCi;
 import com.mrzolution.integridad.app.domain.ebill.Requirement;
 import com.mrzolution.integridad.app.domain.ebill.RequirementBill;
 import com.mrzolution.integridad.app.domain.report.CashClosureReport;
@@ -8,6 +10,7 @@ import com.mrzolution.integridad.app.domain.report.ItemReport;
 import com.mrzolution.integridad.app.domain.report.SalesReport;
 import com.mrzolution.integridad.app.exceptions.BadRequestException;
 import com.mrzolution.integridad.app.services.BillServices;
+import com.mrzolution.integridad.app.services.ComprobanteCobroServices;
 import lombok.extern.slf4j.Slf4j;
 import org.json.simple.parser.ContainerFactory;
 import org.json.simple.parser.JSONParser;
@@ -25,12 +28,15 @@ public class BillController {
     @Autowired
     BillServices service;
 
+
     @RequestMapping(method = RequestMethod.POST, value="/clave_acceso/{id}/{typeDocument}")
     public ResponseEntity saveDatilBill(@RequestBody RequirementBill requirement, @PathVariable("id") UUID userClientId, @PathVariable("typeDocument") int typeDocument) {
         Bill response = null;
         try {
             Bill bill = requirement.getBill();
             String responseDatil = service.getDatil(requirement.getRequirement(), userClientId);
+            ComprobanteCobro comprobante = requirement.getComprobanteCobro();
+            DailybookCi dailybookCi = requirement.getDailybookCi();
 
             JSONParser parser = new JSONParser();
             ContainerFactory containerFactory = new ContainerFactory(){
@@ -47,7 +53,7 @@ public class BillController {
 //              System.out.println(entry.getKey() + "=>" + entry.getValue());
             }
 
-            service.createBill(bill, typeDocument);
+            service.createBill(bill, comprobante, dailybookCi, typeDocument);
             response = bill;
         } catch (Exception e) {
             log.error("BillController saveDatilBill Exception thrown: {}", e.getMessage());
@@ -170,7 +176,7 @@ public class BillController {
     public ResponseEntity createBill(@RequestBody Bill bill, @PathVariable("typeDocument") int typeDocument) {
         Bill response = null;
         try {
-            response = service.createBill(bill, typeDocument);
+            response = service.createBill(bill, null, null, typeDocument);
         } catch (BadRequestException e) {
             log.error("BillController createBill Exception thrown: {}", e.getMessage());
 	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());

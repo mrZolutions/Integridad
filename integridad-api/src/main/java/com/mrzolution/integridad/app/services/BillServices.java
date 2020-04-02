@@ -51,6 +51,12 @@ public class BillServices {
     KardexRepository kardexRepository;
     @Autowired
     KardexChildRepository kardexChildRepository;
+    @Autowired
+    PaymentRepository paymentRepository;
+    @Autowired
+    ComprobanteCobroServices comprobanteCobroService;
+    @Autowired
+    DailybookCiServices dailybookCiServices;
 
     public String getDatil(Requirement requirement, UUID userClientId) throws Exception {
         UserClient userClient = userClientRepository.findOne(userClientId);
@@ -145,7 +151,7 @@ public class BillServices {
 
     //Inicio de Creación de las Bills
     @Async("asyncExecutor")
-    public Bill createBill(Bill bill, int typeDocument) throws BadRequestException {
+    public Bill createBill(Bill bill, ComprobanteCobro comprobante, DailybookCi dailybookCi, int typeDocument) throws BadRequestException {
         List<Detail> details = bill.getDetails();
         List<Pago> pagos = bill.getPagos();
         List<Kardex> detailsKardex = bill.getDetailsKardex();
@@ -155,7 +161,7 @@ public class BillServices {
         if (typeDocument == 1 && pagos == null) {
             throw new BadRequestException("Debe tener un pago por lo menos");
         }
-        bill.setDateCreated(new Date().getTime());
+//        bill.setDateCreated(new Date().getTime());
         bill.setTypeDocument(typeDocument);
         bill.setActive(true);
         bill.setDetails(null);
@@ -166,6 +172,33 @@ public class BillServices {
         Bill saved = billRepository.save(bill);
 
         saveChildrenOnCreation(bill, saved, typeDocument, details, pagos, detailsKardex);
+
+        if(pagos.size() ==1 && pagos.get(0).getMedio() != null && pagos.get(0).getMedio().equals("efectivo")){
+            //************************************************************************************
+            Credits credit = creditsRepository.findByBillId(saved.getId().toString());
+
+            Payment payment = new Payment();
+            payment.setTypePayment("PAC");
+            payment.setModePayment("EFC");
+            payment.setDetail("PAGO TOTAL EFECTIVO");
+            payment.setDatePayment(new Date().getTime());
+            payment.setNoDocument(saved.getStringSeq());
+            payment.setDocumentNumber(saved.getStringSeq());
+            payment.setValorAbono(saved.getTotal());
+            payment.setValorNotac(Double.valueOf(0));
+            payment.setValorReten(Double.valueOf(0));
+            payment.setActive(true);
+            payment.setCredits(credit);
+            payment.setDatePaymentCreated(String.valueOf(saved.getDateCreated()));
+
+            Payment paymentSaved = paymentRepository.save(payment);
+
+            comprobante.setPaymentId(paymentSaved.getId().toString());
+            comprobanteCobroService.createComprobanteCobro(comprobante);
+
+            dailybookCiServices.createDailybookAsinCi(dailybookCi);
+            //************************************************************************************
+        }
 
         log.info("BillServices createBill: {}, {}", saved.getId(), saved.getStringSeq());
         return saved;
@@ -369,7 +402,12 @@ public class BillServices {
             bill.setListsNull();
             Long endDateLong = bill.getDateCreated();
             List<Pago> pagos = getPagosByBill(bill);
+            String paymentMode = "";
             for (Pago pago: pagos) {
+                if(pago.getMedio() != null){
+                    paymentMode = pago.getMedio().toUpperCase();
+                }
+
                 if (pago.getCredits() != null) {
                     for (Credits credit: pago.getCredits()) {
                         if (endDateLong < credit.getFecha()) {
@@ -385,7 +423,7 @@ public class BillServices {
 
             SalesReport saleReport= new SalesReport(date, bill.getClient().getCodApp(), bill.getClient().getName(), bill.getClient().getIdentification(),
 			bill.getStringSeq(), bill.getClaveDeAcceso(), status, bill.getOtir(), bill.getBaseTaxes(), bill.getDiscount(),bill.getBaseNoTaxes(), bill.getIva(), bill.getTotal(), endDate, bill.getUserIntegridad().getCashier().getNameNumber(),
-			null, bill.getSubsidiary().getName(), bill.getUserIntegridad().getFirstName() + " " + bill.getUserIntegridad().getLastName());
+			null, bill.getSubsidiary().getName(), bill.getUserIntegridad().getFirstName() + " " + bill.getUserIntegridad().getLastName(), paymentMode);
 
             salesReportList.add(saleReport);
         });

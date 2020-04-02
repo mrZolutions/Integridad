@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @Slf4j
@@ -29,6 +30,19 @@ public class CuentaContableController {
         }
         log.info("CuentaContableController createCuentaContable DONE");
 	return new ResponseEntity<CuentaContable>(response, HttpStatus.CREATED);
+    }
+
+    @RequestMapping(method = RequestMethod.POST, value="/list")
+    public ResponseEntity createCuentaContableList(@RequestBody List<CuentaContable> cuentasContable) {
+        int response = 0;
+        try {
+            response = service.createCuentaContableList(cuentasContable);
+        } catch(BadRequestException e) {
+            log.error("CuentaContableController createCuentaContableList Exception thrown: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+        log.info("CuentaContableController createCuentaContableList DONE");
+        return new ResponseEntity<Integer>(response, HttpStatus.CREATED);
     }
     
     @RequestMapping(method = RequestMethod.PUT)

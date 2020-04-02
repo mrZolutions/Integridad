@@ -12,6 +12,11 @@ angular
                 return response.data;
             });
         };
+        this.getComprobanteCobroByBillNumberAndUserClientAndDateCreated = function(billNumber, userclientId, dateCreated) {
+            return securityService.get('/compcobro/bill/' + billNumber + '/userclient/' + userclientId + '/'+ dateCreated).then(function successCallback(response) {
+                return response.data;
+            });
+        };
         this.getComprobanteCobroByUserClientId = function(userclientId) {
             return securityService.get('/compcobro/userclient/' + userclientId).then(function successCallback(response) {
                 return response.data;
