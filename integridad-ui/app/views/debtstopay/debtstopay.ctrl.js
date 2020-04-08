@@ -28,6 +28,8 @@ angular.module('integridadUiApp')
         vm.totalTotal = undefined;
         vm.typeTaxes = undefined;
 
+        vm.billsSelected = [];
+
         vm.countries = [
             {code:'16',name:'16 - AMERICAN SAMOA'},{code:'74',name:'74 - BOUVET ISLAND'},{code:'101',name:'101 - ARGENTINA'},{code:'102',name:'102 - BOLIVIA'},
             {code:'103',name:'103 - BRASIL'},{code:'104',name:'104 - CANADA'},{code:'105',name:'105 - COLOMBIA'},{code:'106',name:'106 - COSTA RICA'},
@@ -274,6 +276,9 @@ angular.module('integridadUiApp')
             vm.medio = {};
             vm.itemsMultiplePayments = [];
             vm.pagos = [];
+
+            vm.billsSelected = [];
+            vm.creditsBillsSelected = undefined;
             
             vm.usrCliId = $localStorage.user.subsidiary.userClient.id;
             vm.subCxPActive = $localStorage.user.subsidiary.cxp;
@@ -547,6 +552,7 @@ angular.module('integridadUiApp')
         };
 
         vm.providerMultipleDebts = function(provider) {
+            console.log('*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*')
             vm.loading = true;
             vm.success = undefined;
             vm.provider = provider;
@@ -558,11 +564,24 @@ angular.module('integridadUiApp')
             _initializeComprobantePago();
             cuentaContableService.getCuentaContableByUserClientAndBank(vm.usrCliId).then(function(response) {
                 vm.ctaCtableBankList = response;
+                
+            }).catch(function(error) {
+                vm.loading = false;
+                vm.error = error.data;
+            });
+
+            console.log('*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-* 2')
+            debtsToPayService.getAllDebtsToPayByProviderId(provider.id).then(function(response) {
+                console.log('*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-* 3')
+                vm.providerDebtsList = response;
+                $('#modalFindBills').modal('show');
                 vm.loading = false;
             }).catch(function(error) {
                 vm.loading = false;
                 vm.error = error.data;
             });
+
+            
         };
 
         vm.findDebtsToPay = function() {

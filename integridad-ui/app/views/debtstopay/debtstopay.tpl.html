@@ -1159,13 +1159,13 @@
                                 <div class="form-group col-md-6">
                                     <label>Tarjeta:</label><br/>
                                     <select ng-options="card as card for card in vm.creditCardList"
-                                            ng-model="vm.paymentDebts.cardBrand" class="form-control">
+                                            ng-model="vm.cardBrand" class="form-control">
                                     </select>
                                 </div>
                                 <div class="form-group col-md-6">
                                     <label>No. Lote:</label><br/>
                                     <input type="text" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
-                                           ng-model="vm.paymentDebts.numeroLote" class="form-control" maxlength="5">
+                                           ng-model="vm.numeroLote" class="form-control" maxlength="5">
                                 </div>
                                 <div class="form-group col-md-6">
                                     <label>Detalle:</label><br/>
@@ -1281,7 +1281,6 @@
                 </div>
                 <div class="modal-footer">
                     <button type = "button" title = "Aceptar" class = "btn btn-success btn-sm"
-                            ng-disabled = "vm.paymentDebts.valorAbono == 0 || vm.paymentDebts.valorAbono == '' || vm.paymentDebts.valorAbono == null"
                             ng-click = "vm.pAbonoDebts(vm.paymentDebts)" data-dismiss = "modal">
                             <span class = "glyphicon glyphicon-thumbs-up" aria-hidden = "true"></span>
                     </button>
