@@ -175,6 +175,8 @@ public class DebtsToPayServices {
     
     //Guarda Pagos y Credits de Debts
     void savePagosAndCreditsOfDebts(DebtsToPay saved, List<PagoDebts> pagosDebts) {
+        final Boolean[] savePaymentRetention = {null};
+        savePaymentRetention[0] = saved.getRetentionId() != null;
         pagosDebts.forEach(pagoDebts -> {
             List<CreditsDebts> creditsDebtsList = pagoDebts.getCreditsDebts();
             pagoDebts.setCreditsDebts(null);
@@ -184,11 +186,11 @@ public class DebtsToPayServices {
                 creditsDebtsList.forEach(creditDebt -> {
                     creditDebt.setPagoDebts(pagoDebtSaved);
                     creditDebt.setDebtsToPayId(saved.getId().toString());
-                    if (saved.getRetentionId() != null) {
-                        creditDebt.setValor(saved.getTotal() - saved.getRetentionTotal());
+                    if (savePaymentRetention[0]) {
+                        creditDebt.setValor(creditDebt.getValor() - saved.getRetentionTotal());
                     }
                     CreditsDebts savedCreditDebt = creditsDebtsRepository.save(creditDebt);
-                    if (saved.getRetentionId() != null) {
+                    if (savePaymentRetention[0]) {
                         PaymentDebts paymentDebt = new PaymentDebts();
                         paymentDebt.setCreditsDebts(savedCreditDebt);
                         paymentDebt.setDatePayment(saved.getFecha());
@@ -205,6 +207,7 @@ public class DebtsToPayServices {
                         paymentDebt.setValorReten(saved.getRetentionTotal());
                         paymentDebt.setActive(true);
                         paymentDebtsRepository.save(paymentDebt);
+                        savePaymentRetention[0] = false;
                         log.info("DebtsToPayServices saveRetentionInPaymentDebts DONE");
                     }
                 });

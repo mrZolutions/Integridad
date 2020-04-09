@@ -256,7 +256,6 @@ angular.module('integridadUiApp')
         };
 
         vm.providerSelect = function(provider){
-            console.log(provider)
             vm.loading = true;
             vm.success = undefined;
             vm.update = false;
@@ -307,8 +306,6 @@ angular.module('integridadUiApp')
                 vm.debtsToPay.seccondPartNumber = vm.seccondPartNumber;
                 vm.debtsToPay.billNumber = vm.debtsToPay.threeNumberOne + '-' + vm.debtsToPay.threeNumberTwo + '-' + vm.debtsToPay.seccondPartNumber;
             }
-
-            console.log(vm.debtsToPay)
         }
 
         vm.getRetentionByProviderAndDocumentNumber = function(){
@@ -328,7 +325,6 @@ angular.module('integridadUiApp')
             vm.retentionList = undefined;
             eretentionService.getRetentionById(retention.id).then(function(response) {
                 vm.retention = response;
-                console.log(vm.retention)
                 vm.loading = false;
             }).catch(function(error) {
                 vm.loading = false;
@@ -1187,7 +1183,7 @@ angular.module('integridadUiApp')
             vm.debtsToPay.debtsSeq = vm.seqNumber;
             vm.debtsToPay.ejercicio = vm.ejercicio;
             if (vm.status === 'PENDIENTE') {
-                vm.debtsToPay.saldo = vm.debtsToPay.total - parseFloat(vm.retention.total);
+                vm.debtsToPay.saldo = vm.retention === undefined ? vm.debtsToPay.total : vm.debtsToPay.total - parseFloat(vm.retention.total);
             } else {
                 vm.debtsToPay.saldo = 0;
             };
@@ -1231,12 +1227,13 @@ angular.module('integridadUiApp')
                         _asientoDiarioCxP();
                         vm.debtsToPayCreated = true;
                         vm.success = 'Factura de Compra Ingresada con Exito';
+                        _activate();
                         vm.loading = false;
                     }).catch(function(error) {
+                        _activate();
                         vm.loading = false;
                         vm.error = error.data;
                     });
-                    _activate();
                 } else {
                     vm.error = 'Factura de Compra Ya Existe';
                 };
@@ -1620,7 +1617,7 @@ angular.module('integridadUiApp')
             vm.dailybookCe.nameBank = vm.paymentDebtsCreated.banco;
             vm.dailybookCe.billNumber = vm.paymentDebtsCreated.documentNumber;
             vm.dailybookCe.numCheque = vm.paymentDebtsCreated.noDocument;
-            vm.dailybookCe.typeContab = vm.typeContabCe;
+            vm.dailybookCe.typeContab = vm.paymentDebtsCreated.typePayment === 'RET' ? 'RETENCION':vm.typeContabCe;
             vm.dailybookCe.dailyCeSeq = vm.dailyCeSeq;
             vm.dailybookCe.dailyCeStringSeq = vm.dailyCeStringSeq;
             vm.dailybookCe.dailyCeStringUserSeq = 'PAGO GENERADO ' + vm.dailyCeStringSeq;
@@ -1701,12 +1698,12 @@ angular.module('integridadUiApp')
             vm.dailybookCxP.subTotalDoce = parseFloat((vm.responseDebtsToPay.total / 1.12).toFixed(2));
             vm.dailybookCxP.subTotalCero = 0;
             vm.dailybookCxP.dateRecordBook = $('#pickerDateDebtsToPay').data("DateTimePicker").date().toDate().getTime();
-            if (vm.retentionId == null) {
+            if (vm.retention === undefined) {
                 vm.dailybookCxP.retentionNumber = 'SIN RETENCIÓN';
                 vm.dailybookCxP.retentionDateCreated = 0;
                 vm.dailybookCxP.retentionTotal = 0;
             } else {
-                vm.dailybookCxP.retentionId = vm.retentionId;
+                vm.dailybookCxP.retentionId = vm.retention.id;
                 vm.dailybookCxP.retentionNumber = vm.retention.stringSeq;
                 vm.dailybookCxP.retentionDateCreated = vm.retention.dateCreated;
                 vm.dailybookCxP.retentionTotal = parseFloat(vm.retention.total);
