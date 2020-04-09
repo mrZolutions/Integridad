@@ -234,6 +234,13 @@ angular.module('integridadUiApp')
             vm.threeNumberOne = undefined;
             vm.threeNumberTwo = undefined;
             vm.seccondPartNumber = undefined;
+            vm.isEmp = true;
+            vm.passwordAdm = undefined;
+            vm.paymentDebtsList = undefined;
+            vm.deactivatePaymentDebts = undefined;
+            vm.comprobantePagoCreated = undefined
+            vm.printComprobante = false;
+            vm.printDebtsToPay = false;
 
             vm.usrCliId = $localStorage.user.subsidiary.userClient.id;
             vm.subCxPActive = $localStorage.user.subsidiary.cxp;
@@ -886,6 +893,21 @@ angular.module('integridadUiApp')
             });
         };
 
+        vm.editItemTaxes = function(index) {
+            vm.item = angular.copy(vm.debtsToPay.items[index]);
+            
+            //Diario CxP
+            vm.itema = angular.copy(vm.dailybookCxP.detailDailybookContab[index]);
+            vm.indexEdit = index;
+        };
+
+        vm.deleteItemTaxes = function(index) {
+            vm.debtsToPay.items.splice(index, 1);
+            
+            //Diario CxP
+            vm.dailybookCxP.detailDailybookContab.splice(index, 1);
+        };
+
         vm.getTotalDebito = function() {
             var totalDebito = 0;
             if (vm.debtsToPay) {
@@ -1497,6 +1519,167 @@ angular.module('integridadUiApp')
                 });
             });
             
+        };
+
+        vm.verifyUser = function() {
+            vm.isEmp = $localStorage.user.userType.code === 'EMP';
+        };
+
+        vm.validateAdm = function() {
+            vm.errorValidateAdm = undefined;
+            var userAdm = $localStorage.user.user;
+            userAdm.password = vm.passwordAdm;
+            authService.authUser(userAdm).then(function(response) {
+                vm.loading = false;
+                vm.isEmp = false;
+            }).catch(function(error) {
+                vm.loading = false;
+                vm.errorValidateAdm = error.data;
+            });
+        };
+
+        vm.acceptNewSeq = function() {
+            vm.seqErrorNumber = undefined;
+            vm.loading = true;
+            var stringSeq =  vm.newSeqNumber;
+            debtsToPayService.getDebtsToPayByDebtsSeqAndSubId(stringSeq, vm.companyData.id).then(function(response) {
+                if (response.length === 0) {
+                    vm.seqNumber = stringSeq;
+                    vm.seqChanged = true;
+                    $('#modalEditDebtsToPayNumber').modal('hide');
+                } else {
+                    vm.seqErrorNumber = "NUMERO DE CUENTA POR PAGAR YA EXISTENTE"
+                };
+                vm.loading = false;
+            }).catch(function(error) {
+                vm.loading = false;
+                vm.error = error.data;
+            });
+        };
+
+        vm.paymentDebtsByProvider = function(provider) {
+            vm.loading = true;
+            vm.success = undefined;
+            vm.providerName = provider.name;
+            vm.providerId = provider.id;
+            vm.printComprobante = false;
+            paymentDebtsService.getPaymentDebtsByProviderId(vm.providerId).then(function(response) {
+                vm.paymentDebtsList = response;
+                vm.loading = false;
+            }).catch(function(error) {
+                vm.loading = false;
+                vm.error = error.data;
+            });
+        };
+
+        vm.paymentDebtsDeactivate = function() {
+            vm.loading = true;
+            paymentDebtsService.deactivatePaymentDebts(vm.deactivatePaymentDebts).then(function(response) {
+                var index = vm.paymentDebtsList.indexOf(vm.deactivatePaymentDebts);
+                if (index > -1) {
+                    vm.paymentDebtsList.splice(index, 1);
+                };
+                vm.deactivatePaymentDebts = undefined;
+                vm.success = 'Pago anulado con exito';
+                vm.loading = false;
+            }).catch(function(error) {
+                vm.loading = false;
+                vm.error = error.data;
+            });
+        };
+
+        vm.comprobantePagoSelected = function(paymentDebts) {
+            vm.loading = true;
+            comprobanteService.getComprobanteCobroByPaymentId(paymentDebts.id).then(function(response) {
+                vm.printComprobante = true;
+                vm.comprobantePagoCreated = response;
+                vm.loading = false;
+            }).catch(function(error) {
+                vm.loading = false;
+                vm.error = error.data;
+            });
+        };
+
+        vm.getTotalDebitoCPCreated = function() {
+            var totalDebito = 0;
+            if (vm.comprobantePagoCreated) {
+                _.each(vm.comprobantePagoCreated.detailComprobantePago, function(detail) {
+                    if (detail.tipo === 'DEBITO (D)') {
+                        totalDebito = (parseFloat(totalDebito) + parseFloat(detail.baseImponible)).toFixed(2);
+                    };
+                });
+            };
+            return totalDebito;
+        };
+
+        vm.getTotalCreditoCPCreated = function() {
+            var totalCredito = 0;
+            if (vm.comprobantePagoCreated) {
+                _.each(vm.comprobantePagoCreated.detailComprobantePago, function(detail) {
+                    if (detail.tipo === 'CREDITO (C)') {
+                        totalCredito = (parseFloat(totalCredito) + parseFloat(detail.baseImponible)).toFixed(2);
+                    };
+                });
+            };
+            return totalCredito;
+        };
+
+        vm.consultProviderDebts = function(provider) {
+            vm.loading = true;
+            vm.success = undefined;
+            vm.providerName = provider.name;
+            vm.providerRuc = provider.ruc;
+            vm.providerId = provider.id;
+            debtsToPayService.getDebtsToPayWithSaldoByProviderId(provider.id).then(function(response) {
+                vm.printDebtsToPay = false;
+                vm.providerDebtsList = response;
+                vm.loading = false;
+            }).catch(function(error) {
+                vm.loading = false;
+                vm.error = error.data;
+            });
+        };
+
+        vm.debtsToPayToPrint = function(debts) {
+            vm.loading = true;
+            debtsToPayService.getDebtsToPayById(debts.id).then(function(response) {
+                vm.printDebtsToPay = true;
+                vm.allDebtsToPayList = undefined;
+                vm.debtsToPay = response;
+                vm.debtsDetails = response.detailDebtsToPay;
+                vm.companyData = $localStorage.user.subsidiary;
+                vm.debtsProviderSelected = response.provider;
+                vm.pagos = response.pagos;
+                var dateToShow = new Date(response.fecha);
+                vm.billNumber = response.billNumber;
+                vm.seqNumber = response.debtsSeq;
+                $('#pickerDebtsToPayDate').data("DateTimePicker").date(dateToShow);
+                vm.loading = false;
+            }).catch(function(error) {
+                vm.loading = false;
+                vm.error = error.data;
+            });
+        };
+
+        vm.debtsToPayDeactivate = function() {
+            vm.loading = true;
+            if (vm.deactivateDebtsToPay.credNoteApplied === false) {
+                debtsToPayService.deactivateDebtsToPay(vm.deactivateDebtsToPay).then(function(response) {
+                    var index = vm.providerDebtsList.indexOf(vm.deactivateDebtsToPay);
+                    if (index > -1) {
+                        vm.providerDebtsList.splice(index, 1);
+                    };
+                    vm.deactivateDebtsToPay = undefined;
+                    vm.success = "Factura de Compra Anulada";
+                    vm.loading = false;
+                }).catch(function(error) {
+                    vm.loading = false;
+                    vm.error = error.data;
+                });
+            } else {
+                vm.loading = false;
+                vm.error = "La Factura NO se Puede Anular debido a que presenta una Nota de Crédito";
+            };
         };
 
         vm.cancel = function() {

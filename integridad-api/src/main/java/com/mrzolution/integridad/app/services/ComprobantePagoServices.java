@@ -48,6 +48,14 @@ public class ComprobantePagoServices {
         log.info("ComprobantePagoServices getComprobantePagoByUserClientId: {}", userClientId);
         return comprobantes;
     }
+
+    //Selecciona todos los COMPROBANTES DE PAGO por PaymentId
+    public ComprobantePago getComprobantePagoByPaymentId(String paymentId) {
+        ComprobantePago comprobante = comprobantePagoRepository.findByPaymentId(paymentId);
+        populateChildren(comprobante);
+        log.info("ComprobantePagoServices getComprobantePagoByUserClientId: {}", paymentId);
+        return comprobante;
+    }
     
     //Selecciona todos los COMPROBANTES DE PAGO por Proveedor
     public Iterable<ComprobantePago> getComprobantePagoByProviderId(UUID id) {
