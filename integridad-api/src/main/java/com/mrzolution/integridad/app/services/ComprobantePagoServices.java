@@ -52,7 +52,9 @@ public class ComprobantePagoServices {
     //Selecciona todos los COMPROBANTES DE PAGO por PaymentId
     public ComprobantePago getComprobantePagoByPaymentId(String paymentId) {
         ComprobantePago comprobante = comprobantePagoRepository.findByPaymentId(paymentId);
-        populateChildren(comprobante);
+        if(comprobante != null){
+            populateChildren(comprobante);
+        }
         log.info("ComprobantePagoServices getComprobantePagoByUserClientId: {}", paymentId);
         return comprobante;
     }
@@ -93,6 +95,34 @@ public class ComprobantePagoServices {
             detail.setComprobantePago(null);
         });
         
+        saved.setDetailComprobantePago(detailComprobantePago);
+        log.info("ComprobantePagoServices createComprobantePago: {}, {}", saved.getId(), saved.getComprobanteStringSeq());
+        return saved;
+    }
+
+    public ComprobantePago createComprobantePagoNoAsync(ComprobantePago comprobantePago) throws BadRequestException {
+        List<DetailComprobantePago> detailComprobantePago = comprobantePago.getDetailComprobantePago();
+
+        if (detailComprobantePago == null) {
+            throw new BadRequestException("Debe tener una Detalle por lo menos");
+        }
+
+        comprobantePago.setActive(true);
+        comprobantePago.setDetailComprobantePago(null);
+        comprobantePago.setFatherListToNull();
+        comprobantePago.setListsNull();
+        ComprobantePago saved = comprobantePagoRepository.save(comprobantePago);
+
+        Cashier cashierCmpPago = cashierRepository.findOne(comprobantePago.getUserIntegridad().getCashier().getId());
+        cashierCmpPago.setCompPagoNumberSeq(cashierCmpPago.getCompPagoNumberSeq() + 1);
+        cashierRepository.save(cashierCmpPago);
+
+        detailComprobantePago.forEach(detail -> {
+            detail.setComprobantePago(saved);
+            detailComprobantePagoRepository.save(detail);
+            detail.setComprobantePago(null);
+        });
+
         saved.setDetailComprobantePago(detailComprobantePago);
         log.info("ComprobantePagoServices createComprobantePago: {}, {}", saved.getId(), saved.getComprobanteStringSeq());
         return saved;

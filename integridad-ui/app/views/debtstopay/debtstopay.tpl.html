@@ -34,7 +34,7 @@
     </div>
 
     <!--SECCIÓN DE CARGA DE PROVEEDORES POR USERCLIENT-->
-    <div class="table-responsive" ng-show="vm.providerSelected === undefined && vm.debtsToPayList === undefined && vm.providerDebtsList === undefined && vm.debtsProviderSelected === undefined && vm.debtsToPaySelectedToUpdate === undefined && vm.allDebtsToPayList === undefined && vm.multipleSelected === undefined && vm.paymentDebtsList === undefined && vm.comprobantePagoList === undefined && vm.comprobantePagoCreated === undefined && vm.advertencia === false">
+    <div class="table-responsive" ng-show="vm.providerSelected === undefined && vm.paymentDebtsList === undefined && vm.providerDebtsList === undefined">
         <div class="row">
             <div class="form-group col-md-12">
                 <input id="input41" ng-model="searchText" class="form-control" placeholder="Buscar Proveedores">
@@ -67,20 +67,14 @@
                         <button type = "button" title = "Ingreso de Factura de Compra" class = "btn btn-primary btn-sm" ng-click = "vm.providerSelect(provider)">
                                 <span class = "glyphicon glyphicon-file" aria-hidden = "true"></span>
                         </button>
-                        <button type = "button" title = "Pago Individual de Factura" class = "btn btn-primary btn-sm" ng-click = "vm.providerDebts(provider)">
-                                <span class = "glyphicon glyphicon-usd" aria-hidden = "true"></span>
-                        </button>
                         <button type = "button" title = "Consultar Facturas de Compra" class = "btn btn-primary btn-sm" ng-click = "vm.consultProviderDebts(provider)">
-                                <span class = "glyphicon glyphicon-search" aria-hidden = "true"></span>
+                                <span class = "glyphicon glyphicon-check" aria-hidden = "true"></span>
                         </button>
                         <button type = "button" title = "Pago Múltiple de Facturas" class = "btn btn-success btn-sm" ng-click = "vm.providerMultipleDebts(provider)">
-                                <span class = "glyphicon glyphicon-credit-card" aria-hidden = "true"></span>
+                            <span class = "glyphicon glyphicon-credit-card" aria-hidden = "true"></span>
                         </button>
                         <button type = "button" title = "Consultar Pagos por Proveedor" class = "btn btn-primary btn-sm" ng-click = "vm.paymentDebtsByProvider(provider)">
                                 <span class = "glyphicon glyphicon-zoom-in" aria-hidden = "true"></span>
-                        </button>
-                        <button type = "button" title = "Consultar Comprobante de Pago" class = "btn btn-success btn-sm" ng-click = "vm.comprobantePagoByProvider(provider)">
-                                <span class = "glyphicon glyphicon-search" aria-hidden = "true"></span>
                         </button>
                     </td>
                 </tr>
@@ -96,71 +90,71 @@
         </div>
     </div>
 
-    <div class="table-responsive" ng-show = "vm.allDebtsToPayList !== undefined">
-        <div class = "panel panel-primary">
-            <div class = "panel-heading">
-                <h4>Consulta de Cuentas por Pagar</h4>
+    <div class="table-responsive" ng-show="vm.paymentDebtsList !== undefined && !vm.printComprobante">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <b>Listado de Pagos de Facturas Pertenecientes a: {{vm.providerName}}</b>
             </div>
-            <div class = "panel-body">
-                <label>B&uacute;squeda de Cuentas</label>
-                <input ng-model="searchText" class="form-control" placeholder="Buscar">
-                <table class = "table table-striped">
+            <div class="panel-body">
+                <table class="table table-striped">
                     <thead>
                         <tr>
-                            <th>No. Factura</th>
-                            <th>No. Retenci&oacute;n</th>
-                            <th>Descripci&oacute;n</th>
+                            <th>N&uacute;mero Factura</th>
                             <th>Fecha</th>
+                            <th>Detalle de Cobro</th>
                             <th>Total</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr ng-repeat = "debts in vm.allDebtsToPayList | orderBy:'billNumber':true | filter:searchText">
-                            <td>{{debts.billNumber}}</td>
-                            <td>{{debts.retentionNumber}}</td>
-                            <td>{{debts.observacion}}</td>
-                            <td>{{debts.fecha | date : "dd/MM/yyyy"}}</td>
-                            <td>{{debts.total.toFixed(2)}}</td>
+                        <tr ng-show="vm.paymentDebtsList == 0">
+                            <td colspan="4">
+                                El Peoveedor <b>No Presenta</b> Facturas con Pagos realizados...
+                            </td>
+                        </tr>
+                        <tr ng-repeat="paymentDebts in vm.paymentDebtsList">
+                            <td>{{paymentDebts.documentNumber}}</td>
+                            <td>{{paymentDebts.datePayment | date : "dd/MM/yyyy"}}</td>
+                            <td>{{paymentDebts.detail}}</td>
+                            <td>{{paymentDebts.valorAbono.toFixed(2)}}</td>
                             <td>
-                                <button type = "button" title = "Ver Cuenta por Pagar" 
-                                        class = "btn btn-primary btn-sm" ng-click = "vm.debtsToPayToPrint(debts)">
+                                <button type="button" title = "Ver Comprobante de Pago" class="btn btn-primary btn-sm" 
+                                        ng-click="vm.comprobantePagoSelected(paymentDebts)">
                                         <span class = "glyphicon glyphicon-eye-open" aria-hidden = "true"></span>
+                                </button>
+                                <button type="button" title = "Anular Cobro de Factura" class="btn btn-warning btn-sm" 
+                                        ng-click="vm.deactivatePaymentDebts = paymentDebts" data-toggle="modal" data-target="#modalAnularPaymentDebts">
+                                        <span class = "glyphicon glyphicon-warning-sign" aria-hidden = "true"></span>
                                 </button>
                             </td>
                         </tr>
                     </tbody>
                 </table>
             </div>
-            <div class = "panel-footer">
-                <button type = "button" title = "Salir" class = "btn btn-primary btn-sm" ng-click = "vm.cancel()">
+            <div class="panel-footer">
+                <button type="button" title = "Salir" class="btn btn-primary btn-sm" ng-click="vm.cancel()">
                         <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
                 </button>
             </div>
         </div>
     </div>
 
-    <!--SECCIÓN DE INGRESO DE DETALLES DE FACTURA PARA CUENTAS POR PAGAR-->
-    <div ng-show="vm.providerSelected !== undefined">
+    <div ng-show="vm.billCreation">
         <div class="panel panel-primary">
             <div class="panel-heading">
                 <h4>Ingreso de Cuenta por Pagar</h4>
             </div>
             <div class="panel-body">
                 <div class="row">
-                    <div class="form-group col-md-6">
-                        <b>Cuenta por Pagar Nro: </b>{{vm.seqNumber}}
-                        &nbsp;&nbsp;&nbsp;
-                        <a data-toggle="modal" data-target="#modalEditDebtsToPayNumber" ng-click="vm.verifyUser()">
-                            <b>Editar</b>
-                        </a>
+                    <div class="form-group col-md-4">
+                        <label>Nombre Comercial:</label>
+                        {{vm.debtsToPay.provider.name}}
                     </div>
-                </div>
-                <div class="row">
-                    <div class="form-group col-md-6">
-                        <label>C&oacute;digo Proveedor:</label>
-                        {{vm.debtsToPay.provider.codeIntegridad}}
+                    <div class="form-group col-md-5">
+                        <label>Raz&oacute;n Social:</label>
+                        {{vm.debtsToPay.provider.razonSocial}}
                     </div>
-                    <div class="form-group col-md-6">
+                    <div class="form-group col-md-3">
                         <label ng-if="vm.debtsToPay.provider.rucType === 'RUC'">RUC:</label>
                         <label ng-if="vm.debtsToPay.provider.rucType === 'CED'">CEDULA:</label>
                         <label ng-if="vm.debtsToPay.provider.rucType === 'PAS'">ID. EXTERIOR:</label>
@@ -168,19 +162,20 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="form-group col-md-6">
-                        <label>Nombre Comercial:</label>
-                        {{vm.debtsToPay.provider.name}}
+                    <div class="form-group col-md-4">
+                        <b>Cuenta por Pagar Nro: </b>{{vm.seqNumber}}
+                        &nbsp;&nbsp;&nbsp;
+                        <a data-toggle="modal" data-target="#modalEditDebtsToPayNumber" ng-click="vm.verifyUser()">
+                            <b>Editar</b>
+                        </a>
                     </div>
-                    <div class="form-group col-md-6">
-                        <label>Raz&oacute;n Social:</label>
-                        {{vm.debtsToPay.provider.razonSocial}}
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="form-group col-md-12">
+                    <div class="form-group col-md-5">
                         <label>Tipo de Proveedor:</label>
                         {{vm.debtsToPay.provider.providerType}}
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label>C&oacute;digo Proveedor:</label>
+                        {{vm.debtsToPay.provider.codeIntegridad}}
                     </div>
                 </div>
                 <div class="row">
@@ -198,7 +193,7 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="form-group col-md-3">
+                    <div class="form-group col-lg-2">
                         <label>Fecha del Documento: </label>
                         <div class="input-group date" id="pickerDateDebtsToPay">
                             <input type="text" class="form-control input-group-addon"/>
@@ -209,56 +204,56 @@
                             $('#pickerDateDebtsToPay').datetimepicker({format: "DD/MM/YY",});
                         </script>
                     </div>
-                    <div class="form-group col-md-3">
+                    <div class="form-group col-lg-2">
                         <label>Ejercicio Fiscal:</label><br/>
                         <label>{{vm.ejercicio}}</label>
                     </div>
-                    <div class="form-group col-md-6">
+                    <div class="form-group col-lg-4">
                         <label>N&uacute;mero de Factura:</label><br/>
-                        <div class="form-group col-md-3">
-                            <input type="text" ng-model="vm.threeNumberOne" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+                        <div class="form-group col-lg-3">
+                            <input type="text" ng-model="vm.threeNumberOne" id="billNumberInputFirst" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
                                    class="form-control" maxlength="3">
                         </div>
-                        <div class="form-group col-md-3">
-                            <input type="text" ng-model="vm.threeNumberTwo" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+                        <div class="form-group col-lg-3">
+                            <input type="text" ng-model="vm.threeNumberTwo" id="billNumberInputSecond" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
                                    class="form-control" maxlength="3">
                         </div>
-                        <div class="form-group col-md-6">
-                            <input type="text" ng-model="vm.seccondPartNumber" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+                        <div class="form-group col-lg-6">
+                            <input type="text" ng-model="vm.seccondPartNumber" id="billNumberInputThird" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
                                    class="form-control" maxlength="9">
                         </div>
-                    </div>          
-                </div>
-                <div class="row">
-                    <div class="form-group col-md-9">
+                        <!-- <input type="text" ng-model="vm.debtsToPay.billNumber" id="billNumberInput" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+                            class="form-control" maxlength="17"> -->
+                    </div>
+                    <div class="form-group col-lg-4">
                         <label>N&uacute;mero de Autorizaci&oacute;n:</label><br/>
                         <input type="text" ng-model="vm.debtsToPay.authorizationNumber" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
                                class="form-control" maxlength="90">
                     </div>
-                    <div class="form-group col-md-3">
-                        <label>Valor Total:</label>
-                        <input type="text" ng-model="vm.debtsToPay.total"
-                               class="form-control" maxlength="20">
-                    </div>
-                    <div class="form-group col-md-12">
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-9">
                         <label>Descripci&oacute;n:</label>
                         <input type="text" class="form-control" ng-model="vm.debtsToPay.observacion">
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label>Valor Total:</label>
+                        <input type="text" ng-model="vm.debtsToPay.total" onkeypress="return ((event.which >= 46 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8) || (event.which === 13))"
+                               class="form-control" maxlength="20">
                     </div>
                 </div>
                 <div class="row">
                     <div class="form-group col-md-3">
                         <br/>
-                        <button type = "button" title = "Buscar y Agregar Retención" class = "btn btn-primary btn-block"
+                        <button type = "button" title = "Buscar y Agregar Retención" class = "btn btn-primary btn-block" ng-disabled = "vm.debtsToPay.billNumber == undefined"
                                 ng-click = "vm.getRetentionByProviderAndDocumentNumber()" data-toggle = "modal" data-target = "#modalFindRetention">
                                 Buscar Retenci&oacute;n
                         </button>
                     </div>
                     <div class="form-group col-md-4">
                         <label>Impuesto:</label><br/>
-                        <label class="radio-inline"><input type="radio" ng-model="vm.debtsToPay.typeTaxes" value="1" name="tipo"
-                               ng-change="vm.getPercentageTableAll()">IVA</label>
-                        <label class="radio-inline"><input type="radio" ng-model="vm.debtsToPay.typeTaxes" value="2" name="tipo"
-                               ng-change="vm.getPercentageTableAll()">IVA "0"</label>
+                        <label class="radio-inline"><input type="radio" ng-model="vm.debtsToPay.typeTaxes" value="1" name="tipo">IVA</label>
+                        <label class="radio-inline"><input type="radio" ng-model="vm.debtsToPay.typeTaxes" value="2" name="tipo">IVA "0"</label>
                     </div>
                     <div class="form-group col-md-5">
                         <label>Tipo de Compra</label>
@@ -270,15 +265,15 @@
                 <div class="row" ng-show="vm.retenSelected === true">
                     <div class="form-group col-md-4">
                         <label>Nro. Retención</label><br/>
-                        {{vm.retentionNumber}}
+                        {{vm.retention.stringSeq}}
                     </div>
                     <div class="form-group col-md-4">
                         <label>Fecha de Retención</label><br/>
-                        {{vm.retentionDateCreated | date : "dd/MM/yyyy"}}
+                        {{vm.retention.dateCreated | date : "dd/MM/yyyy"}}
                     </div>
                     <div class="form-group col-md-4">
                         <label>Valor Retención</label><br/>
-                        {{(vm.retentionTotal).toFixed(2)}}
+                        {{vm.retention.total}}
                     </div>
                 </div>
                 <div class="row table-responsive" ng-show="vm.cuentaContableList !== undefined">
@@ -322,6 +317,7 @@
                                     <th>DESCRIPCIÓN</th>
                                     <th>TIPO</th>
                                     <th>VALOR</th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -353,6 +349,7 @@
                                     <td>HABER: {{vm.getTotalCredito()}}</td>
                                     <td><b>SALDO: {{vm.getTotalSaldo()}}</b></td>
                                     <td></td>
+                                    <td></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -364,7 +361,7 @@
                         data-toggle = "modal" data-target = "#modalBaseImponibleIVA" ng-disabled = "vm.getTotalSaldo() == 0.00">
                         IVA y Proveedor
                 </button>
-                <button type = "button" title = "Forma de Pago" class = "btn btn-success btn-sm" 
+                <button type = "button" title = "Forma de Pago" class = "btn btn-success btn-sm" ng-click="vm.formaDePago()"
                         ng-disabled = "vm.getTotalSaldo() != 0.00 || vm.debtsToPay.authorizationNumber === undefined || vm.debtsToPay.authorizationNumber == ''"
                         data-toggle = "modal" data-target = "#modalAddPago">
                         <span class = "glyphicon glyphicon-usd" aria-hidden = "true"></span>
@@ -377,1458 +374,7 @@
         </div>
     </div>
 
-    <!--EDITAR NUMERO DE FACTURA DE COMPRAS-->
-    <div id="modalEditDebtsToPayNumber" class="modal fade" role="dialog">
-        <div class="modal-dialog">
-            <div class="modal-content" ng-show="vm.isEmp">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Editar N&uacute;mero de Cuenta por Pagar</h4>
-                </div>
-                <div class="modal-body">
-                    <div class="row" ng-show="vm.errorValidateAdm !== undefined">
-                        <div class="form-group col-md-12">
-                            <div class="alert alert-danger">
-                                {{vm.errorValidateAdm}}
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="form-group col-md-12">
-                            <b>CLAVE ADMINISTRADOR: </b>
-                            <input type="password" ng-model="vm.passwordAdm" class="form-control">
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="form-group col-md-12">
-                            <button type="button" title="Validar" class="btn btn-primary btn-sm" ng-click="vm.validateAdm()" ng-disabled="vm.passwordAdm === undefined">
-                                    <span class = "glyphicon glyphicon-tags" aria-hidden = "true"></span>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-    
-            <div class="modal-content" ng-show="!vm.isEmp">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Editar N&uacute;mero de Cuenta por Pagar</h4>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="form-group col-md-12">
-                            <b>NUEVO NUMERO DE CUENTA POR PAGAR: </b>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="form-group col-md-6">
-                            <input type="text" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
-                                   ng-model="vm.newSeqNumber" class="form-control" maxlength="6">
-                        </div>
-                    </div>
-                    <div class="row" ng-show="vm.seqErrorNumber !== undefined">
-                        <div class="form-group col-md-12">
-                            <div class="alert alert-danger">
-                                {{vm.seqErrorNumber}}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" title="Aceptar" class="btn btn-success btn-sm" ng-click="vm.acceptNewSeq()">
-                            <span class = "glyphicon glyphicon-thumbs-up" aria-hidden = "true"></span>
-                    </button>
-                    <button type="button" title = "Salir" class="btn btn-primary btn-sm" data-dismiss="modal">
-                            <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!--SECCIÓN DE BUSQUEDA DE RETENCIONES POR PROVEEDOR-->
-    <div id="modalFindRetention" class="modal fade" role="dialog">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class = "modal-title">Retenciones por Proveedor</h4>
-                </div>
-                <div class="modal-body">
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th>Nro. Retenci&oacute;n</th>
-                                <th>Fecha</th>
-                                <th>Nro. Factura</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr ng-show="vm.retentionList == 0">
-                                <td colspan="4">
-                                    No hay Retenciones ingresadas para este Proveedor
-                                </td>
-                            </tr>
-                            <tr ng-repeat="retention in vm.retentionList | orderBy:'dateCreated':true | filter:searchText">
-                                <td>{{retention.stringSeq}}</td>
-                                <td>{{retention.dateCreated | date : "dd/MM/yyyy"}}</td>
-                                <td>{{retention.documentNumber}}</td>
-                                <td>
-                                    <button type="button" title="Ver Retención" class="btn btn-primary btn-sm" ng-click="vm.retentionSelected(retention)"
-                                            data-dismiss="modal" data-toggle="modal" data-target="#modalViewAndSelectRetention">
-                                            <span class = "glyphicon glyphicon-eye-open" aria-hidden = "true"></span>
-                                    </button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" title = "Salir" class="btn btn-primary btn-sm" data-dismiss="modal"
-                            ng-click="vm.retenCodeFuente=undefined; vm.retenCodeIva=undefined">
-                            <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!--MODAL DE VISUALIZACIÓN Y SELECCIÓN DE LA RETENCIÓN PARA LA CUENTA POR PAGAR-->
-    <div id="modalViewAndSelectRetention" class="modal fade" role="dialog">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type = "button" class = "close" data-dismiss = "modal">&times;</button>
-                    <h4 class = "modal-title">Datos de la Retenci&oacute;n</h4>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="form-group col-md-12 ">
-                            <table width="100%">
-                                <tr>
-                                    <td>
-                                        <div>
-                                            <b>COMPROBANTE DE RETENCIÓN</b><br/>
-                                            <b>No: {{vm.retention.stringSeq}}</b><br/>
-                                            <b>AUTORIZACIÓN: {{vm.retention.claveDeAcceso}}</b><br/>
-                                            <b>FECHA DE EMISIÓN: {{vm.retention.dateCreated | date : "dd-MM-yyyy"}}</b><br/>
-                                            <b>FACTURA: {{vm.retention.documentNumber}}</b><br/>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </table>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="form-group col-md-12 ">
-                            <table width="100%">
-                                <tr>
-                                    <td width="50%">
-                                        <div >
-                                            <label>Raz&oacute;n social / Nombres y Apellidos: </label>
-                                            {{vm.retention.provider.razonSocial}}
-                                        </div>
-                                    </td>
-                                    <td width="50%" style=" padding-left: 10px">
-                                        <label>identificaci&oacute;n: </label>
-                                        {{vm.retention.provider.ruc}}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div >
-                                            <label>Fecha del Documento: </label>
-                                            {{vm.retention.documentDate | date : "dd-MM-yyyy"}}
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div >
-                                        <label>Direcci&oacute;n: </label>
-                                        {{vm.retention.provider.address1}}
-                                        </div>
-                                    </td>
-                                    <td style=" padding-left: 10px">
-                                        <label>E-mail: </label>
-                                        {{vm.retention.provider.email}}
-                                    </td>
-                                </tr>
-                            </table>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="form-group col-md-12 ">
-                            <table width="100%" border="1">
-                                <tr>
-                                    <td><b>EJERCICIO FISCAL</b></td>
-                                    <td><b>TIPO IMPUESTO</b></td>
-                                    <td><b>CÓDIGO</b></td>
-                                    <td><b>BASE IMPONIBLE</b></td>
-                                    <td><b>RETENCIONES %</b></td>
-                                    <td><b>VALOR</b></td>
-                                </tr>
-                                <tr ng-repeat="detail in vm.retention.detailRetentions">
-                                    <td>{{vm.retention.ejercicioFiscal}}</td>
-                                    <td>{{detail.taxType}}</td>
-                                    <td>{{detail.code}}</td>
-                                    <td>{{detail.baseImponible}}</td>
-                                    <td>{{detail.percentage}}</td>
-                                    <td>{{detail.total}}</td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td><b>TOTAL</b></td>
-                                    <td>{{(vm.totalRetention).toFixed(2)}}</td>
-                                </tr>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" title = "Aceptar y Agregar Retención" class="btn btn-success btn-sm" ng-click="vm.addRetentionToDebtsDetail()" 
-                            data-dismiss="modal">
-                            <span class = "glyphicon glyphicon-thumbs-up" aria-hidden = "true"></span>
-                    </button>
-                    <button type="button" title = "Salir" class="btn btn-primary btn-sm" data-dismiss="modal">
-                            <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <!--SECCIÓN DE INGRESO DE LAS CUENTAS IVA Y PROVEEDOR-->
-    <div id = "modalBaseImponibleIVA" class = "modal fade" role = "dialog">
-        <div class = "modal-dialog">
-            <div class = "modal-content">
-                <div class = "modal-header">
-                    <button type = "button" class = "close" data-dismiss = "modal">&times;</button>
-                </div>
-                <div class = "modal-body">
-                    <div class = "row">
-                        <div class = "form-group col-md-9">
-                            <label>Ingreso de Base Imponible para calculo del IVA</label>
-                        </div>
-                        <div class = "form-group col-md-3">
-                            <input type = "text" onkeypress = "return ((event.which >= 46 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
-                                   class = "form-control" maxlength = "9" ng-model = "vm.item.base_imponible"/>
-                        </div>
-                    </div>
-                </div>
-                <div class = "modal-footer">
-                    <button type = "button" title = "Aceptar" class = "btn btn-success btn-sm" data-dismiss = "modal" ng-click="vm.addIvaAndProvider()">
-                            <span class = "glyphicon glyphicon-thumbs-up" aria-hidden = "true"></span>
-                    </button>
-                    <button type = "button" title = "Salir" class = "btn btn-primary btn-sm" data-dismiss = "modal"
-                            ng-click = "vm.item = undefined; vm.indexEdit = undefined;">
-                            <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!--SECCIÓN DE SELECCION DE LOS TAXES-->
-    <div id = "modalSelectedTaxes" class = "modal fade" role = "dialog">
-        <div class = "modal-dialog">
-            <div class = "modal-content">
-                <div class = "modal-header">
-                    <button type = "button" class = "close" data-dismiss = "modal">&times;</button>
-                </div>
-                <div class = "modal-body">
-                    <div class = "row">
-                        <div class = "form-group col-md-3">
-                            <label>C&oacute;digo:</label>  
-                            <b>{{vm.item.codigo_contable}}</b>
-                        </div>
-                        <div class = "form-group col-md-3">
-                            <label>Nombre:</label>
-                            <b>{{vm.item.desc_contable}}</b>
-                        </div>
-                        <div class = "form-group col-md-3" ng-if = "vm.item.codigo === 1">
-                            <label>Valor</label>
-                            <input type = "text" onkeypress = "return ((event.which >= 46 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
-                                   class = "form-control" maxlength = "9" ng-model = "vm.item.base_imponible" placeholder = "{{vm.getBaseImponibleCodigo_1()}}"/>
-                        </div>
-                        <div class = "form-group col-md-3" ng-if="vm.item.codigo === 2">
-                            <label>Valor</label>
-                            <input type = "text" onkeypress = "return ((event.which >= 46 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
-                                   class = "form-control" maxlength = "9" ng-model = "vm.item.base_imponible" placeholder = "{{vm.getBaseImponibleCodigo_2()}}"/>
-                        </div>
-                    </div>
-                </div>
-                <div class = "modal-footer">
-                    <button type = "button" title = "Aceptar" class = "btn btn-success btn-sm" data-dismiss = "modal" ng-click = "vm.addItem()">
-                            <span class = "glyphicon glyphicon-thumbs-up" aria-hidden = "true"></span>
-                    </button>
-                    <button type = "button" title = "Salir" class = "btn btn-primary btn-sm" data-dismiss = "modal"
-                            ng-click = "vm.item = undefined; vm.indexEdit = undefined;">
-                            <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div id = "modalEditTaxes" class = "modal fade" role = "dialog">
-        <div class = "modal-dialog">
-            <div class = "modal-content">
-                <div class = "modal-header">
-                    <button type = "button" class = "close" data-dismiss = "modal">&times;</button>
-                </div>
-                <div class = "modal-body">
-                    <div class = "row">
-                        <div class = "form-group col-md-3">
-                            <label>C&oacute;digo:</label>  
-                            <b>{{vm.item.codigo_contable}}</b>
-                        </div>
-                        <div class = "form-group col-md-3">
-                            <label>Nombre:</label>
-                            <b>{{vm.item.desc_contable}}</b>
-                        </div>
-                        <div class = "form-group col-md-3">
-                            <label>Valor</label>
-                            <input type = "text" onkeypress = "return ((event.which >= 46 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
-                                   class = "form-control" maxlength = "9" ng-model = "vm.item.base_imponible"/>
-                        </div>
-                    </div>
-                </div>
-                <div class = "modal-footer">
-                    <button type = "button" title = "Aceptar" class = "btn btn-success btn-sm" data-dismiss = "modal" ng-click = "vm.addItem()">
-                            <span class = "glyphicon glyphicon-thumbs-up" aria-hidden = "true"></span>
-                    </button>
-                    <button type = "button" title = "Salir" class = "btn btn-primary btn-sm" data-dismiss = "modal"
-                            ng-click = "vm.item = undefined; vm.indexEdit = undefined;">
-                            <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!--MODALIDAD DE PAGO-->
-    <div id = "modalAddPago" class = "modal fade" role = "dialog">
-        <div class = "modal-dialog">
-            <div class = "modal-content">
-                <div class = "modal-header">
-                    <button type = "button" class = "close" data-dismiss = "modal" ng-click = "vm.medio={}">&times;</button>
-                    <h4 class = "modal-title">Agregar Pago</h4>
-                    TOTAL: {{vm.debtsToPay.total}}
-                </div>
-                <div class = "modal-body">
-                    <div class = "row">
-                        <div class = "form-group col-md-4">
-                            <b>TIPO DE PAGO: </b>
-                            <select ng-options = "medi.code as medi.name for medi in vm.medLista  | orderBy:'name'  track by medi.code"
-                                    ng-model = "vm.medio.medio" class = "form-control" ng-change = "vm.loadMedio()">
-                            </select>
-                        </div>
-                        <div class = "form-group col-md-4">
-                            <b>PAIS: </b>
-                            <select ng-options = "medi.name as medi.name for medi in vm.countries  | orderBy:'name'  track by medi.code"
-                                    ng-model = "vm.medio.country" class = "form-control" ng-change = "vm.loadMedio()">
-                            </select>
-                        </div>
-                        <div class = "form-group col-md-4">
-                            <b>FORMA DE PAGO: </b><br />
-                            {{vm.medio.payForm}}
-                        </div>
-                    </div>
-                    <div class = "row" ng-show = "vm.medio.medio === 'credito'">
-                        <div class = "form-group col-md-4">
-                            <b>NUMERO DE PAGOS: </b>
-                            <input type = "text" onkeypress = "return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
-                                   ng-model = "vm.medio.creditoNumeroPagos" class = "form-control" maxlength = "2">
-                        </div>
-                        <div class = "form-group col-md-4">
-                            <b>INTERVALOS DE DIAS: </b><br/>
-                            <input type = "text" onkeypress = "return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
-                                   ng-model = "vm.medio.creditoIntervalos" class = "form-control" maxlength = "3">
-                        </div>
-                        <div class = "form-group col-md-4">
-                            <br/>
-                            <button type = "button" title = "Calcular" class = "btn btn-primary btn-sm" ng-click = "vm.loadCredit()"
-                                    ng-disabled = "vm.medio.creditoIntervalos === undefined || vm.medio.creditoNumeroPagos === undefined">
-                                    <span class = "glyphicon glyphicon-th" aria-hidden = "true"></span>
-                            </button>
-                        </div>
-                    </div>
-                    <div class = "row" ng-show = "vm.medio.medio === 'credito'">
-                        <div class = "form-group col-md-12">
-                            <table class = "table table-striped">
-                                <thead>
-                                    <tr>
-                                        <th>PAGO</th>
-                                        <th>DIAS PLAZO</th>
-                                        <th>FECHAS</th>
-                                        <th>VALOR</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr ng-repeat = "cred in vm.medio.creditsDebts">
-                                        <td>{{cred.payNumber}}</td>
-                                        <td>{{cred.diasPlazo}}</td>
-                                        <td>{{cred.fecha | date:'dd/MM/yyyy'}}</td>
-                                        <td>{{cred.valor}}</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                    <div class = "row">
-                        <div class="form-group col-md-4" ng-if="vm.medio.medio !== 'credito'">
-                            <b>VALOR: </b>
-                            <input type = "text" onkeypress = "return ((event.which >= 46 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
-                                   ng-model = "vm.medio.total" class = "form-control" maxlength = "9">
-                        </div>
-                        <div class="form-group col-md-4" ng-if="vm.medio.medio !== 'credito'">
-                            <b>VALOR: </b><br />
-                            ${{vm.medio.total}}
-                        </div>
-                        <div class = "form-group col-md-4">
-                            <br/>
-                            <button type = "button" title = "Agregar Pago" class = "btn btn-primary btn-sm" ng-click = "vm.addPago()"
-                                    ng-disabled = "vm.medio.medio === undefined || vm.medio.total === undefined">
-                                    <span class = "glyphicon glyphicon-plus" aria-hidden = "true"></span>
-                            </button>
-                        </div>
-                    </div>
-                    <div class = "row">
-                        <div class = "col-md-12">
-                            <table class = "table table-striped">
-                                <thead>
-                                    <tr>
-                                        <th>Medio</th>
-                                        <th>Valor</th>
-                                        <th></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr ng-show = "vm.pagos == 0">
-                                        <td colspan = "4">
-                                            No hay pagos ingresados
-                                        </td>
-                                    </tr>
-                                    <tr ng-repeat = "pago in vm.pagos">
-                                        <td>{{pago.medio}}</td>
-                                        <td>{{pago.total.toFixed(2)}}</td>
-                                        <td>
-                                            <button type = "button" title = "Eliminar Pago" class = "btn btn-primary btn-sm" ng-click = "vm.removePago($index)">
-                                                    <span class = "glyphicon glyphicon-trash" aria-hidden = "true"></span>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td><b>TOTAL</b></td>
-                                        <td>{{vm.getTotalPago()}}</td>
-                                        <td>
-                                            Vuelto: {{vm.getCambio}}
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-                <div class = "modal-footer">
-                    <button type = "button" title = "Guardar Cuenta" class = "btn btn-success btn-sm" ng-if="vm.update === false"
-                            ng-click = "vm.saveDebtsToPay(vm.debtsToPay); vm.cancel()" ng-disabled = "vm.pagos.length === 0">
-                            <span class = "glyphicon glyphicon-floppy-save" aria-hidden = "true"></span>
-                    </button>
-                    <button type="button" title = "Salir" class="btn btn-primary btn-sm" data-dismiss="modal">
-                            <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!--SECCIÓN DE CARGA DE LAS CUENTAS POR PAGAR POR PROVEEDOR PARA EL PAGO INDIVIDUAL DE FACTURAS-->
-    <div class="table-responsive" ng-show = "vm.debtsToPayList !== undefined">
-        <div class = "panel panel-primary">
-            <div class = "panel-heading">
-                <h4>Pagos Individuales de Facturas</h4>
-                <div>
-                    <b>Cuentas por Pagar Pertenecientes a: {{vm.providerName}}</b>
-                </div>
-            </div>
-            <div class = "panel-body">
-                <table class = "table table-striped">
-                    <thead>
-                        <tr>
-                            <th>No. Cuenta</th>
-                            <th>No. Factura</th>
-                            <th>Fecha</th>
-                            <th>Total</th>
-                            <th>Pendiente</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr ng-show = "vm.debtsToPayList == 0">
-                            <td colspan = "4">
-                                El Proveedor <b>No Presenta</b> Cuentas por Pagar Ingresadas...
-                            </td>
-                        </tr>
-                        <tr ng-repeat = "debts in vm.debtsToPayList">
-                            <td>{{debts.debtsSeq}}</td>
-                            <td>{{debts.billNumber}}</td>
-                            <td>{{debts.fecha | date : "dd/MM/yyyy"}}</td>
-                            <td>{{debts.total.toFixed(2)}}</td>
-                            <td>{{debts.saldo.toFixed(2)}}</td>
-                            <td>
-                                <button type = "button" title = "Buscar Cuotas" class = "btn btn-primary btn-sm" 
-                                        ng-click = "vm.creditsByDebts(debts)" data-toggle = "modal" data-target = "#modalCuotasDebts">
-                                        <span class = "glyphicon glyphicon-search" aria-hidden = "true"></span>
-                                </button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <div class = "panel-footer">
-                <button type = "button" title = "Salir" class = "btn btn-primary btn-sm" ng-click = "vm.cancel()">
-                        <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!--SECCIÓN DE CARGA DE LOS CRÉDITOS POR CUENTAS POR PAGAR-->
-    <div id = "modalCuotasDebts" class = "modal fade" role = "dialog">
-        <div class = "modal-dialog">
-            <div class = "modal-content">
-                <div class = "modal-header">
-                    <button type = "button" class = "close" data-dismiss = "modal">&times;</button>
-                    <h4 class = "modal-title">Listado de Cuotas por Cuenta por Pagar</h4>
-                </div>
-                <div class = "modal-body">
-                    <table class = "table table-striped">
-                        <thead>
-                            <tr>
-                                <th>Fecha Limite</th>
-                                <th>N&uacute;mero de Pagos</th>
-                                <th>Saldo por Cancelar</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr ng-show = "vm.creditsDebtsList == 0">
-                                <td colspan = "4">
-                                    La Cuenta por Pagar <b>No Presenta</b> Cobros Pendientes por Cancelar...
-                                </td>
-                            </tr>
-                            <tr ng-repeat = "creditsDebts in vm.creditsDebtsList | orderBy : 'payNumber' : true">
-                                <td>{{creditsDebts.fecha | date : "dd/MM/yyyy"}}</td>
-                                <td>{{creditsDebts.payNumber}}</td>
-                                <td>{{creditsDebts.valor.toFixed(2)}}</td>
-                                <td>
-                                    <button type = "button" title = "Abonar Pago" class = "btn btn-primary btn-sm" ng-click = "vm.createAbonoDebts(creditsDebts)"
-                                            data-dismiss = "modal" data-toggle = "modal" data-target = "#modalAbonarDebts">
-                                            <span class = "glyphicon glyphicon-plus" aria-hidden = "true"></span>
-                                    </button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" title = "Salir" class="btn btn-primary btn-sm" data-dismiss="modal">
-                            <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!--SECCIÓN DE PAGO DE LAS CUOTAS POR CUENTA POR PAGAR-->
-    <div id = "modalAbonarDebts" class = "modal fade" role = "dialog">
-        <div class = "modal-dialog">
-            <div class = "modal-content">
-                <div class = "modal-header">
-                    <button type = "button" class = "close" data-dismiss = "modal">&times;</button>
-                    <h4 class = "modal-title">Pago de Cuotas</h4>
-                </div>
-                <div class = "modal-body">
-                    <div class = "row">
-                        <div class = "form-group col-md-6">
-                            <label>Nombre del Proveedor:</label><br/>
-                            <b>{{vm.providerName}}</b>
-                        </div>
-                        <div class = "form-group col-md-6">
-                            <label>Identificaci&oacute;n del Proveedor:</label><br/>
-                            <b>{{vm.providerRuc}}</b><br/>
-                        </div>
-                    </div>
-                    <div class = "row">
-                        <div class = "form-group col-md-6">
-                            <label>Fecha de Pago: </label>
-                            <div class = "input-group date" id="pickerDateOfPaymentDebt">
-                                <input type = "text" class="form-control input-group-addon"/>
-                                <span class = "input-group-addon"><span class = "glyphicon glyphicon-calendar"/></span>
-                            </div>
-                            <script>
-                                var defaultDate = new Date();
-                                $('#pickerDateOfPaymentDebt').datetimepicker({format: "DD/MM/YY",});
-                            </script>
-                        </div>
-                        <div class = "form-group col-md-6">
-                            <label>Seleccione el Tipo de Abono:</label><br/>
-                            <select ng-options = "item.code as item.name for item in [{code:'PAC', name:'PAGO CORRIENTE'}, {code:'RET', name:'ABONO POR RETENCIÓN'}, {code:'CEG', name:'ABONO COMP. EGRESO'}]"
-                                    ng-model = "vm.paymentDebts.typePayment" class = "form-control">
-                            </select>
-                        </div>
-                    </div>
-                    <div class = "row" ng-show = "vm.paymentDebts.typePayment === 'PAC'">
-                        <div class = "form-group col-md-12">
-                            <label>Seleccione Modalidad de Pago:</label><br/>
-                            <label class = "radio-inline"><input type="radio" ng-model = "vm.paymentDebts.modePayment" 
-                                   value = "EFC" name = "efectivo">Efectivo</label>
-                            <label class = "radio-inline"><input type="radio" ng-model = "vm.paymentDebts.modePayment" 
-                                   value = "CHQ" name = "cheque">Cheque</label>
-                            <label class = "radio-inline"><input type="radio" ng-model = "vm.paymentDebts.modePayment" 
-                                   value = "TRF" name = "transferencia">Transferencia</label>
-                            <label class = "radio-inline"><input type="radio" ng-model = "vm.paymentDebts.modePayment" 
-                                   value = "TDC" name = "tdc">Tarjeta de Cŕedito</label>
-                            <label class = "radio-inline"><input type="radio" ng-model="vm.paymentDebts.modePayment" 
-                                   value = "DEP" name = "deposito">Depósito Bancario</label>
-                        </div>
-                        <div class = "form-group col-md-12">
-                            <div class = "row" ng-show = "vm.paymentDebts.modePayment === 'EFC'">
-                                <div class="form-group col-md-12" ng-show="vm.ctaCtableBankList !== undefined">
-                                    <table class="table table-striped">
-                                        <thead>
-                                            <tr>
-                                                <th>N&uacute;mero de Cuenta</th>
-                                                <th>Nombre del Banco</th>
-                                                <th>Tipo de Cuenta</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr ng-show="vm.ctaCtableBankList == 0">
-                                                <td colspan="2">
-                                                    No hay Cuentas Contables de Bancos Ingresadas
-                                                </td>
-                                            </tr>
-                                            <tr dir-paginate = "cuenta in vm.ctaCtableBankList | orderBy:'description' | filter:searchTextTaxes | itemsPerPage: 3" pagination-id = "taxesPagination">
-                                                <td>{{cuenta.code}}</td>
-                                                <td>{{cuenta.description}}</td>
-                                                <td>{{cuenta.accountType}}</td>
-                                                <td>
-                                                    <button type = "button" title = "Seleccionar" class = "btn btn-primary btn-sm"
-                                                            ng-click = "vm.selectCtaCtableBank(cuenta)">
-                                                            <span class = "glyphicon glyphicon-check" aria-hidden = "true"></span>
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                    <dir-pagination-controls pagination-id = "taxesPagination"></dir-pagination-controls>
-                                </div>
-                                <div class = "form-group col-md-6" ng-show="vm.ctaCtableBankList === undefined">
-                                    <label>Caja:</label><br/>
-                                    <input type = "text" class = "form-control" ng-model = "vm.bankName"/>
-                                </div>
-                                <div class = "form-group col-md-6" ng-show="vm.ctaCtableBankList === undefined">
-                                    <label>Detalle:</label><br/>
-                                    <select ng-options = "deta.name as deta.name for deta in [{code: 'APC' ,name:'ABONO PARCIAL DE CUOTA'}, {code: 'ACC', name:'ABONO COMPLEMENTARIO DE CUOTA'}, {code: 'PTC', name:'PAGO TOTAL DE CUOTA'}]"
-                                            ng-model = "vm.paymentDebts.detail" class = "form-control">
-                                    </select>
-                                </div>
-                                <div class = "form-group col-md-6" ng-show="vm.ctaCtableBankList === undefined">
-                                    <label>Monto a Abonar:</label><br/>
-                                    <input type = "text" class = "form-control" ng-model = "vm.paymentDebts.valorAbono" placeholder = "{{vm.creditsDebtsValue}}"/>
-                                </div>
-                            </div>
-                            <div class = "row" ng-show = "vm.paymentDebts.modePayment === 'CHQ'">
-                                <div class="form-group col-md-12" ng-show="vm.ctaCtableBankList !== undefined">
-                                    <table class="table table-striped">
-                                        <thead>
-                                            <tr>
-                                                <th>N&uacute;mero de Cuenta</th>
-                                                <th>Nombre del Banco</th>
-                                                <th>Tipo de Cuenta</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr ng-show="vm.ctaCtableBankList == 0">
-                                                <td colspan="2">
-                                                    No hay Cuentas Contables de Bancos Ingresadas
-                                                </td>
-                                            </tr>
-                                            <tr dir-paginate = "cuenta in vm.ctaCtableBankList | orderBy:'description' | filter:searchTextTaxes | itemsPerPage: 3" pagination-id = "taxesPagination">
-                                                <td>{{cuenta.code}}</td>
-                                                <td>{{cuenta.description}}</td>
-                                                <td>{{cuenta.accountType}}</td>
-                                                <td>
-                                                    <button type = "button" title = "Seleccionar" class = "btn btn-primary btn-sm"
-                                                            ng-click = "vm.selectCtaCtableBank(cuenta)">
-                                                            <span class = "glyphicon glyphicon-check" aria-hidden = "true"></span>
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                    <dir-pagination-controls pagination-id = "taxesPagination"></dir-pagination-controls>
-                                </div>
-                                <div class = "form-group col-md-6" ng-show="vm.ctaCtableBankList === undefined">
-                                    <label>Banco:</label><br/>
-                                    <input type = "text" class = "form-control" ng-model = "vm.bankName"/>
-                                </div>
-                                <div class = "form-group col-md-6" ng-show="vm.ctaCtableBankList === undefined">
-                                    <label>N&uacute;mero de Cheque:</label><br/>
-                                    <input type = "text" class = "form-control" ng-model = "vm.paymentDebts.noDocument"/>
-                                </div>
-                                <div class = "form-group col-md-6" ng-show="vm.ctaCtableBankList === undefined">
-                                    <label>Cuenta Bancaria:</label><br/>
-                                    <input type = "text" class = "form-control" ng-model = "vm.paymentDebts.noAccount"/>
-                                </div>
-                                <div class="form-group col-md-6" ng-show="vm.ctaCtableBankList === undefined">
-                                    <label>Detalle:</label><br/>
-                                    <select ng-options = "deta.name as deta.name for deta in [{code: 'APC' ,name:'ABONO PARCIAL DE CUOTA'}, {code: 'ACC', name:'ABONO COMPLEMENTARIO DE CUOTA'}, {code: 'PTC', name:'PAGO TOTAL DE CUOTA'}]"
-                                            ng-model = "vm.paymentDebts.detail" class = "form-control">
-                                    </select>
-                                </div>
-                                <div class = "form-group col-md-6" ng-show="vm.ctaCtableBankList === undefined">
-                                    <label>Monto a Abonar:</label><br/>
-                                    <input type = "text" class = "form-control" ng-model = "vm.paymentDebts.valorAbono" placeholder = "{{vm.creditsDebtsValue}}"/>
-                                </div>
-                            </div>
-                            <div class = "row" ng-show = "vm.paymentDebts.modePayment === 'TRF'">
-                                <div class="form-group col-md-12" ng-show="vm.ctaCtableBankList !== undefined">
-                                    <table class="table table-striped">
-                                        <thead>
-                                            <tr>
-                                                <th>N&uacute;mero de Cuenta</th>
-                                                <th>Nombre del Banco</th>
-                                                <th>Tipo de Cuenta</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr ng-show="vm.ctaCtableBankList == 0">
-                                                <td colspan="2">
-                                                    No hay Cuentas Contables de Bancos Ingresadas
-                                                </td>
-                                            </tr>
-                                            <tr dir-paginate = "cuenta in vm.ctaCtableBankList | orderBy:'description' | filter:searchTextTaxes | itemsPerPage: 3" pagination-id = "taxesPagination">
-                                                <td>{{cuenta.code}}</td>
-                                                <td>{{cuenta.description}}</td>
-                                                <td>{{cuenta.accountType}}</td>
-                                                <td>
-                                                    <button type = "button" title = "Seleccionar" class = "btn btn-primary btn-sm"
-                                                            ng-click = "vm.selectCtaCtableBank(cuenta)">
-                                                            <span class = "glyphicon glyphicon-check" aria-hidden = "true"></span>
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                    <dir-pagination-controls pagination-id = "taxesPagination"></dir-pagination-controls>
-                                </div>
-                                <div class = "form-group col-md-6" ng-show="vm.ctaCtableBankList === undefined">
-                                    <label>Banco:</label><br/>
-                                    <input type = "text" class = "form-control" ng-model = "vm.bankName"/>
-                                </div>
-                                <div class = "form-group col-md-6" ng-show="vm.ctaCtableBankList === undefined">
-                                    <label>N&uacute;mero de Transferencia:</label><br/>
-                                    <input type = "text" class = "form-control" ng-model = "vm.paymentDebts.noDocument"/>
-                                </div>
-                                <div class = "form-group col-md-6" ng-show="vm.ctaCtableBankList === undefined">
-                                    <label>Cuenta Bancaria:</label><br/>
-                                    <input type = "text" class = "form-control" ng-model = "vm.paymentDebts.noAccount"/>
-                                </div>
-                                <div class="form-group col-md-6" ng-show="vm.ctaCtableBankList === undefined">
-                                    <label>Detalle:</label><br/>
-                                    <select ng-options = "deta.name as deta.name for deta in [{code: 'APC' ,name:'ABONO PARCIAL DE CUOTA'}, {code: 'ACC', name:'ABONO COMPLEMENTARIO DE CUOTA'}, {code: 'PTC', name:'PAGO TOTAL DE CUOTA'}]"
-                                            ng-model = "vm.paymentDebts.detail" class = "form-control">
-                                    </select>
-                                </div>
-                                <div class = "form-group col-md-6" ng-show="vm.ctaCtableBankList === undefined">
-                                    <label>Monto a Abonar:</label><br/>
-                                    <input type = "text" class = "form-control" ng-model = "vm.paymentDebts.valorAbono" placeholder = "{{vm.creditsDebtsValue}}"/>
-                                </div>
-                            </div>
-                            <div class = "row" ng-show="vm.paymentDebts.modePayment === 'TDC'">
-                                <div class = "form-group col-md-6">
-                                    <label>N&uacute;mero de Tarjeta:</label><br/>
-                                    <input type = "text" class = "form-control" ng-model = "vm.paymentDebts.noDocument"/>
-                                </div>
-                                <div class="form-group col-md-6">
-                                    <label>Tarjeta:</label><br/>
-                                    <select ng-options="card as card for card in vm.creditCardList"
-                                            ng-model="vm.cardBrand" class="form-control">
-                                    </select>
-                                </div>
-                                <div class="form-group col-md-6">
-                                    <label>No. Lote:</label><br/>
-                                    <input type="text" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
-                                           ng-model="vm.numeroLote" class="form-control" maxlength="5">
-                                </div>
-                                <div class="form-group col-md-6">
-                                    <label>Detalle:</label><br/>
-                                    <select ng-options = "deta.name as deta.name for deta in [{code: 'APC' ,name:'ABONO PARCIAL DE CUOTA'}, {code: 'ACC', name:'ABONO COMPLEMENTARIO DE CUOTA'}, {code: 'PTC', name:'PAGO TOTAL DE CUOTA'}]"
-                                            ng-model = "vm.paymentDebts.detail" class = "form-control">
-                                    </select>
-                                </div>
-                                <div class = "form-group col-md-6">
-                                    <label>Monto a Abonar:</label><br/>
-                                    <input type = "text" class = "form-control" ng-model = "vm.paymentDebts.valorAbono" placeholder = "{{vm.creditsDebtsValue}}"/>
-                                </div>
-                            </div>
-                            <div class = "row" ng-show="vm.paymentDebts.modePayment === 'DEP'">
-                                <div class="form-group col-md-12" ng-show="vm.ctaCtableBankList !== undefined">
-                                    <table class="table table-striped">
-                                        <thead>
-                                            <tr>
-                                                <th>N&uacute;mero de Cuenta</th>
-                                                <th>Nombre del Banco</th>
-                                                <th>Tipo de Cuenta</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr ng-show="vm.ctaCtableBankList == 0">
-                                                <td colspan="2">
-                                                    No hay Cuentas Contables de Bancos Ingresadas
-                                                </td>
-                                            </tr>
-                                            <tr dir-paginate = "cuenta in vm.ctaCtableBankList | orderBy:'description' | filter:searchTextTaxes | itemsPerPage: 3" pagination-id = "taxesPagination">
-                                                <td>{{cuenta.code}}</td>
-                                                <td>{{cuenta.description}}</td>
-                                                <td>{{cuenta.accountType}}</td>
-                                                <td>
-                                                    <button type = "button" title = "Seleccionar" class = "btn btn-primary btn-sm"
-                                                            ng-click = "vm.selectCtaCtableBank(cuenta)">
-                                                            <span class = "glyphicon glyphicon-check" aria-hidden = "true"></span>
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                    <dir-pagination-controls pagination-id = "taxesPagination"></dir-pagination-controls>
-                                </div>
-                                <div class = "form-group col-md-6" ng-show="vm.ctaCtableBankList === undefined">
-                                    <label>Banco:</label><br/>
-                                    <input type = "text" class = "form-control" ng-model = "vm.bankName"/>
-                                </div>
-                                <div class = "form-group col-md-6" ng-show="vm.ctaCtableBankList === undefined">
-                                    <label>N&uacute;mero de Depósito:</label><br/>
-                                    <input type = "text" class = "form-control" ng-model = "vm.paymentDebts.noDocument"/>
-                                </div>
-                                <div class = "form-group col-md-6" ng-show="vm.ctaCtableBankList === undefined">
-                                    <label>N&uacute;mero de Cuenta:</label><br/>
-                                    <input type = "text" class = "form-control" ng-model = "vm.paymentDebts.noAccount"/>
-                                </div>
-                                <div class = "form-group col-md-6" ng-show="vm.ctaCtableBankList === undefined">
-                                    <label>Detalle:</label><br/>
-                                    <select ng-options = "deta.name as deta.code for deta in [{code: 'ABONO PARCIAL DE CUOTA' ,name:'ABONO PARCIAL DE CUOTA'}, {code: 'ABONO COMPLEMENTARIO DE CUOTA', name:'ABONO COMPLEMENTARIO DE CUOTA'}, {code: 'PAGO TOTAL DE CUOTA', name:'PAGO TOTAL DE CUOTA'}]"
-                                            ng-model = "vm.paymentDebts.detail" class = "form-control">
-                                    </select>
-                                </div>
-                                <div class = "form-group col-md-6" ng-show="vm.ctaCtableBankList === undefined">
-                                    <label>Monto a Abonar:</label><br/>
-                                    <input type = "text" class = "form-control" ng-model = "vm.paymentDebts.valorAbono" placeholder="{{vm.creditsDebtsValue}}"/>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class = "row" ng-show = "vm.paymentDebts.typePayment === 'RET'">
-                        <div class = "form-group col-md-12">
-                            <div class="row">
-                                <div class="form-group col-md-6">
-                                    <label>N&uacute;mero de Retenci&oacute;n:</label><br/>
-                                    <input type="text" class="form-control" ng-model="vm.paymentDebts.noDocument" maxlength="17"/>
-                                </div>
-                                <div class="form-group col-md-6">
-                                    <label>Detalle:</label><br/>
-                                    <select ng-options="deta.name as deta.code for deta in [{code: 'ABONO POR RETENCIÓN' ,name:'ABONO POR RETENCIÓN'}]"
-                                            ng-model="vm.paymentDebts.detail" class="form-control">
-                                    </select>
-                                </div>
-                                <div class="form-group col-md-6">
-                                    <label>Monto de la Retenci&oacute;n:</label><br/>
-                                    <input type="text" class="form-control" ng-model="vm.paymentDebts.valorReten" placeholder="{{vm.creditsDebtsValue}}"/>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class = "row" ng-show = "vm.paymentDebts.typePayment === 'CEG'">
-                        <div class = "form-group col-md-12">
-                            <div class="row">
-                                <div class="form-group col-md-6">
-                                    <label>Nro. Comprobante Egreso:</label><br/>
-                                    <input type="text" class="form-control" ng-model="vm.paymentDebts.noDocument" maxlength="17"/>
-                                </div>
-                                <div class = "form-group col-md-6">
-                                    <label>N&uacute;mero de CHQ/DEP/TRF:</label><br/>
-                                    <input type = "text" class = "form-control" ng-model = "vm.paymentDebts.noDocument"/>
-                                </div>
-                                <div class="form-group col-md-6">
-                                    <label>Detalle:</label><br/>
-                                    <select ng-options="deta.name as deta.code for deta in [{code: 'ABONO POR COMP. EGRESO' ,name:'ABONO POR COMP. EGRESO'}]"
-                                            ng-model="vm.paymentDebts.detail" class="form-control">
-                                    </select>
-                                </div>
-                                <div class="form-group col-md-6">
-                                    <label>Monto:</label><br/>
-                                    <input type="text" class="form-control" ng-model="vm.paymentDebts.valorAbono" placeholder="{{vm.creditsDebtsValue}}"/>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type = "button" title = "Aceptar" class = "btn btn-success btn-sm"
-                            ng-click = "vm.pAbonoDebts(vm.paymentDebts)" data-dismiss = "modal">
-                            <span class = "glyphicon glyphicon-thumbs-up" aria-hidden = "true"></span>
-                    </button>
-                    <button type = "button" title = "Salir" class = "btn btn-primary btn-sm" ng-click = "vm.cancel()" data-dismiss = "modal">
-                            <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!--CONSULTA DE PAGOS REALIZADOS POR PROVEEDOR-->
-    <div class="table-responsive" ng-show="vm.paymentDebtsList !== undefined">
-        <div class="panel panel-primary">
-            <div class="panel-heading">
-                <b>Listado de Pagos de Facturas Pertenecientes a: {{vm.providerName}}</b>
-            </div>
-            <div class="panel-body">
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>N&uacute;mero Factura</th>
-                            <th>Fecha</th>
-                            <th>Detalle de Cobro</th>
-                            <th>Total</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr ng-show="vm.paymentDebtsList == 0">
-                            <td colspan="4">
-                                El Peoveedor <b>No Presenta</b> Facturas con Pagos realizados...
-                            </td>
-                        </tr>
-                        <tr ng-repeat="paymentDebts in vm.paymentDebtsList">
-                            <td>{{paymentDebts.documentNumber}}</td>
-                            <td>{{paymentDebts.datePayment | date : "dd/MM/yyyy"}}</td>
-                            <td>{{paymentDebts.detail}}</td>
-                            <td>{{paymentDebts.valorAbono.toFixed(2)}}</td>
-                            <td>
-                                <button type="button" title = "Anular Cobro de Factura" class="btn btn-warning btn-sm" 
-                                        ng-click="vm.deactivatePaymentDebts = paymentDebts" data-toggle="modal" data-target="#modalAnularPaymentDebts">
-                                        <span class = "glyphicon glyphicon-warning-sign" aria-hidden = "true"></span>
-                                </button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <div class="panel-footer">
-                <button type="button" title = "Salir" class="btn btn-primary btn-sm" ng-click="vm.cancel()">
-                        <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
-                </button>
-            </div>
-        </div>
-    </div>
-    
-    <!--ANULAR COBRO DE FACTURA-->
-    <div id="modalAnularPaymentDebts" class="modal fade" role="dialog">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h3 class="modal-title">¡¡¡Advertencia!!!</h3>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-md-12" >
-                            <p>¿Est&aacute; seguro que desea Anular el Pago de la Factura <b>No. {{vm.deactivatePaymentDebts.documentNumber}}</b>?</p>
-                            <p>Recuerde que el Pago de Factura Anulada <b>NO puede ser Recuperado</b>.</p>
-                        </div>
-                        <br/>
-                        <div class="col-md-12" >
-                            <p>Le recordamos que debe dirigirse al módulo de <b>Contabilidad</b> para proceder a anular</p>
-                            <p>el Comprobante de Egreso en la opci&oacute;n <b>"Anular Comprobante de Egreso"</b>,</p>
-                            <p>una vez anulado este Pago.</p>   
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" title="Anular Cobro de Factura" class="btn btn-danger btn-sm" ng-click="vm.paymentDebtsDeactivate()" data-dismiss="modal">
-                            <span class = "glyphicon glyphicon-screenshot" aria-hidden = "true"></span>
-                    </button>
-                    <button type="button" title = "Salir" class="btn btn-primary btn-sm" data-dismiss="modal">
-                            <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!--SECCIÓN DE PAGOS MULTIPLES DE FACTURAS DE COMPRA-->
-    <div class="table-responsive" ng-show="vm.multipleSelected !== undefined">
-        <div class = "panel panel-primary">
-            <div class = "panel-heading">
-                <h4 class = "modal-title">Pago Multiple de Facturas</h4>
-            </div>
-            <div class = "panel-body">
-                <div class = "row">
-                    <div class = "form-group col-md-6">
-                        <label>Nombre del Proveedor:</label><br/>
-                        <b>{{vm.providerName}}</b>
-                    </div>
-                    <div class = "form-group col-md-6">
-                        <label>Identificaci&oacute;n del Proveedor:</label><br/>
-                        <b>{{vm.providerRuc}}</b><br/>
-                    </div>
-                </div>
-                <div class = "row">
-                    <div class = "form-group col-md-6">
-                        <label>Seleccione el Tipo de Abono:</label><br/>
-                        <select ng-options = "item.code as item.name for item in [{code:'PAC', name:'PAGO CORRIENTE'}]"
-                                ng-model = "vm.typePayment" class = "form-control">
-                        </select>
-                    </div>
-                    <div class = "form-group col-md-6" ng-show = "vm.typePayment === 'PAC'">
-                        <label>Seleccione Modalidad de Pago:</label><br/>
-                        <label class = "radio-inline"><input type="radio" ng-model = "vm.modePayment" 
-                               value = "EFC" name = "efectivo">Efectivo</label>
-                        <label class = "radio-inline"><input type="radio" ng-model = "vm.modePayment" 
-                               value = "CHQ" name = "cheque">Cheque</label>
-                        <label class = "radio-inline"><input type="radio" ng-model = "vm.modePayment" 
-                                value = "TRF" name = "transferencia">Transferencia</label>
-                        <label class = "radio-inline"><input type="radio" ng-model="vm.modePayment" 
-                               value = "DEP" name = "deposito">Depósito Bancario</label>
-                    </div>
-                </div>
-                <div class = "row">
-                    <div class = "form-group col-md-6" ng-show = "vm.typePayment === 'PAC'">
-                        <label>Fecha de Pago: </label>
-                        <div class = "input-group date" id="pickerDateOfMultiPayment">
-                            <input type = "text" class="form-control input-group-addon"/>
-                            <span class = "input-group-addon"><span class = "glyphicon glyphicon-calendar"/></span>
-                        </div>
-                        <script>
-                            $('#pickerDateOfMultiPayment').datetimepicker({
-                                format: "DD/MM/YY",
-                            });
-                        </script>
-                    </div>
-                    <div class = "form-group col-md-12">
-                        <div class = "row" ng-show = "vm.modePayment === 'EFC'">
-                            <div class="form-group col-md-12" ng-show="vm.ctaCtableBankList !== undefined">
-                                <input ng-model="searchTextTaxes" class="form-control" placeholder="Buscar">
-                                <table class="table table-striped">
-                                    <thead>
-                                        <tr>
-                                            <th>N&uacute;mero de Cuenta</th>
-                                            <th>Nombre del Banco</th>
-                                            <th>Tipo de Cuenta</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr ng-show="vm.ctaCtableBankList == 0">
-                                            <td colspan="2">
-                                                No hay Cuentas Contables de Bancos Ingresadas
-                                            </td>
-                                        </tr>
-                                        <tr dir-paginate = "cuenta in vm.ctaCtableBankList | orderBy:'description' | filter:searchTextTaxes | itemsPerPage: 3" pagination-id = "taxesPagination">
-                                            <td>{{cuenta.code}}</td>
-                                            <td>{{cuenta.description}}</td>
-                                            <td>{{cuenta.accountType}}</td>
-                                            <td>
-                                                <button type = "button" title = "Seleccionar" class = "btn btn-primary btn-sm"
-                                                        ng-click = "vm.selectCtaCtableBank(cuenta)">
-                                                        <span class = "glyphicon glyphicon-check" aria-hidden = "true"></span>
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                                <dir-pagination-controls pagination-id = "taxesPagination"></dir-pagination-controls>
-                            </div>
-                            <div class = "form-group col-md-6">
-                                <label>Caja:</label><br/>
-                                <input type = "text" class = "form-control" ng-model = "vm.bankName"/>
-                            </div>
-                            <div class = "form-group col-md-6">
-                                <label>Detalle:</label><br/>
-                                <select ng-options = "deta.name as deta.code for deta in [{code: 'ABONO PARCIAL DE CUOTA' ,name:'ABONO PARCIAL DE CUOTA'}, {code: 'ABONO COMPLEMENTARIO DE CUOTA', name:'ABONO COMPLEMENTARIO DE CUOTA'}, {code: 'PAGO TOTAL DE CUOTA', name:'PAGO TOTAL DE CUOTA'}]"
-                                        ng-model = "vm.details" class = "form-control">
-                                </select>
-                            </div>
-                            <div class = "form-group col-md-6">
-                                <label>Monto a Abonar:</label><br/>
-                                <input type = "text" class = "form-control" ng-model = "vm.valorDocumento"/>
-                            </div>
-                            <div class = "form-group col-md-3">
-                                <br/>
-                                <button type = "button" title = "Buscar Facturas Pendientes" class = "btn btn-primary btn-sm"
-                                        ng-click = "vm.findDebtsToPay()" data-toggle = "modal" data-target = "#modalFindDebtsToPay">
-                                        Facturas Pendientes
-                                </button>
-                            </div>
-                        </div>
-                        <div class = "row" ng-show = "vm.modePayment === 'CHQ'">
-                            <div class="form-group col-md-12" ng-show="vm.ctaCtableBankList !== undefined">
-                                <input ng-model="searchTextTaxes" class="form-control" placeholder="Buscar">
-                                <table class="table table-striped">
-                                    <thead>
-                                        <tr>
-                                            <th>N&uacute;mero de Cuenta</th>
-                                            <th>Nombre del Banco</th>
-                                            <th>Tipo de Cuenta</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr ng-show="vm.ctaCtableBankList == 0">
-                                            <td colspan="2">
-                                                No hay Cuentas Contables de Bancos Ingresadas
-                                            </td>
-                                        </tr>
-                                        <tr dir-paginate = "cuenta in vm.ctaCtableBankList | orderBy:'description' | filter:searchTextTaxes | itemsPerPage: 3" pagination-id = "taxesPagination">
-                                            <td>{{cuenta.code}}</td>
-                                            <td>{{cuenta.description}}</td>
-                                            <td>{{cuenta.accountType}}</td>
-                                            <td>
-                                                <button type = "button" title = "Seleccionar" class = "btn btn-primary btn-sm"
-                                                        ng-click = "vm.selectCtaCtableBank(cuenta)">
-                                                        <span class = "glyphicon glyphicon-check" aria-hidden = "true"></span>
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                                <dir-pagination-controls pagination-id = "taxesPagination"></dir-pagination-controls>
-                            </div>
-                            <div class = "form-group col-md-6">
-                                <label>Banco:</label><br/>
-                                <input type = "text" class = "form-control" ng-model = "vm.bankName"/>
-                            </div>
-                            <div class = "form-group col-md-3">
-                                <label>N&uacute;mero de Cheque:</label><br/>
-                                <input type = "text" class = "form-control" ng-model = "vm.noDocument"/>
-                            </div>
-                            <div class = "form-group col-md-3">
-                                <label>Monto del Cheque:</label><br/>
-                                <input type = "text" class = "form-control" ng-model = "vm.valorDocumento"/>
-                            </div>
-                            <div class = "form-group col-md-3">
-                                <label>N&uacute;mero de Cuenta:</label><br/>
-                                <input type = "text" class = "form-control" ng-model = "vm.noAccount"/>
-                            </div>
-                            <div class = "form-group col-md-6">
-                                <label>Detalle:</label><br/>
-                                <select ng-options = "deta.name as deta.code for deta in [{code: 'ABONO PARCIAL DE CUOTA' ,name:'ABONO PARCIAL DE CUOTA'}, {code: 'ABONO COMPLEMENTARIO DE CUOTA', name:'ABONO COMPLEMENTARIO DE CUOTA'}, {code: 'PAGO TOTAL DE CUOTA', name:'PAGO TOTAL DE CUOTA'}]"
-                                        ng-model = "vm.details" class = "form-control">
-                                </select>
-                            </div>
-                            <div class = "form-group col-md-3">
-                                <br/>
-                                <button type = "button" title = "Buscar Facturas Pendientes" class = "btn btn-primary btn-sm"
-                                        ng-click = "vm.findDebtsToPay()" data-toggle = "modal" data-target = "#modalFindDebtsToPay">
-                                        Facturas Pendientes
-                                </button>
-                            </div>
-                        </div>
-                        <div class = "row" ng-show = "vm.modePayment === 'TRF'">
-                            <div class="form-group col-md-12" ng-show="vm.ctaCtableBankList !== undefined">
-                                <input ng-model="searchTextTaxes" class="form-control" placeholder="Buscar">
-                                <table class="table table-striped">
-                                    <thead>
-                                        <tr>
-                                            <th>N&uacute;mero de Cuenta</th>
-                                            <th>Nombre del Banco</th>
-                                            <th>Tipo de Cuenta</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr ng-show="vm.ctaCtableBankList == 0">
-                                            <td colspan="2">
-                                                No hay Cuentas Contables de Bancos Ingresadas
-                                            </td>
-                                        </tr>
-                                        <tr dir-paginate = "cuenta in vm.ctaCtableBankList | orderBy:'description' | filter:searchTextTaxes | itemsPerPage: 3" pagination-id = "taxesPagination">
-                                            <td>{{cuenta.code}}</td>
-                                            <td>{{cuenta.description}}</td>
-                                            <td>{{cuenta.accountType}}</td>
-                                            <td>
-                                                <button type = "button" title = "Seleccionar" class = "btn btn-primary btn-sm"
-                                                        ng-click = "vm.selectCtaCtableBank(cuenta)">
-                                                        <span class = "glyphicon glyphicon-check" aria-hidden = "true"></span>
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                                <dir-pagination-controls pagination-id = "taxesPagination"></dir-pagination-controls>
-                            </div>
-                            <div class = "form-group col-md-6">
-                                <label>Banco:</label><br/>
-                                <input type = "text" class = "form-control" ng-model = "vm.bankName"/>
-                            </div>
-                            <div class = "form-group col-md-3">
-                                <label>N&uacute;mero de Transferencia:</label><br/>
-                                <input type = "text" class = "form-control" ng-model = "vm.noDocument"/>
-                            </div>
-                            <div class = "form-group col-md-3">
-                                <label>Monto de la Transferencia:</label><br/>
-                                <input type = "text" class = "form-control" ng-model = "vm.valorDocumento"/>
-                            </div>
-                            <div class = "form-group col-md-3">
-                                <label>N&uacute;mero de Cuenta:</label><br/>
-                                <input type = "text" class = "form-control" ng-model = "vm.noAccount"/>
-                            </div>
-                            <div class = "form-group col-md-6">
-                                <label>Detalle:</label><br/>
-                                <select ng-options = "deta.name as deta.code for deta in [{code: 'ABONO PARCIAL DE CUOTA' ,name:'ABONO PARCIAL DE CUOTA'}, {code: 'ABONO COMPLEMENTARIO DE CUOTA', name:'ABONO COMPLEMENTARIO DE CUOTA'}, {code: 'PAGO TOTAL DE CUOTA', name:'PAGO TOTAL DE CUOTA'}]"
-                                        ng-model = "vm.details" class = "form-control">
-                                </select>
-                            </div>
-                            <div class = "form-group col-md-3">
-                                <br/>
-                                <button type = "button" title = "Buscar Facturas Pendientes" class = "btn btn-primary btn-sm"
-                                        ng-click = "vm.findDebtsToPay()" data-toggle = "modal" data-target = "#modalFindDebtsToPay">
-                                        Facturas Pendientes
-                                </button>
-                            </div>
-                        </div>
-                        <div class = "row" ng-show="vm.modePayment === 'DEP'">
-                            <div class="form-group col-md-12" ng-show="vm.ctaCtableBankList !== undefined">
-                                <input ng-model="searchTextTaxes" class="form-control" placeholder="Buscar">
-                                <table class="table table-striped">
-                                    <thead>
-                                        <tr>
-                                            <th>N&uacute;mero de Cuenta</th>
-                                            <th>Nombre del Banco</th>
-                                            <th>Tipo de Cuenta</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr ng-show="vm.ctaCtableBankList == 0">
-                                            <td colspan="2">
-                                                No hay Cuentas Contables de Bancos Ingresadas
-                                            </td>
-                                        </tr>
-                                        <tr dir-paginate = "cuenta in vm.ctaCtableBankList | orderBy:'description' | filter:searchTextTaxes | itemsPerPage: 3" pagination-id = "taxesPagination">
-                                            <td>{{cuenta.code}}</td>
-                                            <td>{{cuenta.description}}</td>
-                                            <td>{{cuenta.accountType}}</td>
-                                            <td>
-                                                <button type = "button" title = "Seleccionar" class = "btn btn-primary btn-sm"
-                                                        ng-click = "vm.selectCtaCtableBank(cuenta)">
-                                                        <span class = "glyphicon glyphicon-check" aria-hidden = "true"></span>
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                                <dir-pagination-controls pagination-id = "taxesPagination"></dir-pagination-controls>
-                            </div>
-                            <div class = "form-group col-md-6">
-                                <label>Banco:</label><br/>
-                                <input type = "text" class = "form-control" ng-model = "vm.bankName"/>
-                            </div>
-                            <div class = "form-group col-md-3">
-                                <label>N&uacute;mero de Dep&oacute;sito:</label><br/>
-                                <input type = "text" class = "form-control" ng-model = "vm.noDocument"/>
-                            </div>
-                            <div class = "form-group col-md-3">
-                                <label>Monto del Dep&oacute;sito:</label><br/>
-                                <input type = "text" class = "form-control" ng-model = "vm.valorDocumento"/>
-                            </div>
-                            <div class = "form-group col-md-3">
-                                <label>N&uacute;mero de Cuenta:</label><br/>
-                                <input type = "text" class = "form-control" ng-model = "vm.noAccount"/>
-                            </div>
-                            <div class = "form-group col-md-6">
-                                <label>Detalle:</label><br/>
-                                <select ng-options = "deta.name as deta.code for deta in [{code: 'ABONO PARCIAL DE CUOTA' ,name:'ABONO PARCIAL DE CUOTA'}, {code: 'ABONO COMPLEMENTARIO DE CUOTA', name:'ABONO COMPLEMENTARIO DE CUOTA'}, {code: 'PAGO TOTAL DE CUOTA', name:'PAGO TOTAL DE CUOTA'}]"
-                                        ng-model = "vm.details" class = "form-control">
-                                </select>
-                            </div>
-                            <div class = "form-group col-md-3">
-                                <br/>
-                                <button type = "button" title = "Buscar Facturas Pendientes" class = "btn btn-primary btn-sm"
-                                        ng-click = "vm.findDebtsToPay()" data-toggle = "modal" data-target = "#modalFindDebtsToPay">
-                                        Facturas Pendientes
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class = "row">
-                    <div class="form-group col-md-12">
-                        <table class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th>No. Factura</th>
-                                    <th>Total</th>
-                                    <th>Pendiente</th>
-                                    <th>Abono Realizado</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr ng-show="vm.itemsMultiplePayments == 0">
-                                    <td colspan="4">
-                                        No hay Facturas de Compra Ingresadas
-                                    </td>
-                                </tr>
-                                <tr ng-repeat="mp in vm.itemsMultiplePayments">
-                                    <td>{{mp.bill_number}}</td>
-                                    <td>{{mp.debt_total}}</td>
-                                    <td>{{mp.debt_pending}}</td>
-                                    <td>{{mp.debt_abono}}</td>
-                                    <td>
-                                        <button type = "button" title = "Eliminar Abono" class = "btn btn-primary btn-sm" 
-                                                ng-click = "vm.eliminaAbono($index)">
-                                                <span class = "glyphicon glyphicon-trash" aria-hidden = "true"></span>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td><b>SALDO: {{vm.getTotalMultiAbonos()}}</b></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-            <div class = "panel-footer">
-                <button type = "button" title = "Aceptar" class = "btn btn-success btn-sm" ng-click = "vm.pagoMultiAbonoDebts()"
-                        ng-disabled ="vm.getTotalMultiAbonos() != vm.valorDocumento">
-                        <span class = "glyphicon glyphicon-thumbs-up" aria-hidden = "true"></span>
-                </button>
-                <button type = "button" title = "Salir" class = "btn btn-primary btn-sm" ng-click = "vm.cancel()">
-                        <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
-                </button>
-            </div>        
-        </div>
-    </div>
-
-    <div id = "modalFindDebtsToPay" class="modal fade" role="dialog">
-        <div class = "modal-dialog">
-            <div class = "modal-content">
-                <div class = "modal-header">
-                    <div>
-                        <b>Cuentas por Pagar Pertenecientes a: {{vm.providerName}}</b>
-                    </div>
-                </div>
-                <div class = "modal-body">
-                    <div class ="row">
-                        <div class = "col-md-12" ng-if = "vm.creditsMultiDebtsList === undefined && vm.creditsDebtsSelected === undefined">
-                            <table class = "table table-striped">
-                                <thead>
-                                    <tr>
-                                        <th>No. Cuenta</th>
-                                        <th>No. Factura</th>
-                                        <th>No. Retenci&oacute;n</th>
-                                        <th>Fecha</th>
-                                        <th>Total</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr ng-show = "vm.debtsToPayMultipleList == 0">
-                                        <td colspan = "4">
-                                            El Proveedor <b>No Presenta</b> Cuentas por Pagar Pendientes...
-                                        </td>
-                                    </tr>
-                                    <tr ng-repeat = "debts in vm.debtsToPayMultipleList">
-                                        <td>{{debts.debtsSeq}}</td>
-                                        <td>{{debts.billNumber}}</td>
-                                        <td>{{debts.retentionNumber}}</td>
-                                        <td>{{debts.fecha | date : "dd/MM/yyyy"}}</td>
-                                        <td>{{debts.total}}</td>
-                                        <td>
-                                            <button type = "button" title = "Consultar Créditos Pendientes" class = "btn btn-primary btn-sm" 
-                                                    ng-click = "vm.creditsMultiByDebts(debts)">
-                                                    <span class = "glyphicon glyphicon-ok" aria-hidden = "true"></span>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            <div>
-                                <button type = "button" title = "Salir" class = "btn btn-primary btn-sm" data-dismiss = "modal">
-                                        <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
-                                </button>
-                            </div>
-                        </div>
-                        <div class = "col-md-12" ng-if = "vm.creditsMultiDebtsList !== undefined">
-                            <table class = "table table-striped">
-                                <thead>
-                                    <tr>
-                                        <th>Fecha Limite</th>
-                                        <th>N&uacute;mero de Pagos</th>
-                                        <th>Saldo por Cancelar</th>
-                                        <th></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr ng-show = "vm.creditsMultiDebtsList == 0">
-                                        <td colspan = "4">
-                                            La Cuenta por Pagar <b>No Presenta</b> Cobros Pendientes por Cancelar...
-                                        </td>
-                                    </tr>
-                                    <tr ng-repeat = "creditsDebts in vm.creditsMultiDebtsList | orderBy : 'payNumber' : true">
-                                        <td>{{creditsDebts.fecha | date : "dd/MM/yyyy"}}</td>
-                                        <td>{{creditsDebts.payNumber}}</td>
-                                        <td>{{(creditsDebts.valor).toFixed(2)}}</td>
-                                        <td>
-                                            <button type = "button" title = "Seleccionar Factura" class = "btn btn-primary btn-sm" ng-click = "vm.multipleAbonoDebts(creditsDebts)">
-                                                    <span class = "glyphicon glyphicon-ok" aria-hidden = "true"></span>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            <div>
-                                <button type = "button" title = "Anterior" class = "btn btn-primary btn-sm" ng-click = "vm.creditsMultiDebtsList = undefined">
-                                        <span class = "glyphicon glyphicon-arrow-left" aria-hidden = "true"></span>
-                                </button>
-                                <button type = "button" title = "Salir" class = "btn btn-primary btn-sm" data-dismiss = "modal">
-                                        <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
-                                </button>
-                            </div>
-                        </div>
-                        <div class = "col-md-12" ng-if = "vm.creditsDebtsSelected !== undefined">
-                            <div>
-                                <div class="form-group col-md-6">
-                                    <label>Factura Nro:</label><br/>
-                                    {{vm.debtsBillNumber}}
-                                </div>
-                                <div class="form-group col-md-6">
-                                    <label>Valor Abono:</label><br/>
-                                    <input type = "text" class = "form-control" ng-model = "vm.valorAbono"/>
-                                </div>
-                            </div>
-                            <div>
-                                <button type = "button" title = "Aceptar" class = "btn btn-success btn-sm" ng-click = "vm.aceptaAbono()">
-                                        <span class = "glyphicon glyphicon-thumbs-up" aria-hidden = "true"></span>
-                                </button>
-                                <button type = "button" title = "Salir" class = "btn btn-primary btn-sm" data-dismiss = "modal">
-                                        <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!--SECCIÓN DE CONSULTA DE CUENTAS POR PAGAR POR PROVEEDOR-->
-    <div class="table-responsive" ng-show = "vm.providerDebtsList !== undefined">
+    <div class="table-responsive" ng-show = "vm.providerDebtsList !== undefined && !vm.printDebtsToPay && !vm.paymentCreation">
         <div class = "panel panel-primary">
             <div class = "panel-heading">
                 <h4>Consulta de Cuentas por Pagar</h4>
@@ -1847,6 +393,7 @@
                             <th>Descripci&oacute;n</th>
                             <th>Fecha</th>
                             <th>Total</th>
+                            <th>Saldo</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -1861,6 +408,7 @@
                             <td>{{debts.observacion}}</td>
                             <td>{{debts.fecha | date : "dd/MM/yyyy"}}</td>
                             <td>{{debts.total.toFixed(2)}}</td>
+                            <td>{{debts.saldo.toFixed(2)}}</td>
                             <td>
                                 <button type = "button" title = "Ver Cuenta por Pagar" 
                                         class = "btn btn-primary btn-sm" ng-click = "vm.debtsToPayToPrint(debts)">
@@ -1883,41 +431,7 @@
         </div>
     </div>
 
-    <!--ANULAR FACTURA DE COMPRA-->
-    <div id="modalAnularDebtsToPay" class="modal fade" role="dialog">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h3 class="modal-title">¡¡¡Advertencia!!!</h3>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-md-12" >
-                            <p>¿Est&aacute; seguro que desea Anular la Factura de Compra <b>No. {{vm.deactivateDebtsToPay.billNumber}}</b>?</p>
-                            <p>Recuerde que la Factura de Compra Anulada <b>NO puede ser Recuperada</b>.</p>
-                        </div>
-                        <div class="col-md-12" >
-                            <p>Le recordamos que debe dirigirse al módulo de <b>Contabilidad</b> para proceder a anular</p>
-                            <p>el Diario de Cuenta por Pagar en la opci&oacute;n <b>"Anular Diario de Cuenta por Pagar"</b>,</p>
-                            <p>una vez anulada esta Factura de Compra.</p>   
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" title="Anular Cuenta por Pagar" class="btn btn-danger btn-sm" ng-click="vm.debtsToPayDeactivate()" data-dismiss="modal">
-                            <span class = "glyphicon glyphicon-screenshot" aria-hidden = "true"></span>
-                    </button>
-                    <button type="button" title = "Salir" class="btn btn-primary btn-sm" data-dismiss="modal">
-                            <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!--SECCIÓN DE CONSULTA DE UNA CUENTA POR PAGAR INDIVIDUAL-->
-    <div class="panel-group table-responsive" ng-show = "vm.debtsProviderSelected !== undefined" id = "printArea" print-section>
+    <div class="panel-group table-responsive" ng-show = "vm.printDebtsToPay" id = "printArea" print-section>
         <div class = "panel panel-primary">
             <div class = "panel-heading">
                 <h4>Cuenta por Pagar Nro: {{vm.seqNumber}}</h4>
@@ -2093,65 +607,894 @@
                 <button print-btn type = "button" title = "Imprimir Comprobante" class = "btn btn-primary btn-sm" print-remove>
                         <span class = "glyphicon glyphicon-print" aria-hidden = "true"></span>
                 </button>
-                <button type = "button" title = "Salir" class = "btn btn-primary btn-sm"
-                        ng-click = "vm.debtsProviderSelected = undefined">
+                <button type = "button" title = "Salirxxxx" class = "btn btn-primary btn-sm"
+                        ng-click = "vm.printDebtsToPay = false">
                         <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
                 </button>
             </div>
         </div>
     </div>
 
-    <!--CONSULTA DE COMPROBANTES DE PAGOS REALIZADOS POR PROVEEDOR-->
-    <div class="table-responsive" ng-show="vm.comprobantePagoList !== undefined">
-        <div class="panel panel-primary">
-            <div class="panel-heading">
-                <b>Listado de Comprobantes de Pagos Pertenecientes a: {{vm.providerName}}</b>
-            </div>
-            <div class="panel-body">
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>Nro. Comprobante</th>
-                            <th>Nro. Factura</th>
-                            <th>Fecha</th>
-                            <th>Total</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr ng-show="vm.comprobantePagoList == 0">
-                            <td colspan="4">
-                                El Proveedor <b>No Presenta</b> Comprobantes de Pagos realizados...
-                            </td>
-                        </tr>
-                        <tr ng-repeat="comprobantePago in vm.comprobantePagoList">
-                            <td>{{comprobantePago.comprobanteStringSeq}}</td>
-                            <td>{{comprobantePago.billNumber}}</td>
-                            <td>{{comprobantePago.dateComprobante | date : "dd/MM/yyyy"}}</td>
-                            <td>{{comprobantePago.total.toFixed(2)}}</td>
-                            <td>
-                                <button type="button" title = "Ver Comprobante de Pago" class="btn btn-primary btn-sm" 
-                                        ng-click="vm.comprobantePagoSelected(comprobantePago)">
-                                        <span class = "glyphicon glyphicon-eye-open" aria-hidden = "true"></span>
-                                </button>
-                                <button type="button" title = "Anular Comprobante de Pago" class="btn btn-warning btn-sm" ng-show="comprobantePago.active !== false"
-                                        ng-click="vm.deactivateComprobantePago = comprobantePago" data-toggle="modal" data-target="#modalAnularComprobantePago">
-                                        <span class = "glyphicon glyphicon-warning-sign" aria-hidden = "true"></span>
-                                </button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <div class="panel-footer">
-                <button type="button" title = "Salir" class="btn btn-primary btn-sm" ng-click="vm.cancel()">
-                        <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
-                </button>
+    <div id="modalFindRetention" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class = "modal-title">Retenciones por Proveedor</h4>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Nro. Retenci&oacute;n</th>
+                                <th>Fecha</th>
+                                <th>Nro. Factura</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-show="vm.retentionList == 0">
+                                <td colspan="4">
+                                    No hay Retenciones ingresadas para este Proveedor
+                                </td>
+                            </tr>
+                            <tr ng-repeat="retention in vm.retentionList | orderBy:'dateCreated':true | filter:searchText">
+                                <td>{{retention.stringSeq}}</td>
+                                <td>{{retention.dateCreated | date : "dd/MM/yyyy"}}</td>
+                                <td>{{retention.documentNumber}}</td>
+                                <td>
+                                    <button type="button" title="Ver Retención" class="btn btn-primary btn-sm" ng-click="vm.retentionSelected(retention)"
+                                            data-dismiss="modal" data-toggle="modal" data-target="#modalViewAndSelectRetention">
+                                            <span class = "glyphicon glyphicon-eye-open" aria-hidden = "true"></span>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" title = "Salir" class="btn btn-primary btn-sm" data-dismiss="modal"
+                            ng-click="vm.retenCodeFuente=undefined; vm.retenCodeIva=undefined">
+                            <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
+                    </button>
+                </div>
             </div>
         </div>
     </div>
 
-    <div class="table-responsive" ng-show="vm.comprobantePagoCreated !== undefined" id="printArea" print-section>
+    <div id="modalViewAndSelectRetention" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type = "button" class = "close" data-dismiss = "modal">&times;</button>
+                    <h4 class = "modal-title">Datos de la Retenci&oacute;n</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="form-group col-md-12 ">
+                            <table width="100%">
+                                <tr>
+                                    <td>
+                                        <div>
+                                            <b>No: {{vm.retention.stringSeq}}</b><br/>
+                                            <b>AUTORIZACIÓN: {{vm.retention.claveDeAcceso}}</b><br/>
+                                            <b>FECHA DE EMISIÓN: {{vm.retention.dateCreated | date : "dd-MM-yyyy"}}</b>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            <b>FACTURA: {{vm.retention.documentNumber}}</b>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-md-12 ">
+                            <table width="100%">
+                                <tr>
+                                    <td width="50%">
+                                        <div >
+                                            <label>Raz&oacute;n social / Nombres y Apellidos: </label>
+                                            {{vm.retention.provider.razonSocial}}
+                                        </div>
+                                    </td>
+                                    <td width="50%" style=" padding-left: 10px">
+                                        <label>identificaci&oacute;n: </label>
+                                        {{vm.retention.provider.ruc}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div >
+                                            <label>Fecha del Documento: </label>
+                                            {{vm.retention.documentDate | date : "dd-MM-yyyy"}}
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div >
+                                        <label>Direcci&oacute;n: </label>
+                                        {{vm.retention.provider.address1}}
+                                        </div>
+                                    </td>
+                                    <td style=" padding-left: 10px">
+                                        <label>E-mail: </label>
+                                        {{vm.retention.provider.email}}
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-md-12 ">
+                            <table width="100%" border="1">
+                                <tr>
+                                    <td><b>EJERCICIO FISCAL</b></td>
+                                    <td><b>TIPO IMPUESTO</b></td>
+                                    <td><b>CÓDIGO</b></td>
+                                    <td><b>BASE IMPONIBLE</b></td>
+                                    <td><b>RETENCIONES %</b></td>
+                                    <td><b>VALOR</b></td>
+                                </tr>
+                                <tr ng-repeat="detail in vm.retention.detailRetentions">
+                                    <td>{{vm.retention.ejercicioFiscal}}</td>
+                                    <td>{{detail.taxType}}</td>
+                                    <td>{{detail.code}}</td>
+                                    <td>{{detail.baseImponible}}</td>
+                                    <td>{{detail.percentage}}</td>
+                                    <td>{{detail.total}}</td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td><b>TOTAL</b></td>
+                                    <td>{{vm.retention.total}}</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" title = "Aceptar y Agregar Retención" class="btn btn-success btn-sm" ng-click="vm.addRetentionToDebtsDetail()" 
+                            data-dismiss="modal">
+                            <span class = "glyphicon glyphicon-thumbs-up" aria-hidden = "true"></span>
+                    </button>
+                    <button type="button" title = "Salir" class="btn btn-primary btn-sm" data-dismiss="modal">
+                            <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id = "modalSelectedTaxes" class = "modal fade" role = "dialog">
+        <div class = "modal-dialog">
+            <div class = "modal-content">
+                <div class = "modal-header">
+                    <button type = "button" class = "close" data-dismiss = "modal">&times;</button>
+                </div>
+                <div class = "modal-body">
+                    <div class = "row">
+                        <div class = "form-group col-md-3">
+                            <label>C&oacute;digo:</label>  
+                            <b>{{vm.item.codigo_contable}}</b>
+                        </div>
+                        <div class = "form-group col-md-3">
+                            <label>Nombre:</label>
+                            <b>{{vm.item.desc_contable}}</b>
+                        </div>
+                        <div class = "form-group col-md-3">
+                            <label>Valor</label>
+                            <input type = "text" onkeypress = "return ((event.which >= 46 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+                                   class = "form-control" maxlength = "9" ng-model = "vm.item.base_imponible" />
+                        </div>
+                    </div>
+                </div>
+                <div class = "modal-footer">
+                    <button type = "button" title = "Aceptar" class = "btn btn-success btn-sm" data-dismiss = "modal" ng-click = "vm.addItem()">
+                            <span class = "glyphicon glyphicon-thumbs-up" aria-hidden = "true"></span>
+                    </button>
+                    <button type = "button" title = "Salir" class = "btn btn-primary btn-sm" data-dismiss = "modal"
+                            ng-click = "vm.item = undefined; vm.indexEdit = undefined;">
+                            <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id = "modalEditTaxes" class = "modal fade" role = "dialog">
+        <div class = "modal-dialog">
+            <div class = "modal-content">
+                <div class = "modal-header">
+                    <button type = "button" class = "close" data-dismiss = "modal">&times;</button>
+                </div>
+                <div class = "modal-body">
+                    <div class = "row">
+                        <div class = "form-group col-md-3">
+                            <label>C&oacute;digo:</label>  
+                            <b>{{vm.item.codigo_contable}}</b>
+                        </div>
+                        <div class = "form-group col-md-3">
+                            <label>Nombre:</label>
+                            <b>{{vm.item.desc_contable}}</b>
+                        </div>
+                        <div class = "form-group col-md-3">
+                            <label>Valor</label>
+                            <input type = "text" onkeypress = "return ((event.which >= 46 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+                                   class = "form-control" maxlength = "9" ng-model = "vm.item.base_imponible"/>
+                        </div>
+                    </div>
+                </div>
+                <div class = "modal-footer">
+                    <button type = "button" title = "Aceptar" class = "btn btn-success btn-sm" data-dismiss = "modal" ng-click = "vm.addItem()">
+                            <span class = "glyphicon glyphicon-thumbs-up" aria-hidden = "true"></span>
+                    </button>
+                    <button type = "button" title = "Salir" class = "btn btn-primary btn-sm" data-dismiss = "modal"
+                            ng-click = "vm.item = undefined; vm.indexEdit = undefined;">
+                            <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id = "modalBaseImponibleIVA" class = "modal fade" role = "dialog">
+        <div class = "modal-dialog">
+            <div class = "modal-content">
+                <div class = "modal-header">
+                    <button type = "button" class = "close" data-dismiss = "modal">&times;</button>
+                </div>
+                <div class = "modal-body">
+                    <div class = "row">
+                        <div class = "form-group col-md-9">
+                            <label>Ingreso de Base Imponible para calculo del IVA</label>
+                        </div>
+                        <div class = "form-group col-md-3">
+                            <input type = "text" onkeypress = "return ((event.which >= 46 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+                                   class = "form-control" maxlength = "9" ng-model = "vm.item.base_imponible"/>
+                        </div>
+                    </div>
+                </div>
+                <div class = "modal-footer">
+                    <button type = "button" title = "Aceptar" class = "btn btn-success btn-sm" data-dismiss = "modal" ng-click="vm.addIvaAndProvider()">
+                            <span class = "glyphicon glyphicon-thumbs-up" aria-hidden = "true"></span>
+                    </button>
+                    <button type = "button" title = "Salir" class = "btn btn-primary btn-sm" data-dismiss = "modal"
+                            ng-click = "vm.item = undefined; vm.indexEdit = undefined;">
+                            <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id = "modalAddPago" class = "modal fade" role = "dialog">
+        <div class = "modal-dialog">
+            <div class = "modal-content">
+                <div class = "modal-header">
+                    <button type = "button" class = "close" data-dismiss = "modal" ng-click = "vm.medio={}">&times;</button>
+                    <h4 class = "modal-title">Agregar Pago</h4>
+                    <b>TOTAL: {{vm.debtsToPay.total}}</b>
+                </div>
+                <div class = "modal-body">
+                    <div class = "row">
+                        <div class = "form-group col-md-4">
+                            <b>TIPO DE PAGO: </b>
+                            <select ng-options = "medi.code as medi.name for medi in vm.medLista  | orderBy:'name'"
+                                    ng-model = "vm.medio.medio" class = "form-control" ng-change = "vm.loadMedio()">
+                            </select>
+                        </div>
+                        <div class = "form-group col-md-4">
+                            <b>PAIS: </b>
+                            <select ng-options = "medi.name as medi.name for medi in vm.countries  | orderBy:'name'"
+                                    ng-model = "vm.medio.country" class = "form-control" ng-change = "vm.loadMedio()">
+                            </select>
+                        </div>
+                        <div class = "form-group col-md-4">
+                            <b>FORMA DE PAGO: </b><br />
+                            {{vm.medio.payForm}}
+                        </div>
+                    </div>
+                    <div class = "row" ng-show = "vm.medio.medio === 'credito'">
+                        <div class = "form-group col-md-4">
+                            <b>NUMERO DE PAGOS: </b>
+                            <input type = "text" onkeypress = "return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+                                   ng-model = "vm.medio.creditoNumeroPagos" class = "form-control" maxlength = "2">
+                        </div>
+                        <div class = "form-group col-md-4">
+                            <b>INTERVALOS DE DIAS: </b><br/>
+                            <input type = "text" onkeypress = "return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+                                   ng-model = "vm.medio.creditoIntervalos" class = "form-control" maxlength = "3">
+                        </div>
+                        <div class = "form-group col-md-4">
+                            <br/>
+                            <button type = "button" title = "Calcular" class = "btn btn-primary btn-sm" ng-click = "vm.loadCredit()"
+                                    ng-disabled = "vm.medio.creditoIntervalos === undefined || vm.medio.creditoNumeroPagos === undefined">
+                                    <span class = "glyphicon glyphicon-th" aria-hidden = "true"></span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class = "row" ng-show = "vm.medio.medio === 'credito'">
+                        <div class = "form-group col-md-12">
+                            <table class = "table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>PAGO</th>
+                                        <th>DIAS PLAZO</th>
+                                        <th>FECHAS</th>
+                                        <th>VALOR</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat = "cred in vm.medio.creditsDebts">
+                                        <td>{{cred.payNumber}}</td>
+                                        <td>{{cred.diasPlazo}}</td>
+                                        <td>{{cred.fecha | date:'dd/MM/yyyy'}}</td>
+                                        <td>{{cred.valor}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class = "row">
+                        <div class="form-group col-md-4" ng-if="vm.medio.medio !== 'credito'">
+                            <b>VALOR: </b>
+                            <input type = "text" onkeypress = "return ((event.which >= 46 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+                                   ng-model = "vm.medio.total" class = "form-control" maxlength = "9">
+                        </div>
+                        <div class="form-group col-md-4" ng-if="vm.medio.medio !== 'credito'">
+                            <b>VALOR: </b><br />
+                            ${{vm.medio.total}}
+                        </div>
+                        <div class = "form-group col-md-4">
+                            <br/>
+                            <button type = "button" title = "Agregar Pago" class = "btn btn-primary btn-sm" ng-click = "vm.addPago()"
+                                    ng-disabled = "vm.medio.medio === undefined || vm.medio.total === undefined">
+                                    <span class = "glyphicon glyphicon-plus" aria-hidden = "true"></span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class = "row">
+                        <div class = "col-md-12">
+                            <table class = "table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Medio</th>
+                                        <th>Valor</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-show = "vm.pagos == 0">
+                                        <td colspan = "4">
+                                            No hay pagos ingresados
+                                        </td>
+                                    </tr>
+                                    <tr ng-repeat = "pago in vm.pagos">
+                                        <td>{{pago.medio}}</td>
+                                        <td>{{pago.total.toFixed(2)}}</td>
+                                        <td>
+                                            <button type = "button" title = "Eliminar Pago" class = "btn btn-primary btn-sm" ng-click = "vm.removePago($index)">
+                                                    <span class = "glyphicon glyphicon-trash" aria-hidden = "true"></span>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>TOTAL</b></td>
+                                        <td>{{vm.getTotalPago()}}</td>
+                                        <td>
+                                            Vuelto: {{vm.getCambio}}
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class = "modal-footer">
+                    <button type = "button" title = "Guardar Cuenta" class = "btn btn-success btn-sm" ng-if="vm.update === false"
+                            ng-click = "vm.saveDebtsToPay(vm.debtsToPay);" ng-disabled = "vm.pagos.length === 0">
+                            <span class = "glyphicon glyphicon-floppy-save" aria-hidden = "true"></span>
+                    </button>
+                    <button type="button" title = "Salir" class="btn btn-primary btn-sm" data-dismiss="modal">
+                            <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="table-responsive" ng-show="vm.paymentCreation">
+        <div class = "panel panel-primary">
+            <div class = "panel-heading">
+                <h4 class = "modal-title">Pago Multiple de Facturas</h4>
+            </div>
+            <div class = "panel-body">
+                <div class = "row">
+                    <div class = "form-group col-md-3">
+                        <label>Nombre del Proveedor:</label><br/>
+                        <b>{{vm.providerSelected.name}}</b>
+                    </div>
+                    <div class = "form-group col-md-2">
+                        <label>Identificaci&oacute;n:</label><br/>
+                        <b>{{vm.providerSelected.rucType}} - {{vm.providerSelected.ruc}}</b><br/>
+                    </div>
+                    <div class = "form-group col-md-2">
+                        <label>Fecha de Pago: </label>
+                        <div class = "input-group date" id="pickerDateOfMultiplePayment">
+                            <input type = "text" class="form-control input-group-addon"/>
+                            <span class = "input-group-addon"><span class = "glyphicon glyphicon-calendar"/></span>
+                        </div>
+                        <script>
+                            var defaultDate = new Date();
+                            $('#pickerDateOfMultiplePayment').datetimepicker({format: "DD/MM/YY", defaultDate: defaultDate});
+                        </script>
+                    </div>
+                    <div class = "form-group col-md-3">
+                        <label>Tipo de Abono:&nbsp;</label>
+                        <select ng-options = "item.code as item.name for item in [{code:'PAC', name:'PAGO CORRIENTE'}, {code:'RET', name:'ABONO POR RETENCIÓN'}, {code:'CEG', name:'ABONO COMP. EGRESO'}]"
+                            ng-change="vm.changeAbonoType()" ng-model="vm.typePayment" class = "form-control">
+                        </select>
+                        <!--TODO check if vm.paymentDebts.typePayment or vm.typePaymentName ***************************************************************** -->
+                    </div>
+                    <div class="form-group col-md-1">
+                        <br/>
+                        <button type = "button" title = "Buscar Facturas Pendientes" class = "btn btn-primary btn-sm"
+                            ng-click = "vm.findBills()" data-toggle = "modal" data-target = "#modalFindBills">
+                            Facturas Pendientes
+                        </button>
+                    </div>
+                </div>
+
+                <div class = "row" ng-show = "vm.typePayment === 'PAC'">
+                    <div class = "form-group col-md-12">
+                        <label>Seleccione Modalidad de Pago:</label><br/>
+                        <label class = "radio-inline"><input type="radio" ng-model = "vm.modePayment" 
+                               value = "EFC" name = "efectivo">Efectivo</label>
+                        <label class = "radio-inline"><input type="radio" ng-model = "vm.modePayment" 
+                               value = "CHQ" name = "cheque">Cheque</label>
+                        <label class = "radio-inline"><input type="radio" ng-model = "vm.modePayment" 
+                               value = "TRF" name = "transferencia">Transferencia</label>
+                        <label class = "radio-inline"><input type="radio" ng-model = "vm.modePayment" 
+                               value = "TDC" name = "tdc">Tarjeta de Cŕedito</label>
+                        <label class = "radio-inline"><input type="radio" ng-model="vm.modePayment" 
+                               value = "DEP" name = "deposito">Depósito Bancario</label>
+                    </div>
+                </div>
+                <div class = "row" ng-show = "vm.typePayment === 'PAC'">
+                    <div class = "form-group col-md-12">
+                        <div class = "row" ng-show = "vm.modePayment !== 'TDC' && vm.modePayment !== undefined">
+                            <div class="form-group col-md-12" ng-show="vm.ctaCtableBankList !== undefined">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>N&uacute;mero de Cuenta</th>
+                                            <th>Nombre del Banco</th>
+                                            <th>Tipo de Cuenta</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-show="vm.ctaCtableBankList == 0">
+                                            <td colspan="2">
+                                                No hay Cuentas Contables de Bancos Ingresadas
+                                            </td>
+                                        </tr>
+                                        <tr dir-paginate = "cuenta in vm.ctaCtableBankList | orderBy:'description' | filter:searchTextTaxes | itemsPerPage: 3" pagination-id = "taxesPagination">
+                                            <td>{{cuenta.code}}</td>
+                                            <td>{{cuenta.description}}</td>
+                                            <td>{{cuenta.accountType}}</td>
+                                            <td>
+                                                <button type = "button" title = "Seleccionar" class = "btn btn-primary btn-sm"
+                                                        ng-click = "vm.selectCtaCtableBank(cuenta)">
+                                                        <span class = "glyphicon glyphicon-check" aria-hidden = "true"></span>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <dir-pagination-controls pagination-id = "taxesPagination"></dir-pagination-controls>
+                            </div>
+                        </div>
+                        <div class = "row" ng-show="vm.modePayment === 'TDC'">
+                            <div class = "form-group col-md-3">
+                                <label>N&uacute;mero de Tarjeta:</label><br/>
+                                <input type = "text" class = "form-control" ng-model = "vm.noDocument"/>
+                            </div>
+                            <div class="form-group col-md-3">
+                                <label>Tarjeta:</label><br/>
+                                <select ng-options="card as card for card in vm.creditCardList"
+                                        ng-model="vm.cardBrand" class="form-control">
+                                </select>
+                            </div>
+                            <div class="form-group col-md-3">
+                                <label>No. Lote:</label><br/>
+                                <input type="text" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+                                       ng-model="vm.numeroLote" class="form-control" maxlength="5">
+                            </div>
+                            <div class = "form-group col-md-3">
+                                <label>Monto a Abonar:</label><br/>
+                                <input type = "text" class = "form-control" ng-model = "vm.valorDocumento" />
+                            </div>
+                        </div>
+
+                        <div class="row" ng-show="vm.modePayment === 'EFC' && vm.ctaCtableBankCode !== undefined">
+                            <div class = "form-group col-md-6">
+                                <label>Caja:</label><br/>
+                                <input type = "text" class = "form-control" ng-model = "vm.bankName"/>
+                            </div>
+                            <div class = "form-group col-md-4">
+                                <label>Monto a Abonar:</label><br/>
+                                <input type = "text" class = "form-control" ng-model = "vm.valorDocumento""/>
+                            </div>
+                        </div>
+
+                        <div class="row" ng-show="vm.modePayment !== 'EFC' && vm.modePayment !== 'TDC' && vm.ctaCtableBankCode !== undefined">
+                            <div class = "form-group col-md-4">
+                                <label>Banco:</label><br/>
+                                <input type = "text" class = "form-control" ng-model = "vm.bankName"/>
+                            </div>
+                            <div class = "form-group col-md-4">
+                                <label>N&uacute;mero de Cuenta:</label><br/>
+                                <input type = "text" class = "form-control" ng-model = "vm.noAccount" maxlength = "15"/>
+                            </div>
+                            <div class = "form-group col-md-4" ng-show="vm.modePayment === 'CHQ'">
+                                <label>N&uacute;mero de Cheque:</label><br/>
+                                <input type = "text" class = "form-control" ng-model = "vm.noDocument" maxlength = "15"/>
+                            </div>
+                            <div class = "form-group col-md-4" ng-show="vm.modePayment === 'TRF'">
+                                <label>N&uacute;mero de Transferencia:</label><br/>
+                                <input type = "text" class = "form-control" ng-model = "vm.noDocument"/>
+                            </div>
+                            <div class = "form-group col-md-4" ng-show="vm.modePayment === 'DEP'">
+                                <label>N&uacute;mero de Dep&oacute;sito:</label><br/>
+                                <input type = "text" class = "form-control" ng-model = "vm.noDocument"/>
+                            </div>
+                            <div class = "form-group col-md-6">
+                                <label>Monto a Abonar:</label><br/>
+                                <input type = "text" class = "form-control" ng-model = "vm.valorDocumento"/>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group col-md-12">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>No. Factura</th>
+                                    <th>Tipo de pago</th>
+                                    <th>Total</th>
+                                    <th>Pendiente</th>
+                                    <th>Abono Realizado</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-show="vm.itemsMultiplePayments == 0">
+                                    <td colspan="5">
+                                        No hay Facturas de Compra Ingresadas
+                                    </td>
+                                </tr>
+                                <tr ng-repeat="mp in vm.itemsMultiplePayments">
+                                    <td>{{mp.bill_number}}</td>
+                                    <td>{{mp.tipo}}</td>
+                                    <td>{{mp.debt_total}}</td>
+                                    <td>{{mp.debt_pending}}</td>
+                                    <td>{{mp.debt_abono}}</td>
+                                    <td>
+                                        <button type = "button" title = "Eliminar Abono" class = "btn btn-primary btn-sm" 
+                                                ng-click = "vm.eliminaAbono($index)">
+                                                <span class = "glyphicon glyphicon-trash" aria-hidden = "true"></span>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td><b>SALDO: {{vm.getTotalMultiAbonos()}}</b></td>
+                                    <td></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class = "row" ng-show = "vm.typePayment === 'RET'">
+                    <div class = "form-group col-md-12">
+                        <div class="row">
+                            <div class="form-group col-md-4">
+                                <label>N&uacute;mero de Retenci&oacute;n:</label><br/>
+                                <input type="text" class="form-control" ng-model="vm.noDocument" maxlength="17"/>
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label>Detalle:</label><br/>
+                                <label>{{vm.paymenDetail}}</label>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label>Monto de la Retenci&oacute;n:</label><br/>
+                                <input type="text" class="form-control" ng-model="vm.valorDocumento"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class = "row" ng-show = "vm.typePayment === 'CEG'">
+                    <div class = "form-group col-md-12">
+                        <div class="row">
+                            <!-- TODO check que se repite el valor vm.noDocument *********************************************************************************  -->
+                            <div class="form-group col-md-3">
+                                <label>Nro. Comprobante Egreso:</label><br/>
+                                <input type="text" class="form-control" ng-model="vm.noDocument" maxlength="17"/>
+                            </div>
+                            <div class = "form-group col-md-3">
+                                <label>N&uacute;mero de CHQ/DEP/TRF:</label><br/>
+                                <input type = "text" class = "form-control" ng-model = "vm.noDocument"/>
+                            </div>
+                            <div class="form-group col-md-3">
+                                <label>Detalle:</label><br/>
+                                <label>{{vm.paymenDetail}}</label>
+                            </div>
+                            <div class="form-group col-md-3">
+                                <label>Monto:</label><br/>
+                                <input type="text" class="form-control" ng-model="vm.valorDocumento"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class = "panel-footer">
+                <button type = "button" title = "Aceptar" class = "btn btn-success btn-sm" ng-click = "vm.pAbonoDebts()"
+                    ng-disabled ="vm.disableMultipleCobro()">
+                    <span class = "glyphicon glyphicon-thumbs-up" aria-hidden = "true"></span>
+                </button>
+                <button type = "button" title = "Salir" class = "btn btn-primary btn-sm" ng-click = "vm.cancel()">
+                    <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
+                </button>
+            </div>        
+        </div>
+    </div>
+
+    <div id="modalFindBills" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div>
+                        <b>Cuentas por Pagar Pertenecientes a: {{vm.providerSelected.name}}</b>
+                    </div>
+                </div>
+                <div class = "modal-body">                   
+                    <div class ="row"> 
+                        <div class = "col-md-12" ng-if = "vm.billsSelected.length <= 0"  >
+                            <table class = "table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>No. Cuenta</th>
+                                        <th>No. Factura</th>
+                                        <th>Fecha</th>
+                                        <th>Total</th>
+                                        <th>Pendiente</th>
+                                        <th>Tipo de Pago</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-show = "vm.providerDebtsList == 0">
+                                        <td colspan = "4">
+                                            El Cliente <b>No Presenta</b> Facturas Pendientes...
+                                        </td>
+                                    </tr>
+                                    <tr ng-repeat = "bill in vm.providerDebtsList">
+                                        <td>{{bill.debtsSeq}}</td>
+                                        <td>{{bill.billNumber}}</td>
+                                        <td>{{bill.fecha | date : "dd/MM/yyyy"}}</td>
+                                        <td>{{bill.total.toFixed(2)}}</td>
+                                        <td>{{bill.saldo}}</td>
+                                        <td>
+                                            TOTAL <input ng-model="bill.selectedTotal" type="checkbox">
+                                            PARCIAL <input ng-model="bill.selectedParcial" type="checkbox">
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div>
+                                <button type = "button" title = "Salir" class = "btn btn-primary btn-sm" data-dismiss = "modal">
+                                        <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
+                                </button>
+                                <button type = "button" title = "Aceptar" class = "btn btn-primary btn-sm" ng-click="vm.payModeSelected()">
+                                    <span class = "glyphicon glyphicon-check" aria-hidden = "true"></span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class = "col-md-12" ng-if = "vm.displayCredits()" ng-repeat = "bill in vm.billsSelected">
+                            <div ng-if="bill.selectedParcial">
+                                <div class="row">
+                                    <div class = "col-md-12" >
+                                        <label>Cuenta No:&nbsp;{{bill.debtsSeq}} - Factura No: {{bill.billNumber}}</label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class = "col-md-12" >
+                                        <table class = "table table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>Fecha Limite</th>
+                                                    <th>N&uacute;mero de Pagos</th>
+                                                    <th>Saldo por Cancelar</th>
+                                                    <th>Valor de la cuota</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr ng-show = "bill.creditsMultiBillsList == 0">
+                                                    <td colspan = "4">
+                                                        La Factura <b>No Presenta</b> Cobros Pendientes por Cancelar...
+                                                    </td>
+                                                </tr>
+                                                <tr ng-repeat = "credits in bill.creditsMultiBillsList | orderBy : 'payNumber' : false">
+                                                    <td>{{credits.fecha | date : "dd/MM/yyyy"}}</td>
+                                                    <td>{{credits.payNumber}}</td>
+                                                    <td>{{credits.valor.toFixed(2)}}</td>
+                                                    <td>
+                                                        <input type="text" class = "form-control" ng-model ="credits.valorAbono" 
+                                                        onkeypress="return ((event.which >= 46 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+                                                        onblur="this.value = this.value !== '' ? parseFloat(this.value).toFixed(2) : ''">
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr/>
+                        </div>
+                        <div class = "col-md-12" ng-if = "vm.billsSelected.length > 0">
+                            <button type = "button" title = "Aceptar" class = "btn btn-primary btn-sm" ng-click="vm.multipleAbono()">
+                                <span class = "glyphicon glyphicon-check" aria-hidden = "true"></span>
+                            </button>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="modalEditDebtsToPayNumber" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content" ng-show="vm.isEmp">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Editar N&uacute;mero de Cuenta por Pagar</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row" ng-show="vm.errorValidateAdm !== undefined">
+                        <div class="form-group col-md-12">
+                            <div class="alert alert-danger">
+                                {{vm.errorValidateAdm}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-md-12">
+                            <b>CLAVE ADMINISTRADOR: </b>
+                            <input type="password" ng-model="vm.passwordAdm" class="form-control">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-md-12">
+                            <button type="button" title="Validar" class="btn btn-primary btn-sm" ng-click="vm.validateAdm()" ng-disabled="vm.passwordAdm === undefined">
+                                    <span class = "glyphicon glyphicon-tags" aria-hidden = "true"></span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    
+            <div class="modal-content" ng-show="!vm.isEmp">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Editar N&uacute;mero de Cuenta por Pagar</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="form-group col-md-12">
+                            <b>NUEVO NUMERO DE CUENTA POR PAGAR: </b>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            <input type="text" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+                                   ng-model="vm.newSeqNumber" class="form-control" maxlength="6">
+                        </div>
+                    </div>
+                    <div class="row" ng-show="vm.seqErrorNumber !== undefined">
+                        <div class="form-group col-md-12">
+                            <div class="alert alert-danger">
+                                {{vm.seqErrorNumber}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" title="Aceptar" class="btn btn-success btn-sm" ng-click="vm.acceptNewSeq()">
+                            <span class = "glyphicon glyphicon-thumbs-up" aria-hidden = "true"></span>
+                    </button>
+                    <button type="button" title = "Salir" class="btn btn-primary btn-sm" data-dismiss="modal">
+                            <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="modalAnularPaymentDebts" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h3 class="modal-title">¡¡¡Advertencia!!!</h3>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12" >
+                            <p>¿Est&aacute; seguro que desea Anular el Pago de la Factura <b>No. {{vm.deactivatePaymentDebts.documentNumber}}</b>?</p>
+                            <p>Recuerde que el Pago de Factura Anulada <b>NO puede ser Recuperado</b>.</p>
+                        </div>
+                        <br/>
+                        <div class="col-md-12" >
+                            <p>Le recordamos que debe dirigirse al módulo de <b>Contabilidad</b> para proceder a anular</p>
+                            <p>el Comprobante de Egreso en la opci&oacute;n <b>"Anular Comprobante de Egreso"</b>,</p>
+                            <p>una vez anulado este Pago.</p>   
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" title="Anular Cobro de Factura" class="btn btn-danger btn-sm" ng-click="vm.paymentDebtsDeactivate()" data-dismiss="modal">
+                            <span class = "glyphicon glyphicon-screenshot" aria-hidden = "true"></span>
+                    </button>
+                    <button type="button" title = "Salir" class="btn btn-primary btn-sm" data-dismiss="modal">
+                            <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="modalAnularDebtsToPay" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h3 class="modal-title">¡¡¡Advertencia!!!</h3>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12" >
+                            <p>¿Est&aacute; seguro que desea Anular la Factura de Compra <b>No. {{vm.deactivateDebtsToPay.billNumber}}</b>?</p>
+                            <p>Recuerde que la Factura de Compra Anulada <b>NO puede ser Recuperada</b>.</p>
+                        </div>
+                        <div class="col-md-12" >
+                            <p>Le recordamos que debe dirigirse al módulo de <b>Contabilidad</b> para proceder a anular</p>
+                            <p>el Diario de Cuenta por Pagar en la opci&oacute;n <b>"Anular Diario de Cuenta por Pagar"</b>,</p>
+                            <p>una vez anulada esta Factura de Compra.</p>   
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" title="Anular Cuenta por Pagar" class="btn btn-danger btn-sm" ng-click="vm.debtsToPayDeactivate()" data-dismiss="modal">
+                            <span class = "glyphicon glyphicon-screenshot" aria-hidden = "true"></span>
+                    </button>
+                    <button type="button" title = "Salir" class="btn btn-primary btn-sm" data-dismiss="modal">
+                            <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="table-responsive" ng-show="vm.comprobantePagoCreated !== undefined && vm.printComprobante" id="printArea" print-section>
         <div class="panel panel-primary">
             <div class="panel-body">
                 <div class="row">
@@ -2297,59 +1640,6 @@
                         </button>
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
-
-    <!--ANULAR COMPROBANTE DE PAGO-->
-    <div id="modalAnularComprobantePago" class="modal fade" role="dialog">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h3 class="modal-title">¡¡¡Advertencia!!!</h3>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                       <div class="col-md-12" >
-                            <p>¿Est&aacute; seguro que desea Anular el Comprobante de Pago?</p>
-                            <p>Recuerde que el Comprobante de Pago ANULADO <b>NO puede ser Recuperado</b>.</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" title="Anular Comprobante de Pago" class="btn btn-danger btn-sm" ng-click="vm.comprobantePagoDeactivate()" data-dismiss="modal">
-                            <span class = "glyphicon glyphicon-screenshot" aria-hidden = "true"></span>
-                    </button>
-                    <button type="button" title = "Salir" class="btn btn-primary btn-sm" data-dismiss="modal">
-                            <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!--ADVERTENCIA-->
-    <div ng-show="vm.advertencia === true">
-        <div class="row">
-            <div class="col-md-8 col-md-offset-3">
-                <img src="images/advertencia.png" style="height: 250px; width: 340px; margin-top: 10px;">
-            </div>
-        </div>
-        <br/>
-        <br/>
-        <div class="row">
-            <div class="col-md-10 col-md-offset-2">
-                <h4><b>MR. ZOLUTIONS LE INFORMA:</b> ESTIMADO CLIENTE, SU USUARIO</h4>
-                <h4><b>NO ESTÁ AUTORIZADO</b> PARA EJECUTAR ESTA OPCIÓN DEL MENÚ</h4>
-            </div>
-        </div>
-        <br/>
-        <div class="row">
-            <div class="col-md-12">
-                <button type="button" title = "Aceptar y Salir" class="btn btn-success btn-sm" ng-click="vm.exit()">
-                        <span class = "glyphicon glyphicon-thumbs-down" aria-hidden = "true"></span>
-                </button>
             </div>
         </div>
     </div>
