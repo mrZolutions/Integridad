@@ -9,8 +9,8 @@ spring:
   profiles: development
   datasource:
     url: jdbc:postgresql://localhost:5432/integridad
-        username: postgres
-        password: postgres
+    username: postgres
+    password: postgres
     
 email:
     username: desarrollo.integridad@mrzolutions.com
