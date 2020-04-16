@@ -105,32 +105,31 @@ public class PaymentDebtsServices {
     }
     
     public void updateCreditsDebts(PaymentDebts saved) {
-        Iterable<CreditsDebts> creditsDebts = creditsDebtsRepository.findCreditsDebtsById(saved.getCreditsDebts().getId());
-        creditsDebts.forEach(creditDebt -> {
-            creditDebt.setValor(creditDebt.getValor() - saved.getValorAbono());
-            creditDebt.setListsNull();
-            creditDebt.setFatherListToNull();
-            creditsDebtsRepository.save(creditDebt);
-        });
+        CreditsDebts creditDebt = creditsDebtsRepository.findOne(saved.getCreditsDebts().getId());
+        if(abono >= creditDebt.getValor()){
+            creditDebt.setEstadoCredits("PAGADO");
+        }
+        creditDebt.setValor(creditDebt.getValor() - abono);
+        creditDebt.setListsNull();
+        creditDebt.setFatherListToNull();
+        creditsDebtsRepository.save(creditDebt);
         log.info("PaymentDebtsServices updateCreditsDebts DONE");
         resto = 0;
     }
     
     public void updateDebtsToPay(PaymentDebts saved) {
-        Iterable<DebtsToPay> debts = debtsToPayRepository.findDebtsToPayById(saved.getCreditsDebts().getPagoDebts().getDebtsToPay().getId());
-        debts.forEach(debt -> {
-            resto = saved.getCreditsDebts().getValor() - saved.getValorAbono();
-            BigDecimal vresto = new BigDecimal(resto);
-            if (resto <= 0) {
-                vresto = vresto.setScale(0, BigDecimal.ROUND_HALF_UP);
-            } else {
-                vresto = vresto.setScale(2, BigDecimal.ROUND_HALF_UP);
-            }
-            debt.setSaldo(vresto.doubleValue());
-            debt.setListsNull();
-            debt.setFatherListToNull();
-            debtsToPayRepository.save(debt);
-        });
+        DebtsToPay debt = debtsToPayRepository.findOne(saved.getCreditsDebts().getPagoDebts().getDebtsToPay().getId());
+        Double saldo = Double.valueOf(debt.getSaldo()) - abono;
+        BigDecimal vresto = new BigDecimal(saldo);
+        if (resto <= 0) {
+            vresto = vresto.setScale(0, BigDecimal.ROUND_HALF_UP);
+        } else {
+            vresto = vresto.setScale(2, BigDecimal.ROUND_HALF_UP);
+        }
+        debt.setSaldo(vresto.doubleValue());
+        debt.setListsNull();
+        debt.setFatherListToNull();
+        debtsToPayRepository.save(debt);
         log.info("PaymentDebtsServices updateDebtsToPay DONE");
         resto = 0;
     }

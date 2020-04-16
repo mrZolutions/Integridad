@@ -64,6 +64,19 @@ public class ComprobantePagoController {
         log.info("ComprobantePagoController getComprobantePagoByUserClientId DONE");
         return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
     }
+
+    @RequestMapping(method = RequestMethod.GET, value="/paymentDebt/{id}")
+    public ResponseEntity getComprobantePagoByPaymentId(@PathVariable("id") String id) {
+        ComprobantePago response = null;
+        try {
+            response = service.getComprobantePagoByPaymentId(id);
+        } catch (BadRequestException e) {
+            log.error("ComprobantePagoController getComprobantePagoByUserClientId Exception thrown: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+        log.info("ComprobantePagoController getComprobantePagoByUserClientId DONE");
+        return new ResponseEntity<ComprobantePago>(response, HttpStatus.ACCEPTED);
+    }
     
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity createComprobantePago(@RequestBody ComprobantePago comprobantePago) {
