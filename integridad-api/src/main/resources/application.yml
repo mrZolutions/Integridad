@@ -8,7 +8,7 @@ spring:
       ddl-auto: update
   profiles: development
   datasource:
-    url: jdbc:postgresql://localhost:5432/postgres
+    url: jdbc:postgresql://localhost:5432/integridad
     username: postgres
     password: postgres
     
@@ -24,9 +24,9 @@ spring:
       ddl-auto: update
   profiles: production
   datasource:
-    url: jdbc:postgresql://ec2-18-232-218-200.compute-1.amazonaws.com:5432/d43ebuhb7nme89?ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory
-    username: uohu0g16spl52
-    password: pa02a480a39d72dc2574dcd01e6d309c953016f5f244bc88f6e0900450f0eb888
+    url: jdbc:postgresql://ec2-34-193-232-231.compute-1.amazonaws.com:5432/db1ae6skr7q6pl?ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory
+    username: rteskdoydvzldn
+    password: f718656b38b389047bb5dd22f192492ef2e139a6991e3d583e36ae5a6486c726
 
 email:
     username: desarrollo.integridad@mrzolutions.com
