@@ -1,12 +1,6 @@
 package com.mrzolution.integridad.app.services;
 
-import com.mrzolution.integridad.app.domain.Cashier;
-import com.mrzolution.integridad.app.domain.CreditsDebts;
-import com.mrzolution.integridad.app.domain.DebtsToPay;
-import com.mrzolution.integridad.app.domain.DetailDebtsToPay;
-import com.mrzolution.integridad.app.domain.PagoDebts;
-import com.mrzolution.integridad.app.domain.PaymentDebts;
-import com.mrzolution.integridad.app.domain.Retention;
+import com.mrzolution.integridad.app.domain.*;
 import com.mrzolution.integridad.app.domain.report.DebtsReport;
 import com.mrzolution.integridad.app.exceptions.BadRequestException;
 import com.mrzolution.integridad.app.repositories.CashierRepository;
@@ -56,6 +50,12 @@ public class DebtsToPayServices {
     PaymentDebtsRepository paymentDebtsRepository;
     @Autowired
     RetentionRepository retentionRepository;
+    @Autowired
+    DailybookCeServices dailybookCeServices;
+    @Autowired
+    ComprobantePagoServices comprobantePagoServices;
+    @Autowired
+    CashierServices cashierServices;
     
     public String debtsId = "";
     public UUID retentionId;
@@ -169,26 +169,34 @@ public class DebtsToPayServices {
             updateRetention(saved);
         }
         saved.setDetailDebtsToPay(detailDebtsToPay);
+
         log.info("DebtsToPayServices createDebtsToPay: {}, {}", saved.getId(), saved.getDebtsSeq());
         return saved;
     }
     
     //Guarda Pagos y Credits de Debts
     void savePagosAndCreditsOfDebts(DebtsToPay saved, List<PagoDebts> pagosDebts) {
+        final Boolean[] savePayments = {null, null};
+        savePayments[0] = (saved.getRetentionId() != null);
+        savePayments[1] = (pagosDebts.size() == 1 && "efectivo".equals(pagosDebts.get(0).getMedio()));
         pagosDebts.forEach(pagoDebts -> {
             List<CreditsDebts> creditsDebtsList = pagoDebts.getCreditsDebts();
             pagoDebts.setCreditsDebts(null);
             pagoDebts.setDebtsToPay(saved);
             PagoDebts pagoDebtSaved = pagoDebtsRepository.save(pagoDebts);
+            log.info("DebtsToPayServices savePagosAndCreditsOfDebts pagoDebtSaved: {}", pagoDebtSaved.getId());
             if (creditsDebtsList != null) {
                 creditsDebtsList.forEach(creditDebt -> {
                     creditDebt.setPagoDebts(pagoDebtSaved);
                     creditDebt.setDebtsToPayId(saved.getId().toString());
-                    if (saved.getRetentionId() != null) {
-                        creditDebt.setValor(saved.getTotal() - saved.getRetentionTotal());
+                    if (savePayments[0]) {
+                        creditDebt.setValor(creditDebt.getValor() - saved.getRetentionTotal());
+                    } else if (savePayments[1]) {
+                        creditDebt.setValor(0);
                     }
                     CreditsDebts savedCreditDebt = creditsDebtsRepository.save(creditDebt);
-                    if (saved.getRetentionId() != null) {
+                    log.info("DebtsToPayServices savePagosAndCreditsOfDebts savedCreditDebt: {}", savedCreditDebt.getId());
+                    if (savePayments[0]) {
                         PaymentDebts paymentDebt = new PaymentDebts();
                         paymentDebt.setCreditsDebts(savedCreditDebt);
                         paymentDebt.setDatePayment(saved.getFecha());
@@ -205,7 +213,147 @@ public class DebtsToPayServices {
                         paymentDebt.setValorReten(saved.getRetentionTotal());
                         paymentDebt.setActive(true);
                         paymentDebtsRepository.save(paymentDebt);
-                        log.info("DebtsToPayServices saveRetentionInPaymentDebts DONE");
+                        savePayments[0] = false;
+                        log.info("DebtsToPayServices saveRetentionInPaymentDebts DONE paymentDebt: {}", paymentDebt.getId());
+                    }
+
+                    if(savePayments[1]){
+                        PaymentDebts paymentDebt = new PaymentDebts();
+                        paymentDebt.setCreditsDebts(savedCreditDebt);
+                        paymentDebt.setDatePayment(saved.getFecha());
+                        paymentDebt.setNoDocument("EFECTIVO");
+                        paymentDebt.setNoAccount("--");
+                        paymentDebt.setDocumentNumber(saved.getBillNumber());
+                        paymentDebt.setModePayment("EFC");
+                        paymentDebt.setTypePayment("PAC");
+                        paymentDebt.setDetail("PAGO EN EFECTIVO");
+                        paymentDebt.setBanco("--");
+                        paymentDebt.setCardBrand("--");
+                        paymentDebt.setNumeroLote("--");
+                        paymentDebt.setValorAbono(saved.getTotal());
+                        paymentDebt.setValorReten(0.0);
+                        paymentDebt.setActive(true);
+                        paymentDebt.setProviderName(saved.getProvider().getName());
+                        PaymentDebts paymentSaved = paymentDebtsRepository.save(paymentDebt);
+                        log.info("DebtsToPayServices saveRetentionInPaymentDebts EFC paymentSaved: {}", paymentSaved.getId());
+
+                        DailybookCe dailybookCe = new DailybookCe();
+                        dailybookCe.setActive(true);
+                        dailybookCe.setDateRecordBook(saved.getFecha());
+                        dailybookCe.setBillNumber(saved.getBillNumber());
+                        dailybookCe.setNameBank("--");
+                        dailybookCe.setNumCheque("--");
+                        dailybookCe.setClientProvName(saved.getProvider().getName());
+                        dailybookCe.setRuc(saved.getProvider().getRuc());
+                        dailybookCe.setCodeTypeContab("2");
+                        dailybookCe.setTypeContab("COMP. DE EGRESO");
+                        dailybookCe.setGeneralDetail(saved.getProvider().getName() + " Fact. " + saved.getBillNumber());
+
+                        String seqString = String.valueOf(saved.getUserIntegridad().getCashier().getDailyCeNumberSeq() + 1);
+                        dailybookCe.setDailyCeSeq(seqString);
+
+                        StringBuilder sb = new StringBuilder();
+                        for (int i = 0; i < 6 - seqString.length(); i++) {
+                            sb.append('0');
+                        }
+
+                        dailybookCe.setDailyCeStringSeq(sb.toString() + seqString);
+                        dailybookCe.setDailyCeStringUserSeq("PAGO GENERADO " + sb.toString() + seqString);
+                        dailybookCe.setSubTotalDoce(saved.getSubTotalDoce());
+                        dailybookCe.setIva(saved.getIva());
+                        dailybookCe.setSubTotalCero(saved.getSubTotalCero());
+                        dailybookCe.setTotal(saved.getTotal());
+                        dailybookCe.setProvider(saved.getProvider());
+                        dailybookCe.setUserIntegridad(saved.getUserIntegridad());
+                        dailybookCe.setSubsidiary(saved.getSubsidiary());
+
+                        DetailDailybookContab itema = new DetailDailybookContab();
+                        itema.setTypeContab("COMP. DE EGRESO");
+                        itema.setCodeConta(paymentSaved.getCtaCtableProvider());
+                        itema.setDescrip("PROVEEDORES LOCALES");
+                        itema.setTipo("DEBITO (D)");
+                        itema.setBaseImponible(saved.getTotal());
+                        itema.setName(saved.getProvider().getName() + " Fact. " + saved.getBillNumber());
+                        itema.setDeber(String.valueOf(saved.getTotal()));
+
+                        DetailDailybookContab itemb = new DetailDailybookContab();
+                        itemb.setTypeContab("COMP. DE EGRESO");
+                        itemb.setCodeConta(paymentSaved.getCtaCtableBanco());
+                        itemb.setDescrip(paymentSaved.getBanco());
+                        itemb.setTipo("CREDITO (C)");
+                        itemb.setBaseImponible(saved.getTotal());
+                        itemb.setName("Cancela Fact. " + paymentSaved.getDocumentNumber() + ", a: " + paymentSaved.getProviderName() + ", con " + paymentSaved.getModePayment()+ " Nro. " + paymentSaved.getNoDocument());
+                        itemb.setHaber(String.valueOf(saved.getTotal()));
+
+                        List<DetailDailybookContab> detailDailybookContab = new ArrayList<>();
+                        detailDailybookContab.add(itema);
+                        detailDailybookContab.add(itemb);
+                        dailybookCe.setDetailDailybookContab(detailDailybookContab);
+                        DailybookCe dailySaved = dailybookCeServices.createDailybookCe(dailybookCe);
+                        log.info("DebtsToPayServices saveRetentionInPaymentDebts dailySaved CE : {}", dailySaved.getId());
+
+                        ComprobantePago comprobantePago = new ComprobantePago();
+                        comprobantePago.setActive(true);
+                        comprobantePago.setDateComprobante(saved.getFecha());
+                        comprobantePago.setProviderName(paymentSaved.getProviderName());
+                        comprobantePago.setProviderRuc(saved.getProvider().getRuc());
+
+                        seqString = String.valueOf(saved.getUserIntegridad().getCashier().getCompPagoNumberSeq() + 1);
+                        comprobantePago.setComprobanteSeq(seqString);
+
+                        sb = new StringBuilder();
+                        for (int i = 0; i < 6 - seqString.length(); i++) {
+                            sb.append('0');
+                        };
+                        comprobantePago.setComprobanteStringSeq(sb.toString() + seqString);
+
+                        comprobantePago.setComprobanteConcep("Pago de Fact. Nro: " + paymentSaved.getDocumentNumber() + " a: " + paymentSaved.getProviderName());
+                        comprobantePago.setComprobanteEstado("PROCESADO");
+                        comprobantePago.setBillNumber(paymentSaved.getDocumentNumber());
+                        comprobantePago.setNumCheque(paymentSaved.getDocumentNumber());
+                        comprobantePago.setNameBank(paymentSaved.getBanco());
+                        comprobantePago.setCodeConta(paymentSaved.getCtaCtableBanco());
+                        comprobantePago.setPaymentDebtId(String.valueOf(paymentSaved.getId()));
+                        comprobantePago.setSubTotalDoce(saved.getSubTotalDoce());
+                        comprobantePago.setIva(saved.getIva());
+                        comprobantePago.setTotal(saved.getTotal());
+                        comprobantePago.setProvider(saved.getProvider());
+                        comprobantePago.setUserIntegridad(saved.getUserIntegridad());
+                        comprobantePago.setSubsidiary(saved.getSubsidiary());
+
+                        List<DetailComprobantePago> detailComprobantePago = new ArrayList<>();
+                        DetailComprobantePago itemac = new DetailComprobantePago();
+                        itemac.setCodeConta(paymentSaved.getCtaCtableProvider());
+                        itemac.setDescrip("PROVEEDORES LOCALES");
+                        itemac.setTipo("DEBITO (D)");
+                        itemac.setBaseImponible(saved.getTotal());
+                        itemac.setName("Pago de Fact. Nro: " + paymentSaved.getDocumentNumber() + " a: " + paymentSaved.getProviderName());
+                        itemac.setDeber(String.valueOf(saved.getTotal()));
+
+                        DetailComprobantePago itembc = new DetailComprobantePago();
+                        itembc.setCodeConta(paymentSaved.getCtaCtableBanco());
+                        itembc.setDescrip(paymentSaved.getBanco());
+                        itembc.setTipo("CREDITO (C)");
+                        itembc.setBaseImponible(saved.getTotal());
+                        itembc.setName("Cancela Fact. Nro: " + paymentSaved.getDocumentNumber());
+                        itembc.setHaber(String.valueOf(saved.getTotal()));
+
+                        detailComprobantePago.add(itemac);
+                        detailComprobantePago.add(itembc);
+                        comprobantePago.setDetailComprobantePago(detailComprobantePago);
+
+                        ComprobantePago coprobanteSaved = comprobantePagoServices.createComprobantePagoNoAsync(comprobantePago);
+                        log.info("DebtsToPayServices saveRetentionInPaymentDebts coprobanteSaved : {}", coprobanteSaved.getId());
+
+                        Cashier cashier = saved.getUserIntegridad().getCashier();
+                        cashier.setCompPagoNumberSeq(cashier.getCompPagoNumberSeq() + 1);
+                        cashier.setDailyCeNumberSeq(cashier.getDailyCeNumberSeq() + 1);
+                        cashierServices.updateCashier(cashier);
+
+                        log.info("DebtsToPayServices saveRetentionInPaymentDebts Cashier sequence Updated ");
+
+                        savePayments[1] =  false;
+                        log.info("DebtsToPayServices saveCashInPaymentDebts DONE");
                     }
                 });
             } 

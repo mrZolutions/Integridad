@@ -126,12 +126,12 @@ angular.module('integridadUiApp')
                     var workbook = XLSX.read(data, {
                     type: "binary"
                     });
-                    workbook.SheetNames.forEach(async function(sheet) {
+                    workbook.SheetNames.forEach(function(sheet) {
                         var cuentas = XLSX.utils.sheet_to_row_object_array(
                         workbook.Sheets[sheet]
                         );
                         
-                        await _.each(cuentas, function(newCuenta){
+                        _.each(cuentas, function(newCuenta){
                             newCuenta.userClient = vm.user.subsidiary.userClient;
                         })
                         cuentaContableService.createList(cuentas).then(function(response) {

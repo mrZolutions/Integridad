@@ -55,7 +55,11 @@ angular
                 return response.data;
             });
         };
-
+        this.getComprobanteCobroByPaymentId = function(id) {
+            return securityService.get('/comppago/paymentDebt/' + id).then(function successCallback(response) {
+                return response.data;
+            });
+        };
         this.deactivateComprobantePago = function(comprobantePago) {
             return securityService.put('/comppago', comprobantePago).then(function successCallback(response) {
                 return response.data;
