@@ -20,6 +20,25 @@ angular.module('integridadUiApp')
         vm.catedral = '1e2049c3-a3bc-4231-a0de-dded8020dc1b';
         vm.ppe = '0a28cbbf-98d5-4ce3-be36-33a7a83bc29e';
 
+        vm.providerList = undefined;
+        vm.ctaCtableBankList = undefined;
+        vm.providerSelected = undefined;
+        vm.providerDebtsList = undefined;
+        vm.paymentCreation = false;
+        vm.billsSelected = [];
+        vm.itemsMultiplePayments = [];
+        vm.modePayment = undefined;
+        vm.valorDocumento = undefined;
+        vm.noAccount = undefined;
+        vm.ctaCtableBankCode = undefined;
+        vm.bankName = undefined;
+        vm.paymenDetail = undefined;
+        vm.cardBrand = undefined;
+        vm.numeroLote = undefined;
+        vm.billCreation = false;
+        vm.retention = undefined;
+        vm.noDocument = undefined;
+
         vm.seqNumber = undefined;
         vm.subIva = undefined;
         vm.subTotalDoce = undefined;
@@ -125,7 +144,8 @@ angular.module('integridadUiApp')
         ];
 
         vm.medLista = [
-            {code: 'credito', name: 'Crédito'}
+            {code: 'credito', name: 'Crédito'},
+            {code: 'efectivo', name: 'Efectivo'},
         ];
 
         vm.creditCardList = [
@@ -191,90 +211,40 @@ angular.module('integridadUiApp')
 
         //Función de activación del módulo de Cuentas por Pagar
         function _activate() {
+            vm.error = undefined;
             vm.advertencia = false;
-            vm.aux = undefined;
-            vm.billNumber = undefined;
-            vm.creditsDebtsValue = undefined;
-            vm.update = undefined;
-            vm.ejercicio = undefined;
-            vm.debtsToPayList = undefined;
-            vm.paymentDebtsList = undefined;
-            vm.allDebtsToPayList = undefined;
-            vm.multipleSelected = undefined;
-            vm.creditsDebtsSelected = undefined;
-            vm.creditsMultipleDebtsSelected = [];
-            vm.debtsToPayMultipleList = undefined;
-            vm.creditsMultiDebtsList = undefined;
-            vm.itemDebtsMulti = {};
-            
-            vm.provider = undefined;
-            vm.providerId = undefined;
-            vm.providerName = undefined;
-            vm.providerSelected = undefined;
             vm.providerList = undefined;
+            vm.ctaCtableBankList = undefined;
+            vm.providerSelected = undefined;
             vm.providerDebtsList = undefined;
-            vm.debtsToPayCreated = undefined;
-            vm.paymentDebtsCreated = undefined;
-
-            vm.retentionId = undefined;
-            vm.retentionNumber = undefined;
-            vm.retentionDateCreated = undefined;
-            vm.retentionTotal = undefined;
-            vm.retenSelected = undefined;
-            vm.retenTaxTypeFuente = undefined;
-            vm.retenTaxTypeIva = undefined;
-            vm.retenCodeFuente = undefined;
-            vm.retenTotalFuente = undefined;
-            vm.retenCodeIva = undefined;
-            vm.retenTotalIva = undefined;
-            vm.responseDebtsToPay = undefined;
-            vm.debtsBillNumber = undefined;
-            vm.debtsNumber = undefined;
-            vm.debtsPending = undefined;
-            vm.debtsToPaySelectedToUpdate = undefined;
+            vm.paymentCreation = false;
+            vm.billsSelected = [];
+            vm.itemsMultiplePayments = [];
+            vm.modePayment = undefined;
+            vm.valorDocumento = undefined;
+            vm.noAccount = undefined;
+            vm.ctaCtableBankCode = undefined;
+            vm.bankName = undefined;
+            vm.paymenDetail = undefined;
+            vm.cardBrand = undefined;
+            vm.numeroLote = undefined;
+            vm.billCreation = false;
+            vm.debtsToPay = undefined;
+            vm.dailybookCxP = undefined;
+            vm.retention = undefined;
+            vm.medio = {};
+            vm.pagos = [];
             vm.threeNumberOne = undefined;
             vm.threeNumberTwo = undefined;
             vm.seccondPartNumber = undefined;
+            vm.isEmp = true;
+            vm.passwordAdm = undefined;
+            vm.paymentDebtsList = undefined;
+            vm.deactivatePaymentDebts = undefined;
+            vm.comprobantePagoCreated = undefined
+            vm.printComprobante = false;
+            vm.printDebtsToPay = false;
 
-            //Comprobante de Egreso
-            vm.selectedTypeBook = undefined;
-            vm.dailyCeSeq = undefined;
-            vm.dailyCeStringSeq = undefined;
-            vm.generalDetailCe_1 = undefined;
-            vm.generalDetailCe_2 = undefined;
-            vm.ctaCtableBankCode = undefined;
-            vm.bankName = undefined;
-            vm.noDocument = undefined;
-            vm.valorDocumento = undefined;
-            vm.noAccount = undefined;
-            vm.typeCuenta = undefined;
-            vm.valorAbono = undefined;
-            vm.details = undefined;
-            vm.modePayment = undefined;
-            vm.typePayment = undefined;
-            vm.ctaCtableBankList = undefined;
-            vm.debtsBillsNumberPayed = undefined;
-
-            //Comprobante de Pago
-            vm.generalDetailCP_1 = undefined;
-            vm.generalDetailCP_2 = undefined;
-            vm.comprobantePagoList = undefined;
-            vm.comprobantePagoCreated = undefined;
-            vm.comprobantePagoSeq = undefined;
-            vm.comprobantePagoStringSeq = undefined;
-            
-            //Diario CxP
-            vm.generalDetailCxP = undefined;
-            
-            vm.status = undefined;
-            vm.saldoCredito = undefined;
-            vm.saldoDebito = undefined;
-            vm.success = undefined;
-            vm.error = undefined;
-            vm.medio = {};
-            vm.itemsMultiplePayments = [];
-            vm.pagos = [];
-            
             vm.usrCliId = $localStorage.user.subsidiary.userClient.id;
             vm.subCxPActive = $localStorage.user.subsidiary.cxp;
             
@@ -295,172 +265,11 @@ angular.module('integridadUiApp')
             };
         };
 
-        //Secuencia numérica de los Debts
-        function _getSeqNumber() {
-            vm.numberAddedOne = parseInt($localStorage.user.cashier.debtsNumberSeq) + 1;
-            vm.seqNumber = utilSeqService._pad_with_zeroes(vm.numberAddedOne, 6);
-            vm.newSeqNumber = vm.seqNumber;
-        };
-
-        //Inicialización de los Debts
-        function _initializeDebts() {
-            vm.debtsToPay = {
-                provider: vm.providerSelected,
-                userIntegridad: $localStorage.user,
-                subsidiary: $localStorage.user.subsidiary,
-                typeTaxes: undefined,
-                items: [],
-                pagos: []
-            };
-        };
-
-        //Inicio de Secuencia de Numeración del Diario e Inicialización del Diario de CxP
-        function _getDailyCxPSeqNumber() {
-            vm.numberAddedOneCxP = parseInt($localStorage.user.cashier.dailyCppNumberSeq) + 1;
-            vm.dailycxpSeq = vm.numberAddedOneCxP;
-            vm.dailycxpStringSeq = utilSeqService._pad_with_zeroes(vm.numberAddedOneCxP, 6);
-        };
-
-        function _initializeDailybookCxP() {
-            vm.dailybookCxP = {
-                provider: vm.providerSelected,
-                userIntegridad: $localStorage.user,
-                subsidiary: $localStorage.user.subsidiary,
-                subTotalDoce: 0,
-                iva: 0,
-                subTotalCero: 0,
-                total: 0,
-                detailDailybookContab: []
-            };
-        };
-
-        //Sección Inicio de Secuencia de Numeración de Comprobante de Egreso para el Asiento Automático
-        function _getDailyCeSeqNumber() {
-            vm.numberAddedOneCe = parseInt($localStorage.user.cashier.dailyCeNumberSeq) + 1;
-            vm.dailyCeSeq = vm.numberAddedOneCe;
-            vm.dailyCeStringSeq = utilSeqService._pad_with_zeroes(vm.numberAddedOneCe, 6);
-        };
-
-        function _initializeDailybookCe() {
-            vm.dailybookCe = {
-                userIntegridad: $localStorage.user,
-                subsidiary: $localStorage.user.subsidiary,
-                provider: vm.provider,
-                ruc: vm.provider.ruc,
-                subTotalDoce: 0,
-                iva: 0,
-                subTotalCero: 0,
-                total: 0,
-                detailDailybookContab: []
-            };
-        };
-        //Fin de Sección
-
-        //Sección Inicio de Secuencia de Numeración de Comprobante de Pago para el Asiento Automático
-        function _getComprobantePagoSeqNumber() {
-            vm.numbAddedOneCP = parseInt($localStorage.user.cashier.compPagoNumberSeq) + 1;
-            vm.comprobantePagoSeq = vm.numbAddedOneCP;
-            vm.comprobantePagoStringSeq = utilSeqService._pad_with_zeroes(vm.numbAddedOneCP, 6);
-        };
-
-        function _initializeComprobantePago() {
-            vm.comprobantePago = {
-                provider: vm.provider,
-                userIntegridad: $localStorage.user,
-                subsidiary: $localStorage.user.subsidiary,
-                providerName: vm.provider.name,
-                providerRuc: vm.provider.ruc,
-                subTotalDoce: 0,
-                iva: 0,
-                total: 0,
-                detailComprobantePago: []
-            };
-        };
-
-        vm.comprobantePagoByProvider = function(provider) {
-            vm.loading = true;
-            vm.success = undefined;
-            vm.providerId = provider.id;
-            comprobanteService.getComprobantePagoByProviderId(vm.providerId).then(function(response) {
-                vm.comprobantePagoList = response;
-                vm.loading = false;
-            }).catch(function(error) {
-                vm.loading = false;
-                vm.error = error.data;
-            });
-        };
-
-        vm.comprobantePagoSelected = function(comprobantePago) {
-            vm.loading = true;
-            vm.comprobantePagoList = undefined;
-            vm.activecmpP = comprobantePago.active;
-            comprobanteService.getComprobantePagoById(comprobantePago.id).then(function(response) {
-                vm.comprobantePagoCreated = response;
-                vm.loading = false;
-            }).catch(function(error) {
-                vm.loading = false;
-                vm.error = error.data;
-            });
-        };
-
-        vm.getTotalDebitoCPCreated = function() {
-            var totalDebito = 0;
-            if (vm.comprobantePagoCreated) {
-                _.each(vm.comprobantePagoCreated.detailComprobantePago, function(detail) {
-                    if (detail.tipo === 'DEBITO (D)') {
-                        totalDebito = (parseFloat(totalDebito) + parseFloat(detail.baseImponible)).toFixed(2);
-                    };
-                });
-            };
-            return totalDebito;
-        };
-
-        vm.getTotalCreditoCPCreated = function() {
-            var totalCredito = 0;
-            if (vm.comprobantePagoCreated) {
-                _.each(vm.comprobantePagoCreated.detailComprobantePago, function(detail) {
-                    if (detail.tipo === 'CREDITO (C)') {
-                        totalCredito = (parseFloat(totalCredito) + parseFloat(detail.baseImponible)).toFixed(2);
-                    };
-                });
-            };
-            return totalCredito;
-        };
-
-        vm.comprobantePagoDeactivate = function() {
-            vm.loading = true;
-            var index = vm.comprobantePagoList.indexOf(vm.deactivateComprobantePago);
-            comprobanteService.deactivateComprobantePago(vm.deactivateComprobantePago).then(function(response) {
-                var index = vm.comprobantePagoList.indexOf(vm.deactivateComprobantePago);
-                if (index > -1) {
-                    vm.comprobantePagoList.splice(index, 1);
-                };
-                vm.deactivateComprobantePago = undefined;
-                vm.success = 'Comprobante de Pago anulado con exito';
-                vm.loading = false;
-            }).catch(function(error) {
-                vm.loading = false;
-                vm.error = error.data;
-            });
-        };
-        //Fin de Sección
-
-        vm.getAllDebtsToPay = function() {
-            vm.loading = true;
-            debtsToPayService.getDebtsToPayByUserClientId(vm.usrCliId).then(function(response) {
-                vm.allDebtsToPayList = response;
-                vm.loading = false;
-            }).catch(function(error) {
-                vm.loading = false;
-                vm.error = error.data;
-            });
-        };
-
-        //Selección del Prooveedor
-        vm.providerSelect = function(provider) {
+        vm.providerSelect = function(provider){
             vm.loading = true;
             vm.success = undefined;
             vm.update = false;
+            vm.billCreation = true;
             vm.providerSelected = provider;
             vm.providerId = provider.id;
             vm.providerName = provider.name;
@@ -471,388 +280,47 @@ angular.module('integridadUiApp')
             _initializeDailybookCxP();
             var today = new Date();
             $('#pickerDateDebtsToPay').data("DateTimePicker").date(today);
-            $('#pickerDateDebtsToPay').on("dp.change", function(data) {
-                vm.ejercicio = ('0' + ($('#pickerDateDebtsToPay').data("DateTimePicker").date().toDate().getMonth() + 1)).slice(-2) + '/' + $('#pickerDateDebtsToPay').data("DateTimePicker").date().toDate().getFullYear();
-            });
+            //TODO check ejercicio fiscal change *********************************************************************************************************
+            // $('#pickerDateDebtsToPay').on("dp.change", function(data) {
+            //     vm.ejercicio = ('0' + ($('#pickerDateDebtsToPay').data("DateTimePicker").date().toDate().getMonth() + 1)).slice(-2) + '/' + $('#pickerDateDebtsToPay').data("DateTimePicker").date().toDate().getFullYear();
+            // });
+            vm.ejercicio = ('0' + (today.getMonth() + 1)).slice(-2) + '/' + today.getFullYear();
+
+            var fnf1 = document.getElementById("billNumberInputFirst");
+            var fnf2 = document.getElementById("billNumberInputSecond");
+            var fnf3 = document.getElementById("billNumberInputThird");
+
+            fnf1.addEventListener('blur', function(evt){
+                vm.threeNumberOne = utilSeqService._pad_with_zeroes(this.value, 3);
+                fnf1.value = vm.threeNumberOne;
+                vm.completeBillNumber();
+            }, false);
+            fnf2.addEventListener('blur', function(evt){
+                vm.threeNumberTwo = utilSeqService._pad_with_zeroes(this.value, 3);
+                fnf2.value = vm.threeNumberTwo;
+                vm.completeBillNumber();
+            }, false);
+            fnf3.addEventListener('blur', function(evt){
+                vm.seccondPartNumber = utilSeqService._pad_with_zeroes(this.value, 9);
+                fnf3.value = vm.seccondPartNumber;
+                vm.completeBillNumber();
+            }, false);
+            
             vm.loading = false;
         };
 
-        vm.validateAdm = function() {
-            vm.errorValidateAdm = undefined;
-            var userAdm = $localStorage.user.user;
-            userAdm.password = vm.passwordAdm;
-            authService.authUser(userAdm).then(function(response) {
-                vm.loading = false;
-                vm.isEmp = false;
-            }).catch(function(error) {
-                vm.loading = false;
-                vm.errorValidateAdm = error.data;
-            });
-        };
+        vm.completeBillNumber = function() {
+            if(vm.threeNumberOne !== undefined && vm.threeNumberTwo !== undefined && vm.seccondPartNumber !== undefined){
+                vm.debtsToPay.threeNumberOne = vm.threeNumberOne;
+                vm.debtsToPay.threeNumberTwo = vm.threeNumberTwo;
+                vm.debtsToPay.seccondPartNumber = vm.seccondPartNumber;
+                vm.debtsToPay.billNumber = vm.debtsToPay.threeNumberOne + '-' + vm.debtsToPay.threeNumberTwo + '-' + vm.debtsToPay.seccondPartNumber;
+            }
+        }
 
-        vm.verifyUser = function() {
-            vm.isEmp = $localStorage.user.userType.code === 'EMP';
-        };
-
-        vm.acceptNewSeq = function() {
-            vm.seqErrorNumber = undefined;
+        vm.getRetentionByProviderAndDocumentNumber = function(){
             vm.loading = true;
-            var stringSeq =  vm.newSeqNumber;
-            debtsToPayService.getDebtsToPayByDebtsSeqAndSubId(stringSeq, vm.companyData.id).then(function(response) {
-                if (response.length === 0) {
-                    vm.seqNumber = stringSeq;
-                    vm.seqChanged = true;
-                    $('#modalEditDebtsToPayNumber').modal('hide');
-                } else {
-                    vm.seqErrorNumber = "NUMERO DE CUENTA POR PAGAR YA EXISTENTE"
-                };
-                vm.loading = false;
-            }).catch(function(error) {
-                vm.loading = false;
-                vm.error = error.data;
-            });
-        };
-
-        //Busqueda de las Cuentas Crédito por Pagar por Proveedor
-        vm.providerDebts = function(provider) {
-            vm.loading = true;
-            vm.success = undefined;
-            vm.provider = provider;
-            vm.providerName = provider.name;
-            vm.providerRuc = provider.ruc;
-            vm.providerId = provider.id;
-            _initializeDailybookCe();
-            _initializeComprobantePago();
-            debtsToPayService.getDebtsToPayWithSaldoByProviderId(provider.id).then(function(response) {
-                vm.debtsToPayList = response;
-                vm.loading = false;
-            }).catch(function(error) {
-                vm.loading = false;
-                vm.error = error.data;
-            });
-        };
-
-        vm.paymentDebtsByProvider = function(provider) {
-            vm.loading = true;
-            vm.success = undefined;
-            vm.providerName = provider.name;
-            vm.providerId = provider.id;
-            paymentDebtsService.getPaymentDebtsByProviderId(vm.providerId).then(function(response) {
-                vm.paymentDebtsList = response;
-                vm.loading = false;
-            }).catch(function(error) {
-                vm.loading = false;
-                vm.error = error.data;
-            });
-        };
-
-        vm.providerMultipleDebts = function(provider) {
-            vm.loading = true;
-            vm.success = undefined;
-            vm.provider = provider;
-            vm.multipleSelected = provider;
-            vm.providerName = provider.name;
-            vm.providerRuc = provider.ruc;
-            vm.providerId = provider.id;
-            _initializeDailybookCe();
-            _initializeComprobantePago();
-            cuentaContableService.getCuentaContableByUserClientAndBank(vm.usrCliId).then(function(response) {
-                vm.ctaCtableBankList = response;
-                vm.loading = false;
-            }).catch(function(error) {
-                vm.loading = false;
-                vm.error = error.data;
-            });
-        };
-
-        vm.findDebtsToPay = function() {
-            vm.loading = true;
-            vm.success = undefined;
-            vm.valorAbono = 0;
-            debtsToPayService.getDebtsToPayWithSaldoByProviderId(vm.providerId).then(function(response) {
-                vm.debtsToPayMultipleList = response;
-                vm.loading = false;
-            }).catch(function(error) {
-                vm.loading = false;
-                vm.error = error.data;
-            });
-        };
-
-        //Busqueda de las Cuentas por Pagar por Proveedor
-        vm.consultProviderDebts = function(provider) {
-            vm.loading = true;
-            vm.success = undefined;
-            vm.providerName = provider.name;
-            vm.providerRuc = provider.ruc;
-            vm.providerId = provider.id;
-            debtsToPayService.getAllDebtsToPayByProviderId(provider.id).then(function(response) {
-                vm.providerDebtsList = response;
-                vm.loading = false;
-            }).catch(function(error) {
-                vm.loading = false;
-                vm.error = error.data;
-            });
-        };
-
-        //Selección de las Cuentas Contables
-        vm.getPercentageTableAll = function() {
-            if (vm.debtsToPay.typeTaxes === '1') {
-                cuentaContableService.getCuentaContableByUserClientNoBank(vm.usrCliId).then(function(response) {
-                    vm.cuentaContableList = response;
-                    vm.loading = false;
-                }).catch(function(error) {
-                    vm.loading = false;
-                    vm.error = error.data;
-                });
-                vm.typeTaxes = vm.debtsToPay.typeTaxes;
-            } else if (vm.debtsToPay.typeTaxes === '2') {
-                cuentaContableService.getCuentaContableByUserClientNoBank(vm.usrCliId).then(function(response) {
-                    vm.cuentaContableList = response;
-                    vm.loading = false;
-                }).catch(function(error) {
-                    vm.loading = false;
-                    vm.error = error.data;
-                });
-                vm.typeTaxes = vm.debtsToPay.typeTaxes;
-            };
-        };
-
-        //Selección de las Cuentas Contables por tipo de Cuenta
-        vm.selectPurchaseTable = function(purchaseType) {
-            if (vm.debtsToPay.typeTaxes === '1') {
-                cuentaContableService.getCuentaContableByType(vm.usrCliId, purchaseType).then(function(response) {
-                    vm.cuentaContableList = response;
-                    vm.loading = false;
-                }).catch(function(error) {
-                    vm.loading = false;
-                    vm.error = error.data;
-                });
-            } else if (vm.debtsToPay.typeTaxes === '2') {
-                cuentaContableService.getCuentaContableByType(vm.usrCliId, purchaseType).then(function(response) {
-                    vm.cuentaContableList = response;
-                    vm.loading = false;
-                }).catch(function(error) {
-                    vm.loading = false;
-                    vm.error = error.data;
-                });
-            };
-        };
-
-        vm.selectTaxes = function(tax) {
-            vm.item = undefined;
-            vm.item = {
-                cta_contable: tax.id,
-                codigo: parseInt(vm.debtsToPay.typeTaxes),
-                codigo_contable: tax.code,
-                desc_contable: tax.description,
-                tipo: tax.accountType,
-                nomb_contable: tax.name
-            };
-            vm.subTotal = parseFloat((vm.debtsToPay.total / 1.12).toFixed(2));
-            vm.totalTotal = parseFloat(vm.debtsToPay.total);
-
-            //Diario CxP
-            vm.itema = undefined;
-            vm.itema = {
-                typeContab: vm.typeContab,
-                codeConta: tax.code,
-                descrip: tax.description,
-                tipo: tax.accountType,
-                name: tax.name
-            };
-            vm.subTotalDoceCxP = parseFloat((vm.debtsToPay.total / 1.12).toFixed(2));
-        };
-
-        //Obtiene la Base Imponible para el tipo de IVA 12
-        vm.getBaseImponibleCodigo_1 = function() {
-            var totalDebito = vm.subTotal;
-            if (vm.debtsToPay) {
-                _.each (vm.debtsToPay.items, function(detail) {
-                    if (detail.tipo === 'DEBITO (D)') {
-                        totalDebito = (parseFloat(totalDebito) - parseFloat(detail.base_imponible)).toFixed(2);
-                    };
-                });
-            };
-            return totalDebito;
-        };
-
-        //Obtiene la Base Imponible para el tipo de IVA 0
-        vm.getBaseImponibleCodigo_2 = function() {
-            var totalDebito = vm.totalTotal;
-            if (vm.debtsToPay) {
-                _.each (vm.debtsToPay.items, function(detail) {
-                    if (detail.tipo === 'DEBITO (D)') {
-                        totalDebito = (parseFloat(totalDebito) - parseFloat(detail.base_imponible)).toFixed(2);
-                    };
-                });
-            };
-            return totalDebito;
-        };
-
-        //Funciones que Agregan, Editan y Eliminan detalles a la Cuenta por Pagar
-        vm.addItem = function() {
-            if (vm.indexEdit !== undefined) {
-                vm.debtsToPay.items.splice(vm.indexEdit, 1);
-                vm.dailybookCxP.detailDailybookContab.splice(vm.indexEdit, 1);
-                vm.indexEdit = undefined;
-            };
-            if (vm.item.tipo == 'DEBITO (D)') {
-                vm.item.deber = vm.item.base_imponible;
-            } else if (vm.item.tipo == 'CREDITO (C)') {
-                vm.item.haber = vm.item.base_imponible;
-            };
-            vm.debtsToPay.items.push(vm.item);
-            
-
-            //Diario CxP
-            if (vm.itema.tipo == 'DEBITO (D)') {
-                vm.itema.deber = vm.item.base_imponible;
-            } else if (vm.itema.tipo == 'CREDITO (C)') {
-                vm.itema.haber = vm.item.base_imponible;
-            };
-            vm.itema.baseImponible = vm.item.base_imponible
-            vm.itema.numCheque =  '--';
-            vm.itema.dailybookNumber = vm.dailycxpStringSeq;
-            vm.itema.userClientId = vm.usrCliId;
-            vm.itema.dateDetailDailybook = $('#pickerDateDebtsToPay').data("DateTimePicker").date().toDate().getTime();
-            vm.dailybookCxP.detailDailybookContab.push(vm.itema);
-            
-            vm.item = undefined;
-            vm.itema = undefined;
-            vm.debtsToPay.typeTaxes = undefined;
-            vm.cuentaContableList = undefined;
-        };
-
-        vm.editItemTaxes = function(index) {
-            vm.item = angular.copy(vm.debtsToPay.items[index]);
-            
-            //Diario CxP
-            vm.itema = angular.copy(vm.dailybookCxP.detailDailybookContab[index]);
-            vm.indexEdit = index;
-        };
-
-        vm.deleteItemTaxes = function(index) {
-            vm.debtsToPay.items.splice(index, 1);
-            
-            //Diario CxP
-            vm.dailybookCxP.detailDailybookContab.splice(index, 1);
-        };
-
-        //Funciones que obtienen los totales de los detalles por tipo
-        vm.getTotalDebito = function() {
-            var totalDebito = 0;
-            if (vm.debtsToPay) {
-                _.each (vm.debtsToPay.items, function(detail) {
-                    if (detail.tipo === 'DEBITO (D)') {
-                        totalDebito = (parseFloat(totalDebito) + parseFloat(detail.base_imponible)).toFixed(2);
-                    };
-                });
-            };
-            vm.saldoDebito = totalDebito;
-            return totalDebito;
-        };
-
-        vm.getTotalCredito = function() {
-            var totalCredito = 0;
-            if (vm.debtsToPay) {
-                _.each(vm.debtsToPay.items, function(detail) {
-                    if (detail.tipo === 'CREDITO (C)') {
-                        totalCredito = (parseFloat(totalCredito) + parseFloat(detail.base_imponible)).toFixed(2);
-                    };
-                });
-            };
-            vm.saldoCredito = totalCredito;
-            return totalCredito;
-        };
-
-        vm.getTotalSaldo = function() {
-            var totalSaldo = 0;
-            totalSaldo = (parseFloat(vm.saldoCredito) - parseFloat(vm.saldoDebito)).toFixed(2);
-            return totalSaldo;
-        };
-
-        //Función que carga el medio de pago
-        vm.loadMedio = function() {
-            var payed = 0;
-            _.each(vm.pagos, function(pago){
-                payed += parseFloat(pago.total);
-            });
-            if (vm.medio.medio === 'credito') {
-                vm.medio.payForm = '20 - OTROS CON UTILIZACION DEL SISTEMA FINANCIERO';
-                vm.medio.total = parseFloat((vm.debtsToPay.total - payed).toFixed(4));
-                vm.status = 'PENDIENTE';
-            };
-        };
-
-        //Funciones que calculan la fecha de Cobro
-        vm.getFechaCobro = function() {
-            var d = new Date();
-            vm.medio.fechaCobro = _addDays(d, parseInt(vm.medio.chequeDiasPlazo));
-        };
-
-        function _addDays(date, days) {
-            var result = new Date(date);
-            result.setDate(result.getDate() + days);
-            return result.getTime();
-        };
-
-        //Función que carga el crédito, cuando el medio de pago es cŕedito
-        vm.loadCredit = function() {
-            var creditArray = [];
-            var diasPlazo = parseInt(vm.medio.creditoIntervalos);
-            var nOne = utilSeqService._pad_with_zeroes(vm.threeNumberOne, 3);
-            var nTwo = utilSeqService._pad_with_zeroes(vm.threeNumberTwo, 3);
-            var pNum = utilSeqService._pad_with_zeroes(vm.seccondPartNumber, 9);
-            var billNumber = nOne + '-' + nTwo + '-' + pNum;
-            var d = new Date();
-            var statusCredits = 'PENDIENTE';
-            var total = parseFloat(parseFloat(vm.debtsToPay.total) / parseFloat(vm.medio.creditoNumeroPagos)).toFixed(4);
-            for (var i = 1; i <= parseInt(vm.medio.creditoNumeroPagos); i++) {
-                var credito = {
-                    payNumber: i,
-                    diasPlazo: diasPlazo,
-                    estadoCredits: statusCredits,
-                    fecha: _addDays(d, diasPlazo),
-                    documentNumber: billNumber,
-                    valor: total
-                };
-                diasPlazo += parseInt(vm.medio.creditoIntervalos);
-                creditArray.push(credito);
-            };
-            vm.medio.creditsDebts = creditArray;
-        };
-
-        //Funciones que se implementan para agregar y eliminar el pago de la Cuenta por Pagar
-        vm.addPago = function() {
-            vm.pagos.push(angular.copy(vm.medio));
-            vm.medio = {};
-        };
-
-        vm.removePago = function(index) {
-            vm.pagos.splice(index, 1);
-        };
-
-        vm.getTotalPago = function() {
-            vm.aux = 0;
-            vm.varPago = 0;
-            if (vm.debtsToPay) {
-                vm.getCambio = 0;
-                _.each(vm.pagos, function(med) {
-                    vm.varPago = parseFloat((vm.varPago + med.total).toFixed(2));
-                });
-                vm.getCambio = parseFloat((vm.varPago - vm.debtsToPay.total).toFixed(2));
-                vm.aux = parseFloat((vm.varPago - vm.getCambio).toFixed(2));
-            };
-            return vm.varPago;
-        };
-
-        vm.getRetentionByProviderAndDocumentNumber = function() {
-            vm.loading = true;
-            var numOne = utilSeqService._pad_with_zeroes(vm.threeNumberOne, 3);
-            var numTwo = utilSeqService._pad_with_zeroes(vm.threeNumberTwo, 3);
-            var parNum = utilSeqService._pad_with_zeroes(vm.seccondPartNumber, 9);
-            vm.debtsBillNumber = numOne + '-' + numTwo + '-' + parNum;
-            eretentionService.getRetentionByProviderIdAndDocumentNumber(vm.providerId, vm.debtsBillNumber).then(function(response) {
+            eretentionService.getRetentionByProviderIdAndDocumentNumber(vm.providerId, vm.debtsToPay.billNumber).then(function(response) {
                 vm.retentionList = response;
                 vm.loading = false;
             }).catch(function(error) {
@@ -861,34 +329,24 @@ angular.module('integridadUiApp')
             });
         };
 
-        //Función que obtiene los Datos de una Retención
-        vm.retentionSelected = function(retention) {
+        vm.retentionSelected = function(retention){
             vm.loading = true;
             $('#modalFindRetention').modal('hide');
             vm.retentionList = undefined;
-            vm.retentionId = retention.id;
-            vm.retentionNumber = retention.stringSeq;
-            vm.retentionDateCreated = retention.dateCreated;
             eretentionService.getRetentionById(retention.id).then(function(response) {
                 vm.retention = response;
-                vm.totalRetention = 0;
-                vm.totalRetention = response.total;
-                vm.retentionTotal = parseFloat(vm.totalRetention);
                 vm.loading = false;
             }).catch(function(error) {
                 vm.loading = false;
                 vm.error = error.data;
             });
-        };
+        }
 
-        //Función que agrega los detalles de la Retención a los detalles de la Cuenta por Pagar
         vm.addRetentionToDebtsDetail = function() {
             vm.retenSelected = true;
-            var numOne = utilSeqService._pad_with_zeroes(vm.threeNumberOne, 3);
-            var numTwo = utilSeqService._pad_with_zeroes(vm.threeNumberTwo, 3);
-            var parNum = utilSeqService._pad_with_zeroes(vm.seccondPartNumber, 9);
-            vm.debtsBillNumber = numOne + '-' + numTwo + '-' + parNum;
-            vm.generalDetailCxP = vm.providerName + ' Fact. ' + vm.debtsBillNumber;
+            vm.debtsToPay.billNumber
+            // vm.debtsBillNumber = numOne + '-' + numTwo + '-' + parNum;
+            vm.generalDetailCxP = vm.providerName + ' Fact. ' + vm.debtsToPay.billNumber;
             _.map(vm.retention.detailRetentions, function(detail) {
                 if (detail.taxType == 'RETENCION EN LA FUENTE') {
                     vm.retenCodeFuente = detail.code;
@@ -1438,23 +896,152 @@ angular.module('integridadUiApp')
             });
         };
 
-        //Función que permite agregar las Cuentas Contables por defecto, Iva y Proveedor
+        vm.editItemTaxes = function(index) {
+            vm.item = angular.copy(vm.debtsToPay.items[index]);
+            
+            //Diario CxP
+            vm.itema = angular.copy(vm.dailybookCxP.detailDailybookContab[index]);
+            vm.indexEdit = index;
+        };
+
+        vm.deleteItemTaxes = function(index) {
+            vm.debtsToPay.items.splice(index, 1);
+            
+            //Diario CxP
+            vm.dailybookCxP.detailDailybookContab.splice(index, 1);
+        };
+
+        vm.getTotalDebito = function() {
+            var totalDebito = 0;
+            if (vm.debtsToPay) {
+                _.each (vm.debtsToPay.items, function(detail) {
+                    if (detail.tipo === 'DEBITO (D)') {
+                        totalDebito = (parseFloat(totalDebito) + parseFloat(detail.base_imponible)).toFixed(2);
+                    };
+                });
+            };
+            vm.saldoDebito = totalDebito;
+            return totalDebito;
+        };
+
+        vm.getTotalCredito = function() {
+            var totalCredito = 0;
+            if (vm.debtsToPay) {
+                _.each(vm.debtsToPay.items, function(detail) {
+                    if (detail.tipo === 'CREDITO (C)') {
+                        totalCredito = (parseFloat(totalCredito) + parseFloat(detail.base_imponible)).toFixed(2);
+                    };
+                });
+            };
+            vm.saldoCredito = totalCredito;
+            return totalCredito;
+        };
+
+        vm.getTotalSaldo = function() {
+            var totalSaldo = 0;
+            totalSaldo = (parseFloat(vm.saldoCredito) - parseFloat(vm.saldoDebito)).toFixed(2);
+            return totalSaldo;
+        };
+
+        vm.getPercentageTableAll = function() {
+            cuentaContableService.getCuentaContableByUserClientNoBank(vm.usrCliId).then(function(response) {
+                vm.cuentaContableList = response;
+                vm.loading = false;
+            }).catch(function(error) {
+                vm.loading = false;
+                vm.error = error.data;
+            });
+            vm.typeTaxes = vm.debtsToPay.typeTaxes;
+        };
+
+        vm.selectPurchaseTable = function(purchaseType) {
+            cuentaContableService.getCuentaContableByType(vm.usrCliId, purchaseType).then(function(response) {
+                vm.cuentaContableList = response;
+                vm.loading = false;
+            }).catch(function(error) {
+                vm.loading = false;
+                vm.error = error.data;
+            });
+            vm.typeTaxes = vm.debtsToPay.typeTaxes;
+        };
+
+        vm.selectTaxes = function(tax) {
+            vm.item = undefined;
+            vm.item = {
+                cta_contable: tax.id,
+                codigo: parseInt(vm.debtsToPay.typeTaxes),
+                codigo_contable: tax.code,
+                desc_contable: tax.description,
+                tipo: tax.accountType,
+                nomb_contable: tax.name,
+            };
+            vm.subTotal = parseFloat((vm.debtsToPay.total / 1.12).toFixed(2));
+            vm.totalTotal = parseFloat(vm.debtsToPay.total);
+
+            var totalDebito = parseInt(vm.debtsToPay.typeTaxes) === 1 ? vm.subTotal : vm.totalTotal;
+            if (vm.debtsToPay) {
+                _.each (vm.debtsToPay.items, function(detail) {
+                    if (detail.tipo === 'DEBITO (D)') {
+                        totalDebito = (parseFloat(totalDebito) - parseFloat(detail.base_imponible)).toFixed(2);
+                    };
+                });
+            };
+            vm.item.base_imponible = totalDebito;
+
+            //Diario CxP
+            vm.itema = undefined;
+            vm.itema = {
+                typeContab: vm.typeContab,
+                codeConta: tax.code,
+                descrip: tax.description,
+                tipo: tax.accountType,
+                name: tax.name
+            };
+            vm.subTotalDoceCxP = parseFloat((vm.debtsToPay.total / 1.12).toFixed(2));
+        };
+
+        vm.addItem = function() {
+            if (vm.indexEdit !== undefined) {
+                vm.debtsToPay.items.splice(vm.indexEdit, 1);
+                vm.dailybookCxP.detailDailybookContab.splice(vm.indexEdit, 1);
+                vm.indexEdit = undefined;
+            };
+            if (vm.item.tipo == 'DEBITO (D)') {
+                vm.item.deber = vm.item.base_imponible;
+            } else if (vm.item.tipo == 'CREDITO (C)') {
+                vm.item.haber = vm.item.base_imponible;
+            };
+            vm.debtsToPay.items.push(vm.item);
+            
+            //Diario CxP
+            if (vm.itema.tipo == 'DEBITO (D)') {
+                vm.itema.deber = vm.item.base_imponible;
+            } else if (vm.itema.tipo == 'CREDITO (C)') {
+                vm.itema.haber = vm.item.base_imponible;
+            };
+            vm.itema.baseImponible = vm.item.base_imponible
+            vm.itema.numCheque =  '--';
+            vm.itema.dailybookNumber = vm.dailycxpStringSeq;
+            vm.itema.userClientId = vm.usrCliId;
+            vm.itema.dateDetailDailybook = $('#pickerDateDebtsToPay').data("DateTimePicker").date().toDate().getTime();
+            vm.dailybookCxP.detailDailybookContab.push(vm.itema);
+            
+            vm.item = undefined;
+            vm.itema = undefined;
+            vm.debtsToPay.typeTaxes = undefined;
+            vm.cuentaContableList = undefined;
+        };
+
         vm.addIvaAndProvider = function() {
             if (vm.generalDetailCxP == null || vm.generalDetailCxP == '') {
-                var numOne = utilSeqService._pad_with_zeroes(vm.threeNumberOne, 3);
-                var numTwo = utilSeqService._pad_with_zeroes(vm.threeNumberTwo, 3);
-                var parNum = utilSeqService._pad_with_zeroes(vm.seccondPartNumber, 9);
-                vm.debtsBillNumber = numOne + '-' + numTwo + '-' + parNum;
-                vm.generalDetailCxP = vm.providerName + ' Fact. ' + vm.debtsBillNumber;
+                vm.generalDetailCxP = vm.providerName + ' Fact. ' + vm.debtsToPay.billNumber;
             };
 
             if (vm.indexEdit !== undefined) {
                 vm.debtsToPay.items.splice(vm.indexEdit, 1);
                 vm.indexEdit = undefined;
             };
-            if (vm.retentionId == null) {
-                vm.retentionTotal = 0;
-            };
+            vm.retentionTotal =  vm.retention === undefined ? 0 : vm.retention.total;
 
             //Selección de las Cuentas Contables por defecto dependiendo del Cliente
             if (vm.usrCliId === vm.laQuinta) {
@@ -1558,16 +1145,79 @@ angular.module('integridadUiApp')
             };
         };
 
-        //Función que Guarda la Cuenta por Pagar con sus Detalles y Pagos
+        vm.formaDePago = function() {
+            vm.medio.country = '593 - ECUADOR';
+            vm.medio.medio = 'credito'
+            vm.loadMedio();
+        }
+
+        vm.loadMedio = function() {
+            var payed = 0;
+            _.each(vm.pagos, function(pago){
+                payed += parseFloat(pago.total);
+            });
+            if (vm.medio.medio === 'credito') {
+                vm.medio.payForm = '20 - OTROS CON UTILIZACION DEL SISTEMA FINANCIERO';
+                vm.medio.total = parseFloat((vm.debtsToPay.total - payed).toFixed(4));
+                vm.status = 'PENDIENTE';
+            } else if (vm.medio.medio === 'efectivo') {
+                vm.medio.payForm = '20 - OTROS CON UTILIZACION DEL SISTEMA FINANCIERO';
+                vm.medio.total = parseFloat((vm.debtsToPay.total - payed).toFixed(4));
+                vm.status = 'PAGADO';
+            };
+        };
+
+        vm.getFechaCobro = function() {
+            var d = new Date();
+            vm.medio.fechaCobro = _addDays(d, parseInt(vm.medio.chequeDiasPlazo));
+        };
+
+        function _addDays(date, days) {
+            var result = new Date(date);
+            result.setDate(result.getDate() + days);
+            return result.getTime();
+        };
+
+        vm.addPago = function() {
+            if(vm.medio.medio === 'efectivo'){
+                var credito = {
+                    payNumber: 1,
+                    diasPlazo: 1,
+                    estadoCredits: 'PAGADO',
+                    fecha: new Date().getTime(),
+                    documentNumber: vm.debtsToPay.billNumber,
+                    valor: vm.debtsToPay.total
+                };
+                vm.medio.creditsDebts = [credito];
+            }
+            
+            vm.pagos.push(angular.copy(vm.medio));
+            vm.medio = {};
+        };
+
+        vm.removePago = function(index) {
+            vm.pagos.splice(index, 1);
+        };
+
+        vm.getTotalPago = function() {
+            vm.aux = 0;
+            vm.varPago = 0;
+            if (vm.debtsToPay) {
+                vm.getCambio = 0;
+                _.each(vm.pagos, function(med) {
+                    vm.varPago = parseFloat((vm.varPago + med.total).toFixed(2));
+                });
+                vm.getCambio = parseFloat((vm.varPago - vm.debtsToPay.total).toFixed(2));
+                vm.aux = parseFloat((vm.varPago - vm.getCambio).toFixed(2));
+            };
+            return vm.varPago;
+        };
+
         vm.saveDebtsToPay = function(debtsToPay) {
             vm.loading = true;
             vm.pagos.total = vm.aux;
             $('#modalAddPago').modal('hide');
             vm.debtsToPay.fecha = $('#pickerDateDebtsToPay').data("DateTimePicker").date().toDate().getTime();
-            vm.debtsToPay.threeNumberOne = utilSeqService._pad_with_zeroes(vm.threeNumberOne, 3);
-            vm.debtsToPay.threeNumberTwo = utilSeqService._pad_with_zeroes(vm.threeNumberTwo, 3);
-            vm.debtsToPay.seccondPartNumber = utilSeqService._pad_with_zeroes(vm.seccondPartNumber, 9);
-            vm.debtsToPay.billNumber = vm.debtsToPay.threeNumberOne + '-' + vm.debtsToPay.threeNumberTwo + '-' + vm.debtsToPay.seccondPartNumber;
             vm.debtsToPay.providerId = vm.providerId;
             vm.debtsToPay.iva = vm.subIva;
             vm.debtsToPay.subTotalDoce = vm.subTotalDoce;
@@ -1575,19 +1225,19 @@ angular.module('integridadUiApp')
             vm.debtsToPay.debtsSeq = vm.seqNumber;
             vm.debtsToPay.ejercicio = vm.ejercicio;
             if (vm.status === 'PENDIENTE') {
-                vm.debtsToPay.saldo = vm.debtsToPay.total - vm.retentionTotal;
+                vm.debtsToPay.saldo = vm.retention === undefined ? vm.debtsToPay.total : vm.debtsToPay.total - parseFloat(vm.retention.total);
             } else {
                 vm.debtsToPay.saldo = 0;
             };
-            if (vm.retentionId == null) {
+            if (vm.retention == undefined) {
                 vm.debtsToPay.retentionNumber = 'SIN RETENCIÓN';
                 vm.debtsToPay.retentionDateCreated = 0;
                 vm.debtsToPay.retentionTotal = 0;
             } else {
-                vm.debtsToPay.retentionId = vm.retentionId;
-                vm.debtsToPay.retentionNumber = vm.retentionNumber;
-                vm.debtsToPay.retentionDateCreated = vm.retentionDateCreated;
-                vm.debtsToPay.retentionTotal = vm.retentionTotal;
+                vm.debtsToPay.retentionId = vm.retention.id;
+                vm.debtsToPay.retentionNumber = vm.retention.stringSeq;
+                vm.debtsToPay.retentionDateCreated = vm.retention.dateCreated;
+                vm.debtsToPay.retentionTotal = parseFloat(vm.retention.total);
             };
             vm.debtsToPay.estado = vm.status;
             vm.debtsToPay.detailDebtsToPay = [];
@@ -1618,17 +1268,634 @@ angular.module('integridadUiApp')
                         };
                         _asientoDiarioCxP();
                         vm.debtsToPayCreated = true;
+
+                        if(debtsToPay.pagos.length === 1 && debtsToPay.pagos[0].medio === 'efectivo'){
+                            $localStorage.user.cashier.compPagoNumberSeq = parseInt($localStorage.user.cashier.compPagoNumberSeq) + 1;
+                            $localStorage.user.cashier.dailyCeNumberSeq = parseInt($localStorage.user.cashier.dailyCeNumberSeq) + 1;
+                        }
+
                         vm.success = 'Factura de Compra Ingresada con Exito';
+                        _activate();
+                        vm.loading = false;
+                    }).catch(function(error) {
+                        _activate();
+                        vm.loading = false;
+                        vm.error = error.data;
+                    });
+                } else {
+                    vm.error = 'Factura de Compra Ya Existe';
+                };
+                vm.loading = false;
+            }).catch(function(error) {
+                vm.loading = false;
+                vm.error = error.data;
+            });
+        };
+
+        vm.loadCredit = function() {
+            var creditArray = [];
+            var diasPlazo = parseInt(vm.medio.creditoIntervalos);
+            var billNumber = vm.debtsToPay.billNumber;
+            var d = new Date();
+            var statusCredits = 'PENDIENTE';
+            var total = parseFloat(parseFloat(vm.debtsToPay.total) / parseFloat(vm.medio.creditoNumeroPagos)).toFixed(4);
+            for (var i = 1; i <= parseInt(vm.medio.creditoNumeroPagos); i++) {
+                var credito = {
+                    payNumber: i,
+                    diasPlazo: diasPlazo,
+                    estadoCredits: statusCredits,
+                    fecha: _addDays(d, diasPlazo),
+                    documentNumber: billNumber,
+                    valor: total
+                };
+                diasPlazo += parseInt(vm.medio.creditoIntervalos);
+                creditArray.push(credito);
+            };
+            vm.medio.creditsDebts = creditArray;
+        };
+
+        vm.providerMultipleDebts = function(provider) {
+            vm.loading = true;
+            vm.success = undefined;
+            vm.paymentCreation = true;
+            vm.providerSelected = provider;
+            vm.typePayment = 'PAC';
+            vm.typePaymentName = 'PAGO CORRIENTE';
+            vm.providerName = provider.name;
+            _initializeDailybookCe();
+            _initializeComprobantePago();
+            cuentaContableService.getCuentaContableByUserClientAndBank(vm.usrCliId).then(function(response) {
+                vm.ctaCtableBankList = response;
+                
+            }).catch(function(error) {
+                vm.loading = false;
+                vm.error = error.data;
+            });
+
+            debtsToPayService.getDebtsToPayWithSaldoByProviderId(provider.id).then(function(response) {
+                vm.providerDebtsList = response;
+                $('#modalFindBills').modal('show');
+                vm.loading = false;
+            }).catch(function(error) {
+                vm.loading = false;
+                vm.error = error.data;
+            });
+        };
+
+        vm.findBills = function() {
+            vm.loading = true;
+            vm.success = undefined;
+            vm.providerDebtsList = undefined; 
+            vm.billsSelected = [];
+            debtsToPayService.getDebtsToPayWithSaldoByProviderId(vm.providerSelected.id).then(function(response) {
+                vm.providerDebtsList = response;
+                vm.loading = false;
+            }).catch(function(error) {
+                vm.loading = false;
+                vm.error = error.data;
+            });
+        };
+
+        vm.payModeSelected = function() {
+            vm.loading = true;
+            vm.success = undefined;
+            vm.error = undefined;
+
+            _.each(vm.providerDebtsList, function(bill){
+                if(bill.selectedTotal || bill.selectedParcial){
+                    vm.billsSelected.push(bill);
+                    creditsDebtsService.getAllCreditsDebtsOfDebtsToPayByDebtsToPayId(bill.id).then(function(response) {
+                        if(bill.selectedTotal){
+                            _.each(response, function(cuota) {
+                                vm.itemCobroBill = {};
+                                var itemBillsMulti = {
+                                    creditsDebts: cuota,
+                                    bill_number: bill.billNumber,
+                                    debt_total: (bill.total).toFixed(2),
+                                    debt_pending: bill.saldo,
+                                    debt_abono: cuota.valor.toFixed(2),
+                                    tipo: 'PAGO TOTAL DE CUOTA',
+                                };
+                                vm.itemsMultiplePayments.push(itemBillsMulti);
+                            });
+                        } else {
+                            bill.creditsMultiBillsList = response;
+                            _.each(bill.creditsMultiBillsList, function(cred){
+                                cred.valorAbono = undefined;
+                            });
+                        }
                         vm.loading = false;
                     }).catch(function(error) {
                         vm.loading = false;
                         vm.error = error.data;
                     });
-                    _activate();
+                }
+            }); 
+            
+            vm.loading = false;        
+        };
+
+        vm.multipleAbono = function() {
+            vm.loading = true;
+            _.each(vm.billsSelected, function(bill){
+                if(bill.selectedParcial){
+                    _.each(bill.creditsMultiBillsList, function(cuota) {
+                        if(cuota.valorAbono !== undefined){
+                            vm.itemCobroBill = {};
+                            var itemBillsMulti = {
+                                creditsDebts: cuota,
+                                bill_number: bill.billNumber,
+                                debt_total: (bill.total).toFixed(2),
+                                debt_pending: bill.saldo,
+                                debt_abono: parseFloat(cuota.valorAbono).toFixed(2),
+                                tipo: parseFloat(cuota.valorAbono) < parseFloat(cuota.valor).toFixed(2) ? 'ABONO PARCIAL DE CUOTA' :  'PAGO TOTAL DE CUOTA',
+                            };
+                            vm.itemsMultiplePayments.push(itemBillsMulti);
+                        }
+                    });
+                }
+            });
+
+            vm.loading = false;
+            $('#modalFindBills').modal('hide');
+        };
+
+        vm.displayCredits = function(){
+            if(vm.billsSelected.length <= 0 ) {
+                return false;
+            } else if(vm.billsSelected.length === 1 && vm.billsSelected[0].selectedTotal){
+                $('#modalFindBills').modal('hide');
+                return false;
+            } else {
+                return true;
+            }
+            
+        }
+
+        vm.changeAbonoType = function(){
+            if(vm.typePayment === 'RET'){
+                vm.paymenDetail = 'ABONO POR RETENCIÓN';
+            } else if(vm.typePayment === 'CEG') {
+                vm.paymenDetail = 'ABONO POR COMP. EGRESO';
+            } else {
+                vm.paymenDetail = undefined;
+            }
+        };
+
+        vm.selectCtaCtableBank = function(cuenta) {
+            vm.ctaCtableBankCode = cuenta.code;
+            vm.noAccount = cuenta.number;
+            vm.bankName = cuenta.description;
+        };
+
+        vm.getTotalMultiAbonos = function() {
+            var totalMultiAbono = 0;
+            _.each(vm.itemsMultiplePayments, function(detail) {
+                totalMultiAbono = (parseFloat(totalMultiAbono) + parseFloat(detail.debt_abono)).toFixed(2);
+            });
+            vm.valorDocumento = totalMultiAbono;
+            return totalMultiAbono;
+        };
+
+        vm.disableMultipleCobro = function(){
+            if(vm.typePayment === 'PAC' && (vm.noDocument === undefined || '' === vm.noDocument.trim() || vm.noDocument === 0) && vm.modePayment !== 'EFC'){
+                return true;
+            }
+            if(vm.typePayment === 'PAC' && vm.modePayment === undefined){
+                return true;
+            }
+            if(vm.getTotalMultiAbonos() != vm.valorDocumento){
+                return true;
+            }
+        
+            return false;
+        };
+
+        vm.getDebtsBillNumberPayed = function() {
+            var debtsBillNumberPayed = '';
+            _.each(vm.itemsMultiplePayments, function(detail) {
+                if(!debtsBillNumberPayed.includes(detail.bill_number))
+                    debtsBillNumberPayed = debtsBillNumberPayed + ' ' + detail.bill_number;
+            });
+            return debtsBillNumberPayed;
+        };
+
+        vm.pAbonoDebts = function() {
+
+            if (vm.usrCliId === vm.laQuinta) {
+                vm.provContable = '2.01.03.01.001';
+            } else if (vm.usrCliId === vm.mrZolutions) {
+                vm.provContable = '2.01.03.01.001';
+            } else if (vm.usrCliId === vm.catedral) {
+                vm.provContable = '2.12.10.101';
+            } else if (vm.usrCliId === vm.ppe) {
+                vm.provContable = '2.01.03.01.01';
+            } else {
+                vm.provContable = '2.01.01.01';
+            };
+            
+            vm.debtsBillsNumberPayed = vm.getDebtsBillNumberPayed();
+
+            _.each(vm.itemsMultiplePayments, function(detail) {
+
+                if (vm.typePayment == 'PAC' || vm.typePayment == 'CEG') {
+                    vm.valorReten = 0;
+                    vm.valorAbono = detail.debt_abono;
+                } else if (vm.typePayment == 'RET') {
+                    vm.valorAbono = 0;
+                    vm.valorReten = detail.debt_abono;
+                    vm.modePayment = 'RET'
+                } 
+                
+                var paymentDebts = {
+                    noDocument: vm.noDocument ? vm.noDocument : 'EFECTIVO',
+                    modePayment: vm.modePayment,
+                    typePayment: vm.typePayment,
+                    datePayment: $('#pickerDateOfMultiplePayment').data("DateTimePicker").date().toDate().getTime(),
+                    documentNumber: vm.debtsBillsNumberPayed,
+                    ctaCtableBanco: vm.ctaCtableBankCode ? vm.ctaCtableBankCode : '--',
+                    banco: vm.bankName ? vm.bankName : '--',
+                    cardBrand: vm.cardBrand,
+                    numeroLote:vm.numeroLote,
+                    ctaCtableProvider: vm.provContable ? vm.provContable : '--',
+                    providerName: vm.providerName ? vm.providerName : '--',
+                    detail: detail.tipo,
+                    noAccount: vm.noAccount ? vm.noAccount : '--',
+                    valorAbono: vm.valorAbono,
+                    valorReten: vm.valorReten,
+                    creditsDebts: detail.creditsDebts,
+
+                }
+
+                paymentDebtsService.getPaymentDebtsByUserClientIdWithBankAndNroDocument(vm.usrCliId, paymentDebts.banco, paymentDebts.noDocument).then(function(response) {
+                    paymentDebtsService.createPaymentDebts(paymentDebts).then(function(response) {
+                        vm.paymentDebtsCreated = response;
+                        _asientoComprobanteEgreso();
+                        _asientoComprobantePago();
+                        vm.success = 'Abono realizado con exito';
+                        vm.loading = false;
+                        _activate();
+                    }).catch(function(error) {
+                        vm.loading = false;
+                        vm.error = error.data;
+                    });
+                }).catch(function(error) {
+                    vm.loading = false;
+                    vm.error = error.data;
+                });
+            });
+            
+        };
+
+        vm.verifyUser = function() {
+            vm.isEmp = $localStorage.user.userType.code === 'EMP';
+        };
+
+        vm.validateAdm = function() {
+            vm.errorValidateAdm = undefined;
+            var userAdm = $localStorage.user.user;
+            userAdm.password = vm.passwordAdm;
+            authService.authUser(userAdm).then(function(response) {
+                vm.loading = false;
+                vm.isEmp = false;
+            }).catch(function(error) {
+                vm.loading = false;
+                vm.errorValidateAdm = error.data;
+            });
+        };
+
+        vm.acceptNewSeq = function() {
+            vm.seqErrorNumber = undefined;
+            vm.loading = true;
+            var stringSeq =  vm.newSeqNumber;
+            debtsToPayService.getDebtsToPayByDebtsSeqAndSubId(stringSeq, vm.companyData.id).then(function(response) {
+                if (response.length === 0) {
+                    vm.seqNumber = stringSeq;
+                    vm.seqChanged = true;
+                    $('#modalEditDebtsToPayNumber').modal('hide');
                 } else {
-                    vm.error = 'Factura de Compra Ya Existe';
+                    vm.seqErrorNumber = "NUMERO DE CUENTA POR PAGAR YA EXISTENTE"
                 };
                 vm.loading = false;
+            }).catch(function(error) {
+                vm.loading = false;
+                vm.error = error.data;
+            });
+        };
+
+        vm.paymentDebtsByProvider = function(provider) {
+            vm.loading = true;
+            vm.success = undefined;
+            vm.providerName = provider.name;
+            vm.providerId = provider.id;
+            vm.printComprobante = false;
+            paymentDebtsService.getPaymentDebtsByProviderId(vm.providerId).then(function(response) {
+                vm.paymentDebtsList = response;
+                vm.loading = false;
+            }).catch(function(error) {
+                vm.loading = false;
+                vm.error = error.data;
+            });
+        };
+
+        vm.paymentDebtsDeactivate = function() {
+            vm.error = undefined;
+            vm.loading = true;
+            paymentDebtsService.deactivatePaymentDebts(vm.deactivatePaymentDebts).then(function(response) {
+                var index = vm.paymentDebtsList.indexOf(vm.deactivatePaymentDebts);
+                if (index > -1) {
+                    vm.paymentDebtsList.splice(index, 1);
+                };
+                vm.deactivatePaymentDebts = undefined;
+                vm.success = 'Pago anulado con exito';
+                vm.loading = false;
+            }).catch(function(error) {
+                vm.loading = false;
+                vm.error = error.data;
+            });
+        };
+
+        vm.eliminaAbono = function(index) {
+            vm.itemsMultiplePayments.splice(index, 1);
+        };
+
+        vm.comprobantePagoSelected = function(paymentDebts) {
+            vm.error = undefined;
+            vm.loading = true;
+            comprobanteService.getComprobanteCobroByPaymentId(paymentDebts.id).then(function(response) {
+                if(response !== ''){
+                    vm.printComprobante = true;
+                    vm.comprobantePagoCreated = response;
+                } else {
+                    vm.error = 'Pago no tiene comprobante';
+                }                
+                vm.loading = false;
+            }).catch(function(error) {
+                vm.loading = false;
+                vm.error = error.data;
+            });
+        };
+
+        vm.getTotalDebitoCPCreated = function() {
+            var totalDebito = 0;
+            if (vm.comprobantePagoCreated) {
+                _.each(vm.comprobantePagoCreated.detailComprobantePago, function(detail) {
+                    if (detail.tipo === 'DEBITO (D)') {
+                        totalDebito = (parseFloat(totalDebito) + parseFloat(detail.baseImponible)).toFixed(2);
+                    };
+                });
+            };
+            return totalDebito;
+        };
+
+        vm.getTotalCreditoCPCreated = function() {
+            var totalCredito = 0;
+            if (vm.comprobantePagoCreated) {
+                _.each(vm.comprobantePagoCreated.detailComprobantePago, function(detail) {
+                    if (detail.tipo === 'CREDITO (C)') {
+                        totalCredito = (parseFloat(totalCredito) + parseFloat(detail.baseImponible)).toFixed(2);
+                    };
+                });
+            };
+            return totalCredito;
+        };
+
+        vm.consultProviderDebts = function(provider) {
+            vm.loading = true;
+            vm.success = undefined;
+            vm.providerName = provider.name;
+            vm.providerRuc = provider.ruc;
+            vm.providerId = provider.id;
+            debtsToPayService.getDebtsToPayWithSaldoByProviderId(provider.id).then(function(response) {
+                vm.printDebtsToPay = false;
+                vm.providerDebtsList = response;
+                vm.loading = false;
+            }).catch(function(error) {
+                vm.loading = false;
+                vm.error = error.data;
+            });
+        };
+
+        vm.debtsToPayToPrint = function(debts) {
+            vm.loading = true;
+            debtsToPayService.getDebtsToPayById(debts.id).then(function(response) {
+                vm.printDebtsToPay = true;
+                vm.allDebtsToPayList = undefined;
+                vm.debtsToPay = response;
+                vm.debtsDetails = response.detailDebtsToPay;
+                vm.companyData = $localStorage.user.subsidiary;
+                vm.debtsProviderSelected = response.provider;
+                vm.pagos = response.pagos;
+                var dateToShow = new Date(response.fecha);
+                vm.billNumber = response.billNumber;
+                vm.seqNumber = response.debtsSeq;
+                $('#pickerDebtsToPayDate').data("DateTimePicker").date(dateToShow);
+                vm.loading = false;
+            }).catch(function(error) {
+                vm.loading = false;
+                vm.error = error.data;
+            });
+        };
+
+        vm.debtsToPayDeactivate = function() {
+            vm.loading = true;
+            if (vm.deactivateDebtsToPay.credNoteApplied === false) {
+                debtsToPayService.deactivateDebtsToPay(vm.deactivateDebtsToPay).then(function(response) {
+                    var index = vm.providerDebtsList.indexOf(vm.deactivateDebtsToPay);
+                    if (index > -1) {
+                        vm.providerDebtsList.splice(index, 1);
+                    };
+                    vm.deactivateDebtsToPay = undefined;
+                    vm.success = "Factura de Compra Anulada";
+                    vm.loading = false;
+                }).catch(function(error) {
+                    vm.loading = false;
+                    vm.error = error.data;
+                });
+            } else {
+                vm.loading = false;
+                vm.error = "La Factura NO se Puede Anular debido a que presenta una Nota de Crédito";
+            };
+        };
+
+        vm.cancel = function() {
+            _activate();
+        };
+
+        function _getSeqNumber() {
+            vm.numberAddedOne = parseInt($localStorage.user.cashier.debtsNumberSeq) + 1;
+            vm.seqNumber = utilSeqService._pad_with_zeroes(vm.numberAddedOne, 6);
+            vm.newSeqNumber = vm.seqNumber;
+        };
+
+        function _initializeDebts() {
+            vm.debtsToPay = {
+                provider: vm.providerSelected,
+                userIntegridad: $localStorage.user,
+                subsidiary: $localStorage.user.subsidiary,
+                typeTaxes: undefined,
+                items: [],
+                pagos: []
+            };
+        };
+
+        function _getDailyCxPSeqNumber() {
+            vm.numberAddedOneCxP = parseInt($localStorage.user.cashier.dailyCppNumberSeq) + 1;
+            vm.dailycxpSeq = vm.numberAddedOneCxP;
+            vm.dailycxpStringSeq = utilSeqService._pad_with_zeroes(vm.numberAddedOneCxP, 6);
+        };
+
+        function _initializeDailybookCxP() {
+            vm.dailybookCxP = {
+                provider: vm.providerSelected,
+                userIntegridad: $localStorage.user,
+                subsidiary: $localStorage.user.subsidiary,
+                subTotalDoce: 0,
+                iva: 0,
+                subTotalCero: 0,
+                total: 0,
+                detailDailybookContab: []
+            };
+        };
+
+        function _initializeDailybookCe() {
+            vm.dailybookCe = {
+                userIntegridad: $localStorage.user,
+                subsidiary: $localStorage.user.subsidiary,
+                provider: vm.providerSelected,
+                ruc: vm.providerSelected.ruc,
+                subTotalDoce: 0,
+                iva: 0,
+                subTotalCero: 0,
+                total: 0,
+                detailDailybookContab: []
+            };
+        };
+
+        function _initializeComprobantePago() {
+            vm.comprobantePago = {
+                provider: vm.providerSelected,
+                userIntegridad: $localStorage.user,
+                subsidiary: $localStorage.user.subsidiary,
+                providerName: vm.providerSelected.name,
+                providerRuc: vm.providerSelected.ruc,
+                subTotalDoce: 0,
+                iva: 0,
+                total: 0,
+                detailComprobantePago: []
+            };
+        };
+
+        function _getDailyCeSeqNumber() {
+            vm.numberAddedOneCe = parseInt($localStorage.user.cashier.dailyCeNumberSeq) + 1;
+            vm.dailyCeSeq = vm.numberAddedOneCe;
+            vm.dailyCeStringSeq = utilSeqService._pad_with_zeroes(vm.numberAddedOneCe, 6);
+        };
+
+        function _getComprobantePagoSeqNumber() {
+            vm.numbAddedOneCP = parseInt($localStorage.user.cashier.compPagoNumberSeq) + 1;
+            vm.comprobantePagoSeq = vm.numbAddedOneCP;
+            vm.comprobantePagoStringSeq = utilSeqService._pad_with_zeroes(vm.numbAddedOneCP, 6);
+        };
+
+        function _asientoComprobanteEgreso() {
+            _getDailyCeSeqNumber();
+            vm.valorToSave = vm.paymentDebtsCreated.modePayment === 'RET' ? vm.paymentDebtsCreated.valorReten : vm.paymentDebtsCreated.valorAbono;
+            vm.selectedTypeBook = '2';
+            vm.generalDetailCe_1 = vm.paymentDebtsCreated.providerName + ' Fact. ' + vm.paymentDebtsCreated.documentNumber;
+            vm.itema = {
+                typeContab: vm.typeContabCe,
+                codeConta: vm.paymentDebtsCreated.ctaCtableProvider,
+                descrip: 'PROVEEDORES LOCALES',
+                tipo: 'DEBITO (D)',
+                baseImponible: parseFloat(vm.valorToSave),
+                name: vm.generalDetailCe_1,
+                deber: parseFloat(vm.valorToSave)
+            };
+            vm.itema.numCheque =  '--';
+            vm.itema.dailybookNumber = vm.dailyCeStringSeq;
+            vm.itema.userClientId = vm.usrCliId;
+            vm.itema.dateDetailDailybook = $('#pickerDateOfMultiplePayment').data("DateTimePicker").date().toDate().getTime();
+            vm.dailybookCe.detailDailybookContab.push(vm.itema);
+            vm.generalDetailCe_2 = vm.paymentDebtsCreated.banco + ' Cancela Fact. ' + vm.paymentDebtsCreated.documentNumber + ', a: ' + vm.paymentDebtsCreated.providerName + ', con ' + vm.paymentDebtsCreated.modePayment + ' Nro. ' + vm.paymentDebtsCreated.noDocument;
+            vm.itemb = {
+                typeContab: vm.typeContabCe,
+                codeConta: vm.paymentDebtsCreated.ctaCtableBanco,
+                descrip: vm.paymentDebtsCreated.banco,
+                tipo: 'CREDITO (C)',
+                baseImponible: parseFloat(vm.valorToSave),
+                name: vm.generalDetailCe_2,
+                haber: parseFloat(vm.valorToSave)
+            };
+            vm.itemb.numCheque = vm.paymentDebtsCreated.noDocument;
+            vm.itemb.dailybookNumber = vm.dailyCeStringSeq;
+            vm.itemb.userClientId = vm.usrCliId;
+            vm.itemb.dateDetailDailybook = $('#pickerDateOfMultiplePayment').data("DateTimePicker").date().toDate().getTime();
+            vm.dailybookCe.detailDailybookContab.push(vm.itemb);
+            vm.dailybookCe.codeTypeContab = vm.selectedTypeBook;
+            vm.dailybookCe.nameBank = vm.paymentDebtsCreated.banco;
+            vm.dailybookCe.billNumber = vm.paymentDebtsCreated.documentNumber;
+            vm.dailybookCe.numCheque = vm.paymentDebtsCreated.noDocument;
+            vm.dailybookCe.typeContab = vm.paymentDebtsCreated.typePayment === 'RET' ? 'RETENCION':vm.typeContabCe;
+            vm.dailybookCe.dailyCeSeq = vm.dailyCeSeq;
+            vm.dailybookCe.dailyCeStringSeq = vm.dailyCeStringSeq;
+            vm.dailybookCe.dailyCeStringUserSeq = 'PAGO GENERADO ' + vm.dailyCeStringSeq;
+            vm.dailybookCe.clientProvName = vm.paymentDebtsCreated.providerName;
+            vm.dailybookCe.generalDetail = vm.generalDetailCe_1;
+            vm.dailybookCe.total = vm.valorToSave;
+            vm.dailybookCe.iva = parseFloat((vm.valorToSave * 0.12).toFixed(2));
+            vm.dailybookCe.subTotalDoce = parseFloat((vm.valorToSave / 1.12).toFixed(2));
+            vm.dailybookCe.subTotalCero = 0;
+            vm.dailybookCe.dateRecordBook = $('#pickerDateOfMultiplePayment').data("DateTimePicker").date().toDate().getTime();
+            
+            contableService.createDailybookAsinCe(vm.dailybookCe).then(function(response) {
+                $localStorage.user.cashier.dailyCeNumberSeq = vm.dailybookCe.dailyCeSeq;
+            }).catch(function(error) {
+                vm.loading = false;
+                vm.error = error.data;
+            });
+        };
+
+        function _asientoComprobantePago() {
+            _getComprobantePagoSeqNumber();
+            vm.valorToSave = vm.paymentDebtsCreated.modePayment === 'RET' ? vm.paymentDebtsCreated.valorReten : vm.paymentDebtsCreated.valorAbono;
+            vm.generalDetailCP_1 = 'Pago de Fact. Nro: ' + vm.paymentDebtsCreated.documentNumber + ' a: ' + vm.paymentDebtsCreated.providerName;
+            vm.itemPagoA = {
+                codeConta: vm.paymentDebtsCreated.ctaCtableProvider,
+                descrip: 'PROVEEDORES LOCALES',
+                tipo: 'DEBITO (D)',
+                baseImponible: parseFloat(vm.valorToSave),
+                name: vm.generalDetailCP_1,
+                deber: parseFloat(vm.valorToSave)
+            };
+            vm.comprobantePago.detailComprobantePago.push(vm.itemPagoA);
+            vm.generalDetailCP_2 = vm.paymentDebtsCreated.banco + ' Cancela Fact. Nro: ' + vm.paymentDebtsCreated.documentNumber;
+            vm.itemPagoB = {
+                codeConta: vm.paymentDebtsCreated.ctaCtableBanco,
+                descrip: vm.paymentDebtsCreated.banco,
+                tipo: 'CREDITO (C)',
+                baseImponible: parseFloat(vm.valorToSave),
+                name: vm.generalDetailCP_2,
+                haber: parseFloat(vm.valorToSave)
+            };
+            vm.comprobantePago.detailComprobantePago.push(vm.itemPagoB);
+
+            vm.comprobantePago.dateComprobante = $('#pickerDateOfMultiplePayment').data("DateTimePicker").date().toDate().getTime();
+            vm.comprobantePago.comprobanteSeq = vm.comprobantePagoSeq;
+            vm.comprobantePago.comprobanteStringSeq = vm.comprobantePagoStringSeq;
+            vm.comprobantePago.billNumber = vm.paymentDebtsCreated.documentNumber;
+            vm.comprobantePago.numCheque = vm.paymentDebtsCreated.noDocument;;
+            vm.comprobantePago.nameBank = vm.paymentDebtsCreated.banco;
+            vm.comprobantePago.comprobanteEstado = 'PROCESADO';
+            vm.comprobantePago.codeConta = vm.paymentDebtsCreated.ctaCtableBanco;
+            vm.comprobantePago.paymentDebtId = vm.paymentDebtsCreated.id;
+            vm.comprobantePago.comprobanteConcep = vm.generalDetailCP_1;
+            vm.comprobantePago.total = vm.valorToSave;
+            vm.comprobantePago.iva = parseFloat((vm.valorToSave * 0.12).toFixed(2));
+            vm.comprobantePago.subTotalDoce = parseFloat((vm.valorToSave / 1.12).toFixed(2));
+
+            comprobanteService.createComprobantePago(vm.comprobantePago).then(function(response) {
+                $localStorage.user.cashier.compPagoNumberSeq = vm.comprobantePago.comprobanteSeq;
             }).catch(function(error) {
                 vm.loading = false;
                 vm.error = error.data;
@@ -1650,15 +1917,15 @@ angular.module('integridadUiApp')
             vm.dailybookCxP.subTotalDoce = parseFloat((vm.responseDebtsToPay.total / 1.12).toFixed(2));
             vm.dailybookCxP.subTotalCero = 0;
             vm.dailybookCxP.dateRecordBook = $('#pickerDateDebtsToPay').data("DateTimePicker").date().toDate().getTime();
-            if (vm.retentionId == null) {
+            if (vm.retention === undefined) {
                 vm.dailybookCxP.retentionNumber = 'SIN RETENCIÓN';
                 vm.dailybookCxP.retentionDateCreated = 0;
                 vm.dailybookCxP.retentionTotal = 0;
             } else {
-                vm.dailybookCxP.retentionId = vm.retentionId;
-                vm.dailybookCxP.retentionNumber = vm.retentionNumber;
-                vm.dailybookCxP.retentionDateCreated = vm.retentionDateCreated;
-                vm.dailybookCxP.retentionTotal = vm.retentionTotal;
+                vm.dailybookCxP.retentionId = vm.retention.id;
+                vm.dailybookCxP.retentionNumber = vm.retention.stringSeq;
+                vm.dailybookCxP.retentionDateCreated = vm.retention.dateCreated;
+                vm.dailybookCxP.retentionTotal = parseFloat(vm.retention.total);
             };
             contableService.createDailybookAsinCxP(vm.dailybookCxP).then(function(response) {
                 $localStorage.user.cashier.dailyCppNumberSeq = vm.dailybookCxP.dailycxpSeq;
@@ -1667,626 +1934,6 @@ angular.module('integridadUiApp')
                 vm.error = error.data;
             });
         };
-
-        //Función que anula una Cuenta por Pagar
-        vm.debtsToPayDeactivate = function() {
-            vm.loading = true;
-            var index = vm.providerDebtsList.indexOf(vm.deactivateDebtsToPay);
-            debtsToPayService.cancelDebtsToPay(vm.deactivateDebtsToPay).then(function(response) {
-                var index = vm.providerDebtsList.indexOf(vm.deactivateDebtsToPay);
-                if (index > -1) {
-                    vm.providerDebtsList.splice(index, 1);
-                };
-                vm.deactivateDebtsToPay = undefined
-                vm.loading = false;
-            }).catch(function(error) {
-                vm.loading = false;
-                vm.error = error.data;
-            });
-        };
-
-        //Función que obtiene los créditos pendientes de las Cuentas por Pagar
-        vm.creditsByDebts = function(debtsToPay) {
-            vm.loading = true;
-            vm.success = undefined;
-            vm.error = undefined;
-            vm.debtsBillNumber = debtsToPay.billNumber;
-            vm.debtsValue = (debtsToPay.total).toFixed(2);
-            creditsDebtsService.getAllCreditsDebtsOfDebtsToPayByDebtsToPayId(debtsToPay.id).then(function(response) {
-                vm.creditsDebtsList = response;
-                vm.loading = false;
-            }).catch(function(error) {
-                vm.loading = false;
-                vm.error = error.data;
-            });
-        };
-
-        vm.creditsMultiByDebts = function(debtsToPay) {
-            vm.loading = true;
-            vm.success = undefined;
-            vm.error = undefined;
-            vm.debtsNumber = debtsToPay.debtsSeq;
-            vm.debtsBillNumber = debtsToPay.billNumber;
-            vm.debtsValue = (debtsToPay.total).toFixed(2);
-            vm.debtsPending = (debtsToPay.saldo).toFixed(2);
-            creditsDebtsService.getAllCreditsDebtsOfDebtsToPayByDebtsToPayId(debtsToPay.id).then(function(response) {
-                vm.creditsMultiDebtsList = response;
-                vm.loading = false;
-            }).catch(function(error) {
-                vm.loading = false;
-                vm.error = error.data;
-            });
-        };
-
-        vm.multipleAbonoDebts = function(creditsDebts) {
-            vm.loading = true;
-            vm.creditsMultiDebtsList = undefined;
-            vm.creditsDebtsSelected = creditsDebts;
-            vm.itemDebtsMulti = {
-                credit_debt: vm.creditsDebtsSelected,
-                bill_number: vm.debtsBillNumber,
-                debt_total: vm.debtsValue,
-                debt_pending: vm.debtsPending
-            };
-            vm.loading = false;
-        };
-
-        vm.aceptaAbono = function() {
-            vm.loading = true;
-            $('#modalFindDebtsToPay').modal('hide');
-            vm.creditsMultipleDebtsSelected.push(vm.creditsDebtsSelected);
-            vm.creditsDebtsSelected = undefined;
-            vm.itemDebtsMulti.debt_abono = vm.valorAbono;
-            vm.itemsMultiplePayments.push(vm.itemDebtsMulti);
-            vm.loading = false;
-        };
-
-        vm.eliminaAbono = function(index) {
-            vm.itemsMultiplePayments.splice(index, 1);
-        };
-
-        vm.getTotalMultiAbonos = function() {
-            var totalMultiAbono = 0;
-            _.each(vm.itemsMultiplePayments, function(detail) {
-                totalMultiAbono = (parseFloat(totalMultiAbono) + parseFloat(detail.debt_abono)).toFixed(2);
-            });
-            return totalMultiAbono;
-        };
-
-        vm.getDebtsBillNumberPayed = function() {
-            var debtsBillNumberPayed = '';
-            _.each(vm.itemsMultiplePayments, function(detail) {
-                debtsBillNumberPayed = debtsBillNumberPayed + ' ' + detail.bill_number;
-            });
-            return debtsBillNumberPayed;
-        };
-
-        vm.pagoMultiAbonoDebts = function() {
-            vm.loading = true;
-            if (vm.usrCliId === vm.laQuinta) {
-                vm.provContable = '2.01.03.01.001';
-            } else if (vm.usrCliId === vm.mrZolutions) {
-                vm.provContable = '2.01.03.01.001';
-            } else if (vm.usrCliId === vm.catedral) {
-                vm.provContable = '2.12.10.101';
-            } else if (vm.usrCliId === vm.ppe) {
-                vm.provContable = '2.01.03.01.01';
-            } else {
-                vm.provContable = '2.01.01.01';
-            };
-            vm.debtsBillsNumberPayed = vm.getDebtsBillNumberPayed();
-            if (vm.modePayment === 'EFC') {
-                _.each(vm.itemsMultiplePayments, function(detail) { 
-                    vm.paymentDebts = {
-                        creditsDebts: detail.credit_debt
-                    };
-                    vm.paymentDebts.typePayment = vm.typePayment;
-                    if (vm.paymentDebts.typePayment == 'PAC') {
-                        vm.valorReten = 0;
-                    };
-                    vm.paymentDebts.datePayment = $('#pickerDateOfMultiPayment').data("DateTimePicker").date().toDate().getTime();
-                    vm.paymentDebts.documentNumber = detail.bill_number;
-                    vm.paymentDebts.modePayment = vm.modePayment;
-                    vm.paymentDebts.detail = vm.details;
-                    vm.paymentDebts.valorAbono = detail.debt_abono;
-                    vm.paymentDebts.noAccount = "--";
-                    vm.paymentDebts.noDocument = "EFECTIVO";
-                    vm.paymentDebts.ctaCtableBanco = vm.ctaCtableBankCode;
-                    vm.paymentDebts.banco = vm.bankName;
-                    paymentDebtsService.createPaymentDebts(vm.paymentDebts).then(function(response) {
-                        vm.paymentDebtsCreated = response;
-                        vm.success = 'Abono realizado con exito';
-                        vm.loading = false;
-                    }).catch(function(error) {
-                        vm.loading = false;
-                        vm.error = error.data;
-                    });
-                });
-                _asientoComprobanteMultiEgreso();
-                _asientoComprobanteMultiPago();
-                _activate();
-            } else {
-                paymentDebtsService.getPaymentDebtsByUserClientIdWithBankAndNroDocument(vm.usrCliId, vm.bankName, vm.noDocument).then(function(response) {
-                    if (response.length === 0) {
-                        _.each(vm.itemsMultiplePayments, function(detail) { 
-                            vm.paymentDebts = {
-                                creditsDebts: detail.credit_debt
-                            };
-                            vm.paymentDebts.typePayment = vm.typePayment;
-                            if (vm.paymentDebts.typePayment == 'PAC') {
-                                vm.valorReten = 0;
-                            };
-                            vm.paymentDebts.datePayment = $('#pickerDateOfMultiPayment').data("DateTimePicker").date().toDate().getTime();
-                            vm.paymentDebts.documentNumber = detail.bill_number;
-                            vm.paymentDebts.modePayment = vm.modePayment;
-                            vm.paymentDebts.detail = vm.details;
-                            vm.paymentDebts.valorAbono = detail.debt_abono;
-                            vm.paymentDebts.noAccount = vm.noAccount;
-                            vm.paymentDebts.noDocument = vm.noDocument;
-                            vm.paymentDebts.ctaCtableBanco = vm.ctaCtableBankCode;
-                            vm.paymentDebts.banco = vm.bankName;
-                            paymentDebtsService.createPaymentDebts(vm.paymentDebts).then(function(response) {
-                                vm.paymentDebtsCreated = response;
-                                vm.success = 'Abono realizado con exito';
-                                vm.loading = false;
-                            }).catch(function(error) {
-                                vm.loading = false;
-                                vm.error = error.data;
-                            });
-                        });
-                        _asientoComprobanteMultiEgreso();
-                        _asientoComprobanteMultiPago();
-                        _activate();
-                    } else {
-                        vm.error = 'El Nro. de Documento (Cheque, Transferencia y/o Depósito) Ya Existe y no puede repetirse';
-                        vm.loading = false;
-                    };
-                }).catch(function(error) {
-                    vm.loading = false;
-                    vm.error = error.data;
-                });
-            };
-        };
-
-        function _asientoComprobanteMultiPago() {
-            _getComprobantePagoSeqNumber();
-            //Selección de las Cuentas Contables por defecto dependiendo del Cliente
-            if (vm.usrCliId === vm.laQuinta) {
-                vm.provContable = '2.01.03.01.001';
-            } else if (vm.usrCliId === vm.mrZolutions) {
-                vm.provContable = '2.01.03.01.001';
-            } else if (vm.usrCliId === vm.catedral) {
-                vm.provContable = '2.12.10.101';
-            } else if (vm.usrCliId === vm.ppe) {
-                vm.provContable = '2.01.03.01.01';
-            } else {
-                vm.provContable = '2.01.01.01';
-            };
-
-            vm.itemPagoMA = {};
-            vm.generalDetailCP_1 = 'Pago de Facts. Nro: ' + vm.debtsBillsNumberPayed + ' a:' + vm.providerName;
-            vm.itemPagoMA = {
-                codeConta: vm.provContable,
-                descrip: 'PROVEEDORES LOCALES',
-                tipo: 'DEBITO (D)',
-                baseImponible: parseFloat(vm.valorDocumento),
-                name: vm.generalDetailCP_1,
-                deber: parseFloat(vm.valorDocumento)
-            };
-            vm.comprobantePago.detailComprobantePago.push(vm.itemPagoMA);
-            vm.itemPagoMB = {};
-            vm.generalDetailCP_2 = vm.bankName + ' Cancela Facts. Nro: ' + vm.debtsBillsNumberPayed;
-            vm.itemPagoMB = {
-                codeConta: vm.ctaCtableBankCode,
-                descrip: vm.bankName,
-                tipo: 'CREDITO (C)',
-                baseImponible: parseFloat(vm.valorDocumento),
-                name: vm.generalDetailCP_2,
-                haber: parseFloat(vm.valorDocumento)
-            };
-            vm.comprobantePago.detailComprobantePago.push(vm.itemPagoMB);
-
-            vm.comprobantePago.dateComprobante = $('#pickerDateOfMultiPayment').data("DateTimePicker").date().toDate().getTime();
-            vm.comprobantePago.comprobanteSeq = vm.comprobantePagoSeq;
-            vm.comprobantePago.comprobanteStringSeq = vm.comprobantePagoStringSeq;
-            vm.comprobantePago.billNumber = vm.debtsBillsNumberPayed;
-            vm.comprobantePago.numCheque = vm.noDocument;
-            vm.comprobantePago.nameBank = vm.bankName;
-            vm.comprobantePago.comprobanteEstado = 'PROCESADO';
-            vm.comprobantePago.codeConta = vm.ctaCtableBankCode;
-            vm.comprobantePago.comprobanteConcep = vm.generalDetailCP_1;
-            vm.comprobantePago.total = vm.valorDocumento;
-            vm.comprobantePago.iva = parseFloat((vm.valorDocumento * 0.12).toFixed(2));
-            vm.comprobantePago.subTotalDoce = parseFloat((vm.valorDocumento / 1.12).toFixed(2));
-
-            comprobanteService.createComprobantePago(vm.comprobantePago).then(function(response) {
-                $localStorage.user.cashier.compPagoNumberSeq = vm.comprobantePago.comprobanteSeq;
-            }).catch(function(error) {
-                vm.loading = false;
-                vm.error = error.data;
-            });
-        };
-
-        function _asientoComprobanteMultiEgreso() {
-            _getDailyCeSeqNumber();
-            vm.selectedTypeBook = '2';
-            //Selección de las Cuentas Contables por defecto dependiendo del Cliente
-            if (vm.usrCliId === vm.laQuinta) {
-                vm.provContable = '2.01.03.01.001';
-            } else if (vm.usrCliId === vm.mrZolutions) {
-                vm.provContable = '2.01.03.01.001';
-            } else if (vm.usrCliId === vm.catedral) {
-                vm.provContable = '2.12.10.101';
-            } else if (vm.usrCliId === vm.ppe) {
-                vm.provContable = '2.01.03.01.01';
-            } else {
-                vm.provContable = '2.01.01.01';
-            };
-            vm.generalDetailCe_1 = vm.providerName + ' Facts. ' + vm.debtsBillsNumberPayed;
-            vm.itema = {
-                typeContab: vm.typeContabCe,
-                codeConta: vm.provContable,
-                descrip: 'PROVEEDORES LOCALES',
-                tipo: 'DEBITO (D)',
-                baseImponible: parseFloat(vm.valorDocumento),
-                name: vm.generalDetailCe_1,
-                deber: parseFloat(vm.valorDocumento)
-            };
-            vm.itema.numCheque =  '--';
-            vm.itema.dailybookNumber = vm.dailyCeStringSeq;
-            vm.itema.userClientId = vm.usrCliId;
-            vm.itema.dateDetailDailybook = $('#pickerDateOfMultiPayment').data("DateTimePicker").date().toDate().getTime();
-            vm.dailybookCe.detailDailybookContab.push(vm.itema);
-            vm.generalDetailCe_2 = vm.bankName + ' Cancela Facts. ' + vm.debtsBillsNumberPayed + ', a: ' + vm.providerName + ', con ' + vm.modePayment + ' Nro. ' + vm.noDocument;
-            vm.itemb = {
-                typeContab: vm.typeContabCe,
-                codeConta: vm.ctaCtableBankCode,
-                descrip: vm.bankName,
-                tipo: 'CREDITO (C)',
-                baseImponible: parseFloat(vm.valorDocumento),
-                name: vm.generalDetailCe_2,
-                haber: parseFloat(vm.valorDocumento)
-            };
-            vm.itemb.numCheque = vm.noDocument;
-            vm.itemb.dailybookNumber = vm.dailyCeStringSeq;
-            vm.itemb.userClientId = vm.usrCliId;
-            vm.itemb.dateDetailDailybook = $('#pickerDateOfMultiPayment').data("DateTimePicker").date().toDate().getTime();
-            vm.dailybookCe.detailDailybookContab.push(vm.itemb);
-            
-            vm.dailybookCe.codeTypeContab = vm.selectedTypeBook;
-            vm.dailybookCe.nameBank = vm.bankName;
-            vm.dailybookCe.billNumber = vm.debtsBillsNumberPayed;
-            vm.dailybookCe.numCheque = vm.noDocument;
-            vm.dailybookCe.typeContab = vm.typeContabCe;
-            vm.dailybookCe.dailyCeSeq = vm.dailyCeSeq;
-            vm.dailybookCe.dailyCeStringSeq = vm.dailyCeStringSeq;
-            vm.dailybookCe.dailyCeStringUserSeq = 'PAGO GENERADO ' + vm.dailyCeStringSeq;
-            vm.dailybookCe.clientProvName = vm.providerName;
-            vm.dailybookCe.generalDetail = vm.generalDetailCe_1;
-            vm.dailybookCe.total = vm.valorDocumento;
-            vm.dailybookCe.iva = parseFloat((vm.valorDocumento * 0.12).toFixed(2));
-            vm.dailybookCe.subTotalDoce = parseFloat((vm.valorDocumento / 1.12).toFixed(2));
-            vm.dailybookCe.subTotalCero = 0;
-            vm.dailybookCe.dateRecordBook = $('#pickerDateOfMultiPayment').data("DateTimePicker").date().toDate().getTime();
-            
-            contableService.createDailybookAsinCe(vm.dailybookCe).then(function(response) {
-                $localStorage.user.cashier.dailyCeNumberSeq = vm.dailybookCe.dailyCeSeq;
-            }).catch(function(error) {
-                vm.loading = false;
-                vm.error = error.data;
-            });
-        };
-
-        //Funciones que permiten hacer los Abonos y/o Pagos de los Creditos pendientes por pagar de las Cuentas por Pagar
-        vm.createAbonoDebts = function(creditsDebts) {
-            vm.loading = true;
-            vm.bankName = undefined;
-            vm.creditsDebtsValue = (creditsDebts.valor).toFixed(2);
-            vm.creditsDebtsId = creditsDebts.id;
-            vm.paymentDebts = {
-                creditsDebts: creditsDebts
-            };
-            cuentaContableService.getCuentaContableByUserClientAndBank(vm.usrCliId).then(function(response) {
-                vm.ctaCtableBankList = response;
-                vm.loading = false;
-            }).catch(function(error) {
-                vm.loading = false;
-                vm.error = error.data;
-            });
-        };
-
-        vm.pAbonoDebts = function(paymentDebts) {
-            vm.loading = true;
-            if (vm.paymentDebts.typePayment == 'PAC') {
-                vm.valorReten = 0;
-            } else if (vm.paymentDebts.typePayment == 'RET') {
-                vm.valorAbono = 0;
-            } else if (vm.paymentDebts.typePayment == 'CEG') {
-                vm.valorReten = 0;
-            };
-            if (vm.usrCliId === vm.laQuinta) {
-                vm.provContable = '2.01.03.01.001';
-            } else if (vm.usrCliId === vm.mrZolutions) {
-                vm.provContable = '2.01.03.01.001';
-            } else if (vm.usrCliId === vm.catedral) {
-                vm.provContable = '2.12.10.101';
-            } else if (vm.usrCliId === vm.ppe) {
-                vm.provContable = '2.01.03.01.01';
-            } else {
-                vm.provContable = '2.01.01.01';
-            };
-            vm.paymentDebts.datePayment = $('#pickerDateOfPaymentDebt').data("DateTimePicker").date().toDate().getTime();
-            vm.paymentDebts.creditId = vm.creditsDebtsId;
-            vm.paymentDebts.documentNumber = vm.debtsBillNumber;
-            if (vm.paymentDebts.modePayment === 'EFC') {
-                vm.paymentDebts.noDocument = 'EFECTIVO'
-                vm.paymentDebts.ctaCtableBanco = vm.ctaCtableBankCode;
-                vm.paymentDebts.banco = vm.bankName;
-                vm.paymentDebts.ctaCtableProvider = vm.provContable;
-                vm.paymentDebts.providerName = vm.providerName;
-            } else if (vm.paymentDebts.modePayment === 'CHQ' || vm.paymentDebts.modePayment === 'TRF' || vm.paymentDebts.modePayment === 'DEP') {
-                vm.paymentDebts.ctaCtableBanco = vm.ctaCtableBankCode;
-                vm.paymentDebts.banco = vm.bankName;
-                vm.paymentDebts.ctaCtableProvider = vm.provContable;
-                vm.paymentDebts.providerName = vm.providerName;
-            } else {
-                vm.paymentDebts.ctaCtableBanco = '--';
-                vm.paymentDebts.banco = '--';
-                vm.paymentDebts.ctaCtableProvider = '--';
-                vm.paymentDebts.providerName = '--';
-            };
-            if (vm.paymentDebts.modePayment === 'EFC') {
-                paymentDebtsService.createPaymentDebts(paymentDebts).then(function(response) {
-                    vm.paymentDebtsCreated = response;
-                    _asientoComprobanteEgreso();
-                    _asientoComprobantePago();
-                    vm.success = 'Abono realizado con exito';
-                    vm.loading = false;
-                }).catch(function(error) {
-                    vm.loading = false;
-                    vm.error = error.data;
-                });
-            } else if (vm.paymentDebts.modePayment === 'CHQ' || vm.paymentDebts.modePayment === 'TRF' || vm.paymentDebts.modePayment === 'DEP') {
-                paymentDebtsService.getPaymentDebtsByUserClientIdWithBankAndNroDocument(vm.usrCliId, vm.paymentDebts.banco, vm.paymentDebts.noDocument).then(function(response) {
-                    if (response.length === 0) {
-                        paymentDebtsService.createPaymentDebts(paymentDebts).then(function(response) {
-                            vm.paymentDebtsCreated = response;
-                            _asientoComprobanteEgreso();
-                            _asientoComprobantePago();                            
-                            vm.success = 'Abono realizado con exito';
-                            vm.loading = false;
-                        }).catch(function(error) {
-                            vm.loading = false;
-                            vm.error = error.data;
-                        });
-                    } else {
-                        vm.error = 'El Nro. de Documento (Cheque, Transferencia y/o Depósito) Ya Existe y no puede repetirse';
-                        vm.loading = false;
-                    };
-                }).catch(function(error) {
-                    vm.loading = false;
-                    vm.error = error.data;
-                });
-            } else {
-                paymentDebtsService.createPaymentDebts(paymentDebts).then(function(response) {
-                    vm.paymentDebtsCreated = response;
-                    vm.success = 'Abono realizado con exito';
-                    vm.loading = false;
-                }).catch(function(error) {
-                    vm.loading = false;
-                    vm.error = error.data;
-                });
-            };
-            _activate();
-        };
-
-        vm.selectCtaCtableBank = function(cuenta) {
-            vm.ctaCtableBankList = undefined;
-            vm.ctaCtableBankCode = cuenta.code;
-            vm.bankName = cuenta.description;
-        };
-
-        function _asientoComprobantePago() {
-            _getComprobantePagoSeqNumber();
-            vm.generalDetailCP_1 = 'Pago de Fact. Nro: ' + vm.paymentDebtsCreated.documentNumber + ' a: ' + vm.paymentDebtsCreated.providerName;
-            vm.itemPagoA = {
-                codeConta: vm.paymentDebtsCreated.ctaCtableProvider,
-                descrip: 'PROVEEDORES LOCALES',
-                tipo: 'DEBITO (D)',
-                baseImponible: parseFloat(vm.paymentDebtsCreated.valorAbono),
-                name: vm.generalDetailCP_1,
-                deber: parseFloat(vm.paymentDebtsCreated.valorAbono)
-            };
-            vm.comprobantePago.detailComprobantePago.push(vm.itemPagoA);
-            vm.generalDetailCP_2 = vm.paymentDebtsCreated.banco + ' Cancela Fact. Nro: ' + vm.paymentDebtsCreated.documentNumber;
-            vm.itemPagoB = {
-                codeConta: vm.paymentDebtsCreated.ctaCtableBanco,
-                descrip: vm.paymentDebtsCreated.banco,
-                tipo: 'CREDITO (C)',
-                baseImponible: parseFloat(vm.paymentDebtsCreated.valorAbono),
-                name: vm.generalDetailCP_2,
-                haber: parseFloat(vm.paymentDebtsCreated.valorAbono)
-            };
-            vm.comprobantePago.detailComprobantePago.push(vm.itemPagoB);
-
-            vm.comprobantePago.dateComprobante = $('#pickerDateOfPaymentDebt').data("DateTimePicker").date().toDate().getTime();
-            vm.comprobantePago.comprobanteSeq = vm.comprobantePagoSeq;
-            vm.comprobantePago.comprobanteStringSeq = vm.comprobantePagoStringSeq;
-            vm.comprobantePago.billNumber = vm.paymentDebtsCreated.documentNumber;
-            vm.comprobantePago.numCheque = vm.paymentDebtsCreated.noDocument;;
-            vm.comprobantePago.nameBank = vm.paymentDebtsCreated.banco;
-            vm.comprobantePago.comprobanteEstado = 'PROCESADO';
-            vm.comprobantePago.codeConta = vm.paymentDebtsCreated.ctaCtableBanco;
-            vm.comprobantePago.paymentDebtId = vm.paymentDebtsCreated.id;
-            vm.comprobantePago.comprobanteConcep = vm.generalDetailCP_1;
-            vm.comprobantePago.total = vm.paymentDebtsCreated.valorAbono;
-            vm.comprobantePago.iva = parseFloat((vm.paymentDebtsCreated.valorAbono * 0.12).toFixed(2));
-            vm.comprobantePago.subTotalDoce = parseFloat((vm.paymentDebtsCreated.valorAbono / 1.12).toFixed(2));
-
-            comprobanteService.createComprobantePago(vm.comprobantePago).then(function(response) {
-                $localStorage.user.cashier.compPagoNumberSeq = vm.comprobantePago.comprobanteSeq;
-            }).catch(function(error) {
-                vm.loading = false;
-                vm.error = error.data;
-            });
-        };
-
-        function _asientoComprobanteEgreso() {
-            _getDailyCeSeqNumber();
-            vm.selectedTypeBook = '2';
-            vm.generalDetailCe_1 = vm.paymentDebtsCreated.providerName + ' Fact. ' + vm.paymentDebtsCreated.documentNumber;
-            vm.itema = {
-                typeContab: vm.typeContabCe,
-                codeConta: vm.paymentDebtsCreated.ctaCtableProvider,
-                descrip: 'PROVEEDORES LOCALES',
-                tipo: 'DEBITO (D)',
-                baseImponible: parseFloat(vm.paymentDebtsCreated.valorAbono),
-                name: vm.generalDetailCe_1,
-                deber: parseFloat(vm.paymentDebtsCreated.valorAbono)
-            };
-            vm.itema.numCheque =  '--';
-            vm.itema.dailybookNumber = vm.dailyCeStringSeq;
-            vm.itema.userClientId = vm.usrCliId;
-            vm.itema.dateDetailDailybook = $('#pickerDateOfPaymentDebt').data("DateTimePicker").date().toDate().getTime();
-            vm.dailybookCe.detailDailybookContab.push(vm.itema);
-            vm.generalDetailCe_2 = vm.paymentDebtsCreated.banco + ' Cancela Fact. ' + vm.paymentDebtsCreated.documentNumber + ', a: ' + vm.paymentDebtsCreated.providerName + ', con ' + vm.paymentDebtsCreated.modePayment + ' Nro. ' + vm.paymentDebtsCreated.noDocument;
-            vm.itemb = {
-                typeContab: vm.typeContabCe,
-                codeConta: vm.paymentDebtsCreated.ctaCtableBanco,
-                descrip: vm.paymentDebtsCreated.banco,
-                tipo: 'CREDITO (C)',
-                baseImponible: parseFloat(vm.paymentDebtsCreated.valorAbono),
-                name: vm.generalDetailCe_2,
-                haber: parseFloat(vm.paymentDebtsCreated.valorAbono)
-            };
-            vm.itemb.numCheque = vm.paymentDebtsCreated.noDocument;
-            vm.itemb.dailybookNumber = vm.dailyCeStringSeq;
-            vm.itemb.userClientId = vm.usrCliId;
-            vm.itemb.dateDetailDailybook = $('#pickerDateOfPaymentDebt').data("DateTimePicker").date().toDate().getTime();
-            vm.dailybookCe.detailDailybookContab.push(vm.itemb);
-            
-            vm.dailybookCe.codeTypeContab = vm.selectedTypeBook;
-            vm.dailybookCe.nameBank = vm.paymentDebtsCreated.banco;
-            vm.dailybookCe.billNumber = vm.paymentDebtsCreated.documentNumber;
-            vm.dailybookCe.numCheque = vm.paymentDebtsCreated.noDocument;
-            vm.dailybookCe.typeContab = vm.typeContabCe;
-            vm.dailybookCe.dailyCeSeq = vm.dailyCeSeq;
-            vm.dailybookCe.dailyCeStringSeq = vm.dailyCeStringSeq;
-            vm.dailybookCe.dailyCeStringUserSeq = 'PAGO GENERADO ' + vm.dailyCeStringSeq;
-            vm.dailybookCe.clientProvName = vm.paymentDebtsCreated.providerName;
-            vm.dailybookCe.generalDetail = vm.generalDetailCe_1;
-            vm.dailybookCe.total = vm.paymentDebtsCreated.valorAbono;
-            vm.dailybookCe.iva = parseFloat((vm.paymentDebtsCreated.valorAbono * 0.12).toFixed(2));
-            vm.dailybookCe.subTotalDoce = parseFloat((vm.paymentDebtsCreated.valorAbono / 1.12).toFixed(2));
-            vm.dailybookCe.subTotalCero = 0;
-            vm.dailybookCe.dateRecordBook = $('#pickerDateOfPaymentDebt').data("DateTimePicker").date().toDate().getTime();
-            
-            contableService.createDailybookAsinCe(vm.dailybookCe).then(function(response) {
-                $localStorage.user.cashier.dailyCeNumberSeq = vm.dailybookCe.dailyCeSeq;
-            }).catch(function(error) {
-                vm.loading = false;
-                vm.error = error.data;
-            });
-        };
-
-        vm.paymentDebtsDeactivate = function() {
-            vm.loading = true;
-            var index = vm.paymentDebtsList.indexOf(vm.deactivatePaymentDebts);
-            paymentDebtsService.deactivatePaymentDebts(vm.deactivatePaymentDebts).then(function(response) {
-                var index = vm.paymentDebtsList.indexOf(vm.deactivatePaymentDebts);
-                if (index > -1) {
-                    vm.paymentDebtsList.splice(index, 1);
-                };
-                vm.deactivatePaymentDebts = undefined;
-                vm.success = 'Pago anulado con exito';
-                vm.loading = false;
-            }).catch(function(error) {
-                vm.loading = false;
-                vm.error = error.data;
-            });
-        };
-
-        //Funciones que permiten obtener los datos de una Cuenta por Pagar para su impresión
-        vm.debtsToPayToPrint = function(debts) {
-            vm.loading = true;
-            debtsToPayService.getDebtsToPayById(debts.id).then(function(response) {
-                vm.allDebtsToPayList = undefined;
-                vm.providerDebtsList = undefined;
-                vm.debtsToPay = response;
-                vm.debtsDetails = response.detailDebtsToPay;
-                vm.companyData = $localStorage.user.subsidiary;
-                vm.debtsProviderSelected = response.provider;
-                vm.pagos = response.pagos;
-                var dateToShow = new Date(response.fecha);
-                vm.billNumber = response.billNumber;
-                vm.seqNumber = response.debtsSeq;
-                $('#pickerDebtsToPayDate').data("DateTimePicker").date(dateToShow);
-                vm.loading = false;
-            }).catch(function(error) {
-                vm.loading = false;
-                vm.error = error.data;
-            });
-        };
-
-        vm.debtsToPayDeactivate = function() {
-            vm.loading = true;
-            var index = vm.providerDebtsList.indexOf(vm.deactivateDebtsToPay);
-            if (vm.deactivateDebtsToPay.credNoteApplied === false) {
-                debtsToPayService.deactivateDebtsToPay(vm.deactivateDebtsToPay).then(function(response) {
-                    var index = vm.providerDebtsList.indexOf(vm.deactivateDebtsToPay);
-                    if (index > -1) {
-                        vm.providerDebtsList.splice(index, 1);
-                    };
-                    vm.deactivateDebtsToPay = undefined;
-                    vm.success = "Factura de Compra Anulada";
-                    vm.loading = false;
-                }).catch(function(error) {
-                    vm.loading = false;
-                    vm.error = error.data;
-                });
-            } else {
-                vm.loading = false;
-                vm.error = "La Factura NO se Puede Anular debido a que presenta una Nota de Crédito";
-            };
-        };
-
-        vm.getTotalDebitoRep = function() {
-            var totalDebito = 0;
-            if (vm.debtsDetails) {
-                _.each (vm.debtsDetails, function(detail) {
-                    if (detail.tipo === 'DEBITO (D)') {
-                        totalDebito = (parseFloat(totalDebito) + parseFloat(detail.baseImponible)).toFixed(2);
-                    };
-                });
-            };
-            vm.saldoDebito = totalDebito;
-            return totalDebito;
-        };
-
-        vm.getTotalCreditoRep = function() {
-            var totalCredito = 0;
-            if (vm.debtsDetails) {
-                _.each(vm.debtsDetails, function(detail) {
-                    if (detail.tipo === 'CREDITO (C)') {
-                        totalCredito = (parseFloat(totalCredito) + parseFloat(detail.baseImponible)).toFixed(2);
-                    };
-                });
-            };
-            vm.saldoCredito = totalCredito;
-            return totalCredito;
-        };
-
-        vm.getTotalSaldoRep = function() {
-            var totalSaldo = 0;
-            totalSaldo = (parseFloat(vm.saldoCredito) - parseFloat(vm.saldoDebito)).toFixed(2);
-            return totalSaldo;
-        };
-
-        vm.cancel = function() {
-            _activate();
-        };
-
-    //Fin de sección
 
         vm.exit = function() {
             $location.path('/home');
