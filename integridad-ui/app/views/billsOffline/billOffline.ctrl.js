@@ -9,7 +9,7 @@
 angular.module('integridadUiApp')
     .controller('BillOfflineCtrl', function(_, $location, utilStringService, $localStorage, projectService, consumptionService,
                                             clientService, productService, authService, billOfflineService, cashierService, utilSeqService,
-                                            validatorService, warehouseService, countryListService) {
+                                            validatorService, warehouseService, countryListService, configCuentasService) {
         var vm = this;
         vm.error = undefined;
         vm.success = undefined;
@@ -131,6 +131,13 @@ angular.module('integridadUiApp')
             } else {
                 vm.advertencia = true;    
             };
+
+            configCuentasService.getConfigCuentaByUserClientAndOptionCode(vm.userClientId, 'FACTEF').then(function (response){
+                vm.cuentaContableEfectivo = response;
+            }).catch(function(error) {
+                vm.loading = false;
+                vm.error = error.data;
+            });
         };
 
         function _getComprobanteCobroSeqNumber() {
@@ -950,8 +957,8 @@ angular.module('integridadUiApp')
                             // Todo DEFINIR CAMPOS DE CODE CONTA Y DESCRIPCION
                             vm.itemb = {
                                 typeContab: vm.typeContabCi,
-                                codeConta: '--',
-                                descrip: '--',
+                                codeConta: vm.cuentaContableEfectivo ? vm.cuentaContableEfectivo.code : '--',
+                                descrip: vm.cuentaContableEfectivo ? vm.cuentaContableEfectivo.description : '--',
                                 tipo: 'DEBITO (D)',
                                 baseImponible: parseFloat(vm.billOffline.total),
                                 name: vm.generalDetailCi_2,

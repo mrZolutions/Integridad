@@ -1,0 +1,83 @@
+<div style="width: 100%; height: 100%; top: 0px; left: 0px; position: fixed; display: block; z-index: 99; background: rgba(255, 255, 255, 0.3)" ng-show="vm.loading">
+    <div style="position: absolute; top: 15%; z-index: 100; width: 100%; text-align: center;">
+        <div class="sk-circle">
+            <div class="sk-circle1 sk-child"></div>
+            <div class="sk-circle2 sk-child"></div>
+            <div class="sk-circle3 sk-child"></div>
+            <div class="sk-circle4 sk-child"></div>
+            <div class="sk-circle5 sk-child"></div>
+            <div class="sk-circle6 sk-child"></div>
+            <div class="sk-circle7 sk-child"></div>
+            <div class="sk-circle8 sk-child"></div>
+            <div class="sk-circle9 sk-child"></div>
+            <div class="sk-circle10 sk-child"></div>
+            <div class="sk-circle11 sk-child"></div>
+            <div class="sk-circle12 sk-child"></div>
+        </div>
+    </div>
+</div>
+
+<div class="form-group col-md-12">
+    <div class="header">
+        <h4><b>Configuraci&oacute;n de Cuentas Contables</b></h4>
+    </div>
+
+    <div class="row" ng-show="vm.error !== undefined">
+        <div class="form-group col-md-12">
+            <div class="alert alert-danger">{{vm.error}}</div>
+        </div>
+    </div>
+    <div class="row" ng-show="vm.success !== undefined">
+        <div class="form-group col-md-12">
+            <div class="alert alert-success">{{vm.success}}</div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+
+    <div>
+        <div class="row">
+            <div class="form-group col-md-10">
+                <input ng-model="searchText" class="form-control" placeholder="Buscar">
+            </div>
+        </div>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Opci&oacute;n</th>
+                    <th>C&oacute;digo de Cuenta Contable</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-show="vm.optionsConfig.length == 0">
+                    <td colspan="4">
+                        No hay Opciones de Configuracion ingresadas...
+                    </td>
+                </tr>
+                <tr ng-repeat="option in vm.optionsConfig | orderBy:'name' | filter:searchText">
+                    <td>{{option.name}}</td>
+                    <td>
+                        <input type="text" ng-model="option.selected" class="form-control" typeahead-show-hint="true"
+                        uib-typeahead="account as (account.name + ' - ' + account.code) for account in vm.cuentasContablesList | orderBy:'name' | filter:$viewValue | limitTo:8">
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="panel-footer">
+            <button type="button" title = "Guardar Configuraci&oacute;n" class="btn btn-success btn-sm" ng-click="vm.save()">
+                    <span class = "glyphicon glyphicon-floppy-save" aria-hidden = "true"></span>
+            </button>
+            <button type="button" title = "cancel" class="btn btn-primary btn-sm"
+                    ng-click="vm.cancel()">
+                    <span class = "glyphicon glyphicon-remove" aria-hidden = "true"></span>
+            </button>
+        </div>
+    </div>
+
+</div>

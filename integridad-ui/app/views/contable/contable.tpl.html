@@ -2667,14 +2667,14 @@
                     <div class="form-group col-md-10">
                         <input ng-model="searchText" class="form-control" placeholder="Buscar Clientes">
                     </div>
-                    <div class="form-group col-md-2">
+                    <!-- <div class="form-group col-md-2">
                         <button type = "button" title = "Comprobante de Factura-Venta Manual" class = "btn btn-success btn-sm" ng-click = "">
                                 <span class = "glyphicon glyphicon-book" aria-hidden = "true"></span>
                         </button>
                         <button type = "button" title = "Consultar Comprobante de Factura-Venta Manual" class = "btn btn-success btn-sm" ng-click = "">
                                 <span class = "glyphicon glyphicon-search" aria-hidden = "true"></span>
                         </button>
-                    </div>
+                    </div> -->
                 </div>
                 <table class="table table-striped">
                     <thead>
@@ -2696,10 +2696,10 @@
                             <td>{{client.name}}</td>
                             <td>{{client.typeId}} - {{client.identification}}</td>
                             <td>
-                                <button type = "button" title = "Nuevo Comprobante de Factura-Venta" class = "btn btn-primary btn-sm" ng-click = "">
+                                <!-- <button type = "button" title = "Nuevo Comprobante de Factura-Venta" class = "btn btn-primary btn-sm" ng-click = "">
                                         <span class = "glyphicon glyphicon-book" aria-hidden = "true"></span>
-                                </button>
-                                <button type = "button" title = "Consultar Comprobante de Factura-Venta" class = "btn btn-primary btn-sm" ng-click = "">
+                                </button> -->
+                                <button type = "button" title = "Consultar Comprobante de Factura-Venta" class = "btn btn-primary btn-sm" ng-click = "vm.consultDailybookFv(client)">
                                         <span class = "glyphicon glyphicon-search" aria-hidden = "true"></span>
                                 </button>
                             </td>
@@ -2715,6 +2715,211 @@
             </div>
         </div>
     </div>
+    <div class="table-responsive" ng-show="vm.dailybookFvList !== undefined">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <b>COMPROBANTE DE FACTURACIÓN-VENTA POR CLIENTE</b>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="form-group col-md-11">
+                        <input ng-model="searchText" class="form-control" placeholder="Buscar">
+                    </div>
+                </div>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>N&uacute;mero</th>
+                            <th>Fecha</th>
+                            <th>Descripci&oacute;n</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-show="vm.dailybookCiList == 0">
+                            <td colspan="4">
+                                No hay Comprobantes de Facturaci&oacute;n-venta ingresados...
+                            </td>
+                        </tr>
+                        <tr ng-repeat="dailyFv in vm.dailybookFvList | orderBy:'dailyFvStringSeq':true">
+                            <td>{{dailyFv.dailyFvStringSeq}}</td>
+                            <td>{{dailyFv.dateRecordBook | date : "dd/MM/yyyy"}}</td>
+                            <td>{{dailyFv.generalDetail}}</td>
+                            <td>
+                                <button type = "button" title = "Ver Comprobante de Ingreso" class = "btn btn-primary btn-sm" 
+                                        ng-click = "vm.dailybookFvSelected(dailyFv)">
+                                        <span class = "glyphicon glyphicon-eye-open" aria-hidden = "true"></span>
+                                </button>
+                                <!-- <button type = "button" title = "Anular Comprobante de Facturaci&oacute;n-Venta" ng-show = "dailyFv.active !== false"
+                                        class = "btn btn-warning btn-sm" ng-click = "vm.deactivatedailybookFv = dailyFv"
+                                        data-toggle = "modal" data-target = "#modalAnularDailyBookFv">
+                                        <span class = "glyphicon glyphicon-warning-sign" aria-hidden = "true"></span>
+                                </button> -->
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="panel-footer">
+                <button type="button" title="Volver" class="btn btn-primary btn-sm"
+                        ng-click = "vm.dailybookCiList = undefined">
+                        <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!--IMPRESIÓN DE COMPROBANTES DE FACTURACIÓN-VENTA POR CLIENTE-->
+    <div class="table-responsive" ng-show="vm.dailybookFvCreated" id="printArea" print-section>
+        <div class="panel panel-primary">
+            <div class="panel-body">
+                <div class="row">
+                    <div class="form-group col-md-12 ">
+                        <table width="100%">
+                            <tr>
+                                <td width="20%" align="center"><img src="images/{{vm.userData.subsidiary.userClient.logo}}"><br></td>
+                                <td width="80%" rowspan="2">
+                                    <div style="padding:0px 15px;">
+                                        <b>{{vm.userData.subsidiary.userClient.name}}</b><br/>
+                                        <b>{{vm.userData.subsidiary.userClient.address1}}</b><br/>
+                                        <b>Tel&eacute;fono: {{vm.userData.subsidiary.phone}} - {{vm.userData.subsidiary.userClient.email}}</b><br/>
+                                        <b>RUC: {{vm.userData.subsidiary.userClient.ruc}}</b>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-12 ">
+                        <table width="100%">
+                            <tr>
+                                <td align="center">
+                                    <div>
+                                        <h4>
+                                            <label>COMPROBANTE DE FACTURACIÓN-VENTA Nro: </label>
+                                            {{vm.dailybookFvCreated.dailyFvStringSeq}}
+                                        </h4>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                        <table width="100%">
+                            <tr>
+                                <td>
+                                    <div>
+                                        <label>RECIBIMOS DE: </label>
+                                        {{vm.dailybookFvCreated.client.name}}
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                        <table width="100%">
+                            <tr>
+                                <td>
+                                    <div>
+                                        <label>LA CANTIDAD DE: </label>
+                                        &#36;&nbsp;{{vm.dailybookFvCreated.total}}
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                        <table width="100%">
+                            <tr>
+                                <td>
+                                    <div>
+                                        <label>FECHA: </label>
+                                        {{vm.dailybookFvCreated.dateRecordBook | date : "dd-MM-yyyy"}}
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-12">
+                        <table width="100%" border="1">
+                            <tr>
+                                <td><b>CUENTA</b></td>
+                                <td><b>NOMBRE CUENTA</b></td>
+                                <td><b>DESCRIPCIÓN</b></td>
+                                <td><b>DÉBITO</b></td>
+                                <td><b>CRÉDITO</b></td>
+                            </tr>
+                            <tr ng-repeat="detail in vm.dailybookFvCreated.detailDailybookContab">
+                                <td>{{detail.codeConta}}</td>
+                                <td>{{detail.descrip}}</td>
+                                <td>{{detail.name}}</td>
+                                <td>{{vm.getDeberHaber(detail.deber)}}</td>
+                                <td>{{vm.getDeberHaber(detail.haber)}}</td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td><b>TOTALES:</b></td>
+                                <td>{{vm.getTotalDebitoFvCreated()}}</td>
+                                <td>{{vm.getTotalCreditoFvCreated()}}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <table width="100%">
+                            <tr>
+                                <td width="33%" align="center">
+                                    <br/><br/>
+                                    _______________<br/>
+                                    &nbsp;&nbsp;AUTORIZADO
+                                </td>
+                                <td width="33%" align="center">
+                                    <br/><br/>
+                                    _______________<br/>
+                                    &nbsp;&nbsp;CONTADOR
+                                </td>
+                                <td width="33%" align="center">
+                                    <br/><br/>
+                                    _____________<br/>
+                                    CONTABILIZADO
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="row" print-remove>
+                    <div class="form-group col-md-12">
+                        <button print-btn type="button" title = "Imprimir Comprobante de Diario" class="btn btn-primary btn-sm"
+                                ng-show="vm.activeFv === true" ng-click="vm.cancel()">
+                                <span class = "glyphicon glyphicon-print" aria-hidden = "true"></span>
+                        </button>
+                        <button type="button" title = "Salir" class="btn btn-primary btn-sm"
+                                ng-click="vm.cancel()">
+                                <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     <!--REPORTE DE MAYORES ESPECÍFICOS-->
     <div class="panel panel-primary" ng-show="vm.selectedTypeBook === '12'">
