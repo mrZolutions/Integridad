@@ -52,8 +52,6 @@ public class BillServices {
     @Autowired
     KardexRepository kardexRepository;
     @Autowired
-    KardexChildRepository kardexChildRepository;
-    @Autowired
     PaymentRepository paymentRepository;
     @Autowired
     ComprobanteCobroServices comprobanteCobroService;
@@ -61,8 +59,6 @@ public class BillServices {
     DailybookCiServices dailybookCiServices;
     @Autowired
     DailybookFvServices dailybookFvServices;
-    @Autowired
-    DetailDailybookContabRepository detailDailybookContabRepository;
     @Autowired
     ConfigCuentasServices configCuentasServices;
 
