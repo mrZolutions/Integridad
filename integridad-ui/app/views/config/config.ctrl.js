@@ -13,9 +13,15 @@ angular.module('integridadUiApp')
         vm.success = undefined;
         vm.loading = false;
         vm.configCuentasList = undefined;
+        vm.cuentasContablesList = undefined;
+        vm.optionsConfig = undefined;
 
         optionConfigCuentasService.getOptionConfigCuentas().then(function(response) {
             vm.optionsConfig = response;
+            vm.optionsConfigInitial = angular.copy(vm.optionsConfig);
+            if(vm.cuentasContablesList){
+                _filterAccounts();
+            }
             vm.loading = false;
         }).catch(function(error) {
             vm.loading = false;
@@ -24,17 +30,16 @@ angular.module('integridadUiApp')
 
         cuentaContableService.getCuentaContableByUserClient($localStorage.user.subsidiary.userClient.id).then(function(response) {
             vm.cuentasContablesList = response;
+            if(vm.optionsConfig){
+                _filterAccounts();
+            }
             vm.loading = false;
         }).catch(function(error) {
             vm.loading = false;
             vm.error = error.data;
         });
 
-        function _activate() {
-            vm.userClient = $localStorage.user.subsidiary.userClient
-            vm.error = undefined;
-            vm.success = undefined;
-
+        function _filterAccounts(){
             vm.loading = true;
             configCuentasService.getConfigCuentaByUserClient(vm.userClient.id).then(function(response){
                 vm.configCuentasList = response
@@ -51,6 +56,14 @@ angular.module('integridadUiApp')
                 vm.loading = false;
                 vm.error = error.data;
             });
+        };
+
+        function _activate() {
+            vm.userClient = $localStorage.user.subsidiary.userClient
+            vm.error = undefined;
+            vm.success = undefined;
+
+            _filterAccounts();
         };
 
         function create() {
@@ -89,6 +102,7 @@ angular.module('integridadUiApp')
         };
 
         vm.cancel = function() {
+            vm.optionsConfig = angular.copy(vm.optionsConfigInitial);
             _activate();
         };
 
