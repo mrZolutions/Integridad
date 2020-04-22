@@ -7,14 +7,15 @@
  * Controller of the integridadUiApp
  */
 angular.module('integridadUiApp')
-    .controller('ActivateCtrl', function ($routeParams, $location, authService, permissionService, $rootScope, $localStorage) {
+    .controller('ActivateCtrl', function ($routeParams, $location, authService, permissionService, $rootScope, holderService, $localStorage) {
         var vm = this;
         vm.error = undefined;
         vm.success = undefined;
+        vm.user = holderService.get();
 
         vm.errorActive = false;
         function getPermissions(){
-            permissionService.getPermissions($localStorage.user.userType).then(function (respnse) {
+            permissionService.getPermissions(user.userType).then(function (respnse) {
                 $localStorage.permissions = respnse;
                 $rootScope.updateMenu();
                 vm.loading = false;
@@ -26,12 +27,11 @@ angular.module('integridadUiApp')
         }
 
         authService.activeUser($routeParams.idUSer, $routeParams.validate).then(function (response) {
-            $localStorage.user = response;
-            console.log($localStorage.user.tempPass)
-            if($localStorage.user.tempPass){
+            holderService.set(response)
+            if(response.tempPass){
                 vm.loading = false;
                 vm.passwordNotMatch = false;
-                vm.userIntegridad = angular.copy($localStorage.user);
+                vm.userIntegridad = angular.copy(holderService.get());
                 $('#modalChangePassword').modal('show');
             } else {
                 var d = new Date();
@@ -54,7 +54,7 @@ angular.module('integridadUiApp')
             authService.updateUser(vm.userIntegridad).then(function (response) {
                 vm.error = undefined;
                 vm.success = 'Perfil actualizado con exito';
-                $localStorage.user = response;
+                holderService.set(response)
                 var d = new Date();
                 $localStorage.timeloged = d.getTime();
                 getPermissions();

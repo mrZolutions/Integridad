@@ -7,7 +7,7 @@
  * Controller of the menu
  */
 angular.module('integridadUiApp')
-    .controller('ReportSalesCtrl', function(_, $localStorage, creditsbillService, billService, eretentionService, eretentionClientService,
+    .controller('ReportSalesCtrl', function(_, holderService, creditsbillService, billService, eretentionService, eretentionClientService,
                                             cellarService, creditNoteCellarService, billOfflineService, paymentService, paymentDebtsService,
                                             creditsDebtsService, $location, debtsToPayService, consumptionService, creditNoteService,
                                             productService, clientService, providerService) {
@@ -18,7 +18,8 @@ angular.module('integridadUiApp')
         // undefined = retention; true = products; false = sales
         vm.isProductReportList = undefined;
         vm.reportList = undefined;
-        vm.userClientId = $localStorage.user.subsidiary.userClient.id;
+        vm.user = holderService.get()
+        vm.userClientId = vm.user.subsidiary.userClient.id;
         vm.valParra = '2455e4bf-68f3-4071-b5c9-833d62512b00';
         vm.laQuinta = '758dea84-74f5-4209-b218-9b84c10621fc';
         vm.mrZolutions = '4907601b-6e54-4675-80a8-ab6503e1dfeb';

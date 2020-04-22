@@ -7,7 +7,7 @@
  * Controller of the integridadUiApp
  */
 angular.module('integridadUiApp')
-    .controller('SwimmingCtrl', function (_, $location, $localStorage, swimmingService) {
+    .controller('SwimmingCtrl', function (_, $location, holderService, swimmingService) {
         var vm = this;
         vm.error = undefined;
         vm.success = undefined;
@@ -16,7 +16,7 @@ angular.module('integridadUiApp')
         vm.clientList = undefined;
         vm.laQuinta = '758dea84-74f5-4209-b218-9b84c10621fc';
         vm.riseQuinta = '988a3fa5-8efe-4a9d-b388-bbac203b7c4f';
-        vm.userData = $localStorage.user;
+        vm.userData = holderService.get();
         vm.totalTkAdulto = 5;
         vm.totalTkMenor = 3;
         vm.totalTk3raEdad = 3.5;
@@ -24,8 +24,8 @@ angular.module('integridadUiApp')
         function _activate() {
             vm.loading = true;
             vm.error = undefined;
-            vm.usrClntId = $localStorage.user.subsidiary.userClient.id;
-            vm.subsidiaryId = $localStorage.user.subsidiary.id;
+            vm.usrClntId = vm.userData.subsidiary.userClient.id;
+            vm.subsidiaryId = vm.userData.subsidiary.id;
             vm.swimmPool = undefined;
             vm.advertencia = undefined;
             vm.swimmList = undefined;
@@ -43,7 +43,7 @@ angular.module('integridadUiApp')
             vm.status = undefined;
             vm.hoy = undefined;
             vm.ticketBarCode = undefined;
-            vm.subTicketActive = $localStorage.user.subsidiary.swimm;
+            vm.subTicketActive = vm.userData.subsidiary.swimm;
             vm.success = undefined;
             if (!vm.subTicketActive) {
                 vm.advertencia = true;
@@ -54,8 +54,8 @@ angular.module('integridadUiApp')
 
         function _initializeTicket() {
             vm.swimmPool = {
-                userIntegridad: $localStorage.user,
-                subsidiary: $localStorage.user.subsidiary,
+                userIntegridad: vm.userData,
+                subsidiary: vm.userData.subsidiary,
                 fecha: vm.dateSwimmPool.getTime(),
                 stringSeq: vm.dateSwimmPool.getTime(),
                 barCode: vm.dateSwimmPool.getTime(),

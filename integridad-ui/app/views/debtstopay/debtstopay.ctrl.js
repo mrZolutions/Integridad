@@ -7,13 +7,13 @@
  * Controller of the menu
  */
 angular.module('integridadUiApp')
-    .controller('DebtsToPayCtrl', function(_, $localStorage, providerService, cuentaContableService, debtsToPayService, authService, contableService,
+    .controller('DebtsToPayCtrl', function(_, holderService, providerService, cuentaContableService, debtsToPayService, authService, contableService,
                                            utilSeqService, creditsDebtsService, paymentDebtsService, $location, eretentionService, cashierService, comprobanteService) {
         var vm = this;
         vm.error = undefined;
         vm.success = undefined;
         vm.loading = false;
-        vm.userData = $localStorage.user;
+        vm.userData = holderService.get();
         
         vm.mrZolutions = '4907601b-6e54-4675-80a8-ab6503e1dfeb';
         vm.laQuinta = '758dea84-74f5-4209-b218-9b84c10621fc';
@@ -245,8 +245,8 @@ angular.module('integridadUiApp')
             vm.printComprobante = false;
             vm.printDebtsToPay = false;
 
-            vm.usrCliId = $localStorage.user.subsidiary.userClient.id;
-            vm.subCxPActive = $localStorage.user.subsidiary.cxp;
+            vm.usrCliId = vm.userData.subsidiary.userClient.id;
+            vm.subCxPActive = vm.userData.subsidiary.cxp;
             
             if (vm.subCxPActive) {
                 vm.loading = true;
@@ -273,7 +273,7 @@ angular.module('integridadUiApp')
             vm.providerSelected = provider;
             vm.providerId = provider.id;
             vm.providerName = provider.name;
-            vm.companyData = $localStorage.user.subsidiary;
+            vm.companyData = vm.userData.subsidiary;
             _getSeqNumber();
             _initializeDebts();
             _getDailyCxPSeqNumber();
@@ -1257,9 +1257,10 @@ angular.module('integridadUiApp')
                     debtsToPayService.createDebtsToPay(debtsToPay).then(function(respDebtsToPay) {
                         vm.debtsToPay = respDebtsToPay;
                         vm.responseDebtsToPay = respDebtsToPay;
-                        $localStorage.user.cashier.debtsNumberSeq = vm.debtsToPay.debtsSeq;
+                        vm.userData.cashier.debtsNumberSeq = vm.debtsToPay.debtsSeq;
+                        holderService.set(vm.userData)
                         if (vm.seqChanged) {
-                            cashierService.update($localStorage.user.cashier).then(function(resp) {
+                            cashierService.update(vm.userData.cashier).then(function(resp) {
                                 //cashier actualizado en caso de haber sido cambiado manualmente
                             }).catch(function(error) {
                                 vm.loading = false;
@@ -1270,8 +1271,9 @@ angular.module('integridadUiApp')
                         vm.debtsToPayCreated = true;
 
                         if(debtsToPay.pagos.length === 1 && debtsToPay.pagos[0].medio === 'efectivo'){
-                            $localStorage.user.cashier.compPagoNumberSeq = parseInt($localStorage.user.cashier.compPagoNumberSeq) + 1;
-                            $localStorage.user.cashier.dailyCeNumberSeq = parseInt($localStorage.user.cashier.dailyCeNumberSeq) + 1;
+                            vm.userData.cashier.compPagoNumberSeq = parseInt(vm.userData.cashier.compPagoNumberSeq) + 1;
+                            vm.userData.cashier.dailyCeNumberSeq = parseInt(vm.userData.cashier.dailyCeNumberSeq) + 1;
+                            holderService.set(vm.userData);
                         }
 
                         vm.success = 'Factura de Compra Ingresada con Exito';
@@ -1548,12 +1550,12 @@ angular.module('integridadUiApp')
         };
 
         vm.verifyUser = function() {
-            vm.isEmp = $localStorage.user.userType.code === 'EMP';
+            vm.isEmp = vm.userData.userType.code === 'EMP';
         };
 
         vm.validateAdm = function() {
             vm.errorValidateAdm = undefined;
-            var userAdm = $localStorage.user.user;
+            var userAdm = vm.userData.user;
             userAdm.password = vm.passwordAdm;
             authService.authUser(userAdm).then(function(response) {
                 vm.loading = false;
@@ -1683,7 +1685,7 @@ angular.module('integridadUiApp')
                 vm.allDebtsToPayList = undefined;
                 vm.debtsToPay = response;
                 vm.debtsDetails = response.detailDebtsToPay;
-                vm.companyData = $localStorage.user.subsidiary;
+                vm.companyData = vm.userData.subsidiary;
                 vm.debtsProviderSelected = response.provider;
                 vm.pagos = response.pagos;
                 var dateToShow = new Date(response.fecha);
@@ -1723,7 +1725,7 @@ angular.module('integridadUiApp')
         };
 
         function _getSeqNumber() {
-            vm.numberAddedOne = parseInt($localStorage.user.cashier.debtsNumberSeq) + 1;
+            vm.numberAddedOne = parseInt(vm.userData.cashier.debtsNumberSeq) + 1;
             vm.seqNumber = utilSeqService._pad_with_zeroes(vm.numberAddedOne, 6);
             vm.newSeqNumber = vm.seqNumber;
         };
@@ -1731,8 +1733,8 @@ angular.module('integridadUiApp')
         function _initializeDebts() {
             vm.debtsToPay = {
                 provider: vm.providerSelected,
-                userIntegridad: $localStorage.user,
-                subsidiary: $localStorage.user.subsidiary,
+                userIntegridad: vm.userData,
+                subsidiary: vm.userData.subsidiary,
                 typeTaxes: undefined,
                 items: [],
                 pagos: []
@@ -1740,7 +1742,7 @@ angular.module('integridadUiApp')
         };
 
         function _getDailyCxPSeqNumber() {
-            vm.numberAddedOneCxP = parseInt($localStorage.user.cashier.dailyCppNumberSeq) + 1;
+            vm.numberAddedOneCxP = parseInt(vm.userData.cashier.dailyCppNumberSeq) + 1;
             vm.dailycxpSeq = vm.numberAddedOneCxP;
             vm.dailycxpStringSeq = utilSeqService._pad_with_zeroes(vm.numberAddedOneCxP, 6);
         };
@@ -1748,8 +1750,8 @@ angular.module('integridadUiApp')
         function _initializeDailybookCxP() {
             vm.dailybookCxP = {
                 provider: vm.providerSelected,
-                userIntegridad: $localStorage.user,
-                subsidiary: $localStorage.user.subsidiary,
+                userIntegridad: vm.userData,
+                subsidiary: vm.userData.subsidiary,
                 subTotalDoce: 0,
                 iva: 0,
                 subTotalCero: 0,
@@ -1760,8 +1762,8 @@ angular.module('integridadUiApp')
 
         function _initializeDailybookCe() {
             vm.dailybookCe = {
-                userIntegridad: $localStorage.user,
-                subsidiary: $localStorage.user.subsidiary,
+                userIntegridad: vm.userData,
+                subsidiary: vm.userData.subsidiary,
                 provider: vm.providerSelected,
                 ruc: vm.providerSelected.ruc,
                 subTotalDoce: 0,
@@ -1775,8 +1777,8 @@ angular.module('integridadUiApp')
         function _initializeComprobantePago() {
             vm.comprobantePago = {
                 provider: vm.providerSelected,
-                userIntegridad: $localStorage.user,
-                subsidiary: $localStorage.user.subsidiary,
+                userIntegridad: vm.userData,
+                subsidiary: vm.userData.subsidiary,
                 providerName: vm.providerSelected.name,
                 providerRuc: vm.providerSelected.ruc,
                 subTotalDoce: 0,
@@ -1787,13 +1789,13 @@ angular.module('integridadUiApp')
         };
 
         function _getDailyCeSeqNumber() {
-            vm.numberAddedOneCe = parseInt($localStorage.user.cashier.dailyCeNumberSeq) + 1;
+            vm.numberAddedOneCe = parseInt(vm.userData.cashier.dailyCeNumberSeq) + 1;
             vm.dailyCeSeq = vm.numberAddedOneCe;
             vm.dailyCeStringSeq = utilSeqService._pad_with_zeroes(vm.numberAddedOneCe, 6);
         };
 
         function _getComprobantePagoSeqNumber() {
-            vm.numbAddedOneCP = parseInt($localStorage.user.cashier.compPagoNumberSeq) + 1;
+            vm.numbAddedOneCP = parseInt(vm.userData.cashier.compPagoNumberSeq) + 1;
             vm.comprobantePagoSeq = vm.numbAddedOneCP;
             vm.comprobantePagoStringSeq = utilSeqService._pad_with_zeroes(vm.numbAddedOneCP, 6);
         };
@@ -1849,7 +1851,8 @@ angular.module('integridadUiApp')
             vm.dailybookCe.dateRecordBook = $('#pickerDateOfMultiplePayment').data("DateTimePicker").date().toDate().getTime();
             
             contableService.createDailybookAsinCe(vm.dailybookCe).then(function(response) {
-                $localStorage.user.cashier.dailyCeNumberSeq = vm.dailybookCe.dailyCeSeq;
+                vm.userData.cashier.dailyCeNumberSeq = vm.dailybookCe.dailyCeSeq;
+                holderService.set(vm.userData)
             }).catch(function(error) {
                 vm.loading = false;
                 vm.error = error.data;
@@ -1895,7 +1898,8 @@ angular.module('integridadUiApp')
             vm.comprobantePago.subTotalDoce = parseFloat((vm.valorToSave / 1.12).toFixed(2));
 
             comprobanteService.createComprobantePago(vm.comprobantePago).then(function(response) {
-                $localStorage.user.cashier.compPagoNumberSeq = vm.comprobantePago.comprobanteSeq;
+                vm.userData.cashier.compPagoNumberSeq = vm.comprobantePago.comprobanteSeq;
+                holderService.set(vm.userData)
             }).catch(function(error) {
                 vm.loading = false;
                 vm.error = error.data;
@@ -1928,7 +1932,8 @@ angular.module('integridadUiApp')
                 vm.dailybookCxP.retentionTotal = parseFloat(vm.retention.total);
             };
             contableService.createDailybookAsinCxP(vm.dailybookCxP).then(function(response) {
-                $localStorage.user.cashier.dailyCppNumberSeq = vm.dailybookCxP.dailycxpSeq;
+                vm.userData.cashier.dailyCppNumberSeq = vm.dailybookCxP.dailycxpSeq;
+                holderService.set(vm.userData);
             }).catch(function(error) {
                 vm.loading = false;
                 vm.error = error.data;
