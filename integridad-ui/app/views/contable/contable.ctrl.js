@@ -2255,6 +2255,49 @@ angular.module('integridadUiApp')
             });
         };
 
+        vm.dailybookFvSelected = function(dailybookFv){
+            vm.loading = true;
+            vm.dailybookFvList = undefined;
+            vm.dailybookFvManualCreatedList = undefined;
+            vm.activeFv = dailybookFv.active;
+            contableService.getDailybookFvById(dailybookFv.id).then(function(response) {
+                vm.dailybookFvCreated = response;
+                vm.dailybookFv = response;
+                vm.loading = false;
+            }).catch(function(error) {
+                vm.loading = false;
+                vm.error = error.data;
+            });
+        }
+
+        vm.getTotalDebitoFvCreated = function() {
+            var totalDebito = 0;
+            if (vm.dailybookFvCreated) {
+                _.each(vm.dailybookFvCreated.detailDailybookContab, function(detail) {
+                    if (detail.tipo === 'DEBITO (D)') {
+                        totalDebito = (parseFloat(totalDebito) + parseFloat(detail.baseImponible)).toFixed(2);
+                    };
+                });
+            };
+            return totalDebito;
+        };
+
+        vm.getTotalCreditoFvCreated = function() {
+            var totalCredito = 0;
+            if (vm.dailybookFvCreated) {
+                _.each(vm.dailybookFvCreated.detailDailybookContab, function(detail) {
+                    if (detail.tipo === 'CREDITO (C)') {
+                        totalCredito = (parseFloat(totalCredito) + parseFloat(detail.baseImponible)).toFixed(2);
+                    };
+                });
+            };
+            return totalCredito;
+        };
+
+        vm.getDeberHaber = function (value){
+            return value !== 'null' ? value : '';
+        };
+
         vm.manualDailybookFv = function() {
             vm.success = undefined;
             vm.error = undefined;
