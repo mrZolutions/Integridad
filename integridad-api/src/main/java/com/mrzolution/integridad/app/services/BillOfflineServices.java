@@ -8,12 +8,8 @@ import com.mrzolution.integridad.app.exceptions.BadRequestException;
 import com.mrzolution.integridad.app.repositories.*;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
@@ -53,6 +49,12 @@ public class BillOfflineServices {
     CreditsRepository creditsRepository;
     @Autowired
     DailybookCiServices dailybookCiServices;
+    @Autowired
+    DailybookFvServices dailybookFvServices;
+    @Autowired
+    ConfigCuentasServices configCuentasServices;
+    @Autowired
+    CuentaContableByProductRepository cuentaContableByProductRepository;
     
     public Iterable<BillOffline> getBillsOfflineByTypeDocument(int value) {
         Iterable<BillOffline> billsOffline = billOfflineRepository.findBillsOfflineByTypeDocument(value);
@@ -167,6 +169,7 @@ public class BillOfflineServices {
             //************************************************************************************
         }
 
+        saveDailyBookFv(saved, detailsOffline);
         log.info("BillOfflineServices createBillOffline: {}, {}", saved.getId(), saved.getStringSeq());
         return saved;
     }
@@ -375,11 +378,112 @@ public class BillOfflineServices {
         List<PagoOffline> pagoOfflineList = new ArrayList<>();
         Iterable<PagoOffline> pagosOffline = pagoOfflineRepository.findByBillOffline(billOffline);
         pagosOffline.forEach(pagoOffline -> {
+            if ("credito".equals(pagoOffline.getMedio())) {
+                Iterable<Credits> credits = creditsRepository.findByPagoOffline(pagoOffline);
+                List<Credits> creditsList = new ArrayList<>();
+                credits.forEach(credit -> {
+                    credit.setListsNull();
+                    credit.setFatherListToNull();
+                    credit.setPago(null);
+                    creditsList.add(credit);
+                });
+                pagoOffline.setCredits(creditsList);
+            } else {
+                pagoOffline.setListsNull();
+            }
             pagoOffline.setFatherListToNull();
             pagoOffline.setBillOffline(null);
             pagoOfflineList.add(pagoOffline);
         });
         return pagoOfflineList;
+    }
+
+    private void saveDailyBookFv(BillOffline saved, List<DetailOffline> details){
+        DailybookFv dailybookFv = new DailybookFv();
+
+        dailybookFv.setActive(true);
+        dailybookFv.setDateRecordBook(saved.getDateCreated());
+        dailybookFv.setBillNumber(saved.getStringSeq());
+        dailybookFv.setClientProvName(saved.getClient().getName());
+        //TODO change this two types (fields) -*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+        dailybookFv.setCodeTypeContab("6");
+        dailybookFv.setTypeContab("COMP. DE FACT-VENTA");
+        dailybookFv.setGeneralDetail("FACTURA N. " + saved.getStringSeq());
+
+        Long newSeq = saved.getUserIntegridad().getCashier().getDailyFvNumberSeq() + 1;
+        String sequence = String.valueOf(newSeq);
+
+        dailybookFv.setDailyFvSeq(sequence);
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < 6 - sequence.length(); i++) {
+            sb.append('0');
+        }
+        dailybookFv.setDailyFvStringSeq(sb.toString() + sequence);
+        dailybookFv.setDailyFvStringUserSeq("ASIENTO DE VENTA GENERADO " + sb.toString() + sequence);
+        dailybookFv.setSubTotalDoce(saved.getBaseTaxes());
+        dailybookFv.setSubTotalCero(saved.getBaseNoTaxes());
+        dailybookFv.setIva(saved.getIva());
+        dailybookFv.setTotal(saved.getTotal());
+        dailybookFv.setClient(saved.getClient());
+        dailybookFv.setUserIntegridad(saved.getUserIntegridad());
+        dailybookFv.setSubsidiary(saved.getSubsidiary());
+
+        List<DetailDailybookContab> dailyDetails = new ArrayList<>();
+        dailyDetails.add(createDetialDailySale(saved, sb.toString() + sequence, saved.getTotal(), null, saved.getClient().getCodConta(), "Clientes Locales"));
+
+        ConfigCuentas configCuentas = configCuentasServices.getCuentasByUserCliendIdAndOptionCode(saved.getSubsidiary().getUserClient().getId(), "IVAVENTAS");
+        dailyDetails.add(createDetialDailySale(saved, sb.toString() + sequence, null,
+                saved.getIva(), configCuentas == null ? "-" : configCuentas.getCode(), configCuentas == null ? "-" :configCuentas.getDescription()));
+
+        Map<CuentaContable, Double> accounts = new HashMap<>();
+        for(DetailOffline det : details){
+            Iterable<CuentaContableByProduct> cuentas =  cuentaContableByProductRepository.findByProductId(det.getProduct().getId());
+            List<CuentaContableByProduct> cuentasByProduct = Lists.newArrayList(cuentas);
+            for(int i = 0; i < cuentasByProduct.size(); i++){
+                if("VENTA".equals(cuentasByProduct.get(i).getType())){
+                    Double value = accounts.get(cuentasByProduct.get(i).getCuentaContable());
+                    if(accounts.isEmpty() || value == null){
+                        accounts.put(cuentasByProduct.get(i).getCuentaContable(), det.getTotal());
+                    } else {
+                        accounts.replace(cuentasByProduct.get(i).getCuentaContable(), value + det.getTotal());
+                    }
+                    i = cuentasByProduct.size();
+                }
+            }
+        }
+
+        for(Map.Entry<CuentaContable, Double> entry : accounts.entrySet()){
+            CuentaContable cuentaContable = entry.getKey();
+            dailyDetails.add(createDetialDailySale(saved, sb.toString() + sequence, null, entry.getValue(), cuentaContable.getCode(), cuentaContable.getName()));
+        };
+
+        dailybookFv.setDetailDailybookContab(dailyDetails);
+        DailybookFv  dailybookFvSaved = dailybookFvServices.createDailybookFv(dailybookFv);
+
+        Cashier cahsierToUpdate = cashierRepository.findOne(saved.getUserIntegridad().getCashier().getId());
+        cahsierToUpdate.setDailyFvNumberSeq(newSeq);
+        cashierRepository.save(cahsierToUpdate);
+
+        log.info("BillServices createBill dailyFV created:{}", dailybookFvSaved.getId());
+    }
+
+    private DetailDailybookContab createDetialDailySale(BillOffline saved, String sequence, Double deber, Double haber, String codeConta, String descConta){
+        DetailDailybookContab detailDailybookContab = new DetailDailybookContab();
+        detailDailybookContab.setTypeContab("COMP. DE VENTAS");
+        detailDailybookContab.setName("FACTURA N. " + saved.getStringSeq());
+        detailDailybookContab.setDateDetailDailybook(saved.getDateCreated());
+        detailDailybookContab.setDailybookNumber(sequence);
+        detailDailybookContab.setUserClientId(saved.getUserIntegridad().getSubsidiary().getUserClient().getId().toString());
+        detailDailybookContab.setActive(true);
+
+        detailDailybookContab.setCodeConta(codeConta);
+        detailDailybookContab.setDescrip(descConta);
+        detailDailybookContab.setTipo(deber == null ? "CREDITO (C)" : "DEBITO (D)");
+        detailDailybookContab.setBaseImponible(deber == null ? haber : deber);
+        detailDailybookContab.setDeber(String.valueOf(deber));
+        detailDailybookContab.setHaber(String.valueOf(haber));
+
+        return detailDailybookContab;
     }
 
 }

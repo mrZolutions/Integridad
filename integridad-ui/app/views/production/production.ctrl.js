@@ -429,7 +429,7 @@ angular.module('integridadUiApp')
         };
 
         vm.disableSave = function(){
-            return vm.cellar.total <= 0 || $('#pickerDateBill').data("DateTimePicker").date() === null || vm.cellar.billNumber === undefined;
+            return vm.cellar === undefined ? true : vm.cellar.total <= 0 || $('#pickerDateBill').data("DateTimePicker").date() === null || vm.cellar.billNumber === undefined;
         }
 
         vm.saveCellar = function(cellar) {

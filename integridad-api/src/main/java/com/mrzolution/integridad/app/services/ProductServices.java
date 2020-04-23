@@ -367,20 +367,20 @@ public class ProductServices {
         
     private void populateChildren(Product product) {
     	List<ProductBySubsidiary> productBySubsidiaryList = new ArrayList<>();
-	Iterable<ProductBySubsidiary> productBySubsidiaries = productBySubsidiairyRepository.findByProductId(product.getId());
-	productBySubsidiaries.forEach(productBySubsidiaryConsumer -> {
-            productBySubsidiaryConsumer.setListsNull();
-            productBySubsidiaryConsumer.setFatherListToNull();
-            productBySubsidiaryConsumer.getSubsidiary().setFatherListToNull();
-            productBySubsidiaryConsumer.getSubsidiary().setListsNull();
-            productBySubsidiaryConsumer.setProduct(null);
-            productBySubsidiaryList.add(productBySubsidiaryConsumer);
-	});
-	product.setProductBySubsidiaries(productBySubsidiaryList);
-        if (product.getBrand() != null) {
-            product.getBrand().setFatherListToNull();
-            product.getBrand().setListsNull();
-	}
-	product.setFatherListToNull();	
+        Iterable<ProductBySubsidiary> productBySubsidiaries = productBySubsidiairyRepository.findByProductId(product.getId());
+        productBySubsidiaries.forEach(productBySubsidiaryConsumer -> {
+                productBySubsidiaryConsumer.setListsNull();
+                productBySubsidiaryConsumer.setFatherListToNull();
+                productBySubsidiaryConsumer.getSubsidiary().setFatherListToNull();
+                productBySubsidiaryConsumer.getSubsidiary().setListsNull();
+                productBySubsidiaryConsumer.setProduct(null);
+                productBySubsidiaryList.add(productBySubsidiaryConsumer);
+        });
+        product.setProductBySubsidiaries(productBySubsidiaryList);
+            if (product.getBrand() != null) {
+                product.getBrand().setFatherListToNull();
+                product.getBrand().setListsNull();
+        }
+        product.setFatherListToNull();
     }
 }
