@@ -92,6 +92,10 @@ function routes($routeProvider) {
             templateUrl: 'views/swimming/swimming.tpl.html',
             controller: 'SwimmingCtrl',
             controllerAs: 'vm'
+        }).when('/config', {
+            templateUrl: 'views/config/config.tpl.html',
+            controller: 'ConfigCtrl',
+            controllerAs: 'vm'
         }).otherwise({
             redirectTo: '/'
     });
