@@ -378,6 +378,19 @@ public class BillOfflineServices {
         List<PagoOffline> pagoOfflineList = new ArrayList<>();
         Iterable<PagoOffline> pagosOffline = pagoOfflineRepository.findByBillOffline(billOffline);
         pagosOffline.forEach(pagoOffline -> {
+            if ("credito".equals(pagoOffline.getMedio())) {
+                Iterable<Credits> credits = creditsRepository.findByPagoOffline(pagoOffline);
+                List<Credits> creditsList = new ArrayList<>();
+                credits.forEach(credit -> {
+                    credit.setListsNull();
+                    credit.setFatherListToNull();
+                    credit.setPago(null);
+                    creditsList.add(credit);
+                });
+                pagoOffline.setCredits(creditsList);
+            } else {
+                pagoOffline.setListsNull();
+            }
             pagoOffline.setFatherListToNull();
             pagoOffline.setBillOffline(null);
             pagoOfflineList.add(pagoOffline);

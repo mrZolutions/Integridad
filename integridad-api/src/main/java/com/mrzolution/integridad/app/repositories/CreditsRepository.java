@@ -2,6 +2,7 @@ package com.mrzolution.integridad.app.repositories;
 
 import com.mrzolution.integridad.app.domain.Credits;
 import com.mrzolution.integridad.app.domain.Pago;
+import com.mrzolution.integridad.app.domain.PagoOffline;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
@@ -15,6 +16,8 @@ import org.springframework.data.repository.query.Param;
 public interface CreditsRepository extends CrudRepository<Credits, UUID> {
 
     Iterable<Credits> findByPago(Pago pago);
+
+    Iterable<Credits> findByPagoOffline(PagoOffline pagoOffline);
     
     Credits findByBillId(String billId);
 
