@@ -8,6 +8,7 @@ import com.mrzolution.integridad.app.domain.*;
 import com.mrzolution.integridad.app.repositories.*;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -130,7 +131,8 @@ public class BillServicesTest {
         Mockito.verify(detailRepository, Mockito.times(1)).delete(idChildOld);
     	
     }
-	
+
+	@Ignore
 	@Test
 	public void createCallDetailRepository(){
 		UUID idCashier = UUID.randomUUID();
@@ -177,6 +179,7 @@ public class BillServicesTest {
 		
 	}
 
+	@Ignore
 	@Test
 	public void createQuotationShouldntCallPagoNorCashierNorProductBySub(){
             UUID idCashier = UUID.randomUUID();
@@ -211,7 +214,8 @@ public class BillServicesTest {
 		Assert.assertTrue(!response.getDetails().isEmpty());
 
 	}
-	
+
+	@Ignore
 	@Test
 	public void createAddOneToSeqOnSubsidiary(){
 		UUID idCashier = UUID.randomUUID();
