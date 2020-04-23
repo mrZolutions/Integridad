@@ -16,5 +16,10 @@ public class OptionConfigCuentas {
     private String description;
     private String name;
     private String code;
+    private String fullDescription;
+    private Double percentage;
+    private String type;
+    private String codigo;
+    private String codigoDatil;
     private boolean active;
 }
