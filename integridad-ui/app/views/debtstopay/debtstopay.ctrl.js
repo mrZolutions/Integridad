@@ -1814,7 +1814,7 @@ angular.module('integridadUiApp')
                 name: vm.generalDetailCe_1,
                 deber: parseFloat(vm.valorToSave)
             };
-            vm.itema.numCheque =  '--';
+            vm.itema.numCheque =  vm.paymentDebtsCreated.noDocument;
             vm.itema.dailybookNumber = vm.dailyCeStringSeq;
             vm.itema.userClientId = vm.usrCliId;
             vm.itema.dateDetailDailybook = $('#pickerDateOfMultiplePayment').data("DateTimePicker").date().toDate().getTime();
