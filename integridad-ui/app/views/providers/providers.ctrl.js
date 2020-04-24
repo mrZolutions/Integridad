@@ -7,15 +7,16 @@
  * Controller of the menu
  */
 angular.module('integridadUiApp')
-    .controller('ProvidersCtrl', function(_, $localStorage, $location, providerService, utilStringService, dateService, eretentionService,
+    .controller('ProvidersCtrl', function(_, holderService, $location, providerService, utilStringService, dateService, eretentionService,
                                             utilSeqService, paymentDebtsService, validatorService, optionConfigCuentasService) {
+
         var vm = this;
         vm.error = undefined;
         vm.success = undefined;
 
         vm.loading = false;
-        vm.userData = $localStorage.user;
-        vm.subOnlineActive = $localStorage.user.subsidiary.online;
+        vm.userData = holderService.get();
+        vm.subOnlineActive = vm.userData.subsidiary.online;
         vm.provider = undefined;
         vm.providerToUse = undefined;
         vm.providerList = undefined;
@@ -125,7 +126,7 @@ angular.module('integridadUiApp')
             vm.providerToUse = undefined;
             vm.totalTotalR = undefined;
             vm.reportStatementProviderSelected = undefined;
-            vm.usrCliId = $localStorage.user.subsidiary.userClient.id;
+            vm.usrCliId = vm.userData.subsidiary.userClient.id;
             vm.providerList = [];
             providerService.getLazyByUserClientId(vm.userData.subsidiary.userClient.id).then(function(response) {
                 vm.providerList = response;
@@ -183,8 +184,8 @@ angular.module('integridadUiApp')
         };
 
         function _getSeqNumber() {
-            vm.numberAddedOne = parseInt($localStorage.user.cashier.retentionNumberSeq) + 1;
-            vm.seqNumberFirstPart = $localStorage.user.subsidiary.threeCode + '-' + $localStorage.user.cashier.threeCode;
+            vm.numberAddedOne = parseInt(vm.userData.cashier.retentionNumberSeq) + 1;
+            vm.seqNumberFirstPart = vm.userData.subsidiary.threeCode + '-' + vm.userData.cashier.threeCode;
             vm.seqNumberSecondPart = utilSeqService._pad_with_zeroes(vm.numberAddedOne, 9);
             vm.seqNumber =  vm.seqNumberFirstPart + '-' + vm.seqNumberSecondPart;
         };
@@ -403,8 +404,9 @@ angular.module('integridadUiApp')
                 _.each(vm.retention.items, function(detail) {
                     totalRetorno = (parseFloat(totalRetorno) + parseFloat(detail.valor_retenido)).toFixed(2);
                 });
+                vm.retention.total = totalRetorno;
             };
-            vm.retention.total = totalRetorno;
+            
             return totalRetorno;
         };
 
@@ -479,8 +481,8 @@ angular.module('integridadUiApp')
             var totalRetent = 0;
             eretentionService.getRetentionByProviderIdAndDocumentNumber(vm.providerId, vm.retention.numero).then(function(response) {
                 if (response.length === 0) {
-                    var eRet = eretentionService.createERetention(vm.retention, $localStorage.user);
-                    eretentionService.getClaveDeAcceso(eRet, $localStorage.user.subsidiary.userClient.id).then(function(resp) {
+                    var eRet = eretentionService.createERetention(vm.retention, vm.userData);
+                    eretentionService.getClaveDeAcceso(eRet, vm.userData.subsidiary.userClient.id).then(function(resp) {
                         var obj = JSON.parse(resp.data);
                         //var obj = {clave_acceso: '1234560', id:'id12345'};
                         if (obj.errors === undefined) {
@@ -491,8 +493,8 @@ angular.module('integridadUiApp')
                             vm.retention.ejercicioFiscal = vm.retention.ejercicio;
                             vm.retention.documentNumber = vm.retention.numero;
                             vm.retention.documentDate = $('#pickerBillDateDocumentRetention').data("DateTimePicker").date().toDate().getTime();
-                            vm.retention.userIntegridad = $localStorage.user;
-                            vm.retention.subsidiary = $localStorage.user.subsidiary;
+                            vm.retention.userIntegridad = vm.userData;
+                            vm.retention.subsidiary = vm.userData.subsidiary;
                             vm.retention.typeDocument = vm.docType;
                             vm.retention.detailRetentions = [];
                             _.each(vm.retention.items, function(item) {
@@ -512,7 +514,8 @@ angular.module('integridadUiApp')
                                     vm.totalRetention = parseFloat(vm.totalRetention + detail.total);
                                 });
                                 vm.retentionCreated = true;
-                                $localStorage.user.cashier.retentionNumberSeq = parseInt($localStorage.user.cashier.retentionNumberSeq) + 1;
+                                vm.userData.cashier.retentionNumberSeq = parseInt(vm.userData.cashier.retentionNumberSeq) + 1;
+                                holderService.set(vm.userData);
                                 vm.loading = false;
                             }).catch(function(error) {
                                 vm.loading = false;

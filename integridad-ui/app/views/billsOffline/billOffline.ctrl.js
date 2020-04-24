@@ -7,7 +7,7 @@
  * Controller of the integridadUiApp
  */
 angular.module('integridadUiApp')
-    .controller('BillOfflineCtrl', function(_, $location, utilStringService, $localStorage, projectService, consumptionService,
+    .controller('BillOfflineCtrl', function(_, $location, utilStringService, holderService, projectService, consumptionService,
                                             clientService, productService, authService, billOfflineService, cashierService, utilSeqService,
                                             validatorService, warehouseService, countryListService, configCuentasService) {
         var vm = this;
@@ -104,11 +104,11 @@ angular.module('integridadUiApp')
             };
             vm.medio = {};
             vm.pagosOffline = [];
-            vm.user = $localStorage.user;
-            vm.userClientId = $localStorage.user.subsidiary.userClient.id;
-            vm.subsidiaryId = $localStorage.user.subsidiary.id;
-            vm.subOfflineActive = $localStorage.user.subsidiary.offline;
-            vm.userId = $localStorage.user.id;
+            vm.user = holderService.get();
+            vm.userClientId = vm.user.subsidiary.userClient.id;
+            vm.subsidiaryId = vm.user.subsidiary.id;
+            vm.subOfflineActive = vm.user.subsidiary.offline;
+            vm.userId = vm.user.id;
             if (vm.subOfflineActive) {
                 vm.loading = true;
                 clientService.getLazyByUserClientId(vm.userClientId).then(function(response) {
@@ -141,13 +141,13 @@ angular.module('integridadUiApp')
         };
 
         function _getComprobanteCobroSeqNumber() {
-            vm.numbAddedOne = parseInt($localStorage.user.cashier.compCobroNumberSeq) + 1;
+            vm.numbAddedOne = parseInt(vm.user.cashier.compCobroNumberSeq) + 1;
             vm.comprobanteCobroSeq = vm.numbAddedOne;
             vm.comprobanteCobroStringSeq = utilSeqService._pad_with_zeroes(vm.numbAddedOne, 6);
         };
 
         function _getDailyCiSeqNumber() {
-            vm.numberAddedOne = parseInt($localStorage.user.cashier.dailyCiNumberSeq) + 1;
+            vm.numberAddedOne = parseInt(vm.user.cashier.dailyCiNumberSeq) + 1;
             vm.dailyCiSeq = vm.numberAddedOne;
             vm.dailyCiStringSeq = utilSeqService._pad_with_zeroes(vm.numberAddedOne, 6);
         };
@@ -170,8 +170,8 @@ angular.module('integridadUiApp')
         function _initializeBillOffline() {
             vm.billOffline = {
                 client: vm.clientSelected,
-                userIntegridad: $localStorage.user,
-                subsidiary: $localStorage.user.subsidiary,
+                userIntegridad: vm.user,
+                subsidiary: vm.user.subsidiary,
                 dateCreated: vm.dateBillOffline.getTime(),
                 discount: 0,
                 total: 0,
@@ -185,7 +185,7 @@ angular.module('integridadUiApp')
 
         vm.filterBarCode = function(){
             if (vm.billOfflineBarCode.length === 13) {
-                productService.getLazyBySusidiaryIdBarCode($localStorage.user.subsidiary.id, vm.billOfflineBarCode).then(function(response) {
+                productService.getLazyBySusidiaryIdBarCode(vm.user.subsidiary.id, vm.billOfflineBarCode).then(function(response) {
                     if (!_.isEmpty(response)) {
                         vm.quantity = 1;
                         vm.paraticularDiscount = undefined;
@@ -204,7 +204,7 @@ angular.module('integridadUiApp')
 
         vm.clientSelectOffline = function(client) {
             vm.success = undefined;
-            vm.companyData = $localStorage.user.subsidiary;
+            vm.companyData = vm.user.subsidiary;
             vm.dateBillOffline = new Date();
             vm.clientSelected = client;
             vm.pagosOffline = [];
@@ -251,7 +251,7 @@ angular.module('integridadUiApp')
                     country: 'Ecuador',
                     city: 'Quito',
                     codApp: number + 1,
-                    userClient: $localStorage.user.subsidiary.userClient
+                    userClient: vm.user.subsidiary.userClient
                 };
             }).catch(function(error) {
                 vm.loading = false;
@@ -429,7 +429,7 @@ angular.module('integridadUiApp')
             } else {
                 var busqueda = variable.toUpperCase();
             };
-            productService.getLazyBySusidiaryId($localStorage.user.subsidiary.id, vm.page, busqueda).then(function(response) {
+            productService.getLazyBySusidiaryId(vm.user.subsidiary.id, vm.page, busqueda).then(function(response) {
                 vm.loading = false;
                 vm.totalPages = response.totalPages;
                 vm.productList = [];
@@ -439,7 +439,7 @@ angular.module('integridadUiApp')
                     });
                     if (productFound === undefined) {
                         var sub = _.find(response.content[i].productBySubsidiaries, function(s) {
-                            return (s.subsidiary.id === $localStorage.user.subsidiary.id && s.active === true);
+                            return (s.subsidiary.id === vm.user.subsidiary.id && s.active === true);
                         });
                         if (sub) {
                             response.content[i].quantity = sub.quantity
@@ -615,7 +615,7 @@ angular.module('integridadUiApp')
 
         vm.validateAdm = function() {
             vm.errorValidateAdm = undefined;
-            var userAdm = $localStorage.user.user;
+            var userAdm = vm.user.user;
             userAdm.password = vm.passwordAdm;
             authService.authUser(userAdm).then(function(response) {
                 vm.loading = false;
@@ -649,7 +649,7 @@ angular.module('integridadUiApp')
         };
 
         vm.verifyUser = function() {
-            vm.isEmp = $localStorage.user.userType.code === 'EMP';
+            vm.isEmp = vm.user.userType.code === 'EMP';
         };
 
         vm.getCost = function(textCost, averageCost) {
@@ -717,7 +717,7 @@ angular.module('integridadUiApp')
             billOfflineService.getBillsOfflineById(billOffline.id).then(function(response) {
                 vm.billOfflineList = undefined;
                 vm.billOffline = response;
-                vm.companyData = $localStorage.user.subsidiary;
+                vm.companyData = vm.user.subsidiary;
                 vm.clientSelected = response.client;
                 vm.pagosOffline = response.pagosOffline;
                 var dateToShow = new Date(response.dateCreated);
@@ -889,8 +889,8 @@ angular.module('integridadUiApp')
                         if(vm.pagosOffline[0].code === 'efectivo'){
                             vm.comprobanteCobro = {
                                 client: vm.clientSelected,
-                                userIntegridad: $localStorage.user,
-                                subsidiary: $localStorage.user.subsidiary,
+                                userIntegridad: vm.user,
+                                subsidiary: vm.user.subsidiary,
                                 clientName: vm.clientSelected.name,
                                 clientRuc: vm.clientSelected.identification,
                                 subTotalDoce: 0,
@@ -926,8 +926,8 @@ angular.module('integridadUiApp')
 
                             vm.dailybookCi = {
                                 client: vm.clientSelected,
-                                userIntegridad: $localStorage.user,
-                                subsidiary: $localStorage.user.subsidiary,
+                                userIntegridad: vm.user,
+                                subsidiary: vm.user.subsidiary,
                                 clientProvName: vm.clientSelected.name,
                                 subTotalDoce: 0,
                                 iva: 0,
@@ -997,11 +997,12 @@ angular.module('integridadUiApp')
                         vm.newBillOffline = false;
                         vm.newBuyOff = false;
                         vm.billOfflineCreated = respBill;
-                        $localStorage.user.cashier.billOfflineNumberSeq = vm.billOffline.billSeq;
+                        vm.user.cashier.billOfflineNumberSeq = vm.billOffline.billSeq;
                         if(vm.comprobanteCobro.comprobanteSeq !== undefined){
-                            $localStorage.user.cashier.compCobroNumberSeq = vm.comprobanteCobro.comprobanteSeq;
-                            $localStorage.user.cashier.dailyCiNumberSeq = vm.dailybookCi.dailyCiSeq;
+                            vm.user.cashier.compCobroNumberSeq = vm.comprobanteCobro.comprobanteSeq;
+                            vm.user.cashier.dailyCiNumberSeq = vm.dailybookCi.dailyCiSeq;
                         }
+                        holderService.set(vm.user)
                         vm.loading = false;
                         vm.rowsToFill = [];
                         for (var i = vm.billOffline.detailsOffline.length; i < 10; i++) {
@@ -1015,7 +1016,7 @@ angular.module('integridadUiApp')
                             // vm.nuevaBill();
                         }, 300);
                         if (vm.seqChanged) {
-                            cashierService.update($localStorage.user.cashier).then(function(resp) {
+                            cashierService.update(vm.user.cashier).then(function(resp) {
                                 // cashier updated
                             }).catch(function(error) {
                                 vm.loading = false;
@@ -1038,15 +1039,15 @@ angular.module('integridadUiApp')
 
         //Consumption Code
         function _getCsmSeqNumber() {
-            vm.numberCsmAddedOne = parseInt($localStorage.user.cashier.csmNumberSeq) + 1;
+            vm.numberCsmAddedOne = parseInt(vm.user.cashier.csmNumberSeq) + 1;
             vm.csmSeqNumber = utilSeqService._pad_with_zeroes(vm.numberCsmAddedOne, 6);
         };
 
         function _initializeConsumption() {
             vm.consumption = {
                 client: vm.clientSelected,
-                userIntegridad: $localStorage.user,
-                subsidiary: $localStorage.user.subsidiary,
+                userIntegridad: vm.user,
+                subsidiary: vm.user.subsidiary,
                 dateConsumption: vm.dateBillOffline.getTime(),
                 total: 0,
                 subTotal: 0,
@@ -1094,7 +1095,8 @@ angular.module('integridadUiApp')
                     vm.consumption.detailsKardex.push(kardex);
                 });
                 consumptionService.create(consumption).then(function(respConsumption) {
-                    $localStorage.user.cashier.csmNumberSeq = vm.numberCsmAddedOne;
+                    vm.user.cashier.csmNumberSeq = vm.numberCsmAddedOne;
+                    holderService.set(vm.user);
                     vm.consumptionCreated = respConsumption;
                     vm.consumptioned = true;
                     vm.newBuyOff = false;

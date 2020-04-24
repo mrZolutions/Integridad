@@ -8,7 +8,6 @@ import com.mrzolution.integridad.app.domain.*;
 import com.mrzolution.integridad.app.repositories.*;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -49,6 +48,12 @@ public class BillServicesTest {
 	CreditsRepository creditsRepository;
 	@Mock
 	PaymentRepository paymentRepository;
+	@Mock
+	ConfigCuentasServices configCuentasServices;
+	@Mock
+	CuentaContableByProductRepository cuentaContableByProductRepository;
+	@Mock
+	DailybookFvServices dailybookFvServices;
 	
 	Bill bill;
 	
@@ -132,7 +137,6 @@ public class BillServicesTest {
     	
     }
 
-	@Ignore
 	@Test
 	public void createCallDetailRepository(){
 		UUID idCashier = UUID.randomUUID();
@@ -166,20 +170,23 @@ public class BillServicesTest {
 		Mockito.when(cashierRepository.findOne(idCashier)).thenReturn(cashier);
 		Mockito.when(billRepository.save(Mockito.any(Bill.class))).thenReturn(Bill.newBillTest());
 		Mockito.when(subsidiaryRepository.findOne(Mockito.any(UUID.class))).thenReturn(Subsidiary.newSubsidiaryTest());
-		
+		Mockito.when(configCuentasServices.getCuentasByUserCliendIdAndOptionCode(Mockito.any(UUID.class), Mockito.anyString())).thenReturn(new ConfigCuentas());
+		Mockito.when(cuentaContableByProductRepository.findByProductId(Mockito.any(UUID.class))).thenReturn(new ArrayList<>());
+		Mockito.when(cashierRepository.findOne(Mockito.any(UUID.class))).thenReturn(cashier);
+		Mockito.when(dailybookFvServices.createDailybookFv(Mockito.any())).thenReturn(new DailybookFv());
+
 		Bill response = service.createBill(bill, null, null,1);
 		
 		Mockito.verify(billRepository, Mockito.times(1)).save(Mockito.any(Bill.class));
 		Mockito.verify(detailRepository, Mockito.times(1)).save(detail);
 		Mockito.verify(pagoRepository, Mockito.times(1)).save(Mockito.any(Pago.class));
-		Mockito.verify(cashierRepository, Mockito.times(1)).save(cashier);
+		Mockito.verify(cashierRepository, Mockito.times(2)).save(cashier);
                 Mockito.verify(kardexRepository, Mockito.times(1)).save(detailk);
 		
 		Assert.assertTrue(!response.getDetails().isEmpty());
 		
 	}
 
-	@Ignore
 	@Test
 	public void createQuotationShouldntCallPagoNorCashierNorProductBySub(){
             UUID idCashier = UUID.randomUUID();
@@ -203,11 +210,14 @@ public class BillServicesTest {
 		Mockito.when(cashierRepository.findOne(idCashier)).thenReturn(cashier);
 		Mockito.when(billRepository.save(Mockito.any(Bill.class))).thenReturn(Bill.newBillTest());
 		Mockito.when(subsidiaryRepository.findOne(Mockito.any(UUID.class))).thenReturn(Subsidiary.newSubsidiaryTest());
+		Mockito.when(cuentaContableByProductRepository.findByProductId(Mockito.any(UUID.class))).thenReturn(new ArrayList<>());
+		Mockito.when(cashierRepository.findOne(Mockito.any(UUID.class))).thenReturn(cashier);
+		Mockito.when(dailybookFvServices.createDailybookFv(Mockito.any())).thenReturn(new DailybookFv());
 
 		Bill response = service.createBill(bill, null,null, 0);
 
 		Mockito.verify(billRepository, Mockito.times(1)).save(Mockito.any(Bill.class));
-		Mockito.verify(cashierRepository, Mockito.times(1)).save(cashier);
+		Mockito.verify(cashierRepository, Mockito.times(2)).save(cashier);
                 Mockito.verify(detailRepository, Mockito.times(1)).save(Mockito.any(Detail.class));
 		Mockito.verify(pagoRepository, Mockito.times(0)).save(Mockito.any(Pago.class));
 
@@ -215,7 +225,6 @@ public class BillServicesTest {
 
 	}
 
-	@Ignore
 	@Test
 	public void createAddOneToSeqOnSubsidiary(){
 		UUID idCashier = UUID.randomUUID();
@@ -247,13 +256,16 @@ public class BillServicesTest {
 		Mockito.when(billRepository.save(Mockito.any(Bill.class))).thenReturn(Bill.newBillTest());
 		Mockito.when(cashierRepository.findOne(idCashier)).thenReturn(cashier);
 //		Mockito.when(subsidiaryRepository.findOne(idSubsidiary)).thenReturn(subsidiary);
+		Mockito.when(cuentaContableByProductRepository.findByProductId(Mockito.any(UUID.class))).thenReturn(new ArrayList<>());
+		Mockito.when(cashierRepository.findOne(Mockito.any(UUID.class))).thenReturn(cashier);
+		Mockito.when(dailybookFvServices.createDailybookFv(Mockito.any())).thenReturn(new DailybookFv());
 		
 		service.createBill(bill, null, null,1);
 
 		
 		Mockito.verify(cashierRepository, Mockito.times(1)).findOne(idCashier);
-		Mockito.verify(cashierRepository, Mockito.times(1)).save(cashier);
-		
+		Mockito.verify(cashierRepository, Mockito.times(2)).save(cashier);
+
 	}
 	
 	@Test(expected=BadRequestException.class)

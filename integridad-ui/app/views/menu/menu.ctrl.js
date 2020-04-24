@@ -7,19 +7,20 @@
  * Controller of the menu
  */
 angular.module('integridadUiApp')
-    .controller('MenuCtrl', function($rootScope, $scope, $localStorage, $location) {
+    .controller('MenuCtrl', function($rootScope, $scope, holderService, $localStorage, $location) {
         $scope.permissions = [];
         $rootScope.updateMenu = function() {
+            $scope.user = holderService.get();
             $scope.permissions = $localStorage.permissions;
-            $scope.nameType = $localStorage.user.firstName + ' - ' + $localStorage.user.userType.name;
+            $scope.nameType = $scope.user.firstName + ' - ' + $scope.user.userType.name;
         };
 
         $scope.logout = function() {
             $scope.permissions = [];
             $scope.nameType = undefined;
             $localStorage.permissions = undefined;
-            $localStorage.user = undefined;
             $localStorage.timeloged = undefined;
+            holderService.set(undefined);
             $location.path('/');
         };
 

@@ -7,7 +7,7 @@
  * Controller of the integridadUiApp
  */
 angular.module('integridadUiApp')
-    .controller('QuotationCtrl', function( _,$location, $localStorage, clientService, productService, billService,
+    .controller('QuotationCtrl', function( _,$location, holderService, clientService, productService, billService,
                                           utilSeqService) {
         var vm = this;
         vm.error = undefined;
@@ -25,7 +25,8 @@ angular.module('integridadUiApp')
         function _activate() {
             vm.billed = false;
             vm.clientSelected = JSON.parse(localStorage.getItem("client"));
-            vm.companyData = $localStorage.user.subsidiary;
+            vm.user = holderService.get();
+            vm.companyData = vm.user.subsidiary;
             vm.dateBill = new Date();
             vm.seqNumber = undefined;
             vm.productList = undefined;
@@ -58,8 +59,7 @@ angular.module('integridadUiApp')
                 "codigo_porcentaje":0
             };
             vm.medio={};
-            vm.user = $localStorage.user;
-            clientService.getLazyByUserClientId($localStorage.user.subsidiary.userClient.id).then(function(response) {
+            clientService.getLazyByUserClientId(vm.user.subsidiary.userClient.id).then(function(response) {
                 vm.clientList = response;
                 vm.loading = false;
             }).catch(function(error) {
@@ -74,9 +74,9 @@ angular.module('integridadUiApp')
         };
 
         function _getSeqNumber() {
-            vm.numberAddedOne = parseInt($localStorage.user.cashier.quotationNumberSeq) + 1;
-            vm.seqNumberFirstPart = $localStorage.user.subsidiary.threeCode + '-'
-              + $localStorage.user.cashier.threeCode;
+            vm.numberAddedOne = parseInt(vm.user.cashier.quotationNumberSeq) + 1;
+            vm.seqNumberFirstPart = vm.user.subsidiary.threeCode + '-'
+              + vm.user.cashier.threeCode;
             vm.seqNumberSecondPart = utilSeqService._pad_with_zeroes(vm.numberAddedOne, 9);
             vm.seqNumber =  vm.seqNumberFirstPart + '-'
               + vm.seqNumberSecondPart;
@@ -85,8 +85,8 @@ angular.module('integridadUiApp')
         function _initializeBill() {
             vm.bill = {
                 client: vm.clientSelected,
-                userIntegridad: $localStorage.user,
-                subsidiary: $localStorage.user.subsidiary,
+                userIntegridad: vm.user,
+                subsidiary: vm.user.subsidiary,
                 dateCreated: vm.dateBill.getTime(),
                 discount: 0,
                 total: 0,
@@ -182,7 +182,7 @@ angular.module('integridadUiApp')
             } else {
                 var busqueda = variable.toUpperCase();
             };
-            productService.getLazyBySusidiaryId($localStorage.user.subsidiary.id, vm.page, busqueda).then(function(response) {
+            productService.getLazyBySusidiaryId(vm.user.subsidiary.id, vm.page, busqueda).then(function(response) {
                 vm.loading = false;
                 vm.totalPages = response.totalPages;
                 vm.productList = [];
@@ -192,7 +192,7 @@ angular.module('integridadUiApp')
                     });
                     if (productFound === undefined) {
                         var sub = _.find(response.content[i].productBySubsidiaries, function(s) {
-                            return (s.subsidiary.id === $localStorage.user.subsidiary.id && s.active === true);
+                            return (s.subsidiary.id === vm.user.subsidiary.id && s.active === true);
                         });
                         if (sub) {
                             response.content[i].quantity = sub.quantity
@@ -385,7 +385,8 @@ angular.module('integridadUiApp')
             // 0 is typeDocument Bill **************!!!
             billService.create(vm.bill, 0).then(function(respBill) {
                 vm.billed = true;
-                $localStorage.user.cashier.quotationNumberSeq = vm.bill.quotationSeq;
+                vm.user.cashier.quotationNumberSeq = vm.bill.quotationSeq;
+                holderService.set(vm.user)
                 vm.loading = false;
             }).catch(function(error) {
                 vm.loading = false;

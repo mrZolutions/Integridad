@@ -7,7 +7,7 @@
  * Controller of the template contable.tpl.html
  */
 angular.module('integridadUiApp')
-    .controller('ContableCtrl', function(_, $localStorage, cuentaContableService, providerService, eretentionService, billService,
+    .controller('ContableCtrl', function(_, holderService, cuentaContableService, providerService, eretentionService, billService,
                                          utilSeqService, debtsToPayService, clientService, contableService, $location) {
         var vm = this;
         vm.error = undefined;
@@ -20,7 +20,7 @@ angular.module('integridadUiApp')
         vm.ppe = '0a28cbbf-98d5-4ce3-be36-33a7a83bc29e';
         
         vm.aux = undefined;
-        vm.userData = $localStorage.user;
+        vm.userData = holderService.get();
 
         vm.typeBookList = [
             {code: '1', type: 'CONTABILIDAD GENERAL'},
@@ -191,8 +191,8 @@ angular.module('integridadUiApp')
             vm.retenTotalFuente = undefined;
             vm.retenCodeIva = undefined;
             vm.retenTotalIva = undefined;
-            vm.usrCliId = $localStorage.user.subsidiary.userClient.id;
-            vm.subContabActive = $localStorage.user.subsidiary.contab;
+            vm.usrCliId = vm.userData.subsidiary.userClient.id;
+            vm.subContabActive = vm.userData.subsidiary.contab;
             vm.selectedTypeBook = undefined;
             vm.error = undefined;
             if (!vm.subContabActive) {
@@ -288,15 +288,15 @@ angular.module('integridadUiApp')
 
     // Funciones para el Diario de Contabilidad General
         function _getDailyCgSeqNumber() {
-            vm.numberAddedOne = parseInt($localStorage.user.cashier.dailyCgNumberSeq) + 1;
+            vm.numberAddedOne = parseInt(vm.userData.cashier.dailyCgNumberSeq) + 1;
             vm.dailyCgSeq = vm.numberAddedOne;
             vm.dailyCgStringSeq = utilSeqService._pad_with_zeroes(vm.numberAddedOne, 6);
         };
 
         function _initializeDailybookCg() {
             vm.dailybookCg = {
-                userIntegridad: $localStorage.user,
-                subsidiary: $localStorage.user.subsidiary,
+                userIntegridad: vm.userData,
+                subsidiary: vm.userData.subsidiary,
                 subTotalDoce: 0,
                 iva: 0,
                 subTotalCero: 0,
@@ -575,7 +575,7 @@ angular.module('integridadUiApp')
                 vm.dailybookCgNew = false;
                 vm.dailybookCgCreated = response;
                 vm.activeCg = true;
-                $localStorage.user.cashier.dailyCgNumberSeq = vm.dailybookCg.dailyCgSeq;
+                vm.userData.cashier.dailyCgNumberSeq = vm.dailybookCg.dailyCgSeq;
                 vm.dailiedCg = true;
                 vm.loading = false;
             }).catch(function(error) {
@@ -639,7 +639,7 @@ angular.module('integridadUiApp')
 
     //Funciones para el Comprobante de Egreso
         function _getDailyCeSeqNumber() {
-            vm.numberAddedOne = parseInt($localStorage.user.cashier.dailyCeNumberSeq) + 1;
+            vm.numberAddedOne = parseInt(vm.userData.cashier.dailyCeNumberSeq) + 1;
             vm.dailyCeSeq = vm.numberAddedOne;
             vm.dailyCeStringSeq = utilSeqService._pad_with_zeroes(vm.numberAddedOne, 6);
         };
@@ -647,8 +647,8 @@ angular.module('integridadUiApp')
         function _initializeDailybookCe() {
             vm.dailybookCe = {
                 provider: vm.providerCeSelected,
-                userIntegridad: $localStorage.user,
-                subsidiary: $localStorage.user.subsidiary,
+                userIntegridad: vm.userData,
+                subsidiary: vm.userData.subsidiary,
                 subTotalDoce: 0,
                 iva: 0,
                 subTotalCero: 0,
@@ -979,7 +979,8 @@ angular.module('integridadUiApp')
                 vm.dailybookCeManual = false;
                 vm.activeCe = true;
                 vm.dailybookCeCreated = response;
-                $localStorage.user.cashier.dailyCeNumberSeq = vm.dailybookCe.dailyCeSeq;
+                vm.userData.cashier.dailyCeNumberSeq = vm.dailybookCe.dailyCeSeq;
+                holderService.set(vm.userData)
                 vm.dailiedCe = true;
                 vm.loading = false;
             }).catch(function(error) {
@@ -1017,7 +1018,7 @@ angular.module('integridadUiApp')
 
     //Funciones para el Comprobante de Ingreso
         function _getDailyCiSeqNumber() {
-            vm.numberAddedOne = parseInt($localStorage.user.cashier.dailyCiNumberSeq) + 1;
+            vm.numberAddedOne = parseInt(vm.userData.cashier.dailyCiNumberSeq) + 1;
             vm.dailyCiSeq = vm.numberAddedOne;
             vm.dailyCiStringSeq = utilSeqService._pad_with_zeroes(vm.numberAddedOne, 6);
         };
@@ -1025,8 +1026,8 @@ angular.module('integridadUiApp')
         function _initializeDailybookCi() {
             vm.dailybookCi = {
                 client: vm.clientCiSelected,
-                userIntegridad: $localStorage.user,
-                subsidiary: $localStorage.user.subsidiary,
+                userIntegridad: vm.userData,
+                subsidiary: vm.userData.subsidiary,
                 subTotalDoce: 0,
                 iva: 0,
                 subTotalCero: 0,
@@ -1320,7 +1321,8 @@ angular.module('integridadUiApp')
                 vm.dailybookCiManual = false;
                 vm.activeCi = true;
                 vm.dailybookCiCreated = response;
-                $localStorage.user.cashier.dailyCiNumberSeq = vm.dailybookCi.dailyCiSeq;
+                vm.userData.cashier.dailyCiNumberSeq = vm.dailybookCi.dailyCiSeq;
+                holderService.set(vm.userData)
                 vm.dailiedCi = true;
                 vm.loading = false;
             }).catch(function(error) {
@@ -1370,7 +1372,7 @@ angular.module('integridadUiApp')
 
     //Funciones para el Diario de Cuentas por Pagar
         function _getDailyCxPSeqNumber() {
-            vm.numberAddedOne = parseInt($localStorage.user.cashier.dailyCppNumberSeq) + 1;
+            vm.numberAddedOne = parseInt(vm.userData.cashier.dailyCppNumberSeq) + 1;
             vm.dailyCxPSeq = vm.numberAddedOne;
             vm.dailyCxPStringSeq = utilSeqService._pad_with_zeroes(vm.numberAddedOne, 6);
         };
@@ -1378,8 +1380,8 @@ angular.module('integridadUiApp')
         function _initializeDailybookCxP() {
             vm.dailybookCxP = {
                 provider: vm.providerCxPSelected,
-                userIntegridad: $localStorage.user,
-                subsidiary: $localStorage.user.subsidiary,
+                userIntegridad: vm.userData,
+                subsidiary: vm.userData.subsidiary,
                 subTotalDoce: 0,
                 iva: 0,
                 subTotalCero: 0,
@@ -2134,7 +2136,8 @@ angular.module('integridadUiApp')
                         vm.dailybookCxPNew = false;
                         vm.dailybookCxPCreated = response;
                         vm.activeCxP = true;
-                        $localStorage.user.cashier.dailyCppNumberSeq = vm.dailybookCxP.dailycxpSeq;
+                        vm.userData.cashier.dailyCppNumberSeq = vm.dailybookCxP.dailycxpSeq;
+                        holderService.set(vm.userData)
                         vm.dailiedCxP = true;
                         vm.loading = false;
                     }).catch(function(error) {
@@ -2207,7 +2210,7 @@ angular.module('integridadUiApp')
 
     // Funciones para el Diario Comprobante de Facturación - Venta
         function _getDailyFvSeqNumber() {
-            vm.numberAddedOne = parseInt($localStorage.user.cashier.dailyFvNumberSeq) + 1;
+            vm.numberAddedOne = parseInt(vm.userData.cashier.dailyFvNumberSeq) + 1;
             vm.dailyFvSeq = vm.numberAddedOne;
             vm.dailyFvStringSeq = utilSeqService._pad_with_zeroes(vm.numberAddedOne, 6);
         };
@@ -2215,8 +2218,8 @@ angular.module('integridadUiApp')
         function _initializeDailybookFv() {
             vm.dailybookFv = {
                 client: vm.clientFvSelected,
-                userIntegridad: $localStorage.user,
-                subsidiary: $localStorage.user.subsidiary,
+                userIntegridad: vm.userData,
+                subsidiary: vm.userData.subsidiary,
                 subTotalDoce: 0,
                 iva: 0,
                 subTotalCero: 0,
