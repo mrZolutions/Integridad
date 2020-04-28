@@ -21,11 +21,12 @@ public class UserTypePermissions {
 	
 	private String path;
 	private String menuName;
+    private String moduleMenu;
 
 	@ManyToOne
     @JoinColumn(name = "user_type_id")
     private UserType userType;
-    
+
     public void setListsNull(){
     }
     

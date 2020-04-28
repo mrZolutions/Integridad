@@ -9,14 +9,18 @@
 angular.module('integridadUiApp')
     .controller('MenuCtrl', function($rootScope, $scope, holderService, $localStorage, $location) {
         $scope.permissions = [];
+        $scope.permissionsSub = [];
         $rootScope.updateMenu = function() {
             $scope.user = holderService.get();
-            $scope.permissions = $localStorage.permissions;
+            $scope.permissions = _.filter($localStorage.permissions, function(perm){ return perm.type === 'null'; })[0].menu;
+            $scope.permissionsSub = _.filter($localStorage.permissions, function(perm){ return perm.type !== 'null'; });
+            console.log($scope.permissionsSub)
             $scope.nameType = $scope.user.firstName + ' - ' + $scope.user.userType.name;
         };
 
         $scope.logout = function() {
             $scope.permissions = [];
+            $scope.permissionsSub = [];
             $scope.nameType = undefined;
             $localStorage.permissions = undefined;
             $localStorage.timeloged = undefined;
