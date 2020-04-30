@@ -12,13 +12,31 @@ angular.module('integridadUiApp')
         $scope.permissionsSub = [];
         $rootScope.updateMenu = function() {
             $scope.user = holderService.get();
-            $scope.permissions = _.filter($localStorage.permissions, function(perm){ return perm.type === 'null'; })[0].menu;
-            $scope.permissionsSub = _.filter($localStorage.permissions, function(perm){ return perm.type !== 'null'; });
+            // $scope.permissions = _.filter($localStorage.permissions, function(perm){ return perm.type === 'null'; })[0].menu;
+            // $scope.permissionsSub = _.filter($localStorage.permissions, function(perm){ return perm.type !== 'null'; });
+            $scope.permissions = $localStorage.permissions;
             console.log($scope.permissionsSub)
             $scope.nameType = $scope.user.firstName + ' - ' + $scope.user.userType.name;
         };
 
+        $scope.showMainManu = function(){ 
+            return $scope.user !== undefined
+        }
+
+        $scope.loadSubMenu = function(id) {
+            console.log(id)
+            console.log('-*-*-*-*-*-*-*-* 0')
+            var permissionsPre = _.filter($localStorage.permissions, function(perm){ return perm.moduleMenu !== null; });
+            console.log(permissionsPre)
+            console.log('-*-*-*-*-*-*-*-* 1')
+            $scope.permissions = _.filter(permissionsPre, function(perm){ return perm.moduleMenu.id === id; });
+            console.log('-*-*-*-*-*-*-*-* 2')
+            console.log($scope.permissions)
+            console.log('-*-*-*-*-*-*-*-* 3')
+        }
+
         $scope.logout = function() {
+            $scope.user = undefined;
             $scope.permissions = [];
             $scope.permissionsSub = [];
             $scope.nameType = undefined;

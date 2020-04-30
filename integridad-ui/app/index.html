@@ -19,7 +19,7 @@
     <link rel="stylesheet" href="styles/main.css">
     <!-- endbuild -->
   </head>
-  <body ng-app="integridadUiApp">
+  <body ng-app="integridadUiApp"  ng-controller="MenuCtrl">
     <!--[if lte IE 8]>
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
@@ -42,28 +42,36 @@
               Integridad
             </span>
           </div>
+          <ul class="nav navbar-nav navbar-right" ng-if="showMainManu()">
+            <li><a ng-click="loadSubMenu('8b4166cb-467d-48e8-89d7-7d1aeca1c3b5')" >Ventas</a></li>
+            <li><a href="./">Compras</a></li>
+            <li><a ng-click="loadSubMenu('fad769df-c7a4-433a-8edd-c3fa0b2acad8')">Cobros</a></li>
+            <li><a href="./">Pagos</a></li>
+            <li><a href="./">Contabilidad</a></li>
+            <li><a href="./">Inventarios</a></li>
+          </ul>
         </div>
       </nav>
     </header>
     
     <div class="container" style="width: 100%; max-width: 100%;">
       <div class="div-princip">
-        <div class="row" ng-controller="MenuCtrl">
-          <div class="col-md-2" ng-if="nameType != undefined">
+        <div class="row" >
+          <div class="col-md-2" ng-if="showMainManu()">
             <div class="collapse navbar-collapse navbar-inverse nav-back" id="js-navbar-collapse">
-              <ul class="nav navbar-nav">
+              <ul class="nav navbar-nav-in">
                 <li ng-show="nameType != undefined">
                   <a class = "atext-user"><b>{{nameType}}</b></a>
                 </li>
                 <li class="dropdown">
                   <a class="dropdown-toggle" href="#!/home" style="padding-top: 4%; padding-bottom: 4%;" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="true"> <span class="nav-label">Home</span></a>
                 </li>
-                <li class="dropdown" ng-repeat="option in permissionsSub">
+                <!-- <li class="dropdown" ng-repeat="option in permissionsSub">
                   <a class="dropdown-toggle" style="padding-top: 4%; padding-bottom: 4%;" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="true"> <span class="nav-label">{{option.type}}</span> <span class="caret"></span></a>
                   <ul class="dropdown-menu">
                       <li ng-repeat="suboption in option.menu"><a href="{{suboption.path}}">{{suboption.menuName}}</a></li>
                   </ul>
-                </li>
+                </li> -->
                 <li class="dropdown" ng-repeat="option in permissions">
                   <a class="dropdown-toggle" href="{{option.path}}" style="padding-top: 4%; padding-bottom: 4%;" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="true"> <span class="nav-label">{{option.menuName}}</span></a>
                 </li>

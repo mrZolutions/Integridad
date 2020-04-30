@@ -177,6 +177,23 @@ h1, h2, h3, h4, h5, p, a {
   padding-left:0 !important;
 }
 
+.navbar-nav-in > li > a {
+  color:#E2E2E2 !important;
+}
+
+.navbar-nav-in > li > a:hover {
+  background-color: #000;
+  color:white !important;
+  font-weight: bold;
+}
+
+.nav .open > a, .nav .open > a:hover, .nav .open > a:focus {
+  background-color: #000;
+  color:white !important;
+  font-weight: bold;
+  text-decoration: #E2E2E2;
+}
+
 /* Responsive: Portrait tablets and up */
 @media screen and (min-width: 1200px) {
   .container {
@@ -221,13 +238,12 @@ h1, h2, h3, h4, h5, p, a {
     margin-left: 0;
   }	
 
-  .navbar-nav,
-  .navbar-nav > li,
+  .navbar-nav-in,
+  .navbar-nav-in > li,
   .navbar-left,
-  .navbar-right,
   .navbar-header
   {
-    float:none !important;
+    /* float:none !important; */
   }
 
   .navbar-right .dropdown-menu {left:0;right:auto;}
