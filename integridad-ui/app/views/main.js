@@ -21,35 +21,22 @@ angular.module('integridadUiApp')
         vm.error = undefined;
         vm.success = undefined;
 
+
         function getPermissions() {
             var user = holderService.get();
             permissionService.getPermissions(user.userType).then(function(response) {
-                console.log(response)
-                console.log('*-*-*-*-*-*--*-*-*-*-*-*')
                 var toGroup = response;
-                // var grouped =_.groupBy(toGroup, 'moduleMenu.menuName');
-                // console.log(grouped)
+                var grouped = {};
+                toGroup.forEach(function(item){
+                    var list = grouped[item.moduleMenu.id];
+                    if(list){
+                        list.push(item);
+                    } else{
+                        grouped[item.moduleMenu.id] = [item];
+                    }
+                });
 
-                // var grouped =
-                // _
-                // .chain(toGroup)
-                // .groupBy('moduleMenu')
-                // .map(function(value, key) {
-                //     return {
-                //         type: key,
-                //         menu: value
-                //     }
-                // })
-                // .value();
-                // console.log(grouped)
-                // $localStorage.permissions = grouped;
-
-
-
-
-
-
-                $localStorage.permissions = response;
+                $localStorage.permissions = grouped;
                 $rootScope.updateMenu();
                 vm.loading = false;
                 $location.path('/home');

@@ -29,62 +29,56 @@
       <nav class="navbar navbar-inverse nav-back-head">
         <div class="container-fluid">
           <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#js-navbar-collapse">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
               <span class="sr-only">Toggle navigation</span>
               <span class="icon-bar"></span>
               <span class="icon-bar"></span>
               <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand inner">
-              <img src="images/SVG INTEGRIDAD.svg" width="40" height="40" class="d-inline-block align-top" alt="">
-            </a>
-            <span class="atext-brand">
-              Integridad
-            </span>
+            <img src="images/SVG INTEGRIDAD.svg" width="40" height="40" class="d-inline-block align-top" alt="Integridad">
+            <span class="atext-brand navbar-brand"> Integridad </span>
           </div>
-          <ul class="nav navbar-nav navbar-right" ng-if="showMainManu()">
-            <li><a ng-click="loadSubMenu('8b4166cb-467d-48e8-89d7-7d1aeca1c3b5')" >Ventas</a></li>
-            <li><a href="./">Compras</a></li>
-            <li><a ng-click="loadSubMenu('fad769df-c7a4-433a-8edd-c3fa0b2acad8')">Cobros</a></li>
-            <li><a href="./">Pagos</a></li>
-            <li><a href="./">Contabilidad</a></li>
-            <li><a href="./">Inventarios</a></li>
-          </ul>
-        </div>
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav"  ng-show="showMainManu()">
+              <li><a href="#!/home">Home</a></li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Ventas <span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                  <li ng-repeat="option in permissions['8b4166cb-467d-48e8-89d7-7d1aeca1c3b5']">
+                    <a href="{{option.path}}"> <span class="nav-label">{{option.menuName}}</span></a>
+                  </li>
+                </ul>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Cobros <span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                  <li ng-repeat="option in permissions['fad769df-c7a4-433a-8edd-c3fa0b2acad8']">
+                    <a href="{{option.path}}"> <span class="nav-label">{{option.menuName}}</span></a>
+                  </li>
+                </ul>
+              </li>
+              <li><a href="./">Compras</a></li>
+              <li><a href="./">Pagos</a></li>
+              <li><a href="./">Contabilidad</a></li>
+              <li><a href="./">Inventarios</a></li>
+              <li class="nav-item"><a class="nav-link" ng-click="logout()" href="#!/">Salir</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right" style="margin-top: 15px;">
+              <li><b>{{nameType}}</b></li>
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div><!--/.container-fluid -->
       </nav>
     </header>
     
     <div class="container" style="width: 100%; max-width: 100%;">
       <div class="div-princip">
         <div class="row" >
-          <div class="col-md-2" ng-if="showMainManu()">
-            <div class="collapse navbar-collapse navbar-inverse nav-back" id="js-navbar-collapse">
-              <ul class="nav navbar-nav-in">
-                <li ng-show="nameType != undefined">
-                  <a class = "atext-user"><b>{{nameType}}</b></a>
-                </li>
-                <li class="dropdown">
-                  <a class="dropdown-toggle" href="#!/home" style="padding-top: 4%; padding-bottom: 4%;" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="true"> <span class="nav-label">Home</span></a>
-                </li>
-                <!-- <li class="dropdown" ng-repeat="option in permissionsSub">
-                  <a class="dropdown-toggle" style="padding-top: 4%; padding-bottom: 4%;" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="true"> <span class="nav-label">{{option.type}}</span> <span class="caret"></span></a>
-                  <ul class="dropdown-menu">
-                      <li ng-repeat="suboption in option.menu"><a href="{{suboption.path}}">{{suboption.menuName}}</a></li>
-                  </ul>
-                </li> -->
-                <li class="dropdown" ng-repeat="option in permissions">
-                  <a class="dropdown-toggle" href="{{option.path}}" style="padding-top: 4%; padding-bottom: 4%;" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="true"> <span class="nav-label">{{option.menuName}}</span></a>
-                </li>
-                <li class="dropdown">
-                  <a class="dropdown-toggle" ng-click="logout()" style="padding-top: 4%; padding-bottom: 4%;" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="true"> <span class="nav-label">Salir</span></a>
-                </li>
-              </ul>
-            </div>
-          </div>
-
-          <div ng-class="setLayout()" style="background-color: white;">
+          <div class="col-md-1" style="background-color: black;"></div>
+          <div class="col-md-10" style="background-color: white;">
             <div ng-view=""></div>
           </div>
+          <div class="col-md-1" style="background-color: black;"></div>
         </div>
       </div>
     </div>
