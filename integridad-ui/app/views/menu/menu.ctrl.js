@@ -7,9 +7,15 @@
  * Controller of the menu
  */
 angular.module('integridadUiApp')
-    .controller('MenuCtrl', function($rootScope, $scope, holderService, $localStorage, $location) {
+    .controller('MenuCtrl', function($rootScope, $scope, holderService, modulesService, $localStorage, $location) {
         $scope.permissions = [];
         $scope.permissionsSub = [];
+        $scope.modules = [];
+
+        modulesService.getAll().then(function (response){
+            $scope.modules = response;
+        });
+
         $rootScope.updateMenu = function() {
             $scope.user = holderService.get();
             $scope.permissions = $localStorage.permissions;

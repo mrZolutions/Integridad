@@ -40,27 +40,15 @@
           </div>
           <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav"  ng-show="showMainManu()">
-              <li><a href="#!/home">Home</a></li>
-              <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Ventas <span class="caret"></span></a>
+              <li class="nav-item"><a class="nav-link" href="#!/home">Home</a></li>
+              <li class="nav-item dropdown" ng-repeat="mod in modules">
+                <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{mod.menuName}} <span class="caret"></span></a>
                 <ul class="dropdown-menu">
-                  <li ng-repeat="option in permissions['8b4166cb-467d-48e8-89d7-7d1aeca1c3b5']">
+                  <li ng-repeat="option in permissions[mod.id]">
                     <a href="{{option.path}}"> <span class="nav-label">{{option.menuName}}</span></a>
                   </li>
                 </ul>
               </li>
-              <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Cobros <span class="caret"></span></a>
-                <ul class="dropdown-menu">
-                  <li ng-repeat="option in permissions['fad769df-c7a4-433a-8edd-c3fa0b2acad8']">
-                    <a href="{{option.path}}"> <span class="nav-label">{{option.menuName}}</span></a>
-                  </li>
-                </ul>
-              </li>
-              <li><a href="./">Compras</a></li>
-              <li><a href="./">Pagos</a></li>
-              <li><a href="./">Contabilidad</a></li>
-              <li><a href="./">Inventarios</a></li>
               <li class="nav-item"><a class="nav-link" ng-click="logout()" href="#!/">Salir</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right" style="margin-top: 15px;">
@@ -200,6 +188,7 @@
     <script src="scripts/services/subgroup.service.js"></script>
     <script src="scripts/services/subsidiary.service.js"></script>
     <script src="scripts/services/swimming.service.js"></script>
+    <script src="scripts/services/modules.service.js"></script>
     <script src="scripts/services/userType.service.js"></script>
     <script src="scripts/services/utilSeq.service.js"></script>
     <script src="scripts/services/utilString.service.js"></script>
