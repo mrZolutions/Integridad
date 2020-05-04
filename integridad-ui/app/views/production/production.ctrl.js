@@ -127,7 +127,7 @@ angular.module('integridadUiApp')
                 vm.error = error.data;
             });
 
-            cuentaContableService.getCuentaContableByType(vm.userData.subsidiary.userClient.id, 'INVT').then(function(response) {
+            cuentaContableService.getCuentaContableByUserClient(vm.userData.subsidiary.userClient.id).then(function(response) {
                 vm.cuentaContableList = response;
                 vm.loading = false;
             }).catch(function(error) {

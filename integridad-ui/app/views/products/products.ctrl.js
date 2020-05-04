@@ -9,7 +9,7 @@
 angular.module('integridadUiApp')
     .controller('ProductsCtrl', function(_, holderService, $location, productService, utilStringService, projectService,
                                           subsidiaryService, productTypeService, messurementListService, brandService, lineService, groupService,
-                                          subgroupService, warehouseService, $routeParams) {
+                                          subgroupService, warehouseService, cuentaContableService, $routeParams) {
 
         var vm = this;
         vm.error = undefined;
@@ -32,6 +32,7 @@ angular.module('integridadUiApp')
         vm.wizard = 0;
         vm.maxCode = undefined;
         vm.warehouseList = undefined;
+        vm.cuentasContablesList = undefined;
 
         function _activate() {
             vm.user = holderService.get();
@@ -58,6 +59,17 @@ angular.module('integridadUiApp')
 
             warehouseService.getAllWarehouseByUserClientId(vm.userClientId).then(function(response) {
                 vm.warehouseList = response;
+            }).catch(function(error) {
+                vm.loading = false;
+                vm.error = error.data;
+            });
+
+            cuentaContableService.getCuentaContableByUserClient(vm.userClientId).then(function(response) {
+                vm.cuentasContablesList = response;
+                if(vm.optionsConfig){
+                    _filterAccounts();
+                }
+                vm.loading = false;
             }).catch(function(error) {
                 vm.loading = false;
                 vm.error = error.data;
@@ -162,6 +174,35 @@ angular.module('integridadUiApp')
 
         function create() {
             vm.product.productBySubsidiaries = vm.productBySubsidiaries;
+            vm.product.cuentaContableByProducts = [];
+            _.each(vm.cuentasContablesForProductSale, function(cc) {
+                var cuentaContableByProduct = {
+                    cuentaContable: cc,
+                    type: 'VENTA'
+                };
+                vm.product.cuentaContableByProducts.push(cuentaContableByProduct);
+            });
+            _.each(vm.cuentasContablesForProductConsume, function(cc) {
+                var cuentaContableByProduct = {
+                    cuentaContable: cc,
+                    type: 'CONSUMO'
+                };
+                vm.product.cuentaContableByProducts.push(cuentaContableByProduct);
+            });
+            _.each(vm.cuentasContablesForProductFinished, function(cc) {
+                var cuentaContableByProduct = {
+                    cuentaContable: cc,
+                    type: 'PRODUCTO_TERMINADO'
+                };
+                vm.product.cuentaContableByProducts.push(cuentaContableByProduct);
+            });
+            _.each(vm.cuentasContablesForProductCost, function(cc) {
+                var cuentaContableByProduct = {
+                    cuentaContable: cc,
+                    type: 'COSTO_DE_VENTA'
+                };
+                vm.product.cuentaContableByProducts.push(cuentaContableByProduct);
+            });
             vm.product.barCode = vm.productBarCode;
             vm.product.costEach = 0;
             vm.product.costCellar = 0;
@@ -368,6 +409,10 @@ angular.module('integridadUiApp')
             vm.success = undefined;
             vm.error = undefined
             vm.productBySubsidiaries = [];
+            vm.cuentasContablesForProductSale = [];
+            vm.cuentasContablesForProductConsume = [];
+            vm.cuentasContablesForProductFinished = [];
+            vm.cuentasContablesForProductCost = [];
             vm.wizard = 1;
 
             productService.getLastCodeByUserClientIdActive(vm.userClientId).then(
@@ -611,6 +656,46 @@ angular.module('integridadUiApp')
         vm.remove = function() {
             vm.product.active = false;
             update(true);
+        };
+
+        vm.addCuentaContableSale = function(){
+            if (vm.cuentaContableSale !== undefined && vm.cuentaContableSale.id !== undefined) {
+                vm.cuentasContablesForProductSale.push(vm.cuentaContableSale);
+            };
+        };
+
+        vm.removeCCSale = function(cc){
+            vm.cuentasContablesForProductSale = _.filter(vm.cuentasContablesForProductSale, function(cuenta){return cuenta.name !== cc.name})
+        };
+
+        vm.addCuentaContableConsume = function(){
+            if (vm.cuentaContableConsume !== undefined && vm.cuentaContableConsume.id !== undefined) {
+                vm.cuentasContablesForProductConsume.push(vm.cuentaContableConsume);
+            };
+        };
+
+        vm.removeCCConsume = function(cc){
+            vm.cuentasContablesForProductConsume = _.filter(vm.cuentasContablesForProductConsume, function(cuenta){return cuenta.name !== cc.name})
+        };
+
+        vm.addCuentaContableFinished = function(){
+            if (vm.cuentaContableFinished !== undefined && vm.cuentaContableFinished.id !== undefined) {
+                vm.cuentasContablesForProductFinished.push(vm.cuentaContableFinished);
+            };
+        };
+
+        vm.removeCCFinished = function(cc){
+            vm.cuentasContablesForProductFinished = _.filter(vm.cuentasContablesForProductFinished, function(cuenta){return cuenta.name !== cc.name})
+        };
+
+        vm.addCuentaContableCost = function(){
+            if (vm.cuentaContableCost !== undefined && vm.cuentaContableCost.id !== undefined) {
+                vm.cuentasContablesForProductCost.push(vm.cuentaContableCost);
+            };
+        };
+
+        vm.removeCCCost = function(cc){
+            vm.cuentasContablesForProductCost = _.filter(vm.cuentasContablesForProductCost, function(cuenta){return cuenta.name !== cc.name})
         };
 
         vm.cancel = function() {
