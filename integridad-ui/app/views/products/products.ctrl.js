@@ -32,6 +32,7 @@ angular.module('integridadUiApp')
         vm.wizard = 0;
         vm.maxCode = undefined;
         vm.warehouseList = undefined;
+        vm.brandLineError = undefined;
 
         function _activate() {
             vm.user = holderService.get();
@@ -43,6 +44,7 @@ angular.module('integridadUiApp')
             vm.userClientId = vm.user.subsidiary.userClient.id;
             vm.subKarActive = vm.user.subsidiary.kar;
             vm.subsidiaryMain = vm.user.subsidiary;
+            vm.brandLineError = undefined;
             vm.messurements = messurementListService.getMessurementList();
             productTypeService.getproductTypesLazy().then(function(response) {
                 vm.productTypes = response;
@@ -366,7 +368,8 @@ angular.module('integridadUiApp')
         vm.productCreate = function() {
             _getSubsidiaries(false);
             vm.success = undefined;
-            vm.error = undefined
+            vm.error = undefined;
+            vm.brandLineError = undefined;
             vm.productBySubsidiaries = [];
             vm.wizard = 1;
 
@@ -450,38 +453,68 @@ angular.module('integridadUiApp')
         };
 
         vm.saveNewBrand = function() {
-            brandService.create(vm.newBrand).then(function(response) {
-                vm.brands.push(response);
-                vm.product.brand = response;
-                vm.newBrand = undefined;
-            }).catch(function(error) {
-                vm.loading = false;
-                vm.error = error.data;
-            });
+            var repeatedCode = _.filter(vm.brands, function(brand){ return brand.code === vm.newBrand.code; });
+
+            if(_.isEmpty(repeatedCode)){
+                vm.brandLineError = undefined;
+                brandService.create(vm.newBrand).then(function(response) {
+                    vm.brands.push(response);
+                    vm.product.brand = response;
+                    vm.newBrand = undefined;
+                    $('#modalCreateBrand').modal('hide');
+                }).catch(function(error) {
+                    vm.loading = false;
+                    vm.error = error.data;
+                    vm.brandLineError = error.data;
+                });
+            } else {
+                vm.brandLineError = 'Código Duplicado';
+            }
+            
         };
 
         vm.saveNewLine = function() {
-            lineService.create(vm.newLine).then(function(response) {
-                vm.lineas.push(response);
-                vm.selectedLine = response;
-                vm.newLine = undefined;
-                vm.groups = [];
-            }).catch(function(error) {
-                vm.loading = false;
-                vm.error = error.data;
-            });
+            var repeatedCode = _.filter(vm.lineas, function(line){ return line.code === vm.newLine.code; });
+
+            if(_.isEmpty(repeatedCode)){
+                vm.brandLineError = undefined;
+                lineService.create(vm.newLine).then(function(response) {
+                    vm.lineas.push(response);
+                    vm.selectedLine = response;
+                    vm.newLine = undefined;
+                    vm.groups = [];
+                    $('#modalCreateLine').modal('hide');
+                }).catch(function(error) {
+                    vm.loading = false;
+                    vm.error = error.data;
+                    m.brandLineError = error.data;
+                });
+            } else {
+                vm.brandLineError = 'Código Duplicado';
+            }
+            
         };
 
         vm.saveNewGroup = function() {
-            groupService.create(vm.newGroup).then(function(response) {
-                vm.groups.push(response);
-                vm.selectedGroup = response;
-                vm.newGroup = undefined;
-                vm.subGroups = [];
-            }).catch(function(error) {
-                vm.loading = false;
-                vm.error = error.data;
-            });
+            var repeatedCode = _.filter(vm.groups, function(gr){ return gr.code === vm.newGroup.code; });
+
+            if(_.isEmpty(repeatedCode)){
+                vm.brandLineError = undefined;
+                groupService.create(vm.newGroup).then(function(response) {
+                    vm.groups.push(response);
+                    vm.selectedGroup = response;
+                    vm.newGroup = undefined;
+                    vm.subGroups = [];
+                    $('#modalCreateGroup').modal('hide');
+                }).catch(function(error) {
+                    vm.loading = false;
+                    vm.error = error.data;
+                    m.brandLineError = error.data;
+                });
+            } else {
+                vm.brandLineError = 'Código Duplicado';
+            }
+            
         };
 
         vm.saveNewSubGroup = function() {
