@@ -7,7 +7,9 @@
  * Controller of the integridadUiApp
  */
 angular.module('integridadUiApp')
-    .controller('ClientsCtrl', function ($routeParams, $location, projectService, utilStringService, countryListService, clientService, $localStorage, validatorService) {
+    .controller('ClientsCtrl', function ($routeParams, $location, projectService, utilStringService, countryListService, clientService, 
+        holderService, validatorService) {
+
         var vm = this;
         vm.error = undefined;
         vm.success = undefined;
@@ -18,7 +20,8 @@ angular.module('integridadUiApp')
         vm.clientList = undefined;
 
         function _activate() {
-            vm.usrCliId = $localStorage.user.subsidiary.userClient.id;
+            vm.user = holderService.get()
+            vm.usrCliId = vm.user.subsidiary.userClient.id;
             if ($routeParams.create) {
                 vm.clientCreate();
             } else {
@@ -80,7 +83,7 @@ angular.module('integridadUiApp')
         };
 
         vm.clientCreate = function() {
-            projectService.getNumberOfProjects($localStorage.user.subsidiary.userClient.id).then(function(response) {
+            projectService.getNumberOfProjects(vm.user.subsidiary.userClient.id).then(function(response) {
                 vm.success = undefined;
                 vm.error = undefined
                 var number = parseInt(response);
@@ -88,7 +91,7 @@ angular.module('integridadUiApp')
                     country: 'Ecuador',
                     city: 'Quito',
                     codApp: number + 1,
-                    userClient: $localStorage.user.subsidiary.userClient
+                    userClient: vm.user.subsidiary.userClient
                 };
             }).catch(function(error) {
                 vm.loading = false;

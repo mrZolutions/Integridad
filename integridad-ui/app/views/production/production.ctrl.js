@@ -7,7 +7,7 @@
  * Controller of the integridadUiApp
  */
 angular.module('integridadUiApp')
-    .controller('ProductionCtrl', function(_, $localStorage, providerService, productService, warehouseService, validatorService, subsidiaryService, $routeParams,
+    .controller('ProductionCtrl', function(_, holderService, providerService, productService, warehouseService, validatorService, subsidiaryService, $routeParams,
                                            productTypeService, messurementListService, clientService, cellarService, consumptionService, utilSeqService, $location,
                                            cuentaContableService,brandService, lineService, groupService, subgroupService, utilStringService) {
 
@@ -15,7 +15,7 @@ angular.module('integridadUiApp')
         vm.error = undefined;
         vm.success = undefined;
         vm.loading = false;
-        vm.userData = $localStorage.user;
+        vm.userData = holderService.get();
         vm.clientList = undefined;
         vm.catedral = '1e2049c3-a3bc-4231-a0de-dded8020dc1b';
         vm.maxCode = undefined;
@@ -104,10 +104,10 @@ angular.module('integridadUiApp')
                 "codigo": "2",
                 "codigo_porcentaje": 0
             };
-            vm.usrCliId = $localStorage.user.subsidiary.userClient.id;
-            vm.subsidiaryId = $localStorage.user.subsidiary.id;
-            vm.userCode = $localStorage.user.userType.code;
-            vm.userId = $localStorage.user.id;
+            vm.usrCliId = vm.userData.subsidiary.userClient.id;
+            vm.subsidiaryId = vm.userData.subsidiary.id;
+            vm.userCode = vm.userData.userType.code;
+            vm.userId = vm.userData.id;
             vm.provider = undefined;
             vm.messurements = messurementListService.getMessurementList();
 
@@ -127,7 +127,7 @@ angular.module('integridadUiApp')
                 vm.error = error.data;
             });
 
-            cuentaContableService.getCuentaContableByType($localStorage.user.subsidiary.userClient.id, 'INVT').then(function(response) {
+            cuentaContableService.getCuentaContableByType(vm.userData.subsidiary.userClient.id, 'INVT').then(function(response) {
                 vm.cuentaContableList = response;
                 vm.loading = false;
             }).catch(function(error) {
@@ -163,7 +163,7 @@ angular.module('integridadUiApp')
 
         //Cellar Code
         function _getCellarSeqNumber() {
-            vm.numberAddedOne = parseInt($localStorage.user.cashier.whNumberSeq) + 1;
+            vm.numberAddedOne = parseInt(vm.userData.cashier.whNumberSeq) + 1;
             vm.cellSeqNumber = utilSeqService._pad_with_zeroes(vm.numberAddedOne, 6);
         };
 
@@ -171,8 +171,8 @@ angular.module('integridadUiApp')
             vm.cellar = {
                 warehouse: vm.warehouse,
                 provider: vm.providerSelected,
-                userIntegridad: $localStorage.user,
-                subsidiary: $localStorage.user.subsidiary,
+                userIntegridad: vm.userData,
+                subsidiary: vm.userData.subsidiary,
                 dateEnterCellar: vm.dateCellar.getTime(),
                 total: 0,
                 subTotal: 0,
@@ -469,7 +469,8 @@ angular.module('integridadUiApp')
                     cellarService.create(vm.cellar).then(function(respCellar) {
                         vm.celled = true;
                         vm.cellarCreated = respCellar;
-                        $localStorage.user.cashier.whNumberSeq = vm.numberAddedOne;
+                        vm.userData.cashier.whNumberSeq = vm.numberAddedOne;
+                        holderService.set(vm.userData);
                         vm.loading = false;
                     }).catch(function(error) {
                         vm.loading = false;
@@ -583,7 +584,7 @@ angular.module('integridadUiApp')
                     vm.loading = false;
                 });
             } else {
-                productService.getLazyBySusidiaryId($localStorage.user.subsidiary.id, vm.pageSet, busquedaSet).then(function(response) {
+                productService.getLazyBySusidiaryId(vm.userData.subsidiary.id, vm.pageSet, busquedaSet).then(function(response) {
                     vm.totalElementsSet = response.totalElements;
                     vm.totalPagesSet = response.totalPages;
                     _getProductQuantitiesSet(response.content);
@@ -610,7 +611,7 @@ angular.module('integridadUiApp')
         function _getProductQuantitiesSet(listResponse) {
             for (var i = 0; i < listResponse.length; i++) {
                 var sub = _.find(listResponse[i].productBySubsidiaries, function(s) {
-                    return (s.subsidiary.id === $localStorage.user.subsidiary.id && s.active === true);
+                    return (s.subsidiary.id === vm.userData.subsidiary.id && s.active === true);
                 });
                 if (sub) {
                     listResponse[i].quantity = sub.quantity
@@ -763,7 +764,7 @@ angular.module('integridadUiApp')
                     vm.loading = false;
                 });
             } else {
-                productService.getLazyBySusidiaryId($localStorage.user.subsidiary.id, vm.pageKar, busquedaKar).then(function(response) {
+                productService.getLazyBySusidiaryId(vm.userData.subsidiary.id, vm.pageKar, busquedaKar).then(function(response) {
                     vm.totalElementsKar = response.totalElements;
                     vm.totalPagesKar = response.totalPages;
                     _getProductQuantitiesKar(response.content);
@@ -790,7 +791,7 @@ angular.module('integridadUiApp')
         function _getProductQuantitiesKar(listResponse) {
             for (var i = 0; i < listResponse.length; i++) {
                 var sub = _.find(listResponse[i].productBySubsidiaries, function(s) {
-                    return (s.subsidiary.id === $localStorage.user.subsidiary.id && s.active === true);
+                    return (s.subsidiary.id === vm.userData.subsidiary.id && s.active === true);
                 });
                 if (sub) {
                     listResponse[i].quantity = sub.quantity
@@ -816,7 +817,7 @@ angular.module('integridadUiApp')
 
         //Consumption Code
         function _getCsmSeqNumber() {
-            vm.numberCsmAddedOne = parseInt($localStorage.user.cashier.csmNumberSeq) + 1;
+            vm.numberCsmAddedOne = parseInt(vm.userData.cashier.csmNumberSeq) + 1;
             vm.csmSeqNumber = utilSeqService._pad_with_zeroes(vm.numberCsmAddedOne, 6);
         };
 
@@ -824,8 +825,8 @@ angular.module('integridadUiApp')
             vm.consumption = {
                 client: vm.clientSelected,
                 warehouse: vm.warehouse,
-                userIntegridad: $localStorage.user,
-                subsidiary: $localStorage.user.subsidiary,
+                userIntegridad: vm.userData,
+                subsidiary: vm.userData.subsidiary,
                 dateConsumption: vm.dateConsumption.getTime(),
                 total: 0,
                 subTotal: 0,
@@ -860,7 +861,7 @@ angular.module('integridadUiApp')
         };
 
         vm.clientSelect = function(client) {
-            vm.companyData = $localStorage.user.subsidiary;
+            vm.companyData = vm.userData.subsidiary;
             vm.dateConsumption = new Date();
             vm.clientList = undefined;
             vm.warehouseSelected = true;
@@ -999,7 +1000,8 @@ angular.module('integridadUiApp')
                 vm.consumption.detailsKardex.push(kardex);
             });
             consumptionService.create(consumption).then(function(respConsumption) {
-                $localStorage.user.cashier.csmNumberSeq = vm.numberCsmAddedOne;
+                vm.userData.cashier.csmNumberSeq = vm.numberCsmAddedOne;
+                holderService.set(vm.userData);
                 vm.consumptionCreated = respConsumption;
                 vm.consumptioned = true;
                 vm.loading = false;
@@ -1052,7 +1054,7 @@ angular.module('integridadUiApp')
             } else {
                 var busquedaCsm = variable.toUpperCase();
             };
-            productService.getLazyBySusidiaryId($localStorage.user.subsidiary.id, vm.page, busquedaCsm).then(function(response) {
+            productService.getLazyBySusidiaryId(vm.userData.subsidiary.id, vm.page, busquedaCsm).then(function(response) {
                 vm.loading = false;
                 vm.totalPages = response.totalPages;
                 vm.productList = [];
@@ -1062,7 +1064,7 @@ angular.module('integridadUiApp')
                     });
                     if (productFound === undefined) {
                         var sub = _.find(response.content[i].productBySubsidiaries, function(s) {
-                            return (s.subsidiary.id === $localStorage.user.subsidiary.id && s.active === true);
+                            return (s.subsidiary.id === vm.userData.subsidiary.id && s.active === true);
                         });
                         if (sub) {
                             response.content[i].quantity = sub.quantity
@@ -1175,7 +1177,7 @@ angular.module('integridadUiApp')
             } else {
                 var busquedaCellar = variableCellar.toUpperCase();
             };
-            productService.getLazyBySusidiaryId($localStorage.user.subsidiary.id, vm.page, busquedaCellar).then(function(response) {
+            productService.getLazyBySusidiaryId(vm.userData.subsidiary.id, vm.page, busquedaCellar).then(function(response) {
                 vm.loading = false;
                 vm.totalPages = response.totalPages;
                 vm.productList = [];
@@ -1185,7 +1187,7 @@ angular.module('integridadUiApp')
                     });
                     if (productFound === undefined) {
                         var sub = _.find(response.content[i].productBySubsidiaries, function(s) {
-                            return (s.subsidiary.id === $localStorage.user.subsidiary.id && s.active === true);
+                            return (s.subsidiary.id === vm.userData.subsidiary.id && s.active === true);
                         });
                         if (sub) {
                             response.content[i].quantity = sub.quantity
@@ -1335,7 +1337,7 @@ angular.module('integridadUiApp')
         // NEW PRODUCT ----------------------
 
         function _getSubsidiaries() {
-            subsidiaryService.getByProjectId($localStorage.user.subsidiary.userClient.id).then(function(response) {
+            subsidiaryService.getByProjectId(vm.userData.subsidiary.userClient.id).then(function(response) {
                 vm.subsidiaries = response;
             }).catch(function(error) {
                 vm.loading = false;
@@ -1344,7 +1346,7 @@ angular.module('integridadUiApp')
         };
 
         function _getBrands() {
-            brandService.getBrandsLazy($localStorage.user.subsidiary.userClient.id).then(function(response) {
+            brandService.getBrandsLazy(vm.userData.subsidiary.userClient.id).then(function(response) {
                 vm.brands = response;
             }).catch(function(error) {
                 vm.loading = false;
@@ -1353,7 +1355,7 @@ angular.module('integridadUiApp')
         };
 
         function _getLines() {
-            lineService.getLinesLazy($localStorage.user.subsidiary.userClient.id).then(function(response) {
+            lineService.getLinesLazy(vm.userData.subsidiary.userClient.id).then(function(response) {
                 vm.lineas = response;
             }).catch(function(error) {
                 vm.loading = false;
@@ -1449,7 +1451,7 @@ angular.module('integridadUiApp')
             );
 
             vm.product = {
-                userClient: $localStorage.user.subsidiary.userClient,
+                userClient: vm.userData.subsidiary.userClient,
                 productBySubsidiaries: []
             };
         };
@@ -1550,7 +1552,7 @@ angular.module('integridadUiApp')
 
         vm.createBrand = function() {
             vm.newBrand = {
-                userClient: $localStorage.user.subsidiary.userClient,
+                userClient: vm.userData.subsidiary.userClient,
                 code: vm.brands.length + 1,
                 active: true
             };
@@ -1558,7 +1560,7 @@ angular.module('integridadUiApp')
 
         vm.createLine = function() {
             vm.newLine = {
-                userClient: $localStorage.user.subsidiary.userClient,
+                userClient: vm.userData.subsidiary.userClient,
                 code: vm.lineas.length + 1,
                 active: true,
                 groupLines:[]

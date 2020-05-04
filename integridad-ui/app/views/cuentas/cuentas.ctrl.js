@@ -7,13 +7,14 @@
  * Controller of the integridadUiApp
  */
 angular.module('integridadUiApp')
-    .controller('CuentasContablesCtrl', function(_, $location, $localStorage, cuentaContableService) {
+    .controller('CuentasContablesCtrl', function(_, $location, holderService, cuentaContableService) {
         var vm = this;
         vm.error = undefined;
         vm.success = undefined;
         vm.loading = false;
         vm.cuentasContablesList = undefined;
         vm.typeSelected = {};
+        vm.user = holderService.get();
 
         vm.tipoCtaCtable = [
             {code: 'GENE' ,name: 'GENERAL'}, {code: 'BIEN' ,name: 'BIENES'},
@@ -31,8 +32,8 @@ angular.module('integridadUiApp')
             vm.error = undefined;
             vm.success = undefined;
             vm.cuentaSelected = undefined;
-            vm.user = $localStorage.user;
-            vm.subContabActive = $localStorage.user.subsidiary.contab;
+            vm.user = vm.user;
+            vm.subContabActive = vm.user.subsidiary.contab;
             if (vm.subContabActive) {
                 vm.loading = true;
                 cuentaContableService.getCuentaContableByUserClient(vm.user.subsidiary.userClient.id).then(function(response) {

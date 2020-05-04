@@ -7,12 +7,12 @@
  * Controller of the integridadUiApp
  */
 angular.module('integridadUiApp')
-    .controller('UserEditCtrl', function($rootScope, utilStringService, $location, authService, $localStorage) {
+    .controller('UserEditCtrl', function($rootScope, utilStringService, $location, authService, holderService) {
         var vm = this;
         vm.error = undefined;
         vm.success = undefined;
         vm.loading = false;
-        vm.userIntegridad = angular.copy($localStorage.user);
+        vm.userIntegridad = angular.copy(holderService.get());
         vm.changePassword = false;
         vm.passwordNotMatch = false;
 
@@ -54,7 +54,7 @@ angular.module('integridadUiApp')
                     vm.loading = false;
                     vm.error = undefined;
                     vm.success = 'Perfil actualizado con exito';
-                    $localStorage.user = response;
+                    holderService.set(response)
                     $rootScope.updateMenu();
                 }).catch(function(error) {
                     vm.loading = false;
@@ -64,7 +64,7 @@ angular.module('integridadUiApp')
         };
 
         vm.cancel = function() {
-            vm.userIntegridad = angular.copy($localStorage.user);
+            vm.userIntegridad = angular.copy(holderService.get());
             vm.success = undefined;
             vm.error = undefined
             vm.changePassword = false;

@@ -7,7 +7,7 @@
  * Controller of the integridadUiApp
  */
 angular.module('integridadUiApp')
-    .controller('BillCtrl', function(_, $location, utilStringService, $localStorage, consumptionService,
+    .controller('BillCtrl', function(_, $location, holderService, consumptionService,
                                      clientService, productService, authService, billService, warehouseService,
                                      cashierService, requirementService, utilSeqService, configCuentasService) {
         var vm = this;
@@ -94,13 +94,13 @@ angular.module('integridadUiApp')
             };
             vm.medio = {};
             vm.pagos = [];
-            vm.user = $localStorage.user;
-            vm.userId = $localStorage.user.id;
-            vm.userClientId = $localStorage.user.subsidiary.userClient.id;
-            vm.subsidiaryId = $localStorage.user.subsidiary.id;
-            vm.subOnlineActive = $localStorage.user.subsidiary.online;
-            vm.userCashier = $localStorage.user.cashier;
-            vm.userSubsidiary = $localStorage.user.subsidiary;
+            vm.user = holderService.get();
+            vm.userId = vm.user.id;
+            vm.userClientId = vm.user.subsidiary.userClient.id;
+            vm.subsidiaryId = vm.user.subsidiary.id;
+            vm.subOnlineActive = vm.user.subsidiary.online;
+            vm.userCashier = vm.user.cashier;
+            vm.userSubsidiary = vm.user.subsidiary;
             if (vm.subOnlineActive) {
                 vm.loading = true;
                 clientService.getLazyByUserClientId(vm.userClientId).then(function(response) {
@@ -133,13 +133,13 @@ angular.module('integridadUiApp')
         };
 
         function _getComprobanteCobroSeqNumber() {
-            vm.numbAddedOne = parseInt($localStorage.user.cashier.compCobroNumberSeq) + 1;
+            vm.numbAddedOne = parseInt(vm.user.cashier.compCobroNumberSeq) + 1;
             vm.comprobanteCobroSeq = vm.numbAddedOne;
             vm.comprobanteCobroStringSeq = utilSeqService._pad_with_zeroes(vm.numbAddedOne, 6);
         };
 
         function _getDailyCiSeqNumber() {
-            vm.numberAddedOne = parseInt($localStorage.user.cashier.dailyCiNumberSeq) + 1;
+            vm.numberAddedOne = parseInt(vm.user.cashier.dailyCiNumberSeq) + 1;
             vm.dailyCiSeq = vm.numberAddedOne;
             vm.dailyCiStringSeq = utilSeqService._pad_with_zeroes(vm.numberAddedOne, 6);
         };
@@ -173,8 +173,8 @@ angular.module('integridadUiApp')
         function _initializeBill() {
             vm.bill = {
                 client: vm.clientSelected,
-                userIntegridad: $localStorage.user,
-                subsidiary: $localStorage.user.subsidiary,
+                userIntegridad: vm.user,
+                subsidiary: vm.user.subsidiary,
                 dateCreated: vm.dateBill.getTime(),
                 discount: 0,
                 total: 0,
@@ -188,7 +188,7 @@ angular.module('integridadUiApp')
 
         vm.filterBarCode = function(){
             if(vm.billBarCode.length === 13){
-                productService.getLazyBySusidiaryIdBarCode($localStorage.user.subsidiary.id, vm.billBarCode).then(function(response) {
+                productService.getLazyBySusidiaryIdBarCode(vm.user.subsidiary.id, vm.billBarCode).then(function(response) {
                     if(!_.isEmpty(response)) {
                         vm.quantity = 1;
                         vm.toAdd = response[0];
@@ -361,7 +361,7 @@ angular.module('integridadUiApp')
             } else {
                 var busqueda = variable.toUpperCase();
             };
-            productService.getLazyBySusidiaryIdForBill($localStorage.user.subsidiary.id, vm.page, busqueda).then(function(response) {
+            productService.getLazyBySusidiaryIdForBill(vm.user.subsidiary.id, vm.page, busqueda).then(function(response) {
                 vm.loading = false;
                 vm.totalPages = response.totalPages;
                 vm.productList = [];
@@ -371,7 +371,7 @@ angular.module('integridadUiApp')
                     });
                     if (productFound === undefined) {
                         var sub = _.find(response.content[i].productBySubsidiaries, function(s) {
-                            return (s.subsidiary.id === $localStorage.user.subsidiary.id && s.active === true);
+                            return (s.subsidiary.id === vm.user.subsidiary.id && s.active === true);
                         });
                         if (sub) {
                             response.content[i].quantity = sub.quantity
@@ -554,7 +554,7 @@ angular.module('integridadUiApp')
 
         vm.validateAdm = function() {
             vm.errorValidateAdm = undefined;
-            var userAdm = $localStorage.user.user;
+            var userAdm = vm.user.user;
             userAdm.password = vm.passwordAdm;
             authService.authUser(userAdm).then(function(response) {
                 vm.loading = false;
@@ -566,7 +566,7 @@ angular.module('integridadUiApp')
         };
 
         vm.verifyUser = function() {
-            vm.isEmp = $localStorage.user.userType.code === 'EMP';
+            vm.isEmp = vm.user.userType.code === 'EMP';
         };
 
         vm.loadMedio = function() {
@@ -692,7 +692,7 @@ angular.module('integridadUiApp')
                 vm.detailList = undefined;
                 vm.billList = undefined;
                 vm.bill = response;
-                vm.companyData = $localStorage.user.subsidiary;
+                vm.companyData = vm.user.subsidiary;
                 vm.clientSelected = response.client;
                 vm.pagos = response.pagos;
                 var dateToShow = new Date(response.dateCreated);
@@ -896,7 +896,7 @@ angular.module('integridadUiApp')
                 vm.bill.discountPercentage = 0;
             };
 
-            var req = requirementService.createRequirement(vm.clientSelected, vm.bill, $localStorage.user, vm.impuestosTotales, vm.items, vm.pagos);
+            var req = requirementService.createRequirement(vm.clientSelected, vm.bill, vm.user, vm.impuestosTotales, vm.items, vm.pagos);
             var reqBill = {requirement : req, bill: vm.bill}
 
             vm.comprobanteCobro = {};
@@ -906,8 +906,8 @@ angular.module('integridadUiApp')
                 if(vm.pagos[0].code === 'efectivo'){
                     vm.comprobanteCobro = {
                         client: vm.clientSelected,
-                        userIntegridad: $localStorage.user,
-                        subsidiary: $localStorage.user.subsidiary,
+                        userIntegridad: vm.user,
+                        subsidiary: vm.user.subsidiary,
                         clientName: vm.clientSelected.name,
                         clientRuc: vm.clientSelected.identification,
                         subTotalDoce: 0,
@@ -943,8 +943,8 @@ angular.module('integridadUiApp')
 
                     vm.dailybookCi = {
                         client: vm.clientSelected,
-                        userIntegridad: $localStorage.user,
-                        subsidiary: $localStorage.user.subsidiary,
+                        userIntegridad: vm.user,
+                        subsidiary: vm.user.subsidiary,
                         clientProvName: vm.clientSelected.name,
                         subTotalDoce: 0,
                         iva: 0,
@@ -1014,11 +1014,12 @@ angular.module('integridadUiApp')
               vm.billed = true;
               vm.newBill = false;
               vm.newBuy = false;
-              $localStorage.user.cashier.billNumberSeq = vm.bill.billSeq;
+              vm.user.cashier.billNumberSeq = vm.bill.billSeq;
               if(vm.comprobanteCobro.comprobanteSeq !== undefined){
-                $localStorage.user.cashier.compCobroNumberSeq = vm.comprobanteCobro.comprobanteSeq;
-                $localStorage.user.cashier.dailyCiNumberSeq = vm.dailybookCi.dailyCiSeq;
+                vm.user.cashier.compCobroNumberSeq = vm.comprobanteCobro.comprobanteSeq;
+                vm.user.cashier.dailyCiNumberSeq = vm.dailybookCi.dailyCiSeq;
               }
+              holderService.set(vm.user);
               vm.loading = false;
               setTimeout(function() {
                 vm.user.cashier.specialPrint ? vm.printToCart('printMatrixBillId') : document.getElementById("printBtnBill").click();
@@ -1027,7 +1028,7 @@ angular.module('integridadUiApp')
                 vm.nuevaBill();
             }, 300);
               if (vm.seqChanged) {
-                  cashierService.update($localStorage.user.cashier).then(function(resp) {
+                  cashierService.update(vm.user.cashier).then(function(resp) {
                       // cashier updated
                   }).catch(function(error) {
                       vm.loading = false;
@@ -1042,15 +1043,15 @@ angular.module('integridadUiApp')
 
         //Consumption Code
         function _getCsmSeqNumber() {
-            vm.numberCsmAddedOne = parseInt($localStorage.user.cashier.csmNumberSeq) + 1;
+            vm.numberCsmAddedOne = parseInt(vm.user.cashier.csmNumberSeq) + 1;
             vm.csmSeqNumber = utilSeqService._pad_with_zeroes(vm.numberCsmAddedOne, 6);
         };
 
         function _initializeConsumption() {
             vm.consumption = {
                 client: vm.clientSelected,
-                userIntegridad: $localStorage.user,
-                subsidiary: $localStorage.user.subsidiary,
+                userIntegridad: vm.user,
+                subsidiary: vm.user.subsidiary,
                 dateConsumption: vm.dateBill.getTime(),
                 total: 0,
                 subTotal: 0,
@@ -1098,7 +1099,8 @@ angular.module('integridadUiApp')
                     vm.consumption.detailsKardex.push(kardex);
                 });
                 consumptionService.create(consumption).then(function(respConsumption) {
-                    $localStorage.user.cashier.csmNumberSeq = vm.numberCsmAddedOne;
+                    vm.user.cashier.csmNumberSeq = vm.numberCsmAddedOne;
+                    holderService.set(vm.user);
                     vm.consumptionCreated = respConsumption;
                     vm.consumptioned = true;
                     vm.newBuy = false;

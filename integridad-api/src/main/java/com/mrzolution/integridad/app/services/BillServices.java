@@ -617,7 +617,7 @@ public class BillServices {
         detailDailybookContab.setName("FACTURA N. " + saved.getStringSeq());
         detailDailybookContab.setDateDetailDailybook(saved.getDateCreated());
         detailDailybookContab.setDailybookNumber(sequence);
-        detailDailybookContab.setUserClientId(saved.getUserIntegridad().getSubsidiary().getUserClient().getId().toString());
+        detailDailybookContab.setUserClientId(String.valueOf(saved.getUserIntegridad().getSubsidiary().getUserClient().getId()));
         detailDailybookContab.setActive(true);
 
         detailDailybookContab.setCodeConta(codeConta);

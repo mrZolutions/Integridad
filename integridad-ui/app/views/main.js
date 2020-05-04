@@ -7,7 +7,7 @@
  * Controller of the integridadUiApp
  */
 angular.module('integridadUiApp')
-    .controller('MainCtrl', function ($rootScope, $location, authService, utilStringService, permissionService, $localStorage) {
+    .controller('MainCtrl', function ($rootScope, $location, authService, utilStringService, permissionService, holderService, $localStorage) {
         var vm = this;
         vm.error = undefined;
         vm.success = undefined;
@@ -22,7 +22,8 @@ angular.module('integridadUiApp')
         vm.success = undefined;
 
         function getPermissions() {
-            permissionService.getPermissions($localStorage.user.userType).then(function(response) {
+            var user = holderService.get();
+            permissionService.getPermissions(user.userType).then(function(response) {
                 $localStorage.permissions = response;
                 $rootScope.updateMenu();
                 vm.loading = false;
@@ -37,11 +38,13 @@ angular.module('integridadUiApp')
             vm.loading = true;
             var user = {email: vm.email, password: vm.password};
             authService.authUser(user).then(function(response) {
-                $localStorage.user = response;
-                if ($localStorage.user.tempPass) {
+                // $localStorage.user = response;
+                holderService.set(response);
+                var userSaved = holderService.get();
+                if (response.tempPass) {
                     vm.loading = false;
                     vm.passwordNotMatch = false;
-                    vm.userIntegridad = angular.copy($localStorage.user);
+                    vm.userIntegridad = angular.copy(userSaved.user);
                     $('#modalChangePassword').modal('show');
                 } else {
                     var d = new Date();
@@ -61,7 +64,7 @@ angular.module('integridadUiApp')
             authService.updateUser(vm.userIntegridad).then(function(response) {
                 vm.error = undefined;
                 vm.success = 'Perfil actualizado con exito';
-                $localStorage.user = response;
+                holderService.set(response);
                 var d = new Date();
                 $localStorage.timeloged = d.getTime();
                 getPermissions();
