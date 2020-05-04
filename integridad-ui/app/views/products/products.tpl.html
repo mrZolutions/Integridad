@@ -417,10 +417,13 @@
                             <label>C&oacute;digo: </label>
                             <input type="text" ng-model="vm.newBrand.code" class="form-control">
                         </div>
+                        <div class="form-group col-md-6" ng-show="vm.brandLineError !== undefined">
+                            <div class="alert alert-danger">{{vm.brandLineError}}</div>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" title="Aceptar" class="btn btn-success btn-sm" ng-click="vm.saveNewBrand()" data-dismiss="modal">
+                    <button type="button" title="Aceptar" class="btn btn-success btn-sm" ng-click="vm.saveNewBrand()">
                             <span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span>
                     </button>
                     <button type="button" title="Salir" class="btn btn-primary btn-sm" ng-click="vm.newBrand = undefined" data-dismiss="modal">
@@ -493,10 +496,13 @@
                             <label>C&oacute;digo: </label>
                             <input type="text" ng-model="vm.newLine.code" class="form-control">
                         </div>
+                        <div class="form-group col-md-6" ng-show="vm.brandLineError !== undefined">
+                            <div class="alert alert-danger">{{vm.brandLineError}}</div>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" title="Aceptar" class="btn btn-success btn-sm" ng-click="vm.saveNewLine()" data-dismiss="modal">
+                    <button type="button" title="Aceptar" class="btn btn-success btn-sm" ng-click="vm.saveNewLine()">
                             <span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span>
                     </button>
                     <button type="button" title="Salir" class="btn btn-primary btn-sm" ng-click="vm.newLine = undefined" data-dismiss="modal">
@@ -568,10 +574,13 @@
                             <label>C&oacute;digo: </label>
                             <input type="text" ng-model="vm.newGroup.code" class="form-control">
                         </div>
+                        <div class="form-group col-md-6" ng-show="vm.brandLineError !== undefined">
+                            <div class="alert alert-danger">{{vm.brandLineError}}</div>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" title="Aceptar" class="btn btn-success btn-sm" ng-click="vm.saveNewGroup()" data-dismiss="modal">
+                    <button type="button" title="Aceptar" class="btn btn-success btn-sm" ng-click="vm.saveNewGroup()">
                             <span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span>
                     </button>
                     <button type="button" title="Salir" class="btn btn-primary btn-sm" ng-click="vm.newGroup = undefined" data-dismiss="modal">
@@ -643,10 +652,13 @@
                             <label>C&oacute;digo: </label>
                             <input type="text" ng-model="vm.newSubGroup.code" class="form-control">
                         </div>
+                        <div class="form-group col-md-6" ng-show="vm.brandLineError !== undefined">
+                            <div class="alert alert-danger">{{vm.brandLineError}}</div>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" title="Aceptar" class="btn btn-success btn-sm" ng-click="vm.saveNewSubGroup()" data-dismiss="modal">
+                    <button type="button" title="Aceptar" class="btn btn-success btn-sm" ng-click="vm.saveNewSubGroup()">
                             <span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span>
                     </button>
                     <button type="button" title="Salir" class="btn btn-primary btn-sm" ng-click="vm.newSubGroup = undefined" data-dismiss="modal">
