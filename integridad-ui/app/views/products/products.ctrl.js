@@ -509,7 +509,7 @@ angular.module('integridadUiApp')
                 }).catch(function(error) {
                     vm.loading = false;
                     vm.error = error.data;
-                    m.brandLineError = error.data;
+                    vm.brandLineError = error.data;
                 });
             } else {
                 vm.brandLineError = 'Código Duplicado';
@@ -518,14 +518,23 @@ angular.module('integridadUiApp')
         };
 
         vm.saveNewSubGroup = function() {
-            subgroupService.create(vm.newSubGroup).then(function(response) {
-                vm.subGroups.push(response);
-                vm.product.subgroup = response;
-                vm.newSubGroup = undefined;
-            }).catch(function(error) {
-                vm.loading = false;
-                vm.error = error.data;
-            });
+            var repeatedCode = _.filter(vm.subGroups, function(sub){ return sub.code === vm.newSubGroup.code; });
+
+            if(_.isEmpty(repeatedCode)){
+                subgroupService.create(vm.newSubGroup).then(function(response) {
+                    vm.subGroups.push(response);
+                    vm.product.subgroup = response;
+                    vm.newSubGroup = undefined;
+                    $('#modalCreateSubGroup').modal('hide');
+                }).catch(function(error) {
+                    vm.loading = false;
+                    vm.error = error.data;
+                    vm.brandLineError = error.data;
+                });
+            } else {
+                vm.brandLineError = 'Código Duplicado';
+            }
+            
         };
 
         vm.validateAndContinueToWiz2 = function() {
