@@ -1,9 +1,10 @@
 angular
     .module('app.services')
-    .factory('authorizationService', function($localStorage) {
+    .factory('authorizationService', function(holderService) {
         return {
             isLoggedIn : function() {
-                return($localStorage.user)? $localStorage.user : false;
+                var user = holderService.get();
+                return(user)? user : false;
             }
         };
 });

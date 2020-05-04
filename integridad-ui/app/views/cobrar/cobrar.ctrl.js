@@ -7,14 +7,14 @@
  * Controller of the integridadUiApp
  */
 angular.module('integridadUiApp')
-    .controller('CuentasCobrarCtrl', function(_, $localStorage, clientService, cuentaContableService, paymentService, dateService, utilSeqService,
+    .controller('CuentasCobrarCtrl', function(_, holderService, clientService, cuentaContableService, paymentService, dateService, utilSeqService,
                                               creditsbillService, $location, billService, eretentionClientService, contableService, comprobanteService) {
         var vm = this;
         vm.error = undefined;
         vm.success = undefined;
 
         vm.loading = false;
-        vm.userData = $localStorage.user;
+        vm.userData = holderService.get();
         
         vm.documentType = [
             {code: '01', name: 'Factura'},
@@ -173,9 +173,9 @@ angular.module('integridadUiApp')
             vm.itemsMultipleCobros = [];
             vm.billsSelected = [];
 
-            vm.userCashier = $localStorage.user.cashier;
-            vm.usrCliId = $localStorage.user.subsidiary.userClient.id;
-            vm.subCxCActive = $localStorage.user.subsidiary.cxc;
+            vm.userCashier = vm.userData.cashier;
+            vm.usrCliId = vm.userData.subsidiary.userClient.id;
+            vm.subCxCActive = vm.userData.subsidiary.cxc;
             
             if (vm.subCxCActive) {
                 vm.loading = true;
@@ -201,8 +201,8 @@ angular.module('integridadUiApp')
         function _initializeDailybookCi() {
             vm.dailybookCi = {
                 client: vm.clientSelected,
-                userIntegridad: $localStorage.user,
-                subsidiary: $localStorage.user.subsidiary,
+                userIntegridad: vm.userData,
+                subsidiary: vm.userData.subsidiary,
                 clientProvName: vm.clientSelected.name,
                 subTotalDoce: 0,
                 iva: 0,
@@ -223,8 +223,8 @@ angular.module('integridadUiApp')
         function _initializeComprobanteCobro() {
             vm.comprobanteCobro = {
                 client: vm.clientSelected,
-                userIntegridad: $localStorage.user,
-                subsidiary: $localStorage.user.subsidiary,
+                userIntegridad: vm.userData,
+                subsidiary: vm.userData.subsidiary,
                 clientName: vm.clientSelected.name,
                 clientRuc: vm.clientSelected.identification,
                 subTotalDoce: 0,
@@ -607,7 +607,7 @@ angular.module('integridadUiApp')
                 name: vm.generalDetailCi_2,
                 deber: parseFloat(vm.valorDocumento)
             };
-            vm.itemb.numCheque = '--';
+            vm.itemb.numCheque = vm.noDocument;
             vm.itemb.dailybookNumber = vm.dailyCiStringSeq;
             vm.itemb.userClientId = vm.usrCliId;
             vm.itemb.dateDetailDailybook = $('#pickerDateOfMultiplePayment').data("DateTimePicker").date().toDate().getTime();

@@ -7,7 +7,7 @@
  * Controller of the integridadUiApp
  */
 angular.module('integridadUiApp')
-    .controller('ConfigCtrl', function(_, $location, $localStorage, configCuentasService, cuentaContableService, optionConfigCuentasService) {
+    .controller('ConfigCtrl', function(_, holderService, configCuentasService, cuentaContableService, optionConfigCuentasService) {
         var vm = this;
         vm.error = undefined;
         vm.success = undefined;
@@ -15,6 +15,7 @@ angular.module('integridadUiApp')
         vm.configCuentasList = undefined;
         vm.cuentasContablesList = undefined;
         vm.optionsConfig = undefined;
+        vm.user = holderService.get();
 
         optionConfigCuentasService.getOptionConfigCuentas().then(function(response) {
             vm.optionsConfig = response;
@@ -28,7 +29,7 @@ angular.module('integridadUiApp')
             vm.error = error.data;
         });
 
-        cuentaContableService.getCuentaContableByUserClient($localStorage.user.subsidiary.userClient.id).then(function(response) {
+        cuentaContableService.getCuentaContableByUserClient(vm.user.subsidiary.userClient.id).then(function(response) {
             vm.cuentasContablesList = response;
             if(vm.optionsConfig){
                 _filterAccounts();
@@ -59,7 +60,7 @@ angular.module('integridadUiApp')
         };
 
         function _activate() {
-            vm.userClient = $localStorage.user.subsidiary.userClient
+            vm.userClient = vm.user.subsidiary.userClient
             vm.error = undefined;
             vm.success = undefined;
 

@@ -60,7 +60,7 @@
                         No hay Opciones de Configuracion ingresadas...
                     </td>
                 </tr>
-                <tr ng-repeat="option in vm.optionsConfig | orderBy:'name' | filter:searchText">
+                <tr dir-paginate="option in vm.optionsConfig | orderBy:'name' | filter:searchText | itemsPerPage: 10" pagination-id = "cuentasPagination">
                     <td>{{option.name}}</td>
                     <td>
                         <input type="text" ng-model="option.selected" class="form-control" typeahead-show-hint="true"
@@ -69,6 +69,7 @@
                 </tr>
             </tbody>
         </table>
+        <dir-pagination-controls pagination-id = "cuentasPagination"></dir-pagination-controls>
         <div class="panel-footer">
             <button type="button" title = "Guardar Configuraci&oacute;n" class="btn btn-success btn-sm" ng-click="vm.save()">
                     <span class = "glyphicon glyphicon-floppy-save" aria-hidden = "true"></span>

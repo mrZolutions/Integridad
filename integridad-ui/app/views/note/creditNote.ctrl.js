@@ -7,7 +7,7 @@
  * Controller of the integridadUiApp
  */
 angular.module('integridadUiApp')
-    .controller('CreditNoteCtrl', function(_, $location, providerService, $localStorage, debtsToPayService, cellarService, productService,
+    .controller('CreditNoteCtrl', function(_, $location, providerService, holderService, debtsToPayService, cellarService, productService,
                                            clientService, billService, creditNoteService, utilSeqService, creditNoteCellarService) {
 
         var vm = this;
@@ -23,12 +23,12 @@ angular.module('integridadUiApp')
         ];
 
         function _activate() {
-            vm.user = $localStorage.user;
-            vm.userClientId = $localStorage.user.subsidiary.userClient.id;
-            vm.userCashier = $localStorage.user.cashier;
-            vm.userSubsidiary = $localStorage.user.subsidiary;
-            vm.subOnlineActive = $localStorage.user.subsidiary.online;
-            vm.subCxPActive = $localStorage.user.subsidiary.cxp;
+            vm.user = holderService.get();
+            vm.userClientId = vm.user.subsidiary.userClient.id;
+            vm.userCashier = vm.user.cashier;
+            vm.userSubsidiary = vm.user.subsidiary;
+            vm.subOnlineActive = vm.user.subsidiary.online;
+            vm.subCxPActive = vm.user.subsidiary.cxp;
             vm.newCNCellar = undefined;
 
             vm.clientList = undefined;
@@ -154,7 +154,7 @@ angular.module('integridadUiApp')
         vm.clientSelect = function(client) {
             vm.error = undefined;
             vm.success = undefined;
-            vm.companyData = $localStorage.user.subsidiary;
+            vm.companyData = vm.user.subsidiary;
             vm.clientSelected = client;
             billService.getAllBillsByClientIdAndNoCN(vm.clientSelected.id).then(function(response) {
                 vm.billList = response;
@@ -171,8 +171,8 @@ angular.module('integridadUiApp')
                 vm.bill.details = [];
                 vm.idBill = billSelected.id;
                 vm.bill.client = vm.clientSelected;
-                vm.bill.userIntegridad= $localStorage.user;
-                vm.bill.subsidiary= $localStorage.user.subsidiary;
+                vm.bill.userIntegridad= vm.user;
+                vm.bill.subsidiary= vm.user.subsidiary;
                 _.each(response.details, function(detail) {
                     detail.id = undefined;
                     vm.bill.details.push(detail);
@@ -282,7 +282,7 @@ angular.module('integridadUiApp')
                 vm.items.push(item);
             });
 
-            var req = creditNoteService.createRequirement(vm.clientSelected, vm.bill, $localStorage.user, vm.impuestosTotales, vm.items);
+            var req = creditNoteService.createRequirement(vm.clientSelected, vm.bill, vm.user, vm.impuestosTotales, vm.items);
             
             creditNoteService.getClaveDeAcceso(req, vm.companyData.userClient.id).then(function(resp) {
                 var obj = JSON.parse(resp.data);
@@ -312,7 +312,7 @@ angular.module('integridadUiApp')
         vm.creditsNoteByClient = function(client) {
             vm.error = undefined;
             vm.success = undefined;
-            vm.companyData = $localStorage.user.subsidiary;
+            vm.companyData = vm.user.subsidiary;
             vm.clientName = client.name;
             creditNoteService.getCreditsNoteByClientId(client.id).then(function(response) {
                 vm.creditNoteList = response;
@@ -381,7 +381,7 @@ angular.module('integridadUiApp')
         vm.providerSelect = function(provider) {
             vm.error = undefined;
             vm.success = undefined;
-            vm.companyData = $localStorage.user.subsidiary;
+            vm.companyData = vm.user.subsidiary;
             vm.providerSelected = provider;
             cellarService.getCellarsByProviderIdAndNoCN(vm.providerSelected.id).then(function(response) {
                 vm.cellarList = response;
@@ -399,8 +399,8 @@ angular.module('integridadUiApp')
                 vm.cellar.detailsCellar = [];
                 vm.idCellar = cellar.id;
                 vm.cellar.provider = vm.providerSelected;
-                vm.cellar.userIntegridad= $localStorage.user;
-                vm.cellar.subsidiary= $localStorage.user.subsidiary;
+                vm.cellar.userIntegridad= vm.user;
+                vm.cellar.subsidiary= vm.user.subsidiary;
                 _.each(response.detailsCellar, function(detail) {
                     detail.id = undefined;
                     vm.cellar.detailsCellar.push(detail);
@@ -453,7 +453,7 @@ angular.module('integridadUiApp')
             } else {
                 var busqueda = variable.toUpperCase();
             };
-            productService.getLazyBySusidiaryId($localStorage.user.subsidiary.id, vm.page, busqueda).then(function(response) {
+            productService.getLazyBySusidiaryId(vm.user.subsidiary.id, vm.page, busqueda).then(function(response) {
                 vm.loading = false;
                 vm.totalPages = response.totalPages;
                 vm.productServicesList = [];
@@ -463,7 +463,7 @@ angular.module('integridadUiApp')
                     });
                     if (productFound === undefined) {
                         var sub = _.find(response.content[i].productBySubsidiaries, function(s) {
-                            return (s.subsidiary.id === $localStorage.user.subsidiary.id && s.active === true);
+                            return (s.subsidiary.id === vm.user.subsidiary.id && s.active === true);
                         });
                         if (sub) {
                             response.content[i].quantity = sub.quantity
@@ -583,7 +583,7 @@ angular.module('integridadUiApp')
             vm.loading = true;
             vm.error = undefined;
             vm.success = undefined;
-            vm.companyData = $localStorage.user.subsidiary;
+            vm.companyData = vm.user.subsidiary;
             creditNoteCellarService.getCreditNoteCellarById(creditNote.id).then(function(response) {
                 vm.cellar = response;
                 vm.providerSelected = response.provider;
