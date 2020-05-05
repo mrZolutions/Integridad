@@ -10,16 +10,13 @@ import com.mrzolution.integridad.app.domain.ProductBySubsidiary;
 import com.mrzolution.integridad.app.exceptions.BadRequestException;
 import com.mrzolution.integridad.app.father.Father;
 import com.mrzolution.integridad.app.father.FatherManageChildren;
-import com.mrzolution.integridad.app.repositories.CuentaContableByProductRepository;
-import com.mrzolution.integridad.app.repositories.ProductBySubsidiairyRepository;
-import com.mrzolution.integridad.app.repositories.ProductBySubsidiaryChildRepository;
+import com.mrzolution.integridad.app.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Component;
 import com.mrzolution.integridad.app.domain.Product;
 import com.mrzolution.integridad.app.domain.report.ExistencyCatReport;
 import com.mrzolution.integridad.app.domain.report.ExistencyReport;
-import com.mrzolution.integridad.app.repositories.ProductRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
 
@@ -32,6 +29,8 @@ public class ProductServices {
     ProductBySubsidiairyRepository productBySubsidiairyRepository;
     @Autowired
     ProductBySubsidiaryChildRepository productBySubsidiaryChildRepository;
+    @Autowired
+    CuentaContableByProductChildRepository cuentaContableByProductChildRepository;
     @Autowired
     CuentaContableByProductRepository cuentaContableByProductRepository;
     
@@ -83,19 +82,21 @@ public class ProductServices {
     }
     
     public void updateProduct(Product product) {
-	product.setLastDateUpdated(new Date().getTime());
-	product.setListsNull();
-	product.setFatherListToNull();
-	Product updated = productRepository.save(product);
-        log.info("ProductServices updateProduct: {}", updated.getId());
-    }
-
-    public void updateProductEdited(Product product) {
         product.setLastDateUpdated(new Date().getTime());
         product.setListsNull();
         product.setFatherListToNull();
-        Product updated = productRepository.save(product);
-        log.info("ProductServices updateProductEdited: {}", updated.getId());
+	    Product updated = productRepository.save(product);
+        log.info("ProductServices updateProduct: {}", updated.getId());
+    }
+
+    @Async("asyncExecutor")
+    public void updateProductChildrenCC(Product product) {
+        product.setLastDateUpdated(new Date().getTime());
+        Father<Product, CuentaContableByProduct> fatherCC = new Father<>(product, product.getCuentaContableByProducts());
+        FatherManageChildren fatherUpdateChildrenCC = new FatherManageChildren(fatherCC, cuentaContableByProductChildRepository, cuentaContableByProductRepository);
+        fatherUpdateChildrenCC.updateChildren();
+
+        log.info("ProductServices updateChildrenProductCC: {}", product.getId());
     }
 
     @Async("asyncExecutor")
@@ -104,6 +105,7 @@ public class ProductServices {
         Father<Product, ProductBySubsidiary> father = new Father<>(product, product.getProductBySubsidiaries());
         FatherManageChildren fatherUpdateChildren = new FatherManageChildren(father, productBySubsidiaryChildRepository, productBySubsidiairyRepository);
         fatherUpdateChildren.updateChildren();
+
         log.info("ProductServices updateChildrenProductEdited: {}", product.getId());
     }
 	
@@ -160,7 +162,7 @@ public class ProductServices {
 	List<Product> listReturn = new ArrayList<>();
 	productIdList.forEach(page -> {
 	    Product p = getProductById(page);
-	    p.setCuentaContableByProducts(null);
+//	    p.setCuentaContableByProducts(null);
 	    listReturn.add(p);
 	});
 	Page<Product> products = new PageImpl<>(listReturn, pageable, productIdList.getTotalElements());
@@ -376,10 +378,22 @@ public class ProductServices {
                 productBySubsidiaryConsumer.setProduct(null);
                 productBySubsidiaryList.add(productBySubsidiaryConsumer);
         });
+
+        List<CuentaContableByProduct> cuentasList = new ArrayList<>();
+        Iterable<CuentaContableByProduct> cuentas = cuentaContableByProductRepository.findByProductId(product.getId());
+        cuentas.forEach(cuenta ->{
+            cuenta.setListsNull();
+            cuenta.setFatherListToNull();
+            cuenta.getCuentaContable().setFatherListToNull();
+            cuenta.getCuentaContable().setListsNull();
+            cuentasList.add(cuenta);
+        });
+
         product.setProductBySubsidiaries(productBySubsidiaryList);
-            if (product.getBrand() != null) {
-                product.getBrand().setFatherListToNull();
-                product.getBrand().setListsNull();
+        product.setCuentaContableByProducts(cuentasList);
+        if (product.getBrand() != null) {
+            product.getBrand().setFatherListToNull();
+            product.getBrand().setListsNull();
         }
         product.setFatherListToNull();
     }

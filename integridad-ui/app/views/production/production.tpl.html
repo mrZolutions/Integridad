@@ -1576,14 +1576,14 @@
                     <div class="row">
                         <div class="form-group col-md-8">
                             <label>Cuenta contable para la Venta: </label>
-                            <select ng-options="cc as cc.name for cc in vm.cuentaContableList  | orderBy:'name'  track by cc.id"
-                                    ng-model="vm.cuentaContableSale" class="form-control">
-                            </select>
+                            <input type="text" ng-model="vm.cuentaContableSale" class="form-control" typeahead-show-hint="true"
+                            uib-typeahead="account as (account.name + ' - ' + account.code) for account in vm.cuentaContableList | orderBy:'name' | filter:$viewValue | limitTo:8">
                         </div>
                         <div class="form-group col-md-4">
                             <label>&nbsp;</label>
-                            <button type="button" title = "Agregar Cuenta Contable" class="form-control btn btn-primary btn-sm" ng-click="vm.addCuentaContableSale()">
-                                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                            <button type="button" title = "Agregar Cuenta Contable" class="form-control btn btn-primary btn-sm" ng-click="vm.addCuentaContableSale()"
+                                ng-disabled="vm.cuentasContablesForProductSale.length > 0">
+                                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                             </button>
                         </div>
                     </div>
@@ -1614,14 +1614,14 @@
                     <div class="row">
                         <div class="form-group col-md-8">
                             <label>Cuenta contable para el Egreso: </label>
-                            <select ng-options="cc as cc.name for cc in vm.cuentaContableList  | orderBy:'name'  track by cc.id"
-                                    ng-model="vm.cuentaContableConsume" class="form-control">
-                            </select>
+                            <input type="text" ng-model="vm.cuentaContableConsume" class="form-control" typeahead-show-hint="true"
+                            uib-typeahead="account as (account.name + ' - ' + account.code) for account in vm.cuentaContableList | orderBy:'name' | filter:$viewValue | limitTo:8">
                         </div>
                         <div class="form-group col-md-4">
                             <label>&nbsp;</label>
-                            <button type="button" title = "Agregar Cuenta Contable" class="form-control btn btn-primary btn-sm" ng-click="vm.addCuentaContableConsume()">
-                                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                            <button type="button" title = "Agregar Cuenta Contable" class="form-control btn btn-primary btn-sm" ng-click="vm.addCuentaContableConsume()"
+                                ng-disabled="vm.cuentasContablesForProductConsume.length > 0">
+                                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                             </button>
                         </div>
                     </div>
@@ -1654,14 +1654,14 @@
                     <div class="row">
                         <div class="form-group col-md-8">
                             <label>Cuenta contable para el Producto Terminado: </label>
-                            <select ng-options="cc as cc.name for cc in vm.cuentaContableList  | orderBy:'name'  track by cc.id"
-                                    ng-model="vm.cuentaContableFinished" class="form-control">
-                            </select>
+                            <input type="text" ng-model="vm.cuentaContableFinished" class="form-control" typeahead-show-hint="true"
+                            uib-typeahead="account as (account.name + ' - ' + account.code) for account in vm.cuentaContableList | orderBy:'name' | filter:$viewValue | limitTo:8">
                         </div>
                         <div class="form-group col-md-4">
                             <label>&nbsp;</label>
-                            <button type="button" title = "Agregar Cuenta Contable" class="form-control btn btn-primary btn-sm" ng-click="vm.addCuentaContableFinished()">
-                                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                            <button type="button" title = "Agregar Cuenta Contable" class="form-control btn btn-primary btn-sm" ng-click="vm.addCuentaContableFinished()"
+                                ng-disabled="vm.cuentasContablesForProductFinished.length > 0">
+                                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                             </button>
                         </div>
                     </div>
@@ -1692,14 +1692,14 @@
                     <div class="row">
                         <div class="form-group col-md-8">
                             <label>Cuenta contable para el Costo de Ventas: </label>
-                            <select ng-options="cc as cc.name for cc in vm.cuentaContableList  | orderBy:'name'  track by cc.id"
-                                    ng-model="vm.cuentaContableCost" class="form-control">
-                            </select>
+                            <input type="text" ng-model="vm.cuentaContableCost" class="form-control" typeahead-show-hint="true"
+                            uib-typeahead="account as (account.name + ' - ' + account.code) for account in vm.cuentaContableList | orderBy:'name' | filter:$viewValue | limitTo:8">
                         </div>
                         <div class="form-group col-md-4">
                             <label>&nbsp;</label>
-                            <button type="button" title = "Agregar Cuenta Contable" class="form-control btn btn-primary btn-sm" ng-click="vm.addCuentaContableCost()">
-                                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                            <button type="button" title = "Agregar Cuenta Contable" class="form-control btn btn-primary btn-sm" ng-click="vm.addCuentaContableCost()"
+                                ng-disabled="vm.cuentasContablesForProductCost.length > 0">
+                                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                             </button>
                         </div>
                     </div>
