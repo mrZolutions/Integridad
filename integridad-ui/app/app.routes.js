@@ -76,6 +76,12 @@ function routes($routeProvider) {
             templateUrl: 'views/production/production.tpl.html',
             controller: 'ProductionCtrl',
             controllerAs: 'vm'
+        }).when('/entry', {
+            templateUrl: 'views/production/production.tpl.html',
+            controller: 'ProductionCtrl',
+            // templateUrl: 'views/inventories/entry.tpl.html',
+            // controller: 'EntryCtrl',
+            controllerAs: 'vm'
         }).when('/contab', {
             templateUrl: 'views/contable/contable.tpl.html',
             controller: 'ContableCtrl',

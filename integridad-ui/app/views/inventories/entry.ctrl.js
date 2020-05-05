@@ -7,7 +7,7 @@
  * Controller of the integridadUiApp
  */
 angular.module('integridadUiApp')
-    .controller('ProductionCtrl', function(_, holderService, providerService, productService, warehouseService, validatorService, subsidiaryService, $routeParams,
+    .controller('EntryCtrl', function(_, holderService, providerService, productService, warehouseService, validatorService, subsidiaryService, $routeParams,
                                            productTypeService, messurementListService, clientService, cellarService, consumptionService, utilSeqService, $location,
                                            cuentaContableService,brandService, lineService, groupService, subgroupService, utilStringService) {
 
@@ -19,7 +19,6 @@ angular.module('integridadUiApp')
         vm.clientList = undefined;
         vm.catedral = '1e2049c3-a3bc-4231-a0de-dded8020dc1b';
         vm.maxCode = undefined;
-        vm.inventoryOption = 'PROD';
 
         vm.prices = [
             { name: 'EFECTIVO', cod: 'cashPercentage'}, { name: 'MAYORISTA', cod: 'majorPercentage'},
@@ -111,8 +110,6 @@ angular.module('integridadUiApp')
             vm.userId = vm.userData.id;
             vm.provider = undefined;
             vm.messurements = messurementListService.getMessurementList();
-            if($location.path().includes("/entry"))
-                vm.inventoryOption = 'ENTR';
 
             warehouseService.getAllWarehouseByUserClientId(vm.usrCliId).then(function(response) {
                 vm.warehouseList = response;
