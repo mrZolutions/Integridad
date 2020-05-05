@@ -160,10 +160,7 @@
                 </div>
             </div>
 
-
-
-
-            <div class="row">
+            <div class="row" ng-show="vm.subKarActive">
                 <div class="form-group col-md-6">
                     <div class="row">
                         <div class="form-group col-md-8">
@@ -241,7 +238,7 @@
                     </div>
                 </div>
             </div>
-            <div class="row">
+            <div class="row" ng-show="vm.subKarActive">
                 <div class="form-group col-md-6">
                     <div class="row">
                         <div class="form-group col-md-8">
@@ -319,9 +316,6 @@
                     </div>
                 </div>
             </div>
-
-
-
 
         </div>
         <div class="panel-footer">
@@ -523,6 +517,164 @@
                     <p>{{vm.costIvaPreview()}}</p>
                 </div>
             </div>
+
+            <div class="row" ng-show="vm.product.id !== undefined && vm.subKarActive">
+                <div class="form-group col-md-6">
+                    <div class="row">
+                        <div class="form-group col-md-8">
+                            <label>Cuenta contable para la Venta: </label>
+                            <input type="text" ng-model="vm.cuentaContableSale" class="form-control" typeahead-show-hint="true"
+                            uib-typeahead="account as (account.name + ' - ' + account.code) for account in vm.cuentasContablesList | orderBy:'name' | filter:$viewValue | limitTo:8">
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label>&nbsp;</label>
+                            <button type="button" title = "Agregar Cuenta Contable" class="form-control btn btn-primary btn-sm" ng-click="vm.addCuentaContableSale()"
+                                ng-disabled="vm.cuentasContablesForProductSale.length > 0">
+                                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-md-12">
+                            <table class="table table-striped">
+                                <thead>
+                                <tr>
+                                    <th>Nombre</th>
+                                    <th></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr ng-repeat="ccp in vm.cuentasContablesForProductSale | orderBy:'name':true">
+                                    <td>{{ccp.name}}</td>
+                                    <td>
+                                        <button type="button" title = "Siguiente" class="btn btn-primary btn-sm" ng-click="vm.removeCCSale(ccp)">
+                                                <span class = "glyphicon glyphicon-minus" aria-hidden = "true"></span>
+                                        </button>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-md-6">
+                    <div class="row">
+                        <div class="form-group col-md-8">
+                            <label>Cuenta contable para el Egreso: </label>
+                            <input type="text" ng-model="vm.cuentaContableConsume" class="form-control" typeahead-show-hint="true"
+                            uib-typeahead="account as (account.name + ' - ' + account.code) for account in vm.cuentasContablesList | orderBy:'name' | filter:$viewValue | limitTo:8">
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label>&nbsp;</label>
+                            <button type="button" title = "Agregar Cuenta Contable" class="form-control btn btn-primary btn-sm" ng-click="vm.addCuentaContableConsume()"
+                                ng-disabled="vm.cuentasContablesForProductConsume.length > 0">
+                                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-md-12">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Nombre</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="ccp in vm.cuentasContablesForProductConsume | orderBy:'name':true">
+                                    <td>{{ccp.name}}</td>
+                                    <td>
+                                        <button type="button" title = "Siguiente" class="btn btn-primary btn-sm" ng-click="vm.removeCCConsume(ccp)">
+                                            <span class = "glyphicon glyphicon-minus" aria-hidden = "true"></span>
+                                        </button>
+                                    </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" ng-show="vm.product.id !== undefined && vm.subKarActive">
+                <div class="form-group col-md-6">
+                    <div class="row">
+                        <div class="form-group col-md-8">
+                            <label>Cuenta contable para el Producto Terminado: </label>
+                            <input type="text" ng-model="vm.cuentaContableFinished" class="form-control" typeahead-show-hint="true"
+                            uib-typeahead="account as (account.name + ' - ' + account.code) for account in vm.cuentasContablesList | orderBy:'name' | filter:$viewValue | limitTo:8">
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label>&nbsp;</label>
+                            <button type="button" title = "Agregar Cuenta Contable" class="form-control btn btn-primary btn-sm" ng-click="vm.addCuentaContableFinished()"
+                                ng-disabled="vm.cuentasContablesForProductFinished.length > 0">
+                                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-md-12">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Nombre</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="ccp in vm.cuentasContablesForProductFinished | orderBy:'name':true">
+                                        <td>{{ccp.name}}</td>
+                                        <td>
+                                            <button type="button" title = "Siguiente" class="btn btn-primary btn-sm" ng-click="vm.removeCCFinished(ccp)">
+                                                    <span class = "glyphicon glyphicon-minus" aria-hidden = "true"></span>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-md-6">
+                    <div class="row">
+                        <div class="form-group col-md-8">
+                            <label>Cuenta contable para el Costo de Ventas: </label>
+                            <input type="text" ng-model="vm.cuentaContableCost" class="form-control" typeahead-show-hint="true"
+                            uib-typeahead="account as (account.name + ' - ' + account.code) for account in vm.cuentasContablesList | orderBy:'name' | filter:$viewValue | limitTo:8">
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label>&nbsp;</label>
+                            <button type="button" title = "Agregar Cuenta Contable" class="form-control btn btn-primary btn-sm" ng-click="vm.addCuentaContableCost()"
+                                ng-disabled="vm.cuentasContablesForProductCost.length > 0">
+                                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-md-12">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Nombre</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="ccp in vm.cuentasContablesForProductCost | orderBy:'name':true">
+                                        <td>{{ccp.name}}</td>
+                                        <td>
+                                            <button type="button" title = "Siguiente" class="btn btn-primary btn-sm" ng-click="vm.removeCCCost(ccp)">
+                                                    <span class = "glyphicon glyphicon-minus" aria-hidden = "true"></span>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
         <div class="panel-footer">
             <button type="button" title="Atrás" class="btn btn-primary btn-sm" ng-click="vm.wizard = 2" ng-show="vm.product.id === undefined">
@@ -581,10 +733,13 @@
                             <label>C&oacute;digo: </label>
                             <input type="text" ng-model="vm.newBrand.code" class="form-control">
                         </div>
+                        <div class="form-group col-md-6" ng-show="vm.brandLineError !== undefined">
+                            <div class="alert alert-danger">{{vm.brandLineError}}</div>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" title="Aceptar" class="btn btn-success btn-sm" ng-click="vm.saveNewBrand()" data-dismiss="modal">
+                    <button type="button" title="Aceptar" class="btn btn-success btn-sm" ng-click="vm.saveNewBrand()">
                             <span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span>
                     </button>
                     <button type="button" title="Salir" class="btn btn-primary btn-sm" ng-click="vm.newBrand = undefined" data-dismiss="modal">
@@ -657,10 +812,13 @@
                             <label>C&oacute;digo: </label>
                             <input type="text" ng-model="vm.newLine.code" class="form-control">
                         </div>
+                        <div class="form-group col-md-6" ng-show="vm.brandLineError !== undefined">
+                            <div class="alert alert-danger">{{vm.brandLineError}}</div>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" title="Aceptar" class="btn btn-success btn-sm" ng-click="vm.saveNewLine()" data-dismiss="modal">
+                    <button type="button" title="Aceptar" class="btn btn-success btn-sm" ng-click="vm.saveNewLine()">
                             <span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span>
                     </button>
                     <button type="button" title="Salir" class="btn btn-primary btn-sm" ng-click="vm.newLine = undefined" data-dismiss="modal">
@@ -732,10 +890,13 @@
                             <label>C&oacute;digo: </label>
                             <input type="text" ng-model="vm.newGroup.code" class="form-control">
                         </div>
+                        <div class="form-group col-md-6" ng-show="vm.brandLineError !== undefined">
+                            <div class="alert alert-danger">{{vm.brandLineError}}</div>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" title="Aceptar" class="btn btn-success btn-sm" ng-click="vm.saveNewGroup()" data-dismiss="modal">
+                    <button type="button" title="Aceptar" class="btn btn-success btn-sm" ng-click="vm.saveNewGroup()">
                             <span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span>
                     </button>
                     <button type="button" title="Salir" class="btn btn-primary btn-sm" ng-click="vm.newGroup = undefined" data-dismiss="modal">
@@ -807,10 +968,13 @@
                             <label>C&oacute;digo: </label>
                             <input type="text" ng-model="vm.newSubGroup.code" class="form-control">
                         </div>
+                        <div class="form-group col-md-6" ng-show="vm.brandLineError !== undefined">
+                            <div class="alert alert-danger">{{vm.brandLineError}}</div>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" title="Aceptar" class="btn btn-success btn-sm" ng-click="vm.saveNewSubGroup()" data-dismiss="modal">
+                    <button type="button" title="Aceptar" class="btn btn-success btn-sm" ng-click="vm.saveNewSubGroup()">
                             <span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span>
                     </button>
                     <button type="button" title="Salir" class="btn btn-primary btn-sm" ng-click="vm.newSubGroup = undefined" data-dismiss="modal">

@@ -44,7 +44,10 @@ public class ProductController {
     @RequestMapping(method = RequestMethod.PUT)
     public ResponseEntity updateProduct(@RequestBody Product product) {
         try {
+            List<CuentaContableByProduct> cuentaContableByProducts = product.getCuentaContableByProducts();
             service.updateProduct(product);
+            product.setCuentaContableByProducts(cuentaContableByProducts);
+            service.updateProductChildrenCC(product);
 	} catch (BadRequestException e) {
             log.error("ProductController updateProduct Exception thrown: {}", e.getMessage());	    
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
@@ -58,7 +61,7 @@ public class ProductController {
         try {
             List<ProductBySubsidiary> productBySubsidiaries = product.getProductBySubsidiaries();
             List<CuentaContableByProduct> cuentaContableByProducts = product.getCuentaContableByProducts();
-            service.updateProductEdited(product);
+            service.updateProduct(product);
             product.setProductBySubsidiaries(productBySubsidiaries);
             product.setCuentaContableByProducts(cuentaContableByProducts);
             service.updateProductChildrenEdited(product);

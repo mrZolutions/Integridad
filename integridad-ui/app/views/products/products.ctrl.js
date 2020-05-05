@@ -33,6 +33,7 @@ angular.module('integridadUiApp')
         vm.maxCode = undefined;
         vm.warehouseList = undefined;
         vm.cuentasContablesList = undefined;
+        vm.brandLineError = undefined;
 
         function _activate() {
             vm.user = holderService.get();
@@ -44,6 +45,15 @@ angular.module('integridadUiApp')
             vm.userClientId = vm.user.subsidiary.userClient.id;
             vm.subKarActive = vm.user.subsidiary.kar;
             vm.subsidiaryMain = vm.user.subsidiary;
+            vm.brandLineError = undefined;
+            vm.cuentasContablesForProductSale = [];
+            vm.cuentasContablesForProductConsume = [];
+            vm.cuentasContablesForProductFinished = [];
+            vm.cuentasContablesForProductCost = [];
+            vm.cuentaContableSale = undefined;
+            vm.cuentaContableConsume = undefined;
+            vm.cuentaContableFinished = undefined;
+            vm.cuentaContableCost = undefined;
             vm.messurements = messurementListService.getMessurementList();
             productTypeService.getproductTypesLazy().then(function(response) {
                 vm.productTypes = response;
@@ -286,6 +296,35 @@ angular.module('integridadUiApp')
             _.each(vm.productBySubsidiaries, function(psNew) {
                 vm.product.productBySubsidiaries.push(psNew);
             });
+            vm.product.cuentaContableByProducts = [];
+            _.each(vm.cuentasContablesForProductSale, function(cc) {
+                var cuentaContableByProduct = {
+                    cuentaContable: cc,
+                    type: 'VENTA'
+                };
+                vm.product.cuentaContableByProducts.push(cuentaContableByProduct);
+            });
+            _.each(vm.cuentasContablesForProductConsume, function(cc) {
+                var cuentaContableByProduct = {
+                    cuentaContable: cc,
+                    type: 'CONSUMO'
+                };
+                vm.product.cuentaContableByProducts.push(cuentaContableByProduct);
+            });
+            _.each(vm.cuentasContablesForProductFinished, function(cc) {
+                var cuentaContableByProduct = {
+                    cuentaContable: cc,
+                    type: 'PRODUCTO_TERMINADO'
+                };
+                vm.product.cuentaContableByProducts.push(cuentaContableByProduct);
+            });
+            _.each(vm.cuentasContablesForProductCost, function(cc) {
+                var cuentaContableByProduct = {
+                    cuentaContable: cc,
+                    type: 'COSTO_DE_VENTA'
+                };
+                vm.product.cuentaContableByProducts.push(cuentaContableByProduct);
+            });
             vm.product.barCode = vm.productBarCode;
             productService.update(vm.product).then(function(response) {
                 vm.product = undefined;
@@ -400,6 +439,26 @@ angular.module('integridadUiApp')
             vm.getGroups();
             vm.getSubGroups();
             _getSubsidiaries(true);
+
+            _.each(productEdit.cuentaContableByProducts, function(ccp) {
+                if(ccp.type === 'VENTA'){
+                    vm.cuentasContablesForProductSale = [ccp.cuentaContable];
+                    vm.cuentaContableSale = ccp.cuentaContable;
+                }
+                if(ccp.type === 'PRODUCTO_TERMINADO'){
+                    vm.cuentasContablesForProductFinished = [ccp.cuentaContable];
+                    vm.cuentaContableFinished = ccp.cuentaContable;
+                }
+                if(ccp.type === 'CONSUMO'){
+                    vm.cuentasContablesForProductConsume = [ccp.cuentaContable];
+                    vm.cuentaContableConsume = ccp.cuentaContable;
+                }
+                if(ccp.type === 'COSTO_DE_VENTA'){
+                    vm.cuentasContablesForProductCost = [ccp.cuentaContable];
+                    vm.cuentaContableCost = ccp.cuentaContable;
+                }
+            });
+
             vm.wizard = 3;
             vm.product = productEdit;
         };
@@ -407,7 +466,8 @@ angular.module('integridadUiApp')
         vm.productCreate = function() {
             _getSubsidiaries(false);
             vm.success = undefined;
-            vm.error = undefined
+            vm.error = undefined;
+            vm.brandLineError = undefined;
             vm.productBySubsidiaries = [];
             vm.cuentasContablesForProductSale = [];
             vm.cuentasContablesForProductConsume = [];
@@ -495,49 +555,88 @@ angular.module('integridadUiApp')
         };
 
         vm.saveNewBrand = function() {
-            brandService.create(vm.newBrand).then(function(response) {
-                vm.brands.push(response);
-                vm.product.brand = response;
-                vm.newBrand = undefined;
-            }).catch(function(error) {
-                vm.loading = false;
-                vm.error = error.data;
-            });
+            var repeatedCode = _.filter(vm.brands, function(brand){ return brand.code === vm.newBrand.code; });
+
+            if(_.isEmpty(repeatedCode)){
+                vm.brandLineError = undefined;
+                brandService.create(vm.newBrand).then(function(response) {
+                    vm.brands.push(response);
+                    vm.product.brand = response;
+                    vm.newBrand = undefined;
+                    $('#modalCreateBrand').modal('hide');
+                }).catch(function(error) {
+                    vm.loading = false;
+                    vm.error = error.data;
+                    vm.brandLineError = error.data;
+                });
+            } else {
+                vm.brandLineError = 'Código Duplicado';
+            }
+            
         };
 
         vm.saveNewLine = function() {
-            lineService.create(vm.newLine).then(function(response) {
-                vm.lineas.push(response);
-                vm.selectedLine = response;
-                vm.newLine = undefined;
-                vm.groups = [];
-            }).catch(function(error) {
-                vm.loading = false;
-                vm.error = error.data;
-            });
+            var repeatedCode = _.filter(vm.lineas, function(line){ return line.code === vm.newLine.code; });
+
+            if(_.isEmpty(repeatedCode)){
+                vm.brandLineError = undefined;
+                lineService.create(vm.newLine).then(function(response) {
+                    vm.lineas.push(response);
+                    vm.selectedLine = response;
+                    vm.newLine = undefined;
+                    vm.groups = [];
+                    $('#modalCreateLine').modal('hide');
+                }).catch(function(error) {
+                    vm.loading = false;
+                    vm.error = error.data;
+                    m.brandLineError = error.data;
+                });
+            } else {
+                vm.brandLineError = 'Código Duplicado';
+            }
+            
         };
 
         vm.saveNewGroup = function() {
-            groupService.create(vm.newGroup).then(function(response) {
-                vm.groups.push(response);
-                vm.selectedGroup = response;
-                vm.newGroup = undefined;
-                vm.subGroups = [];
-            }).catch(function(error) {
-                vm.loading = false;
-                vm.error = error.data;
-            });
+            var repeatedCode = _.filter(vm.groups, function(gr){ return gr.code === vm.newGroup.code; });
+
+            if(_.isEmpty(repeatedCode)){
+                vm.brandLineError = undefined;
+                groupService.create(vm.newGroup).then(function(response) {
+                    vm.groups.push(response);
+                    vm.selectedGroup = response;
+                    vm.newGroup = undefined;
+                    vm.subGroups = [];
+                    $('#modalCreateGroup').modal('hide');
+                }).catch(function(error) {
+                    vm.loading = false;
+                    vm.error = error.data;
+                    vm.brandLineError = error.data;
+                });
+            } else {
+                vm.brandLineError = 'Código Duplicado';
+            }
+            
         };
 
         vm.saveNewSubGroup = function() {
-            subgroupService.create(vm.newSubGroup).then(function(response) {
-                vm.subGroups.push(response);
-                vm.product.subgroup = response;
-                vm.newSubGroup = undefined;
-            }).catch(function(error) {
-                vm.loading = false;
-                vm.error = error.data;
-            });
+            var repeatedCode = _.filter(vm.subGroups, function(sub){ return sub.code === vm.newSubGroup.code; });
+
+            if(_.isEmpty(repeatedCode)){
+                subgroupService.create(vm.newSubGroup).then(function(response) {
+                    vm.subGroups.push(response);
+                    vm.product.subgroup = response;
+                    vm.newSubGroup = undefined;
+                    $('#modalCreateSubGroup').modal('hide');
+                }).catch(function(error) {
+                    vm.loading = false;
+                    vm.error = error.data;
+                    vm.brandLineError = error.data;
+                });
+            } else {
+                vm.brandLineError = 'Código Duplicado';
+            }
+            
         };
 
         vm.validateAndContinueToWiz2 = function() {
@@ -705,6 +804,14 @@ angular.module('integridadUiApp')
             vm.selectedLine = undefined;
             vm.success = undefined;
             vm.error = undefined;
+            vm.cuentasContablesForProductSale = [];
+            vm.cuentasContablesForProductConsume = [];
+            vm.cuentasContablesForProductFinished = [];
+            vm.cuentasContablesForProductCost = [];
+            vm.cuentaContableSale = undefined;
+            vm.cuentaContableConsume = undefined;
+            vm.cuentaContableFinished = undefined;
+            vm.cuentaContableCost = undefined;
         };
 
         vm.exit = function() {
