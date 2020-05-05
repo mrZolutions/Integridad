@@ -16,7 +16,18 @@ angular.module('integridadUiApp')
         vm.errorActive = false;
         function getPermissions(){
             permissionService.getPermissions(user.userType).then(function (respnse) {
-                $localStorage.permissions = respnse;
+                var toGroup = response;
+                var grouped = {};
+                toGroup.forEach(function(item){
+                    var list = grouped[item.moduleMenu.id];
+                    if(list){
+                        list.push(item);
+                    } else{
+                        grouped[item.moduleMenu.id] = [item];
+                    }
+                });
+
+                $localStorage.permissions = grouped;
                 $rootScope.updateMenu();
                 vm.loading = false;
                 $location.path('/home');
