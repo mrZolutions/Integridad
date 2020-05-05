@@ -21,6 +21,7 @@ public class UserTypePermissions {
 	
 	private String path;
 	private String menuName;
+	private Integer orderMenu;
 
 	@ManyToOne
     @JoinColumn(name = "user_type_id")

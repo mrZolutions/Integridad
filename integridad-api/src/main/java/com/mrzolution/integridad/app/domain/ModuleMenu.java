@@ -13,6 +13,7 @@ public class ModuleMenu {
     @Id
     @GeneratedValue
     private UUID id;
+    private Integer orderMenu;
 
     private String menuName;
 }

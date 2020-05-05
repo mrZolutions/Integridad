@@ -41,10 +41,10 @@
           <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav"  ng-show="showMainManu()">
               <li class="nav-item"><a class="nav-link" href="#!/home">Home</a></li>
-              <li class="nav-item dropdown" ng-repeat="mod in modules">
+              <li class="nav-item dropdown" ng-repeat="mod in modules | orderBy:'orderMenu'">
                 <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{mod.menuName}} <span class="caret"></span></a>
                 <ul class="dropdown-menu">
-                  <li ng-repeat="option in permissions[mod.id]">
+                  <li ng-repeat="option in permissions[mod.id] | orderBy:'orderMenu'">
                     <a href="{{option.path}}"> <span class="nav-label">{{option.menuName}}</span></a>
                   </li>
                 </ul>
