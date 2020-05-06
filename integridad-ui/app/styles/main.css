@@ -100,11 +100,11 @@ h1, h2, h3, h4, h5, p, a {
 }
 
 .atext-brand {
-  color: #6094D6;
+  color: #6094D6 !important;
   font-size: large;
   font-weight: bold;
-  margin-top: 12px;
-  float: left;
+  padding: 15px 15px 0 20px !important;
+  float: right !important;
 }
 
 .atext-user {
@@ -177,6 +177,36 @@ h1, h2, h3, h4, h5, p, a {
   padding-left:0 !important;
 }
 
+.navbar-nav-in > li > a {
+  color:#E2E2E2 !important;
+}
+
+.navbar-nav-in > li > a:hover {
+  background-color: #000;
+  /* color:white !important; */
+  font-weight: bold;
+}
+
+.nav .open > a, .nav .open > a:hover, .nav .open > a:focus {
+  background-color: #000;
+  color:white !important;
+  font-weight: bold;
+  text-decoration: #E2E2E2;
+}
+
+.navbar-inverse .navbar-nav > li > a:hover {
+  color: #6094D6;
+}
+
+.navbar-inverse .navbar-nav > .open > a, .navbar-inverse .navbar-nav > .open > a:hover, .navbar-inverse .navbar-nav > .open > a:focus {
+  background-color: #9d9d9d;
+  color: #ffffff;
+}
+
+.navbar-inverse .navbar-nav > li > a {
+  color: #5d5d5d;
+}
+
 /* Responsive: Portrait tablets and up */
 @media screen and (min-width: 1200px) {
   .container {
@@ -221,17 +251,22 @@ h1, h2, h3, h4, h5, p, a {
     margin-left: 0;
   }	
 
-  .navbar-nav,
-  .navbar-nav > li,
+  .navbar-nav-in,
+  .navbar-nav-in > li,
   .navbar-left,
-  .navbar-right,
   .navbar-header
   {
-    float:none !important;
+    /* float:none !important; */
   }
 
   .navbar-right .dropdown-menu {left:0;right:auto;}
   .navbar-collapse .navbar-nav.navbar-right:last-child {
     margin-right: 0;
+  }
+}
+
+@media screen and (max-width: 769px) {
+  .navbar-nav {
+    margin: 8.25px 15px !important;
   }
 }

@@ -1,5 +1,6 @@
 package com.mrzolution.integridad.app.domain;
 
+import com.mrzolution.integridad.app.interfaces.Child;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -7,7 +8,7 @@ import java.util.UUID;
 
 @Entity
 @Data
-public class CuentaContableByProduct {
+public class CuentaContableByProduct implements Child {
     @Id
     @GeneratedValue
     private UUID id;
