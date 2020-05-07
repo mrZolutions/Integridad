@@ -31,6 +31,6 @@ public interface CuentaContableRepository extends CrudRepository<CuentaContable,
     @Query("SELECT cc FROM CuentaContable cc WHERE cc.type = (:typ) AND cc.accountType = (:atyp) AND cc.active = true")
     Iterable<CuentaContable> findByTypeAndAccountType(@Param("typ") String typ, @Param("atyp") String atyp);
 
-    @Query("SELECT cc FROM CuentaContable cc WHERE cc.userClient.id = (:userId) AND cc.code = (:code) AND cc.active = true")
+    @Query("SELECT cc FROM CuentaContable cc WHERE cc.userClient.id = (:userId) AND cc.code like CONCAT(:code, '%') AND cc.active = true")
     CuentaContable findByUserClientAndCode(@Param("userId") UUID userId, @Param("code") String code);
 }

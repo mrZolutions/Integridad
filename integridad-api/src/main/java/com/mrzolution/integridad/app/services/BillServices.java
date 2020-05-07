@@ -61,6 +61,8 @@ public class BillServices {
     DailybookFvServices dailybookFvServices;
     @Autowired
     ConfigCuentasServices configCuentasServices;
+    @Autowired
+    CuentaContableRepository cuentaContableRepository;
 
     public String getDatil(Requirement requirement, UUID userClientId) throws Exception {
         UserClient userClient = userClientRepository.findOne(userClientId);
@@ -573,7 +575,8 @@ public class BillServices {
         dailybookFv.setSubsidiary(saved.getSubsidiary());
 
         List<DetailDailybookContab> dailyDetails = new ArrayList<>();
-        dailyDetails.add(createDetialDailySale(saved, sb.toString() + sequence, saved.getTotal(), null, saved.getClient().getCodConta(), "Clientes Locales"));
+        CuentaContable cuenta = cuentaContableRepository.findByUserClientAndCode(saved.getUserIntegridad().getSubsidiary().getUserClient().getId(), saved.getClient().getCodConta());
+        dailyDetails.add(createDetialDailySale(saved, sb.toString() + sequence, saved.getTotal(), null, saved.getClient().getCodConta(), cuenta.getDescription()));
 
         ConfigCuentas configCuentas = configCuentasServices.getCuentasByUserCliendIdAndOptionCode(saved.getSubsidiary().getUserClient().getId(), "IVAVENTAS");
         dailyDetails.add(createDetialDailySale(saved, sb.toString() + sequence, null,
