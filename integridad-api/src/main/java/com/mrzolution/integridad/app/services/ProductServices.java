@@ -81,12 +81,13 @@ public class ProductServices {
         return saved;
     }
     
-    public void updateProduct(Product product) {
+    public Product updateProduct(Product product) {
         product.setLastDateUpdated(new Date().getTime());
         product.setListsNull();
         product.setFatherListToNull();
 	    Product updated = productRepository.save(product);
         log.info("ProductServices updateProduct: {}", updated.getId());
+        return updated;
     }
 
     @Async("asyncExecutor")

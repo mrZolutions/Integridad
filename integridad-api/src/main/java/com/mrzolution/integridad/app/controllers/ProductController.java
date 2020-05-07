@@ -4,6 +4,8 @@ import java.util.UUID;
 
 import com.mrzolution.integridad.app.domain.CuentaContableByProduct;
 import com.mrzolution.integridad.app.domain.ProductBySubsidiary;
+import com.mrzolution.integridad.app.domain.ProductWrapper;
+import com.mrzolution.integridad.app.services.ProductRemoveDetailServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -27,6 +29,8 @@ import lombok.extern.slf4j.Slf4j;
 public class ProductController {
     @Autowired
     ProductServices service;
+    @Autowired
+    ProductRemoveDetailServices productRemoveDetailServices;
 
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity createProduct(@RequestBody Product product) {
@@ -71,6 +75,20 @@ public class ProductController {
         }
         log.info("ProductController updateProductEdited DONE");
 	return new ResponseEntity<Void>(HttpStatus.ACCEPTED);
+    }
+
+    @RequestMapping(method = RequestMethod.PUT, value="/remove")
+    public ResponseEntity removeProduct(@RequestBody ProductWrapper productWrapper) {
+        try {
+            Product productUpdated = service.updateProduct(productWrapper.getProduct());
+            productWrapper.setProduct(productUpdated);
+            productRemoveDetailServices.createFromWrapper(productWrapper);
+        } catch (BadRequestException e) {
+            log.error("ProductController removeProduct Exception thrown: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+        log.info("ProductController removeProduct DONE");
+        return new ResponseEntity<Void>(HttpStatus.ACCEPTED);
     }
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/{productId}")

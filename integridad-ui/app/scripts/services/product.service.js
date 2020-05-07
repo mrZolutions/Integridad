@@ -19,6 +19,12 @@ angular
             });
         };
 
+        this.remove = function(productWrapper) {
+            return securityService.put('/product/remove', productWrapper).then(function successCallback(response) {
+                return response.data;
+            });
+        };
+
         this.delete = function(productId) {
             return securityService.delete('/product/' + productId).then(function successCallback(response) {
                 return response.data;

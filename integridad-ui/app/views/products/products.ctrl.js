@@ -54,6 +54,13 @@ angular.module('integridadUiApp')
             vm.cuentaContableConsume = undefined;
             vm.cuentaContableFinished = undefined;
             vm.cuentaContableCost = undefined;
+
+            vm.product = undefined;
+            vm.selectedGroup = undefined;
+            vm.selectedLine = undefined;
+            vm.wizard = 0;
+            vm.remveReason = undefined;
+
             vm.messurements = messurementListService.getMessurementList();
             productTypeService.getproductTypesLazy().then(function(response) {
                 vm.productTypes = response;
@@ -290,6 +297,7 @@ angular.module('integridadUiApp')
         };
 
         function update(isRemove) {
+            vm.loading = true;
             _.each(vm.product.productBySubsidiaries, function(ps) {
                 ps.active=false;
             });
@@ -326,22 +334,35 @@ angular.module('integridadUiApp')
                 vm.product.cuentaContableByProducts.push(cuentaContableByProduct);
             });
             vm.product.barCode = vm.productBarCode;
-            productService.update(vm.product).then(function(response) {
-                vm.product = undefined;
-                vm.selectedGroup = undefined;
-                vm.selectedLine = undefined;
-                vm.wizard = 0;
-                _activate();
-                vm.error = undefined;
-                if (isRemove) {
+
+            if (isRemove){
+                var wrapper = {
+                    product : vm.product,
+                    removeReason : vm.remveReason,
+                    date: new Date().getTime(),
+                    userId: vm.user.id
+                }
+                productService.remove(wrapper).then(function(response) {
+                    _activate();
+                    vm.error = undefined;
+                    vm.loading = false;
                     vm.success = 'Registro eliminado con exito';
-                } else {
+                }).catch(function(error) {
+                    vm.loading = false;
+                    vm.error = error.data;
+                });
+            } else {
+                productService.update(vm.product).then(function(response) {
+                    _activate();
+                    vm.error = undefined;
+                    vm.loading = false;
                     vm.success = 'Registro actualizado con exito';
-                };
-            }).catch(function(error) {
-                vm.loading = false;
-                vm.error = error.data;
-            });
+                }).catch(function(error) {
+                    vm.loading = false;
+                    vm.error = error.data;
+                });
+            }
+
         };
 
         vm.filterEvent = function(event) {
