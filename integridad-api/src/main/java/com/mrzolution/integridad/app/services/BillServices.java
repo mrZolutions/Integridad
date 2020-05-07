@@ -598,7 +598,7 @@ public class BillServices {
 
         for(Map.Entry<CuentaContable, Double> entry : accounts.entrySet()){
             CuentaContable cuentaContable = entry.getKey();
-            dailyDetails.add(createDetialDailySale(saved, sb.toString() + sequence, null, entry.getValue(), cuentaContable.getCode(), cuentaContable.getName()));
+            dailyDetails.add(createDetialDailySale(saved, sb.toString() + sequence, null, entry.getValue(), cuentaContable.getCode(), cuentaContable.getDescription()));
         };
 
         dailybookFv.setDetailDailybookContab(dailyDetails);
