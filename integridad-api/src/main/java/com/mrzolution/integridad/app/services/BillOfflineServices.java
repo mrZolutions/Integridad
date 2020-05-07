@@ -55,6 +55,8 @@ public class BillOfflineServices {
     ConfigCuentasServices configCuentasServices;
     @Autowired
     CuentaContableByProductRepository cuentaContableByProductRepository;
+    @Autowired
+    CuentaContableRepository cuentaContableRepository;
     
     public Iterable<BillOffline> getBillsOfflineByTypeDocument(int value) {
         Iterable<BillOffline> billsOffline = billOfflineRepository.findBillsOfflineByTypeDocument(value);
@@ -429,7 +431,8 @@ public class BillOfflineServices {
         dailybookFv.setSubsidiary(saved.getSubsidiary());
 
         List<DetailDailybookContab> dailyDetails = new ArrayList<>();
-        dailyDetails.add(createDetialDailySale(saved, sb.toString() + sequence, saved.getTotal(), null, saved.getClient().getCodConta(), "Clientes Locales"));
+        CuentaContable cuenta = cuentaContableRepository.findByUserClientAndCode(saved.getUserIntegridad().getSubsidiary().getUserClient().getId(), saved.getClient().getCodConta());
+        dailyDetails.add(createDetialDailySale(saved, sb.toString() + sequence, saved.getTotal(), null, saved.getClient().getCodConta(), cuenta.getDescription()));
 
         ConfigCuentas configCuentas = configCuentasServices.getCuentasByUserCliendIdAndOptionCode(saved.getSubsidiary().getUserClient().getId(), "IVAVENTAS");
         dailyDetails.add(createDetialDailySale(saved, sb.toString() + sequence, null,
@@ -454,7 +457,7 @@ public class BillOfflineServices {
 
         for(Map.Entry<CuentaContable, Double> entry : accounts.entrySet()){
             CuentaContable cuentaContable = entry.getKey();
-            dailyDetails.add(createDetialDailySale(saved, sb.toString() + sequence, null, entry.getValue(), cuentaContable.getCode(), cuentaContable.getName()));
+            dailyDetails.add(createDetialDailySale(saved, sb.toString() + sequence, null, entry.getValue(), cuentaContable.getCode(), cuentaContable.getDescription()));
         };
 
         dailybookFv.setDetailDailybookContab(dailyDetails);
