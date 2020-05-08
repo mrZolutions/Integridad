@@ -55,7 +55,9 @@ public class BillServicesTest {
 	CuentaContableByProductRepository cuentaContableByProductRepository;
 	@Mock
 	DailybookFvServices dailybookFvServices;
-	
+	@Mock
+	CuentaContableRepository cuentaContableRepository;
+
 	Bill bill;
 	
 	@Before
@@ -175,6 +177,7 @@ public class BillServicesTest {
 		Mockito.when(configCuentasServices.getCuentasByUserCliendIdAndOptionCode(Mockito.any(UUID.class), Mockito.anyString())).thenReturn(new ConfigCuentas());
 		Mockito.when(cuentaContableByProductRepository.findByProductId(Mockito.any(UUID.class))).thenReturn(new ArrayList<>());
 		Mockito.when(cashierRepository.findOne(Mockito.any(UUID.class))).thenReturn(cashier);
+		Mockito.when(cuentaContableRepository.findByUserClientAndCode(Mockito.any(), Mockito.anyString())).thenReturn(new CuentaContable());
 		Mockito.when(dailybookFvServices.createDailybookFv(Mockito.any())).thenReturn(new DailybookFv());
 
 		Bill response = service.createBill(bill, null, null,1);
@@ -215,6 +218,7 @@ public class BillServicesTest {
 		Mockito.when(subsidiaryRepository.findOne(Mockito.any(UUID.class))).thenReturn(Subsidiary.newSubsidiaryTest());
 		Mockito.when(cuentaContableByProductRepository.findByProductId(Mockito.any(UUID.class))).thenReturn(new ArrayList<>());
 		Mockito.when(cashierRepository.findOne(Mockito.any(UUID.class))).thenReturn(cashier);
+		Mockito.when(cuentaContableRepository.findByUserClientAndCode(Mockito.any(), Mockito.anyString())).thenReturn(new CuentaContable());
 		Mockito.when(dailybookFvServices.createDailybookFv(Mockito.any())).thenReturn(new DailybookFv());
 
 		Bill response = service.createBill(bill, null,null, 0);
@@ -262,6 +266,7 @@ public class BillServicesTest {
 //		Mockito.when(subsidiaryRepository.findOne(idSubsidiary)).thenReturn(subsidiary);
 		Mockito.when(cuentaContableByProductRepository.findByProductId(Mockito.any(UUID.class))).thenReturn(new ArrayList<>());
 		Mockito.when(cashierRepository.findOne(Mockito.any(UUID.class))).thenReturn(cashier);
+		Mockito.when(cuentaContableRepository.findByUserClientAndCode(Mockito.any(), Mockito.anyString())).thenReturn(new CuentaContable());
 		Mockito.when(dailybookFvServices.createDailybookFv(Mockito.any())).thenReturn(new DailybookFv());
 		
 		service.createBill(bill, null, null,1);
