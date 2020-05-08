@@ -773,6 +773,18 @@ angular.module('integridadUiApp')
             };
         };
 
+        vm.enableSave = function(){
+            if(vm.product !== undefined && vm.product.productType !== undefined){
+                if(vm.product.productType.code === 'SER'){
+                    return vm.product.averageCost === undefined || vm.product.averageCost === '' || vm.errorCalc;
+                } else {
+                    return vm.product.maxMinimun === undefined || vm.product.maxMinimun === '' || vm.product.averageCost === undefined || vm.product.averageCost === '' || vm.errorCalc;
+                }
+            } else {
+                return false;
+            } 
+        };
+
         vm.remove = function() {
             vm.product.active = false;
             update(true);
