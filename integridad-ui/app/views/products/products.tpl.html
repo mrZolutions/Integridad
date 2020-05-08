@@ -682,7 +682,7 @@
             </button>
             <button type="button" title="Guardar Producto" class="btn btn-success btn-sm"
                     ng-click="vm.save()"
-                    ng-disabled="vm.product.maxMinimun === undefined || vm.product.maxMinimun === '' || vm.product.averageCost === undefined || vm.product.averageCost === '' || vm.errorCalc">
+                    ng-disabled="vm.enableSave()">
                     <span class="glyphicon glyphicon-floppy-save" aria-hidden="true"></span>
             </button>
             <button type="button" title="Salir" class="btn btn-primary btn-sm" ng-click="vm.cancel()">
