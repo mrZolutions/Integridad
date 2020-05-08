@@ -140,7 +140,6 @@ public class BillServicesTest {
     	
     }
 
-	@Ignore
 	@Test
 	public void createCallDetailRepository(){
 		UUID idCashier = UUID.randomUUID();
@@ -192,7 +191,6 @@ public class BillServicesTest {
 		
 	}
 
-	@Ignore
 	@Test
 	public void createQuotationShouldntCallPagoNorCashierNorProductBySub(){
             UUID idCashier = UUID.randomUUID();
@@ -232,7 +230,6 @@ public class BillServicesTest {
 
 	}
 
-	@Ignore
 	@Test
 	public void createAddOneToSeqOnSubsidiary(){
 		UUID idCashier = UUID.randomUUID();
