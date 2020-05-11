@@ -156,11 +156,14 @@ public class ProductController {
 	return new ResponseEntity<Iterable>(response, HttpStatus.CREATED);
     }
 
-    @RequestMapping(method = RequestMethod.GET, value="/actives/subsidiary/{subsidiaryId}/{page}")
-    public ResponseEntity getProductsActivesBySubsidiaryId(@PathVariable("subsidiaryId") UUID subsidiaryId, @PathVariable("page") int page, @RequestParam(required = false, name = "var") String variable) {
+    @RequestMapping(method = RequestMethod.GET, value="/actives/subsidiary/{subsidiaryId}/{page}/{lineId}")
+    public ResponseEntity getProductsActivesBySubsidiaryId(@PathVariable("subsidiaryId") UUID subsidiaryId, @PathVariable("lineId") String lineIdParam,
+                                                           @PathVariable("page") int page, @RequestParam(required = false, name = "var") String variable) {
         Page<Product> response = null;
+        UUID lineId = null;
+        if( !"undefined".equals(lineIdParam)) lineId = UUID.fromString(lineIdParam);
 	try {
-            response = service.getProductsActivesBySubsidiaryId(subsidiaryId, variable, new PageRequest(page, 50, Sort.Direction.ASC, "product"));
+            response = service.getProductsActivesBySubsidiaryId(subsidiaryId, variable, lineId, new PageRequest(page, 50, Sort.Direction.ASC, "product"));
 	} catch (BadRequestException e) {
             log.error("ProductController getProductsActivesBySubsidiaryId Exception thrown: {}", e.getMessage());	    
 	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());

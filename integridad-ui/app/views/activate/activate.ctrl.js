@@ -15,7 +15,7 @@ angular.module('integridadUiApp')
 
         vm.errorActive = false;
         function getPermissions(){
-            permissionService.getPermissions(user.userType).then(function (respnse) {
+            permissionService.getPermissions(vm.user.userType).then(function (response) {
                 var toGroup = response;
                 var grouped = {};
                 toGroup.forEach(function(item){
@@ -66,6 +66,7 @@ angular.module('integridadUiApp')
                 vm.error = undefined;
                 vm.success = 'Perfil actualizado con exito';
                 holderService.set(response)
+                vm.user = holderService.get();
                 var d = new Date();
                 $localStorage.timeloged = d.getTime();
                 getPermissions();
