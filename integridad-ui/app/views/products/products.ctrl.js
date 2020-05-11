@@ -92,6 +92,7 @@ angular.module('integridadUiApp')
                 vm.error = error.data;
             });
 
+            _getLines();
             _filter();
         };
 
@@ -105,8 +106,9 @@ angular.module('integridadUiApp')
             } else {
                 var busqueda = variable.toUpperCase();
             };
+            var lineaIdFilter = vm.lineaFilter !== undefined ?  vm.lineaFilter.id : undefined;
             if ($routeParams.subsidiaryId) {
-                productService.getLazyBySusidiaryId($routeParams.subsidiaryId, vm.page, busqueda).then(function(response) {
+                productService.getLazyBySusidiaryId($routeParams.subsidiaryId, vm.page, busqueda, lineaIdFilter).then(function(response) {
                     vm.totalPages = response.totalPages;
                     vm.totalElements = response.totalElements;
                     _getProductQuantities(response.content);
@@ -116,7 +118,7 @@ angular.module('integridadUiApp')
                     vm.error = error.data;
                 });
             } else {
-                productService.getLazyBySusidiaryId(vm.user.subsidiary.id, vm.page, busqueda).then(function(response) {
+                productService.getLazyBySusidiaryId(vm.user.subsidiary.id, vm.page, busqueda, lineaIdFilter).then(function(response) {
                     vm.totalElements = response.totalElements;
                     vm.totalPages = response.totalPages;
                     _getProductQuantities(response.content);
@@ -363,13 +365,6 @@ angular.module('integridadUiApp')
                 });
             }
 
-        };
-
-        vm.filterEvent = function(event) {
-            vm.page = 0;
-            if (event.keyCode === 13 || event.charCode === 13) {
-                _filter();
-            };
         };
 
         vm.filter = function() {
@@ -683,7 +678,8 @@ angular.module('integridadUiApp')
             };
           });
           _getBrands();
-          _getLines();
+          //********************************************************************************************************************************** */
+        //   _getLines();
           isSubsidiarySelected ? vm.wizard = 2 : vm.error = 'Debe Seleccionar por lo menos una matriz.';
         };
 

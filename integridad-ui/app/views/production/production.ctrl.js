@@ -574,7 +574,7 @@ angular.module('integridadUiApp')
                 var busquedaSet = variableSet.toUpperCase();
             };
             if ($routeParams.subsidiaryId) {
-                productService.getLazyBySusidiaryId($routeParams.subsidiaryId, vm.pageSet, busquedaSet).then(function(response) {
+                productService.getLazyBySusidiaryId($routeParams.subsidiaryId, vm.pageSet, busquedaSet, undefined).then(function(response) {
                     vm.totalPagesSet = response.totalPages;
                     vm.totalElementsSet = response.totalElements;
                     _getProductQuantitiesSet(response.content);
@@ -584,7 +584,7 @@ angular.module('integridadUiApp')
                     vm.loading = false;
                 });
             } else {
-                productService.getLazyBySusidiaryId(vm.userData.subsidiary.id, vm.pageSet, busquedaSet).then(function(response) {
+                productService.getLazyBySusidiaryId(vm.userData.subsidiary.id, vm.pageSet, busquedaSet, undefined).then(function(response) {
                     vm.totalElementsSet = response.totalElements;
                     vm.totalPagesSet = response.totalPages;
                     _getProductQuantitiesSet(response.content);
@@ -754,7 +754,7 @@ angular.module('integridadUiApp')
                 var busquedaKar = variableKar.toUpperCase();
             };
             if ($routeParams.subsidiaryId) {
-                productService.getLazyBySusidiaryId($routeParams.subsidiaryId, vm.pageKar, busquedaKar).then(function(response) {
+                productService.getLazyBySusidiaryId($routeParams.subsidiaryId, vm.pageKar, busquedaKar, undefined).then(function(response) {
                     vm.totalPagesKar = response.totalPages;
                     vm.totalElementsKar = response.totalElements;
                     _getProductQuantitiesKar(response.content);
@@ -764,7 +764,7 @@ angular.module('integridadUiApp')
                     vm.loading = false;
                 });
             } else {
-                productService.getLazyBySusidiaryId(vm.userData.subsidiary.id, vm.pageKar, busquedaKar).then(function(response) {
+                productService.getLazyBySusidiaryId(vm.userData.subsidiary.id, vm.pageKar, busquedaKar, undefined).then(function(response) {
                     vm.totalElementsKar = response.totalElements;
                     vm.totalPagesKar = response.totalPages;
                     _getProductQuantitiesKar(response.content);
@@ -1054,7 +1054,7 @@ angular.module('integridadUiApp')
             } else {
                 var busquedaCsm = variable.toUpperCase();
             };
-            productService.getLazyBySusidiaryId(vm.userData.subsidiary.id, vm.page, busquedaCsm).then(function(response) {
+            productService.getLazyBySusidiaryId(vm.userData.subsidiary.id, vm.page, busquedaCsm, undefined).then(function(response) {
                 vm.loading = false;
                 vm.totalPages = response.totalPages;
                 vm.productList = [];
@@ -1177,7 +1177,7 @@ angular.module('integridadUiApp')
             } else {
                 var busquedaCellar = variableCellar.toUpperCase();
             };
-            productService.getLazyBySusidiaryId(vm.userData.subsidiary.id, vm.page, busquedaCellar).then(function(response) {
+            productService.getLazyBySusidiaryId(vm.userData.subsidiary.id, vm.page, busquedaCellar, undefined).then(function(response) {
                 vm.loading = false;
                 vm.totalPages = response.totalPages;
                 vm.productList = [];

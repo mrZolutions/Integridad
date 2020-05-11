@@ -24,11 +24,14 @@ public interface ProductBySubsidiairyRepository extends CrudRepository<ProductBy
     @Query("SELECT p FROM ProductBySubsidiary p WHERE p.subsidiary.id = (:idS) AND p.product.id = (:idP) AND p.active = true")
     ProductBySubsidiary findBySubsidiaryIdAndProductId(@Param("idS") UUID subsidiaryId, @Param("idP") UUID ProductId);
         
-    @Query("SELECT DISTINCT p.product.id FROM ProductBySubsidiary p WHERE p.subsidiary.id = (:id) AND p.product.active = true")
-    Page<UUID> findBySubsidiaryIdAndProductActive(@Param("id") UUID subsidiaryId, Pageable pageable);
+    @Query("SELECT DISTINCT p.product.id FROM ProductBySubsidiary p WHERE p.subsidiary.id = (:id) AND p.product.active = true " +
+            "and (cast(:lineId as text) is NULL OR p.product.subgroup.groupLine.line.id = (:lineId))")
+    Page<UUID> findBySubsidiaryIdAndProductActive(@Param("id") UUID subsidiaryId, @Param("lineId") UUID lineId, Pageable pageable);
         
-    @Query("SELECT DISTINCT p.product.id FROM ProductBySubsidiary p WHERE p.subsidiary.id = (:id) AND p.product.active = true AND (p.product.codeIntegridad LIKE (%:variable%) OR p.product.name LIKE (%:variable%))")
-    Page<UUID> findBySubsidiaryIdAndVariabledAndProductActive(@Param("id") UUID subsidiaryId, @Param("variable") String variable, Pageable pageable);
+    @Query("SELECT DISTINCT p.product.id FROM ProductBySubsidiary p WHERE p.subsidiary.id = (:id) AND p.product.active = true " +
+            "AND (p.product.codeIntegridad LIKE (%:variable%) OR p.product.name LIKE (%:variable%)) " +
+            "and (cast(:lineId as text) is NULL OR p.product.subgroup.groupLine.line.id = (:lineId))")
+    Page<UUID> findBySubsidiaryIdAndVariabledAndProductActive(@Param("id") UUID subsidiaryId, @Param("variable") String variable, @Param("lineId") UUID lineId, Pageable pageable);
 
     @Query("SELECT DISTINCT p.product FROM ProductBySubsidiary p WHERE p.subsidiary.id = (:id) AND p.product.active = true AND p.product.barCode LIKE (%:variable%)")
     Iterable<Product> findBySubsidiaryIdAndBarCodedAndProductActive(@Param("id") UUID subsidiaryId, @Param("variable") String variable);
