@@ -188,8 +188,8 @@
                         <table class="table table-striped">
                             <thead>
                                 <tr>
-                                    <th>Tipo de Cuenta</th>
-                                    <th>Nombre G&eacute;nerico</th>
+                                    <th>Descripci&oacute;n</th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -198,9 +198,8 @@
                                         No hay Fuente Seleccionada
                                     </td>
                                 </tr>
-                                <tr dir-paginate = "cuenta in vm.cuentaContableList | orderBy:'type' | filter:searchTextTaxes | itemsPerPage: 5" pagination-id = "taxesPagination">
-                                    <td>{{cuenta.accountType}}</td>
-                                    <td>{{cuenta.name}}</td>
+                                <tr dir-paginate = "cuenta in vm.cuentaContableList | orderBy:'description' | filter:searchTextTaxes | itemsPerPage: 5" pagination-id = "taxesPagination">
+                                    <td>{{cuenta.description}}</td>
                                     <td>
                                         <button type = "button" title = "Seleccionar" class = "btn btn-primary btn-sm"
                                                 ng-click = "vm.selectCuentasCg(cuenta)" data-toggle = "modal" data-target = "#modalSelectedCuentasCg">
