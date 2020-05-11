@@ -111,8 +111,11 @@ angular.module('integridadUiApp')
             vm.userId = vm.userData.id;
             vm.provider = undefined;
             vm.messurements = messurementListService.getMessurementList();
-            if($location.path().includes("/entry"))
-                vm.inventoryOption = 'ENTR';
+            switch(true) {
+                case $location.path().includes('/entry'): vm.inventoryOption = 'ENTR'; break;
+                case $location.path().includes('/adjustment'): vm.inventoryOption = 'ADJ'; break;
+                case $location.path().includes('/report'): vm.inventoryOption = 'REPT'; break;
+            }
 
             warehouseService.getAllWarehouseByUserClientId(vm.usrCliId).then(function(response) {
                 vm.warehouseList = response;

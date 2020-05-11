@@ -248,7 +248,7 @@
                             <tr>
                                 <td>
                                     <b>Nombre: </b>{{vm.clientSelected.name}} &nbsp;
-                                    <button type="button" title="Cambiar" class="btn btn-primary btn-sm" ng-if="vm.newBill" ng-click="vm.clientChange()">
+                                    <button type="button" title="Cambiar" class="btn btn-primary btn-sm" ng-if="vm.newBill" ng-click="vm.clientChange()"  ng-show="vm.inventoryOption === 'NORM'">
                                             Cambiar
                                     </button>
                                     <br/>
@@ -976,14 +976,14 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" title = "Facturar" class="btn btn-success btn-sm" ng-click="vm.getClaveAcceso()" id="processBillBtn"
-                            ng-disabled="(vm.pagos.length === 0 || vm.getCambio < 0) || vm.billed" print-remove>
+                            ng-disabled="(vm.pagos.length === 0 || vm.getCambio < 0) || vm.billed" print-remove ng-show="vm.inventoryOption === 'NORM'">
                             <span class = "glyphicon glyphicon-credit-card" aria-hidden = "true"></span>
                     </button>
                     <button type="button" title = "Cancelar Facturación" class="btn btn-warning btn-sm" data-dismiss="modal">
                             <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
                     </button>
                     <button type="button" title="Generar Consumo" class="btn btn-primary btn-sm" ng-click="vm.saveConsumption(vm.consumption)"
-                            ng-disabled="(vm.pagos.length === 0 || vm.getCambio < 0) || vm.billed">
+                            ng-disabled="(vm.pagos.length === 0 || vm.getCambio < 0) || vm.billed" ng-show="vm.inventoryOption === 'INNER'">
                             <span class="glyphicon glyphicon-glass" aria-hidden="true"></span>
                     </button>
                 </div>

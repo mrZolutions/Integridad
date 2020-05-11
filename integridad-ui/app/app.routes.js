@@ -36,6 +36,10 @@ function routes($routeProvider) {
             templateUrl: 'views/bills/bill.tpl.html',
             controller: 'BillCtrl',
             controllerAs: 'vm'
+        }).when('/bills/innerbill', {
+            templateUrl: 'views/bills/bill.tpl.html',
+            controller: 'BillCtrl',
+            controllerAs: 'vm'
         }).when('/projects/projects', {
             templateUrl: 'views/projects/projects.tpl.html',
             controller: 'ProjectsCtrl',
@@ -76,11 +80,17 @@ function routes($routeProvider) {
             templateUrl: 'views/production/production.tpl.html',
             controller: 'ProductionCtrl',
             controllerAs: 'vm'
+        }).when('/inventories/report', {
+            templateUrl: 'views/production/production.tpl.html',
+            controller: 'ProductionCtrl',
+            controllerAs: 'vm'
         }).when('/entry', {
             templateUrl: 'views/production/production.tpl.html',
             controller: 'ProductionCtrl',
-            // templateUrl: 'views/inventories/entry.tpl.html',
-            // controller: 'EntryCtrl',
+            controllerAs: 'vm'
+        }).when('/adjustment', {
+            templateUrl: 'views/production/production.tpl.html',
+            controller: 'ProductionCtrl',
             controllerAs: 'vm'
         }).when('/contab', {
             templateUrl: 'views/contable/contable.tpl.html',

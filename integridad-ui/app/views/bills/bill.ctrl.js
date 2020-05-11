@@ -101,6 +101,10 @@ angular.module('integridadUiApp')
             vm.subOnlineActive = vm.user.subsidiary.online;
             vm.userCashier = vm.user.cashier;
             vm.userSubsidiary = vm.user.subsidiary;
+            vm.inventoryOption = 'NORM';
+            if($location.path().includes("/innerbill"))
+                vm.inventoryOption = 'INNER';
+
             if (vm.subOnlineActive) {
                 vm.loading = true;
                 clientService.getLazyByUserClientId(vm.userClientId).then(function(response) {
