@@ -92,7 +92,7 @@ angular.module('integridadUiApp')
                         option: vm.optionsConfig[index],
                         idCuenta: vm.optionsConfig[index].selected.id,
                         code: vm.optionsConfig[index].selected.code,
-                        description: vm.optionsConfig[index].selected.name,
+                        description: vm.optionsConfig[index].selected.description,
                     };
 
                     vm.configCuentasList.push(configCuenta);

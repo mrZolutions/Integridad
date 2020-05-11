@@ -4,6 +4,8 @@ import java.util.UUID;
 
 import com.mrzolution.integridad.app.domain.CuentaContableByProduct;
 import com.mrzolution.integridad.app.domain.ProductBySubsidiary;
+import com.mrzolution.integridad.app.domain.ProductWrapper;
+import com.mrzolution.integridad.app.services.ProductRemoveDetailServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -27,6 +29,8 @@ import lombok.extern.slf4j.Slf4j;
 public class ProductController {
     @Autowired
     ProductServices service;
+    @Autowired
+    ProductRemoveDetailServices productRemoveDetailServices;
 
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity createProduct(@RequestBody Product product) {
@@ -71,6 +75,20 @@ public class ProductController {
         }
         log.info("ProductController updateProductEdited DONE");
 	return new ResponseEntity<Void>(HttpStatus.ACCEPTED);
+    }
+
+    @RequestMapping(method = RequestMethod.PUT, value="/remove")
+    public ResponseEntity removeProduct(@RequestBody ProductWrapper productWrapper) {
+        try {
+            Product productUpdated = service.updateProduct(productWrapper.getProduct());
+            productWrapper.setProduct(productUpdated);
+            productRemoveDetailServices.createFromWrapper(productWrapper);
+        } catch (BadRequestException e) {
+            log.error("ProductController removeProduct Exception thrown: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+        log.info("ProductController removeProduct DONE");
+        return new ResponseEntity<Void>(HttpStatus.ACCEPTED);
     }
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/{productId}")
@@ -138,11 +156,14 @@ public class ProductController {
 	return new ResponseEntity<Iterable>(response, HttpStatus.CREATED);
     }
 
-    @RequestMapping(method = RequestMethod.GET, value="/actives/subsidiary/{subsidiaryId}/{page}")
-    public ResponseEntity getProductsActivesBySubsidiaryId(@PathVariable("subsidiaryId") UUID subsidiaryId, @PathVariable("page") int page, @RequestParam(required = false, name = "var") String variable) {
+    @RequestMapping(method = RequestMethod.GET, value="/actives/subsidiary/{subsidiaryId}/{page}/{lineId}")
+    public ResponseEntity getProductsActivesBySubsidiaryId(@PathVariable("subsidiaryId") UUID subsidiaryId, @PathVariable("lineId") String lineIdParam,
+                                                           @PathVariable("page") int page, @RequestParam(required = false, name = "var") String variable) {
         Page<Product> response = null;
+        UUID lineId = null;
+        if( !"undefined".equals(lineIdParam)) lineId = UUID.fromString(lineIdParam);
 	try {
-            response = service.getProductsActivesBySubsidiaryId(subsidiaryId, variable, new PageRequest(page, 50, Sort.Direction.ASC, "product"));
+            response = service.getProductsActivesBySubsidiaryId(subsidiaryId, variable, lineId, new PageRequest(page, 50, Sort.Direction.ASC, "product"));
 	} catch (BadRequestException e) {
             log.error("ProductController getProductsActivesBySubsidiaryId Exception thrown: {}", e.getMessage());	    
 	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());

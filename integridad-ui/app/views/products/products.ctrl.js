@@ -54,6 +54,13 @@ angular.module('integridadUiApp')
             vm.cuentaContableConsume = undefined;
             vm.cuentaContableFinished = undefined;
             vm.cuentaContableCost = undefined;
+
+            vm.product = undefined;
+            vm.selectedGroup = undefined;
+            vm.selectedLine = undefined;
+            vm.wizard = 0;
+            vm.remveReason = undefined;
+
             vm.messurements = messurementListService.getMessurementList();
             productTypeService.getproductTypesLazy().then(function(response) {
                 vm.productTypes = response;
@@ -85,6 +92,7 @@ angular.module('integridadUiApp')
                 vm.error = error.data;
             });
 
+            _getLines();
             _filter();
         };
 
@@ -98,8 +106,9 @@ angular.module('integridadUiApp')
             } else {
                 var busqueda = variable.toUpperCase();
             };
+            var lineaIdFilter = vm.lineaFilter !== undefined ?  vm.lineaFilter.id : undefined;
             if ($routeParams.subsidiaryId) {
-                productService.getLazyBySusidiaryId($routeParams.subsidiaryId, vm.page, busqueda).then(function(response) {
+                productService.getLazyBySusidiaryId($routeParams.subsidiaryId, vm.page, busqueda, lineaIdFilter).then(function(response) {
                     vm.totalPages = response.totalPages;
                     vm.totalElements = response.totalElements;
                     _getProductQuantities(response.content);
@@ -109,7 +118,7 @@ angular.module('integridadUiApp')
                     vm.error = error.data;
                 });
             } else {
-                productService.getLazyBySusidiaryId(vm.user.subsidiary.id, vm.page, busqueda).then(function(response) {
+                productService.getLazyBySusidiaryId(vm.user.subsidiary.id, vm.page, busqueda, lineaIdFilter).then(function(response) {
                     vm.totalElements = response.totalElements;
                     vm.totalPages = response.totalPages;
                     _getProductQuantities(response.content);
@@ -290,6 +299,7 @@ angular.module('integridadUiApp')
         };
 
         function update(isRemove) {
+            vm.loading = true;
             _.each(vm.product.productBySubsidiaries, function(ps) {
                 ps.active=false;
             });
@@ -326,29 +336,35 @@ angular.module('integridadUiApp')
                 vm.product.cuentaContableByProducts.push(cuentaContableByProduct);
             });
             vm.product.barCode = vm.productBarCode;
-            productService.update(vm.product).then(function(response) {
-                vm.product = undefined;
-                vm.selectedGroup = undefined;
-                vm.selectedLine = undefined;
-                vm.wizard = 0;
-                _activate();
-                vm.error = undefined;
-                if (isRemove) {
-                    vm.success = 'Registro eliminado con exito';
-                } else {
-                    vm.success = 'Registro actualizado con exito';
-                };
-            }).catch(function(error) {
-                vm.loading = false;
-                vm.error = error.data;
-            });
-        };
 
-        vm.filterEvent = function(event) {
-            vm.page = 0;
-            if (event.keyCode === 13 || event.charCode === 13) {
-                _filter();
-            };
+            if (isRemove){
+                var wrapper = {
+                    product : vm.product,
+                    removeReason : vm.remveReason,
+                    date: new Date().getTime(),
+                    userId: vm.user.id
+                }
+                productService.remove(wrapper).then(function(response) {
+                    _activate();
+                    vm.error = undefined;
+                    vm.loading = false;
+                    vm.success = 'Registro eliminado con exito';
+                }).catch(function(error) {
+                    vm.loading = false;
+                    vm.error = error.data;
+                });
+            } else {
+                productService.update(vm.product).then(function(response) {
+                    _activate();
+                    vm.error = undefined;
+                    vm.loading = false;
+                    vm.success = 'Registro actualizado con exito';
+                }).catch(function(error) {
+                    vm.loading = false;
+                    vm.error = error.data;
+                });
+            }
+
         };
 
         vm.filter = function() {
@@ -662,7 +678,8 @@ angular.module('integridadUiApp')
             };
           });
           _getBrands();
-          _getLines();
+          //********************************************************************************************************************************** */
+        //   _getLines();
           isSubsidiarySelected ? vm.wizard = 2 : vm.error = 'Debe Seleccionar por lo menos una matriz.';
         };
 
@@ -750,6 +767,18 @@ angular.module('integridadUiApp')
                     vm.subKarActive ? update(false) : updateEdited(false);
                 };
             };
+        };
+
+        vm.enableSave = function(){
+            if(vm.product !== undefined && vm.product.productType !== undefined){
+                if(vm.product.productType.code === 'SER'){
+                    return vm.product.averageCost === undefined || vm.product.averageCost === '' || vm.errorCalc;
+                } else {
+                    return vm.product.maxMinimun === undefined || vm.product.maxMinimun === '' || vm.product.averageCost === undefined || vm.product.averageCost === '' || vm.errorCalc;
+                }
+            } else {
+                return false;
+            } 
         };
 
         vm.remove = function() {

@@ -34,17 +34,27 @@
 
     <div class="table-responsive" ng-show="vm.wizard === 0">
         <div class="row">
-            <div class="form-group col-md-10">
-                <input id="input40" ng-model="vm.searchText" ng-keypress="vm.filterEvent($event)" class="form-control" placeholder="Buscar" />
-            </div>
-            <div class="form-group col-md-2">
-                <button type="button" title="Buscar Producto" class="btn btn-primary" ng-click="vm.filter()">
-                        <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
-                </button>
-                <button type="button" title="Crear Nuevo Producto" class="btn btn-primary" ng-click="vm.productCreate()">
-                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                </button>
-            </div>
+            <form ng-submit="vm.filter()">
+                <div class="form-group col-md-4">
+                    <label>Filtro por L&iacute;nea: </label>
+                    <select ng-options="lin as lin.name for lin in vm.lineas | orderBy:'name'"
+                        ng-model="vm.lineaFilter" class="form-control">
+                    </select>
+                </div>
+                <div class="form-group col-md-6">
+                    <label>Filtro por Nombre o C&oacute;digo: </label>
+                    <input id="input40" ng-model="vm.searchText" class="form-control" placeholder="Buscar" />
+                </div>
+                <div class="form-group col-md-2">
+                    <br/>
+                    <button type="submit" title="Buscar Producto" class="btn btn-primary">
+                            <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                    </button>
+                    <button type="button" title="Crear Nuevo Producto" class="btn btn-primary" ng-click="vm.productCreate()">
+                            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                    </button>
+                </div>
+            </form>
         </div>
         <table class="table table-striped">
             <thead>
@@ -75,7 +85,7 @@
                                 <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
                         </button>
                         <button type="button" title="Eliminar Producto" class="btn btn-primary btn-sm" ng-click="vm.product=productEdit"
-                                data-toggle="modal" data-target="#modalEliminar">
+                                data-toggle="modal" data-target="#modalEliminar" ng-show="!vm.subKarActive">
                                 <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
                         </button>
                     </td>
@@ -166,7 +176,7 @@
                         <div class="form-group col-md-8">
                             <label>Cuenta contable para la Venta: </label>
                             <input type="text" ng-model="vm.cuentaContableSale" class="form-control" typeahead-show-hint="true"
-                            uib-typeahead="account as (account.name + ' - ' + account.code) for account in vm.cuentasContablesList | orderBy:'name' | filter:$viewValue | limitTo:8">
+                            uib-typeahead="account as (account.description + ' - ' + account.code) for account in vm.cuentasContablesList | orderBy:'name' | filter:$viewValue | limitTo:8">
                         </div>
                         <div class="form-group col-md-4">
                             <label>&nbsp;</label>
@@ -204,7 +214,7 @@
                         <div class="form-group col-md-8">
                             <label>Cuenta contable para el Egreso: </label>
                             <input type="text" ng-model="vm.cuentaContableConsume" class="form-control" typeahead-show-hint="true"
-                            uib-typeahead="account as (account.name + ' - ' + account.code) for account in vm.cuentasContablesList | orderBy:'name' | filter:$viewValue | limitTo:8">
+                            uib-typeahead="account as (account.description + ' - ' + account.code) for account in vm.cuentasContablesList | orderBy:'name' | filter:$viewValue | limitTo:8">
                         </div>
                         <div class="form-group col-md-4">
                             <label>&nbsp;</label>
@@ -244,7 +254,7 @@
                         <div class="form-group col-md-8">
                             <label>Cuenta contable para el Producto Terminado: </label>
                             <input type="text" ng-model="vm.cuentaContableFinished" class="form-control" typeahead-show-hint="true"
-                            uib-typeahead="account as (account.name + ' - ' + account.code) for account in vm.cuentasContablesList | orderBy:'name' | filter:$viewValue | limitTo:8">
+                            uib-typeahead="account as (account.description + ' - ' + account.code) for account in vm.cuentasContablesList | orderBy:'name' | filter:$viewValue | limitTo:8">
                         </div>
                         <div class="form-group col-md-4">
                             <label>&nbsp;</label>
@@ -282,7 +292,7 @@
                         <div class="form-group col-md-8">
                             <label>Cuenta contable para el Costo de Ventas: </label>
                             <input type="text" ng-model="vm.cuentaContableCost" class="form-control" typeahead-show-hint="true"
-                            uib-typeahead="account as (account.name + ' - ' + account.code) for account in vm.cuentasContablesList | orderBy:'name' | filter:$viewValue | limitTo:8">
+                            uib-typeahead="account as (account.description + ' - ' + account.code) for account in vm.cuentasContablesList | orderBy:'name' | filter:$viewValue | limitTo:8">
                         </div>
                         <div class="form-group col-md-4">
                             <label>&nbsp;</label>
@@ -524,7 +534,7 @@
                         <div class="form-group col-md-8">
                             <label>Cuenta contable para la Venta: </label>
                             <input type="text" ng-model="vm.cuentaContableSale" class="form-control" typeahead-show-hint="true"
-                            uib-typeahead="account as (account.name + ' - ' + account.code) for account in vm.cuentasContablesList | orderBy:'name' | filter:$viewValue | limitTo:8">
+                            uib-typeahead="account as (account.description + ' - ' + account.code) for account in vm.cuentasContablesList | orderBy:'name' | filter:$viewValue | limitTo:8">
                         </div>
                         <div class="form-group col-md-4">
                             <label>&nbsp;</label>
@@ -562,7 +572,7 @@
                         <div class="form-group col-md-8">
                             <label>Cuenta contable para el Egreso: </label>
                             <input type="text" ng-model="vm.cuentaContableConsume" class="form-control" typeahead-show-hint="true"
-                            uib-typeahead="account as (account.name + ' - ' + account.code) for account in vm.cuentasContablesList | orderBy:'name' | filter:$viewValue | limitTo:8">
+                            uib-typeahead="account as (account.description + ' - ' + account.code) for account in vm.cuentasContablesList | orderBy:'name' | filter:$viewValue | limitTo:8">
                         </div>
                         <div class="form-group col-md-4">
                             <label>&nbsp;</label>
@@ -602,7 +612,7 @@
                         <div class="form-group col-md-8">
                             <label>Cuenta contable para el Producto Terminado: </label>
                             <input type="text" ng-model="vm.cuentaContableFinished" class="form-control" typeahead-show-hint="true"
-                            uib-typeahead="account as (account.name + ' - ' + account.code) for account in vm.cuentasContablesList | orderBy:'name' | filter:$viewValue | limitTo:8">
+                            uib-typeahead="account as (account.description + ' - ' + account.code) for account in vm.cuentasContablesList | orderBy:'name' | filter:$viewValue | limitTo:8">
                         </div>
                         <div class="form-group col-md-4">
                             <label>&nbsp;</label>
@@ -640,7 +650,7 @@
                         <div class="form-group col-md-8">
                             <label>Cuenta contable para el Costo de Ventas: </label>
                             <input type="text" ng-model="vm.cuentaContableCost" class="form-control" typeahead-show-hint="true"
-                            uib-typeahead="account as (account.name + ' - ' + account.code) for account in vm.cuentasContablesList | orderBy:'name' | filter:$viewValue | limitTo:8">
+                            uib-typeahead="account as (account.description + ' - ' + account.code) for account in vm.cuentasContablesList | orderBy:'name' | filter:$viewValue | limitTo:8">
                         </div>
                         <div class="form-group col-md-4">
                             <label>&nbsp;</label>
@@ -682,7 +692,7 @@
             </button>
             <button type="button" title="Guardar Producto" class="btn btn-success btn-sm"
                     ng-click="vm.save()"
-                    ng-disabled="vm.product.maxMinimun === undefined || vm.product.maxMinimun === '' || vm.product.averageCost === undefined || vm.product.averageCost === '' || vm.errorCalc">
+                    ng-disabled="vm.enableSave()">
                     <span class="glyphicon glyphicon-floppy-save" aria-hidden="true"></span>
             </button>
             <button type="button" title="Salir" class="btn btn-primary btn-sm" ng-click="vm.cancel()">
@@ -704,9 +714,15 @@
                             Esta seguro que desea Eliminar el Producto {{vm.product.name}}
                         </div>
                     </div>
+                    <div class="row">
+                        <div class="form-group col-md-12">
+                            <label>Ingrese el motivo: </label>
+                            <input type="text" ng-model="vm.remveReason" class="form-control">
+                        </div>
+                    </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" title="Eliminar" class="btn btn-primary btn-sm" ng-click="vm.remove()" data-dismiss="modal">
+                    <button type="button" title="Eliminar" class="btn btn-primary btn-sm" ng-click="vm.remove()" data-dismiss="modal" ng-disabled="vm.remveReason === '' || vm.remveReason === undefined">
                             <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
                     </button>
                 </div>

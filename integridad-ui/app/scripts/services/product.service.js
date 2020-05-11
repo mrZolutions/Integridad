@@ -19,6 +19,12 @@ angular
             });
         };
 
+        this.remove = function(productWrapper) {
+            return securityService.put('/product/remove', productWrapper).then(function successCallback(response) {
+                return response.data;
+            });
+        };
+
         this.delete = function(productId) {
             return securityService.delete('/product/' + productId).then(function successCallback(response) {
                 return response.data;
@@ -43,8 +49,8 @@ angular
             });
         };
 
-        this.getLazyBySusidiaryId = function(subsidiaryId, page, variable) {
-            return securityService.get('/product/actives/subsidiary/' + subsidiaryId + '/' + page + '?var=' + variable).then(function successCallback(response) {
+        this.getLazyBySusidiaryId = function(subsidiaryId, page, variable, lineId) {
+            return securityService.get('/product/actives/subsidiary/' + subsidiaryId + '/' + page + '/' + lineId + '?var=' + variable).then(function successCallback(response) {
                 return response.data;
             });
         };

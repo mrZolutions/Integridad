@@ -81,12 +81,13 @@ public class ProductServices {
         return saved;
     }
     
-    public void updateProduct(Product product) {
+    public Product updateProduct(Product product) {
         product.setLastDateUpdated(new Date().getTime());
         product.setListsNull();
         product.setFatherListToNull();
 	    Product updated = productRepository.save(product);
         log.info("ProductServices updateProduct: {}", updated.getId());
+        return updated;
     }
 
     @Async("asyncExecutor")
@@ -151,13 +152,14 @@ public class ProductServices {
         return products;
     }
         
-    public Page<Product> getProductsActivesBySubsidiaryId(UUID subsidiaryId, String variable, Pageable pageable) {
+    public Page<Product> getProductsActivesBySubsidiaryId(UUID subsidiaryId, String variable, UUID lineId, Pageable pageable) {
 	log.info("ProductServices getProductsActivesBySubsidiaryId");
 	Page<UUID> productIdList;
 	if (variable.equals("null")) {
-            productIdList = productBySubsidiairyRepository.findBySubsidiaryIdAndProductActive(subsidiaryId, pageable);
+            productIdList = productBySubsidiairyRepository.findBySubsidiaryIdAndProductActive(subsidiaryId, lineId, pageable);
 	} else {
-            productIdList = productBySubsidiairyRepository.findBySubsidiaryIdAndVariabledAndProductActive(subsidiaryId, variable, new PageRequest(0, 150, Sort.Direction.ASC, "product"));
+//            productIdList = productBySubsidiairyRepository.findBySubsidiaryIdAndVariabledAndProductActive(subsidiaryId, variable, new PageRequest(0, 150, Sort.Direction.ASC, "product"));
+            productIdList = productBySubsidiairyRepository.findBySubsidiaryIdAndVariabledAndProductActive(subsidiaryId, variable, lineId, pageable);
 	}
 	List<Product> listReturn = new ArrayList<>();
 	productIdList.forEach(page -> {
