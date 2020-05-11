@@ -428,6 +428,23 @@ angular.module('integridadUiApp')
             _getCellarTotalSubtotal();
         };
 
+        vm.disableSaveProvider = function() {
+            if (vm.provider) {
+                return utilStringService.isAnyInArrayStringEmpty([
+                    vm.provider.codeIntegridad,
+                    vm.provider.ruc,
+                    vm.provider.rucType,
+                    vm.provider.name,
+                    vm.provider.razonSocial,
+                    vm.provider.country,
+                    vm.provider.city,
+                    vm.provider.address1,
+                    vm.provider.contact,
+                    vm.provider.providerType
+                ]);
+            };
+        };
+
         vm.disableSave = function(){
             return vm.cellar === undefined ? true : vm.cellar.total <= 0 || $('#pickerDateBill').data("DateTimePicker").date() === null || vm.cellar.billNumber === undefined;
         }
