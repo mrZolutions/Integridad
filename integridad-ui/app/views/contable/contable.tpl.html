@@ -792,8 +792,8 @@
                         <table class="table table-striped">
                             <thead>
                                 <tr>
-                                    <th>Tipo de Cuenta</th>
-                                    <th>Nombre G&eacute;nerico</th>
+                                    <th>Nombre de Cuenta</th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -803,8 +803,7 @@
                                     </td>
                                 </tr>
                                 <tr dir-paginate = "cuenta in vm.cuentaContableList | orderBy:'type' | filter:searchTextTaxes | itemsPerPage: 5" pagination-id = "taxesPagination">
-                                    <td>{{cuenta.accountType}}</td>
-                                    <td>{{cuenta.name}}</td>
+                                    <td>{{cuenta.description}}</td>
                                     <td>
                                         <button type = "button" title = "Seleccionar" class = "btn btn-primary btn-sm"
                                                 ng-click = "vm.selectCuentasCe(cuenta)" data-toggle = "modal" data-target = "#modalSelectedCuentasCe">
@@ -823,7 +822,8 @@
                         <table class="table table-striped">
                             <thead>
                                 <tr>
-                                    <th>Nombre G&eacute;nerico</th>
+                                    <th>Nombre de Cuenta</th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -833,7 +833,7 @@
                                     </td>
                                 </tr>
                                 <tr dir-paginate = "cuenta in vm.cuentaContableBankList | orderBy:'type' | filter:searchTextTaxes | itemsPerPage: 5" pagination-id = "taxesPagination">
-                                    <td>{{cuenta.name}}</td>
+                                    <td>{{cuenta.description}}</td>
                                     <td>
                                         <button type = "button" title = "Seleccionar" class = "btn btn-primary btn-sm"
                                                 ng-click = "vm.selectCuentasBankCe(cuenta)" data-toggle = "modal" data-target = "#modalSelectedCuentasCe">
@@ -1506,8 +1506,8 @@
                         <table class="table table-striped">
                             <thead>
                                 <tr>
-                                    <th>Tipo de Cuenta</th>
-                                    <th>Nombre G&eacute;nerico</th>
+                                    <th>Nombre de Cuenta</th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -1517,8 +1517,7 @@
                                     </td>
                                 </tr>
                                 <tr dir-paginate = "cuenta in vm.cuentaContableList | orderBy:'type' | filter:searchTextTaxes | itemsPerPage: 5" pagination-id = "taxesPagination">
-                                    <td>{{cuenta.accountType}}</td>
-                                    <td>{{cuenta.name}}</td>
+                                    <td>{{cuenta.description}}</td>
                                     <td>
                                         <button type = "button" title = "Seleccionar" class = "btn btn-primary btn-sm"
                                                 ng-click = "vm.selectCuentasCi(cuenta)" data-toggle = "modal" data-target = "#modalSelectedCuentasCi">
@@ -1537,7 +1536,8 @@
                         <table class="table table-striped">
                             <thead>
                                 <tr>
-                                    <th>Nombre G&eacute;nerico</th>
+                                    <th>Nombre de Cuenta</th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -1547,7 +1547,7 @@
                                     </td>
                                 </tr>
                                 <tr dir-paginate = "cuenta in vm.cuentaContableBankList | orderBy:'type' | filter:searchTextTaxes | itemsPerPage: 5" pagination-id = "taxesPagination">
-                                    <td>{{cuenta.name}}</td>
+                                    <td>{{cuenta.description}}</td>
                                     <td>
                                         <button type = "button" title = "Seleccionar" class = "btn btn-primary btn-sm"
                                                 ng-click = "vm.selectCuentasBankCi(cuenta)" data-toggle = "modal" data-target = "#modalSelectedCuentasCi">
@@ -2109,8 +2109,8 @@
                         <table class="table table-striped">
                             <thead>
                                 <tr>
-                                    <th>Tipo de Cuenta</th>
-                                    <th>Nombre G&eacute;nerico</th>
+                                    <th>Nombre de Cuenta</th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -2120,8 +2120,7 @@
                                     </td>
                                 </tr>
                                 <tr dir-paginate = "cuenta in vm.cuentaContableList | orderBy:'type' | filter:searchTextTaxes | itemsPerPage: 5" pagination-id = "taxesPagination">
-                                    <td>{{cuenta.accountType}}</td>
-                                    <td>{{cuenta.name}}</td>
+                                    <td>{{cuenta.description}}</td>
                                     <td>
                                         <button type = "button" title = "Seleccionar" class = "btn btn-primary btn-sm"
                                                 ng-click = "vm.selectCuentasCxP(cuenta)" data-toggle = "modal" data-target = "#modalSelectedCuentasCxP">
