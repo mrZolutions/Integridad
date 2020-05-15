@@ -19,7 +19,7 @@
 
 <div class="form-group col-md-12">
     <div class="header" ng-show="vm.warehouseSelected === undefined">
-        <h4><b>Producción</b></h4>
+        <h4><b>Inventarios</b></h4>
     </div>
     <div class="row" ng-show="vm.error != undefined">
         <div class = "form-group col-md-12">
@@ -44,6 +44,7 @@
                 <tr>
                     <th>C&oacute;digo</th>
                     <th>Nombre de Bodega</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
@@ -57,23 +58,23 @@
                     <td>{{warehouse.nameNumber}}</td>
                     <td>
                         <button type="button" title = "Ingresos" class="btn btn-primary btn-sm"
-                                ng-click="vm.selectWarehouse(warehouse)">
-                                <span class = "glyphicon glyphicon-check" aria-hidden = "true"></span>
+                                ng-click="vm.selectWarehouse(warehouse)" ng-show="vm.inventoryOption === 'ENTR'">
+                                <span class = "glyphicon glyphicon-log-in" aria-hidden = "true"></span>
                         </button>
                         <!--<button type="button" title="Consulta de Ingresos Pendientes" class="btn btn-success btn-sm"
                                 ng-disabled="vm.userCode === 'EMP'" ng-click="vm.findCellarPending(warehouse)">
                                 <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
                         </button>-->
                         <button type="button" title="Egresos" class="btn btn-primary btn-sm"
-                                ng-click="vm.consumptionFromWarehouse(warehouse)">
+                                ng-click="vm.consumptionFromWarehouse(warehouse)" ng-show="vm.inventoryOption === 'EGRS'">
                                 <span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
                         </button>
                         <button type="button" title="Reporte Kardex por Producto" class="btn btn-success btn-sm"
-                                ng-click="vm.reportKardex(warehouse)">
+                                ng-click="vm.reportKardex(warehouse)" ng-show="vm.inventoryOption === 'REPT'">
                                 <span class="glyphicon glyphicon-film" aria-hidden="true"></span>
                         </button>
                         <button type="button" title="Ajuste Kardex por Producto" class="btn btn-primary btn-sm"
-                                ng-click="vm.settingForKardex(warehouse)">
+                                ng-click="vm.settingForKardex(warehouse)" ng-show="vm.inventoryOption === 'ADJ'">
                                 <span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
                         </button>
                     </td>
