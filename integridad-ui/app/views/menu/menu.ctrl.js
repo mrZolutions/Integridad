@@ -12,11 +12,18 @@ angular.module('integridadUiApp')
         $scope.permissionsSub = [];
         $scope.modules = [];
 
-        modulesService.getAll().then(function (response){
-            $scope.modules = response;
-        });
+        
+        
+        function getModules(){
+            modulesService.getAll().then(function (response){
+                $scope.modules = response;
+            });
+        }
 
         $rootScope.updateMenu = function() {
+            if ($scope.modules.length === 0) {
+                getModules();
+            }
             $scope.user = holderService.get();
             $scope.permissions = $localStorage.permissions;
             $scope.nameType = $scope.user.firstName + ' - ' + $scope.user.userType.name;
@@ -24,6 +31,10 @@ angular.module('integridadUiApp')
 
         $scope.showMainManu = function(){ 
             return $scope.user !== undefined
+        }
+
+        $scope.getClass = function(item){
+            return item.sons !== undefined ? 'dropdown-submenu' : '';
         }
 
         $scope.logout = function() {
@@ -57,4 +68,6 @@ angular.module('integridadUiApp')
         if ($localStorage.permissions) {
             $rootScope.updateMenu();
         };
+
+        getModules();
 });

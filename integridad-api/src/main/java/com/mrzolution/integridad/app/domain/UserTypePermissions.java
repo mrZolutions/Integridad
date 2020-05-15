@@ -22,6 +22,9 @@ public class UserTypePermissions {
 	private String path;
 	private String menuName;
 	private Integer orderMenu;
+	private Integer level;
+
+	private String permissionFather;
 
 	@ManyToOne
     @JoinColumn(name = "user_type_id")

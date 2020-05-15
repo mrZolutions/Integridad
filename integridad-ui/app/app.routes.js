@@ -112,6 +112,10 @@ function routes($routeProvider) {
             templateUrl: 'views/config/config.tpl.html',
             controller: 'ConfigCtrl',
             controllerAs: 'vm'
+        }).when('/opencash', {
+            templateUrl: 'views/cashierProcess/open.tpl.html',
+            controller: 'OpenCashierCtrl',
+            controllerAs: 'vm'
         }).otherwise({
             redirectTo: '/'
     });
