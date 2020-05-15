@@ -59,14 +59,14 @@
                     <td>
                         <button type="button" title = "Ingresos" class="btn btn-primary btn-sm"
                                 ng-click="vm.selectWarehouse(warehouse)" ng-show="vm.inventoryOption === 'ENTR'">
-                                <span class = "glyphicon glyphicon-check" aria-hidden = "true"></span>
+                                <span class = "glyphicon glyphicon-log-in" aria-hidden = "true"></span>
                         </button>
                         <!--<button type="button" title="Consulta de Ingresos Pendientes" class="btn btn-success btn-sm"
                                 ng-disabled="vm.userCode === 'EMP'" ng-click="vm.findCellarPending(warehouse)">
                                 <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
                         </button>-->
                         <button type="button" title="Egresos" class="btn btn-primary btn-sm"
-                                ng-click="vm.consumptionFromWarehouse(warehouse)" ng-show="vm.inventoryOption === 'ADJ'">
+                                ng-click="vm.consumptionFromWarehouse(warehouse)" ng-show="vm.inventoryOption === 'EGRS'">
                                 <span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
                         </button>
                         <button type="button" title="Reporte Kardex por Producto" class="btn btn-success btn-sm"

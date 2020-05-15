@@ -36,10 +36,6 @@ function routes($routeProvider) {
             templateUrl: 'views/bills/bill.tpl.html',
             controller: 'BillCtrl',
             controllerAs: 'vm'
-        }).when('/bills/innerbill', {
-            templateUrl: 'views/bills/bill.tpl.html',
-            controller: 'BillCtrl',
-            controllerAs: 'vm'
         }).when('/projects/projects', {
             templateUrl: 'views/projects/projects.tpl.html',
             controller: 'ProjectsCtrl',
@@ -89,6 +85,10 @@ function routes($routeProvider) {
             controller: 'ProductionCtrl',
             controllerAs: 'vm'
         }).when('/adjustment', {
+            templateUrl: 'views/production/production.tpl.html',
+            controller: 'ProductionCtrl',
+            controllerAs: 'vm'
+        }).when('/egress', {
             templateUrl: 'views/production/production.tpl.html',
             controller: 'ProductionCtrl',
             controllerAs: 'vm'

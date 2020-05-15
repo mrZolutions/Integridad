@@ -115,6 +115,7 @@ angular.module('integridadUiApp')
                 case $location.path().includes('/entry'): vm.inventoryOption = 'ENTR'; break;
                 case $location.path().includes('/adjustment'): vm.inventoryOption = 'ADJ'; break;
                 case $location.path().includes('/report'): vm.inventoryOption = 'REPT'; break;
+                case $location.path().includes('/egress'): vm.inventoryOption = 'EGRS'; break;
             }
 
             warehouseService.getAllWarehouseByUserClientId(vm.usrCliId).then(function(response) {
