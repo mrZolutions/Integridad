@@ -116,17 +116,18 @@ public class KardexServices {
             Double avgCst = Double.valueOf(0);
             
             Product prod = productRepository.findPrdByUsrClntAndId(usrClntId, karSvd.getProduct().getId());
-                qntCel = karSvd.getProdQuantity() + prod.getQuantityCellar();    
-                cstCel = karSvd.getProdTotal() + prod.getCostCellar();
-                avgCst = cstCel / qntCel;
-                BigDecimal vavgCst = new BigDecimal(avgCst);
-                if (avgCst > 0) {
-                    vavgCst = vavgCst.setScale(4, BigDecimal.ROUND_HALF_UP);
-                }
-                avgCst = vavgCst.doubleValue();
-                prod.setQuantityCellar(qntCel);
-                prod.setCostCellar(cstCel);
-                prod.setAverageCostSuggested(avgCst);
+            qntCel = karSvd.getProdQuantity() + prod.getQuantityCellar();
+            cstCel = karSvd.getProdTotal() + prod.getCostCellar();
+            avgCst = cstCel / qntCel;
+            BigDecimal vavgCst = new BigDecimal(avgCst);
+            if (avgCst > 0) {
+                vavgCst = vavgCst.setScale(4, BigDecimal.ROUND_HALF_UP);
+            }
+            avgCst = vavgCst.doubleValue();
+            prod.setQuantityCellar(qntCel);
+            prod.setCostCellar(cstCel);
+            prod.setAverageCostSuggested(avgCst);
+            prod.setAverageCost(avgCst);
             productRepository.save(prod);
         } else {
             //Actualización del campo cantidad en Product by Subsiduary
