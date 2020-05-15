@@ -12,11 +12,18 @@ angular.module('integridadUiApp')
         $scope.permissionsSub = [];
         $scope.modules = [];
 
-        modulesService.getAll().then(function (response){
-            $scope.modules = response;
-        });
+        
+        
+        function getModules(){
+            modulesService.getAll().then(function (response){
+                $scope.modules = response;
+            });
+        }
 
         $rootScope.updateMenu = function() {
+            if ($scope.modules.length === 0) {
+                getModules();
+            }
             $scope.user = holderService.get();
             $scope.permissions = $localStorage.permissions;
             $scope.nameType = $scope.user.firstName + ' - ' + $scope.user.userType.name;
@@ -61,4 +68,6 @@ angular.module('integridadUiApp')
         if ($localStorage.permissions) {
             $rootScope.updateMenu();
         };
+
+        getModules();
 });
