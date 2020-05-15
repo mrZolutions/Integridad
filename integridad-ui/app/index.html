@@ -18,6 +18,7 @@
     <!-- build:css(.tmp) styles/main.css -->
     <link rel="stylesheet" href="styles/main.css">
     <!-- endbuild -->
+    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
   </head>
   <body ng-app="integridadUiApp"  ng-controller="MenuCtrl">
     <!--[if lte IE 8]>
@@ -41,14 +42,21 @@
           <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav"  ng-show="showMainManu()">
               <li class="nav-item"><a class="nav-link" href="#!/home">Home</a></li>
+              
               <li class="nav-item dropdown" ng-repeat="mod in modules | orderBy:'orderMenu'">
                 <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{mod.menuName}} <span class="caret"></span></a>
                 <ul class="dropdown-menu">
-                  <li ng-repeat="option in permissions[mod.id] | orderBy:'orderMenu'">
+                  <li ng-class="getClass(option)" ng-repeat="option in permissions[mod.id] | orderBy:'orderMenu'">
                     <a href="{{option.path}}"> <span class="nav-label">{{option.menuName}}</span></a>
+                    <ul class="dropdown-menu" ng-show="option.sons !== undefined">
+                      <li ng-repeat="son in option.sons | orderBy:'orderMenu'">
+                        <a href="{{son.path}}"> <span class="nav-label">{{son.menuName}}</span></a>
+                      </li>
+                    </ul>
                   </li>
                 </ul>
               </li>
+
               <li class="nav-item"><a class="nav-link" ng-click="logout()" href="#!/">Salir</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right" style="margin-top: 15px;">
@@ -145,6 +153,7 @@
     <script src="views/swimming/swimming.ctrl.js"></script>
     <script src="views/users/users.ctrl.js"></script>
     <script src="views/users/edit.ctrl.js"></script>
+    <script src="views/cashierProcess/open.ctrl.js"></script>
     
     <!--Services-->
     <script src="scripts/services/holder.service.js"></script>
@@ -194,6 +203,7 @@
     <script src="scripts/services/utilString.service.js"></script>
     <script src="scripts/services/validator.service.js"></script>
     <script src="scripts/services/warehouse.service.js"></script>
+    <script src="scripts/services/processCashier.service.js"></script>
     <script src="scripts/services/xlsx.full.min.js"></script>
     <!-- endbuild -->
   </body>

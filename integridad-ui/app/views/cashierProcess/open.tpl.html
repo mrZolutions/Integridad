@@ -1,0 +1,128 @@
+<div style = "width: 100%;height: 100%;top: 0px;left: 0px;position: fixed;display: block; z-index: 99; background: rgba(255, 255, 255, 0.3)" ng-show="vm.loading">
+    <div style = "position: absolute;top: 15%;z-index: 100; width: 100%; text-align: center;">
+        <div class = "sk-circle">
+            <div class = "sk-circle1 sk-child"></div>
+            <div class = "sk-circle2 sk-child"></div>
+            <div class = "sk-circle3 sk-child"></div>
+            <div class = "sk-circle4 sk-child"></div>
+            <div class = "sk-circle5 sk-child"></div>
+            <div class = "sk-circle6 sk-child"></div>
+            <div class = "sk-circle7 sk-child"></div>
+            <div class = "sk-circle8 sk-child"></div>
+            <div class = "sk-circle9 sk-child"></div>
+            <div class = "sk-circle10 sk-child"></div>
+            <div class = "sk-circle11 sk-child"></div>
+            <div class = "sk-circle12 sk-child"></div>
+        </div>
+    </div>
+</div>
+
+<div class="form-group col-md-12">
+    <div class = "header">
+        <h4><b>Apertura de Caja</b></h4>
+    </div>
+
+    <div class = "row" ng-show = "vm.error !== undefined">
+        <div class = "form-group col-md-12">
+            <div class = "alert alert-danger">{{vm.error}}</div>
+        </div>
+    </div>
+    <div class="row" ng-show = "vm.success !== undefined">
+        <div class = "form-group col-md-12">
+            <div class = "alert alert-success">{{vm.success}}</div>
+        </div>
+    </div>
+
+    <div class = "panel panel-primary" id="printArea" print-section>
+        <div class="panel-heading">
+            <b>Datos del Cajero</b> <b print-only> -  APERTURA DE CAJA</b>
+        </div>
+        <div class = "panel-body table-responsive">
+            <div class="row">
+                <div class="form-group col-md-4">
+                    <label>Cajero:</label>
+                    <span>{{vm.processCashier.user.firstName}}&nbsp;{{vm.processCashier.user.lastName}}</span>
+                </div>
+                <div class="form-group col-md-4">
+                    <label>Fecha:</label>
+                    <span>{{vm.date | date : "dd/MM/yyyy HH:MM"}}</span>
+                </div>
+                <div class="form-group col-md-4">
+                    <label>N&uacute;mero de Arqueo:</label>
+                    <span>{{vm.processCashier.code}}</span>
+                </div>
+            </div>
+            <div class="row">
+                <form ng-submit="vm.addDetail()">
+                    <div class="form-group col-md-2">
+                        <label>Moneda:</label>
+                        <select ng-options="currency for currency in vm.currencies"  ng-model="vm.processCashier.currency" class="form-control" >
+                        </select>
+                    </div>
+                    <div class="form-group col-md-6" print-remove>
+                        <label>Denominaci&oacute;n 	&#36;:</label><br/>
+                        <label class = "radio-inline" ng-repeat="dem in vm.denominaciones">
+                            <input type="radio" ng-model = "vm.denominacionSelected" value = "{{dem}}" name = "{{dem}}">
+                            {{dem}}&nbsp;&nbsp;
+                        </label>
+                    </div>
+                    <div class="form-group col-md-2" print-remove>
+                        <label>Cantidad:</label>
+                        <input type="text" ng-model="vm.denominacionQuantity" class="form-control"  maxlength="5"
+                            onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))">
+                    </div>
+                    <div class="form-group col-md-2" print-remove>
+                        <br/>
+                        <button type="submit" title="Agregar" class="btn btn-primary btn-sm">
+                            Agregar
+                        </button>
+                    </div>
+                </form>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-2"></div>
+                <div class="form-group col-md-8">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr><th>Denominaci&oacute;n &#36;</th><th>Cantidad</th><th>Total</th><th></th></tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="detail in vm.details | orderBy:'denominacion'">
+                                <td>{{detail.denominacion}}</td>
+                                <td>{{detail.quantity}}</td>
+                                <td>{{detail.subtotal}}</td>
+                                <td>
+                                    <button type="button" title="Eliminar Denominaci&oacute;n" class="btn btn-primary btn-sm"
+                                        ng-click="vm.removeDetail($index)" print-remove>
+                                        <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>TOTAL</td>
+                                <td>{{vm.total}}</td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="form-group col-md-2"></div>
+            </div>
+        </div>
+
+        <div class="panel-footer">
+            <button type="button" title = "Guardar Apertura" class="btn btn-primary btn-sm" print-remove
+                ng-disabled="vm.details.length === 0" ng-click="vm.save()">
+                <span class = "glyphicon glyphicon-save" aria-hidden = "true"></span>
+            </button>
+            <button print-btn type="button" title = "Imprimir Apertura" class="btn btn-primary btn-sm"
+                id="printBtnApertura" ng-if="true" print-remove>
+                <span class = "glyphicon glyphicon-print" aria-hidden = "true"></span>
+            </button>
+            <button type="button" title="Salir"  class="btn btn-primary btn-sm" ng-click="vm.salir()" print-remove>
+                <span class = "glyphicon glyphicon-log-out" aria-hidden = "true"></span>
+            </button>
+        </div>
+    </div>
+</div>

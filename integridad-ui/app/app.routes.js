@@ -76,6 +76,22 @@ function routes($routeProvider) {
             templateUrl: 'views/production/production.tpl.html',
             controller: 'ProductionCtrl',
             controllerAs: 'vm'
+        }).when('/inventories/report', {
+            templateUrl: 'views/production/production.tpl.html',
+            controller: 'ProductionCtrl',
+            controllerAs: 'vm'
+        }).when('/entry', {
+            templateUrl: 'views/production/production.tpl.html',
+            controller: 'ProductionCtrl',
+            controllerAs: 'vm'
+        }).when('/adjustment', {
+            templateUrl: 'views/production/production.tpl.html',
+            controller: 'ProductionCtrl',
+            controllerAs: 'vm'
+        }).when('/egress', {
+            templateUrl: 'views/production/production.tpl.html',
+            controller: 'ProductionCtrl',
+            controllerAs: 'vm'
         }).when('/contab', {
             templateUrl: 'views/contable/contable.tpl.html',
             controller: 'ContableCtrl',
@@ -95,6 +111,10 @@ function routes($routeProvider) {
         }).when('/config', {
             templateUrl: 'views/config/config.tpl.html',
             controller: 'ConfigCtrl',
+            controllerAs: 'vm'
+        }).when('/opencash', {
+            templateUrl: 'views/cashierProcess/open.tpl.html',
+            controller: 'OpenCashierCtrl',
             controllerAs: 'vm'
         }).otherwise({
             redirectTo: '/'
