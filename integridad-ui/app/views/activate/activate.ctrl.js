@@ -16,7 +16,15 @@ angular.module('integridadUiApp')
         vm.errorActive = false;
         function getPermissions(){
             permissionService.getPermissions(vm.user.userType).then(function (response) {
-                var toGroup = response;
+                var dads = _.filter(response, function(item){ return item.permissionFather === null; });
+                var sons = _.filter(response, function(item){ return item.permissionFather !== null; });
+
+                sons.forEach(function(item){
+                    var dad = _.findWhere(dads, {id: item.permissionFather});
+                    dad.sons = dad.sons === undefined ? [item] : dad.sons.push(item);
+                })
+
+                var toGroup = dads;
                 var grouped = {};
                 toGroup.forEach(function(item){
                     var list = grouped[item.moduleMenu.id];

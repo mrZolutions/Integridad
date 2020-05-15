@@ -26,6 +26,10 @@ angular.module('integridadUiApp')
             return $scope.user !== undefined
         }
 
+        $scope.getClass = function(item){
+            return item.sons !== undefined ? 'dropdown-submenu' : '';
+        }
+
         $scope.logout = function() {
             $scope.user = undefined;
             $scope.permissions = [];
