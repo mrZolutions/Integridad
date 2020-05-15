@@ -37,7 +37,7 @@
         <div class="panel-heading">
             <b>Datos del Cajero</b> <b print-only> -  APERTURA DE CAJA</b>
         </div>
-        <div class = "panel-body">
+        <div class = "panel-body table-responsive">
             <div class="row">
                 <div class="form-group col-md-4">
                     <label>Cajero:</label>
@@ -54,22 +54,24 @@
             </div>
             <div class="row">
                 <form ng-submit="vm.addDetail()">
-                    <div class="form-group col-md-3">
+                    <div class="form-group col-md-2">
                         <label>Moneda:</label>
                         <select ng-options="currency for currency in vm.currencies"  ng-model="vm.processCashier.currency" class="form-control" >
                         </select>
                     </div>
-                    <div class="form-group col-md-3" print-remove>
-                        <label>Denominaci&oacute;n 	&#36;:</label>
-                        <select ng-options="den for den in vm.denominaciones"  ng-model="vm.denominacionSelected" class="form-control" >
-                        </select>
+                    <div class="form-group col-md-6" print-remove>
+                        <label>Denominaci&oacute;n 	&#36;:</label><br/>
+                        <label class = "radio-inline" ng-repeat="dem in vm.denominaciones">
+                            <input type="radio" ng-model = "vm.denominacionSelected" value = "{{dem}}" name = "{{dem}}">
+                            {{dem}}&nbsp;&nbsp;
+                        </label>
                     </div>
-                    <div class="form-group col-md-3" print-remove>
+                    <div class="form-group col-md-2" print-remove>
                         <label>Cantidad:</label>
                         <input type="text" ng-model="vm.denominacionQuantity" class="form-control"  maxlength="5"
                             onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))">
                     </div>
-                    <div class="form-group col-md-3" print-remove>
+                    <div class="form-group col-md-2" print-remove>
                         <br/>
                         <button type="submit" title="Agregar" class="btn btn-primary btn-sm">
                             Agregar
@@ -77,35 +79,38 @@
                     </div>
                 </form>
             </div>
-        </div>
-        <div class="row">
-            <div class="form-group col-md-12">
-                <table class="table table-striped">
-                    <thead>
-                        <tr><th>Denominaci&oacute;n &#36;</th><th>Cantidad</th><th>Total</th><th></th></tr>
-                    </thead>
-                    <tbody>
-                        <tr ng-repeat="detail in vm.details | orderBy:'denominacion'">
-                            <td>{{detail.denominacion}}</td>
-                            <td>{{detail.quantity}}</td>
-                            <td>{{detail.subtotal}}</td>
-                            <td>
-                                <button type="button" title="Eliminar Denominaci&oacute;n" class="btn btn-primary btn-sm"
-                                    ng-click="vm.removeDetail($index)" print-remove>
-                                    <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
-                                </button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td></td>
-                            <td>TOTAL</td>
-                            <td>{{vm.total}}</td>
-                            <td></td>
-                        </tr>
-                    </tbody>
-                </table>
+            <div class="row">
+                <div class="form-group col-md-2"></div>
+                <div class="form-group col-md-8">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr><th>Denominaci&oacute;n &#36;</th><th>Cantidad</th><th>Total</th><th></th></tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="detail in vm.details | orderBy:'denominacion'">
+                                <td>{{detail.denominacion}}</td>
+                                <td>{{detail.quantity}}</td>
+                                <td>{{detail.subtotal}}</td>
+                                <td>
+                                    <button type="button" title="Eliminar Denominaci&oacute;n" class="btn btn-primary btn-sm"
+                                        ng-click="vm.removeDetail($index)" print-remove>
+                                        <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>TOTAL</td>
+                                <td>{{vm.total}}</td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="form-group col-md-2"></div>
             </div>
         </div>
+
         <div class="panel-footer">
             <button type="button" title = "Guardar Apertura" class="btn btn-primary btn-sm" print-remove
                 ng-disabled="vm.details.length === 0" ng-click="vm.save()">
