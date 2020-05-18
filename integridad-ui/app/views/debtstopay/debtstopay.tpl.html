@@ -19,7 +19,8 @@
 
 <div class="form-group col-md-12">
     <div class="header">
-        <h4><b>Cuentas por Pagar</b></h4>
+        <h4  ng-show="vm.debtsOption === 'DEBT'"><b>Cuentas por Pagar</b></h4>
+        <h4 ng-show="vm.debtsOption === 'PURCHBILL'"><b>Compras - Ingreso de Factura</b></h4>
     </div>
 
     <div class="row" ng-show="vm.error !== undefined">
@@ -64,16 +65,20 @@
                     <td>{{provider.name}}</td>
                     <td>{{provider.rucType}} - {{provider.ruc}}</td>
                     <td>
-                        <button type = "button" title = "Ingreso de Factura de Compra" class = "btn btn-primary btn-sm" ng-click = "vm.providerSelect(provider)">
+                        <button type = "button" title = "Ingreso de Factura de Compra" class = "btn btn-primary btn-sm"
+                            ng-click = "vm.providerSelect(provider)" ng-show="vm.debtsOption === 'PURCHBILL'">
                                 <span class = "glyphicon glyphicon-file" aria-hidden = "true"></span>
                         </button>
-                        <button type = "button" title = "Consultar Facturas de Compra" class = "btn btn-primary btn-sm" ng-click = "vm.consultProviderDebts(provider)">
+                        <button type = "button" title = "Consultar Facturas de Compra" class = "btn btn-primary btn-sm" 
+                            ng-click = "vm.consultProviderDebts(provider)" ng-show="vm.debtsOption === 'DEBT'">
                                 <span class = "glyphicon glyphicon-check" aria-hidden = "true"></span>
                         </button>
-                        <button type = "button" title = "Pago Múltiple de Facturas" class = "btn btn-success btn-sm" ng-click = "vm.providerMultipleDebts(provider)">
+                        <button type = "button" title = "Pago Múltiple de Facturas" class = "btn btn-success btn-sm" 
+                            ng-click = "vm.providerMultipleDebts(provider)" ng-show="vm.debtsOption === 'DEBT'">
                             <span class = "glyphicon glyphicon-credit-card" aria-hidden = "true"></span>
                         </button>
-                        <button type = "button" title = "Consultar Pagos por Proveedor" class = "btn btn-primary btn-sm" ng-click = "vm.paymentDebtsByProvider(provider)">
+                        <button type = "button" title = "Consultar Pagos por Proveedor" class = "btn btn-primary btn-sm" 
+                            ng-click = "vm.paymentDebtsByProvider(provider)"  ng-show="vm.debtsOption === 'DEBT'">
                                 <span class = "glyphicon glyphicon-zoom-in" aria-hidden = "true"></span>
                         </button>
                     </td>

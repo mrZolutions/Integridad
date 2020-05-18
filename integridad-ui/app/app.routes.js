@@ -52,6 +52,18 @@ function routes($routeProvider) {
             templateUrl: 'views/providers/providers.tpl.html',
             controller: 'ProvidersCtrl',
             controllerAs: 'vm'
+        }).when('/provider/retention', {
+            templateUrl: 'views/providers/providers.tpl.html',
+            controller: 'ProvidersCtrl',
+            controllerAs: 'vm'
+        }).when('/provider/reports', {
+            templateUrl: 'views/providers/providers.tpl.html',
+            controller: 'ProvidersCtrl',
+            controllerAs: 'vm'
+        }).when('/purcahses/bill', {
+            templateUrl: 'views/debtstopay/debtstopay.tpl.html',
+            controller: 'DebtsToPayCtrl',
+            controllerAs: 'vm'
         }).when('/report/sales', {
             templateUrl: 'views/reports/sales.tpl.html',
             controller: 'ReportSalesCtrl',
