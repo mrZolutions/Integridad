@@ -46,6 +46,7 @@ angular.module('integridadUiApp')
         vm.subTotal = undefined;
         vm.totalTotal = undefined;
         vm.typeTaxes = undefined;
+        vm.debtsOption = 'DEBT';
 
         vm.countries = [
             {code:'16',name:'16 - AMERICAN SAMOA'},{code:'74',name:'74 - BOUVET ISLAND'},{code:'101',name:'101 - ARGENTINA'},{code:'102',name:'102 - BOLIVIA'},
@@ -247,6 +248,10 @@ angular.module('integridadUiApp')
 
             vm.usrCliId = vm.userData.subsidiary.userClient.id;
             vm.subCxPActive = vm.userData.subsidiary.cxp;
+
+            switch(true) {
+                case $location.path().includes('/purcahses/bill'): vm.debtsOption = 'PURCHBILL'; break;
+            }
             
             if (vm.subCxPActive) {
                 vm.loading = true;
