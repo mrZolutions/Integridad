@@ -22,6 +22,7 @@ angular.module('integridadUiApp')
         vm.providerList = undefined;
         vm.retentionList = undefined;
         vm.optionsList = undefined;
+        vm.purchasesOption = 'PROV';
         
         vm.providerType = [
             'PROVEEDORES LOCALES O NACIONALES 01',
@@ -128,6 +129,12 @@ angular.module('integridadUiApp')
             vm.reportStatementProviderSelected = undefined;
             vm.usrCliId = vm.userData.subsidiary.userClient.id;
             vm.providerList = [];
+            
+            switch(true) {
+                case $location.path().includes('/retention'): vm.purchasesOption = 'RETN'; break;
+                case $location.path().includes('/reports'): vm.purchasesOption = 'REPT'; break;
+            }
+
             providerService.getLazyByUserClientId(vm.userData.subsidiary.userClient.id).then(function(response) {
                 vm.providerList = response;
                 vm.loading = false;
