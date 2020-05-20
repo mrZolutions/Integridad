@@ -30,7 +30,10 @@ angular.module('integridadUiApp')
 
                 sons.forEach(function(item){
                     var dad = _.findWhere(dads, {id: item.permissionFather});
-                    dad.sons = dad.sons === undefined ? [item] : dad.sons.push(item);
+                    if(dad.sons === undefined) 
+                        dad.sons = [item];
+                    else
+                        dad.sons.push(item);
                 })
 
                 var toGroup = dads;

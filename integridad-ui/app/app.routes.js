@@ -28,6 +28,10 @@ function routes($routeProvider) {
             templateUrl: 'views/clients/clients.tpl.html',
             controller: 'ClientsCtrl',
             controllerAs: 'vm'
+        }).when('/cotizacion', {
+            templateUrl: 'views/clients/clients.tpl.html',
+            controller: 'ClientsCtrl',
+            controllerAs: 'vm'
         }).when('/clients/:create', {
             templateUrl: 'views/clients/clients.tpl.html',
             controller: 'ClientsCtrl',
@@ -72,6 +76,16 @@ function routes($routeProvider) {
             templateUrl: 'views/note/creditNote.tpl.html',
             controller: 'CreditNoteCtrl',
             controllerAs: 'vm'
+        })
+        .when('/creditNoteSale', {
+            templateUrl: 'views/note/creditNote.tpl.html',
+            controller: 'CreditNoteCtrl',
+            controllerAs: 'vm'
+        })
+        .when('/creditNoteManual', {
+            templateUrl: 'views/note/creditNote.tpl.html',
+            controller: 'CreditNoteCtrl',
+            controllerAs: 'vm'
         }).when('/quotation/quotation', {
             templateUrl: 'views/quotation/quotation.tpl.html',
             controller: 'QuotationCtrl',
@@ -81,6 +95,10 @@ function routes($routeProvider) {
             controller: 'CuentasContablesCtrl',
             controllerAs: 'vm'
         }).when('/cobrar', {
+            templateUrl: 'views/cobrar/cobrar.tpl.html',
+            controller: 'CuentasCobrarCtrl',
+            controllerAs: 'vm'
+        }).when('/retentionClient', {
             templateUrl: 'views/cobrar/cobrar.tpl.html',
             controller: 'CuentasCobrarCtrl',
             controllerAs: 'vm'

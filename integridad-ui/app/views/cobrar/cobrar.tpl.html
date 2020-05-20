@@ -19,7 +19,8 @@
 
 <div class="form-group col-md-12">
     <div class="header">
-        <h4><b>Cuentas Por Cobrar</b></h4>
+        <h4 ng-show="vm.cobrarOption === 'COBRAR'"><b>Cuentas Por Cobrar</b></h4>
+        <h4 ng-show="vm.cobrarOption === 'RETEN'"><b>Retenciones</b></h4>
     </div>
     
     <div class="row" ng-show="vm.error !== undefined">
@@ -60,13 +61,16 @@
                     <td>{{client.name}}</td>
                     <td>{{client.typeId}} - {{client.identification}}</td>
                     <td>
-                        <button type = "button" title = "Facturas Pendientes" class = "btn btn-primary btn-sm" ng-click = "vm.clientConsult(client)">
+                        <button type = "button" title = "Facturas Pendientes" class = "btn btn-primary btn-sm" 
+                            ng-click = "vm.clientConsult(client)" ng-show="vm.cobrarOption === 'RETEN'">
                                 <span class = "glyphicon glyphicon-check" aria-hidden = "true"></span>
                         </button>
-                        <button type = "button" title = "Realizar Cobro" class = "btn btn-success btn-sm" ng-click = "vm.clientMultiplePayment(client)">
+                        <button type = "button" title = "Realizar Cobro" class = "btn btn-success btn-sm" 
+                            ng-click = "vm.clientMultiplePayment(client)" ng-show="vm.cobrarOption === 'COBRAR'">
                                 <span class = "glyphicon glyphicon-credit-card" aria-hidden = "true"></span>
                         </button>
-                        <button type = "button" title = "Consultar Cobros por Cliente" class = "btn btn-primary btn-sm" ng-click = "vm.paymentsByClient(client)">
+                        <button type = "button" title = "Consultar Cobros por Cliente" class = "btn btn-primary btn-sm" 
+                            ng-click = "vm.paymentsByClient(client)" ng-show="vm.cobrarOption === 'COBRAR'">
                                 <span class = "glyphicon glyphicon-zoom-in" aria-hidden = "true"></span>
                         </button>
                     </td>

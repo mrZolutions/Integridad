@@ -18,10 +18,15 @@ angular.module('integridadUiApp')
         vm.countryList = countryListService.getCountryList();
         vm.citiesList = countryListService.getCitiesEcuador();
         vm.clientList = undefined;
+        vm.salesOption = 'CLIENTS';
 
         function _activate() {
             vm.user = holderService.get()
             vm.usrCliId = vm.user.subsidiary.userClient.id;
+            switch(true) {
+                case $location.path().includes('/cotizacion'): vm.salesOption = 'COTIZ'; break;
+            }
+
             if ($routeParams.create) {
                 vm.clientCreate();
             } else {
