@@ -18,6 +18,8 @@ angular.module('integridadUiApp')
         vm.laQuinta = '758dea84-74f5-4209-b218-9b84c10621fc';
         vm.catedral = '1e2049c3-a3bc-4231-a0de-dded8020dc1b';
         vm.ppe = '0a28cbbf-98d5-4ce3-be36-33a7a83bc29e';
+
+        vm.contabOption = 'CONTAB';
         
         vm.aux = undefined;
         vm.userData = holderService.get();
@@ -195,6 +197,30 @@ angular.module('integridadUiApp')
             vm.subContabActive = vm.userData.subsidiary.contab;
             vm.selectedTypeBook = undefined;
             vm.error = undefined;
+
+            switch(true) {
+                case $location.path().includes('/general'): 
+                    vm.contabOption = 'GENERAL';
+                    vm.dailybookType = '1';
+                    vm.loadTypeDailybook();
+                break;
+                case $location.path().includes('/salesBill'): 
+                    vm.contabOption = 'SALESBILL';
+                    vm.dailybookType = '6';
+                    vm.loadTypeDailybook();
+                break;
+                case $location.path().includes('/dailyIncome'): 
+                    vm.contabOption = 'DAYINCM';
+                    vm.dailybookType = '3';
+                    vm.loadTypeDailybook();
+                break;
+                case $location.path().includes('/dailyOutcome'): 
+                    vm.contabOption = 'DAYOTCM';
+                    vm.dailybookType = '2';
+                    vm.loadTypeDailybook();
+                break;
+            }
+
             if (!vm.subContabActive) {
                 vm.advertencia = true;
                 vm.selectedTypeBook = 'advert';

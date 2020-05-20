@@ -76,13 +76,11 @@ function routes($routeProvider) {
             templateUrl: 'views/note/creditNote.tpl.html',
             controller: 'CreditNoteCtrl',
             controllerAs: 'vm'
-        })
-        .when('/creditNoteSale', {
+        }).when('/creditNoteSale', {
             templateUrl: 'views/note/creditNote.tpl.html',
             controller: 'CreditNoteCtrl',
             controllerAs: 'vm'
-        })
-        .when('/creditNoteManual', {
+        }).when('/creditNoteManual', {
             templateUrl: 'views/note/creditNote.tpl.html',
             controller: 'CreditNoteCtrl',
             controllerAs: 'vm'
@@ -123,6 +121,22 @@ function routes($routeProvider) {
             controller: 'ProductionCtrl',
             controllerAs: 'vm'
         }).when('/contab', {
+            templateUrl: 'views/contable/contable.tpl.html',
+            controller: 'ContableCtrl',
+            controllerAs: 'vm'
+        }).when('/general', {
+            templateUrl: 'views/contable/contable.tpl.html',
+            controller: 'ContableCtrl',
+            controllerAs: 'vm'
+        }).when('/salesBill', {
+            templateUrl: 'views/contable/contable.tpl.html',
+            controller: 'ContableCtrl',
+            controllerAs: 'vm'
+        }).when('/dailyIncome', {
+            templateUrl: 'views/contable/contable.tpl.html',
+            controller: 'ContableCtrl',
+            controllerAs: 'vm'
+        }).when('/dailyOutcome', {
             templateUrl: 'views/contable/contable.tpl.html',
             controller: 'ContableCtrl',
             controllerAs: 'vm'
