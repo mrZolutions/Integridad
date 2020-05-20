@@ -15,6 +15,7 @@ angular.module('integridadUiApp')
         vm.success = undefined;
         vm.loading = false;
         vm.idBill = undefined;
+        vm.creditNoteOption = undefined;
 
         vm.typeCreditNote = [
             {code: '1', type: 'NOTA DE CRÉDITO - FACTURAS DE VENTAS'},
@@ -49,6 +50,21 @@ angular.module('integridadUiApp')
             vm.cellar = undefined;
             vm.cellarList = undefined;
             vm.billOffline = undefined;
+
+            switch(true) {
+                case $location.path().includes('/note/credit'): 
+                    vm.creditNoteOption = 'PURCH';
+                    vm.loadTypeCreditNote('2');
+                    break;
+                case $location.path().includes('/creditNoteSale'): 
+                    vm.creditNoteOption = 'SALE';
+                    vm.loadTypeCreditNote('1');
+                    break;
+                case $location.path().includes('/creditNoteManual'): 
+                    vm.creditNoteOption = 'SALEM';
+                    vm.loadTypeCreditNote('3');
+                    break;
+            }
 
             vm.impuestoIVA = {
                 "base_imponible": 0,

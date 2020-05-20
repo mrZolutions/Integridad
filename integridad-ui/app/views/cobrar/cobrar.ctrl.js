@@ -12,6 +12,7 @@ angular.module('integridadUiApp')
         var vm = this;
         vm.error = undefined;
         vm.success = undefined;
+        vm.cobrarOption = 'COBRAR';
 
         vm.loading = false;
         vm.userData = holderService.get();
@@ -176,6 +177,10 @@ angular.module('integridadUiApp')
             vm.userCashier = vm.userData.cashier;
             vm.usrCliId = vm.userData.subsidiary.userClient.id;
             vm.subCxCActive = vm.userData.subsidiary.cxc;
+
+            switch(true) {
+                case $location.path().includes('/retentionClient'): vm.cobrarOption = 'RETEN'; break;
+            }
             
             if (vm.subCxCActive) {
                 vm.loading = true;
