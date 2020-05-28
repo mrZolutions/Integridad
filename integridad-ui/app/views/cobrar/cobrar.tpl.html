@@ -595,7 +595,7 @@
                                         <th>No. Factura</th>
                                         <th>Fecha</th>
                                         <th>Total</th>
-                                        <th>Saldo</th>
+                                        <th>Saldoxxx</th>
                                         <th>Tipo de Cobro</th>
                                     </tr>
                                 </thead>
@@ -609,7 +609,7 @@
                                         <td>{{bills.stringSeq}}</td>
                                         <td>{{bills.dateCreated | date : "dd/MM/yyyy"}}</td>
                                         <td>{{bills.total.toFixed(2)}}</td>
-                                        <td>{{parseFloat(bills.saldo).toFixed(4)}}</td>
+                                        <td>{{vm.getSaldo(bills.saldo)}}</td>
                                         <td>
                                             TOTAL <input ng-model="bills.selectedTotal" type="checkbox">
                                             PARCIAL <input ng-model="bills.selectedParcial" type="checkbox">
