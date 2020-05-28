@@ -384,6 +384,11 @@ angular.module('integridadUiApp')
             });
         };
 
+        vm.getSaldo = function(saldoString){
+            var saldo = parseFloat(saldoString).toFixed(4);
+            return isNaN(saldo) ? '' : saldo;
+        };
+
         vm.findBills = function() {
             vm.loading = true;
             vm.success = undefined;
