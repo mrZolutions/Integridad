@@ -189,6 +189,7 @@
                             <thead>
                                 <tr>
                                     <th>Descripci&oacute;n</th>
+                                    <th>C&oacute;digo</th>
                                     <th></th>
                                 </tr>
                             </thead>
@@ -200,6 +201,7 @@
                                 </tr>
                                 <tr dir-paginate = "cuenta in vm.cuentaContableList | orderBy:'description' | filter:searchTextTaxes | itemsPerPage: 5" pagination-id = "taxesPagination">
                                     <td>{{cuenta.description}}</td>
+                                    <td>{{cuenta.code}}</td>
                                     <td>
                                         <button type = "button" title = "Seleccionar" class = "btn btn-primary btn-sm"
                                                 ng-click = "vm.selectCuentasCg(cuenta)" data-toggle = "modal" data-target = "#modalSelectedCuentasCg">
@@ -793,6 +795,7 @@
                             <thead>
                                 <tr>
                                     <th>Nombre de Cuenta</th>
+                                    <th>C&oacute;digo</th>
                                     <th></th>
                                 </tr>
                             </thead>
@@ -804,6 +807,7 @@
                                 </tr>
                                 <tr dir-paginate = "cuenta in vm.cuentaContableList | orderBy:'type' | filter:searchTextTaxes | itemsPerPage: 5" pagination-id = "taxesPagination">
                                     <td>{{cuenta.description}}</td>
+                                    <td>{{cuenta.code}}</td>
                                     <td>
                                         <button type = "button" title = "Seleccionar" class = "btn btn-primary btn-sm"
                                                 ng-click = "vm.selectCuentasCe(cuenta)" data-toggle = "modal" data-target = "#modalSelectedCuentasCe">
@@ -1507,6 +1511,7 @@
                             <thead>
                                 <tr>
                                     <th>Nombre de Cuenta</th>
+                                    <th>C&oacute;digo</th>
                                     <th></th>
                                 </tr>
                             </thead>
@@ -1518,6 +1523,7 @@
                                 </tr>
                                 <tr dir-paginate = "cuenta in vm.cuentaContableList | orderBy:'type' | filter:searchTextTaxes | itemsPerPage: 5" pagination-id = "taxesPagination">
                                     <td>{{cuenta.description}}</td>
+                                    <td>{{cuenta.code}}</td>
                                     <td>
                                         <button type = "button" title = "Seleccionar" class = "btn btn-primary btn-sm"
                                                 ng-click = "vm.selectCuentasCi(cuenta)" data-toggle = "modal" data-target = "#modalSelectedCuentasCi">
@@ -2110,6 +2116,7 @@
                             <thead>
                                 <tr>
                                     <th>Nombre de Cuenta</th>
+                                    <th>C&oacute;digo</th>
                                     <th></th>
                                 </tr>
                             </thead>
@@ -2121,6 +2128,7 @@
                                 </tr>
                                 <tr dir-paginate = "cuenta in vm.cuentaContableList | orderBy:'type' | filter:searchTextTaxes | itemsPerPage: 5" pagination-id = "taxesPagination">
                                     <td>{{cuenta.description}}</td>
+                                    <td>{{cuenta.code}}</td>
                                     <td>
                                         <button type = "button" title = "Seleccionar" class = "btn btn-primary btn-sm"
                                                 ng-click = "vm.selectCuentasCxP(cuenta)" data-toggle = "modal" data-target = "#modalSelectedCuentasCxP">
