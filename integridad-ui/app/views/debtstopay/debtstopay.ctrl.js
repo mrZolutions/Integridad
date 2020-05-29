@@ -1673,14 +1673,26 @@ angular.module('integridadUiApp')
             vm.providerName = provider.name;
             vm.providerRuc = provider.ruc;
             vm.providerId = provider.id;
-            debtsToPayService.getDebtsToPayWithSaldoByProviderId(provider.id).then(function(response) {
-                vm.printDebtsToPay = false;
-                vm.providerDebtsList = response;
-                vm.loading = false;
-            }).catch(function(error) {
-                vm.loading = false;
-                vm.error = error.data;
-            });
+            if(vm.debtsOption === 'PURCHBILL'){
+                debtsToPayService.getAllDebtsToPayByProviderId(provider.id).then(function(response) {
+                    vm.printDebtsToPay = false;
+                    vm.providerDebtsList = response;
+                    vm.loading = false;
+                }).catch(function(error) {
+                    vm.loading = false;
+                    vm.error = error.data;
+                });
+            } else {
+                debtsToPayService.getDebtsToPayWithSaldoByProviderId(provider.id).then(function(response) {
+                    vm.printDebtsToPay = false;
+                    vm.providerDebtsList = response;
+                    vm.loading = false;
+                }).catch(function(error) {
+                    vm.loading = false;
+                    vm.error = error.data;
+                });
+            }
+            
         };
 
         vm.debtsToPayToPrint = function(debts) {
