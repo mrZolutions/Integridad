@@ -70,7 +70,7 @@
                                 <span class = "glyphicon glyphicon-file" aria-hidden = "true"></span>
                         </button>
                         <button type = "button" title = "Consultar Facturas de Compra" class = "btn btn-primary btn-sm" 
-                            ng-click = "vm.consultProviderDebts(provider)" ng-show="vm.debtsOption === 'DEBT'">
+                            ng-click = "vm.consultProviderDebts(provider)" ng-show="vm.debtsOption === 'DEBT' || vm.debtsOption === 'PURCHBILL'">
                                 <span class = "glyphicon glyphicon-check" aria-hidden = "true"></span>
                         </button>
                         <button type = "button" title = "Pago Múltiple de Facturas" class = "btn btn-success btn-sm" 
@@ -415,12 +415,12 @@
                             <td>{{debts.total.toFixed(2)}}</td>
                             <td>{{debts.saldo.toFixed(2)}}</td>
                             <td>
-                                <button type = "button" title = "Ver Cuenta por Pagar" 
+                                <button type = "button" title = "Ver" 
                                         class = "btn btn-primary btn-sm" ng-click = "vm.debtsToPayToPrint(debts)">
                                         <span class = "glyphicon glyphicon-eye-open" aria-hidden = "true"></span>
                                 </button>
-                                <button type="button" title="Anular Cuenta por Pagar" class="btn btn-warning btn-sm" ng-click="vm.deactivateDebtsToPay = debts"
-                                        data-toggle="modal" data-target="#modalAnularDebtsToPay">
+                                <button type="button" title="Anular" class="btn btn-warning btn-sm" ng-click="vm.deactivateDebtsToPay = debts"
+                                        data-toggle="modal" data-target="#modalAnularDebtsToPay" ng-show="debts.saldo > 0">
                                         <span class = "glyphicon glyphicon-warning-sign" aria-hidden = "true"></span>
                                 </button>
                             </td>
