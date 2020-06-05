@@ -29,7 +29,7 @@ angular.module('integridadUiApp')
             {code: 'cheque', name: 'Cheque'},
             {code: 'tarjeta_credito', name: 'Tarjeta de Crédito'},
             {code: 'tarjeta_debito', name: 'Tarjeta de Débito'},
-            {code: 'transferencia', name: 'Transferencia'}
+            // {code: 'transferencia', name: 'Transferencia'}
         ];
 
         vm.formList = [

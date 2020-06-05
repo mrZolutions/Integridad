@@ -27,7 +27,7 @@ angular.module('integridadUiApp')
             {code: 'tarjeta_debito', name: 'Tarjeta de débito'},
             {code: 'dinero_electronico_ec', name: 'Dinero electrónico'},
             {code: 'credito', name: 'Crédito'},
-            {code: 'transferencia', name: 'Transferencia'}
+            // {code: 'transferencia', name: 'Transferencia'}
         ];
         vm.formList = [
             '01 - SIN UTILIZACION DEL SISTEMA FINANCIERO',
