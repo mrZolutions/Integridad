@@ -7,7 +7,7 @@
  * Controller of the menu
  */
 angular.module('integridadUiApp')
-    .controller('DebtsToPayCtrl', function(_, holderService, providerService, cuentaContableService, debtsToPayService, authService, contableService,
+    .controller('DebtsToPayCtrl', function(_, holderService, providerService, cuentaContableService, debtsToPayService, authService, contableService, configCuentasService,
                                            utilSeqService, creditsDebtsService, paymentDebtsService, $location, eretentionService, cashierService, comprobanteService) {
         var vm = this;
         vm.error = undefined;
@@ -248,6 +248,23 @@ angular.module('integridadUiApp')
 
             vm.usrCliId = vm.userData.subsidiary.userClient.id;
             vm.subCxPActive = vm.userData.subsidiary.cxp;
+
+            configCuentasService.getConfigCuentaByUserClientAndOptionCode(vm.usrCliId, 'PROVDR').then(function (response){
+                vm.provContable = response;
+                console.log('PROV: ', vm.provContable)
+            }).catch(function(error) {
+                vm.loading = false;
+                vm.error = error.data;
+            });
+
+            //IVACOMP
+            configCuentasService.getConfigCuentaByUserClientAndOptionCode(vm.usrCliId, 'IVACOMP').then(function (response){
+                vm.ivaContable = response;
+                console.log('COMP: ', vm.ivaContable)
+            }).catch(function(error) {
+                vm.loading = false;
+                vm.error = error.data;
+            });
 
             switch(true) {
                 case $location.path().includes('/purcahses/bill'): vm.debtsOption = 'PURCHBILL'; break;
@@ -1049,17 +1066,17 @@ angular.module('integridadUiApp')
             vm.retentionTotal =  vm.retention === undefined ? 0 : vm.retention.total;
 
             //Selección de las Cuentas Contables por defecto dependiendo del Cliente
-            if (vm.usrCliId === vm.laQuinta) {
-                vm.ivaContable = '1.01.05.01.001'; vm.provContable = '2.01.03.01.001';
-            } else if (vm.usrCliId === vm.mrZolutions) {
-                vm.ivaContable = '1.01.05.02.001'; vm.provContable = '2.01.03.01.001';
-            } else if (vm.usrCliId === vm.catedral) {
-                vm.ivaContable = '1.14.10.201'; vm.provContable = '2.12.10.101';
-            } else if (vm.usrCliId === vm.ppe) {
-                vm.ivaContable = '1.01.05.01.01'; vm.provContable = '2.01.03.01.01';
-            } else {
-                vm.ivaContable = '1.01.01.01'; vm.provContable = '2.01.01.01';
-            };
+            // if (vm.usrCliId === vm.laQuinta) {
+            //     vm.ivaContable = '1.01.05.01.001'; vm.provContable = '2.01.03.01.001';
+            // } else if (vm.usrCliId === vm.mrZolutions) {
+            //     vm.ivaContable = '1.01.05.02.001'; vm.provContable = '2.01.03.01.001';
+            // } else if (vm.usrCliId === vm.catedral) {
+            //     vm.ivaContable = '1.14.10.201'; vm.provContable = '2.12.10.101';
+            // } else if (vm.usrCliId === vm.ppe) {
+            //     vm.ivaContable = '1.01.05.01.01'; vm.provContable = '2.01.03.01.01';
+            // } else {
+            //     vm.ivaContable = '1.01.01.01'; vm.provContable = '2.01.01.01';
+            // };
           
             if (vm.typeTaxes === '1') {
                 vm.subIva = (vm.item.base_imponible * 0.12).toFixed(2);
@@ -1489,17 +1506,17 @@ angular.module('integridadUiApp')
 
         vm.pAbonoDebts = function() {
 
-            if (vm.usrCliId === vm.laQuinta) {
-                vm.provContable = '2.01.03.01.001';
-            } else if (vm.usrCliId === vm.mrZolutions) {
-                vm.provContable = '2.01.03.01.001';
-            } else if (vm.usrCliId === vm.catedral) {
-                vm.provContable = '2.12.10.101';
-            } else if (vm.usrCliId === vm.ppe) {
-                vm.provContable = '2.01.03.01.01';
-            } else {
-                vm.provContable = '2.01.01.01';
-            };
+            // if (vm.usrCliId === vm.laQuinta) {
+            //     vm.provContable = '2.01.03.01.001';
+            // } else if (vm.usrCliId === vm.mrZolutions) {
+            //     vm.provContable = '2.01.03.01.001';
+            // } else if (vm.usrCliId === vm.catedral) {
+            //     vm.provContable = '2.12.10.101';
+            // } else if (vm.usrCliId === vm.ppe) {
+            //     vm.provContable = '2.01.03.01.01';
+            // } else {
+            //     vm.provContable = '2.01.01.01';
+            // };
             
             vm.debtsBillsNumberPayed = vm.getDebtsBillNumberPayed();
 
