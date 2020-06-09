@@ -250,7 +250,7 @@ angular.module('integridadUiApp')
             vm.subCxPActive = vm.userData.subsidiary.cxp;
 
             configCuentasService.getConfigCuentaByUserClientAndOptionCode(vm.usrCliId, 'PROVDR').then(function (response){
-                vm.provContable = response.code;
+                vm.provContable = response;
             }).catch(function(error) {
                 vm.loading = false;
                 vm.error = error.data;
@@ -258,7 +258,7 @@ angular.module('integridadUiApp')
 
             //IVACOMP
             configCuentasService.getConfigCuentaByUserClientAndOptionCode(vm.usrCliId, 'IVACOMP').then(function (response){
-                vm.ivaContable = response.code;
+                vm.ivaContable = response;
             }).catch(function(error) {
                 vm.loading = false;
                 vm.error = error.data;
@@ -1068,21 +1068,21 @@ angular.module('integridadUiApp')
                 vm.subTotalDoce = vm.item.base_imponible;
                 vm.subTotalCero = vm.debtsToPay.total - vm.subTotalDoce - vm.subIva;
                 vm.itemIva = {
-                    codigo_contable: vm.ivaContable ? vm.ivaContable : '--',
-                    desc_contable: 'IVA EN COMPRAS',
+                    codigo_contable: vm.ivaContable ? vm.ivaContable.code : '--',
+                    desc_contable: vm.ivaContable ? vm.ivaContable.description : '--',
                     tipo: 'DEBITO (D)',
                     base_imponible: vm.subIva,
-                    nomb_contable: 'DEFINIDA PARA TODAS LAS COMPRAS',
+                    nomb_contable: vm.ivaContable ? vm.ivaContable.description : '--',
                     deber: vm.subIva
                 };
                 var subBase = 0;
                 subBase = (vm.debtsToPay.total - vm.retentionTotal).toFixed(2);
                 vm.itemProvider = {
-                    codigo_contable: vm.provContable,
-                    desc_contable: 'PROVEEDORES LOCALES',
+                    codigo_contable: vm.provContable ? vm.provContable.code : '--',
+                    desc_contable: vm.provContable ? vm.provContable.description : '--',
                     tipo: 'CREDITO (C)',
                     base_imponible: parseFloat((vm.debtsToPay.total - vm.retentionTotal).toFixed(2)),
-                    nomb_contable: 'DEFINIDA PARA TODOS LOS PROVEEDORES',
+                    nomb_contable: vm.provContable ? vm.provContable.description : '--',
                     haber: subBase
                 };
                 vm.debtsToPay.items.push(vm.itemIva);
@@ -1091,8 +1091,8 @@ angular.module('integridadUiApp')
                 //Diario Cxp
                 vm.itemIvaCxP = {
                     typeContab: vm.typeContab,
-                    codeConta: vm.ivaContable ? vm.ivaContable : '--',
-                    descrip: 'IVA EN COMPRAS',
+                    codeConta: vm.ivaContable ? vm.ivaContable.code : '--',
+                    descrip: vm.ivaContable ? vm.ivaContable.description : '--',
                     tipo: 'DEBITO (D)',
                     baseImponible: vm.subIva,
                     name: vm.generalDetailCxP,
@@ -1104,8 +1104,8 @@ angular.module('integridadUiApp')
                 vm.itemIvaCxP.dateDetailDailybook = $('#pickerDateDebtsToPay').data("DateTimePicker").date().toDate().getTime();
                 vm.itemProviderCxP = {
                     typeContab: vm.typeContab,
-                    codeConta: vm.provContable,
-                    descrip: 'PROVEEDORES LOCALES',
+                    codeConta: vm.provContable ? vm.provContable.code : '--',
+                    descrip: vm.provContable ? vm.provContable.description : '--',
                     tipo: 'CREDITO (C)',
                     baseImponible: parseFloat((vm.debtsToPay.total - vm.retentionTotal).toFixed(2)),
                     name: vm.generalDetailCxP,
@@ -1125,11 +1125,11 @@ angular.module('integridadUiApp')
                 var subBaseDos = 0;
                 subBaseDos = (vm.debtsToPay.total - vm.retentionTotal).toFixed(2);
                 vm.itemProvider = {
-                    codigo_contable: vm.provContable,
-                    desc_contable: 'PROVEEDORES LOCALES',
+                    codigo_contable: vm.provContable ? vm.provContable.code : '--',
+                    desc_contable: vm.provContable ? vm.provContable.description : '--',
                     tipo: 'CREDITO (C)',
                     base_imponible: parseFloat((vm.debtsToPay.total - vm.retentionTotal).toFixed(2)),
-                    nomb_contable: 'DEFINIDA PARA TODOS LOS PROVEEDORES',
+                    nomb_contable: vm.provContable ? vm.provContable.description : '--',
                     haber: subBaseDos
                 };
                 vm.debtsToPay.items.push(vm.itemProvider);
@@ -1137,7 +1137,7 @@ angular.module('integridadUiApp')
                 //Diario Cxp
                 vm.itemProviderCxP = {
                     typeContab: vm.typeContab,
-                    codeConta: vm.provContable,
+                    codeConta: vm.provContable ? vm.provContable.code : '--',
                     descrip: 'PROVEEDORES LOCALES',
                     tipo: 'CREDITO (C)',
                     baseImponible: parseFloat((vm.debtsToPay.total - vm.retentionTotal).toFixed(2)),
@@ -1514,7 +1514,7 @@ angular.module('integridadUiApp')
                     banco: vm.bankName ? vm.bankName : '--',
                     cardBrand: vm.cardBrand,
                     numeroLote:vm.numeroLote,
-                    ctaCtableProvider: vm.provContable ? vm.provContable : '--',
+                    ctaCtableProvider: vm.provContable ? vm.provContable.code : '--',
                     providerName: vm.providerName ? vm.providerName : '--',
                     detail: detail.tipo,
                     noAccount: vm.noAccount ? vm.noAccount : '--',
