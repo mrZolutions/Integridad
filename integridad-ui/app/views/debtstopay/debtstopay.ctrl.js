@@ -251,7 +251,6 @@ angular.module('integridadUiApp')
 
             configCuentasService.getConfigCuentaByUserClientAndOptionCode(vm.usrCliId, 'PROVDR').then(function (response){
                 vm.provContable = response;
-                console.log('PROV: ', vm.provContable)
             }).catch(function(error) {
                 vm.loading = false;
                 vm.error = error.data;
@@ -260,7 +259,6 @@ angular.module('integridadUiApp')
             //IVACOMP
             configCuentasService.getConfigCuentaByUserClientAndOptionCode(vm.usrCliId, 'IVACOMP').then(function (response){
                 vm.ivaContable = response;
-                console.log('COMP: ', vm.ivaContable)
             }).catch(function(error) {
                 vm.loading = false;
                 vm.error = error.data;
