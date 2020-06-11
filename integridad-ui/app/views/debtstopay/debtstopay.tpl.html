@@ -389,7 +389,7 @@
             </div>
             <div class = "panel-body">
                 <label>B&uacute;squeda de Cuentas</label>
-                <input ng-model="searchText" class="form-control" placeholder="Buscar">
+                <input ng-model="searchTextDebt" class="form-control" placeholder="Buscar">
                 <table class = "table table-striped">
                     <thead>
                         <tr>
@@ -407,7 +407,7 @@
                                 El Proveedor <b>No Presenta</b> Cuentas por Pagar Ingresadas...
                             </td>
                         </tr>
-                        <tr ng-repeat = "debts in vm.providerDebtsList">
+                        <tr ng-repeat = "debts in vm.providerDebtsList | filter:searchTextDebt">
                             <td>{{debts.debtsSeq}}</td>
                             <td>{{debts.billNumber}}</td>
                             <td>{{debts.observacion}}</td>
@@ -643,7 +643,7 @@
                                     No hay Retenciones ingresadas para este Proveedor
                                 </td>
                             </tr>
-                            <tr ng-repeat="retention in vm.retentionList | orderBy:'dateCreated':true | filter:searchText">
+                            <tr ng-repeat="retention in vm.retentionList | orderBy:'dateCreated':true ">
                                 <td>{{retention.stringSeq}}</td>
                                 <td>{{retention.dateCreated | date : "dd/MM/yyyy"}}</td>
                                 <td>{{retention.documentNumber}}</td>
