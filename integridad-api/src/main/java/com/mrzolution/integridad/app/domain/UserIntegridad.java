@@ -35,6 +35,9 @@ public class UserIntegridad {
     private String validation;
     private boolean active;
 
+    private String token;
+    private String refreshToken;
+
     @Email
     private String email;
 

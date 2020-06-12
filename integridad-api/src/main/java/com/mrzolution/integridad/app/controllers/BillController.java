@@ -29,12 +29,13 @@ public class BillController {
     BillServices service;
 
 
-    @RequestMapping(method = RequestMethod.POST, value="/clave_acceso/{id}/{typeDocument}")
-    public ResponseEntity saveDatilBill(@RequestBody RequirementBill requirement, @PathVariable("id") UUID userClientId, @PathVariable("typeDocument") int typeDocument) {
+    @RequestMapping(method = RequestMethod.POST, value="/clave_acceso/{userId}/{typeDocument}")
+    public ResponseEntity saveDatilBill(@RequestBody RequirementBill requirement, @PathVariable("userId") UUID userIntegridadId,
+                                        @PathVariable("typeDocument") int typeDocument) {
         Bill response = null;
         try {
             Bill bill = requirement.getBill();
-            String responseDatil = service.getDatil(requirement.getRequirement(), userClientId);
+            String responseDatil = service.getDatil(requirement.getRequirement(), userIntegridadId);
             ComprobanteCobro comprobante = requirement.getComprobanteCobro();
             DailybookCi dailybookCi = requirement.getDailybookCi();
 
