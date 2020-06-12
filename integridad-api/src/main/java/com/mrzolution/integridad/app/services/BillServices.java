@@ -204,7 +204,10 @@ public class BillServices {
             //************************************************************************************
         }
 
-        saveDailyBookFv(saved, details);
+        if(saved.getClient().getCodConta() != null && !"".equals(saved.getClient().getCodConta())){
+            saveDailyBookFv(saved, details);
+        }
+
 
         log.info("BillServices createBill: {}, {}", saved.getId(), saved.getStringSeq());
         return saved;
