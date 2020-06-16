@@ -380,7 +380,7 @@ angular.module('integridadUiApp')
         vm.displayCredits = function(){
             if(vm.billsSelected.length <= 0 ) {
                 return false;
-            } else if(vm.billsSelected.length === 1 && vm.billsSelected[0].selectedTotal){
+            } else if(_.findWhere(vm.billsSelected, {selectedParcial: true}) === undefined){
                 $('#modalFindBills').modal('hide');
                 return false;
             } else {
