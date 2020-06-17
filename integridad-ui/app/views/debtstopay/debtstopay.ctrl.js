@@ -15,7 +15,7 @@ angular.module('integridadUiApp')
         vm.loading = false;
         vm.userData = holderService.get();
         
-        vm.mrZolutions = '4907601b-6e54-4675-80a8-ab6503e1dfeb';
+        vm.mrZolutions = '3566a41d-3260-49ba-9ee4-00c7d54e46b3';
         vm.laQuinta = '758dea84-74f5-4209-b218-9b84c10621fc';
         vm.catedral = '1e2049c3-a3bc-4231-a0de-dded8020dc1b';
         vm.ppe = '0a28cbbf-98d5-4ce3-be36-33a7a83bc29e';
