@@ -722,9 +722,10 @@ angular.module('integridadUiApp')
             vm.isProductReportList = '1';
             vm.reportList = undefined;
             vm.loading = true;
-            vm.dateOne = $('#pickerKardexDateOne').data("DateTimePicker").date().toDate().getTime();
-            vm.dateTwo = $('#pickerKardexDateTwo').data("DateTimePicker").date().toDate().getTime();
-            vm.dateTwo += 86399000;
+            vm.dateO = $('#pickerKardexDateOne').data("DateTimePicker").date().startOf('day').toDate();
+            vm.dateT = $('#pickerKardexDateTwo').data("DateTimePicker").date().endOf('day').toDate();
+            vm.dateOne = vm.dateO.getTime();
+            vm.dateTwo = vm.dateT.getTime();
         
             productService.getKardexActivesByUserClientIdAndProductIdAndDates(vm.usrCliId, vm.prodKarId, vm.dateOne, vm.dateTwo).then(function(response) {
                 vm.reportList = response;
