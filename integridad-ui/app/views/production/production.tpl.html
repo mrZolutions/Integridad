@@ -2231,6 +2231,7 @@
         <div class="row" ng-if="vm.isProductReportList != undefined">
             <div class="form-group col-md-10">
                 <h5><b>Producto: </b>{{vm.prodKarName}}</h5>
+                <h5><b>Fechas: </b>{{vm.dateO | date:'yyyy-MM-dd'}} - {{vm.dateT | date:'yyyy-MM-dd'}}</h5>
             </div>
             <div class="form-group col-md-2">
                 <button type="button" title="Exportar a Hoja Excel" class="btn btn-primary btn-sm" ng-click="vm.exportExcel()">
