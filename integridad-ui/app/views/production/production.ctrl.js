@@ -143,6 +143,15 @@ angular.module('integridadUiApp')
             });
         };
 
+        vm.showCalendar = function(pickerId){
+            if($('#'+pickerId).data("DateTimePicker") !== undefined){
+                $('#'+pickerId).data("DateTimePicker").destroy();
+            } 
+
+            $('#'+pickerId).datetimepicker({ format: "DD/MM/YY" });
+            $('#'+pickerId).data("DateTimePicker").clear();
+            $('#'+pickerId).data("DateTimePicker").show();
+        }
         //Warehouse Code
         vm.selectWarehouse = function(warehouse) {
             vm.loading = true;
@@ -203,6 +212,7 @@ angular.module('integridadUiApp')
             _getCellarSeqNumber();
             _initializeCellar();
             var today = new Date();
+            $('#pickerDateEnterCellar').datetimepicker({ format: "DD/MM/YY" });
             $('#pickerDateEnterCellar').data("DateTimePicker").date(today);
             vm.loading = false;
             vm.newCellar = true;
@@ -286,7 +296,7 @@ angular.module('integridadUiApp')
         };
 
         vm.getDateToPrint = function() {
-            if (vm.cellar != undefined) {
+            if (vm.cellar != undefined && $('#pickerDateEnterCellar').data("DateTimePicker") !== undefined) {
                 return $('#pickerDateEnterCellar').data("DateTimePicker").date().toDate();
             };
         };
@@ -1665,8 +1675,6 @@ angular.module('integridadUiApp')
                 createProduct();
             };
         };
-
-        // NEW PRODUCT -------------------- END
 
         //Init Controler Code
         (function initController() {
