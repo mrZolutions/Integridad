@@ -320,13 +320,9 @@
                     <div class="form-group col-md-4">
                         <label>Fecha de Ingreso a Bodega:</label>
                         <div class="input-group date" id="pickerDateEnterCellar">
-                            <input type="text" class="form-control input-group-addon"/>
-                            <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"/></span>
+                            <input type="text" class="form-control input-group-addon" ng-click="vm.showCalendar('pickerDateEnterCellar')"/>
+                            <span class="input-group-addon" ng-click="vm.showCalendar('pickerDateEnterCellar')"><span class="glyphicon glyphicon-calendar"/></span>
                         </div>
-                        <script>
-                            var defaultDate = new Date();
-                            $('#pickerDateEnterCellar').datetimepicker({format: "DD/MM/YY",});
-                        </script>
                     </div>
                     <div class="form-group col-md-4">
                         <label>&#42; N&uacute;mero de Factura:</label><br/>
@@ -336,13 +332,9 @@
                     <div class="form-group col-md-4">
                         <label>&#42; Fecha de Factura: </label>
                         <div class="input-group date" id="pickerDateBill">
-                            <input type="text" class="form-control input-group-addon"/>
-                            <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"/></span>
+                            <input type="text" class="form-control input-group-addon" ng-click="vm.showCalendar('pickerDateBill')"/>
+                            <span class="input-group-addon" ng-click="vm.showCalendar('pickerDateBill')"><span class="glyphicon glyphicon-calendar"/></span>
                         </div>
-                        <script>
-                            var defaultDate = new Date();
-                            $('#pickerDateBill').datetimepicker({format: "DD/MM/YY",});
-                        </script>
                     </div>
                 </div>
                 <div class="row">
@@ -1083,13 +1075,9 @@
                     <div class="form-group col-md-4">
                         <label>Fecha de Egreso:</label>
                         <div class="input-group date" id="pickerDateConsumption">
-                            <input type="text" class="form-control input-group-addon"/>
-                            <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"/></span>
+                            <input type="text" class="form-control input-group-addon" ng-click="vm.showCalendar('pickerDateConsumption')"/>
+                            <span class="input-group-addon" ng-click="vm.showCalendar('pickerDateConsumption')"><span class="glyphicon glyphicon-calendar"/></span>
                         </div>
-                        <script>
-                            var defaultDate = new Date();
-                            $('#pickerDateConsumption').datetimepicker({format: "DD/MM/YY",});
-                        </script>
                     </div>
                 </div>
                 <div class="row">
@@ -2231,6 +2219,7 @@
         <div class="row" ng-if="vm.isProductReportList != undefined">
             <div class="form-group col-md-10">
                 <h5><b>Producto: </b>{{vm.prodKarName}}</h5>
+                <h5><b>Fechas: </b>{{vm.dateO | date:'yyyy-MM-dd'}} - {{vm.dateT | date:'yyyy-MM-dd'}}</h5>
             </div>
             <div class="form-group col-md-2">
                 <button type="button" title="Exportar a Hoja Excel" class="btn btn-primary btn-sm" ng-click="vm.exportExcel()">
@@ -2332,26 +2321,16 @@
                         <div class="form-group col-md-5 ">
                             <label>FECHA INICIO: </label>
                             <div class="input-group date" id="pickerKardexDateOne">
-                                <input type="text" class="form-control input-group-addon"/>
-                                <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"/></span>
+                                <input type="text" class="form-control input-group-addon" ng-click="vm.showCalendar('pickerKardexDateOne')"/>
+                                <span class="input-group-addon" ng-click="vm.showCalendar('pickerKardexDateOne')"><span class="glyphicon glyphicon-calendar"/></span>
                             </div>
-                            <script>
-                                $('#pickerKardexDateOne').datetimepicker({
-                                    format: "DD/MM/YY",
-                                });
-                            </script>
                         </div>                
                         <div class="form-group col-md-5 ">
                             <label>FECHA FIN: </label>
                             <div class="input-group date" id="pickerKardexDateTwo">
-                                <input type="text" class="form-control input-group-addon"/>
-                                <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"/></span>
+                                <input type="text" class="form-control input-group-addon" ng-click="vm.showCalendar('pickerKardexDateTwo')"/>
+                                <span class="input-group-addon" ng-click="vm.showCalendar('pickerKardexDateTwo')"><span class="glyphicon glyphicon-calendar"/></span>
                             </div>
-                            <script>
-                                $('#pickerKardexDateTwo').datetimepicker({
-                                    format: "DD/MM/YY",
-                                });
-                            </script>
                         </div>
                         <div class="form-group col-md-2">
                             <br/>
@@ -2452,14 +2431,9 @@
                         <div class="form-group col-md-5 ">
                             <label>FECHA AJUSTE: </label>
                             <div class="input-group date" id="pickerSettingKardexDate">
-                                <input type="text" class="form-control input-group-addon"/>
-                                <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"/></span>
+                                <input type="text" class="form-control input-group-addon" ng-click="vm.showCalendar('pickerSettingKardexDate')"/>
+                                <span class="input-group-addon" ng-click="vm.showCalendar('pickerSettingKardexDate')"><span class="glyphicon glyphicon-calendar"/></span>
                             </div>
-                            <script>
-                                $('#pickerSettingKardexDate').datetimepicker({
-                                    format: "DD/MM/YY",
-                                });
-                            </script>
                         </div>                        
                         <div class="form-group col-md-5">
                             <label>Tipo de Ajuste:</label>
