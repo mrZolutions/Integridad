@@ -160,6 +160,10 @@ function routes($routeProvider) {
             templateUrl: 'views/cashierProcess/open.tpl.html',
             controller: 'OpenCashierCtrl',
             controllerAs: 'vm'
+        }).when('/invoice/:id/:acceso', {
+            templateUrl: 'views/openinvoice/invoice.tpl.html',
+            controller: 'InvoiceCtrl',
+            controllerAs: 'vm'
         }).otherwise({
             redirectTo: '/'
     });

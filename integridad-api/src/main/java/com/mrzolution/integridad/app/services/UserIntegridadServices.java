@@ -96,27 +96,28 @@ public class UserIntegridadServices {
 	}
 	userResponse.setFatherListToNull();
 
-	String data = "{\"email\": \""+ user.getEmail() + "\", \"password\": \"" + user.getPassword()+"\"}";
-	String response = httpCallerService.post(Constants.FACTURACION_LINK_AUTH, data, null);
-	System.out.println(response);
+	if(userResponse.isApiConnection()){
+		String data = "{\"email\": \""+ user.getEmail() + "\", \"password\": \"" + user.getPassword()+"\"}";
+		String response = httpCallerService.post(Constants.FACTURACION_LINK_AUTH, data, null);
+		System.out.println(response);
 
-	JSONParser parser = new JSONParser();
-	ContainerFactory containerFactory = new ContainerFactory(){
-		public List creatArrayContainer() { return new LinkedList(); }
-		public Map createObjectContainer() { return new LinkedHashMap(); }
-	};
+		JSONParser parser = new JSONParser();
+		ContainerFactory containerFactory = new ContainerFactory(){
+			public List creatArrayContainer() { return new LinkedList(); }
+			public Map createObjectContainer() { return new LinkedHashMap(); }
+		};
 
-	Map json = (Map)parser.parse(response, containerFactory);
-	Iterator iter = json.entrySet().iterator();
-	while(iter.hasNext()){
-		Map.Entry entry = (Map.Entry)iter.next();
-		if(entry.getKey().equals("accessToken"))  userResponse.setToken((String) entry.getValue());
-		if(entry.getKey().equals("refreshToken")) userResponse.setRefreshToken((String) entry.getValue());
+		Map json = (Map)parser.parse(response, containerFactory);
+		Iterator iter = json.entrySet().iterator();
+		while(iter.hasNext()){
+			Map.Entry entry = (Map.Entry)iter.next();
+			if(entry.getKey().equals("accessToken"))  userResponse.setToken((String) entry.getValue());
+			if(entry.getKey().equals("refreshToken")) userResponse.setRefreshToken((String) entry.getValue());
 //      System.out.println(entry.getKey() + "=>" + entry.getValue());
+		}
+
+		if(userResponse.getToken() != null) update(userResponse);
 	}
-
-	if(userResponse.getToken() != null) update(userResponse);
-
 
 	log.info("UserIntegridadServices authenticate success: {}, id: {}", userResponse.getEmail(), userResponse.getId());
 	return userResponse;

@@ -37,6 +37,7 @@ public class UserIntegridad {
 
     private String token;
     private String refreshToken;
+    private boolean apiConnection;
 
     @Email
     private String email;

@@ -1,0 +1,177 @@
+<div style="width: 100%;height: 100%;top: 0px;left: 0px;position: fixed;display: block; z-index: 99; background: rgba(255, 255, 255, 0.3)" ng-show="vm.loading">
+    <div style="position: absolute;top: 15%;z-index: 100; width: 100%; text-align: center;">
+        <div class="sk-circle">
+            <div class="sk-circle1 sk-child"></div>
+            <div class="sk-circle2 sk-child"></div>
+            <div class="sk-circle3 sk-child"></div>
+            <div class="sk-circle4 sk-child"></div>
+            <div class="sk-circle5 sk-child"></div>
+            <div class="sk-circle6 sk-child"></div>
+            <div class="sk-circle7 sk-child"></div>
+            <div class="sk-circle8 sk-child"></div>
+            <div class="sk-circle9 sk-child"></div>
+            <div class="sk-circle10 sk-child"></div>
+            <div class="sk-circle11 sk-child"></div>
+            <div class="sk-circle12 sk-child"></div>
+        </div>
+    </div>
+</div>
+
+<div class="form-group col-md-12">
+    <div class="header" ng-show="vm.selectedTypeCreditNote === undefined">
+        <h4><b>Factura Electr&oacute;nica</b></h4>
+    </div>
+    <div class="panel-group table-responsive" ng-show="vm.data !== undefined" id="printArea" print-section>
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <b>Datos del Cliente</b>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="form-group col-md-12">
+                        <table width="100%">
+                            <tr>
+                                <td width="20%" align="center"><img src="images/{{vm.companyData.userClient.logo}}"><br></td>
+                                <td width="80%">
+                                    <b>{{vm.data.emisor.nombre_comercial}}</b><br/></br>
+                                    <b>Matriz: {{vm.data.emisor.direccion}}</b><br/>
+                                    <b>Establecimiento: {{vm.data.emisor.establecimiento.direccion}}</b><br/><br/>
+                                    <b>RUC: {{vm.data.emisor.ruc}}</b><br/>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <!-- <div class="row table-responsive" print-remove>
+                    <div class="form-group col-md-12">
+                        <table width="100%">
+                            <tr>
+                                <td>
+                                    <button type="button" title="Buscar Cotizaci&oacute;n" class="btn btn-primary btn-sm" ng-click="vm.getQuotations()"
+                                            data-toggle="modal" data-target="#modalCotizacion">
+                                            <span class = "glyphicon glyphicon-search" aria-hidden = "true"></span>
+                                    </button>
+                                </td>
+                                <td>
+                                    <b>N&uacute;mero de Cotizaci&oacute;n: </b>{{vm.bill.stringQuotationSeq}}
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div> -->
+
+
+
+
+                <div class="row">
+                    <div class="form-group col-md-12">
+                        <table width="100%">
+                            <tr>
+                                <td width="20%">
+                                    <label>Fecha de Autorizaci&oacute;n: </label><br/>
+                                    {{vm.data.fecha_autorizacion | date:  "dd/MM/yyyy"}}
+                                </td>
+                                <td width="20%">
+                                    <label>Fecha de Emisi&oacute;n: </label><br/>
+                                    {{vm.data.fecha_emision | date:  "dd/MM/yyyy"}}
+                                </td>
+                                <td width="60%">
+                                    <div style="padding-left: 10px">
+                                        <label>Clave de Acceso: </label><br/>
+                                        {{vm.data.clave_acceso}}
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-12">
+                        <table width="100%">
+                            <tr>
+                                <td>
+                                    <b>Nombre: </b>{{vm.data.comprador.razon_social}} &nbsp;
+                                    <br/>
+                                </td>
+                                <td>
+                                    <b>Identificaci&oacute;n: </b>
+                                    {{vm.data.comprador.identificacion}}
+                                </td>
+                                <td>
+                                    <b>Teléfono: </b>{{vm.data.comprador.telefono}}
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <!-- <div class="row">
+                    <div class="form-group col-md-12">
+                        <table width="100%">
+                            <tr>
+                                <td><b>Dirección: </b>{{vm.clientSelected.address}}</td>
+                                <td><b>E-mail: </b>{{vm.clientSelected.email}}</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <b>Número de Factura: </b>{{vm.seqNumber}}
+                                    &nbsp;&nbsp;&nbsp;
+                                    <a data-toggle="modal" data-target="#modalEditBillNumber" ng-click="vm.verifyUser()" ng-if="vm.newBill" print-remove>
+                                        <b>Editar</b>
+                                    </a>
+                                </td>
+                                <td print-remove>
+                                    <b>Precio Convenido: </b>
+                                    <select ng-options="price as price.name for price in vm.prices"  ng-if="vm.newBill"
+                                            ng-model="vm.priceType" class="form-control" ng-change="vm.reCalculateTotal()" ng-disabled="vm.bill.details.length > 0">
+                                    </select>
+                                    <span ng-if="!vm.newBill">{{vm.bill.priceType}}</span>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="row" ng-if="vm.companyData.userClient.espTemp == 'A-1'" print-if="vm.companyData.userClient.espTemp == 'A-1'">
+                    <div class="form-group col-md-12">
+                        <table width="100%" style="border-collapse: separate; border-spacing: 6px;">
+                            <tr>
+                                <td width="50%">
+                                    <b>Orden de Compra: </b>
+                                    <input type="text" ng-disabled="!vm.newBill" ng-model="vm.bill.ordenDecompra" class="form-control">
+                                </td>
+                                <td width="50%">
+                                    <b>Srevices Receipts Register: </b>
+                                    <input type="text" ng-disabled="!vm.newBill" ng-model="vm.bill.srr" class="form-control">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td width="50%">
+                                    <b>Lugar: </b>
+                                    <input type="text" ng-disabled="!vm.newBill" ng-model="vm.bill.lugar" class="form-control">
+                                </td>
+                                <td width="50%">
+                                    <b>OTI/OTIR: </b>
+                                    <input type="text" ng-disabled="!vm.newBill" ng-model="vm.bill.otir" class="form-control">
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-9">
+                        <b>Observaciones:</b>
+                        <input type="text" ng-model="vm.bill.observation" class="form-control">
+                    </div>
+                    <div class="form-group col-md-3" ng-if="vm.newBill">
+                        <b>Descuento %: </b>
+                        <input type="text" ng-blur="vm.reCalculateTotal()" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+                               ng-model="vm.bill.discountPercentage" class="form-control" maxlength="9" ng-change="vm.getFechaCobro()" ng-disabled="!vm.newBill">
+                    </div>
+                </div> -->
+
+
+
+            </div>
+        </div>
+
+    </div>
+</div>
