@@ -19,19 +19,19 @@
 
 <div class="form-group col-md-12">
     <div class="header" ng-show="vm.selectedTypeCreditNote === undefined">
-        <h4><b>Factura Electr&oacute;nica</b></h4>
+        <h4><b></b></h4>
     </div>
     <div class="panel-group table-responsive" ng-show="vm.data !== undefined" id="printArea" print-section>
         <div class="panel panel-primary">
             <div class="panel-heading">
-                <b>Datos del Cliente</b>
+                <b>Factura Electr&oacute;nica</b>
             </div>
             <div class="panel-body">
                 <div class="row">
                     <div class="form-group col-md-12">
                         <table width="100%">
                             <tr>
-                                <td width="20%" align="center"><img src="images/{{vm.companyData.userClient.logo}}"><br></td>
+                                <td width="20%" align="center"><img src="images/{{vm.data.logo}}"><br></td>
                                 <td width="80%">
                                     <b>{{vm.data.emisor.nombre_comercial}}</b><br/></br>
                                     <b>Matriz: {{vm.data.emisor.direccion}}</b><br/>
@@ -42,32 +42,12 @@
                         </table>
                     </div>
                 </div>
-                <!-- <div class="row table-responsive" print-remove>
-                    <div class="form-group col-md-12">
-                        <table width="100%">
-                            <tr>
-                                <td>
-                                    <button type="button" title="Buscar Cotizaci&oacute;n" class="btn btn-primary btn-sm" ng-click="vm.getQuotations()"
-                                            data-toggle="modal" data-target="#modalCotizacion">
-                                            <span class = "glyphicon glyphicon-search" aria-hidden = "true"></span>
-                                    </button>
-                                </td>
-                                <td>
-                                    <b>N&uacute;mero de Cotizaci&oacute;n: </b>{{vm.bill.stringQuotationSeq}}
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-                </div> -->
-
-
-
 
                 <div class="row">
                     <div class="form-group col-md-12">
                         <table width="100%">
                             <tr>
-                                <td width="20%">
+                                <td width="30%">
                                     <label>Fecha de Autorizaci&oacute;n: </label><br/>
                                     {{vm.data.fecha_autorizacion | date:  "dd/MM/yyyy"}}
                                 </td>
@@ -75,7 +55,7 @@
                                     <label>Fecha de Emisi&oacute;n: </label><br/>
                                     {{vm.data.fecha_emision | date:  "dd/MM/yyyy"}}
                                 </td>
-                                <td width="60%">
+                                <td width="50%">
                                     <div style="padding-left: 10px">
                                         <label>Clave de Acceso: </label><br/>
                                         {{vm.data.clave_acceso}}
@@ -89,87 +69,143 @@
                     <div class="form-group col-md-12">
                         <table width="100%">
                             <tr>
-                                <td>
+                                <td width="40%">
                                     <b>Nombre: </b>{{vm.data.comprador.razon_social}} &nbsp;
                                     <br/>
                                 </td>
-                                <td>
+                                <td width="30%">
                                     <b>Identificaci&oacute;n: </b>
                                     {{vm.data.comprador.identificacion}}
                                 </td>
-                                <td>
+                                <td width="30%">
                                     <b>Teléfono: </b>{{vm.data.comprador.telefono}}
                                 </td>
                             </tr>
                         </table>
                     </div>
                 </div>
-                <!-- <div class="row">
+                <div class="row">
                     <div class="form-group col-md-12">
                         <table width="100%">
                             <tr>
-                                <td><b>Dirección: </b>{{vm.clientSelected.address}}</td>
-                                <td><b>E-mail: </b>{{vm.clientSelected.email}}</td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <b>Número de Factura: </b>{{vm.seqNumber}}
-                                    &nbsp;&nbsp;&nbsp;
-                                    <a data-toggle="modal" data-target="#modalEditBillNumber" ng-click="vm.verifyUser()" ng-if="vm.newBill" print-remove>
-                                        <b>Editar</b>
-                                    </a>
-                                </td>
-                                <td print-remove>
-                                    <b>Precio Convenido: </b>
-                                    <select ng-options="price as price.name for price in vm.prices"  ng-if="vm.newBill"
-                                            ng-model="vm.priceType" class="form-control" ng-change="vm.reCalculateTotal()" ng-disabled="vm.bill.details.length > 0">
-                                    </select>
-                                    <span ng-if="!vm.newBill">{{vm.bill.priceType}}</span>
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-                </div>
-                <div class="row" ng-if="vm.companyData.userClient.espTemp == 'A-1'" print-if="vm.companyData.userClient.espTemp == 'A-1'">
-                    <div class="form-group col-md-12">
-                        <table width="100%" style="border-collapse: separate; border-spacing: 6px;">
-                            <tr>
-                                <td width="50%">
-                                    <b>Orden de Compra: </b>
-                                    <input type="text" ng-disabled="!vm.newBill" ng-model="vm.bill.ordenDecompra" class="form-control">
-                                </td>
-                                <td width="50%">
-                                    <b>Srevices Receipts Register: </b>
-                                    <input type="text" ng-disabled="!vm.newBill" ng-model="vm.bill.srr" class="form-control">
-                                </td>
-                            </tr>
-                            <tr>
-                                <td width="50%">
-                                    <b>Lugar: </b>
-                                    <input type="text" ng-disabled="!vm.newBill" ng-model="vm.bill.lugar" class="form-control">
-                                </td>
-                                <td width="50%">
-                                    <b>OTI/OTIR: </b>
-                                    <input type="text" ng-disabled="!vm.newBill" ng-model="vm.bill.otir" class="form-control">
-                                </td>
+                                <td width="40%"><b>E-mail: </b>{{vm.mailClient}}</td>
+                                <td width="60%"><b>Dirección: </b>{{vm.data.comprador.direccion}}</td>
                             </tr>
                         </table>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="form-group col-md-9">
-                        <b>Observaciones:</b>
-                        <input type="text" ng-model="vm.bill.observation" class="form-control">
+                    <div class="form-group col-md-12">
+                        <table width="100%">
+                            <tr>
+                                <td width="40%">
+                                    <b>Número de Factura: </b>{{vm.invoiceNumber}}
+                                </td>
+                                <td width="60%">
+                                    <b>Estado: </b>{{vm.data.estado}}
+                                </td>
+                            </tr>
+                        </table>
                     </div>
-                    <div class="form-group col-md-3" ng-if="vm.newBill">
-                        <b>Descuento %: </b>
-                        <input type="text" ng-blur="vm.reCalculateTotal()" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
-                               ng-model="vm.bill.discountPercentage" class="form-control" maxlength="9" ng-change="vm.getFechaCobro()" ng-disabled="!vm.newBill">
+                </div>
+            </div>
+
+
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <b>Detalle</b>
+                </div>
+                <div class="panel-body table-responsive">
+                    <div class="row">
+                        <div class="form-group col-md-12">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Item</th>
+                                        <th>C&oacute;digo</th>
+                                        <th>Nombre Producto</th>
+                                        <th>Cant.</th>
+                                        <th>U. Med.</th>
+                                        <th>V. Unit.</th>
+                                        <th>% Desc.</th>
+                                        <th>V. Total.</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="detail in vm.data.items">
+                                        <td>{{$index + 1}}</td>
+                                        <td>{{detail.codigo_principal}}</td>
+                                        <td>{{detail.descripcion}}</td>
+                                        <td>{{detail.cantidad}}</td>
+                                        <td>{{detail.unidad_medida}}</td>
+                                        <td>{{detail.precio_unitario}}</td>
+                                        <td>{{detail.descuento}} %</td>
+                                        <td>{{(detail.precio_total_sin_impuestos)}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td><b>SubTotal: </b></td>
+                                        <td>{{(vm.data.totales.total_sin_impuestos)}}</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td><b>Descuento: </b></td>
+                                        <td>{{(vm.data.totales.descuento)}}</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td><b>Base 12%: </b></td>
+                                        <td>{{vm.data.totales.impuestos[0].base_imponible}}</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td><b>Iva: </b></td>
+                                        <td>{{vm.data.totales.impuestos[0].valor}}</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td><b>Total: </b></td>
+                                        <td>{{(vm.data.totales.importe_total)}}</td>
+                                        <td></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
-                </div> -->
-
-
-
+                </div>
+                <div class="panel-footer" print-remove>
+                    <button type="button" class="btn btn-primary btn-sm" ng-click="vm.clickPdf()">PDF</button>
+                    <button type="button" class="btn btn-primary btn-sm" ng-click="vm.clickXml()">XML</button>
+                </div>
             </div>
         </div>
 

@@ -75,12 +75,31 @@ public class BillServices {
                 }
             });
         }
+
+        UserClient userClient = userIntegridad.getSubsidiary().getUserClient();
+        if ((!userIntegridad.isApiConnection()) && (userClient.getApiKey() == null || "".equals(userClient.getApiKey()))) {
+            throw new BadRequestException("Empresa Invalida");
+        }
+        log.info("BillServices getDatil Empresa valida: {}", userClient.getName());
+        if (requirement.getPagos() != null) {
+            requirement.getPagos().forEach(pago -> {
+                if ("credito".equals(pago.getMedio())) {
+                    pago.setMedio("otros");
+                }
+            });
+        }
+
         ObjectMapper mapper = new ObjectMapper();
         String data = mapper.writeValueAsString(requirement);
         log.info("BillServices getDatil MAPPER creado");
 
-//        String response = httpCallerService.postAPIMrz(Constants.FACTURACION_LINK, data, userIntegridad);
-//        String response = httpCallerService.post(Constants.DATIL_LINK, data, userClient);
+//        String response = "";
+//        if(userIntegridad.isApiConnection()){
+//            response = httpCallerService.postAPIMrz(Constants.FACTURACION_LINK, data, userIntegridad);
+//        } else {
+//            response = httpCallerService.post(Constants.DATIL_LINK, data, userClient);
+//        }
+
         String response ="{\n" +
                 "  \"id\": \"abcdef09876123cea56784f01\",\n" +
                 "  \"ambiente\":1,\n" +
