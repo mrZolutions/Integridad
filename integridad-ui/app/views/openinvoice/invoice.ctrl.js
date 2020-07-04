@@ -21,6 +21,17 @@ angular.module('integridadUiApp')
         vm.config.headers = {
             'Content-Type':'application/json',
         };
+        vm.options = {
+            width: 2,
+            height: 100,
+            quite: 10,
+            displayValue: true,
+            font: "monospace",
+            textAlign: "center",
+            fontSize: 12,
+            backgroundColor: "",
+            lineColor: "#000"
+        };
 
         vm.processData = function (data) {
             console.log(data)
@@ -29,6 +40,8 @@ angular.module('integridadUiApp')
             vm.invoiceNumber += data.secuencial.toString().padStart(9, '0');
 
             vm.mailClient = data.comprador.email.split(',')[0];
+
+            vm.txt = vm.data.clave_acceso;
         }
 
 
