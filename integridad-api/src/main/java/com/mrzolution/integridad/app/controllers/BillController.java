@@ -47,15 +47,23 @@ public class BillController {
 
             Map json = (Map)parser.parse(responseDatil, containerFactory);
             Iterator iter = json.entrySet().iterator();
+            String errorXmlSri = null;
             while(iter.hasNext()){
                 Map.Entry entry = (Map.Entry)iter.next();
                 if(entry.getKey().equals("id")) bill.setIdSri((String) entry.getValue());
                 if(entry.getKey().equals("clave_acceso")) bill.setClaveDeAcceso((String) entry.getValue());
+                if(entry.getKey().equals("errors")) errorXmlSri = (String) entry.getValue();
 //              System.out.println(entry.getKey() + "=>" + entry.getValue());
             }
 
-            service.createBill(bill, comprobante, dailybookCi, typeDocument);
-            response = bill;
+            if(errorXmlSri == null){
+                service.createBill(bill, comprobante, dailybookCi, typeDocument);
+                response = bill;
+            } else {
+                log.error("BillController saveDatilBill Exception XML error thrown: {}", errorXmlSri);
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorXmlSri);
+            }
+
         } catch (Exception e) {
             log.error("BillController saveDatilBill Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());

@@ -1011,7 +1011,8 @@ angular.module('integridadUiApp')
             reqBill.dailybookCi = vm.dailybookCi;
             
             // 1 is typeDocument Bill **************!!!
-            billService.getClaveDeAccesoSaveBill(reqBill, vm.companyData.userClient.id, 1).then(function(resp) {
+            // billService.getClaveDeAccesoSaveBill(reqBill, vm.companyData.userClient.id, 1).then(function(resp) {
+            billService.getClaveDeAccesoSaveBill(reqBill, vm.userId, 1).then(function(resp) {
               vm.bill.claveDeAcceso = resp.data.claveDeAcceso;
               vm.billed = true;
               vm.newBill = false;

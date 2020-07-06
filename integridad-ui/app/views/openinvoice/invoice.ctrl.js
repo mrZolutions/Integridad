@@ -16,7 +16,7 @@ angular.module('integridadUiApp')
         vm.invoiceNumber = undefined;
         vm.mailClient = undefined;
 
-        vm.baseUrl = 'http://localhost:3600/invoices/print/';
+        vm.baseUrl = 'https://invoicesmrz.herokuapp.com/invoices/print/';
         vm.config = {};
         vm.config.headers = {
             'Content-Type':'application/json',

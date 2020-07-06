@@ -99,7 +99,6 @@ public class UserIntegridadServices {
 	if(userResponse.isApiConnection()){
 		String data = "{\"email\": \""+ user.getEmail() + "\", \"password\": \"" + user.getPassword()+"\"}";
 		String response = httpCallerService.post(Constants.FACTURACION_LINK_AUTH, data, null);
-		System.out.println(response);
 
 		JSONParser parser = new JSONParser();
 		ContainerFactory containerFactory = new ContainerFactory(){
@@ -116,7 +115,10 @@ public class UserIntegridadServices {
 //      System.out.println(entry.getKey() + "=>" + entry.getValue());
 		}
 
-		if(userResponse.getToken() != null) update(userResponse);
+		if(userResponse.getToken() != null) {
+			userResponse.setPassword("");
+			update(userResponse);
+		};
 	}
 
 	log.info("UserIntegridadServices authenticate success: {}, id: {}", userResponse.getEmail(), userResponse.getId());
