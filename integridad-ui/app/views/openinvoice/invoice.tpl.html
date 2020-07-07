@@ -115,104 +115,137 @@
                 </div>
             </div>
 
-
-            <div class="panel panel-primary">
-                <div class="panel-heading">
-                    <b>Detalle</b>
-                </div>
-                <div class="panel-body table-responsive">
-                    <div class="row">
-                        <div class="form-group col-md-12">
-                            <table class="table table-striped">
-                                <thead>
-                                    <tr>
-                                        <th>Item</th>
-                                        <th>C&oacute;digo</th>
-                                        <th>Nombre Producto</th>
-                                        <th>Cant.</th>
-                                        <th>U. Med.</th>
-                                        <th>V. Unit.</th>
-                                        <th>% Desc.</th>
-                                        <th>V. Total.</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr ng-repeat="detail in vm.data.items">
-                                        <td>{{$index + 1}}</td>
-                                        <td>{{detail.codigo_principal}}</td>
-                                        <td>{{detail.descripcion}}</td>
-                                        <td>{{detail.cantidad}}</td>
-                                        <td>{{detail.unidad_medida}}</td>
-                                        <td>{{detail.precio_unitario}}</td>
-                                        <td>{{detail.descuento}} %</td>
-                                        <td>{{(detail.precio_total_sin_impuestos)}}</td>
-                                    </tr>
-                                    <tr>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td><b>SubTotal: </b></td>
-                                        <td>{{(vm.data.totales.total_sin_impuestos)}}</td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td><b>Descuento: </b></td>
-                                        <td>{{(vm.data.totales.descuento)}}</td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td><b>Base 12%: </b></td>
-                                        <td>{{vm.data.totales.impuestos[0].base_imponible}}</td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td><b>Iva: </b></td>
-                                        <td>{{vm.data.totales.impuestos[0].valor}}</td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td><b>Total: </b></td>
-                                        <td>{{(vm.data.totales.importe_total)}}</td>
-                                        <td></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
+        </div>
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <b>Detalle</b>
+            </div>
+            <div class="panel-body table-responsive">
+                <div class="row">
+                    <div class="form-group col-md-12">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Item</th>
+                                    <th>C&oacute;digo</th>
+                                    <th>Nombre Producto</th>
+                                    <th>Cant.</th>
+                                    <th>U. Med.</th>
+                                    <th>V. Unit.</th>
+                                    <th>% Desc.</th>
+                                    <th>V. Total.</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="detail in vm.data.items">
+                                    <td>{{$index + 1}}</td>
+                                    <td>{{detail.codigo_principal}}</td>
+                                    <td>{{detail.descripcion}}</td>
+                                    <td>{{detail.cantidad}}</td>
+                                    <td>{{detail.unidad_medida}}</td>
+                                    <td>{{detail.precio_unitario}}</td>
+                                    <td>{{detail.descuento}} %</td>
+                                    <td>{{(detail.precio_total_sin_impuestos)}}</td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td><b>SubTotal: </b></td>
+                                    <td>{{(vm.data.totales.total_sin_impuestos)}}</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td><b>Descuento: </b></td>
+                                    <td>{{(vm.data.totales.descuento)}}</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td><b>Base 12%: </b></td>
+                                    <td>{{vm.data.totales.impuestos[0].base_imponible}}</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td><b>Iva: </b></td>
+                                    <td>{{vm.data.totales.impuestos[0].valor}}</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td><b>Total: </b></td>
+                                    <td>{{(vm.data.totales.importe_total)}}</td>
+                                    <td></td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
-                </div>
-                <div class="panel-footer" print-remove>
-                    <button type="button" class="btn btn-primary btn-sm" ng-click="vm.clickPdf()">PDF</button>
-                    <button type="button" class="btn btn-primary btn-sm" ng-click="vm.clickXml()">XML</button>
                 </div>
             </div>
         </div>
 
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <b>Forma de Pago</b>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Medio</th>
+                                    <th>Valor</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        {{vm.pagos.name}}<br/>{{vm.pagos.code}}
+                                    </td>
+                                    <td>{{vm.pagos.total}}</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td><b>Total:</b></td>
+                                    <td>{{vm.pagos.total}}</td>
+                                    <td>Vuelto: {{vm.cambio}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="panel-footer" print-remove>
+        <button type="button" class="btn btn-primary btn-sm" ng-click="vm.clickPdf()">PDF</button>
+        <button type="button" class="btn btn-primary btn-sm" ng-click="vm.clickXml()">XML</button>
     </div>
 </div>
