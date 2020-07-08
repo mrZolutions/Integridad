@@ -40,6 +40,10 @@ function routes($routeProvider) {
             templateUrl: 'views/bills/bill.tpl.html',
             controller: 'BillCtrl',
             controllerAs: 'vm'
+        }).when('/bills/nat', {
+            templateUrl: 'views/bills/nat.tpl.html',
+            controller: 'NatCtrl',
+            controllerAs: 'vm'
         }).when('/projects/projects', {
             templateUrl: 'views/projects/projects.tpl.html',
             controller: 'ProjectsCtrl',
