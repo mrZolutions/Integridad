@@ -47,7 +47,6 @@ angular.module('integridadUiApp')
         };
 
         vm.processData = function (data) {
-            console.log(data)
             vm.data = data;
             vm.invoiceNumber = data.emisor.establecimiento.codigo +'-'+ data.emisor.establecimiento.punto_emision+'-';
             vm.invoiceNumber += data.secuencial.toString().padStart(9, '0');
@@ -56,8 +55,6 @@ angular.module('integridadUiApp')
 
             vm.txt = vm.data.clave_acceso;
 
-            console.log('credito', vm.data.credito)
-            console.log('pagos', vm.data.pagos)
             if(vm.data.credito){
                 vm.pagos = {name: "CREDITO", code: payForm["credito"].name, total: vm.data.credito.monto}
             } else if(vm.data.pagos){
@@ -102,7 +99,6 @@ angular.module('integridadUiApp')
         function _getData(){
             var url = vm.baseUrl + $routeParams.id +'/'+$routeParams.acceso;
             $http.get(url, vm.config).then(function (response) {
-                console.log(response)
                 if(response.data[0]){
                     vm.processData(response.data[0]);
                 } else {
