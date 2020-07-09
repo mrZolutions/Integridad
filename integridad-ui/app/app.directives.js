@@ -1,2 +1,2 @@
 angular
-    .module('app.directives', ['ngPatternRestrict']);
+    .module('app.directives', ['ngPatternRestrict', 'barcode']);

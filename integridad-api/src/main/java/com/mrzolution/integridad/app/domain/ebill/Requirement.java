@@ -24,4 +24,5 @@ public class Requirement {
     private List<Pago> pagos;
     private List<CompensacionSolidaria> compensaciones;
     private Exportacion exportacion;
+    private String logo;
 }
