@@ -88,7 +88,7 @@ public class UserIntegridadServicesTest {
 	}
 	
 	@Test(expected=BadRequestException.class)
-	public void wrongMailAuthenticationTest(){
+	public void wrongMailAuthenticationTest() throws Exception {
 		String email = "daniel@yahoo.com"; 
 		user.setEmail(email);
 		
@@ -99,7 +99,7 @@ public class UserIntegridadServicesTest {
 	}
 	
 	@Test(expected=BadRequestException.class)
-	public void wrongPasswordAuthenticationTest(){
+	public void wrongPasswordAuthenticationTest() throws Exception {
 		String email = "daniel@yahoo.com";
 		String password = "12345";
 		user.setEmail(email);

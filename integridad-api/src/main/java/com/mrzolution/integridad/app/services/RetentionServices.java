@@ -32,16 +32,13 @@ public class RetentionServices {
     @Autowired
     CashierRepository cashierRepository;
     @Autowired
-    ProductBySubsidiairyRepository productBySubsidiairyRepository;
-    @Autowired
-    PagoRepository pagoRepository;
-    @Autowired
-    CreditsRepository creditsRepository;
-    @Autowired
     UserClientRepository userClientRepository;
+    @Autowired
+    UserIntegridadRepository userIntegridadRepository;
 
-    public String getDatil(com.mrzolution.integridad.app.domain.eretention.Retention requirement, UUID userClientId) throws Exception {
-        UserClient userClient = userClientRepository.findOne(userClientId);
+    public String getDatil(com.mrzolution.integridad.app.domain.eretention.Retention requirement, UUID userIntegridadId) throws Exception {
+        UserIntegridad userIntegridad = userIntegridadRepository.findOne(userIntegridadId);
+        UserClient userClient = userIntegridad.getSubsidiary().getUserClient();;
         if (userClient.getApiKey() == null || "".equals(userClient.getApiKey())) {
             throw new BadRequestException("Empresa Invalida");
         }
@@ -49,16 +46,31 @@ public class RetentionServices {
         ObjectMapper mapper = new ObjectMapper();
         String data = mapper.writeValueAsString(requirement);
         log.info("RetentionServices getDatil MAPPER creado");
-	
-        String response = httpCallerService.post(Constants.DATIL_RETENTION_LINK, data, userClient);
-//        String response ="{\n" +
+        String response = "";
+
+        if(userIntegridad.isApiConnection()){
+            log.info("RetentionService uses Integridad Retention: {}", userIntegridad.getEmail());
+            response = httpCallerService.postAPIMrz(Constants.RETENTION_LINK, data, userIntegridad);
+//            response ="{\n" +
 //                "  \"id\": \"abcdef09876123cea56784f01\",\n" +
 //                "  \"ambiente\":1,\n" +
 //                "  \"tipo_emision\":1,\n" +
 //                "  \"secuencial\":148,\n" +
 //                "  \"fecha_emision\":\"2019-09-28T11:28:56.782Z\",\n" +
 //                "  \"clave_acceso\": \"2802201501091000000000120010010000100451993736618\"}";
-        log.info("RetentionServices getDatil httpcall DONE");
+        } else {
+            response = httpCallerService.post(Constants.DATIL_RETENTION_LINK, data, userClient);
+
+//            response ="{\n" +
+//                "  \"id\": \"abcdef09876123cea56784f01\",\n" +
+//                "  \"ambiente\":1,\n" +
+//                "  \"tipo_emision\":1,\n" +
+//                "  \"secuencial\":148,\n" +
+//                "  \"fecha_emision\":\"2019-09-28T11:28:56.782Z\",\n" +
+//                "  \"clave_acceso\": \"2802201501091000000000120010010000100451993736618\"}";
+        }
+
+        log.info("RetentionServices getClaveAcceso httpcall DONE");
         return response;
     }
 

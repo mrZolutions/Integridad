@@ -1,9 +1,10 @@
 package com.mrzolution.integridad.app.services;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.UUID;
+import java.util.*;
+
 import com.mrzolution.integridad.app.domain.Subsidiary;
+import org.json.simple.parser.ContainerFactory;
+import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -27,6 +28,8 @@ public class UserIntegridadServices {
     UserTypeServices userTypeServices;
     @Autowired
     SubsidiaryServices subsidiaryServices;
+	@Autowired
+	httpCallerService httpCallerService;
 	
     public UserIntegridad create(UserIntegridad userIntegridad) throws BadRequestException {
         log.info("UserIntegridadServices create: {}", userIntegridad.getEmail());	
@@ -81,7 +84,7 @@ public class UserIntegridadServices {
 	return updated;
     }
 
-    public UserIntegridad authenticate(UserIntegridad user) throws BadRequestException {
+    public UserIntegridad authenticate(UserIntegridad user) throws Exception {
 	log.info("UserIntegridadServices authenticate: {}", user.getEmail());
 	UserIntegridad userResponse = userIntegridadRepository.findByEmailIgnoreCaseAndActive(user.getEmail(), true);
 	if (userResponse == null) {
@@ -92,6 +95,32 @@ public class UserIntegridadServices {
             throw new BadRequestException("Wrong Password");
 	}
 	userResponse.setFatherListToNull();
+
+	if(userResponse.isApiConnection()){
+		String data = "{\"email\": \""+ user.getEmail() + "\", \"password\": \"" + user.getPassword()+"\"}";
+		String response = httpCallerService.post(Constants.FACTURACION_LINK_AUTH, data, null);
+
+		JSONParser parser = new JSONParser();
+		ContainerFactory containerFactory = new ContainerFactory(){
+			public List creatArrayContainer() { return new LinkedList(); }
+			public Map createObjectContainer() { return new LinkedHashMap(); }
+		};
+
+		Map json = (Map)parser.parse(response, containerFactory);
+		Iterator iter = json.entrySet().iterator();
+		while(iter.hasNext()){
+			Map.Entry entry = (Map.Entry)iter.next();
+			if(entry.getKey().equals("accessToken"))  userResponse.setToken((String) entry.getValue());
+			if(entry.getKey().equals("refreshToken")) userResponse.setRefreshToken((String) entry.getValue());
+//      System.out.println(entry.getKey() + "=>" + entry.getValue());
+		}
+
+		if(userResponse.getToken() != null) {
+			userResponse.setPassword("");
+			update(userResponse);
+		};
+	}
+
 	log.info("UserIntegridadServices authenticate success: {}, id: {}", userResponse.getEmail(), userResponse.getId());
 	return userResponse;
     }

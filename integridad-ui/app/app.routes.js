@@ -40,6 +40,10 @@ function routes($routeProvider) {
             templateUrl: 'views/bills/bill.tpl.html',
             controller: 'BillCtrl',
             controllerAs: 'vm'
+        }).when('/bills/nat', {
+            templateUrl: 'views/bills/nat.tpl.html',
+            controller: 'NatCtrl',
+            controllerAs: 'vm'
         }).when('/projects/projects', {
             templateUrl: 'views/projects/projects.tpl.html',
             controller: 'ProjectsCtrl',
@@ -63,6 +67,10 @@ function routes($routeProvider) {
         }).when('/provider/reports', {
             templateUrl: 'views/providers/providers.tpl.html',
             controller: 'ProvidersCtrl',
+            controllerAs: 'vm'
+        }).when('/provider/nat', {
+            templateUrl: 'views/providers/nat.tpl.html',
+            controller: 'NatRetentionCtrl',
             controllerAs: 'vm'
         }).when('/purcahses/bill', {
             templateUrl: 'views/debtstopay/debtstopay.tpl.html',
@@ -159,6 +167,14 @@ function routes($routeProvider) {
         }).when('/opencash', {
             templateUrl: 'views/cashierProcess/open.tpl.html',
             controller: 'OpenCashierCtrl',
+            controllerAs: 'vm'
+        }).when('/invoice/:id/:acceso', {
+            templateUrl: 'views/openinvoice/invoice.tpl.html',
+            controller: 'InvoiceCtrl',
+            controllerAs: 'vm'
+        }).when('/retention/:id/:acceso', {
+            templateUrl: 'views/openretention/retention.tpl.html',
+            controller: 'RetentionCtrl',
             controllerAs: 'vm'
         }).otherwise({
             redirectTo: '/'

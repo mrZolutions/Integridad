@@ -63,10 +63,21 @@ public class BillServices {
     ConfigCuentasServices configCuentasServices;
     @Autowired
     CuentaContableRepository cuentaContableRepository;
+    @Autowired
+    UserIntegridadRepository userIntegridadRepository;
 
-    public String getDatil(Requirement requirement, UUID userClientId) throws Exception {
-        UserClient userClient = userClientRepository.findOne(userClientId);
-        if (userClient.getApiKey() == null || "".equals(userClient.getApiKey())) {
+    public String getDatil(Requirement requirement, UUID userIntegridadId) throws Exception {
+        UserIntegridad userIntegridad = userIntegridadRepository.findOne(userIntegridadId);
+        if (requirement.getPagos() != null) {
+            requirement.getPagos().forEach(pago -> {
+                if ("credito".equals(pago.getMedio())) {
+                    pago.setMedio("otros");
+                }
+            });
+        }
+
+        UserClient userClient = userIntegridad.getSubsidiary().getUserClient();
+        if ((!userIntegridad.isApiConnection()) && (userClient.getApiKey() == null || "".equals(userClient.getApiKey()))) {
             throw new BadRequestException("Empresa Invalida");
         }
         log.info("BillServices getDatil Empresa valida: {}", userClient.getName());
@@ -77,18 +88,25 @@ public class BillServices {
                 }
             });
         }
+
         ObjectMapper mapper = new ObjectMapper();
         String data = mapper.writeValueAsString(requirement);
         log.info("BillServices getDatil MAPPER creado");
 
-        String response = httpCallerService.post(Constants.DATIL_LINK, data, userClient);
-//        String response ="{\n" +
-//                "  \"id\": \"abcdef09876123cea56784f01\",\n" +
-//                "  \"ambiente\":1,\n" +
-//                "  \"tipo_emision\":1,\n" +
-//                "  \"secuencial\":148,\n" +
-//                "  \"fecha_emision\":\"2019-09-28T11:28:56.782Z\",\n" +
-//                "  \"clave_acceso\": \"2802201501091000000000120010010000100451993736618\"}";
+        String response = "";
+        if(userIntegridad.isApiConnection()){
+            log.info("BillServices uses Integridad Invoice: {}", userIntegridad.getEmail());
+            response = httpCallerService.postAPIMrz(Constants.FACTURACION_LINK, data, userIntegridad);
+        } else {
+            response = httpCallerService.post(Constants.DATIL_LINK, data, userClient);
+//            response ="{\n" +
+//                    "  \"id\": \"abcdef09876123cea56784f01\",\n" +
+//                    "  \"ambiente\":1,\n" +
+//                    "  \"tipo_emision\":1,\n" +
+//                    "  \"secuencial\":148,\n" +
+//                    "  \"fecha_emision\":\"2019-09-28T11:28:56.782Z\",\n" +
+//                    "  \"clave_acceso\": \"2802201501091000000000120010010000100451993736618\"}";
+        }
 
         log.info("BillServices getDatil httpcall DONE");
         return response;
