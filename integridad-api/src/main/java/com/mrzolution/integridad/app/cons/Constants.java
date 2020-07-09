@@ -22,4 +22,5 @@ public final class Constants {
 
     public static final String FACTURACION_LINK_AUTH = "https://invoicesmrz.herokuapp.com/auth";
     public static final String FACTURACION_LINK = "https://invoicesmrz.herokuapp.com/invoices";
+    public static final String RETENTION_LINK = "https://invoicesmrz.herokuapp.com/retentions";
 }

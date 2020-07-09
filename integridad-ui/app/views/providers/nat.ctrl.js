@@ -1,27 +1,27 @@
 'use strict';
 /**
  * @ngdoc function
- * @name integridadUiApp.controller:NatCtrl
+ * @name integridadUiApp.controller:NatRetentionCtrl
  * @description
- * # NatCtrl
+ * # NatRetentionCtrl
  * Controller of the integridadUiApp
  */
 angular.module('integridadUiApp')
-    .controller('NatCtrl', function(_, $http, holderService) {
+    .controller('NatRetentionCtrl', function(_, $http, holderService) {
 
         var vm = this;
         vm.error = undefined;
         vm.success = undefined;
-        vm.baseUrl = 'https://invoicesmrz.herokuapp.com/invoices/';
+        vm.baseUrl = 'https://invoicesmrz.herokuapp.com/retentions/';
         vm.config = {};
         vm.config.headers = {
             'Content-Type':'application/json',
         };
-        vm.billList = [];
+        vm.retentionList = [];
 
-        vm.resendBill = function(bill){
+        vm.resendRetention = function(ret){
             vm.loading = true;
-            $http.get(vm.baseUrl + 'resend/' + bill.id, vm.config).then(function (response) {
+            $http.get(vm.baseUrl + 'resend/' + ret.id, vm.config).then(function (response) {
                 vm.success = 'Comprobante reenviado';
                 vm.loading = false;
             }).catch(function(error) {
@@ -31,9 +31,9 @@ angular.module('integridadUiApp')
             });
         }
 
-        vm.recheckBill = function(bill){
+        vm.recheckRetention = function(ret){
             vm.loading = true;
-            $http.get(vm.baseUrl + 'recheck/' + bill.id, vm.config).then(function (response) {
+            $http.get(vm.baseUrl + 'recheck/' + ret.id, vm.config).then(function (response) {
                 vm.success = 'Comprobante revisado';
                 vm.loading = false;
             }).catch(function(error) {
@@ -51,10 +51,14 @@ angular.module('integridadUiApp')
 
                 $http.get(vm.baseUrl + 'nat/company', vm.config).then(function (response) {
                     if(response.data){
-                        vm.billList = response.data;
-                        for (const bill of vm.billList) {
-                            bill.stringSeq = bill.emisor.establecimiento.codigo + bill.emisor.establecimiento.punto_emision + 
-                            bill.secuencial.toString().padStart(9, '0');
+                        vm.retentionList = response.data;
+                        for (const item of vm.retentionList) {
+                            item.stringSeq = item.emisor.establecimiento.codigo + item.emisor.establecimiento.punto_emision + 
+                            item.secuencial.toString().padStart(9, '0');
+                            item.total = 0;
+                            for(const retItm of item.items){
+                                item.total += parseFloat(retItm.valor_retenido);
+                            }
                         }
                     } else {
                         console.log('Respnse DATA Error')    

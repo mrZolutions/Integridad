@@ -72,11 +72,11 @@ angular.module('integridadUiApp')
         vm.clickPdf = function (){
             var element = document.getElementById('printArea');
             var opt = {
-                margin:       0.4,
-                filename:     'factura.pdf',
-                image:        { type: 'jpeg', quality: 0.98 },
-                html2canvas:  { dpi: 192, letterRendering: true },
-                jsPDF:        { unit: 'in', format: 'A4', orientation: 'portrait' }
+                margin: 0.4,
+                filename: 'factura.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { dpi: 192, letterRendering: true },
+                jsPDF: { unit: 'in', format: 'A4', orientation: 'portrait' }
               };
             html2pdf(element, opt);
         }

@@ -1,0 +1,135 @@
+<div style="width: 100%;height: 100%;top: 0px;left: 0px;position: fixed;display: block; z-index: 99; background: rgba(255, 255, 255, 0.3)" ng-show="vm.loading">
+    <div style="position: absolute;top: 15%;z-index: 100; width: 100%; text-align: center;">
+        <div class="sk-circle">
+            <div class="sk-circle1 sk-child"></div>
+            <div class="sk-circle2 sk-child"></div>
+            <div class="sk-circle3 sk-child"></div>
+            <div class="sk-circle4 sk-child"></div>
+            <div class="sk-circle5 sk-child"></div>
+            <div class="sk-circle6 sk-child"></div>
+            <div class="sk-circle7 sk-child"></div>
+            <div class="sk-circle8 sk-child"></div>
+            <div class="sk-circle9 sk-child"></div>
+            <div class="sk-circle10 sk-child"></div>
+            <div class="sk-circle11 sk-child"></div>
+            <div class="sk-circle12 sk-child"></div>
+        </div>
+    </div>
+</div>
+
+<div class="form-group col-md-12">
+    <div class="header" ng-show="vm.selectedTypeCreditNote === undefined">
+        <h4><b></b></h4>
+    </div>
+
+    <div class="panel-group table-responsive" ng-show="vm.retention !== undefined" id="printArea" print-section>
+
+
+
+
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <b>Retenci&oacute;n Electr&oacute;nica</b>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="form-group col-md-12">
+                        <table width="100%">
+                            <tr>
+                                <td width="50%" align="center"><img src="images/{{vm.retention.logo}}" ><br></td>
+                                <td width="50%" rowspan="2">
+                                    <div style="padding:0px 20px;">
+                                        <b>RUC: {{vm.retention.emisor.ruc}}</b><br/>
+                                        <b>COMPROBANTE DE RETENCION</b><br/>
+                                        <b>No: {{vm.retentionNumber}}</b><br/>
+                                        <b>AUTORIZACION: {{vm.retention.clave_acceso}}</b><br/>
+                                        <b>FECHA DE EMISIÓN: {{vm.retention.fecha_emision | date : "dd-MM-yyyy"}}</b><br/>
+                                        <b>AMBIENTE: {{vm.retention.ambiente === 1 ? 'PRUEBAS' : 'PRODUCCION'}}</b><br/><br/>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td  width="50%" valign="top">
+                                    <div style="padding:10px 20px;">
+                                        <b>{{vm.retention.emisor.nombre_comercial}}</b><br/></br>
+                                        <b>Matriz: {{vm.retention.emisor.direccion}}</b><br/>
+                                        <b>Establecimiento: {{vm.retention.emisor.establecimiento.direccion}}</b><br/>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-12 ">
+                        <table width="100%">
+                            <tr>
+                                <td width="50%">
+                                    <div>
+                                        <label>Raz&oacute;n social / Nombres y Apellidos: </label>
+                                        {{vm.retention.sujeto.razon_social}}
+                                    </div>
+                                </td>
+                                <td width="50%" style=" padding-left: 10px">
+                                    <label>Identificaci&oacute;n: </label>
+                                    {{vm.retention.sujeto.identificacion}}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div>
+                                        <label>Fecha del Documento: </label>
+                                        {{vm.retention.items[0].fecha_emision_documento_sustento | date : "dd-MM-yyyy"}}
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div>
+                                        <label>Direcci&oacute;n: </label>
+                                        {{vm.retention.sujeto.direccion}}
+                                    </div>
+                                </td>
+                                <td style=" padding-left: 10px">
+                                    <label>E-mail: </label>
+                                    {{vm.retention.sujeto.email}}
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-12 ">
+                        <table width="100%" border="1">
+                            <tr>
+                                <td><b>EJERCICIO FISCAL </b></td>
+                                <td><b>IMPUESTO </b></td>
+                                <td><b>BASE IMPONIBLE </b></td>
+                                <td><b>RETENCIONES % </b></td>
+                                <td><b>VALOR </b></td>
+                            </tr>
+                            <tr ng-repeat="detail in vm.retention.items">
+                                <td>{{vm.retention.periodo_fiscal}}</td>
+                                <td>{{detail.codigo === 1 ? 'RENTA' : 'IVA'}}</td>
+                                <td>{{detail.base_imponible}}</td>
+                                <td>{{detail.porcentaje}}</td>
+                                <td>{{detail.valor_retenido}}</td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td><b>TOTAL</b></td>
+                                <td>{{(vm.total).toFixed(2)}}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="panel-footer" print-remove>
+        <button type="button" class="btn btn-primary btn-sm" ng-click="vm.clickPdf()">PDF</button>
+        <button type="button" class="btn btn-primary btn-sm" ng-click="vm.clickXml()">XML</button>
+    </div>
+</div>
