@@ -289,7 +289,7 @@ angular.module('integridadUiApp')
                 if (detail.product.ice) {
                     vm.bill.ice = parseFloat((parseFloat(vm.bill.ice) + (parseFloat(tot) * 0.10)).toFixed(4));
                 };
-                vm.bill.discount += parseFloat(detail.discountValue);
+                if(detail.discountValue) vm.bill.discount += parseFloat(detail.discountValue);
             });
 
             vm.impuestoICE.base_imponible = parseFloat((vm.bill.subTotal).toFixed(4));
@@ -787,6 +787,10 @@ angular.module('integridadUiApp')
                 vm.bill = response;
                 vm.bill.id = undefined;
                 vm.bill.claveDeAcceso = undefined;
+
+                _.each(vm.bill.details, function(item) {
+                    vm.consumption.detailsConsumption.push(item);
+                });
                 _getTotalSubtotal();
                 vm.loading = false;
             }).catch(function(error) {
@@ -1101,6 +1105,7 @@ angular.module('integridadUiApp')
                     };
                     vm.consumption.detailsKardex.push(kardex);
                 });
+
                 consumptionService.create(consumption).then(function(respConsumption) {
                     vm.user.cashier.csmNumberSeq = vm.numberCsmAddedOne;
                     holderService.set(vm.user);
