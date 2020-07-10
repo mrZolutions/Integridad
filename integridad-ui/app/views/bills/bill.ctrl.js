@@ -1106,7 +1106,6 @@ angular.module('integridadUiApp')
                     vm.consumption.detailsKardex.push(kardex);
                 });
 
-                console.log(consumption);
                 consumptionService.create(consumption).then(function(respConsumption) {
                     vm.user.cashier.csmNumberSeq = vm.numberCsmAddedOne;
                     holderService.set(vm.user);
