@@ -62,9 +62,10 @@ angular.module('integridadUiApp')
             vm.retentionNumber = retention.emisor.establecimiento.codigo +'-'+ retention.emisor.establecimiento.punto_emision+'-';
             vm.retentionNumber += retention.secuencial.toString().padStart(9, '0');
             vm.retention = retention;
-            vm.total = 0
+            vm.total = 0;
 
-            for(const item of retention.items){
+            for(var i = 0; i < retention.items.length; i++){
+                var item = retention.items[i];
                 vm.total += parseFloat(item.valor_retenido);
             }
         }

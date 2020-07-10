@@ -52,7 +52,8 @@ angular.module('integridadUiApp')
                 $http.get(vm.baseUrl + 'nat/company', vm.config).then(function (response) {
                     if(response.data){
                         vm.billList = response.data;
-                        for (const bill of vm.billList) {
+                        for (var i = 0; i < vm.billList.length; i++) {
+                            var bill = vm.billList[i];
                             bill.stringSeq = bill.emisor.establecimiento.codigo + bill.emisor.establecimiento.punto_emision + 
                             bill.secuencial.toString().padStart(9, '0');
                         }
