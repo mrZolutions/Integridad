@@ -55,7 +55,6 @@ angular.module('integridadUiApp')
             vm.cuentaContableFinished = undefined;
             vm.cuentaContableCost = undefined;
 
-            vm.product = undefined;
             vm.selectedGroup = undefined;
             vm.selectedLine = undefined;
             vm.wizard = 0;
@@ -137,7 +136,12 @@ angular.module('integridadUiApp')
                 });
                 if (sub) {
                     listResponse[i].quantity = sub.quantity
-                    vm.productList.push(listResponse[i]);
+                    if(vm.product !== undefined && vm.product.id === listResponse[i].id){
+                        vm.productList.push(vm.product);
+                        vm.product = undefined;
+                    } else {
+                        vm.productList.push(listResponse[i]);
+                    }
                 };
             };
         };
@@ -280,22 +284,19 @@ angular.module('integridadUiApp')
                 };
             });
             vm.product.barCode = vm.productBarCode;
-            productService.updateEdited(vm.product).then(function(response) {
-                vm.product = undefined;
-                vm.selectedGroup = undefined;
-                vm.selectedLine = undefined;
-                vm.wizard = 0;
-                _activate();
+            productService.updateEdited(angular.copy(vm.product)).then(function(response) {
                 vm.error = undefined;
                 if (isRemove) {
                     vm.success = 'Registro eliminado con exito';
                 } else {
-                    vm.success = 'Registro actualizado con exito';
+                    vm.success = 'Producto actualizado con exito';
                 };
             }).catch(function(error) {
                 vm.loading = false;
+                vm.success = undefined;
                 vm.error = error.data;
             });
+            _activate();
         };
 
         function update(isRemove) {
