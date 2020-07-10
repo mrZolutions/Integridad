@@ -21,10 +21,10 @@ public class RetentionController {
     RetentionServices service;
 
     @RequestMapping(method = RequestMethod.POST, value="/clave_acceso/{id}")
-    public ResponseEntity getDatil(@RequestBody com.mrzolution.integridad.app.domain.eretention.Retention requirement, @PathVariable("id") UUID userClientId) {
+    public ResponseEntity getDatil(@RequestBody com.mrzolution.integridad.app.domain.eretention.Retention requirement, @PathVariable("id") UUID userIntegridadId) {
         String response = null;
 	try {
-            response = service.getDatil(requirement, userClientId);
+            response = service.getDatil(requirement, userIntegridadId);
 	} catch(Exception e) {
             log.error("RetentionController getDatil Exception thrown: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());

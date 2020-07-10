@@ -19,4 +19,5 @@ public class Retention {
     private List<Item> items;
     private Sujeto sujeto;
     private String periodo_fiscal;
+    private String logo;
 }

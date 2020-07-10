@@ -56,7 +56,7 @@ public class UserIntegridadController {
         UserIntegridad response = null;
 	try {
             response = service.authenticate(userIntegridad);
-	} catch (BadRequestException e) {
+	} catch (Exception e) {
             log.info("UserIntegridadController authenticate Exception thrown: {}", e.getMessage());	    
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
         }
