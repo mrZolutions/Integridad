@@ -52,7 +52,13 @@ public class BillController {
                 Map.Entry entry = (Map.Entry)iter.next();
                 if(entry.getKey().equals("id")) bill.setIdSri((String) entry.getValue());
                 if(entry.getKey().equals("clave_acceso")) bill.setClaveDeAcceso((String) entry.getValue());
-                if(entry.getKey().equals("errors")) errorXmlSri = (String) entry.getValue();
+                if(entry.getKey().equals("errors")){
+                    if(entry.getValue() instanceof LinkedList){
+                        errorXmlSri = "Erro CLAVE DE ACCESO ";
+                    } else {
+                        errorXmlSri = (String) entry.getValue();
+                    }
+                }
 //              System.out.println(entry.getKey() + "=>" + entry.getValue());
             }
 
