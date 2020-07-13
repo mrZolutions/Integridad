@@ -799,6 +799,250 @@ angular.module('integridadUiApp')
             });
         };
 
+        vm.reSend = function() {
+            console.log(vm.impuestoIVA, vm.impuestoIVAZero)
+            vm.loading = true;
+            vm.impuestosTotales = [];
+            vm.bill.detailsKardex = [];
+            if (vm.bill.observation === null || vm.bill.observation === undefined || vm.bill.observation === '') {
+                vm.bill.observation = '--';
+            };
+            if (vm.bill.baseTaxes > 0) {
+                vm.impuestoIVA.base_imponible = vm.bill.baseTaxes;
+                vm.impuestoIVA.valor = vm.bill.iva;
+                vm.impuestosTotales.push(vm.impuestoIVA);
+            };
+            if (vm.impuestoIVAZero.base_imponible > 0) {
+                vm.impuestosTotales.push(vm.impuestoIVAZero);
+            };
+            if (vm.bill.discountPercentage === undefined) {
+                vm.bill.discountPercentage = 0;
+            };
+            _.each(vm.bill.details, function(det) {
+                var costWithIva = parseFloat((det.total * 1.12).toFixed(4));
+                var costWithIce = parseFloat((det.total * 1.10).toFixed(4));
+                var impuestos = [];
+                var impuesto = {};
+                var detaAdic = {
+                    "det": det.adicional
+                };
+
+                if (det.product.iva) {
+                    impuesto.base_imponible = parseFloat(((parseFloat(det.costEach) - (parseFloat(det.costEach) * parseFloat((vm.bill.discountPercentage / 100)))) * parseFloat(det.quantity)).toFixed(4));
+                    impuesto.valor = parseFloat((parseFloat(impuesto.base_imponible) * 0.12).toFixed(4));
+                    impuesto.tarifa = 12.0;
+                    impuesto.codigo = '2';
+                    impuesto.codigo_porcentaje = '2';
+                    impuestos.push(impuesto);
+                } else {
+                    impuesto.base_imponible = parseFloat(((parseFloat(det.costEach) - (parseFloat(det.costEach) * parseFloat((vm.bill.discountPercentage / 100)))) * parseFloat(det.quantity)).toFixed(4));
+                    impuesto.valor = parseFloat((parseFloat(impuesto.base_imponible) * 0.0000).toFixed(4));
+                    impuesto.tarifa = 0.0;
+                    impuesto.codigo = '2';
+                    impuesto.codigo_porcentaje = '0';
+                    impuestos.push(impuesto);
+                };
+
+                if (det.product.ice) {
+                    impuesto.base_imponible = parseFloat((det.costEach).toFixed(4));
+                    impuesto.valor = costWithIce;
+                    impuesto.tarifa = 10.0;
+                    impuesto.codigo = '3';
+                    impuesto.codigo_porcentaje = '2';
+                    impuestos.push(impuesto);
+                };
+
+                var item = {
+                    "cantidad": det.quantity,
+                    "codigo_principal": det.product.codeIntegridad,
+                    "precio_unitario": parseFloat(det.costEach),
+                    "descripcion": det.product.name,
+                    "precio_total_sin_impuestos": parseFloat(((parseFloat(det.costEach) - (parseFloat(det.costEach) * parseFloat((vm.bill.discountPercentage / 100)))) * parseFloat(det.quantity)).toFixed(4)),
+                    "descuento": parseFloat(((det.quantity * det.costEach) * parseFloat((vm.bill.discountPercentage) / 100)).toFixed(4)),
+                    "unidad_medida": det.product.unitOfMeasurementFull === null ? undefined : det.product.unitOfMeasurementFull,
+                    "detalles_adicionales": detaAdic
+                };
+
+                if (!_.isEmpty(impuestos)) {
+                    item.impuestos = impuestos;
+                };
+
+                vm.items.push(item);
+            });
+
+            vm.bill.pagos = vm.pagos;
+            if (vm.bill.discountPercentage === undefined) {
+                vm.bill.discountPercentage = 0;
+            };
+
+            for(var it  in vm.pagos){
+                for (var [key, value] of Object.entries(vm.pagos[it])) {
+                    if(value === null){
+                        console.log(`${key}: ${value}`);
+                        vm.pagos[it][key] = undefined;
+                    }
+                    if(key === 'id') vm.pagos[it][key] = undefined
+                    if(key === 'payForm') vm.pagos[it][key] = undefined
+                    if(key === 'fechaCobro') vm.pagos[it][key] = undefined
+                    if(key === 'creditoIntervalos') vm.pagos[it][key] = undefined
+                    if(key === 'creditoNumeroPagos') vm.pagos[it][key] = undefined
+                    if(key === 'statusPago') vm.pagos[it][key] = undefined
+                    if(key === '$$hashKey') vm.pagos[it][key] = undefined
+                }
+            }
+
+            var req = requirementService.createRequirement(vm.clientSelected, vm.bill, vm.user, vm.impuestosTotales, vm.items, vm.pagos);
+            req.logo = vm.companyData.userClient.logo;
+            console.log(JSON.stringify(req, null, 4))
+            var reqBill = {requirement : req, bill: vm.bill}
+
+            // vm.comprobanteCobro = {};
+            // vm.dailybookCi = {};
+
+            // if(vm.pagos.length === 1){
+            //     if(vm.pagos[0].code === 'efectivo'){
+            //         vm.comprobanteCobro = {
+            //             client: vm.clientSelected,
+            //             userIntegridad: vm.user,
+            //             subsidiary: vm.user.subsidiary,
+            //             clientName: vm.clientSelected.name,
+            //             clientRuc: vm.clientSelected.identification,
+            //             subTotalDoce: 0,
+            //             iva: 0,
+            //             total: 0,
+            //             detailComprobanteCobro: []
+            //         };
+                    
+            //         vm.itemBill = {
+            //             numCheque: '-',
+            //             cuenta: '-',
+            //             banco: '-',
+            //             tipoAbono: 'EFC',
+            //             totalAbono: vm.bill.total,
+            //             billNumber: vm.bill.stringSeq,
+            //             dateBill: vm.bill.dateCreated
+            //         };
+        
+            //         _getComprobanteCobroSeqNumber();
+        
+            //         vm.comprobanteCobro.detailComprobanteCobro.push(vm.itemBill);
+            //         vm.comprobanteCobro.billNumber = vm.bill.stringSeq;
+            //         vm.comprobanteCobro.dateComprobante = vm.bill.dateCreated;
+            //         vm.comprobanteCobro.dateComprobanteCreated = vm.bill.dateCreated;
+            //         vm.comprobanteCobro.comprobanteSeq = vm.comprobanteCobroSeq;
+            //         vm.comprobanteCobro.comprobanteStringSeq = vm.comprobanteCobroStringSeq;
+            //         vm.comprobanteCobro.comprobanteConcep = 'Cancela Fact. ' + vm.bill.stringSeq;
+            //         vm.comprobanteCobro.comprobanteEstado = 'PROCESADO';
+            //         vm.comprobanteCobro.total = vm.bill.total;
+            //         vm.comprobanteCobro.subTotalDoce = parseFloat((vm.bill.total / 1.12).toFixed(2));
+            //         vm.comprobanteCobro.iva = parseFloat((vm.bill.total * 0.12).toFixed(2));
+            //         vm.comprobanteCobro.paymentId = '-';
+
+            //         vm.dailybookCi = {
+            //             client: vm.clientSelected,
+            //             userIntegridad: vm.user,
+            //             subsidiary: vm.user.subsidiary,
+            //             clientProvName: vm.clientSelected.name,
+            //             subTotalDoce: 0,
+            //             iva: 0,
+            //             subTotalCero: 0,
+            //             total: 0,
+            //             detailDailybookContab: []
+            //         };
+            //         _getDailyCiSeqNumber();
+            //         vm.selectedTypeBook = '3';
+            //         vm.generalDetailCi_1 = vm.clientSelected.name + ' Cancela Facts. ' + vm.bill.stringSeq;
+            //         vm.typeContabCi = 'COMP. DE INGRESO';
+            //         vm.itema = {
+            //             typeContab: vm.typeContabCi,
+            //             codeConta: vm.clientSelected.codConta,
+            //             descrip: 'CLIENTES NO RELACIONADOS',
+            //             tipo: 'CREDITO (C)',
+            //             baseImponible: parseFloat(vm.bill.total),
+            //             name: vm.generalDetailCi_1,
+            //             haber: parseFloat(vm.bill.total)
+            //         };
+            //         vm.itema.numCheque = '--';
+            //         vm.itema.dailybookNumber = vm.dailyCiStringSeq;
+            //         vm.itema.userClientId = vm.userClientId;
+            //         vm.itema.dateDetailDailybook = vm.bill.dateCreated;
+            //         vm.dailybookCi.detailDailybookContab.push(vm.itema);
+            //         vm.generalDetailCi_2 = 'Cobro de Facts. ' + vm.bill.stringSeq + ' en EFECTIVO';
+            //         // Todo DEFINIR CAMPOS DE CODE CONTA Y DESCRIPCION
+            //         vm.itemb = {
+            //             typeContab: vm.typeContabCi,
+            //             codeConta: vm.cuentaContableEfectivo ? vm.cuentaContableEfectivo.code : '--',
+            //             descrip: vm.cuentaContableEfectivo ? vm.cuentaContableEfectivo.description : '--',
+            //             tipo: 'DEBITO (D)',
+            //             baseImponible: parseFloat(vm.bill.total),
+            //             name: vm.generalDetailCi_2,
+            //             deber: parseFloat(vm.bill.total)
+            //         };
+            //         vm.itemb.numCheque = '--';
+            //         vm.itemb.dailybookNumber = vm.dailyCiStringSeq;
+            //         vm.itemb.userClientId = vm.userClientId;
+            //         vm.itemb.dateDetailDailybook = vm.bill.dateCreated;
+            //         vm.dailybookCi.detailDailybookContab.push(vm.itemb);
+            //         vm.dailybookCi.codeTypeContab = vm.selectedTypeBook;
+            //         vm.dailybookCi.nameBank = '--';
+            //         vm.dailybookCi.billNumber = vm.bill.stringSeq;
+            //         vm.dailybookCi.numCheque = '--';
+            //         vm.dailybookCi.typeContab = vm.typeContabCi;
+            //         vm.dailybookCi.dailyCiSeq = vm.dailyCiSeq;
+            //         vm.dailybookCi.dailyCiStringSeq = vm.dailyCiStringSeq;
+            //         vm.dailybookCi.dailyCiStringUserSeq = 'PAGO GENERADO ' + vm.dailyCiStringSeq;
+            //         vm.dailybookCi.clientProvName = vm.clientSelected.name;
+            //         vm.dailybookCi.generalDetail = vm.generalDetailCi_1;
+            //         vm.dailybookCi.total = vm.bill.total;
+            //         vm.dailybookCi.iva = parseFloat((vm.bill.total * 0.12).toFixed(2));
+            //         vm.dailybookCi.subTotalDoce = parseFloat((vm.bill.total / 1.12).toFixed(2));
+            //         vm.dailybookCi.subTotalCero = 0;
+            //         vm.dailybookCi.dateRecordBook = vm.bill.dateCreated;
+                    
+            //     }
+            // }
+
+            // reqBill.comprobanteCobro = vm.comprobanteCobro;
+            // reqBill.dailybookCi = vm.dailybookCi;
+            
+            // 1 is typeDocument Bill **************!!!
+            // billService.getClaveDeAccesoSaveBill(reqBill, vm.companyData.userClient.id, 1).then(function(resp) {
+            
+            
+            
+            // billService.getClaveDeAccesoSaveBill(reqBill, vm.userId, 1).then(function(resp) {
+            //   vm.bill.claveDeAcceso = resp.data.claveDeAcceso;
+            //   vm.billed = true;
+            //   vm.newBill = false;
+            //   vm.newBuy = false;
+            //   vm.user.cashier.billNumberSeq = vm.bill.billSeq;
+            //   if(vm.comprobanteCobro.comprobanteSeq !== undefined){
+            //     vm.user.cashier.compCobroNumberSeq = vm.comprobanteCobro.comprobanteSeq;
+            //     vm.user.cashier.dailyCiNumberSeq = vm.dailybookCi.dailyCiSeq;
+            //   }
+            //   holderService.set(vm.user);
+            //   vm.loading = false;
+            //   setTimeout(function() {
+            //     vm.user.cashier.specialPrint ? vm.printToCart('printMatrixBillId') : document.getElementById("printBtnBill").click();
+            //     // document.getElementById("printBtnBill").click();
+            //     // vm.printToCart('printMatrixBillId')
+            //     vm.nuevaBill();
+            // }, 300);
+            //   if (vm.seqChanged) {
+            //       cashierService.update(vm.user.cashier).then(function(resp) {
+            //           // cashier updated
+            //       }).catch(function(error) {
+            //           vm.loading = false;
+            //           vm.error = error.data;
+            //       });
+            //   };
+            // }).catch(function(error) {
+            //     vm.loading = false;
+            //     vm.error = "Error al obtener Clave de Acceso y Guardar Factura: " + error.data;
+            // });
+            vm.loading = false;
+        };
+
         vm.getClaveAcceso = function() {
             vm.loading = true;
             $('#modalAddPago').modal('hide');

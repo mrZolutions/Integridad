@@ -28,6 +28,55 @@ public class BillController {
     @Autowired
     BillServices service;
 
+    @RequestMapping(method = RequestMethod.POST, value="/clave_acceso/resend/{userId}/{typeDocument}")
+    public ResponseEntity resendDatilBill(@RequestBody RequirementBill requirement, @PathVariable("userId") UUID userIntegridadId,
+                                        @PathVariable("typeDocument") int typeDocument) {
+        Bill response = null;
+        try {
+            Bill bill = requirement.getBill();
+            String responseDatil = service.getDatil(requirement.getRequirement(), userIntegridadId);
+            ComprobanteCobro comprobante = requirement.getComprobanteCobro();
+            DailybookCi dailybookCi = requirement.getDailybookCi();
+
+            JSONParser parser = new JSONParser();
+            ContainerFactory containerFactory = new ContainerFactory(){
+                public List creatArrayContainer() { return new LinkedList(); }
+                public Map createObjectContainer() { return new LinkedHashMap(); }
+            };
+
+            Map json = (Map)parser.parse(responseDatil, containerFactory);
+            Iterator iter = json.entrySet().iterator();
+//            String errorXmlSri = null;
+            while(iter.hasNext()){
+                Map.Entry entry = (Map.Entry)iter.next();
+                if(entry.getKey().equals("id")) bill.setIdSri((String) entry.getValue());
+                if(entry.getKey().equals("clave_acceso")) bill.setClaveDeAcceso((String) entry.getValue());
+//                if(entry.getKey().equals("errors")){
+//                    if(entry.getValue() instanceof LinkedList){
+//                        errorXmlSri = "Erro CLAVE DE ACCESO ";
+//                    } else {
+//                        errorXmlSri = (String) entry.getValue();
+//                    }
+//                }
+//              System.out.println(entry.getKey() + "=>" + entry.getValue());
+            }
+
+            service.updateBillClave(bill);
+//            if(errorXmlSri == null){
+//                service.createBill(bill, comprobante, dailybookCi, typeDocument);
+//                response = bill;
+//            } else {
+//                log.error("BillController saveDatilBill Exception XML error thrown: {}", errorXmlSri);
+//                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorXmlSri);
+//            }
+
+        } catch (Exception e) {
+            log.error("BillController resendDatilBill Exception thrown: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+        log.info("BillController resendDatilBill DONE: ", requirement.getBill().getId());
+        return new ResponseEntity<Bill>(response, HttpStatus.ACCEPTED);
+    }
 
     @RequestMapping(method = RequestMethod.POST, value="/clave_acceso/{userId}/{typeDocument}")
     public ResponseEntity saveDatilBill(@RequestBody RequirementBill requirement, @PathVariable("userId") UUID userIntegridadId,

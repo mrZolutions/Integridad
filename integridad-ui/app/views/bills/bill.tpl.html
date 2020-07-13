@@ -633,6 +633,11 @@
                         ng-click="vm.nuevaBill()">
                         <span class="glyphicon glyphicon-file" aria-hidden="true"></span>
                 </button>
+                <button type="button" title="REENVIAR" class="btn btn-primary btn-sm"
+                        ng-if="!vm.newBill"
+                        ng-click="vm.reSend()">
+                        REENVIAR
+                </button>
                 <button print-btn type="button" title = "Imprimir Factura" class="btn btn-primary btn-sm"
                         id="printBtnBill" ng-if="!vm.newBill">
                         <span class = "glyphicon glyphicon-print" aria-hidden = "true"></span>

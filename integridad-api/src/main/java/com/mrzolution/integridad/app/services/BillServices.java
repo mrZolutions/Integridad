@@ -313,6 +313,16 @@ public class BillServices {
         return updated;
     }
 
+    public Bill updateBillClave(Bill bill) throws BadRequestException {
+        if (bill.getId() == null) {
+            throw new BadRequestException("Invalid Bill");
+        }
+        bill.setListsNull();
+        Bill updated = billRepository.save(bill);
+        log.info("BillServices updateBill Clave id: {}", updated.getId());
+        return updated;
+    }
+
     //Desactivación o Anulación de las Bills
     @Async("asyncExecutor")
     public Bill deactivateBill(Bill bill) throws BadRequestException {
