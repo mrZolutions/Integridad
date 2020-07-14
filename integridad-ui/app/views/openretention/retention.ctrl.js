@@ -64,7 +64,8 @@ angular.module('integridadUiApp')
             vm.retention = retention;
             vm.total = 0
 
-            for(const item of retention.items){
+            for(var i = 0; i < retention.items.length; i++){
+                var item = retention.items[i];
                 vm.total += parseFloat(item.valor_retenido);
             }
         }
