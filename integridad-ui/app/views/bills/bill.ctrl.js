@@ -902,7 +902,7 @@ angular.module('integridadUiApp')
             };
 
             var req = requirementService.createRequirement(vm.clientSelected, vm.bill, vm.user, vm.impuestosTotales, vm.items, vm.pagos);
-            req.logo = vm.companyData.userClient.logo;
+            if(vm.user.apiConnection) req.logo = vm.companyData.userClient.logo;
             var reqBill = {requirement : req, bill: vm.bill}
 
             vm.comprobanteCobro = {};
