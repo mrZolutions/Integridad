@@ -902,150 +902,151 @@ angular.module('integridadUiApp')
             };
 
             var req = requirementService.createRequirement(vm.clientSelected, vm.bill, vm.user, vm.impuestosTotales, vm.items, vm.pagos);
-            req.logo = vm.companyData.userClient.logo;
+            if(vm.user.apiConnection) req.logo = vm.companyData.userClient.logo;
             var reqBill = {requirement : req, bill: vm.bill}
+            console.log(req)
 
-            vm.comprobanteCobro = {};
-            vm.dailybookCi = {};
+            // vm.comprobanteCobro = {};
+            // vm.dailybookCi = {};
 
-            if(vm.pagos.length === 1){
-                if(vm.pagos[0].code === 'efectivo'){
-                    vm.comprobanteCobro = {
-                        client: vm.clientSelected,
-                        userIntegridad: vm.user,
-                        subsidiary: vm.user.subsidiary,
-                        clientName: vm.clientSelected.name,
-                        clientRuc: vm.clientSelected.identification,
-                        subTotalDoce: 0,
-                        iva: 0,
-                        total: 0,
-                        detailComprobanteCobro: []
-                    };
+            // if(vm.pagos.length === 1){
+            //     if(vm.pagos[0].code === 'efectivo'){
+            //         vm.comprobanteCobro = {
+            //             client: vm.clientSelected,
+            //             userIntegridad: vm.user,
+            //             subsidiary: vm.user.subsidiary,
+            //             clientName: vm.clientSelected.name,
+            //             clientRuc: vm.clientSelected.identification,
+            //             subTotalDoce: 0,
+            //             iva: 0,
+            //             total: 0,
+            //             detailComprobanteCobro: []
+            //         };
                     
-                    vm.itemBill = {
-                        numCheque: '-',
-                        cuenta: '-',
-                        banco: '-',
-                        tipoAbono: 'EFC',
-                        totalAbono: vm.bill.total,
-                        billNumber: vm.bill.stringSeq,
-                        dateBill: vm.bill.dateCreated
-                    };
+            //         vm.itemBill = {
+            //             numCheque: '-',
+            //             cuenta: '-',
+            //             banco: '-',
+            //             tipoAbono: 'EFC',
+            //             totalAbono: vm.bill.total,
+            //             billNumber: vm.bill.stringSeq,
+            //             dateBill: vm.bill.dateCreated
+            //         };
         
-                    _getComprobanteCobroSeqNumber();
+            //         _getComprobanteCobroSeqNumber();
         
-                    vm.comprobanteCobro.detailComprobanteCobro.push(vm.itemBill);
-                    vm.comprobanteCobro.billNumber = vm.bill.stringSeq;
-                    vm.comprobanteCobro.dateComprobante = vm.bill.dateCreated;
-                    vm.comprobanteCobro.dateComprobanteCreated = vm.bill.dateCreated;
-                    vm.comprobanteCobro.comprobanteSeq = vm.comprobanteCobroSeq;
-                    vm.comprobanteCobro.comprobanteStringSeq = vm.comprobanteCobroStringSeq;
-                    vm.comprobanteCobro.comprobanteConcep = 'Cancela Fact. ' + vm.bill.stringSeq;
-                    vm.comprobanteCobro.comprobanteEstado = 'PROCESADO';
-                    vm.comprobanteCobro.total = vm.bill.total;
-                    vm.comprobanteCobro.subTotalDoce = parseFloat((vm.bill.total / 1.12).toFixed(2));
-                    vm.comprobanteCobro.iva = parseFloat((vm.bill.total * 0.12).toFixed(2));
-                    vm.comprobanteCobro.paymentId = '-';
+            //         vm.comprobanteCobro.detailComprobanteCobro.push(vm.itemBill);
+            //         vm.comprobanteCobro.billNumber = vm.bill.stringSeq;
+            //         vm.comprobanteCobro.dateComprobante = vm.bill.dateCreated;
+            //         vm.comprobanteCobro.dateComprobanteCreated = vm.bill.dateCreated;
+            //         vm.comprobanteCobro.comprobanteSeq = vm.comprobanteCobroSeq;
+            //         vm.comprobanteCobro.comprobanteStringSeq = vm.comprobanteCobroStringSeq;
+            //         vm.comprobanteCobro.comprobanteConcep = 'Cancela Fact. ' + vm.bill.stringSeq;
+            //         vm.comprobanteCobro.comprobanteEstado = 'PROCESADO';
+            //         vm.comprobanteCobro.total = vm.bill.total;
+            //         vm.comprobanteCobro.subTotalDoce = parseFloat((vm.bill.total / 1.12).toFixed(2));
+            //         vm.comprobanteCobro.iva = parseFloat((vm.bill.total * 0.12).toFixed(2));
+            //         vm.comprobanteCobro.paymentId = '-';
 
-                    vm.dailybookCi = {
-                        client: vm.clientSelected,
-                        userIntegridad: vm.user,
-                        subsidiary: vm.user.subsidiary,
-                        clientProvName: vm.clientSelected.name,
-                        subTotalDoce: 0,
-                        iva: 0,
-                        subTotalCero: 0,
-                        total: 0,
-                        detailDailybookContab: []
-                    };
-                    _getDailyCiSeqNumber();
-                    vm.selectedTypeBook = '3';
-                    vm.generalDetailCi_1 = vm.clientSelected.name + ' Cancela Facts. ' + vm.bill.stringSeq;
-                    vm.typeContabCi = 'COMP. DE INGRESO';
-                    vm.itema = {
-                        typeContab: vm.typeContabCi,
-                        codeConta: vm.clientSelected.codConta,
-                        descrip: 'CLIENTES NO RELACIONADOS',
-                        tipo: 'CREDITO (C)',
-                        baseImponible: parseFloat(vm.bill.total),
-                        name: vm.generalDetailCi_1,
-                        haber: parseFloat(vm.bill.total)
-                    };
-                    vm.itema.numCheque = '--';
-                    vm.itema.dailybookNumber = vm.dailyCiStringSeq;
-                    vm.itema.userClientId = vm.userClientId;
-                    vm.itema.dateDetailDailybook = vm.bill.dateCreated;
-                    vm.dailybookCi.detailDailybookContab.push(vm.itema);
-                    vm.generalDetailCi_2 = 'Cobro de Facts. ' + vm.bill.stringSeq + ' en EFECTIVO';
-                    // Todo DEFINIR CAMPOS DE CODE CONTA Y DESCRIPCION
-                    vm.itemb = {
-                        typeContab: vm.typeContabCi,
-                        codeConta: vm.cuentaContableEfectivo ? vm.cuentaContableEfectivo.code : '--',
-                        descrip: vm.cuentaContableEfectivo ? vm.cuentaContableEfectivo.description : '--',
-                        tipo: 'DEBITO (D)',
-                        baseImponible: parseFloat(vm.bill.total),
-                        name: vm.generalDetailCi_2,
-                        deber: parseFloat(vm.bill.total)
-                    };
-                    vm.itemb.numCheque = '--';
-                    vm.itemb.dailybookNumber = vm.dailyCiStringSeq;
-                    vm.itemb.userClientId = vm.userClientId;
-                    vm.itemb.dateDetailDailybook = vm.bill.dateCreated;
-                    vm.dailybookCi.detailDailybookContab.push(vm.itemb);
-                    vm.dailybookCi.codeTypeContab = vm.selectedTypeBook;
-                    vm.dailybookCi.nameBank = '--';
-                    vm.dailybookCi.billNumber = vm.bill.stringSeq;
-                    vm.dailybookCi.numCheque = '--';
-                    vm.dailybookCi.typeContab = vm.typeContabCi;
-                    vm.dailybookCi.dailyCiSeq = vm.dailyCiSeq;
-                    vm.dailybookCi.dailyCiStringSeq = vm.dailyCiStringSeq;
-                    vm.dailybookCi.dailyCiStringUserSeq = 'PAGO GENERADO ' + vm.dailyCiStringSeq;
-                    vm.dailybookCi.clientProvName = vm.clientSelected.name;
-                    vm.dailybookCi.generalDetail = vm.generalDetailCi_1;
-                    vm.dailybookCi.total = vm.bill.total;
-                    vm.dailybookCi.iva = parseFloat((vm.bill.total * 0.12).toFixed(2));
-                    vm.dailybookCi.subTotalDoce = parseFloat((vm.bill.total / 1.12).toFixed(2));
-                    vm.dailybookCi.subTotalCero = 0;
-                    vm.dailybookCi.dateRecordBook = vm.bill.dateCreated;
+            //         vm.dailybookCi = {
+            //             client: vm.clientSelected,
+            //             userIntegridad: vm.user,
+            //             subsidiary: vm.user.subsidiary,
+            //             clientProvName: vm.clientSelected.name,
+            //             subTotalDoce: 0,
+            //             iva: 0,
+            //             subTotalCero: 0,
+            //             total: 0,
+            //             detailDailybookContab: []
+            //         };
+            //         _getDailyCiSeqNumber();
+            //         vm.selectedTypeBook = '3';
+            //         vm.generalDetailCi_1 = vm.clientSelected.name + ' Cancela Facts. ' + vm.bill.stringSeq;
+            //         vm.typeContabCi = 'COMP. DE INGRESO';
+            //         vm.itema = {
+            //             typeContab: vm.typeContabCi,
+            //             codeConta: vm.clientSelected.codConta,
+            //             descrip: 'CLIENTES NO RELACIONADOS',
+            //             tipo: 'CREDITO (C)',
+            //             baseImponible: parseFloat(vm.bill.total),
+            //             name: vm.generalDetailCi_1,
+            //             haber: parseFloat(vm.bill.total)
+            //         };
+            //         vm.itema.numCheque = '--';
+            //         vm.itema.dailybookNumber = vm.dailyCiStringSeq;
+            //         vm.itema.userClientId = vm.userClientId;
+            //         vm.itema.dateDetailDailybook = vm.bill.dateCreated;
+            //         vm.dailybookCi.detailDailybookContab.push(vm.itema);
+            //         vm.generalDetailCi_2 = 'Cobro de Facts. ' + vm.bill.stringSeq + ' en EFECTIVO';
+            //         // Todo DEFINIR CAMPOS DE CODE CONTA Y DESCRIPCION
+            //         vm.itemb = {
+            //             typeContab: vm.typeContabCi,
+            //             codeConta: vm.cuentaContableEfectivo ? vm.cuentaContableEfectivo.code : '--',
+            //             descrip: vm.cuentaContableEfectivo ? vm.cuentaContableEfectivo.description : '--',
+            //             tipo: 'DEBITO (D)',
+            //             baseImponible: parseFloat(vm.bill.total),
+            //             name: vm.generalDetailCi_2,
+            //             deber: parseFloat(vm.bill.total)
+            //         };
+            //         vm.itemb.numCheque = '--';
+            //         vm.itemb.dailybookNumber = vm.dailyCiStringSeq;
+            //         vm.itemb.userClientId = vm.userClientId;
+            //         vm.itemb.dateDetailDailybook = vm.bill.dateCreated;
+            //         vm.dailybookCi.detailDailybookContab.push(vm.itemb);
+            //         vm.dailybookCi.codeTypeContab = vm.selectedTypeBook;
+            //         vm.dailybookCi.nameBank = '--';
+            //         vm.dailybookCi.billNumber = vm.bill.stringSeq;
+            //         vm.dailybookCi.numCheque = '--';
+            //         vm.dailybookCi.typeContab = vm.typeContabCi;
+            //         vm.dailybookCi.dailyCiSeq = vm.dailyCiSeq;
+            //         vm.dailybookCi.dailyCiStringSeq = vm.dailyCiStringSeq;
+            //         vm.dailybookCi.dailyCiStringUserSeq = 'PAGO GENERADO ' + vm.dailyCiStringSeq;
+            //         vm.dailybookCi.clientProvName = vm.clientSelected.name;
+            //         vm.dailybookCi.generalDetail = vm.generalDetailCi_1;
+            //         vm.dailybookCi.total = vm.bill.total;
+            //         vm.dailybookCi.iva = parseFloat((vm.bill.total * 0.12).toFixed(2));
+            //         vm.dailybookCi.subTotalDoce = parseFloat((vm.bill.total / 1.12).toFixed(2));
+            //         vm.dailybookCi.subTotalCero = 0;
+            //         vm.dailybookCi.dateRecordBook = vm.bill.dateCreated;
                     
-                }
-            }
+            //     }
+            // }
 
-            reqBill.comprobanteCobro = vm.comprobanteCobro;
-            reqBill.dailybookCi = vm.dailybookCi;
+            // reqBill.comprobanteCobro = vm.comprobanteCobro;
+            // reqBill.dailybookCi = vm.dailybookCi;
             
-            // 1 is typeDocument Bill **************!!!
-            // billService.getClaveDeAccesoSaveBill(reqBill, vm.companyData.userClient.id, 1).then(function(resp) {
-            billService.getClaveDeAccesoSaveBill(reqBill, vm.userId, 1).then(function(resp) {
-              vm.bill.claveDeAcceso = resp.data.claveDeAcceso;
-              vm.billed = true;
-              vm.newBill = false;
-              vm.newBuy = false;
-              vm.user.cashier.billNumberSeq = vm.bill.billSeq;
-              if(vm.comprobanteCobro.comprobanteSeq !== undefined){
-                vm.user.cashier.compCobroNumberSeq = vm.comprobanteCobro.comprobanteSeq;
-                vm.user.cashier.dailyCiNumberSeq = vm.dailybookCi.dailyCiSeq;
-              }
-              holderService.set(vm.user);
-              vm.loading = false;
-              setTimeout(function() {
-                vm.user.cashier.specialPrint ? vm.printToCart('printMatrixBillId') : document.getElementById("printBtnBill").click();
-                // document.getElementById("printBtnBill").click();
-                // vm.printToCart('printMatrixBillId')
-                vm.nuevaBill();
-            }, 300);
-              if (vm.seqChanged) {
-                  cashierService.update(vm.user.cashier).then(function(resp) {
-                      // cashier updated
-                  }).catch(function(error) {
-                      vm.loading = false;
-                      vm.error = error.data;
-                  });
-              };
-            }).catch(function(error) {
-                vm.loading = false;
-                vm.error = "Error al obtener Clave de Acceso y Guardar Factura: " + error.data;
-            });
+            // // 1 is typeDocument Bill **************!!!
+            // // billService.getClaveDeAccesoSaveBill(reqBill, vm.companyData.userClient.id, 1).then(function(resp) {
+            // billService.getClaveDeAccesoSaveBill(reqBill, vm.userId, 1).then(function(resp) {
+            //   vm.bill.claveDeAcceso = resp.data.claveDeAcceso;
+            //   vm.billed = true;
+            //   vm.newBill = false;
+            //   vm.newBuy = false;
+            //   vm.user.cashier.billNumberSeq = vm.bill.billSeq;
+            //   if(vm.comprobanteCobro.comprobanteSeq !== undefined){
+            //     vm.user.cashier.compCobroNumberSeq = vm.comprobanteCobro.comprobanteSeq;
+            //     vm.user.cashier.dailyCiNumberSeq = vm.dailybookCi.dailyCiSeq;
+            //   }
+            //   holderService.set(vm.user);
+            //   vm.loading = false;
+            //   setTimeout(function() {
+            //     vm.user.cashier.specialPrint ? vm.printToCart('printMatrixBillId') : document.getElementById("printBtnBill").click();
+            //     // document.getElementById("printBtnBill").click();
+            //     // vm.printToCart('printMatrixBillId')
+            //     vm.nuevaBill();
+            // }, 300);
+            //   if (vm.seqChanged) {
+            //       cashierService.update(vm.user.cashier).then(function(resp) {
+            //           // cashier updated
+            //       }).catch(function(error) {
+            //           vm.loading = false;
+            //           vm.error = error.data;
+            //       });
+            //   };
+            // }).catch(function(error) {
+            //     vm.loading = false;
+            //     vm.error = "Error al obtener Clave de Acceso y Guardar Factura: " + error.data;
+            // });
         };
 
         //Consumption Code
