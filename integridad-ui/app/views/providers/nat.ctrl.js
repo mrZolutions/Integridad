@@ -52,11 +52,13 @@ angular.module('integridadUiApp')
                 $http.get(vm.baseUrl + 'nat/company', vm.config).then(function (response) {
                     if(response.data){
                         vm.retentionList = response.data;
-                        for (const item of vm.retentionList) {
+                        for (var i = 0; i < vm.retentionList.length; i++) {
+                            var item = vm.retentionList[i];
                             item.stringSeq = item.emisor.establecimiento.codigo + item.emisor.establecimiento.punto_emision + 
                             item.secuencial.toString().padStart(9, '0');
                             item.total = 0;
-                            for(const retItm of item.items){
+                            for(var j = 0; j < item.items.length; j++){
+                                var retItm = item.items[j];
                                 item.total += parseFloat(retItm.valor_retenido);
                             }
                         }
