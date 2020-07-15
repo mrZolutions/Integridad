@@ -489,7 +489,7 @@ angular.module('integridadUiApp')
             eretentionService.getRetentionByProviderIdAndDocumentNumber(vm.providerId, vm.retention.numero).then(function(response) {
                 if (response.length === 0) {
                     var eRet = eretentionService.createERetention(vm.retention, vm.userData);
-                    if(vm.userData.apiConnection) req.logo = vm.userData.subsidiary.userClient.logo;
+                    if(vm.userData.apiConnection) eRet.logo = vm.userData.subsidiary.userClient.logo;
                     // eRet.logo = vm.userData.subsidiary.userClient.logo
                     eretentionService.getClaveDeAcceso(eRet, vm.userData.id).then(function(resp) {
                     //eretentionService.getClaveDeAcceso(eRet, vm.userData.subsidiary.userClient.id).then(function(resp) {
