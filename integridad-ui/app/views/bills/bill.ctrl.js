@@ -511,6 +511,7 @@ angular.module('integridadUiApp')
                 vm.consumption.detailsConsumption.push(detail);
             };
             vm.productToAdd = undefined;
+            vm.indexDetail = undefined;
             vm.quantity = undefined;
             vm.adicional = undefined;
             _getTotalSubtotal();
