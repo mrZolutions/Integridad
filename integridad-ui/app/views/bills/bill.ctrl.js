@@ -1077,7 +1077,12 @@ angular.module('integridadUiApp')
             _getCsmSeqNumber();
             warehouseService.getAllWarehouseByUserClientId(vm.userClientId).then(function(response) {
                 vm.warehouseList = response;
+                var observation = 'CONSUMO INTERNO';
                 var finalWarehouse = _.filter(vm.warehouseList, function(warehouse) { return warehouse.subsidiary.id === vm.subsidiaryId});
+                if(vm.bill.observation !== undefined && vm.bill.observation !== '' && vm.bill.observation !== null ){
+                    observation = vm.bill.observation;
+                }
+                
                 vm.consumption.warehouse = finalWarehouse[0];
                 vm.consumption.dateConsumption = $('#pickerBillDate').data("DateTimePicker").date().toDate().getTime();
                 vm.consumption.csmSeq = parseInt(vm.numberCsmAddedOne);
@@ -1085,7 +1090,7 @@ angular.module('integridadUiApp')
                 vm.consumption.clientName = vm.clientSelected.name;
                 vm.consumption.codeWarehouse = '--';
                 vm.consumption.nameSupervisor = '--';
-                vm.consumption.observation = 'CONSUMO INTERNO';
+                vm.consumption.observation = observation;
                 vm.consumption.detailsKardex = [];
                 _.each(vm.consumption.detailsConsumption, function(item) {
                     var kardex = {
