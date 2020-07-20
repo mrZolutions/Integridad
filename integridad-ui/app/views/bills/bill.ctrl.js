@@ -1079,7 +1079,8 @@ angular.module('integridadUiApp')
                 vm.warehouseList = response;
                 var observation = 'CONSUMO INTERNO';
                 var finalWarehouse = _.filter(vm.warehouseList, function(warehouse) { return warehouse.subsidiary.id === vm.subsidiaryId});
-                if(vm.bill.observation !== undefined && vm.bill.observation !== '');{
+                if(vm.bill.observation !== undefined && vm.bill.observation !== '' && vm.bill.observation !== null ){
+                    console.log('----:'+vm.bill.observation+':-----' )
                     observation = vm.bill.observation;
                 }
                 
