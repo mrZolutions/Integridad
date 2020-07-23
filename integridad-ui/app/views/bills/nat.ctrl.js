@@ -122,8 +122,7 @@ angular.module('integridadUiApp')
             vm.loading = true;
             vm.user = holderService.get();
             if(vm.user.token !== null){
-                // vm.config.headers['Authorization'] = 'Bearer ' + vm.user.token;
-                vm.config.headers['Authorization'] = 'Bearer ' + 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1ZWUxNWJiNTI5NmI3MDYwZDYwMGRkNjEiLCJlbWFpbCI6ImRhbmllbEBnbWFpbC5jb20iLCJwZXJtaXNzaW9uTGV2ZWwiOjIxNDc0ODM2NDcsInByb3ZpZGVyIjoiZW1haWwiLCJuYW1lIjoiRGFuaWVsIEEuIEFyY29zIiwiY29tcGFueUlkIjoiNWVmMzkwODE1ZDZmOGQzY2RkMDVmMzFmIiwicmVmcmVzaEtleSI6Ikd0NEU3enFqa0MwR2dRVzhrRk1Lc0E9PSIsImlhdCI6MTU5NTQzNjEzNH0.0o2TJmSutBo5HfUzo0Qa5nSbohHd1ez35m9LTH7sM84';
+                vm.config.headers['Authorization'] = 'Bearer ' + vm.user.token;
 
                 $http.get(vm.baseUrl + 'nat/company', vm.config).then(function (response) {
                     if(response.data){
