@@ -33,7 +33,7 @@
         </div>
     </div>
 
-    <div class="table-responsive" ng-show="vm.billList !== undefined">
+    <div class="table-responsive" ng-show="vm.doc === undefined">
         <input ng-model="searchText" class="form-control" placeholder="Buscar">
         <table class="table table-striped">
             <thead>
@@ -64,8 +64,12 @@
                             Validar Autorizaci&oacute;n
                         </button>
                         <button type="button" title="Reenviar" class="btn btn-warning btn-sm" ng-click="vm.resendBill(bill)"
-                        ng-show="bill.estado === 'REENVIAR' || bill.estado === 'NO AUTORIZADO'">
+                        ng-show="bill.estado === 'REENVIAR'">
                             Reenviar
+                        </button>
+                        <button type="button" title="Editar" class="btn btn-warning btn-sm" ng-click="vm.doc = bill"
+                        ng-show="bill.estado === 'NO AUTORIZADO'">
+                            Editar
                         </button>
                     </td>
                 </tr>
@@ -73,4 +77,140 @@
         </table>
     </div>
 
+    <!--EDIT TO RESEND-->
+    <div class="table-responsive" ng-show="vm.doc !== undefined">
+        <div class="row">
+            <div class="col-md-12">
+                <h3>Editar Factura - {{vm.doc.stringSeq}}</h3>
+                ERROR: {{vm.doc.error}}
+                <hr/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12"><h3>Cliente</h3><hr/></div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <label>Nombre: </label>
+                <input type="text" ng-model="vm.doc.comprador.razon_social" class="form-control">
+            </div>
+            <div class="col-md-6">
+                <label>Identificaci&oacute;n: </label>
+                <input type="text" ng-model="vm.doc.comprador.identificacion" class="form-control">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <label>Email: </label>
+                <input type="text" ng-model="vm.doc.comprador.email" class="form-control">
+            </div>
+            <div class="col-md-6">
+                <label>Direcci&oacute;n: </label>
+                <input type="text" ng-model="vm.doc.comprador.direccion" class="form-control">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12"><h3>Detalle</h3><hr/></div>
+        </div>
+        <div class="row" ng-repeat="det in vm.doc.items">
+            <div class="col-md-1">
+                <label>C&oacute;digo: </label>
+                {{det.codigo_principal}}
+            </div>
+            <div class="col-md-3">
+                <label>Descripci&oacute;n: </label>
+                {{det.descripcion}}
+            </div>
+            <div class="col-md-2">
+                <label>Cantidad: </label>
+                <input type="text" ng-model="det.cantidad" class="form-control" ng-change="vm.getTotalDetail($index)">
+            </div>
+            <div class="col-md-2">
+                <label>Precio: </label>
+                <input type="text" ng-model="det.precio_unitario" class="form-control" ng-change="vm.getTotalDetail($index)">
+            </div>
+            <div class="col-md-2">
+                <label>Dcto: </label>
+                <input type="text" ng-model="det.descuento" class="form-control" ng-change="vm.getTotalDetail($index)">
+            </div>
+            <div class="col-md-1">
+                <label>Total: </label>
+                {{det.precio_total_sin_impuestos}}
+            </div>
+            <div class="col-md-1">
+                <button type="button" title="Eliminar" class="btn btn-primary btn-sm" ng-click="vm.removeDetail($index)" >
+                    <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                </button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12"><h3>Totales</h3><hr/></div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <label>Total sin Impuestos: </label><br/>
+                {{vm.doc.totales.total_sin_impuestos}}
+            </div>
+            <div class="col-md-4">
+                <label>Descuento: </label>
+                <input type="text" ng-model="vm.doc.totales.descuento" class="form-control" ng-change="vm.getTotales()">
+            </div>
+        </div>
+        <div class="row" ng-repeat="imp in vm.doc.totales.impuestos">
+            <div class="col-md-4">
+                <label>Impuesto: </label>
+                {{vm.tipoImpuesto[imp.codigo]}} {{vm.codigoPorcentaje[imp.codigo_porcentaje]}} %
+            </div>
+            <div class="col-md-4">
+                <label>Base Imponible: </label>
+                {{imp.base_imponible}}
+            </div>
+            <div class="col-md-4">
+                <label>Valor: </label>
+                {{imp.valor}}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <h3>TOTAL: {{(vm.doc.totales.importe_total).toFixed(2)}}</h3>
+            </div>
+        </div>
+        <div class="row" ng-if="vm.doc.pagos.length > 0">
+            <div class="col-md-12"><h3>Pagos</h3><hr/></div>
+        </div>
+        <div class="row" ng-repeat="pay in vm.doc.pagos" ng-if="vm.doc.pagos.length > 0">
+            <div class="col-md-4">
+                <label>Medio: </label><br/>
+                <select ng-options="payform.codigo as payform.name for payform in vm.payForms" ng-model="pay.medio" class="form-control">
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label>Monto: </label>
+                <input type="text" ng-model="pay.total" class="form-control">
+            </div>
+        </div>
+        <div class="row" ng-if="vm.doc.credito">
+            <div class="col-md-12"><h3>Cr&eacute;dito</h3><hr/></div>
+        </div>
+        <div class="row" ng-if="vm.doc.credito">
+            <div class="col-md-4">
+                <label>Monto: </label><br/>
+                <input type="text" ng-model="vm.doc.credito.monto" class="form-control">
+            </div>
+            <div class="col-md-4">
+                <label>Fecha Vencimiento: </label>
+                {{vm.doc.credito.fecha_vencimiento}}
+            </div>
+        </div>
+        <div class="panel-footer" print-remove>
+            <button type="button" class="btn btn-primary btn-sm"
+                    ng-click="vm.resendBill()">
+                    Guardar y Reenviar
+            </button>
+            <button type="button" class="btn btn-danger btn-sm"
+                    ng-click="vm.doc = undefined">
+                    Cancelar
+            </button>
+        </div>
+    </div>
 </div>
