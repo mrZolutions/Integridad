@@ -13,15 +13,21 @@ angular.module('integridadUiApp')
         vm.error = undefined;
         vm.success = undefined;
         vm.baseUrl = 'https://invoicesmrz.herokuapp.com/retentions/';
+        // vm.baseUrl = 'http://localhost:3600/retentions/';
         vm.config = {};
         vm.config.headers = {
             'Content-Type':'application/json',
         };
         vm.retentionList = [];
+        vm.doc = undefined;
 
         vm.resendRetention = function(ret){
+            vm.error = undefined;
+            vm.success = undefined;
+            if(ret) vm.doc = ret;
             vm.loading = true;
-            $http.get(vm.baseUrl + 'resend/' + ret.id, vm.config).then(function (response) {
+            $http.post(vm.baseUrl + 'resend/', vm.doc, vm.config).then(function (response) {
+                vm.doc = undefined;
                 vm.success = 'Comprobante reenviado';
                 vm.loading = false;
             }).catch(function(error) {

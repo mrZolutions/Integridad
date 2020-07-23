@@ -13,6 +13,7 @@ angular.module('integridadUiApp')
         vm.error = undefined;
         vm.success = undefined;
         vm.baseUrl = 'https://invoicesmrz.herokuappk.com/invoices/';
+        // vm.baseUrl = 'http://localhost:3600/invoices/';
         vm.config = {};
         vm.config.headers = {
             'Content-Type':'application/json',
@@ -41,8 +42,12 @@ angular.module('integridadUiApp')
         vm.doc = undefined;
 
         vm.resendBill = function(bill){
+            vm.error = undefined;
+            vm.success = undefined;
+            if(bill) vm.doc = bill;
             vm.loading = true;
-            $http.get(vm.baseUrl + 'resend/' + bill.id, vm.config).then(function (response) {
+            $http.post(vm.baseUrl + 'resend/', vm.doc, vm.config).then(function (response) {
+                vm.doc = undefined;
                 vm.success = 'Comprobante reenviado';
                 vm.loading = false;
             }).catch(function(error) {
@@ -53,6 +58,8 @@ angular.module('integridadUiApp')
         }
 
         vm.recheckBill = function(bill){
+            vm.error = undefined;
+            vm.success = undefined;
             vm.loading = true;
             $http.get(vm.baseUrl + 'recheck/' + bill.id, vm.config).then(function (response) {
                 vm.success = 'Comprobante revisado';
@@ -84,20 +91,6 @@ angular.module('integridadUiApp')
 
         vm.getTotales = function(){
             _getTotals();
-        }
-
-        vm.saveResend = function(){
-            vm.loading = true;
-            $http.post(vm.baseUrl + 'reaut/', vm.doc, vm.config).then(function (response) {
-                vm.success = 'Comprobante reenviado';
-                vm.loading = false;
-                vm.doc = undefined;
-                _getData();
-            }).catch(function(error) {
-                console.log(error)
-                vm.loading = false;
-                vm.error = error.data;
-            });
         }
 
         function _getTotals() {
