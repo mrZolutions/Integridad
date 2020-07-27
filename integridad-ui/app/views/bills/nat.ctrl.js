@@ -12,7 +12,7 @@ angular.module('integridadUiApp')
         var vm = this;
         vm.error = undefined;
         vm.success = undefined;
-        vm.baseUrl = 'https://invoicesmrz.herokuappk.com/invoices/';
+        vm.baseUrl = 'https://invoicesmrz.herokuapp.com/invoices/';
         // vm.baseUrl = 'http://localhost:3600/invoices/';
         vm.config = {};
         vm.config.headers = {
