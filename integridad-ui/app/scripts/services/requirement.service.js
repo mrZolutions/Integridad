@@ -87,7 +87,12 @@ angular
                 };
                 req.informacion_adicional = informAdicional;
             } else if (user.cashier.subsidiary.userClient.espTemp === 'A-3') {
-                req.comprador.email = req.comprador.email + ', facturacion@mrzolutions.com';
+                if(user.cashier.subsidiary.userClient.codeIntegridad == 'VSEP-01') {
+                    req.comprador.email = req.comprador.email + ', gerencia@equiposdentalesecuador.com';
+                } else {
+                    req.comprador.email = req.comprador.email + ', facturacion@mrzolutions.com';
+                }
+                
                 var informAdicional = {
                     observ: ' ' + bill.observation
                 };
