@@ -248,8 +248,10 @@ angular.module('integridadUiApp')
                 vm.cellar = response;
                 vm.cellSeqNumber = response.whNumberSeq;
                 var dateToShow = new Date(response.dateEnterCellar);
+                $('#pickerDateEnterCellar').datetimepicker({ format: "DD/MM/YY" });
                 $('#pickerDateEnterCellar').data("DateTimePicker").date(dateToShow);
                 var dateBillToShow = new Date(response.dateBill);
+                $('#pickerDateBill').datetimepicker({ format: "DD/MM/YY" });
                 $('#pickerDateBill').data("DateTimePicker").date(dateBillToShow);
                 vm.newCellar = false;
                 vm.providerSelected = isView ? response.provider : undefined;
