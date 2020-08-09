@@ -12,8 +12,8 @@ angular.module('integridadUiApp')
     var vm = this;
     vm.error = undefined;
     vm.success = undefined;
-    //vm.baseUrl = 'https://invoicesmrz.herokuapp.com/invoices/';
-    vm.baseUrl = 'http://localhost:3000/login/id/';
+    vm.baseUrl = 'https://guidemrz.herokuapp.com/login/id/';
+    //vm.baseUrl = 'http://localhost:3000/login/id/';
 
     function _verifyUserGuides(){
         vm.user = holderService.get();
