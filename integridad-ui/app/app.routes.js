@@ -176,6 +176,10 @@ function routes($routeProvider) {
             templateUrl: 'views/openretention/retention.tpl.html',
             controller: 'RetentionCtrl',
             controllerAs: 'vm'
+        }).when('/guias', {
+            templateUrl: 'views/guides/guides.tpl.html',
+            controller: 'GuidesCtrl',
+            controllerAs: 'vm'
         }).otherwise({
             redirectTo: '/'
     });

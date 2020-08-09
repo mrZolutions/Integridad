@@ -38,6 +38,7 @@ public class UserIntegridad {
     private String token;
     private String refreshToken;
     private boolean apiConnection;
+    private boolean guias;
 
     @Email
     private String email;
