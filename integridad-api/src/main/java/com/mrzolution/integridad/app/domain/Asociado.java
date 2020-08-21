@@ -7,26 +7,23 @@ import java.util.UUID;
 
 @Entity
 @Data
-public class Placa {
+public class Asociado {
 
     @Id
     @GeneratedValue
     private UUID id;
-    private String name;
-    private String conductor;
-    private String cedula;
-    private Long fechaCaducidadLicencia;
-    private String tipoLicencia;
-    private String observacion;
+    private String apellidos;
+    private String nombres;
+    private String ruc;
+    private String correo;
+    private String telefono;
+    private String contacto;
+    private String telefonoContacto;
     private boolean active;
 
     @ManyToOne
     @JoinColumn(name = "user_client_id")
     private UserClient userClient;
-
-    @ManyToOne
-    @JoinColumn(name = "asociado_id")
-    private Asociado asociado;
 
     public void setFatherListToNull(){
         userClient.setListsNull();
