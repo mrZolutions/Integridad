@@ -1,7 +1,7 @@
 package com.mrzolution.integridad.app.services;
 
 import java.util.Properties;
-import javax.mail.Authenticator;
+    import javax.mail.Authenticator;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.PasswordAuthentication;
@@ -73,15 +73,15 @@ public class MailingService {
         
         props.put("mail.transport.protocol","smtp" );
         props.put("mail.smtp.starttls.enable","true" );
-        props.put("mail.smtp.ssl.enable", "false");
-        props.put("mail.smtp.host","smtpout.secureserver.net");
+        //props.put("mail.smtp.ssl.enable", "false");
+        props.put("mail.smtp.host","smtp.gmail.com");
 
         props.put("mail.smtp.auth","true");
-        props.put("mail.smtp.port","465");
+        props.put("mail.smtp.port","587");
         props.put("mail.debug","true");
-        props.put("mail.smtp.socketFactory.port","465");
-        props.put("mail.smtp.socketFactory.class","javax.net.ssl.SSLSocketFactory");
-        props.put("mail.smtp.socketFactory.fallback","false");
+        //props.put("mail.smtp.socketFactory.port","587");
+        //props.put("mail.smtp.socketFactory.class","javax.net.ssl.SSLSocketFactory");
+        //props.put("mail.smtp.socketFactory.fallback","false");
         
         Session session = Session.getInstance(props,
                 new Authenticator() {
