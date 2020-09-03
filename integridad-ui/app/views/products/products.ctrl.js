@@ -105,7 +105,7 @@ angular.module('integridadUiApp')
             } else {
                 var busqueda = variable.toUpperCase();
             };
-            var lineaIdFilter = vm.lineaFilter !== undefined ?  vm.lineaFilter.id : undefined;
+            var lineaIdFilter = vm.lineaFilter !== undefined && vm.lineaFilter !== null ?  vm.lineaFilter.id : undefined;
             if ($routeParams.subsidiaryId) {
                 productService.getLazyBySusidiaryId($routeParams.subsidiaryId, vm.page, busqueda, lineaIdFilter).then(function(response) {
                     vm.totalPages = response.totalPages;
