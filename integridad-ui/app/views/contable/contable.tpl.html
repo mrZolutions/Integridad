@@ -546,7 +546,7 @@
             <div class="panel-body">
                 <div class="row">
                     <div class="form-group col-md-11">
-                        <input ng-model="searchText" class="form-control" placeholder="Buscar">
+                        <input ng-model="searchTextCompEgre" class="form-control" placeholder="Buscar">
                     </div>
                 </div>
                 <table class="table table-striped">
@@ -563,7 +563,7 @@
                                 No hay Comprobantes de Egreso ingresados...
                             </td>
                         </tr>
-                        <tr ng-repeat="dailyCe in vm.dailybookCeList | orderBy:'dailyCeStringSeq':true">
+                        <tr ng-repeat="dailyCe in vm.dailybookCeList | orderBy:'dailyCeStringSeq':true | filter:searchTextCompEgre">
                             <td>{{dailyCe.dailyCeStringSeq}}</td>
                             <td>{{dailyCe.dateRecordBook | date : "dd/MM/yyyy"}}</td>
                             <td>{{dailyCe.generalDetail}}</td>
@@ -1262,7 +1262,7 @@
             <div class="panel-body">
                 <div class="row">
                     <div class="form-group col-md-11">
-                        <input ng-model="searchText" class="form-control" placeholder="Buscar">
+                        <input ng-model="searchTextCompIngr" class="form-control" placeholder="Buscar">
                     </div>
                 </div>
                 <table class="table table-striped">
@@ -1279,7 +1279,7 @@
                                 No hay Comprobantes de Ingreso ingresados...
                             </td>
                         </tr>
-                        <tr ng-repeat="dailyCi in vm.dailybookCiList | orderBy:'dailyCiStringSeq':true">
+                        <tr ng-repeat="dailyCi in vm.dailybookCiList | orderBy:'dailyCiStringSeq':true | filter:searchTextCompIngr">
                             <td>{{dailyCi.dailyCiStringSeq}}</td>
                             <td>{{dailyCi.dateRecordBook | date : "dd/MM/yyyy"}}</td>
                             <td>{{dailyCi.generalDetail}}</td>
@@ -1947,7 +1947,7 @@
             <div class="panel-body">
                 <div class="row">
                     <div class="form-group col-md-11">
-                        <input ng-model="searchText" class="form-control" placeholder="Buscar">
+                        <input ng-model="searchTextDaily" class="form-control" placeholder="Buscar">
                     </div>
                 </div>
                 <table class="table table-striped">
@@ -1964,7 +1964,7 @@
                                 No hay Diarios de Cuentas por Pagar ingresados...
                             </td>
                         </tr>
-                        <tr ng-repeat="dailycxp in vm.dailybookCxPList | orderBy:'payNumber':true">
+                        <tr ng-repeat="dailycxp in vm.dailybookCxPList | orderBy:'payNumber':true | filter:searchTextDaily">
                             <td>{{dailycxp.dailycxpStringSeq}}</td>
                             <td>{{dailycxp.dateRecordBook | date : "dd/MM/yyyy"}}</td>
                             <td>{{dailycxp.generalDetail}}</td>
@@ -2671,7 +2671,7 @@
             <div class="panel-body">
                 <div class="row">
                     <div class="form-group col-md-10">
-                        <input ng-model="searchText" class="form-control" placeholder="Buscar Clientes">
+                        <input ng-model="searchTextFactVent" class="form-control" placeholder="Buscar Clientes">
                     </div>
                     <!-- <div class="form-group col-md-2">
                         <button type = "button" title = "Comprobante de Factura-Venta Manual" class = "btn btn-success btn-sm" ng-click = "">
@@ -2697,7 +2697,7 @@
                                 No hay Clientes ingresados
                             </td>
                         </tr>
-                        <tr ng-repeat="client in vm.clientFvList | orderBy:'name' | filter:searchText">
+                        <tr ng-repeat="client in vm.clientFvList | orderBy:'name' | filter:searchTextFactVent">
                             <td>{{client.codApp}}</td>
                             <td>{{client.name}}</td>
                             <td>{{client.typeId}} - {{client.identification}}</td>
@@ -2729,7 +2729,7 @@
             <div class="panel-body">
                 <div class="row">
                     <div class="form-group col-md-11">
-                        <input ng-model="searchText" class="form-control" placeholder="Buscar">
+                        <input ng-model="searchTextFactVentCli" class="form-control" placeholder="Buscar">
                     </div>
                 </div>
                 <table class="table table-striped">
@@ -2746,7 +2746,7 @@
                                 No hay Comprobantes de Facturaci&oacute;n-venta ingresados...
                             </td>
                         </tr>
-                        <tr ng-repeat="dailyFv in vm.dailybookFvList | orderBy:'dailyFvStringSeq':true">
+                        <tr ng-repeat="dailyFv in vm.dailybookFvList | orderBy:'dailyFvStringSeq':true | filter:searchTextFactVentCli">
                             <td>{{dailyFv.dailyFvStringSeq}}</td>
                             <td>{{dailyFv.dateRecordBook | date : "dd/MM/yyyy"}}</td>
                             <td>{{dailyFv.generalDetail}}</td>
@@ -2767,7 +2767,7 @@
             </div>
             <div class="panel-footer">
                 <button type="button" title="Volver" class="btn btn-primary btn-sm"
-                        ng-click = "vm.dailybookCiList = undefined">
+                        ng-click = "vm.dailybookFvList = undefined">
                         <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
                 </button>
             </div>
