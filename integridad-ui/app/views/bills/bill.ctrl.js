@@ -140,9 +140,9 @@ angular.module('integridadUiApp')
         };
 
         function _getDailyCiSeqNumber() {
-            vm.numberAddedOne = parseInt(vm.user.cashier.dailyCiNumberSeq) + 1;
-            vm.dailyCiSeq = vm.numberAddedOne;
-            vm.dailyCiStringSeq = utilSeqService._pad_with_zeroes(vm.numberAddedOne, 6);
+            vm.numberAddedOneDailySeq = parseInt(vm.user.cashier.dailyCiNumberSeq) + 1;
+            vm.dailyCiSeq = vm.numberAddedOneDailySeq;
+            vm.dailyCiStringSeq = utilSeqService._pad_with_zeroes(vm.numberAddedOneDailySeq, 6);
         };
 
         vm.getDetailsOfBills = function() {
