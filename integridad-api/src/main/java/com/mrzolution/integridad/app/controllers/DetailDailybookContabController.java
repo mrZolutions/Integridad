@@ -1,5 +1,6 @@
 package com.mrzolution.integridad.app.controllers;
 
+import com.mrzolution.integridad.app.domain.report.AllDailyReport;
 import com.mrzolution.integridad.app.domain.report.EspecificMajorReport;
 import com.mrzolution.integridad.app.domain.report.GeneralMajorReport;
 import com.mrzolution.integridad.app.exceptions.BadRequestException;
@@ -49,6 +50,20 @@ public class DetailDailybookContabController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
         log.info("DetailDailybookContabController getGenMajorReportByUsrClntIdAndCodeCtbleAndDate DONE");
+        return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
+    }
+
+    //TODO reporte nuevo pedido por PABLO *********************************
+    @RequestMapping(method = RequestMethod.GET, value="rep/all/{id}/{dateOne}/{dateTwo}")
+    public ResponseEntity getAllDailyReportByUsrClntIdAndDate(@PathVariable("id") String id,@PathVariable("dateOne") long dateOne, @PathVariable("dateTwo") long dateTwo) {
+        List<AllDailyReport> response = null;
+        try {
+            response = service.getAllDailyReportByUserClntIdAndDate(id, dateOne, dateTwo);
+        } catch (BadRequestException e) {
+            log.error("DetailDailybookContabController getAllDailyReportByUsrClntIdAndDate Exception thrown: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+        log.info("DetailDailybookContabController getAllDailyReportByUsrClntIdAndDate DONE");
         return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
     }
 }
