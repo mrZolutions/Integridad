@@ -2,6 +2,7 @@ package com.mrzolution.integridad.app.services;
 
 import com.google.common.collect.Iterables;
 import com.mrzolution.integridad.app.domain.DetailDailybookContab;
+import com.mrzolution.integridad.app.domain.report.AllDailyReport;
 import com.mrzolution.integridad.app.domain.report.EspecificMajorReport;
 import com.mrzolution.integridad.app.domain.report.GeneralMajorReport;
 import com.mrzolution.integridad.app.repositories.DetailDailybookContabRepository;
@@ -212,5 +213,78 @@ public class DetailDailybookContabServices {
         generalMajorReportList.add(generalMajorReports);
         
         return generalMajorReportList;
+    }
+
+    public List<AllDailyReport> getAllDailyReportByUserClntIdAndDate(String id, long dateOne, long dateTwo){
+        log.info("DetailDailybookContabServices getAllDailyReportByUserClntIdAndDate: {}, {}, {}", id, dateOne, dateTwo);
+        Iterable<DetailDailybookContab> detailGen = detailDailybookContabRepository.findAllByUsrClntIdAndAndDate(id, dateOne, dateTwo);
+        List<AllDailyReport> arrayReturn = new ArrayList<AllDailyReport>();
+        long[] arrayValidator = {0};
+        String [] arrayValidatorThree = {null};
+        AllDailyReport [] arrayValidatorTwo = {null};
+
+        detailGen.forEach(detGen -> {
+            if(detGen.getDateDetailDailybook() != arrayValidator[0] || !detGen.getDailybookNumber().equals(arrayValidatorThree[0])){
+                if(arrayValidator[0] != 0){
+                    arrayReturn.add(arrayValidatorTwo[0]);
+                    arrayValidatorTwo[0] = null;
+                }
+                arrayValidator[0] = detGen.getDateDetailDailybook();
+                arrayValidatorThree[0] = detGen.getDailybookNumber();
+                SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+                String fechaBook = dateFormat.format(new Date(detGen.getDateDetailDailybook()));
+                String tipoDocumento = new String();
+                String clienteProveedor = new String();
+                String detalle = new String();
+                String numero =  detGen.getDailybookNumber();
+                String numeroFactura = new String();
+
+
+                if(detGen.getDailybookCg() != null){
+                    tipoDocumento = "CONTABILIDAD GENERAL";
+                    detalle = detGen.getDailybookCg().getGeneralDetail();
+                    clienteProveedor = "--";
+                    numeroFactura = "--";
+                }
+                if(detGen.getDailybookCe() != null){
+                    tipoDocumento = "COMPROBANTE EGRESO";
+                    detalle = detGen.getDailybookCe().getGeneralDetail();
+                    clienteProveedor = detGen.getDailybookCe().getClientProvName();
+                    numeroFactura = detGen.getDailybookCe().getBillNumber();
+                }
+                if(detGen.getDailybookCi() != null){
+                    tipoDocumento = "COMPROBANTE INGRESO";
+                    detalle = detGen.getDailybookCi().getGeneralDetail();
+                    clienteProveedor = detGen.getDailybookCi().getClientProvName();
+                    numeroFactura = detGen.getDailybookCi().getBillNumber();
+                }
+                if(detGen.getDailybookCxP() != null){
+                    tipoDocumento = "CUNETAS POR PAGAR";
+                    detalle = detGen.getDailybookCxP().getGeneralDetail();
+                    clienteProveedor = detGen.getDailybookCxP().getClientProvName();
+                    numeroFactura = detGen.getDailybookCxP().getBillNumber();
+                }
+                if(detGen.getDailybookFv() != null){
+                    tipoDocumento = "FACTURACION VENTAS";
+                    detalle = detGen.getDailybookFv().getGeneralDetail();
+                    clienteProveedor = detGen.getDailybookFv().getClientProvName();
+                    numeroFactura = detGen.getDailybookFv().getBillNumber();
+                }
+
+                AllDailyReport data = new AllDailyReport(fechaBook, tipoDocumento, clienteProveedor,
+                        detalle, numero, numeroFactura, Double.valueOf(0), Double.valueOf(0));
+                arrayValidatorTwo[0] = data;
+
+            }
+
+            if(detGen.getDeber() != null && !detGen.getDeber().equals("null")){
+                arrayValidatorTwo[0].setDeber(Double.sum(Double.valueOf(detGen.getDeber()), arrayValidatorTwo[0].getDeber()));
+            }
+            if(detGen.getHaber() != null && !detGen.getHaber().equals("null")){
+                arrayValidatorTwo[0].setHaber(Double.sum(Double.valueOf(detGen.getHaber()), arrayValidatorTwo[0].getHaber()));
+            }
+        });
+
+        return arrayReturn;
     }
 }

@@ -180,6 +180,13 @@
                             Reporte Proveedores
                     </button>
                 </div>
+                <div class="form-group col-md-6">
+                    <p><b>Diarios</b></p>
+                    <button type="button" class="btn btn-primary btn-sm"
+                            ng-click="vm.getReportDiarios()">
+                            Reporte Diarios
+                    </button>
+                </div>
             </div>
             <div ng-show="vm.reportList.length === 0">
                 <br/>
@@ -955,6 +962,36 @@
                     <td>{{data.email}}</td>
                     <td>{{data.providerType}}</td>
                     <td>{{data.contact}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!--Reporte de Diarios-->
+    <div class="table-responsive" ng-if="vm.isProductReportList === '21'" style="overflow-x: auto">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Fecha</th>
+                    <th>Tipo</th>
+                    <th>Cliente / Proveedor</th>
+                    <th>Detalle</th>
+                    <th>Número Diario</th>
+                    <th>Número Factura</th>
+                    <th>Debe</th>
+                    <th>Haber</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="data in vm.reportList">
+                    <td>{{data.fecha}}</td>
+                    <td>{{data.tipoDocumento}}</td>
+                    <td>{{data.clienteProveedor}}</td>
+                    <td>{{data.descripcion}}</td>
+                    <td>{{data.numero}}</td>
+                    <td>{{data.numeroFactura}}</td>
+                    <td>{{data.deber.toFixed(4)}}</td>
+                    <td>{{data.haber.toFixed(4)}}</td>
                 </tr>
             </tbody>
         </table>
