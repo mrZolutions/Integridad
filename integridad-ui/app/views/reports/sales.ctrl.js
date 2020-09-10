@@ -10,7 +10,7 @@ angular.module('integridadUiApp')
     .controller('ReportSalesCtrl', function(_, holderService, creditsbillService, billService, eretentionService, eretentionClientService,
                                             cellarService, creditNoteCellarService, billOfflineService, paymentService, paymentDebtsService,
                                             creditsDebtsService, $location, debtsToPayService, consumptionService, creditNoteService,
-                                            productService, clientService, providerService) {
+                                            productService, clientService, providerService, contableService) {
         var vm = this;
         var today = new Date();
         $('#pickerBillDateOne').data("DateTimePicker").date(today);
@@ -369,6 +369,29 @@ angular.module('integridadUiApp')
                 vm.loading = false;
                 vm.error = error.data;
             });
+        }
+
+        vm.getReportDiarios = function() {
+            vm.error = undefined;
+            vm.reportName = 'Reporte de diarios';
+            vm.isProductReportList = '21';
+            vm.reportList = undefined;
+            vm.loading = true;
+            var dateOne = $('#pickerBillDateOne').data("DateTimePicker").date().toDate().getTime();
+            var dateTwo = $('#pickerBillDateTwo').data("DateTimePicker").date().toDate().getTime();
+            if(dateTwo - dateOne > 2764800000){
+                vm.loading = false;
+                vm.error = "Reporte de máximo 31 días"
+            } else {
+                contableService.getDailysTotal(vm.userClientId, dateOne, dateTwo )
+                    .then(function (response) {
+                        vm.reportList = response;
+                        vm.loading = false;
+                    }).catch(function (error) {
+                        vm.loading = false;
+                        vm.error = error.data;
+                    });
+            }
         }
 
         vm.getTotal = function(total, subTotal) {
@@ -783,6 +806,21 @@ angular.module('integridadUiApp')
                 
                         dataReport.push(data);
                     });
+                    case '21':
+                        _.each(vm.reportList, function(prov) {
+                            var data = {
+                                FEHCA: prov.fecha,
+                                TIPO_DIARIO: prov.tipoDocumento,
+                                CLIENTE_PROVEEDOR: prov.clienteProveedor,
+                                DETALLE: prov.descripcion,
+                                NUMERO: prov.numero,
+                                NUMERO_FACTURA: prov.numeroFactura,
+                                DEBE: prov.deber.toFixed(4),
+                                HABER: prov.haber.toFixed(4)
+                            };
+                    
+                            dataReport.push(data);
+                        });
                 break;
             };
             

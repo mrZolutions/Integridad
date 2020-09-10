@@ -223,4 +223,10 @@ angular
                 return response.data;
             });
         };
+
+        this.getDailysTotal = function(id, dateOne, dateTwo) {
+            return securityService.get('/dailybook/details/rep/all/' + id + '/' + '/' + dateOne + '/' + dateTwo).then(function successCallback(response) {
+                return response.data;
+            });
+        }
 });
