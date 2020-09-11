@@ -428,6 +428,7 @@ angular.module('integridadUiApp')
                             CLIENTE: bill.clientName,
                             RUC_CI: bill.ruc,
                             NUMERO_FACTURA: bill.billNumber,
+                            NUMERO_EN_SRI: bill.billSeq,
                             NUMERO_AUTORIZACION: bill.authorizationNumber,
                             ESTADO: bill.status,
                             OTI: bill.oti,

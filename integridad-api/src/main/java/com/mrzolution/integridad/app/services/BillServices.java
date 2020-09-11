@@ -13,6 +13,7 @@ import com.mrzolution.integridad.app.domain.report.CashClosureReport;
 import com.mrzolution.integridad.app.domain.report.ItemReport;
 import com.mrzolution.integridad.app.domain.report.SalesReport;
 import com.mrzolution.integridad.app.repositories.*;
+import org.apache.commons.lang3.StringUtils;
 import org.json.simple.parser.ContainerFactory;
 import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -449,9 +450,12 @@ public class BillServices {
             String status = bill.isActive() ? "ACTIVA" : "ANULADA";
             String endDate = dateFormat.format(new Date(endDateLong));
 
+            String seqSRI = bill.getSubsidiary().getThreeCode() + '-' +
+                    bill.getUserIntegridad().getCashier().getThreeCode() + '-' + StringUtils.leftPad(bill.getBillSeq(), 9, "0");
+
             SalesReport saleReport= new SalesReport(date, bill.getClient().getCodApp(), bill.getClient().getName(), bill.getClient().getIdentification(),
 			bill.getStringSeq(), bill.getClaveDeAcceso(), status, bill.getOtir(), bill.getBaseTaxes(), bill.getDiscount(),bill.getBaseNoTaxes(), bill.getIva(), bill.getTotal(), endDate, bill.getUserIntegridad().getCashier().getNameNumber(),
-			null, bill.getSubsidiary().getName(), bill.getUserIntegridad().getFirstName() + " " + bill.getUserIntegridad().getLastName(), paymentMode);
+			null, bill.getSubsidiary().getName(), bill.getUserIntegridad().getFirstName() + " " + bill.getUserIntegridad().getLastName(), paymentMode, seqSRI);
 
             salesReportList.add(saleReport);
         });
