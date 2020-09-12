@@ -217,13 +217,19 @@ public class DetailDailybookContabServices {
 
     public List<AllDailyReport> getAllDailyReportByUserClntIdAndDate(String id, long dateOne, long dateTwo){
         log.info("DetailDailybookContabServices getAllDailyReportByUserClntIdAndDate: {}, {}, {}", id, dateOne, dateTwo);
-        Iterable<DetailDailybookContab> detailGen = detailDailybookContabRepository.findAllByUsrClntIdAndAndDate(id, dateOne, dateTwo);
+        Iterable<DetailDailybookContab> detailCe = detailDailybookContabRepository.findDailyCeByUsrClntIdAndAndDate(id, dateOne, dateTwo);
+        Iterable<DetailDailybookContab> detailCg = detailDailybookContabRepository.findDailyCgByUsrClntIdAndAndDate(id, dateOne, dateTwo);
+        Iterable<DetailDailybookContab> detailCi = detailDailybookContabRepository.findDailyCiByUsrClntIdAndAndDate(id, dateOne, dateTwo);
+        Iterable<DetailDailybookContab> detailCxp = detailDailybookContabRepository.findDailyCxpByUsrClntIdAndAndDate(id, dateOne, dateTwo);
+        Iterable<DetailDailybookContab> detailFv = detailDailybookContabRepository.findDailyFvByUsrClntIdAndAndDate(id, dateOne, dateTwo);
+
+        Iterable<DetailDailybookContab> detailTotal = Iterables.concat(detailCe, detailCg, detailCi, detailCxp, detailFv);
         List<AllDailyReport> arrayReturn = new ArrayList<AllDailyReport>();
         long[] arrayValidator = {0};
         String [] arrayValidatorThree = {null};
         AllDailyReport [] arrayValidatorTwo = {null};
 
-        detailGen.forEach(detGen -> {
+        detailTotal.forEach(detGen -> {
             if(detGen.getDateDetailDailybook() != arrayValidator[0] || !detGen.getDailybookNumber().equals(arrayValidatorThree[0])){
                 if(arrayValidator[0] != 0){
                     arrayReturn.add(arrayValidatorTwo[0]);
@@ -259,7 +265,7 @@ public class DetailDailybookContabServices {
                     numeroFactura = detGen.getDailybookCi().getBillNumber();
                 }
                 if(detGen.getDailybookCxP() != null){
-                    tipoDocumento = "CUNETAS POR PAGAR";
+                    tipoDocumento = "CUENTAS POR PAGAR";
                     detalle = detGen.getDailybookCxP().getGeneralDetail();
                     clienteProveedor = detGen.getDailybookCxP().getClientProvName();
                     numeroFactura = detGen.getDailybookCxP().getBillNumber();
@@ -284,6 +290,11 @@ public class DetailDailybookContabServices {
                 arrayValidatorTwo[0].setHaber(Double.sum(Double.valueOf(detGen.getHaber()), arrayValidatorTwo[0].getHaber()));
             }
         });
+
+        if(arrayValidatorTwo[0] != null){
+            arrayReturn.add(arrayValidatorTwo[0]);
+            arrayValidatorTwo[0] = null;
+        }
 
         return arrayReturn;
     }
