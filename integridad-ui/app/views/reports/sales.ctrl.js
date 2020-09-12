@@ -807,21 +807,21 @@ angular.module('integridadUiApp')
                 
                         dataReport.push(data);
                     });
-                    case '21':
-                        _.each(vm.reportList, function(prov) {
-                            var data = {
-                                FEHCA: prov.fecha,
-                                TIPO_DIARIO: prov.tipoDocumento,
-                                CLIENTE_PROVEEDOR: prov.clienteProveedor,
-                                DETALLE: prov.descripcion,
-                                NUMERO: prov.numero,
-                                NUMERO_FACTURA: prov.numeroFactura,
-                                DEBE: prov.deber.toFixed(4),
-                                HABER: prov.haber.toFixed(4)
-                            };
-                    
-                            dataReport.push(data);
-                        });
+                case '21':
+                    _.each(vm.reportList, function (prov) {
+                        var data = {
+                            FECHA: prov.fecha,
+                            TIPO_DIARIO: prov.tipoDocumento,
+                            CLIENTE_PROVEEDOR: prov.clienteProveedor,
+                            DETALLE: prov.descripcion,
+                            NUMERO: prov.numero,
+                            NUMERO_FACTURA: prov.numeroFactura,
+                            DEBE: parseFloat(prov.deber.toFixed(4)),
+                            HABER: parseFloat(prov.haber.toFixed(4))
+                        };
+
+                        dataReport.push(data);
+                    });
                 break;
             };
             
