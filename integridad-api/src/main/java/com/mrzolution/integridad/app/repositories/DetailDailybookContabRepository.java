@@ -56,22 +56,22 @@ public interface DetailDailybookContabRepository extends CrudRepository<DetailDa
     Iterable<DetailDailybookContab> findAllByUsrClntIdAndAndDate(@Param("id") String id, @Param("dateOne") long dateOne, @Param("dateTwo") long dateTwo);
 
     @Query("SELECT d FROM DetailDailybookContab d WHERE d.userClientId = (:id) AND  (d.dateDetailDailybook >= (:dateOne) AND d.dateDetailDailybook <= (:dateTwo)) AND d.active = true " +
-            "AND d.dailybookCe is not NULL GROUP BY d.dailybookCe, d.id ORDER BY d.dateDetailDailybook DESC")
+            "AND d.dailybookCe is not NULL ORDER BY d.dailybookCe, d.dateDetailDailybook DESC")
     Iterable<DetailDailybookContab> findDailyCeByUsrClntIdAndAndDate(@Param("id") String id, @Param("dateOne") long dateOne, @Param("dateTwo") long dateTwo);
 
     @Query("SELECT d FROM DetailDailybookContab d WHERE d.userClientId = (:id) AND  (d.dateDetailDailybook >= (:dateOne) AND d.dateDetailDailybook <= (:dateTwo)) AND d.active = true " +
-            "AND d.dailybookCg is not NULL GROUP BY d.dailybookCg, d.id ORDER BY d.dateDetailDailybook DESC")
+            "AND d.dailybookCg is not NULL ORDER BY d.dailybookCg, d.dateDetailDailybook DESC")
     Iterable<DetailDailybookContab> findDailyCgByUsrClntIdAndAndDate(@Param("id") String id, @Param("dateOne") long dateOne, @Param("dateTwo") long dateTwo);
 
     @Query("SELECT d FROM DetailDailybookContab d WHERE d.userClientId = (:id) AND  (d.dateDetailDailybook >= (:dateOne) AND d.dateDetailDailybook <= (:dateTwo)) AND d.active = true " +
-            "AND d.dailybookCi is not NULL GROUP BY d.dailybookCi, d.id ORDER BY d.dateDetailDailybook DESC")
+            "AND d.dailybookCi is not NULL ORDER BY d.dailybookCi, d.dateDetailDailybook DESC")
     Iterable<DetailDailybookContab> findDailyCiByUsrClntIdAndAndDate(@Param("id") String id, @Param("dateOne") long dateOne, @Param("dateTwo") long dateTwo);
 
     @Query("SELECT d FROM DetailDailybookContab d WHERE d.userClientId = (:id) AND  (d.dateDetailDailybook >= (:dateOne) AND d.dateDetailDailybook <= (:dateTwo)) AND d.active = true " +
-            "AND d.dailybookCxP is not NULL GROUP BY d.dailybookCxP, d.id ORDER BY d.dateDetailDailybook DESC")
+            "AND d.dailybookCxP is not NULL ORDER BY d.dailybookCxP, d.dateDetailDailybook DESC")
     Iterable<DetailDailybookContab> findDailyCxpByUsrClntIdAndAndDate(@Param("id") String id, @Param("dateOne") long dateOne, @Param("dateTwo") long dateTwo);
 
     @Query("SELECT d FROM DetailDailybookContab d WHERE d.userClientId = (:id) AND  (d.dateDetailDailybook >= (:dateOne) AND d.dateDetailDailybook <= (:dateTwo)) AND d.active = true " +
-            "AND d.dailybookFv is not NULL GROUP BY d.dailybookFv, d.id ORDER BY d.dateDetailDailybook DESC")
+            "AND d.dailybookFv is not NULL ORDER BY d.dailybookFv, d.dateDetailDailybook DESC")
     Iterable<DetailDailybookContab> findDailyFvByUsrClntIdAndAndDate(@Param("id") String id, @Param("dateOne") long dateOne, @Param("dateTwo") long dateTwo);
 }
