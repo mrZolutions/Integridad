@@ -809,8 +809,14 @@ angular.module('integridadUiApp')
                     });
                 case '21':
                     _.each(vm.reportList, function (prov) {
+                        var fechaSplitted = prov.fecha.split('/')
+                        var dia = fechaSplitted[0];
+                        var mes = fechaSplitted[1];
+                        fechaSplitted[0] = mes;
+                        fechaSplitted[1] = dia;
+                        var fecha = fechaSplitted.join('/')
                         var data = {
-                            FECHA: prov.fecha,
+                            FECHA: new Date(fecha),
                             TIPO_DIARIO: prov.tipoDocumento,
                             CLIENTE_PROVEEDOR: prov.clienteProveedor,
                             DETALLE: prov.descripcion,
