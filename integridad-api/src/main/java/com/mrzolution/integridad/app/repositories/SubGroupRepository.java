@@ -19,4 +19,7 @@ public interface SubGroupRepository extends CrudRepository<SubGroup, UUID>{
 	@Query("SELECT p FROM SubGroup p WHERE p.groupLine.id = (:id) and p.active = true")
 	Iterable<SubGroup> findByGroupLineIdAndActive(@Param("id") UUID groupLineId);
 
+	@Query("SELECT p FROM SubGroup p WHERE p.groupLine.line.userClient.id = (:id) and p.name LIKE (%:nameSub)")
+	SubGroup findByNameAndUserClient(@Param("nameSub")String name, @Param("id") UUID userClientId);
+
 }
