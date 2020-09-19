@@ -36,4 +36,10 @@ angular
                 return response.data;
             });
         };
+
+        this.createList = function(clientes) {
+            return securityService.post('/client/list', clientes).then(function successCallback(response) {
+                return response.data;
+            });
+        };
 });

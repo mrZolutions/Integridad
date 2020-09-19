@@ -163,6 +163,7 @@ public class ProductController {
         UUID lineId = null;
         if( !"undefined".equals(lineIdParam)) lineId = UUID.fromString(lineIdParam);
 	try {
+	    System.out.println(subsidiaryId + " - " + variable + " - " + lineId);
             response = service.getProductsActivesBySubsidiaryId(subsidiaryId, variable, lineId, new PageRequest(page, 50, Sort.Direction.ASC, "product"));
 	} catch (BadRequestException e) {
             log.error("ProductController getProductsActivesBySubsidiaryId Exception thrown: {}", e.getMessage());	    
@@ -235,5 +236,18 @@ public class ProductController {
         }
         log.info("ProductController getLastCodeActiveByUserClientId DONE");
         return new ResponseEntity<String>(response, HttpStatus.OK);
+    }
+
+    @RequestMapping(method = RequestMethod.POST, value="/list")
+    public ResponseEntity createProductLista(@RequestBody List<Product> products) {
+        int response = 0;
+        try {
+            response = service.createProductList(products);
+        } catch (BadRequestException e) {
+            log.error("ProductController createProduct Exception thrown: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+        log.info("ProductController createProduct DONE");
+        return new ResponseEntity<Integer>(response, HttpStatus.CREATED);
     }
 }
