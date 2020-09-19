@@ -110,4 +110,10 @@ angular
                 return response.data;
             });
         };
+
+        this.createList = function(productos) {
+            return securityService.post('/product/list', productos).then(function successCallback(response) {
+                return response.data;
+            });
+        };
 });
