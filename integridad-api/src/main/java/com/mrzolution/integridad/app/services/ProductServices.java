@@ -7,6 +7,7 @@ import java.util.UUID;
 import com.google.common.collect.Iterables;
 import com.mrzolution.integridad.app.domain.CuentaContableByProduct;
 import com.mrzolution.integridad.app.domain.ProductBySubsidiary;
+import com.mrzolution.integridad.app.domain.SubGroup;
 import com.mrzolution.integridad.app.exceptions.BadRequestException;
 import com.mrzolution.integridad.app.father.Father;
 import com.mrzolution.integridad.app.father.FatherManageChildren;
@@ -33,6 +34,8 @@ public class ProductServices {
     CuentaContableByProductChildRepository cuentaContableByProductChildRepository;
     @Autowired
     CuentaContableByProductRepository cuentaContableByProductRepository;
+    @Autowired
+    SubGroupRepository subGroupRepository;
     
     public String observ;
     public String grupo;
@@ -398,5 +401,23 @@ public class ProductServices {
             product.getBrand().setListsNull();
         }
         product.setFatherListToNull();
+    }
+
+    public int createProductList(List<Product> products) {
+        SubGroup sub = subGroupRepository.findByNameAndUserClient("GENERICA", products.get(0).getUserClient().getId());
+
+        int cont = 0;
+        for(Product product: products){
+            product.setSubgroup(sub);
+            List<ProductBySubsidiary> productBySubsidiaryList = product.getProductBySubsidiaries();
+            product.setListsNull();
+            Product saved = productRepository.save(product);
+
+            createProductChildren(saved, productBySubsidiaryList, null);
+
+            cont ++;
+        }
+        log.info("ProductServices createProductList products created: {} of {}", cont, products.size());
+        return cont;
     }
 }

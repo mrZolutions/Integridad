@@ -844,6 +844,56 @@ angular.module('integridadUiApp')
             vm.cuentaContableCost = undefined;
         };
 
+        vm.import = function() {
+            var f = document.getElementById('file').files[0];
+            if(f){
+                var r = new FileReader();
+                r.onload = function(event) {
+                    var data = event.target.result;
+                    var workbook = XLSX.read(data, {
+                    type: "binary"
+                    });
+                    workbook.SheetNames.forEach(function(sheet) {
+                        var productos = XLSX.utils.sheet_to_row_object_array(
+                        workbook.Sheets[sheet]
+                        );
+                        
+                        _.each(productos, function(newProduct){
+                            var productBySubsidiary = {
+                                dateCreated: new Date().getTime(),
+                                quantity: newProduct.quantity,
+                                subsidiary: vm.user.subsidiary,
+                                active: true
+                            };
+
+                            newProduct.productType = _.find(vm.productTypes, function(t){ return t.code == newProduct.type; });
+                            newProduct.userClient = vm.user.subsidiary.userClient;
+                            newProduct.dateCreated = new Date().getTime();
+                            newProduct.lastDateUpdated = new Date().getTime();
+                            newProduct.active = true;
+                            newProduct.quantityCellar = 0;
+                            newProduct.costCellar = newProduct.averageCost;
+                            newProduct.costEach = newProduct.averageCost;
+                            newProduct.averageCostSuggested = newProduct.averageCost;
+                            newProduct.productBySubsidiaries=[productBySubsidiary]
+                        })
+
+                        productService.createList(productos).then(function(response) {
+                            _activate();
+                            vm.error = undefined;
+                            $('#modalUpload').modal('hide');
+                            vm.success = 'Registros creados con exito';
+                        }).catch(function(error) {
+                            vm.loading = false;
+                            vm.error = error.data;
+                        });
+
+                    });
+                };
+                r.readAsBinaryString(f);
+            } 
+        };
+
         vm.exit = function() {
             $location.path('/home');
         };

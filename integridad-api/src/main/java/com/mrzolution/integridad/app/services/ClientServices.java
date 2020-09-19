@@ -120,4 +120,17 @@ public class ClientServices {
         client.setBills(billList);
     }
 
+    public int createClienteList(List<Client> clientes) {
+        int cont = 0;
+        for(Client client : clientes){
+            if(client.getCodApp() == null){
+                throw new BadRequestException("Debe tener el codigo de aplicacion");
+            }
+            clientRepository.save(client);
+            cont ++;
+        }
+
+        log.info("ClienteServices createClienteList clientes created: {} of {}", cont, clientes.size());
+        return cont;
+    }
 }

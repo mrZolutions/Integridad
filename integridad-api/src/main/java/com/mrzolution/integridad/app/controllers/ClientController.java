@@ -96,4 +96,17 @@ public class ClientController {
         log.info("ClientController getClientsReport DONE");
         return new ResponseEntity<List>(response, HttpStatus.ACCEPTED);
     }
+
+    @RequestMapping(method = RequestMethod.POST, value="/list")
+    public ResponseEntity createClientesList(@RequestBody List<Client> clientes) {
+        int response = 0;
+        try {
+            response = service.createClienteList(clientes);
+        } catch(BadRequestException e) {
+            log.error("CuentaContableController createCuentaContableList Exception thrown: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+        log.info("CuentaContableController createCuentaContableList DONE");
+        return new ResponseEntity<Integer>(response, HttpStatus.CREATED);
+    }
 }
