@@ -13,6 +13,7 @@ import com.mrzolution.integridad.app.repositories.PagoDebtsChildRepository;
 import com.mrzolution.integridad.app.repositories.PagoDebtsRepository;
 import com.mrzolution.integridad.app.repositories.PaymentDebtsRepository;
 import com.mrzolution.integridad.app.repositories.RetentionRepository;
+import com.mrzolution.integridad.app.repositories.DailybookCxPRepository;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -56,6 +57,8 @@ public class DebtsToPayServices {
     ComprobantePagoServices comprobantePagoServices;
     @Autowired
     CashierServices cashierServices;
+    @Autowired
+    DailybookCxPRepository dailybookCxPRepository;
     
     public String debtsId = "";
     public UUID retentionId;
@@ -405,6 +408,15 @@ public class DebtsToPayServices {
                     }
                 }
             }
+
+            Iterable<DailybookCxP> dailys = dailybookCxPRepository.findDailybookCxPByUserClientIdAndProvIdAndBillNumber(userClientId, debt.getProvider().getId(), debt.getBillNumber());
+            String[] dailyNumber = {""};
+            dailys.forEach(daily -> {
+                daily.setFatherListToNull();
+                daily.setListsNull();
+                dailyNumber[0] = daily.getDailycxpStringSeq();
+            });
+
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
             String date = dateFormat.format(new Date(debt.getFecha()));
             String status = debt.isActive() ? "ACTIVA" : "ANULADA";
@@ -412,7 +424,7 @@ public class DebtsToPayServices {
             
             DebtsReport debtsReport = new DebtsReport(date, debt.getProvider().getCodeIntegridad(), debt.getProvider().getRazonSocial(), debt.getProvider().getRuc(), debt.getDebtsSeq(), debt.getBillNumber(), debt.getAuthorizationNumber(), debt.getBuyTypeVoucher(), debt.getPurchaseType(),
                                           status, debt.getObservacion(), debt.getRetentionNumber(), debt.getSubTotalDoce(), debt.getIva(), debt.getSubTotalCero(), debt.getTotal(), endDate, debt.getUserIntegridad().getCashier().getNameNumber(), debt.getSubsidiary().getName(),
-                                          debt.getUserIntegridad().getFirstName() + " " + debt.getUserIntegridad().getLastName());
+                                          debt.getUserIntegridad().getFirstName() + " " + debt.getUserIntegridad().getLastName(), dailyNumber[0]);
             
             debtsReportList.add(debtsReport);
         });
