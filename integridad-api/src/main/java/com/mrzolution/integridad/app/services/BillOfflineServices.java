@@ -401,73 +401,75 @@ public class BillOfflineServices {
     }
 
     private void saveDailyBookFv(BillOffline saved, List<DetailOffline> details){
-        DailybookFv dailybookFv = new DailybookFv();
+        if(saved.getClient().getCodConta() != null){
+            DailybookFv dailybookFv = new DailybookFv();
 
-        dailybookFv.setActive(true);
-        dailybookFv.setDateRecordBook(saved.getDateCreated());
-        dailybookFv.setBillNumber(saved.getStringSeq());
-        dailybookFv.setClientProvName(saved.getClient().getName());
-        //TODO change this two types (fields) -*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
-        dailybookFv.setCodeTypeContab("6");
-        dailybookFv.setTypeContab("COMP. DE FACT-VENTA");
-        dailybookFv.setGeneralDetail("FACTURA N. " + saved.getStringSeq());
+            dailybookFv.setActive(true);
+            dailybookFv.setDateRecordBook(saved.getDateCreated());
+            dailybookFv.setBillNumber(saved.getStringSeq());
+            dailybookFv.setClientProvName(saved.getClient().getName());
+            //TODO change this two types (fields) -*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+            dailybookFv.setCodeTypeContab("6");
+            dailybookFv.setTypeContab("COMP. DE FACT-VENTA");
+            dailybookFv.setGeneralDetail("FACTURA N. " + saved.getStringSeq());
 
-        Long newSeq = saved.getUserIntegridad().getCashier().getDailyFvNumberSeq() + 1;
-        String sequence = String.valueOf(newSeq);
+            Long newSeq = saved.getUserIntegridad().getCashier().getDailyFvNumberSeq() + 1;
+            String sequence = String.valueOf(newSeq);
 
-        dailybookFv.setDailyFvSeq(sequence);
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < 6 - sequence.length(); i++) {
-            sb.append('0');
-        }
-        dailybookFv.setDailyFvStringSeq(sb.toString() + sequence);
-        dailybookFv.setDailyFvStringUserSeq("ASIENTO DE VENTA GENERADO " + sb.toString() + sequence);
-        dailybookFv.setSubTotalDoce(saved.getBaseTaxes());
-        dailybookFv.setSubTotalCero(saved.getBaseNoTaxes());
-        dailybookFv.setIva(saved.getIva());
-        dailybookFv.setTotal(saved.getTotal());
-        dailybookFv.setClient(saved.getClient());
-        dailybookFv.setUserIntegridad(saved.getUserIntegridad());
-        dailybookFv.setSubsidiary(saved.getSubsidiary());
+            dailybookFv.setDailyFvSeq(sequence);
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < 6 - sequence.length(); i++) {
+                sb.append('0');
+            }
+            dailybookFv.setDailyFvStringSeq(sb.toString() + sequence);
+            dailybookFv.setDailyFvStringUserSeq("ASIENTO DE VENTA GENERADO " + sb.toString() + sequence);
+            dailybookFv.setSubTotalDoce(saved.getBaseTaxes());
+            dailybookFv.setSubTotalCero(saved.getBaseNoTaxes());
+            dailybookFv.setIva(saved.getIva());
+            dailybookFv.setTotal(saved.getTotal());
+            dailybookFv.setClient(saved.getClient());
+            dailybookFv.setUserIntegridad(saved.getUserIntegridad());
+            dailybookFv.setSubsidiary(saved.getSubsidiary());
 
-        List<DetailDailybookContab> dailyDetails = new ArrayList<>();
-        CuentaContable cuenta = cuentaContableRepository.findByUserClientAndCode(saved.getUserIntegridad().getSubsidiary().getUserClient().getId(), saved.getClient().getCodConta());
-        dailyDetails.add(createDetialDailySale(saved, sb.toString() + sequence, saved.getTotal(), null, saved.getClient().getCodConta(), cuenta.getDescription()));
+            List<DetailDailybookContab> dailyDetails = new ArrayList<>();
+            CuentaContable cuenta = cuentaContableRepository.findByUserClientAndCode(saved.getUserIntegridad().getSubsidiary().getUserClient().getId(), saved.getClient().getCodConta());
+            dailyDetails.add(createDetialDailySale(saved, sb.toString() + sequence, saved.getTotal(), null, saved.getClient().getCodConta(), cuenta.getDescription()));
 
-        ConfigCuentas configCuentas = configCuentasServices.getCuentasByUserCliendIdAndOptionCode(saved.getSubsidiary().getUserClient().getId(), "IVAVENTAS");
-        dailyDetails.add(createDetialDailySale(saved, sb.toString() + sequence, null,
-                saved.getIva(), configCuentas == null ? "-" : configCuentas.getCode(), configCuentas == null ? "-" :configCuentas.getDescription()));
+            ConfigCuentas configCuentas = configCuentasServices.getCuentasByUserCliendIdAndOptionCode(saved.getSubsidiary().getUserClient().getId(), "IVAVENTAS");
+            dailyDetails.add(createDetialDailySale(saved, sb.toString() + sequence, null,
+                    saved.getIva(), configCuentas == null ? "-" : configCuentas.getCode(), configCuentas == null ? "-" :configCuentas.getDescription()));
 
-        Map<CuentaContable, Double> accounts = new HashMap<>();
-        for(DetailOffline det : details){
-            Iterable<CuentaContableByProduct> cuentas =  cuentaContableByProductRepository.findByProductId(det.getProduct().getId());
-            List<CuentaContableByProduct> cuentasByProduct = Lists.newArrayList(cuentas);
-            for(int i = 0; i < cuentasByProduct.size(); i++){
-                if("VENTA".equals(cuentasByProduct.get(i).getType())){
-                    Double value = accounts.get(cuentasByProduct.get(i).getCuentaContable());
-                    if(accounts.isEmpty() || value == null){
-                        accounts.put(cuentasByProduct.get(i).getCuentaContable(), det.getTotal());
-                    } else {
-                        accounts.replace(cuentasByProduct.get(i).getCuentaContable(), value + det.getTotal());
+            Map<CuentaContable, Double> accounts = new HashMap<>();
+            for(DetailOffline det : details){
+                Iterable<CuentaContableByProduct> cuentas =  cuentaContableByProductRepository.findByProductId(det.getProduct().getId());
+                List<CuentaContableByProduct> cuentasByProduct = Lists.newArrayList(cuentas);
+                for(int i = 0; i < cuentasByProduct.size(); i++){
+                    if("VENTA".equals(cuentasByProduct.get(i).getType())){
+                        Double value = accounts.get(cuentasByProduct.get(i).getCuentaContable());
+                        if(accounts.isEmpty() || value == null){
+                            accounts.put(cuentasByProduct.get(i).getCuentaContable(), det.getTotal());
+                        } else {
+                            accounts.replace(cuentasByProduct.get(i).getCuentaContable(), value + det.getTotal());
+                        }
+                        i = cuentasByProduct.size();
                     }
-                    i = cuentasByProduct.size();
                 }
             }
+
+            for(Map.Entry<CuentaContable, Double> entry : accounts.entrySet()){
+                CuentaContable cuentaContable = entry.getKey();
+                dailyDetails.add(createDetialDailySale(saved, sb.toString() + sequence, null, entry.getValue(), cuentaContable.getCode(), cuentaContable.getDescription()));
+            };
+
+            dailybookFv.setDetailDailybookContab(dailyDetails);
+            DailybookFv  dailybookFvSaved = dailybookFvServices.createDailybookFv(dailybookFv);
+
+            Cashier cahsierToUpdate = cashierRepository.findOne(saved.getUserIntegridad().getCashier().getId());
+            cahsierToUpdate.setDailyFvNumberSeq(newSeq);
+            cashierRepository.save(cahsierToUpdate);
+
+            log.info("BillServices createBill dailyFV created:{}", dailybookFvSaved.getId());
         }
-
-        for(Map.Entry<CuentaContable, Double> entry : accounts.entrySet()){
-            CuentaContable cuentaContable = entry.getKey();
-            dailyDetails.add(createDetialDailySale(saved, sb.toString() + sequence, null, entry.getValue(), cuentaContable.getCode(), cuentaContable.getDescription()));
-        };
-
-        dailybookFv.setDetailDailybookContab(dailyDetails);
-        DailybookFv  dailybookFvSaved = dailybookFvServices.createDailybookFv(dailybookFv);
-
-        Cashier cahsierToUpdate = cashierRepository.findOne(saved.getUserIntegridad().getCashier().getId());
-        cahsierToUpdate.setDailyFvNumberSeq(newSeq);
-        cashierRepository.save(cahsierToUpdate);
-
-        log.info("BillServices createBill dailyFV created:{}", dailybookFvSaved.getId());
     }
 
     private DetailDailybookContab createDetialDailySale(BillOffline saved, String sequence, Double deber, Double haber, String codeConta, String descConta){
