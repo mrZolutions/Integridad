@@ -569,6 +569,7 @@ angular.module('integridadUiApp')
                             RUC: debt.ruc,
                             NUMERO_CUENTA: debt.debtNumber,
                             NUMERO_FACTURA: debt.billNumber,
+                            NUMERO_DIARIO: debt.dailyNumber,
                             NUMERO_AUTORIZACION: debt.authorizationNumber,
                             COMP_COMPRA: debt.buyTypeVoucher,
                             COD_SUSTENTO: debt.purchaseType,
