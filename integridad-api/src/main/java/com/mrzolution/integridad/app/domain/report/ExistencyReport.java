@@ -18,14 +18,14 @@ public class ExistencyReport {
     private Double costCredit;
     private Double costMajor;
     private long maxMin;
-    private long quantity;
+    private Double quantity;
     private String groupo;
     private String subGroup;
     private String marca;
     private String linea;
     private String observacion;
     
-    public ExistencyReport(String code, String name, String typeProduct, Double costReal, Double costCash, Double costCard, Double costCredit, Double costMajor, long maxMin, long quantity, String groupo, String subGroup, String marca, String linea, String observacion) {
+    public ExistencyReport(String code, String name, String typeProduct, Double costReal, Double costCash, Double costCard, Double costCredit, Double costMajor, long maxMin, Double quantity, String groupo, String subGroup, String marca, String linea, String observacion) {
         this.code = code;
         this.name = name;
         this.typeProduct = typeProduct;

@@ -57,7 +57,7 @@ angular.module('integridadUiApp')
             vm.valParra = '2455e4bf-68f3-4071-b5c9-833d62512b00';
             vm.laQuinta = '758dea84-74f5-4209-b218-9b84c10621fc';
             vm.mrZolutions = '4907601b-6e54-4675-80a8-ab6503e1dfeb';
-            vm.pineda = '6e663299-d61c-44de-b42c-a3d6595b46d2';
+            vm.terneza = 'c4d6c059-2de1-412c-aa0e-90a84331e083';
             vm.ordonez = '366cfcb7-195c-4622-b8f2-09cb021e7609';
 
             vm.error = undefined;
@@ -735,7 +735,7 @@ angular.module('integridadUiApp')
 
             var contentToPrint = 'printMatrixBillOfflineId';
             switch (vm.userClientId) {
-                case vm.pineda:
+                case vm.terneza:
                     contentToPrint = 'printMatrixBillIdPineda';
                     break;
                 case vm.ordonez:
@@ -868,7 +868,9 @@ angular.module('integridadUiApp')
                     userClientId: vm.userClientId,
                     userId: vm.userId
                 };
-                vm.billOffline.detailsKardexOffline.push(kardexoff);
+
+                if(vm.userClientId !== vm.terneza)
+                    vm.billOffline.detailsKardexOffline.push(kardexoff);
             });
 
             var obj = {clave_acceso: '1124225675', id:'id12345'};

@@ -43,7 +43,7 @@ public class ProductServices {
     public String marca;
     public String linea;
     public String codigo;
-    public long cantidad;
+    public Double cantidad;
     public long minimo;
 
     @Async("asyncExecutor")
@@ -227,7 +227,7 @@ public class ProductServices {
                     if (pss.getQuantity() != null) {
                         cantidad = pss.getQuantity();
                     } else {
-                        cantidad = 0;
+                        cantidad = new Double(0);
                     }
                 }
             }
@@ -322,7 +322,7 @@ public class ProductServices {
                     if (pss.getQuantity() != null) {
                         cantidad = pss.getQuantity();
                     } else {
-                        cantidad = 0;
+                        cantidad = new Double(0);
                     }
                 }
             }
