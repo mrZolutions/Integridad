@@ -12,11 +12,11 @@ public class ExistencyCatReport {
     private String code;
     private String name;
     private Double costReal;
-    private long quantity;
+    private Double quantity;
     private Double averCost;
     private long minorQuantity;
     
-    public ExistencyCatReport(String code, String name, Double costReal, long quantity, Double averCost, long minorQuantity) {
+    public ExistencyCatReport(String code, String name, Double costReal, Double quantity, Double averCost, long minorQuantity) {
         this.code = code;
         this.name = name;
         this.costReal = costReal;
