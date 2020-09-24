@@ -160,7 +160,7 @@ public class BillServicesTest {
 		bill.getUserIntegridad().getCashier().setBillNumberSeq(1);
 		
                 ProductBySubsidiary ps = ProductBySubsidiary.newProductBySubsidiaryTest();
-		ps.setQuantity(Long.valueOf(1));
+		ps.setQuantity(Double.valueOf(1));
 		
                 Cashier cashier = bill.getUserIntegridad().getCashier();
 		
@@ -204,7 +204,7 @@ public class BillServicesTest {
 		bill.getUserIntegridad().getCashier().setQuotationNumberSeq(1);
 		
                 ProductBySubsidiary ps = ProductBySubsidiary.newProductBySubsidiaryTest();
-		ps.setQuantity(Long.valueOf(1));
+		ps.setQuantity(Double.valueOf(1));
 		
                 Cashier cashier = bill.getUserIntegridad().getCashier();
 		
@@ -240,7 +240,7 @@ public class BillServicesTest {
 		bill.getUserIntegridad().getCashier().setBillNumberSeq(1);
 		
                 ProductBySubsidiary ps = ProductBySubsidiary.newProductBySubsidiaryTest();
-		ps.setQuantity(Long.valueOf(1));
+		ps.setQuantity(Double.valueOf(1));
 		Cashier cashier = bill.getUserIntegridad().getCashier();
 		Subsidiary subsidiary = bill.getSubsidiary(); 
 		

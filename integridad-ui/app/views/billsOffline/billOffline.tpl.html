@@ -382,7 +382,7 @@
                         <div class="form-group col-md-2">
                             <b>Cantidad: </b>
                             <input type="text" ng-model="vm.quantity" ng-attr-tabindex="1" class="form-control" id="productQuantity"
-                            onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.which === 13) || (event.keyCode == 9 || event.keyCode == 8))">
+                            onkeypress="return ((event.which >= 46 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8) || (event.which === 13))">
                         </div>
                         <div class="form-group col-md-3" ng-disabled="vm.toAdd === undefined">
                             <br/>
@@ -1073,7 +1073,7 @@
                                         </div>
                                         <div class="form-group col-md-6">
                                             <b>Cantidad a Venta: </b>
-                                            <input type="text" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+                                            <input type="text" onkeypress="return ((event.which >= 46 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8) || (event.which === 13))"
                                                    ng-model="vm.quantity" class="form-control" maxlength="9">
                                         </div>
                                     </div>
