@@ -21,7 +21,7 @@ public class DetailOffline implements Child {
     @GeneratedValue
     private UUID id;
     
-    private long quantity;
+    private Double quantity;
     private Double costEach;
     private Double total;
     private String adicional;

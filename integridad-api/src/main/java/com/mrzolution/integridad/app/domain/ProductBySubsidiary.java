@@ -18,7 +18,8 @@ public class ProductBySubsidiary implements Child {
     private UUID id;
 
     private Long dateCreated;
-    private Long quantity;
+    //private Long quantity;
+    private Double quantity;
 
     private boolean active;
 
