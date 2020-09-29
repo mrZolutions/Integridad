@@ -229,4 +229,10 @@ angular
                 return response.data;
             });
         }
+
+        this.upsertDetailsDaily = function(details, dailyId, type) {
+            return securityService.post('/dailybook/details/'+dailyId+'/'+type, details).then(function successCallback(response) {
+                return response.data;
+            });
+        };
 });

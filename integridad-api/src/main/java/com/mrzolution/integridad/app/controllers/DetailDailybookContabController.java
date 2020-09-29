@@ -1,19 +1,19 @@
 package com.mrzolution.integridad.app.controllers;
 
+import com.mrzolution.integridad.app.domain.DetailDailybookContab;
 import com.mrzolution.integridad.app.domain.report.AllDailyReport;
 import com.mrzolution.integridad.app.domain.report.EspecificMajorReport;
 import com.mrzolution.integridad.app.domain.report.GeneralMajorReport;
 import com.mrzolution.integridad.app.exceptions.BadRequestException;
 import com.mrzolution.integridad.app.services.DetailDailybookContabServices;
 import java.util.List;
+import java.util.UUID;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  *
@@ -65,5 +65,18 @@ public class DetailDailybookContabController {
         }
         log.info("DetailDailybookContabController getAllDailyReportByUsrClntIdAndDate DONE");
         return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
+    }
+
+    @RequestMapping(method = RequestMethod.POST, value="/{dailyId}/{type}")
+    public ResponseEntity upsertDetails(@RequestBody List<DetailDailybookContab> details, @PathVariable("type") String type, @PathVariable("dailyId") String dailyId){
+        UUID response = null;
+        try{
+            response = service.upsertDailyBooks(details, type, dailyId);
+        } catch (BadRequestException e) {
+            log.error("DetailDailybookContabController upsertDetails Exception thrown: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+        log.info("DetailDailybookContabController upsertDetails DONE");
+        return new ResponseEntity<UUID>(response, HttpStatus.CREATED);
     }
 }
