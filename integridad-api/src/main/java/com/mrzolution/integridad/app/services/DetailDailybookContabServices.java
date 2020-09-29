@@ -1,16 +1,17 @@
 package com.mrzolution.integridad.app.services;
 
 import com.google.common.collect.Iterables;
-import com.mrzolution.integridad.app.domain.DetailDailybookContab;
+import com.mrzolution.integridad.app.domain.*;
 import com.mrzolution.integridad.app.domain.report.AllDailyReport;
 import com.mrzolution.integridad.app.domain.report.EspecificMajorReport;
 import com.mrzolution.integridad.app.domain.report.GeneralMajorReport;
-import com.mrzolution.integridad.app.repositories.DetailDailybookContabRepository;
+import com.mrzolution.integridad.app.exceptions.BadRequestException;
+import com.mrzolution.integridad.app.repositories.*;
+
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -25,6 +26,16 @@ import org.springframework.stereotype.Component;
 public class DetailDailybookContabServices {
     @Autowired
     DetailDailybookContabRepository detailDailybookContabRepository;
+    @Autowired
+    DailybookCxPRepository dailybookCxPRepository;
+    @Autowired
+    DailybookCeRepository dailybookCeRepository;
+    @Autowired
+    DailybookCgRepository dailybookCgRepository;
+    @Autowired
+    DailybookCiRepository dailybookCiRepository;
+    @Autowired
+    DailybookFvRepository dailybookFvRepository;
     
     private double sumSaldo;
     private double sumDeber;
@@ -297,5 +308,109 @@ public class DetailDailybookContabServices {
         }
 
         return arrayReturn;
+    }
+
+    public UUID upsertDailyBooks(List<DetailDailybookContab> details, String type, String dailyId) throws BadRequestException {
+
+        if(details.size() <= 0) {
+            throw new BadRequestException("Debe existir por lo menos un detalle");
+        }
+
+        UUID result = null;
+
+        DailybookCxP dailyCxP = null;
+        DailybookCe dailyCe = null;
+        DailybookCg dailyCg = null;
+        DailybookCi dailyCi = null;
+        DailybookFv dailyFv = null;
+
+        Iterable<DetailDailybookContab> detailOld = null;
+
+        switch(type.toUpperCase()) {
+            case "CXP":
+                dailyCxP = dailybookCxPRepository.findOne(UUID.fromString(dailyId));
+                dailyCxP.setListsNull();
+                dailyCxP.setFatherListToNull();
+                detailOld = detailDailybookContabRepository.findByDailybookCxP(dailyCxP);
+                result = dailyCxP.getId();
+                break;
+            case "CE":
+                dailyCe = dailybookCeRepository.findOne(UUID.fromString(dailyId));
+                dailyCe.setListsNull();
+                dailyCe.setFatherListToNull();
+                detailOld = detailDailybookContabRepository.findByDailybookCe(dailyCe);
+                result = dailyCe.getId();
+                break;
+            case "CG":
+                dailyCg = dailybookCgRepository.findOne(UUID.fromString(dailyId));
+                dailyCg.setListsNull();
+                dailyCg.setFatherListToNull();
+                detailOld = detailDailybookContabRepository.findByDailybookCg(dailyCg);
+                result = dailyCg.getId();
+                break;
+            case "CI":
+                dailyCi = dailybookCiRepository.findOne(UUID.fromString(dailyId));
+                dailyCi.setListsNull();
+                dailyCi.setFatherListToNull();
+                detailOld = detailDailybookContabRepository.findByDailybookCi(dailyCi);
+                result = dailyCi.getId();
+                break;
+            case "FV":
+                dailyFv = dailybookFvRepository.findOne(UUID.fromString(dailyId));
+                dailyFv.setListsNull();
+                dailyFv.setFatherListToNull();
+                detailOld = detailDailybookContabRepository.findByDailybookFv(dailyFv);
+                result = dailyFv.getId();
+                break;
+            default:
+                throw new BadRequestException("Type incorrecto");
+        }
+
+        for (DetailDailybookContab detGen : detailOld) {
+            Optional<DetailDailybookContab> first = details.stream().filter(det -> det.getId().equals(detGen.getId())).findFirst();
+
+            if (first.isPresent()) {
+                DetailDailybookContab detailToSave = first.get();
+                detailToSave.setDailybookCe(dailyCe);
+                detailToSave.setDailybookCxP(dailyCxP);
+                detailToSave.setDailybookCi(dailyCi);
+                detailToSave.setDailybookCg(dailyCg);
+                detailToSave.setDailybookFv(dailyFv);
+                detailDailybookContabRepository.save(detailToSave);
+                details.remove(detailToSave);
+            } else {
+                detGen.setDailybookCe(dailyCe);
+                detGen.setDailybookCxP(dailyCxP);
+                detGen.setDailybookCi(dailyCi);
+                detGen.setDailybookCg(dailyCg);
+                detGen.setDailybookFv(dailyFv);
+                detGen.setActive(false);
+                detailDailybookContabRepository.delete(detGen.getId());
+            }
+        }
+
+
+        for(DetailDailybookContab det : details){
+            det.setDailybookCe(dailyCe);
+            det.setDailybookCxP(dailyCxP);
+            det.setDailybookCi(dailyCi);
+            det.setDailybookCg(dailyCg);
+            det.setDailybookFv(dailyFv);
+            String base = "0";
+
+            if(det.getHaber() != null){
+                base = det.getHaber();
+                det.setTipo("CREDITO (C)");
+            }
+
+            if(det.getDeber() != null){
+                base = det.getDeber();
+                det.setTipo("DEBITO (D)");
+            }
+
+            det.setBaseImponible(Double.valueOf(base));
+            detailDailybookContabRepository.save(det);
+        }
+        return result;
     }
 }

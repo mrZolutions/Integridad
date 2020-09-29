@@ -1973,6 +1973,10 @@
                                         ng-click = "vm.dailybookCxPSelected(dailycxp)">
                                         <span class = "glyphicon glyphicon-eye-open" aria-hidden = "true"></span>
                                 </button>
+                                <!-- <button type = "button" title = "Editar Diario de Cuentas por Pagar" class = "btn btn-primary btn-sm" 
+                                        ng-click = "vm.dailybookCxPSelected(dailycxp)">
+                                        <span class = "glyphicon glyphicon-pencil" aria-hidden = "true"></span>
+                                </button> -->
                                 <button type = "button" title = "Anular Diario de Cuentas por Pagar" ng-show = "dailycxp.active !== false"
                                         class = "btn btn-warning btn-sm" ng-click = "vm.deactivatedailybookCxP = dailycxp"
                                         data-toggle = "modal" data-target = "#modalAnularDailyBookCxP">
@@ -2209,7 +2213,7 @@
                     <div class="form-group col-md-12 ">
                         <table width="100%">
                             <tr>
-                                <td width="20%" align="center"><img src="images/{{vm.userData.subsidiary.userClient.logo}}"><br></td>
+                                <td width="20%" align="center"><img src="images/{{vm.userData.subsidiary.userClient.logo}}" width="80%"><br></td>
                                 <td width="80%" rowspan="2">
                                     <div style="padding:0px 15px;">
                                         <b>{{vm.userData.subsidiary.userClient.name}}</b><br/>
@@ -2331,6 +2335,10 @@
                         <button print-btn type="button" title = "Imprimir Comprobante de Diario" class="btn btn-primary btn-sm"
                                 ng-show="vm.activeCxP === true" ng-click="vm.cancel()">
                                 <span class = "glyphicon glyphicon-print" aria-hidden = "true"></span>
+                        </button>
+                        <button type="button" title = "Editar" class="btn btn-primary btn-sm" ng-click="vm.editDetailFunction()"
+                                data-toggle= "modal" data-target="#modalEditDaily">
+                                <span class = "glyphicon glyphicon-pencil" aria-hidden = "true"></span>
                         </button>
                         <button type="button" title = "Salir" class="btn btn-primary btn-sm"
                                 ng-click="vm.cancel()">
@@ -3172,6 +3180,73 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" title="Salir" class="btn btn-primary btn-sm" data-dismiss="modal">
+                            <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--MODAL DE EDICION DE DIARIO-->
+    <div id="modalEditDaily" class="modal fade" role="dialog">
+        <div class="modal-dialog" style="width: 80%;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type = "button" class = "close" data-dismiss = "modal">&times;</button>
+                    <h4 class = "modal-title">Edici&oacute;n de detalle de Diaro</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="form-group col-md-12">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>CUENTA</th>
+                                        <th>NOMBRE CUENTA</th>
+                                        <th>DESCRIPCIÓN</th>
+                                        <th>DEBE</th>
+                                        <th>HABER</th>
+                                        <th>
+                                            <button type = "button" title = "Agregar Detalle" class = "btn btn-primary btn-sm" ng-click = "vm.addDetail()">
+                                                <span class = "glyphicon glyphicon-plus" aria-hidden = "true"></span>
+                                            </button>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="detail in vm.editDetail">
+                                        <td>
+                                            <input ng-model="detail.codeConta" class="form-control">
+                                        </td>
+                                        <td>
+                                            <input ng-model="detail.descrip" class="form-control">
+                                        </td>
+                                        <td>
+                                            <input ng-model="detail.name" class="form-control">
+                                        </td>
+                                        <td>
+                                            <input ng-model="detail.deber" class="form-control">
+                                        </td>
+                                        <td>
+                                            <input ng-model="detail.haber" class="form-control">
+                                        </td>
+                                        <td>
+                                            <button type="button" title="Eliminar" class="btn btn-primary btn-sm" ng-click="vm.removeDetail($index)">
+                                                    <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" title = "Aceptar" class="btn btn-primary btn-sm" data-dismiss="modal"
+                                ng-click="vm.guardarDetail()">
+                                <span class = "glyphicon glyphicon-floppy-save" aria-hidden = "true"></span>
+                        </button>
+                    <button type="button" title="Salir" class="btn btn-primary btn-sm" data-dismiss="modal"
+                                ng-click="vm.editDetail = []">
                             <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
                     </button>
                 </div>

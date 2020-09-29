@@ -75,6 +75,8 @@ angular.module('integridadUiApp')
             vm.isProductReportList = undefined;
             vm.codeContaOne = undefined;
             vm.codeContaTwo = undefined;
+
+            vm.detailToEdit = [];
             
             //Contabilidad General Cg
             vm.dailybookCgNew = undefined;
@@ -2351,6 +2353,41 @@ angular.module('integridadUiApp')
                 vm.loading = false;
                 vm.error = error.data;
             });
+        };
+
+        vm.editDetailFunction = function(){
+            vm.editDetail = angular.copy(vm.dailybookCxP.detailDailybookContab);
+        };
+
+        vm.removeDetail = function(index){
+            vm.editDetail.splice(index, 1);
+        };
+
+        vm.addDetail = function(){
+            console.log(vm.editDetail);
+            vm.editDetail.push({
+                typeContab: "CxP. CON RETENCIONES",
+                numCheque: "--",
+                codeConta: undefined,
+                descrip: undefined,
+                name: undefined,
+                tipo: undefined,
+                baseImponible: undefined,
+                deber: undefined,
+                haber: undefined,
+                dateDetailDailybook: vm.dailybookCxP.dateRecordBook,
+                dailybookNumber: vm.dailybookCxP.dailycxpStringSeq,
+                userClientId: "3566a41d-3260-49ba-9ee4-00c7d54e46b3",
+                active: true,
+            });
+        };
+
+        vm.guardarDetail = function(){
+            contableService.upsertDetailsDaily(vm.editDetail, vm.dailybookCxP.id, 'CXP')
+            .then(function(response){
+                vm.editDetail = [];
+                vm.dailybookCxPSelected(vm.dailybookCxP)
+            })
         };
 
         vm.exit = function() {
