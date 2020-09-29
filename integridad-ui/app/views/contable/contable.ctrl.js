@@ -2377,7 +2377,7 @@ angular.module('integridadUiApp')
                 haber: undefined,
                 dateDetailDailybook: vm.dailybookCxP.dateRecordBook,
                 dailybookNumber: vm.dailybookCxP.dailycxpStringSeq,
-                userClientId: "3566a41d-3260-49ba-9ee4-00c7d54e46b3",
+                userClientId: vm.usrCliId,
                 active: true,
             });
         };
