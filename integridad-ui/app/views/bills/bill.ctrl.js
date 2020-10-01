@@ -1,3 +1,4 @@
+
 'use strict';
 /**
  * @ngdoc function
@@ -1048,6 +1049,13 @@ angular.module('integridadUiApp')
                 vm.error = "Error al obtener Clave de Acceso y Guardar Factura: " + error.data;
             });
         };
+
+        vm.getIsAgentRetention = function() {
+            if(vm.user.subsidiary.userClient.agentRetention){
+                return 'Agente de Retención mediante Resolución Nro. NAC-DNCRASC20-00000001'
+            }
+            return '';
+        }
 
         //Consumption Code
         function _getCsmSeqNumber() {
