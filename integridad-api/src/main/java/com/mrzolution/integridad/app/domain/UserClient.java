@@ -40,6 +40,7 @@ public class UserClient {
     private String logo;
     private String apiKey;
     private String espTemp;
+    private boolean isAgentRetention;
 
     private boolean testMode;
     

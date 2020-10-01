@@ -554,6 +554,13 @@ angular.module('integridadUiApp')
             vm.retention = undefined
         };
 
+        vm.getIsAgentRetention = function() {
+            if(vm.userData.subsidiary.userClient.agentRetention){
+                return 'Agente de Retención mediante Resolución Nro. NAC-DNCRASC20-00000001'
+            }
+            return '';
+        }
+
         vm.exit = function() {
             $location.path('/home');
         };

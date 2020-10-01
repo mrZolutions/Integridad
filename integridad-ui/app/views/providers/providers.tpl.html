@@ -554,7 +554,7 @@
                     <div class="form-group col-md-12">
                         <table width="100%">
                             <tr>
-                                <td width="50%" align="center"><img src="images/{{vm.userData.subsidiary.userClient.logo}}" ><br></td>
+                                <td width="50%" align="center"><img src="images/{{vm.userData.subsidiary.userClient.logo}}" width="20%" ><br></td>
                                 <td width="50%" rowspan="2">
                                     <div style="padding:0px 20px;">
                                         <b>RUC: {{vm.userData.subsidiary.userClient.ruc}}</b><br/>
@@ -574,6 +574,7 @@
                                         <b>Matriz: {{vm.userData.subsidiary.userClient.address1}}</b><br/>
                                         <b>Establecimiento: {{vm.userData.subsidiary.address1}}</b><br/>
                                         <b>Tel&eacute;fono: {{vm.userData.subsidiary.phone}}</b><br/>
+                                        <b>{{vm.getIsAgentRetention()}}</b><br/>
                                     </div>
                                 </td>
                             </tr>
