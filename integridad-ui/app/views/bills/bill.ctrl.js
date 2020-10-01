@@ -1,3 +1,4 @@
+
 'use strict';
 /**
  * @ngdoc function
@@ -904,9 +905,6 @@ angular.module('integridadUiApp')
 
             var req = requirementService.createRequirement(vm.clientSelected, vm.bill, vm.user, vm.impuestosTotales, vm.items, vm.pagos);
             if(vm.user.apiConnection) req.logo = vm.companyData.userClient.logo;
-
-            //console.log(JSON.stringify(req))
-
             var reqBill = {requirement : req, bill: vm.bill}
 
             vm.comprobanteCobro = {};
@@ -1020,44 +1018,37 @@ angular.module('integridadUiApp')
             
             // 1 is typeDocument Bill **************!!!
             // billService.getClaveDeAccesoSaveBill(reqBill, vm.companyData.userClient.id, 1).then(function(resp) {
-            // billService.getClaveDeAccesoSaveBill(reqBill, vm.userId, 1).then(function(resp) {
-            //   vm.bill.claveDeAcceso = resp.data.claveDeAcceso;
-            //   vm.billed = true;
-            //   vm.newBill = false;
-            //   vm.newBuy = false;
-            //   vm.user.cashier.billNumberSeq = vm.bill.billSeq;
-            //   if(vm.comprobanteCobro.comprobanteSeq !== undefined){
-            //     vm.user.cashier.compCobroNumberSeq = vm.comprobanteCobro.comprobanteSeq;
-            //     vm.user.cashier.dailyCiNumberSeq = vm.dailybookCi.dailyCiSeq;
-            //   }
-            //   holderService.set(vm.user);
-            //   vm.loading = false;
-            //   setTimeout(function() {
-            //     vm.user.cashier.specialPrint ? vm.printToCart('printMatrixBillId') : document.getElementById("printBtnBill").click();
-            //     // document.getElementById("printBtnBill").click();
-            //     // vm.printToCart('printMatrixBillId')
-            //     vm.nuevaBill();
-            // }, 300);
-            //   if (vm.seqChanged) {
-            //       cashierService.update(vm.user.cashier).then(function(resp) {
-            //           // cashier updated
-            //       }).catch(function(error) {
-            //           vm.loading = false;
-            //           vm.error = error.data;
-            //       });
-            //   };
-            // }).catch(function(error) {
-            //     vm.loading = false;
-            //     vm.error = "Error al obtener Clave de Acceso y Guardar Factura: " + error.data;
-            // });
+            billService.getClaveDeAccesoSaveBill(reqBill, vm.userId, 1).then(function(resp) {
+              vm.bill.claveDeAcceso = resp.data.claveDeAcceso;
+              vm.billed = true;
+              vm.newBill = false;
+              vm.newBuy = false;
+              vm.user.cashier.billNumberSeq = vm.bill.billSeq;
+              if(vm.comprobanteCobro.comprobanteSeq !== undefined){
+                vm.user.cashier.compCobroNumberSeq = vm.comprobanteCobro.comprobanteSeq;
+                vm.user.cashier.dailyCiNumberSeq = vm.dailybookCi.dailyCiSeq;
+              }
+              holderService.set(vm.user);
+              vm.loading = false;
+              setTimeout(function() {
+                vm.user.cashier.specialPrint ? vm.printToCart('printMatrixBillId') : document.getElementById("printBtnBill").click();
+                // document.getElementById("printBtnBill").click();
+                // vm.printToCart('printMatrixBillId')
+                vm.nuevaBill();
+            }, 300);
+              if (vm.seqChanged) {
+                  cashierService.update(vm.user.cashier).then(function(resp) {
+                      // cashier updated
+                  }).catch(function(error) {
+                      vm.loading = false;
+                      vm.error = error.data;
+                  });
+              };
+            }).catch(function(error) {
+                vm.loading = false;
+                vm.error = "Error al obtener Clave de Acceso y Guardar Factura: " + error.data;
+            });
         };
-
-        vm.getIsAgentRetention = function() {
-            if(vm.user.subsidiary.userClient.agentRetention){
-                return 'Agente de Retención mediante Resolución Nro. NAC-DNCRASC20-00000001'
-            }
-            return '';
-        }
 
         //Consumption Code
         function _getCsmSeqNumber() {
