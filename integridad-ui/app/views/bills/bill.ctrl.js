@@ -1050,6 +1050,13 @@ angular.module('integridadUiApp')
             });
         };
 
+        vm.getIsAgentRetention = function() {
+            if(vm.user.subsidiary.userClient.agentRetention){
+                return 'Agente de Retención mediante Resolución Nro. NAC-DNCRASC20-00000001'
+            }
+            return '';
+        }
+
         //Consumption Code
         function _getCsmSeqNumber() {
             vm.numberCsmAddedOne = parseInt(vm.user.cashier.csmNumberSeq) + 1;
