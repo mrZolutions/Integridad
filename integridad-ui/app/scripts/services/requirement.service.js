@@ -44,6 +44,7 @@ angular
                     "nombre_comercial": user.cashier.subsidiary.userClient.name,
                     "razon_social": user.cashier.subsidiary.userClient.name,
                     "direccion": user.cashier.subsidiary.userClient.address1,
+                    "agent_retention": user.cashier.subsidiary.userClient.agentRetention,
                     "establecimiento": {
                         "punto_emision": user.cashier.threeCode,
                         "codigo": user.cashier.subsidiary.threeCode,
