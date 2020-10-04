@@ -758,6 +758,7 @@
         <p>{{vm.clientSelected.name}}</p><br/>
         <p>IDENTIFICACION: {{vm.clientSelected.identification}}</p><br/>
         <p>FECHA: {{vm.getDateToPrint() | date :  "dd/MM/yyyy"}}</p><br/>
+        <p>{{vm.getIsAgentRetention()}}</p><br/>
         <p>DESCRIPCIÓN &nbsp;&nbsp;CANTIDAD &nbsp;&nbsp;P.UNIT &nbsp;&nbsp;TOTAL</p>
         <table width="100%">
             <tr ng-repeat="detail in vm.bill.details">
