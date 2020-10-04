@@ -12,5 +12,6 @@ public class Emisor {
     private String nombre_comercial;
     private String razon_social;
     private String direccion;
+    private boolean agent_retention;
     private Establecimiento establecimiento;
 }
