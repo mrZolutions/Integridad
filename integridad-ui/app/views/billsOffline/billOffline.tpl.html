@@ -250,7 +250,7 @@
                     <div class="form-group col-md-12">
                         <table width="100%">
                             <tr>
-                                <td width="20%" align="center"><img src="images/{{vm.companyData.userClient.logo}}"><br></td>
+                                <td width="20%" align="center"><img src="images/{{vm.companyData.userClient.logo}}" width="50%"><br></td>
                                 <td width="80%">
                                     <b>{{vm.companyData.userClient.name}}</b><br/></br>
                                     <b>Matriz: {{vm.companyData.userClient.address1}}</b><br/>
@@ -464,6 +464,28 @@
                                     <td></td>
                                     <td><b>Descuento: </b></td>
                                     <td>{{(vm.billOffline.discount).toFixed(2)}}</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td><b>Base 0%: </b></td>
+                                    <td>{{(vm.billOffline.baseNoTaxes).toFixed(2)}}</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td><b>Base 12%: </b></td>
+                                    <td>{{(vm.billOffline.baseTaxes).toFixed(2)}}</td>
                                     <td></td>
                                 </tr>
                                 <tr ng-show="vm.userClientId !== vm.laQuinta">
