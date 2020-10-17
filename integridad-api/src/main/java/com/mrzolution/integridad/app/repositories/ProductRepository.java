@@ -1,5 +1,6 @@
 package com.mrzolution.integridad.app.repositories;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -16,6 +17,9 @@ import com.mrzolution.integridad.app.domain.Product;
 @Qualifier(value="ProductRepository")
 public interface ProductRepository extends CrudRepository<Product, UUID> {
     Iterable<Product> findByActive(boolean active);
+
+    @Query("SELECT p FROM Product p WHERE p.id in (:ids) AND p.active = true")
+    Iterable<Product> findByListIdAndActive(@Param("ids") List<UUID> productIds);
 	
     @Query("SELECT p FROM Product p WHERE p.userClient.id = (:id) AND p.active = true")
     Iterable<Product> findByUserClientIdAndActive(@Param("id") UUID userClientId);

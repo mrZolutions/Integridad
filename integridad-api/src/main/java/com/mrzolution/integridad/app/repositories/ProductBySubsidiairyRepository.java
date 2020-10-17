@@ -27,7 +27,7 @@ public interface ProductBySubsidiairyRepository extends CrudRepository<ProductBy
     @Query("SELECT DISTINCT p.product.id FROM ProductBySubsidiary p WHERE p.subsidiary.id = (:id) AND p.product.active = true " +
             "and (cast(:lineId as text) is NULL OR p.product.subgroup.groupLine.line.id = (:lineId))")
     Page<UUID> findBySubsidiaryIdAndProductActive(@Param("id") UUID subsidiaryId, @Param("lineId") UUID lineId, Pageable pageable);
-        
+
     @Query("SELECT DISTINCT p.product.id FROM ProductBySubsidiary p WHERE p.subsidiary.id = (:id) AND p.product.active = true " +
             "AND (p.product.codeIntegridad LIKE (%:variable%) OR lower(p.product.name) LIKE lower(%:variable%)) " +
             "and (cast(:lineId as text) is NULL OR p.product.subgroup.groupLine.line.id = (:lineId))")
