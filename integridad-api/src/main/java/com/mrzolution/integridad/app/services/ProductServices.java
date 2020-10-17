@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 import com.mrzolution.integridad.app.domain.CuentaContableByProduct;
 import com.mrzolution.integridad.app.domain.ProductBySubsidiary;
 import com.mrzolution.integridad.app.domain.SubGroup;
@@ -164,14 +165,15 @@ public class ProductServices {
 //            productIdList = productBySubsidiairyRepository.findBySubsidiaryIdAndVariabledAndProductActive(subsidiaryId, variable, new PageRequest(0, 150, Sort.Direction.ASC, "product"));
             productIdList = productBySubsidiairyRepository.findBySubsidiaryIdAndVariabledAndProductActive(subsidiaryId, variable, lineId, pageable);
 	}
-	List<Product> listReturn = new ArrayList<>();
-	productIdList.forEach(page -> {
-	    Product p = getProductById(page);
-//	    p.setCuentaContableByProducts(null);
-	    listReturn.add(p);
+
+     Iterable<Product> products = productRepository.findByListIdAndActive(productIdList.getContent());
+
+	products.forEach(p -> {
+        populateChildren(p);
 	});
-	Page<Product> products = new PageImpl<>(listReturn, pageable, productIdList.getTotalElements());
-	return products;
+
+	Page<Product> productsPage = new PageImpl<>(Lists.newArrayList(products), pageable, Iterables.size(products));
+	return productsPage;
     }
 
     public List<Product> getProductsActivesBySubsidiaryIdBarCode(UUID subsidiaryId, String variable) {
