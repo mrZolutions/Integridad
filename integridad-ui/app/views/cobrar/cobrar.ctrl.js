@@ -8,7 +8,7 @@
  */
 angular.module('integridadUiApp')
     .controller('CuentasCobrarCtrl', function(_, holderService, clientService, cuentaContableService, paymentService, dateService, utilSeqService,
-                                              creditsbillService, $location, billService, eretentionClientService, contableService, comprobanteService,
+                                              creditsbillService, $location, billService, billOfflineService, eretentionClientService, contableService, comprobanteService,
                                               optionConfigCuentasService) {
         var vm = this;
         vm.error = undefined;
@@ -332,6 +332,20 @@ angular.module('integridadUiApp')
                 vm.loading = false;
                 vm.error = error.data;
             });
+
+
+            billOfflineService.getAllBillsOfflineByClientIdWithSaldo(vm.clientId).then(function(response) {
+                if(vm.billMultipleList){
+                    vm.billMultipleList = vm.billMultipleList.concat(response);
+                } else {
+                    vm.billMultipleList = response;
+                }
+                
+                vm.loading = false;
+            }).catch(function(error) {
+                vm.loading = false;
+                vm.error = error.data;
+            });
         };
 
         vm.creditsMultiByBills = function() {
@@ -343,6 +357,7 @@ angular.module('integridadUiApp')
                 if(bill.selectedTotal || bill.selectedParcial){
                     vm.billsSelected.push(bill);
                     creditsbillService.getAllCreditsOfBillById(bill.id).then(function(response) {
+                        console.log('-*-*-*-*-*-*: ',response)
                         if(bill.selectedTotal){
                             _.each(response, function(cuota) {
                                 vm.itemCobroBill = {};

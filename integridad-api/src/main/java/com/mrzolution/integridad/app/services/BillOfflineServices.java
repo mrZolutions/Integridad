@@ -400,6 +400,17 @@ public class BillOfflineServices {
         return pagoOfflineList;
     }
 
+    //Selecciona todas las Facturas del Cliente con Saldo != '0.00'
+    public Iterable<BillOffline> getBillOfflineByClientIdWithSaldo(UUID id, int type) {
+        Iterable<BillOffline> bills = billOfflineRepository.findBillOfflineByClientIdWithSaldo(id, type);
+        bills.forEach(bill -> {
+            bill.setListsNull();
+            bill.setFatherListToNull();
+        });
+        log.info("BillOfflineServices getBillOfflineByClientIdWithSaldo: {}", id);
+        return bills;
+    }
+
     private void saveDailyBookFv(BillOffline saved, List<DetailOffline> details){
         if(saved.getClient().getCodConta() != null){
             DailybookFv dailybookFv = new DailybookFv();

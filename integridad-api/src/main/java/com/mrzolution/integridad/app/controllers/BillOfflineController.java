@@ -1,5 +1,6 @@
 package com.mrzolution.integridad.app.controllers;
 
+import com.mrzolution.integridad.app.domain.Bill;
 import com.mrzolution.integridad.app.domain.BillOffline;
 import com.mrzolution.integridad.app.domain.ebill.RequirementBillOffline;
 import com.mrzolution.integridad.app.domain.report.ItemOfflineReport;
@@ -135,5 +136,19 @@ public class BillOfflineController {
         }
         log.info("BillOfflineController getByUserClientIdAndDatesActives DONE");
         return new ResponseEntity<List>(response, HttpStatus.ACCEPTED);
+    }
+
+    //Selecciona todas las Facturas del Cliente con Saldo != '0.00'
+    @RequestMapping(method = RequestMethod.GET, value="/bill/client/saldo/{id}")
+    public ResponseEntity getBillOfflineByClientIdWithSaldo(@PathVariable("id") UUID id) {
+        Iterable<BillOffline> response = null;
+        try {
+            response = service.getBillOfflineByClientIdWithSaldo(id, 1);
+        } catch (BadRequestException e) {
+            log.error("BillController getBillByClientIdWithSaldo Exception thrown: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+        log.info("BillOfflineController getBillOfflineByClientIdWithSaldo DONE");
+        return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
     }
 }

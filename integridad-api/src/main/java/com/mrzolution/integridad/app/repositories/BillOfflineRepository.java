@@ -1,5 +1,6 @@
 package com.mrzolution.integridad.app.repositories;
 
+import com.mrzolution.integridad.app.domain.Bill;
 import com.mrzolution.integridad.app.domain.BillOffline;
 import com.mrzolution.integridad.app.domain.Client;
 import com.mrzolution.integridad.app.domain.UserIntegridad;
@@ -23,6 +24,9 @@ public interface BillOfflineRepository extends CrudRepository<BillOffline, UUID>
     Iterable<BillOffline> findBillsOfflineByUserIntegridad(UserIntegridad user);
     
     Iterable<BillOffline> findBillsOfflineByStringSeq(String stringSeq);
+
+    @Query("SELECT b FROM BillOffline b WHERE b.client.id = (:id) AND b.typeDocument = (:type) AND b.saldo != '0' AND b.saldo != '0.00' AND b.saldo != '0.0' AND b.active = true ORDER BY b.stringSeq")
+    Iterable<BillOffline> findBillOfflineByClientIdWithSaldo(@Param("id") UUID id, @Param("type") int type);
     
     @Query("SELECT b FROM BillOffline b WHERE b.typeDocument = (:value) AND b.active = true")
     Iterable<BillOffline> findBillsOfflineByTypeDocument(@Param("value") int value);

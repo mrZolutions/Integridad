@@ -23,6 +23,9 @@ public interface CreditsRepository extends CrudRepository<Credits, UUID> {
 
     @Query("SELECT c FROM Credits c JOIN c.pago p JOIN p.bill b WHERE b.id = (:id) AND b.active = true AND c.statusCredits = 'PENDIENTE'")
     Iterable<Credits> findCreditsByBillId(@Param("id") UUID id);
+
+    @Query("SELECT c FROM Credits c JOIN c.pagoOffline p JOIN p.billOffline b WHERE b.id = (:id) AND b.active = true AND c.statusCredits = 'PENDIENTE'")
+    Iterable<Credits> findCreditsByBillOfflineId(@Param("id") UUID id);
     
     @Query("SELECT c FROM Credits c WHERE c.id = (:id)")
     Iterable<Credits> findCreditsById(@Param("id") UUID id);

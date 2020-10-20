@@ -59,14 +59,19 @@ public class CreditsServices {
     private int plazo = 0;
     private long lastDay = 0;
 
-    public Iterable<Credits> getCreditsByBillId(UUID id) {
+    public List<Credits> getCreditsByBillId(UUID id) {
         Iterable<Credits> credits = creditsRepository.findCreditsByBillId(id);
-        credits.forEach(credit -> {
+        Iterable<Credits> creditsOff = creditsRepository.findCreditsByBillOfflineId(id);
+        Iterable<Credits> allCredits = Iterables.unmodifiableIterable(Iterables.concat(credits, creditsOff));
+        System.out.println("=====: " + Iterables.size(allCredits));
+        List<Credits> creditsList = new ArrayList<>();
+        allCredits.forEach(credit -> {
             credit.setListsNull();
             credit.setFatherListToNull();
+            creditsList.add(credit);
         });
         log.info("CreditsServices getCreditsByBillId: {}", id);
-        return credits;
+        return creditsList;
     }
     
     public List<CreditsReport> getCreditsPendingOfBillByUserClientId(UUID id, long dateTwo) {

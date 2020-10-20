@@ -13,6 +13,13 @@ angular
             });
         };
 
+        this.getAllBillsOfflineByClientIdWithSaldo = function(id) {
+            console.log('yaffffffffffffffff 2')
+            return securityService.get('/billoffline/bill/client/saldo/' + id).then(function successCallback(response) {
+                return response.data;
+            });
+        };
+
         this.getBillsOfflineByClientIdWithSaldo = function(id) {
             return securityService.get('/billoffline/bill/client/saldo/' + id).then(function successCallback(response) {
                 return response.data;

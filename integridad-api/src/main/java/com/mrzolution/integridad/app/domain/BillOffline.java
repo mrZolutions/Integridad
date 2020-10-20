@@ -41,6 +41,7 @@ public class BillOffline {
     private String observation;
     private String claveDeAcceso;
     private String idSri;
+    private String saldo;
     
     private String creditNoteId;
     private String creditNoteNumber;

@@ -950,14 +950,55 @@
                                    ng-model="vm.medio.numeroLote" class="form-control" maxlength="5">
                         </div>
                     </div>
+                    <div class="row" ng-show="vm.medio.code === 'credito'">
+                        <div class="form-group col-md-4">
+                            <b>Número de Pagos: </b>
+                            <input type="text" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+                                   ng-model="vm.medio.creditoNumeroPagos" class="form-control" maxlength="2">
+                        </div>
+                        <div class="form-group col-md-4">
+                            <b>Intervalo de Días: </b><br/>
+                            <input type="text" onkeypress="return ((event.which >= 48 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+                                  ng-model="vm.medio.creditoIntervalos" class="form-control" maxlength="3">
+                        </div>
+                        <div class="form-group col-md-4">
+                            <br/>
+                            <button type="button" title = "Calcular" class="btn btn-primary btn-sm" ng-click="vm.loadCredit()"
+                                    ng-disabled="vm.medio.creditoIntervalos === undefined || vm.medio.creditoNumeroPagos === undefined">
+                                    <span class = "glyphicon glyphicon-th" aria-hidden = "true"></span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="row" ng-show="vm.medio.code === 'credito'">
+                        <div class="form-group col-md-12">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Pago</th>
+                                        <th>Días Plazo</th>
+                                        <th>Fechas</th>
+                                        <th>Valor $</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="cred in vm.medio.credits">
+                                        <td>{{cred.payNumber}}</td>
+                                        <td>{{cred.diasPlazo}}</td>
+                                        <td>{{cred.fecha | date:'dd/MM/yyyy'}}</td>
+                                        <td>{{cred.valor}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                     <div class="row">
                         <form ng-submit="vm.addPago()">
-                            <div class="form-group col-md-4">
+                            <div class="form-group col-md-4" ng-if="vm.medio.code !== 'credito'">
                                 <b>Valor: </b>
                                 <input type="text" onkeypress="return ((event.which >= 46 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8) || (event.which === 13))"
                                        ng-model="vm.medio.total" class="form-control" maxlength="9" id="medioTotal">
                             </div>
-                            <div class="form-group col-md-4">
+                            <div class="form-group col-md-4" ng-if="vm.medio.code !== 'credito'">
                                 <b>Valor: </b><br />
                                 $ {{vm.medio.total}}
                             </div>

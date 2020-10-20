@@ -30,7 +30,7 @@ public class CreditsController {
     
     @RequestMapping(method = RequestMethod.GET, value="/credits/bill/{id}")
     public ResponseEntity getCreditsByBillId(@PathVariable("id") UUID id) {
-        Iterable<Credits> response = null;
+        List<Credits> response = null;
         try {
             response = service.getCreditsByBillId(id);
         } catch (BadRequestException e) {
@@ -38,7 +38,7 @@ public class CreditsController {
 	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
         log.info("CreditsControler getCreditsByBillById DONE");
-        return new ResponseEntity<Iterable>(response, HttpStatus.ACCEPTED);
+        return new ResponseEntity<List>(response, HttpStatus.ACCEPTED);
     }
     
     @RequestMapping(method = RequestMethod.GET, value="/rep/pendingreport/{userClientId}/{dateTwo}")

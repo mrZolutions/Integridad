@@ -29,6 +29,7 @@ angular.module('integridadUiApp')
             {code: 'cheque', name: 'Cheque'},
             {code: 'tarjeta_credito', name: 'Tarjeta de Crédito'},
             {code: 'tarjeta_debito', name: 'Tarjeta de Débito'},
+            {code: 'credito', name: 'Crédito'},
             // {code: 'transferencia', name: 'Transferencia'}
         ];
 
@@ -62,6 +63,7 @@ angular.module('integridadUiApp')
 
             vm.error = undefined;
             vm.success = undefined;
+            vm.estado = undefined;
             vm.aux = undefined;
             vm.newClient = undefined;
             vm.newBillOffline = true;
@@ -646,6 +648,17 @@ angular.module('integridadUiApp')
                 vm.medio.total = parseFloat((vm.billOffline.total - payed).toFixed(2));
                 vm.medio.statusPago = 'PAGADO';
             };
+            if (vm.medio.code === 'credito') {
+                vm.medio.payForm = '20 - OTROS CON UTILIZACION DEL SISTEMA FINANCIERO';
+                // CAMBIO SRI POR CONFIRMAR
+                // vm.medio.payForm = '01 - SIN UTILIZACION DEL SISTEMA FINANCIERO';
+                vm.medio.total = parseFloat((vm.billOffline.total - payed).toFixed(4));
+                if (vm.priceType.name === 'CREDITO') {
+                    vm.medio.statusPago = 'PENDIENTE';
+                } else {
+                    vm.medio.statusPago = 'PAGADO';
+                };
+            };
         };
 
         vm.verifyUser = function() {
@@ -658,8 +671,38 @@ angular.module('integridadUiApp')
             return parseFloat(cost.toFixed(2));
         };
 
+        function _addDays(date, days) {
+            var result = new Date(date);
+            result.setDate(result.getDate() + days);
+            return result.getTime();
+        };
+
+        vm.loadCredit = function() {
+            var creditArray = [];
+            var diasPlazo = parseInt(vm.medio.creditoIntervalos);
+            var d = new Date();
+            var statusCredits = 'PENDIENTE';
+            var total = parseFloat((vm.billOffline.total / vm.medio.creditoNumeroPagos).toFixed(4));
+            vm.seqNumberCredits = vm.seqNumber;
+            vm.estado = statusCredits;
+            for (var i = 1; i <= parseInt(vm.medio.creditoNumeroPagos); i++) {
+                var credito = {
+                    payNumber: i,
+                    diasPlazo: diasPlazo,
+                    fecha: _addDays(d, diasPlazo),
+                    statusCredits: statusCredits,
+                    documentNumber: vm.seqNumberCredits,
+                    valor: total
+                };
+                diasPlazo += parseInt(vm.medio.creditoIntervalos);
+                creditArray.push(credito);
+            };
+            vm.medio.credits = creditArray;
+            vm.pagoTot = credito.total;
+        };
+
         vm.addPago = function() {
-            vm.medio.medio = vm.medio.code;
+            //vm.medio.medio = vm.medio.code;
             if(vm.medio.code === 'efectivo'){
                 var credit = {
                     payNumber: 1,
@@ -881,6 +924,11 @@ angular.module('integridadUiApp')
             vm.billOffline.stringSeq = vm.seqNumber;
             vm.billOffline.priceType = vm.priceType.name;
             vm.billOffline.dateCreated = $('#pickerBillOfflineDate').data("DateTimePicker").date().toDate().getTime();
+            if (vm.estado === 'PENDIENTE') {
+                vm.billOffline.saldo = (vm.billOffline.total).toString();
+            } else {
+                vm.billOffline.saldo = '0';
+            };
 
             billOfflineService.getBillsOfflineByStringSeq(vm.seqNumber, vm.companyData.id).then(function(response) {
                 if (response.length === 0) {

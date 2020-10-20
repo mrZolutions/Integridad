@@ -3,6 +3,7 @@ angular
     .service('creditsbillService', function(securityService) { 
         this.getAllCreditsOfBillById = function(id) {
             return securityService.get('/creditsbybill/credits/bill/' + id).then(function successCallback(response) {
+                console.log(response)
                 return response.data;
             });
         };
