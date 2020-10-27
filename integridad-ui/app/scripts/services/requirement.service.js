@@ -110,7 +110,14 @@ angular
                     observ: ' ' + bill.observation
                 };
                 req.informacion_adicional = informAdicional;
-            };
+            } else if (user.cashier.subsidiary.userClient.espTemp === 'A-TRANS') {
+                //req.comprador.email = req.comprador.email + ', facturaslaquintarm@hotmail.com';
+                var informAdicional = {
+                    observ: ' ' + bill.observation
+                };
+                req.informacion_adicional = informAdicional;
+            };;
+
             if (credito !== undefined) {
                 req.credito = credito;
             };
