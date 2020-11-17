@@ -43,7 +43,7 @@ public interface ProductBySubsidiairyRepository extends CrudRepository<ProductBy
     @Query("SELECT DISTINCT p.product.id FROM ProductBySubsidiary p WHERE p.subsidiary.id = (:id) AND p.product.active = true AND (p.product.productType.id NOT IN ('594f9d5a-3236-4702-86e1-6f0d34f0bd14', '75591174-db48-4313-a6a0-1f2581ff9ed3', 'b7583d7b-39e5-4ba1-aa88-5fa5eeee2024'))")
     Page<UUID> findBySubsidiaryIdAndProductActiveForBill(@Param("id") UUID subsidiaryId, Pageable pageable);
 
-    @Query("SELECT DISTINCT p.product.id FROM ProductBySubsidiary p WHERE p.subsidiary.id = (:id) and p.product.active = true AND (p.product.codeIntegridad LIKE (%:variable%) OR p.product.name LIKE (%:variable%)) AND (p.product.productType.id NOT IN ('594f9d5a-3236-4702-86e1-6f0d34f0bd14', '75591174-db48-4313-a6a0-1f2581ff9ed3', 'b7583d7b-39e5-4ba1-aa88-5fa5eeee2024'))")
+    @Query("SELECT DISTINCT p.product.id FROM ProductBySubsidiary p WHERE p.subsidiary.id = (:id) and p.product.active = true AND (p.product.codeIntegridad LIKE (%:variable%) OR lower(p.product.name) LIKE lower(%:variable%)) AND (p.product.productType.id NOT IN ('594f9d5a-3236-4702-86e1-6f0d34f0bd14', '75591174-db48-4313-a6a0-1f2581ff9ed3', 'b7583d7b-39e5-4ba1-aa88-5fa5eeee2024'))")
     Page<UUID> findBySubsidiaryIdAndVariabledAndProductActiveForBill(@Param("id") UUID subsidiaryId, @Param("variable") String variable, Pageable pageable);
         
 }
