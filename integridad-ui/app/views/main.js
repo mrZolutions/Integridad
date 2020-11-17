@@ -67,7 +67,7 @@ angular.module('integridadUiApp')
                 if (response.tempPass) {
                     vm.loading = false;
                     vm.passwordNotMatch = false;
-                    vm.userIntegridad = angular.copy(userSaved.user);
+                    vm.userIntegridad = angular.copy(userSaved);
                     $('#modalChangePassword').modal('show');
                 } else {
                     var d = new Date();
