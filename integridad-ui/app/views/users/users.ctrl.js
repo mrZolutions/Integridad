@@ -218,6 +218,8 @@ angular.module('integridadUiApp')
                 vm.typeId = 'Cedula'
                 vm.userIntegridad.cedula = vm.asociado.ruc.slice(0, -3)
                 vm.userIntegridad.email = vm.asociado.correo
+                vm.userIntegridad.asociado = vm.asociado
+                vm.userIntegridad.type = 'ASO'
                 vm.getSubsidiaries();
             }
         };
