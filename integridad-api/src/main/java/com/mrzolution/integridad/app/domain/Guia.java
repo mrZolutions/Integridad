@@ -29,6 +29,10 @@ public class Guia {
     private UserClient userClient;
 
     @ManyToOne
+    @JoinColumn(name = "asociado_id")
+    private Asociado asociado;
+
+    @ManyToOne
     @JoinColumn(name = "client_id")
     private Client client;
 

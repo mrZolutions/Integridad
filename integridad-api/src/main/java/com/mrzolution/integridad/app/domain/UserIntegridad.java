@@ -39,6 +39,7 @@ public class UserIntegridad {
     private String refreshToken;
     private boolean apiConnection;
     private boolean guias;
+    private String type;
 
     @Email
     private String email;
@@ -58,6 +59,10 @@ public class UserIntegridad {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private UserIntegridad user;
+
+    @ManyToOne
+    @JoinColumn(name = "aso_id")
+    private Asociado asociado;
     
     public void setListsNull() {
     }
@@ -75,6 +80,10 @@ public class UserIntegridad {
     	    cashier.setFatherListToNull();
     	    cashier.setListsNull();
         }
+
+    	if(asociado != null){
+            asociado.setFatherListToNull();
+        }
     }
 
     @Transient
@@ -87,6 +96,9 @@ public class UserIntegridad {
         userFatther.setUserType(UserType.newUserTypeTest());
         userFatther.setSubsidiary(Subsidiary.newSubsidiaryTest());
         userIntegridad.setUser(userFatther);
+        Asociado asociadoFather = new Asociado();
+        asociadoFather.setUserClient(UserClient.newUserClientTest());
+        userIntegridad.setAsociado(asociadoFather);
         return userIntegridad;
     }
 
