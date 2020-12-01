@@ -85,78 +85,83 @@ public class UserIntegridadServices {
     }
 
     public UserIntegridad authenticate(UserIntegridad user) throws Exception {
-	log.info("UserIntegridadServices authenticate: {}", user.getEmail());
-	UserIntegridad userResponse = userIntegridadRepository.findByEmailIgnoreCaseAndActive(user.getEmail(), true);
-	if (userResponse == null) {
-            throw new BadRequestException("Invalid Email");
-	}
-	if (!passwordEncoder.matches(user.getPassword(), userResponse.getPassword())) {
-            userResponse = null;
-            throw new BadRequestException("Wrong Password");
-	}
-	userResponse.setFatherListToNull();
+		log.info("UserIntegridadServices authenticate: {}", user.getEmail());
+		UserIntegridad userResponse = null;
+		if(user.getCedula() != null){
+			userResponse = userIntegridadRepository.findByCedulaIgnoreCaseAndActive(user.getCedula(), true);
+		} else{
+			userResponse = userIntegridadRepository.findByEmailIgnoreCaseAndActive(user.getEmail(), true);
+		}
+		if (userResponse == null) {
+			throw new BadRequestException("Invalid Email");
+		}
+		if (!passwordEncoder.matches(user.getPassword(), userResponse.getPassword())) {
+			userResponse = null;
+			throw new BadRequestException("Wrong Password");
+		}
+		userResponse.setFatherListToNull();
 
-	if(userResponse.isApiConnection()){
-		String data = "{\"email\": \""+ user.getEmail() + "\", \"password\": \"" + user.getPassword()+"\"}";
-		String response = httpCallerService.post(Constants.FACTURACION_LINK_AUTH, data, null);
+		if(userResponse.isApiConnection()){
+			String data = "{\"email\": \""+ user.getEmail() + "\", \"password\": \"" + user.getPassword()+"\"}";
+			String response = httpCallerService.post(Constants.FACTURACION_LINK_AUTH, data, null);
 
-		JSONParser parser = new JSONParser();
-		ContainerFactory containerFactory = new ContainerFactory(){
-			public List creatArrayContainer() { return new LinkedList(); }
-			public Map createObjectContainer() { return new LinkedHashMap(); }
-		};
+			JSONParser parser = new JSONParser();
+			ContainerFactory containerFactory = new ContainerFactory(){
+				public List creatArrayContainer() { return new LinkedList(); }
+				public Map createObjectContainer() { return new LinkedHashMap(); }
+			};
 
-		Map json = (Map)parser.parse(response, containerFactory);
-		Iterator iter = json.entrySet().iterator();
-		while(iter.hasNext()){
-			Map.Entry entry = (Map.Entry)iter.next();
-			if(entry.getKey().equals("accessToken"))  userResponse.setToken((String) entry.getValue());
-			if(entry.getKey().equals("refreshToken")) userResponse.setRefreshToken((String) entry.getValue());
+			Map json = (Map)parser.parse(response, containerFactory);
+			Iterator iter = json.entrySet().iterator();
+			while(iter.hasNext()){
+				Map.Entry entry = (Map.Entry)iter.next();
+				if(entry.getKey().equals("accessToken"))  userResponse.setToken((String) entry.getValue());
+				if(entry.getKey().equals("refreshToken")) userResponse.setRefreshToken((String) entry.getValue());
 //      System.out.println(entry.getKey() + "=>" + entry.getValue());
+			}
+
+			if(userResponse.getToken() != null) {
+				userResponse.setPassword("");
+				update(userResponse);
+			};
 		}
 
-		if(userResponse.getToken() != null) {
-			userResponse.setPassword("");
-			update(userResponse);
-		};
+		log.info("UserIntegridadServices authenticate success: {}, id: {}", userResponse.getEmail(), userResponse.getType());
+		return userResponse;
 	}
 
-	log.info("UserIntegridadServices authenticate success: {}, id: {}", userResponse.getEmail(), userResponse.getId());
-	return userResponse;
-    }
-
-    public UserIntegridad activate(UUID userId, String validation) throws BadRequestException {
-	log.info("UserIntegridadServices activate: {}", userId);
-	UserIntegridad userToValidate = userIntegridadRepository.findByIdAndValidation(userId, validation);
-	if (userToValidate != null && !userToValidate.isActive()) {
-            log.info("UserIntegridadServices activating: {}", userToValidate.getId());
-            userToValidate.setActive(true);
-            UserIntegridad activeUser = userIntegridadRepository.save(userToValidate);
-            activeUser.setFatherListToNull();
-            log.info("UserIntegridadServices activated: {}", activeUser.getId());
-            return activeUser;
+	public UserIntegridad activate(UUID userId, String validation) throws BadRequestException {
+		log.info("UserIntegridadServices activate: {}", userId);
+		UserIntegridad userToValidate = userIntegridadRepository.findByIdAndValidation(userId, validation);
+		if (userToValidate != null && !userToValidate.isActive()) {
+			log.info("UserIntegridadServices activating: {}", userToValidate.getId());
+			userToValidate.setActive(true);
+			UserIntegridad activeUser = userIntegridadRepository.save(userToValidate);
+			activeUser.setFatherListToNull();
+			log.info("UserIntegridadServices activated: {}", activeUser.getId());
+			return activeUser;
+		}
+		throw new BadRequestException("Wrong URL to validate");
 	}
-        throw new BadRequestException("Wrong URL to validate");
-    }
 
-    public UserIntegridad recoverPassword(String eMail) {
-	log.info("UserIntegridadServices recoverPassword: {}", eMail);
-	UserIntegridad userResponse = userIntegridadRepository.findByEmailIgnoreCaseAndActive(eMail, true);
-        if (userResponse == null) {
-            throw new BadRequestException("Invalid Email");
-	}
-	log.info("UserIntegridadServices recoverPassword user found: {}", userResponse.getId());
-	UUID rand = UUID.randomUUID();
-	String newPass = rand.toString();
-	log.info("UserIntegridadServices recoverPassword user found new pass: {}", newPass);
-	String encoded = passwordEncoder.encode(newPass);
-	userResponse.setPassword(encoded);
-	userResponse.setTempPass(true);
-	userIntegridadRepository.save(userResponse);
-	log.info("UserIntegridadServices recoverPassword user updated with new pass: {}", userResponse.getId());
-	mailingService.sendEmailRecoveryPass(userResponse, newPass);
-	userResponse.setFatherListToNull();
-	return userResponse;
+	public UserIntegridad recoverPassword(String eMail) {
+		log.info("UserIntegridadServices recoverPassword: {}", eMail);
+		UserIntegridad userResponse = userIntegridadRepository.findByEmailIgnoreCaseAndActive(eMail, true);
+		if (userResponse == null) {
+			throw new BadRequestException("Invalid Email");
+		}
+		log.info("UserIntegridadServices recoverPassword user found: {}", userResponse.getId());
+		UUID rand = UUID.randomUUID();
+		String newPass = rand.toString();
+		log.info("UserIntegridadServices recoverPassword user found new pass: {}", newPass);
+		String encoded = passwordEncoder.encode(newPass);
+		userResponse.setPassword(encoded);
+		userResponse.setTempPass(true);
+		userIntegridadRepository.save(userResponse);
+		log.info("UserIntegridadServices recoverPassword user updated with new pass: {}", userResponse.getId());
+		mailingService.sendEmailRecoveryPass(userResponse, newPass);
+		userResponse.setFatherListToNull();
+		return userResponse;
     }
 
     public Iterable<UserIntegridad> getAllActivesLazy() {

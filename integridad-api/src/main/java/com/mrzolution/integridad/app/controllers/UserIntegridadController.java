@@ -52,7 +52,7 @@ public class UserIntegridadController {
 	
     @RequestMapping(method = RequestMethod.POST, value="/auth")
     public ResponseEntity authenticate(@RequestBody UserIntegridad userIntegridad) {
-	log.info("UserIntegridadController authenticate {}", userIntegridad);
+	log.info("UserIntegridadController authenticate {}", userIntegridad.getEmail());
         UserIntegridad response = null;
 	try {
             response = service.authenticate(userIntegridad);

@@ -39,6 +39,7 @@ public class UserIntegridad {
     private String refreshToken;
     private boolean apiConnection;
     private boolean guias;
+    private String type;
 
     @Email
     private String email;
@@ -58,6 +59,10 @@ public class UserIntegridad {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private UserIntegridad user;
+
+    @ManyToOne
+    @JoinColumn(name = "aso_id")
+    private Asociado asociado;
     
     public void setListsNull() {
     }
@@ -74,6 +79,10 @@ public class UserIntegridad {
     	if (cashier != null) {
     	    cashier.setFatherListToNull();
     	    cashier.setListsNull();
+        }
+
+    	if(asociado != null){
+            asociado.setFatherListToNull();
         }
     }
 
