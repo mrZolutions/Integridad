@@ -96,6 +96,9 @@ public class UserIntegridad {
         userFatther.setUserType(UserType.newUserTypeTest());
         userFatther.setSubsidiary(Subsidiary.newSubsidiaryTest());
         userIntegridad.setUser(userFatther);
+        Asociado asociadoFather = new Asociado();
+        asociadoFather.setUserClient(UserClient.newUserClientTest());
+        userIntegridad.setAsociado(asociadoFather);
         return userIntegridad;
     }
 
