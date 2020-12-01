@@ -7,7 +7,7 @@
  * Controller of the integridadUiApp
  */
 angular.module('integridadUiApp')
-    .controller('UsersCtrl', function(utilStringService, userTypeService, authService, projectService,
+    .controller('UsersCtrl', function(_, utilStringService, userTypeService, authService, projectService, asociadoService,
                                       subsidiaryService, validatorService, cashierService) {
         var vm = this;
         vm.error = undefined;
@@ -15,6 +15,7 @@ angular.module('integridadUiApp')
         vm.loading = false;
         vm.userIntegridad = undefined;
         vm.project = undefined;
+        vm.asociado = undefined;
         vm.bosses = [];
         vm.codeBosses = {
             EMP : 'ADM',
@@ -31,6 +32,17 @@ angular.module('integridadUiApp')
                 vm.error = error.data;
             });
             getProjects();
+            getAociados();
+        };
+
+        function getAociados() {
+            asociadoService.getLazy().then(function(response) {
+                vm.asociadosList = _.sortBy(response, 'apellidos');
+                vm.loading = false;
+            }).catch(function(error) {
+                vm.loading = false;
+                vm.error = error.data;
+            });
         };
 
         function getProjects() {
@@ -80,6 +92,11 @@ angular.module('integridadUiApp')
             subsidiaryService.getByProjectId(vm.project.id).then(function(response) {
                 vm.subsidiaryList = response;
                 vm.loading = false;
+
+                if(vm.subsidiaryList.length === 1){
+                    vm.userIntegridad.subsidiary = vm.subsidiaryList[0];
+                    vm.getCashiers();
+                }
             }).catch(function(error) {
                 vm.loading = false;
                 vm.error = error.data;
@@ -96,6 +113,13 @@ angular.module('integridadUiApp')
             cashierService.getBySubsidiaryId(vm.userIntegridad.subsidiary.id).then(function(response) {
                 vm.cashierList = response;
                 vm.loading = false;
+
+                if(vm.cashierList.length === 1){
+                    vm.userIntegridad.cashier = vm.cashierList[0];
+                    // id de EMPLEADOS
+                    vm.userIntegridad.userType = _.find(vm.userTypes, function(usr){ return usr.id === "2c2fa78b-879a-4ef6-b701-00d25028f0fb"})
+                    vm.getBosses()
+                }
             }).catch(function(error) {
                 vm.loading = false;
                 vm.error = error.data;
@@ -182,6 +206,22 @@ angular.module('integridadUiApp')
                 vm.loading = false;
                 vm.error = error.data;
             });
+        };
+
+        vm.setAsoValues = function() {
+            if(vm.asociado){
+                // id de TRANSPORTISTAS
+                vm.project = _.find(vm.projectList, function(proj){ return proj.id === "e660b893-0c70-4985-b9d7-890938412ec4"})
+                vm.userIntegridad.firstName = vm.asociado.nombres
+                vm.userIntegridad.lastName = vm.asociado.apellidos
+                vm.userIntegridad.celPhone = vm.asociado.telefono
+                vm.typeId = 'Cedula'
+                vm.userIntegridad.cedula = vm.asociado.ruc.slice(0, -3)
+                vm.userIntegridad.email = vm.asociado.correo
+                vm.userIntegridad.asociado = vm.asociado
+                vm.userIntegridad.type = 'ASO'
+                vm.getSubsidiaries();
+            }
         };
 
         (function initController() {
