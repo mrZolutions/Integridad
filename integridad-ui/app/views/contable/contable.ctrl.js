@@ -2359,12 +2359,20 @@ angular.module('integridadUiApp')
             vm.editDetail = angular.copy(vm.dailybookCxP.detailDailybookContab);
         };
 
+        vm.editDetailSalesFunction = function(){
+            vm.editDetail = angular.copy(vm.dailybookFv.detailDailybookContab);
+            vm.editDetail.forEach(function(det){
+                det.deber = vm.getDeberHaber(det.deber);
+                det.haber = vm.getDeberHaber(det.haber);
+            });
+            
+        };
+
         vm.removeDetail = function(index){
             vm.editDetail.splice(index, 1);
         };
 
         vm.addDetail = function(){
-            console.log(vm.editDetail);
             vm.editDetail.push({
                 typeContab: "CxP. CON RETENCIONES",
                 numCheque: "--",
@@ -2382,11 +2390,30 @@ angular.module('integridadUiApp')
             });
         };
 
-        vm.guardarDetail = function(){
-            contableService.upsertDetailsDaily(vm.editDetail, vm.dailybookCxP.id, 'CXP')
+        vm.addDetailSales = function(){
+            vm.editDetail.push({
+                typeContab: "COMP. DE VENTAS",
+                numCheque: null,
+                codeConta: undefined,
+                descrip: undefined,
+                name: undefined,
+                tipo: undefined,
+                baseImponible: undefined,
+                deber: undefined,
+                haber: undefined,
+                dateDetailDailybook: vm.dailybookFv.dateRecordBook,
+                dailybookNumber: vm.dailybookFv.dailycxpStringSeq,
+                userClientId: vm.usrCliId,
+                active: true,
+            });
+        };
+
+        vm.guardarDetail = function(id, type){
+            contableService.upsertDetailsDaily(vm.editDetail, id, type)
             .then(function(response){
                 vm.editDetail = [];
-                vm.dailybookCxPSelected(vm.dailybookCxP)
+                if(vm.dailybookCxP) vm.dailybookCxPSelected(vm.dailybookCxP)
+                if(vm.dailybookFv) vm.dailybookFvSelected(vm.dailybookFv)
             })
         };
 
