@@ -434,10 +434,10 @@ angular.module('integridadUiApp')
                 vm.totalPages = response.totalPages;
                 vm.productList = [];
                 for (var i = 0; i < response.content.length; i++) {
-                    var productFound = _.find(vm.billOffline.detailsOffline, function(detail) {
-                        return detail.product.id === response.content[i].id;
-                    });
-                    if (productFound === undefined) {
+                    // var productFound = _.find(vm.billOffline.detailsOffline, function(detail) {
+                    //     return detail.product.id === response.content[i].id;
+                    // });
+                    // if (productFound === undefined) {
                         var sub = _.find(response.content[i].productBySubsidiaries, function(s) {
                             return (s.subsidiary.id === vm.user.subsidiary.id && s.active === true);
                         });
@@ -445,7 +445,7 @@ angular.module('integridadUiApp')
                             response.content[i].quantity = sub.quantity
                             vm.productList.push(response.content[i]);
                         };
-                    };
+                    // };
                 };
             }).catch(function(error) {
                 vm.loading = false;
@@ -587,12 +587,13 @@ angular.module('integridadUiApp')
                 vm.toAddPrice = undefined;
                 vm.billOfflineBarCode = undefined;
                 document.getElementById("input4").focus();
-            } else {
-                var newProductList = _.filter(vm.productList, function(prod) {
-                    return prod.id !== detail.product.id;
-                });
-                vm.productList = newProductList;
-            };
+            } 
+            // else {
+            //     var newProductList = _.filter(vm.productList, function(prod) {
+            //         return prod.id !== detail.product.id;
+            //     });
+            //     vm.productList = newProductList;
+            // };
             vm.paraticularDiscount = undefined;
         };
 
