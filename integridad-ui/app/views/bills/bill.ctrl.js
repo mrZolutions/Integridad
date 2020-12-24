@@ -742,6 +742,17 @@ angular.module('integridadUiApp')
             popupWinindow.close();
         };
 
+        vm.printToCartTwo = function(printBillId) {
+            var innerContents = document.getElementById(printBillId).innerHTML;
+            var popupWinindow = window.open('', 'printMatrixBillId', 'width=272,height=1000');
+            popupWinindow.document.write('<html><head>');
+            popupWinindow.document.write('</head><body style="font-family: Arial, Helvetica, sans-serif; font-size:medium; width: 100vw;">');
+            popupWinindow.document.write(innerContents);
+            popupWinindow.document.write('</body></html>');
+            popupWinindow.print();
+            popupWinindow.close();
+        };
+
         vm.downloadBillTxtTM20 = function(billToDownloadEpsonTM20) {
             var b = document.body.appendChild(document.createElement("b"));
             b.href = "data:text/plain; charset=utf-8," + document.getElementById(billToDownloadEpsonTM20).innerText;
@@ -1031,7 +1042,7 @@ angular.module('integridadUiApp')
               holderService.set(vm.user);
               vm.loading = false;
               setTimeout(function() {
-                vm.user.cashier.specialPrint ? vm.printToCart('printMatrixBillId') : document.getElementById("printBtnBill").click();
+                vm.user.cashier.specialPrint ? vm.printToCartTwo('printLRDosMillBillId') : document.getElementById("printBtnBill").click();
                 // document.getElementById("printBtnBill").click();
                 // vm.printToCart('printMatrixBillId')
                 vm.nuevaBill();

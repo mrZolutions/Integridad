@@ -647,6 +647,11 @@
                         ng-click="vm.printToCart('printMatrixBillId')">
                         <span class = "glyphicon glyphicon-print" aria-hidden = "true"></span>
                 </button>
+                <button type="button" title = "Imprimir Ticket-Termal" class="btn btn-warning btn-sm"
+                        ng-if="!vm.newBill && vm.user.cashier.specialPrint" id="printBtnBillTicketLR"
+                        ng-click="vm.printToCart('printLRDosMillBillId')">
+                        <span class = "glyphicon glyphicon-print" aria-hidden = "true"></span>
+                </button>
                 <button type="button" title="Volver a Inicio" class="btn btn-danger btn-sm"
                         ng-if="!vm.newBill"
                         ng-click="vm.exit()">
@@ -785,6 +790,79 @@
         </table>
 
         ------------------------------------
+    </div>
+
+    <!--IMPRIME TICKET FACTURA LR2000-->
+    <div id="printLRDosMillBillId" ng-show='false' 
+    style="padding: 0; margin: 0; font-family: Arial, Helvetica, sans-serif; font-size:small;">
+        <table width="100%">
+            <tr>
+                <td align="center">
+                    <img src="images/{{vm.companyData.userClient.logo}}" width="110" height="80"/>
+                    <h4><b>{{vm.companyData.userClient.name}}</b></h4>
+                    <p><b>Matriz:</b> {{vm.companyData.userClient.address1}}</p>
+                    <p><b>Establecimiento:</b> {{vm.companyData.address1}}</p>
+                    <p><b>RUC:</b> {{vm.companyData.userClient.ruc}}</p>
+                </td>
+            </tr>
+        </table>
+
+        <p><b>FACTURA No.</b> {{vm.seqNumber}}</p>
+        <p><b>CLAVE ACCESO:</b> {{vm.bill.claveDeAcceso}}</p>
+        <p><b>AMBIENTE:</b> PRODUCCIÓN<br/>
+        <b>EMISIÓN:</b> NORMAL<br/>
+        <b>--- CLIENTE ---</b><br/>
+        <b>RAZON SOCIAL: </b>{{vm.clientSelected.name}}<br/>
+        <b>IDENTIFICACION: </b>{{vm.clientSelected.identification}}<br/>
+        <b>FECHA: </b> {{vm.getDateToPrint() | date :  "dd/MM/yyyy"}}</p>
+        <p>{{vm.getIsAgentRetention()}}</p>
+
+        ------------------------------------------------------------------
+        <table width="100%">
+            <tr>
+                <th>DESCRIPCION</th>
+                <th>CANTIDAD</th>
+                <th>UNITARIO</th>
+                <th>TOTAL</th>
+            </tr>
+            <tr ng-repeat="detail in vm.bill.details">
+                <td>{{(detail.product.name).substr(0,15)}}</td>
+                <td align="center">{{detail.quantity}}</td>
+                <td>&#36;{{detail.costEach}}</td>
+                <td>&#36;{{detail.total}}</td>
+            </tr>
+            <tr>
+                <td>SUBTOTAL:</td>
+                <td></td>
+                <td></td>
+                <td>&#36;{{vm.bill.subTotal}}</td>
+            </tr>
+            <tr>
+                <td>BASE 0%:</td>
+                <td></td>
+                <td></td>
+                <td>&#36;{{vm.bill.baseNoTaxes}}</td>
+            </tr>
+            <tr>
+                <td>BASE 12%:</td>
+                <td></td>
+                <td></td>
+                <td>&#36;{{vm.bill.baseTaxes}}</td>
+            </tr>
+            <tr>
+                <td>IVA:</td>
+                <td></td>
+                <td></td>
+                <td>&#36;{{vm.bill.iva}}</td>
+            </tr>
+            <tr>
+                <td><b>TOTAL:</b></td>
+                <td></td>
+                <td></td>
+                <td><b>&#36;{{vm.bill.total}}</b></td>
+            </tr>
+        </table>
+        ------------------------------------------------------------------
     </div>
 
     <!--IMPRIME TICKET DE CONSUMO-->
