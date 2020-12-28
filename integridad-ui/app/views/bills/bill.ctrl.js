@@ -742,6 +742,17 @@ angular.module('integridadUiApp')
             popupWinindow.close();
         };
 
+        vm.printToCartTwo = function(printBillId) {
+            var innerContents = document.getElementById(printBillId).innerHTML;
+            var popupWinindow = window.open('', 'printMatrixBillId', 'width=272,height=1000');
+            popupWinindow.document.write('<html><head>');
+            popupWinindow.document.write('</head><body style="font-family: Arial, Helvetica, sans-serif; font-size:medium; width: 100vw;">');
+            popupWinindow.document.write(innerContents);
+            popupWinindow.document.write('</body></html>');
+            popupWinindow.print();
+            popupWinindow.close();
+        };
+
         vm.downloadBillTxtTM20 = function(billToDownloadEpsonTM20) {
             var b = document.body.appendChild(document.createElement("b"));
             b.href = "data:text/plain; charset=utf-8," + document.getElementById(billToDownloadEpsonTM20).innerText;
@@ -1031,10 +1042,18 @@ angular.module('integridadUiApp')
               holderService.set(vm.user);
               vm.loading = false;
               setTimeout(function() {
-                vm.user.cashier.specialPrint ? vm.printToCart('printMatrixBillId') : document.getElementById("printBtnBill").click();
+                  //LOZADA cashier ids
+                if(['ff2daf1f-047e-40b5-be28-ae79a326257a',
+                    '34c5289c-3b1d-4920-8b4f-c4266ad3c0fe'].includes(vm.user.cashier.id)){
+                        //DO NOTHING hasta que este instalada la impresora
+                    //vm.printToCartTwo('printLRDosMillBillId')
+                } else {
+                    vm.user.cashier.specialPrint ? vm.printToCart('printMatrixBillId') : document.getElementById("printBtnBill").click();
+                    vm.nuevaBill();
+                }
                 // document.getElementById("printBtnBill").click();
                 // vm.printToCart('printMatrixBillId')
-                vm.nuevaBill();
+                
             }, 300);
               if (vm.seqChanged) {
                   cashierService.update(vm.user.cashier).then(function(resp) {
