@@ -1042,10 +1042,18 @@ angular.module('integridadUiApp')
               holderService.set(vm.user);
               vm.loading = false;
               setTimeout(function() {
-                vm.user.cashier.specialPrint ? vm.printToCartTwo('printLRDosMillBillId') : document.getElementById("printBtnBill").click();
+                  //LOZADA cashier ids
+                if(['ff2daf1f-047e-40b5-be28-ae79a326257a',
+                    '34c5289c-3b1d-4920-8b4f-c4266ad3c0fe'].includes(vm.user.cashier.id)){
+                        //DO NOTHING hasta que este instalada la impresora
+                    //vm.printToCartTwo('printLRDosMillBillId')
+                } else {
+                    vm.user.cashier.specialPrint ? vm.printToCart('printMatrixBillId') : document.getElementById("printBtnBill").click();
+                    vm.nuevaBill();
+                }
                 // document.getElementById("printBtnBill").click();
                 // vm.printToCart('printMatrixBillId')
-                vm.nuevaBill();
+                
             }, 300);
               if (vm.seqChanged) {
                   cashierService.update(vm.user.cashier).then(function(resp) {
