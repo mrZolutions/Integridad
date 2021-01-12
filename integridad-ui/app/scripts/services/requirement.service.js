@@ -33,7 +33,7 @@ angular
                 };
             });
             var req = {
-                "ambiente": 2,
+                "ambiente": 1,
                 "tipo_emision": 1,
                 "secuencial": bill.billSeq,
                 "fecha_emision": dateService.getIsoDate($('#pickerBillDate').data("DateTimePicker").date().toDate()),
@@ -111,12 +111,18 @@ angular
                 };
                 req.informacion_adicional = informAdicional;
             } else if (user.cashier.subsidiary.userClient.espTemp === 'A-TRANS') {
-                //req.comprador.email = req.comprador.email + ', facturaslaquintarm@hotmail.com';
+                req.comprador.email = req.comprador.email + ', facturacion@transportelospuentessa.com';
                 var informAdicional = {
                     observ: ' ' + bill.observation
                 };
                 req.informacion_adicional = informAdicional;
-            };;
+            } else if (user.cashier.subsidiary.userClient.espTemp === 'A-ZIP') {
+                req.comprador.email = req.comprador.email + ', contabilidad@ziponlineshop.com';
+                var informAdicional = {
+                    observ: ' ' + bill.observation
+                };
+                req.informacion_adicional = informAdicional;
+            };
 
             if (credito !== undefined) {
                 req.credito = credito;
