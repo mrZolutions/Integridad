@@ -51,6 +51,10 @@ angular
                 eRet.sujeto.email = eRet.sujeto.email + ', facturaslaquintarm@hotmail.com';
             } else if (user.cashier.subsidiary.userClient.espTemp === 'A-3') {
                 eRet.sujeto.email = eRet.sujeto.email + ', facturacion@mrzolutions.com';
+            } else if (user.cashier.subsidiary.userClient.espTemp === 'A-ZIP') {
+                eRet.sujeto.email = eRet.sujeto.email + ', contabilidad@ziponlineshop.com';
+            } else if (user.cashier.subsidiary.userClient.espTemp === 'A-TRANS') {
+                eRet.sujeto.email = eRet.sujeto.email + ', facturacion@transportelospuentessa.com';
             };
             _.each(eRet.items, function(item) {
                 item.codigo = String(item.codigo);
