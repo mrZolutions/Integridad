@@ -33,7 +33,7 @@ angular
                 };
             });
             var req = {
-                "ambiente": 1,
+                "ambiente": 2,
                 "tipo_emision": 1,
                 "secuencial": bill.billSeq,
                 "fecha_emision": dateService.getIsoDate($('#pickerBillDate').data("DateTimePicker").date().toDate()),
