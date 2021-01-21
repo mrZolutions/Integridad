@@ -95,6 +95,9 @@ angular.module('integridadUiApp')
 
         function _getTotals() {
             vm.doc.totales.total_sin_impuestos = 0;
+            _.each(vm.doc.totales.impuestos, function(itm){
+                itm.base_imponible = 0;
+            });
             var impuestos = 0;
             _.each(vm.doc.items, function(itm){
                 _.each(itm.impuestos, function(imp){
