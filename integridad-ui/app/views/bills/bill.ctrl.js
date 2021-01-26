@@ -814,6 +814,7 @@ angular.module('integridadUiApp')
 
         vm.getClaveAcceso = function() {
             vm.loading = true;
+            vm.bill.dateCreated = $('#pickerBillDate').data("DateTimePicker").date().toDate().getTime()
             $('#modalAddPago').modal('hide');
             vm.impuestosTotales = [];
             vm.bill.detailsKardex = [];
