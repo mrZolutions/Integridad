@@ -1,5 +1,6 @@
 package com.mrzolution.integridad.app.services;
 
+import ch.qos.logback.core.CoreConstants;
 import com.google.common.collect.Lists;
 import com.mrzolution.integridad.app.domain.*;
 import com.mrzolution.integridad.app.domain.report.ItemOfflineReport;
@@ -268,6 +269,7 @@ public class BillOfflineServices {
         billsOffline.forEach(billOff-> {
             billOff.setListsNull();
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+            dateFormat.setTimeZone(TimeZone.getTimeZone("America/Guayaquil"));
             String date = dateFormat.format(new Date(billOff.getDateCreated()));
             String status = billOff.isActive() ? "ACTIVA" : "ANULADA";
 

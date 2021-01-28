@@ -10,10 +10,8 @@ import com.mrzolution.integridad.app.repositories.ProductBySubsidiairyRepository
 import com.mrzolution.integridad.app.repositories.ProductRepository;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
@@ -63,6 +61,7 @@ public class KardexServices {
         detaKardex.forEach(kard -> {
             if (kard.isActive()) {
                 SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+                dateFormat.setTimeZone(TimeZone.getTimeZone("America/Guayaquil"));
                 String fechaReg = dateFormat.format(new Date(kard.getDateRegister()));
                 
                 if ("INGRESO".equals(kard.getObservation())) {

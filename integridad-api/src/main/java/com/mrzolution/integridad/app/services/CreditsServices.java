@@ -94,6 +94,7 @@ public class CreditsServices {
             populateChildren(credit);
             
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+            dateFormat.setTimeZone(TimeZone.getTimeZone("America/Guayaquil"));
             String fechaVenta = dateFormat.format(new Date(credit.getPago().getBill().getDateCreated()));
             String fechaVence = dateFormat.format(new Date(credit.getFecha()));
             
@@ -326,6 +327,7 @@ public class CreditsServices {
 
     private CreditsResumeReport setInitialToReport (Credits credit){
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        dateFormat.setTimeZone(TimeZone.getTimeZone("America/Guayaquil"));
         Bill bill = credit.getPago().getBill();
         totalAbono = 0;
         totalNC = 0;
