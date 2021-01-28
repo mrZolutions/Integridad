@@ -115,6 +115,7 @@ public class DetailDailybookContabServices {
         details.forEach(detail -> {
             if (detail.isActive()) {
                 SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+                dateFormat.setTimeZone(TimeZone.getTimeZone("America/Guayaquil"));
                 String fechaBook = dateFormat.format(new Date(detail.getDateDetailDailybook()));
             
                 Double sumaDeber = Double.valueOf(0);
@@ -178,6 +179,7 @@ public class DetailDailybookContabServices {
         detailGen.forEach(detGen -> {
             if (detGen.isActive()) {
                 SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+                dateFormat.setTimeZone(TimeZone.getTimeZone("America/Guayaquil"));
                 String fechaBook = dateFormat.format(new Date(detGen.getDateDetailDailybook()));                                
                 if (codeContab != null && codeContab.equals(detGen.getCodeConta())) {
                     sumDeber = 0.0;
@@ -249,6 +251,7 @@ public class DetailDailybookContabServices {
                 arrayValidator[0] = detGen.getDateDetailDailybook();
                 arrayValidatorThree[0] = detGen.getDailybookNumber();
                 SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+                dateFormat.setTimeZone(TimeZone.getTimeZone("America/Guayaquil"));
                 String fechaBook = dateFormat.format(new Date(detGen.getDateDetailDailybook()));
                 String tipoDocumento = new String();
                 String clienteProveedor = new String();

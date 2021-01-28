@@ -201,6 +201,7 @@ public class PaymentServices {
         
         payments.forEach(payment -> {
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+            dateFormat.setTimeZone(TimeZone.getTimeZone("America/Guayaquil"));
             String fechaPago = dateFormat.format(new Date(payment.getDatePayment()));
             
             if (clientId != null && clientId.equals(payment.getCredits().getPago().getBill().getClient().getId())) {

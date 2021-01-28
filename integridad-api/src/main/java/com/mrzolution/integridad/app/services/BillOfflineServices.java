@@ -268,6 +268,7 @@ public class BillOfflineServices {
         billsOffline.forEach(billOff-> {
             billOff.setListsNull();
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+            dateFormat.setTimeZone(TimeZone.getTimeZone("America/Guayaquil"));
             String date = dateFormat.format(new Date(billOff.getDateCreated()));
             String status = billOff.isActive() ? "ACTIVA" : "ANULADA";
 

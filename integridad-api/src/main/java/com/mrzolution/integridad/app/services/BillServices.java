@@ -446,6 +446,8 @@ public class BillServices {
                 }
             }
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+            dateFormat.setTimeZone(TimeZone.getTimeZone("America/Guayaquil"));
+//            Date date = dateFormat.parse("2010-05-23T09:01:02");
             String date = dateFormat.format(new Date(bill.getDateCreated()));
             String status = bill.isActive() ? "ACTIVA" : "ANULADA";
             String endDate = dateFormat.format(new Date(endDateLong));
@@ -471,6 +473,7 @@ public class BillServices {
             pago.setListsNull();
             Long endDateLong = pago.getBill().getDateCreated();
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+            dateFormat.setTimeZone(TimeZone.getTimeZone("America/Guayaquil"));
             String endDate = dateFormat.format(new Date(endDateLong));
             
             CashClosureReport cashClosureReport = new CashClosureReport(endDate, pago.getBill().getStringSeq(), pago.getBill().getBaseTaxes(), pago.getBill().getBaseNoTaxes(), pago.getBill().getSubTotal(),

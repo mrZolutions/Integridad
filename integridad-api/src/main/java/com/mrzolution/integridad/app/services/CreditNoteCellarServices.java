@@ -25,10 +25,8 @@ import com.mrzolution.integridad.app.repositories.ProductBySubsidiairyRepository
 import com.mrzolution.integridad.app.repositories.ProductRepository;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
@@ -252,6 +250,7 @@ public class CreditNoteCellarServices {
             creditNote.setListsNull();
             String status = creditNote.isActive() ? "ACTIVA" : "ANULADA";
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+            dateFormat.setTimeZone(TimeZone.getTimeZone("America/Guayaquil"));
             String dateCreated = dateFormat.format(new Date(creditNote.getDateCreated()));
             
             CreditNoteCellarReport creditNoteCellarReport = new CreditNoteCellarReport(creditNote.getStringSeq(), dateCreated, creditNote.getDocumentStringSeq(), status, creditNote.getBaseTaxes(),

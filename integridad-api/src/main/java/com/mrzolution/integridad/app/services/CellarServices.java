@@ -9,12 +9,8 @@ import com.mrzolution.integridad.app.repositories.*;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
@@ -301,6 +297,7 @@ public class CellarServices {
         for (UUID uuidCurrent: productIds) {
             for (Cellar cellar: cellars) {
                 SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+                dateFormat.setTimeZone(TimeZone.getTimeZone("America/Guayaquil"));
                 String fechaIngreso = dateFormat.format(new Date(cellar.getDateEnterCellar()));
                 String fechaBill = dateFormat.format(new Date(cellar.getDateBill()));
                 Double iva = new Double(0);

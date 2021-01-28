@@ -13,10 +13,8 @@ import com.mrzolution.integridad.app.repositories.PagoDebtsRepository;
 import com.mrzolution.integridad.app.repositories.PaymentDebtsRepository;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
@@ -151,6 +149,7 @@ public class PaymentDebtsServices {
         
         paymentsDebts.forEach(paymentDebt -> {
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+            dateFormat.setTimeZone(TimeZone.getTimeZone("America/Guayaquil"));
             String fechaPago = dateFormat.format(new Date(paymentDebt.getDatePayment()));
             
             if (providerId != null && providerId.equals(paymentDebt.getCreditsDebts().getPagoDebts().getDebtsToPay().getProvider().getId())) {
@@ -202,6 +201,7 @@ public class PaymentDebtsServices {
         
         paymentsDebts.forEach(paymentDebt -> {
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+            dateFormat.setTimeZone(TimeZone.getTimeZone("America/Guayaquil"));
             String fechaPago = dateFormat.format(new Date(paymentDebt.getDatePayment()));
             String fechaCompra = dateFormat.format(new Date(paymentDebt.getCreditsDebts().getPagoDebts().getDebtsToPay().getFecha()));
             String fechaVence = dateFormat.format(new Date(paymentDebt.getCreditsDebts().getFecha()));

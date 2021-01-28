@@ -230,6 +230,7 @@ public class CreditNoteServices {
             creditNote.setListsNull();
             String status = creditNote.isActive() ? "ACTIVA" : "ANULADA";
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+            dateFormat.setTimeZone(TimeZone.getTimeZone("America/Guayaquil"));
             String dateCreated = dateFormat.format(new Date(creditNote.getDateCreated()));
             
             CreditNoteReport creditNoteReport = new CreditNoteReport(creditNote.getStringSeq(), dateCreated, creditNote.getDocumentStringSeq(), status, creditNote.getBaseTaxes(),
