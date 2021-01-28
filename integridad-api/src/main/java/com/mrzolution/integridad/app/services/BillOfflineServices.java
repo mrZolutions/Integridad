@@ -1,6 +1,5 @@
 package com.mrzolution.integridad.app.services;
 
-import ch.qos.logback.core.CoreConstants;
 import com.google.common.collect.Lists;
 import com.mrzolution.integridad.app.domain.*;
 import com.mrzolution.integridad.app.domain.report.ItemOfflineReport;
