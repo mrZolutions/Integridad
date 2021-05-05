@@ -1307,6 +1307,7 @@ angular.module('integridadUiApp')
         };
 
         function _getDailyCxPSeqNumber() {
+            console.log(vm.userData)
             vm.numberAddedOneCxP = parseInt(vm.userData.cashier.dailyCppNumberSeq) + 1;
             vm.dailycxpSeq = vm.numberAddedOneCxP;
             vm.dailycxpStringSeq = utilSeqService._pad_with_zeroes(vm.numberAddedOneCxP, 6);
@@ -1497,12 +1498,14 @@ angular.module('integridadUiApp')
                 vm.dailybookCxP.retentionTotal = parseFloat(vm.retention.total);
             };
             contableService.createDailybookAsinCxP(vm.dailybookCxP).then(function(response) {
-                vm.userData.cashier.dailyCppNumberSeq = vm.dailybookCxP.dailycxpSeq;
-                holderService.set(vm.userData);
+                
             }).catch(function(error) {
                 vm.loading = false;
                 vm.error = error.data;
             });
+
+            vm.userData.cashier.dailyCppNumberSeq = vm.dailybookCxP.dailycxpSeq;
+            holderService.set(vm.userData);
         };
 
         vm.exit = function() {
