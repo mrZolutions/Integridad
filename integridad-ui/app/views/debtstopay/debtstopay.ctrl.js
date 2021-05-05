@@ -1307,7 +1307,6 @@ angular.module('integridadUiApp')
         };
 
         function _getDailyCxPSeqNumber() {
-            console.log(vm.userData)
             vm.numberAddedOneCxP = parseInt(vm.userData.cashier.dailyCppNumberSeq) + 1;
             vm.dailycxpSeq = vm.numberAddedOneCxP;
             vm.dailycxpStringSeq = utilSeqService._pad_with_zeroes(vm.numberAddedOneCxP, 6);
