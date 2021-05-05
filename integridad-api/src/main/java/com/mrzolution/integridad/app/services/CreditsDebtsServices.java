@@ -9,10 +9,7 @@ import com.mrzolution.integridad.app.repositories.PaymentDebtsRepository;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import lombok.extern.slf4j.Slf4j;
@@ -78,6 +75,7 @@ public class CreditsDebtsServices {
             populateChildren(creditD);
             
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+            dateFormat.setTimeZone(TimeZone.getTimeZone("America/Guayaquil"));
             String fechaVenta = dateFormat.format(new Date(creditD.getPagoDebts().getDebtsToPay().getFecha()));
             String fechaVence = dateFormat.format(new Date(creditD.getFecha()));
             
