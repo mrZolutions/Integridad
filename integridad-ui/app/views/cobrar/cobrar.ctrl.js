@@ -472,12 +472,13 @@ angular.module('integridadUiApp')
                     paymentService.createPaymentList(paymentsListToSave).then(function(response) {
                         vm.loading = false;
                         vm.success = 'Abono realizado con exito';
+                        _asientoComprobanteMultipleCobro();
+                        _asientoComprobanteMultipleIngreso();
                     }).catch(function(error) {
                         vm.loading = false;
                         vm.error = error.data;
                     });
-                    _asientoComprobanteMultipleCobro();
-                    _asientoComprobanteMultipleIngreso();
+                    
                     _activate();
                 } else {
                     vm.error = 'El Nro. de Cheque, Transferencia y/o Depósito Ya Existe y no puede repetirse';
