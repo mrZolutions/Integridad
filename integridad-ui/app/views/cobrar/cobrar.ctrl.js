@@ -17,6 +17,7 @@ angular.module('integridadUiApp')
         vm.optionsList = undefined;
 
         vm.loading = false;
+        vm.userData = holderService.get();
         
         vm.documentType = [
             {code: '01', name: 'Factura'},
@@ -56,7 +57,6 @@ angular.module('integridadUiApp')
         vm.typeContabCi = 'COMP. DE INGRESO'
 
         function _activate() {
-            vm.userData = holderService.get();
             vm.advertencia = false;
             vm.error = undefined;
             vm.today = new Date();
