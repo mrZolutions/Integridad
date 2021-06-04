@@ -17,7 +17,6 @@ angular.module('integridadUiApp')
         vm.optionsList = undefined;
 
         vm.loading = false;
-        vm.userData = holderService.get();
         
         vm.documentType = [
             {code: '01', name: 'Factura'},
@@ -57,6 +56,7 @@ angular.module('integridadUiApp')
         vm.typeContabCi = 'COMP. DE INGRESO'
 
         function _activate() {
+            vm.userData = holderService.get();
             vm.advertencia = false;
             vm.error = undefined;
             vm.today = new Date();
@@ -472,12 +472,13 @@ angular.module('integridadUiApp')
                     paymentService.createPaymentList(paymentsListToSave).then(function(response) {
                         vm.loading = false;
                         vm.success = 'Abono realizado con exito';
+                        _asientoComprobanteMultipleCobro();
+                        _asientoComprobanteMultipleIngreso();
                     }).catch(function(error) {
                         vm.loading = false;
                         vm.error = error.data;
                     });
-                    _asientoComprobanteMultipleCobro();
-                    _asientoComprobanteMultipleIngreso();
+                    
                     _activate();
                 } else {
                     vm.error = 'El Nro. de Cheque, Transferencia y/o Depósito Ya Existe y no puede repetirse';
