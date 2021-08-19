@@ -49,6 +49,8 @@ angular.module('integridadUiApp')
         vm.seqChanged = false;
 
         function _activate() {
+            vm.clienteAConsultar = undefined;
+            vm.billListCopy = undefined;
             vm.advertencia = false;
             vm.clientList = undefined;
             vm.error = undefined;
@@ -218,6 +220,7 @@ angular.module('integridadUiApp')
         };
 
         vm.clientSelectChanged = function(client) {
+            vm.clienteAConsultar = undefined;
             vm.clientSelected = client;
             vm.bill.client = vm.clientSelected;
             vm.consumption.client = vm.clientSelected;
@@ -229,7 +232,9 @@ angular.module('integridadUiApp')
 
         vm.clientConsult = function(client) {
             vm.loading = true;
+            vm.clienteAConsultar = client;
             billService.getAllBillsByClientId(client.id).then(function(response) {
+                vm.billListCopy = angular.copy(response);
                 vm.billList = response;
                 vm.loading = false;
             }).catch(function(error) {
@@ -1160,7 +1165,14 @@ angular.module('integridadUiApp')
         };
 
         vm.exit = function() {
-            $location.path('/home');
+            if(vm.clienteAConsultar) {
+                vm.bill = undefined;
+                vm.clientSelected = undefined;
+                vm.billList = angular.copy(vm.billListCopy)
+            } else {
+                $location.path('/home');    
+            }
+            //$location.path('/home');
         };
 
         (function initController() {
