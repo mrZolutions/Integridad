@@ -12,6 +12,7 @@ angular.module('integridadUiApp')
                                      clientService, productService, authService, billService, warehouseService,
                                      cashierService, requirementService, utilSeqService, configCuentasService) {
         var vm = this;
+        vm.searchForced = '';
         vm.error = undefined;
         vm.success = undefined;
         vm.loading = false;
@@ -49,6 +50,7 @@ angular.module('integridadUiApp')
         vm.seqChanged = false;
 
         function _activate() {
+            vm.searchForced = '';
             vm.clienteAConsultar = undefined;
             vm.billListCopy = undefined;
             vm.advertencia = false;
