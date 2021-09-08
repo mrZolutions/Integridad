@@ -1091,7 +1091,9 @@
                         <div class="col-md-12" ng-if="vm.productToAdd === undefined">
                             <div class="row">
                                 <div class="form-group col-md-8">
-                                    <input id="prod011" ng-model="vm.searchText" ng-keypress="vm.filterEvent($event)" class="form-control" placeholder="Buscar">
+                                    <form>
+                                        <input id="prod011" ng-model="vm.searchText" ng-keypress="vm.filterEvent($event)" class="form-control" placeholder="Buscar" autocomplete="off">
+                                    </form>
                                 </div>
                                 <div class="form-group col-md-4">
                                     <button type="button" title="Buscar" class="btn btn-primary btn-sm" ng-click="vm.filter()">
