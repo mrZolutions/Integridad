@@ -5,7 +5,7 @@ spring:
 spring:
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
   profiles: development
   datasource:
     url: jdbc:postgresql://localhost:5432/integridad
@@ -21,8 +21,8 @@ email:
 spring:
   jpa:
     hibernate:
-      ddl-auto: update
-  profiles: production
+      ddl-auto: none
+      profiles: production
   datasource:
     url: jdbc:postgresql://ec2-34-193-232-231.compute-1.amazonaws.com:5432/db1ae6skr7q6pl?ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory
     username: rteskdoydvzldn
