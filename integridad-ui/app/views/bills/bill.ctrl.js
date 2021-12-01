@@ -18,7 +18,7 @@ angular.module('integridadUiApp')
         vm.loading = false;
         vm.isEmp = true;
         vm.prices = [
-            {name: 'EFECTIVO', cod: 'cashPercentage'}, {name: 'MAYORISTA', cod: 'majorPercentage'},
+            {name: 'EFECTIVOzzz', cod: 'cashPercentage'}, {name: 'MAYORISTA', cod: 'majorPercentage'},
             {name: 'CREDITO', cod: 'creditPercentage'}, {name: 'TARJETA', cod: 'cardPercentage'}
         ];
         vm.medList = [
