@@ -14,7 +14,7 @@ spring:
     
 email:
     username: facturacionmrz@gmail.com
-    pass: Hijodedios.3
+    pass: Hijodedios.5
     emailFrom: Integridad - MrZolutions <desarrollo.integridad@mrzolutions.com>
 
 ---
@@ -30,5 +30,5 @@ spring:
 
 email:
     username: facturacionmrz@gmail.com
-    pass: Hijodedios.3
+    pass: Hijodedios.5
     emailFrom: Integridad - MrZolutions <desarrollo.integridad@mrzolutions.com>
