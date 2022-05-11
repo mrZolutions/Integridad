@@ -50,6 +50,11 @@ angular.module('integridadUiApp')
         vm.seqChanged = false;
 
         function _activate() {
+            vm.mrZolutions = '3566a41d-3260-49ba-9ee4-00c7d54e46b3';
+            vm.dental = '8770552e-f64d-4947-95fd-c3c4ed04e5c4';
+            vm.lozada = '1f9c21d7-a485-482b-b5eb-e363728340b2';
+            vm.rimpeIds = [vm.mrZolutions, vm.lozada, vm.dental];
+
             vm.searchForced = '';
             vm.clienteAConsultar = undefined;
             vm.billListCopy = undefined;
@@ -188,7 +193,8 @@ angular.module('integridadUiApp')
                 iva: 0,
                 ice: 0,
                 details: [],
-                pagos: []
+                pagos: [],
+                observation: vm.rimpeIds.includes(vm.user.subsidiary.userClient.id) ? 'CONTRIBUYENTE REGIMEN RIMPE' : '', 
             };
         };
 
