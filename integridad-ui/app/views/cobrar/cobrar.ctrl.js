@@ -56,7 +56,7 @@ angular.module('integridadUiApp')
 
         vm.typeContabCi = 'COMP. DE INGRESO'
 
-        function _activate() {
+        function _activate(cleanItemsMultipleCobros = true) {
             vm.advertencia = false;
             vm.error = undefined;
             vm.today = new Date();
@@ -80,10 +80,10 @@ angular.module('integridadUiApp')
             vm.clientCodConta = undefined;
             vm.ctaCtableBankList = undefined;
             vm.paymentList = undefined;
-            vm.bankName = undefined;
-            vm.modePayment = undefined;
-            vm.noDocument = undefined;
-            vm.noAccount = undefined;
+            // vm.bankName = undefined;
+            // vm.modePayment = undefined;
+            // vm.noDocument = undefined;
+            // vm.noAccount = undefined;
             vm.details = undefined;
             vm.valorDocumento = undefined;
             vm.dailyCiSeq = undefined;
@@ -92,7 +92,13 @@ angular.module('integridadUiApp')
             vm.comprobanteCobroCreated = undefined;
             vm.comprobanteCobroSeq = undefined;
             vm.comprobanteCobroStringSeq = undefined;
-            vm.itemsMultipleCobros = [];
+            if (cleanItemsMultipleCobros) {
+                vm.itemsMultipleCobros = [];
+                vm.bankName = undefined;
+                vm.noAccount = undefined;
+                vm.noDocument = undefined;
+                vm.modePayment = undefined;
+            }
             vm.billsSelected = [];
 
             vm.userCashier = vm.userData.cashier;
@@ -474,12 +480,19 @@ angular.module('integridadUiApp')
                         vm.success = 'Abono realizado con exito';
                         _asientoComprobanteMultipleCobro();
                         _asientoComprobanteMultipleIngreso();
+                        
+                        vm.itemsMultipleCobros = [];
+                        vm.bankName = undefined;
+                        vm.noAccount = undefined;
+                        vm.noDocument = undefined;
+                        vm.modePayment = undefined;
+                        // _activate();
                     }).catch(function(error) {
                         vm.loading = false;
                         vm.error = error.data;
                     });
                     
-                    _activate();
+                    _activate(false);
                 } else {
                     vm.error = 'El Nro. de Cheque, Transferencia y/o Depósito Ya Existe y no puede repetirse';
                     vm.loading = false;
