@@ -56,7 +56,11 @@ angular.module('integridadUiApp')
 
         vm.typeContabCi = 'COMP. DE INGRESO'
 
-        function _activate(cleanItemsMultipleCobros = true) {
+        function _activate(cleanItemsMultipleCobrosAux) {
+            var cleanItemsMultipleCobros = true;
+            if(cleanItemsMultipleCobrosAux !== undefined) {
+                cleanItemsMultipleCobros = cleanItemsMultipleCobrosAux;
+            }
             vm.advertencia = false;
             vm.error = undefined;
             vm.today = new Date();
