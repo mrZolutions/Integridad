@@ -122,6 +122,12 @@ angular
                     observ: ' ' + bill.observation
                 };
                 req.informacion_adicional = informAdicional;
+            } else if (user.cashier.subsidiary.userClient.espTemp === 'A-ESC') {
+                req.comprador.email = req.comprador.email + ', facturasgbs17h00420@gmail.com';
+                var informAdicional = {
+                    observ: ' ' + bill.observation
+                };
+                req.informacion_adicional = informAdicional;
             };
 
             if (credito !== undefined) {
