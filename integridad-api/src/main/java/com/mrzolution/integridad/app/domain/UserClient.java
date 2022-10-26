@@ -41,6 +41,7 @@ public class UserClient {
     private String apiKey;
     private String espTemp;
     private boolean isAgentRetention;
+    private boolean isContab;
 
     private boolean testMode;
     

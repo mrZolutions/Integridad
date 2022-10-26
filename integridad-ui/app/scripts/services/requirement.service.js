@@ -39,7 +39,7 @@ angular
                 "fecha_emision": dateService.getIsoDate($('#pickerBillDate').data("DateTimePicker").date().toDate()),
                 "emisor": {
                     "ruc": user.cashier.subsidiary.userClient.ruc,
-                    "obligado_contabilidad": true,
+                    "obligado_contabilidad": user.cashier.subsidiary.userClient.contab,
                     "contribuyente_especial": "",
                     "nombre_comercial": user.cashier.subsidiary.userClient.name,
                     "razon_social": user.cashier.subsidiary.userClient.name,
