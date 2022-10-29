@@ -113,7 +113,14 @@ angular
             } else if (user.cashier.subsidiary.userClient.espTemp === 'A-TRANS') {
                 req.comprador.email = req.comprador.email + ', facturacion@transportelospuentessa.com';
                 var informAdicional = {
-                    observ: ' ' + bill.observation
+                    observ: ' ' + bill.observation,
+                    placa: bill.placa,
+                    punto_emision: user.cashier.threeCode,
+                    telefono: user.phone,
+                    ruc:user.ruc,
+                    email: user.email,
+                    name: user.firstName + ' ' + user.lastName,
+                    direccion: user.address1, 
                 };
                 req.informacion_adicional = informAdicional;
             } else if (user.cashier.subsidiary.userClient.espTemp === 'A-ZIP') {
