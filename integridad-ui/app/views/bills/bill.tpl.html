@@ -335,6 +335,12 @@
                                ng-model="vm.bill.discountPercentage" class="form-control" maxlength="9" ng-change="vm.getFechaCobro()" ng-disabled="!vm.newBill">
                     </div>
                 </div>
+                <div class="row" ng-if="vm.companyData.userClient.espTemp === 'A-TRANS'">
+                    <div class="form-group col-md-4">
+                        <b>Placa:</b>
+                        <input type="text" ng-model="vm.bill.placa" class="form-control">
+                    </div>
+                </div>
             </div>
         </div>
         <div class="panel panel-primary">
