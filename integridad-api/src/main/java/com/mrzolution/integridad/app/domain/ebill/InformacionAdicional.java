@@ -11,7 +11,7 @@ public class InformacionAdicional {
     private String observ;
     private String placa;
     private String telefono;
-    private String puntoEmision;
+    private String punto_emision;
     private String ruc;
     private String email;
     private String name;
