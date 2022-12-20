@@ -135,6 +135,12 @@ angular
                     observ: ' ' + bill.observation
                 };
                 req.informacion_adicional = informAdicional;
+            } else if (user.cashier.subsidiary.userClient.espTemp === 'A-5') {
+                req.comprador.email = req.comprador.email + ', farmacia.novapiel@gmail.com';
+                var informAdicional = {
+                    observ: ' ' + bill.observation
+                };
+                req.informacion_adicional = informAdicional;
             };
 
             if (credito !== undefined) {
