@@ -53,7 +53,8 @@ angular.module('integridadUiApp')
             vm.mrZolutions = '3566a41d-3260-49ba-9ee4-00c7d54e46b3';
             vm.dental = '8770552e-f64d-4947-95fd-c3c4ed04e5c4';
             vm.lozada = '1f9c21d7-a485-482b-b5eb-e363728340b2';
-            vm.rimpeIds = [vm.mrZolutions, vm.lozada, vm.dental];
+            vm.novapiel = '9fb035e0-d903-48b6-b36b-788d6f57a58a';
+            vm.rimpeIds = [vm.mrZolutions, vm.lozada, vm.dental, vm.novapiel];
 
             vm.searchForced = '';
             vm.clienteAConsultar = undefined;
