@@ -141,6 +141,12 @@ angular
                     observ: ' ' + bill.observation
                 };
                 req.informacion_adicional = informAdicional;
+            } else if (user.cashier.subsidiary.userClient.espTemp === 'A-6') {
+                req.comprador.email = req.comprador.email + ', ' + user.email;
+                var informAdicional = {
+                    observ: ' ' + bill.observation
+                };
+                req.informacion_adicional = informAdicional;
             };
 
             if (credito !== undefined) {
