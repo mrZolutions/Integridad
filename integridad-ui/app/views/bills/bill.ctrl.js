@@ -1087,6 +1087,9 @@ angular.module('integridadUiApp')
 
         vm.getIsAgentRetention = function() {
             if(vm.user.subsidiary.userClient.agentRetention){
+                if(vm.user.subsidiary.userClient.id === 'e660b893-0c70-4985-b9d7-890938412ec4') {
+                    return 'Agente de Retención mediante Resolución Nro. NAC-GTRRIOC21-00000001'
+                }
                 return 'Agente de Retención mediante Resolución Nro. NAC-DNCRASC20-00000001'
             }
             return '';
