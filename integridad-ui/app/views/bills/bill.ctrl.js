@@ -892,14 +892,15 @@ angular.module('integridadUiApp')
                 };
 
                 // "precio_total_sin_impuestos": parseFloat(((parseFloat(det.costEach) - (parseFloat(det.costEach) * parseFloat((vm.bill.discountPercentage / 100)))) * parseFloat(det.quantity)).toFixed(4)),
+                var precioTotSinImp = parseFloat(((parseFloat(det.costEach) - (parseFloat(det.discountValue))) * parseFloat(det.quantity)).toFixed(4));
                 var item = {
                     "cantidad": det.quantity,
                     "codigo_principal": det.product.codeIntegridad,
                     "codigo_auxiliar": det.product.barCode,
                     "precio_unitario": parseFloat(det.costEach),
                     "descripcion": det.product.name,
-                    "precio_total_sin_impuestos": parseFloat(((parseFloat(det.costEach) - (parseFloat(det.discountValue))) * parseFloat(det.quantity)).toFixed(4)),
-                    "descuento": parseFloat((det.quantity * (parseFloat(det.costEach) - (parseFloat(det.discountValue)))).toFixed(4)),
+                    "precio_total_sin_impuestos": precioTotSinImp,
+                    "descuento": parseFloat((parseFloat(det.quantity) * parseFloat(det.discountValue)).toFixed(4)),
                     "unidad_medida": det.product.unitOfMeasurementFull,
                     "detalles_adicionales": detaAdic
                 };
