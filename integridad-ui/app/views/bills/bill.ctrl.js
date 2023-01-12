@@ -550,9 +550,13 @@ angular.module('integridadUiApp')
             vm.toAddDiscount = undefined;
         };
 
-        vm.getCost = function(textCost, averageCost, discount = 0) {
+        vm.getCost = function(textCost, averageCost, discount) {
+            var discountValidated = 0;
+            if(discount !== undefined){
+                discountValidated = discount
+            }
             var aC = 1 + ((parseFloat(textCost)) / 100);
-            var discountC = (parseFloat(discount)) / 100;
+            var discountC = (parseFloat(discountValidated)) / 100;
             var cost = aC * averageCost;
             var costTotal = cost - (cost * discountC).toFixed(2);
             // return parseFloat(costTotal.toFixed(4));
