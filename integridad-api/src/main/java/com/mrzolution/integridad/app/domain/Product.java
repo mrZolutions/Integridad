@@ -36,6 +36,9 @@ public class Product implements Child {
     private Long maxMinimun;
     private boolean ice;
     private boolean iva;
+
+    private Double cashDiscount;
+    private Double cardDiscount;
     
     private Long quantityCellar;
     private Double costCellar;
