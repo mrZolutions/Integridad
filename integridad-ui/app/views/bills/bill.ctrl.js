@@ -858,9 +858,6 @@ angular.module('integridadUiApp')
                 vm.bill.discountPercentage = 0;
             };
             _.each(vm.bill.details, function(det) {
-                console.log('======= inicio')
-                console.log(det)
-                console.log('======= fin')
                 var costWithIva = parseFloat((det.total * 1.12).toFixed(4));
                 var costWithIce = parseFloat((det.total * 1.10).toFixed(4));
                 var impuestos = [];
@@ -945,7 +942,6 @@ angular.module('integridadUiApp')
                 vm.bill.discountPercentage = 0;
             };
 
-            console.log(vm.items)
             var req = requirementService.createRequirement(vm.clientSelected, vm.bill, vm.user, vm.impuestosTotales, vm.items, vm.pagos);
             if(vm.user.apiConnection) req.logo = vm.companyData.userClient.logo;
             var reqBill = {requirement : req, bill: vm.bill}
@@ -1061,44 +1057,44 @@ angular.module('integridadUiApp')
             
             // 1 is typeDocument Bill **************!!!
             // billService.getClaveDeAccesoSaveBill(reqBill, vm.companyData.userClient.id, 1).then(function(resp) {
-            // billService.getClaveDeAccesoSaveBill(reqBill, vm.userId, 1).then(function(resp) {
-            //   vm.bill.claveDeAcceso = resp.data.claveDeAcceso;
-            //   vm.billed = true;
-            //   vm.newBill = false;
-            //   vm.newBuy = false;
-            //   vm.user.cashier.billNumberSeq = vm.bill.billSeq;
-            //   if(vm.comprobanteCobro.comprobanteSeq !== undefined){
-            //     vm.user.cashier.compCobroNumberSeq = vm.comprobanteCobro.comprobanteSeq;
-            //     vm.user.cashier.dailyCiNumberSeq = vm.dailybookCi.dailyCiSeq;
-            //   }
-            //   holderService.set(vm.user);
-            //   vm.loading = false;
-            //   setTimeout(function() {
-            //       //LOZADA cashier ids
-            //     if(['ff2daf1f-047e-40b5-be28-ae79a326257a',
-            //         '34c5289c-3b1d-4920-8b4f-c4266ad3c0fe'].includes(vm.user.cashier.id)){
-            //         vm.printToCartTwo('printLRDosMillBillId')
-            //     } else {
-            //         vm.user.cashier.specialPrint ? vm.printToCart('printMatrixBillId') : document.getElementById("printBtnBill").click();
+            billService.getClaveDeAccesoSaveBill(reqBill, vm.userId, 1).then(function(resp) {
+              vm.bill.claveDeAcceso = resp.data.claveDeAcceso;
+              vm.billed = true;
+              vm.newBill = false;
+              vm.newBuy = false;
+              vm.user.cashier.billNumberSeq = vm.bill.billSeq;
+              if(vm.comprobanteCobro.comprobanteSeq !== undefined){
+                vm.user.cashier.compCobroNumberSeq = vm.comprobanteCobro.comprobanteSeq;
+                vm.user.cashier.dailyCiNumberSeq = vm.dailybookCi.dailyCiSeq;
+              }
+              holderService.set(vm.user);
+              vm.loading = false;
+              setTimeout(function() {
+                  //LOZADA cashier ids
+                if(['ff2daf1f-047e-40b5-be28-ae79a326257a',
+                    '34c5289c-3b1d-4920-8b4f-c4266ad3c0fe'].includes(vm.user.cashier.id)){
+                    vm.printToCartTwo('printLRDosMillBillId')
+                } else {
+                    vm.user.cashier.specialPrint ? vm.printToCart('printMatrixBillId') : document.getElementById("printBtnBill").click();
                     
-            //     }
-            //     vm.nuevaBill();
-            //     // document.getElementById("printBtnBill").click();
-            //     // vm.printToCart('printMatrixBillId')
+                }
+                vm.nuevaBill();
+                // document.getElementById("printBtnBill").click();
+                // vm.printToCart('printMatrixBillId')
                 
-            // }, 300);
-            //   if (vm.seqChanged) {
-            //       cashierService.update(vm.user.cashier).then(function(resp) {
-            //           // cashier updated
-            //       }).catch(function(error) {
-            //           vm.loading = false;
-            //           vm.error = error.data;
-            //       });
-            //   };
-            // }).catch(function(error) {
-            //     vm.loading = false;
-            //     vm.error = "Error al obtener Clave de Acceso y Guardar Factura: " + error.data;
-            // });
+            }, 300);
+              if (vm.seqChanged) {
+                  cashierService.update(vm.user.cashier).then(function(resp) {
+                      // cashier updated
+                  }).catch(function(error) {
+                      vm.loading = false;
+                      vm.error = error.data;
+                  });
+              };
+            }).catch(function(error) {
+                vm.loading = false;
+                vm.error = "Error al obtener Clave de Acceso y Guardar Factura: " + error.data;
+            });
         };
 
         vm.getIsAgentRetention = function() {
