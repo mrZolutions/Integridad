@@ -18,8 +18,8 @@ angular.module('integridadUiApp')
         vm.loading = false;
         vm.isEmp = true;
         vm.prices = [
-            {name: 'EFECTIVO', cod: 'cashPercentage'}, {name: 'MAYORISTA', cod: 'majorPercentage'},
-            {name: 'CREDITO', cod: 'creditPercentage'}, {name: 'TARJETA', cod: 'cardPercentage'}
+            {name: 'EFECTIVO', cod: 'cashPercentage', disc: 'cashDiscount'}, {name: 'MAYORISTA', cod: 'majorPercentage', disc: 'cashDiscount'},
+            {name: 'CREDITO', cod: 'creditPercentage', disc: 'cardDiscount'}, {name: 'TARJETA', cod: 'cardPercentage', disc: 'cardDiscount'}
         ];
         vm.medList = [
             {code: 'efectivo', name: 'Efectivo'},
@@ -55,7 +55,8 @@ angular.module('integridadUiApp')
             vm.lozada = '1f9c21d7-a485-482b-b5eb-e363728340b2';
             vm.novapiel = '9fb035e0-d903-48b6-b36b-788d6f57a58a';
             vm.jhonservic = '68c74f50-39d6-4204-b607-14b098a50934';
-            vm.rimpeIds = [vm.mrZolutions, vm.lozada, vm.dental, vm.novapiel, vm.jhonservic];
+            vm.escuela = 'ddd1e6d8-a6c6-4a6d-8074-a0d704e25fb5';
+            vm.rimpeIds = [vm.mrZolutions, vm.lozada, vm.dental, vm.novapiel, vm.jhonservic, vm.escuela];
 
             vm.searchForced = '';
             vm.clienteAConsultar = undefined;
@@ -207,7 +208,8 @@ angular.module('integridadUiApp')
                         vm.quantity = 1;
                         vm.toAdd = response[0];
                         vm.toAddExistency = _.last(vm.toAdd.productBySubsidiaries).quantity;
-                        vm.toAddPrice = vm.getCost(vm.toAdd[vm.priceType.cod], vm.toAdd.averageCost);
+                        vm.toAddDiscount = vm.toAdd[vm.priceType.disc];
+                        vm.toAddPrice = vm.getCost(vm.toAdd[vm.priceType.cod], vm.toAdd.averageCost, vm.toAdd[vm.priceType.disc]);
                         setTimeout(function() {
                             var input = document.getElementById("productQuantity");
                             input.focus();
@@ -356,8 +358,8 @@ angular.module('integridadUiApp')
                 vm.bill.discountPercentage = 0;
             };
             _.map(vm.bill.details, function(detail) {
-                detail.discount = parseFloat(vm.bill.discountPercentage) + parseFloat(detail.discountData);
-                var costEachCalculated = vm.getCost(detail.product[vm.priceType.cod], detail.product.averageCost);
+                detail.discount = parseFloat(vm.bill.discountPercentage) + parseFloat(detail.product[vm.priceType.disc]);
+                var costEachCalculated = vm.getCost(detail.product[vm.priceType.cod], detail.product.averageCost, detail.product[vm.priceType.disc]);
                 detail.costEach = costEachCalculated;
                 var discountValue =  (parseFloat(detail.costEach) * parseFloat(detail.discount / 100)).toFixed(4);
                 detail.discountValue = discountValue;
@@ -448,7 +450,8 @@ angular.module('integridadUiApp')
                 productSelect.quantity = 1;
             };
             vm.productToAdd = angular.copy(productSelect);
-            var costEachCalculated = vm.getCost(productSelect[vm.priceType.cod], productSelect.averageCost);
+            var costEachCalculated = vm.getCost(productSelect[vm.priceType.cod], productSelect.averageCost, productSelect[vm.priceType.disc]);
+            vm.toAddDiscount = productSelect[vm.priceType.disc];
             vm.productToAdd.costEachCalculated = costEachCalculated;
         };
 
@@ -547,15 +550,23 @@ angular.module('integridadUiApp')
             vm.toAddDiscount = undefined;
         };
 
-        vm.getCost = function(textCost, averageCost) {
+        vm.getCost = function(textCost, averageCost, discount) {
+            var discountValidated = 0;
+            if(discount !== undefined){
+                discountValidated = discount
+            }
             var aC = 1 + ((parseFloat(textCost)) / 100);
+            var discountC = (parseFloat(discountValidated)) / 100;
             var cost = aC * averageCost;
+            var costTotal = cost - (cost * discountC).toFixed(2);
+            // return parseFloat(costTotal.toFixed(4));
             return parseFloat(cost.toFixed(4));
         };
 
         vm.editDetail = function(detail, index) {
             vm.indexDetail = index;
             vm.productToAdd = detail.product;
+            vm.toAddDiscount = detail.discountData
             vm.quantity = detail.quantity;
             vm.adicional = detail.adicional;
             setTimeout(function() {

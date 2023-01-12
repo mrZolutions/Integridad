@@ -405,6 +405,48 @@ angular.module('integridadUiApp')
             return (preview).toFixed(4);
         };
 
+        vm.costDiscountPreview = function() {
+            vm.errorCalc = false;
+            var avrCost = 0;
+            var discount = 0;
+            var gEfectivo = 0;
+            if (vm.product === null || vm.product === undefined) {
+                var avrCost = 0;
+                var gEfectivo = 0;
+                var discount = 0;
+            } else {
+                var avrCost = vm.product.averageCost;
+                var discount = vm.product.cashDiscount / 100.00;
+                var gEfectivo = 1 + ((vm.product.cashPercentage) / 100.00);
+            };
+            var preview = avrCost * gEfectivo;
+            if (isNaN(preview)) {
+                vm.errorCalc = true;
+            };
+            return (preview - (preview * discount).toFixed(2)).toFixed(2);
+        };
+
+        vm.costDiscountCardPreview = function() {
+            vm.errorCalc = false;
+            var avrCost = 0;
+            var discount = 0;
+            var gEfectivo = 0;
+            if (vm.product === null || vm.product === undefined) {
+                var avrCost = 0;
+                var gEfectivo = 0;
+                var discount = 0;
+            } else {
+                var avrCost = vm.product.averageCost;
+                var discount = vm.product.cardDiscount / 100.00;
+                var gEfectivo = 1 + ((vm.product.cardPercentage) / 100.00);
+            };
+            var preview = avrCost * gEfectivo;
+            if (isNaN(preview)) {
+                vm.errorCalc = true;
+            };
+            return (preview - (preview * discount).toFixed(2)).toFixed(2);
+        };
+
         vm.costIvaPreview = function() {
             var avrCost = 0;
             var gEfectivo = 0;
@@ -418,6 +460,52 @@ angular.module('integridadUiApp')
             };
             var preview = avrCost * gEfectivo * iva;
             return (preview).toFixed(4);
+        };
+
+        vm.costDiscountIvaPreview = function() {
+            vm.errorCalc = false;
+            var avrCost = 0;
+            var discount = 0;
+            var gEfectivo = 0;
+            var iva = 1.12;
+            if (vm.product === null || vm.product === undefined) {
+                var avrCost = 0;
+                var gEfectivo = 0;
+                var discount = 0;
+            } else {
+                var avrCost = vm.product.averageCost;
+                var discount = vm.product.cashDiscount / 100.00;
+                var gEfectivo = 1 + ((vm.product.cashPercentage) / 100.00);
+            };
+            var preview = avrCost * gEfectivo;
+            if (isNaN(preview)) {
+                vm.errorCalc = true;
+            };
+            var total = (preview - (preview * discount).toFixed(2));
+            return (total * iva).toFixed(2);
+        };
+
+        vm.costDiscountCardIvaPreview = function() {
+            vm.errorCalc = false;
+            var avrCost = 0;
+            var discount = 0;
+            var gEfectivo = 0;
+            var iva = 1.12;
+            if (vm.product === null || vm.product === undefined) {
+                var avrCost = 0;
+                var gEfectivo = 0;
+                var discount = 0;
+            } else {
+                var avrCost = vm.product.averageCost;
+                var discount = vm.product.cardDiscount / 100.00;
+                var gEfectivo = 1 + ((vm.product.cardPercentage) / 100.00);
+            };
+            var preview = avrCost * gEfectivo;
+            if (isNaN(preview)) {
+                vm.errorCalc = true;
+            };
+            var total = (preview - (preview * discount).toFixed(2));
+            return (total * iva).toFixed(2);
         };
 
         vm.getPvp = function(iva, cashPercen, averageCost) {

@@ -512,6 +512,18 @@
             </div>
             <div class="row">
                 <div class="form-group col-md-6">
+                    <label>Descuento % efectivo: </label>
+                    <input type="text" onkeypress="return ((event.which >= 46 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+                           ng-model="vm.product.cashDiscount" class="form-control" maxlength="9">
+                </div>
+                <div class="form-group col-md-6">
+                    <label>Descuento % tarjeta: </label>
+                    <input type="text" onkeypress="return ((event.which >= 46 && event.which <= 57) || (event.keyCode == 9 || event.keyCode == 8))"
+                           ng-model="vm.product.cardDiscount" class="form-control" maxlength="9">
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-6">
                     <label>IVA: </label>
                     <input class="pull-right" ng-model="vm.product.iva" type="checkbox">
                 </div>
@@ -528,6 +540,40 @@
                 <div class="form-group col-md-3" ng-show="vm.product.iva === true">
                     <label>Costo + IVA:</label><br/>
                     <p>{{vm.costIvaPreview()}}</p>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="form-group col-md-3">
+                    <label>COSTO EFECTIVO:</label><br/>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="form-group col-md-3">
+                    <label>Costo con descuento sin IVA:</label><br/>
+                    <p>{{vm.costDiscountPreview()}}</p>
+                </div>
+                <div class="form-group col-md-3" ng-show="vm.product.iva === true">
+                    <label>Costo - Descuento + IVA:</label><br/>
+                    <p>{{vm.costDiscountIvaPreview()}}</p>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="form-group col-md-3">
+                    <label>COSTO TARJETA:</label><br/>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="form-group col-md-3">
+                    <label>Costo con descuento sin IVA:</label><br/>
+                    <p>{{vm.costDiscountCardPreview()}}</p>
+                </div>
+                <div class="form-group col-md-3" ng-show="vm.product.iva === true">
+                    <label>Costo - Descuento + IVA:</label><br/>
+                    <p>{{vm.costDiscountCardIvaPreview()}}</p>
                 </div>
             </div>
 
