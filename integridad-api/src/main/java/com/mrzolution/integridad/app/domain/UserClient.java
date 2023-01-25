@@ -43,6 +43,14 @@ public class UserClient {
     private boolean isAgentRetention;
     private boolean isContab;
 
+    private boolean isMicroempresa;
+
+    private boolean isRimpe;
+
+    private String retentionData;
+
+    private String retentionDataLong;
+
     private boolean testMode;
     
     private long dateCreated;

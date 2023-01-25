@@ -25,6 +25,10 @@ angular
                     "razon_social": user.cashier.subsidiary.userClient.name,
                     "direccion": user.cashier.subsidiary.userClient.address1,
                     "agent_retention": user.cashier.subsidiary.userClient.agentRetention,
+                    "retention_data": user.cashier.subsidiary.userClient.retentionData,
+                    "retention_data_long": user.cashier.subsidiary.userClient.retentionDataLong,
+                    "microempresa": user.cashier.subsidiary.userClient.microempresa,
+                    "rimpe": user.cashier.subsidiary.userClient.rimpe,
                     "establecimiento": {
                         "punto_emision": user.cashier.threeCode,
                         "codigo": user.cashier.subsidiary.threeCode,

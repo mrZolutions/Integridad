@@ -55,7 +55,7 @@ angular.module('integridadUiApp')
             vm.lozada = '1f9c21d7-a485-482b-b5eb-e363728340b2';
             vm.novapiel = '9fb035e0-d903-48b6-b36b-788d6f57a58a';
             vm.jhonservic = '68c74f50-39d6-4204-b607-14b098a50934';
-            vm.escuela = 'ddd1e6d8-a6c6-4a6d-8074-a0d704e25fb5';
+            vm.escuela = 'ccd28854-7eab-4141-82d7-d1d4d0582274';
             vm.rimpeIds = [vm.mrZolutions, vm.lozada, vm.dental, vm.novapiel, vm.jhonservic, vm.escuela];
 
             vm.searchForced = '';
@@ -197,7 +197,8 @@ angular.module('integridadUiApp')
                 ice: 0,
                 details: [],
                 pagos: [],
-                observation: vm.rimpeIds.includes(vm.user.subsidiary.userClient.id) ? 'CONTRIBUYENTE REGIMEN RIMPE' : '', 
+                // observation: vm.rimpeIds.includes(vm.user.subsidiary.userClient.id) ? 'CONTRIBUYENTE REGIMEN RIMPE' : '', 
+                observation: '',
             };
         };
 
@@ -1099,11 +1100,22 @@ angular.module('integridadUiApp')
         };
 
         vm.getIsAgentRetention = function() {
-            if(vm.user.subsidiary.userClient.agentRetention){
-                if(vm.user.subsidiary.userClient.id === 'e660b893-0c70-4985-b9d7-890938412ec4') {
-                    return 'Agente de Retención mediante Resolución Nro. NAC-GTRRIOC21-00000001'
-                }
-                return 'Agente de Retención mediante Resolución Nro. NAC-DNCRASC20-00000001'
+            if(vm.user.subsidiary.userClient.retentionData) {
+                return 'Agente de Retención mediante Resolución Nro. ' + vm.user.subsidiary.userClient.retentionDataLong;
+            }
+            return '';
+            // if(vm.user.subsidiary.userClient.agentRetention){
+            //     if(vm.user.subsidiary.userClient.id === 'e660b893-0c70-4985-b9d7-890938412ec4') {
+            //         return 'Agente de Retención mediante Resolución Nro. NAC-GTRRIOC21-00000001'
+            //     }
+            //     return 'Agente de Retención mediante Resolución Nro. NAC-DNCRASC20-00000001'
+            // }
+            // return '';
+        }
+
+        vm.getIsRimpe = function() {
+            if(vm.user.subsidiary.userClient.rimpe) {
+                return 'CONTRIBUYENTE REGIMEN RIMPE';
             }
             return '';
         }
