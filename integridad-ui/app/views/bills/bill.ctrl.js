@@ -185,7 +185,6 @@ angular.module('integridadUiApp')
         };
 
         function _initializeBill() {
-            console.log(vm.user.subsidiary)
             vm.bill = {
                 client: vm.clientSelected,
                 userIntegridad: vm.user,
