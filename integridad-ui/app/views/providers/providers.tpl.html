@@ -389,6 +389,11 @@
                     </div>
                 </div>
                 <div class="row">
+                    <div class="form-group col-md-12">
+                        <b>{{vm.getIsRimpe()}}</b>
+                    </div>
+                </div>
+                <div class="row">
                     <div class="form-group col-md-6">
                         <label>N&uacute;mero de Retenci&oacute;n: </label>
                         <b>{{vm.seqNumber}}</b>
@@ -580,6 +585,7 @@
                                         <b>Establecimiento: {{vm.userData.subsidiary.address1}}</b><br/>
                                         <b>Tel&eacute;fono: {{vm.userData.subsidiary.phone}}</b><br/>
                                         <b>{{vm.getIsAgentRetention()}}</b><br/>
+                                        <b>{{vm.getIsRimpe()}}</b><br/>
                                     </div>
                                 </td>
                             </tr>

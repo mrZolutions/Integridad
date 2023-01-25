@@ -295,6 +295,11 @@
                                     <b>{{vm.getIsAgentRetention()}}</b>
                                 </td>
                             </tr>
+                            <tr>
+                                <td colspan="2">
+                                    <b>{{vm.getIsRimpe()}}</b>
+                                </td>
+                            </tr>
                         </table>
                     </div>
                 </div>
@@ -772,6 +777,7 @@
         <p>IDENTIFICACION: {{vm.clientSelected.identification}}</p><br/>
         <p>FECHA: {{vm.getDateToPrint() | date :  "dd/MM/yyyy"}}</p><br/>
         <p>{{vm.getIsAgentRetention()}}</p><br/>
+        <p>{{vm.getIsRimpe()}}</p><br/>
         <p>DESCRIPCIÓN &nbsp;&nbsp;CANTIDAD &nbsp;&nbsp;P.UNIT &nbsp;&nbsp;TOTAL</p>
         <table width="100%">
             <tr ng-repeat="detail in vm.bill.details">
@@ -825,6 +831,7 @@
         <b>IDENTIFICACION: </b>{{vm.clientSelected.identification}}<br/>
         <b>FECHA: </b> {{vm.getDateToPrint() | date :  "dd/MM/yyyy"}}</p>
         <p>{{vm.getIsAgentRetention()}}</p>
+        <p>{{vm.getIsRimpe()}}</p>
 
         ------------------------------------------------------------------
         <table width="100%">
