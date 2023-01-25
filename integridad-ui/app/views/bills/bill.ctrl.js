@@ -1090,7 +1090,7 @@ angular.module('integridadUiApp')
                   cashierService.update(vm.user.cashier).then(function(resp) {
                       // cashier updated
                   }).catch(function(error) {
-                      vm.loading = false;asdf
+                      vm.loading = false;
                       vm.error = error.data;
                   });
               };
