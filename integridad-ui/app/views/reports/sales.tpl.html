@@ -118,6 +118,13 @@
                     </button>
                 </div>
                 <div class="form-group col-md-6">
+                    <p><b>Rep. Productos</b></p>
+                    <button type="button" class="btn btn-primary btn-sm"
+                            ng-click="vm.getReportExistencyV2()">
+                            Inventario de Productos V2
+                    </button>
+                </div>
+                <div class="form-group col-md-6">
                     <p><b>Rep. Cuentas por Cobrar</b></p>
                     <button type="button" title="Seleccione Fecha Fin" class="btn btn-primary btn-sm"
                             ng-click="vm.getCreditsPendingReport()">
@@ -996,6 +1003,48 @@
                     <td>{{data.numeroFactura}}</td>
                     <td>{{data.deber.toFixed(4)}}</td>
                     <td>{{data.haber.toFixed(4)}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!--Reporte de Productos-->
+    <div class="table-responsive" ng-if="vm.isProductReportList === '22'" style="overflow-x: auto">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>C&oacute;digo Prod.</th>
+                    <th>Nombre</th>
+                    <th>Saldo</th>
+                    <th>Tipo</th>
+                    <th>Grupo</th>
+                    <th>Marca</th>
+                    <th>Linea</th>
+                    <th>Medida</th>
+                    <th>Iva</th>
+                    <th>PVP</th>
+                    <th>% Efectivo</th>
+                    <th>% Desc Efectivo</th>
+                    <th>Efectivo Sin IVA</th>
+                    <th>P. Farmacia</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="data in vm.reportList | orderBy:'name'" >
+                    <td>{{data.code}}</td>
+                    <td>{{data.name}}</td>
+                    <td>{{data.quantity}}</td>
+                    <td>{{data.tipo}}</td>
+                    <td>{{data.groupo}}</td>
+                    <td>{{data.marca}}</td>
+                    <td>{{data.linea}}</td>
+                    <td>{{data.medida}}</td>
+                    <td>{{data.iva}}</td>
+                    <td>{{data.pvp.toFixed(2)}}</td>
+                    <td>{{data.cashPercentage}}</td>
+                    <td>{{data.cashDiscount}}</td>
+                    <td>{{data.sinIva.toFixed(2)}}</td>
+                    <td>{{data.precio.toFixed(2)}}</td>
                 </tr>
             </tbody>
         </table>

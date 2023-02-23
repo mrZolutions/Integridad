@@ -292,6 +292,21 @@ angular.module('integridadUiApp')
             });
         };
 
+        vm.getReportExistencyV2 = function() {
+            vm.reportName = 'Inventario';
+            vm.isProductReportList = '22';
+            vm.reportList = undefined;
+            vm.loading = true;
+            
+            productService.getProductsForExistencyReportV2(vm.userClientId).then(function(response) {
+                vm.reportList = response;
+                vm.loading = false;
+            }).catch(function(error) {
+                vm.loading = false;
+                vm.error = error.data;
+            });
+        };
+
         vm.getReportSalesOffline = function() {
             vm.reportName = 'Ventas';
             vm.isProductReportList = '16';
@@ -827,6 +842,27 @@ angular.module('integridadUiApp')
                             HABER: parseFloat(prov.haber.toFixed(4))
                         };
 
+                        dataReport.push(data);
+                    });
+                case '22':
+                    _.each(vm.reportList, function(existency) {
+                        var data = {
+                            CODIGO: existency.code,
+                            NOMBRE: existency.name,
+                            CANTIDAD: parseInt(existency.quantity),
+                            TIPO: existency.tipo,
+                            GRUPO: existency.groupo,
+                            MARCA: existency.marca,
+                            LINEA: existency.linea,
+                            MEDIDA: existency.medida,
+                            IVA: existency.iva,
+                            PVP: parseFloat(existency.pvp.toFixed(2)),
+                            PORCENTAGE_EFEC: existency.cashPercentage,
+                            DESCUENTO_EFEC: existency.cashDiscount,
+                            PRECIO_SIN_IVA: parseFloat(existency.sinIva.toFixed(2)),
+                            PRECIO_FINAL: parseFloat(existency.precio.toFixed(2))
+                        };
+                
                         dataReport.push(data);
                     });
                 break;

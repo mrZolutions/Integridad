@@ -9,6 +9,7 @@ import com.google.common.collect.Lists;
 import com.mrzolution.integridad.app.domain.CuentaContableByProduct;
 import com.mrzolution.integridad.app.domain.ProductBySubsidiary;
 import com.mrzolution.integridad.app.domain.SubGroup;
+import com.mrzolution.integridad.app.domain.report.ExistencyReportV2;
 import com.mrzolution.integridad.app.exceptions.BadRequestException;
 import com.mrzolution.integridad.app.father.Father;
 import com.mrzolution.integridad.app.father.FatherManageChildren;
@@ -207,6 +208,83 @@ public class ProductServices {
         });
         Page<Product> products = new PageImpl<>(listReturn, pageable, productIdList.getTotalElements());
         return products;
+    }
+
+    public List<ExistencyReportV2> getProductsForExistencyReportV2(UUID userClientId) {
+        log.info("ProductServices getProductsForExistencyV2: {}", userClientId);
+        codigo = "SER";
+        Iterable<Product> productos = productRepository.findPrdsForExistReport(userClientId, codigo);
+        List<ExistencyReportV2> existencyReportList = new ArrayList<>();
+
+        productos.forEach(product -> {
+            populateForExistency(product);
+
+            for (ProductBySubsidiary pss : product.getProductBySubsidiaries()) {
+                if (pss.isActive()) {
+                    if (pss.getQuantity() != null) {
+                        cantidad = pss.getQuantity();
+                    } else {
+                        cantidad = new Double(0);
+                    }
+                }
+            }
+
+            // PVP
+            Float iva = new Float(1.12);
+            Double avrCost = new Double(product.getAverageCost());
+            Double cashPercent = new Double(0);
+            if(product.getCashPercentage() != null) {
+                cashPercent = product.getCashPercentage();
+            }
+            Double gEfectivo = new Double(1 + (cashPercent / 100));
+            Double descuentoEfectivo = new Double( (product.getCashDiscount() / 100));
+            Double precio = new Double(avrCost * gEfectivo);
+            Double preview = new Double(avrCost * gEfectivo * iva);
+
+            Double pvp = new Double(Math.round(preview * 100) / 100);
+
+            Double sinIva = new Double(Math.round((precio - (precio * descuentoEfectivo))*100)/100);
+
+            Double pFarmacia = new Double(0);
+
+            if(product.isIva()) {
+                pFarmacia = sinIva * iva;
+            } else {
+                pFarmacia = sinIva;
+            }
+
+
+            if (product.getSubgroup() != null) {
+                if (product.getSubgroup().getGroupLine() != null) {
+                    if (product.getSubgroup().getGroupLine().getLine() != null) {
+                        linea = product.getSubgroup().getGroupLine().getLine().getName();
+                    } else {
+                        linea = "NO ASIGNADO";
+                    }
+                    grupo = product.getSubgroup().getGroupLine().getName();
+                } else {
+                    grupo = "NO ASIGNADO";
+                }
+                subGrupo = product.getSubgroup().getName();
+            } else {
+                subGrupo = "NO ASIGNADO";
+            }
+
+            if (product.getBrand() != null) {
+                marca = product.getBrand().getName();
+            } else {
+                marca = "NO ASIGNADO";
+            }
+
+            String tieneIva = "NO";
+            if(product.isIva()) {
+                tieneIva = "NO";
+            }
+            ExistencyReportV2 existencyReport = new ExistencyReportV2(product.getCodeIntegridad(), product.getName(), cantidad, grupo, marca, linea, product.getUnitOfMeasurementFull(),
+                    tieneIva, pvp, product.getCashPercentage(), product.getCashDiscount(), sinIva, pFarmacia, product.getProductType().getName());
+            existencyReportList.add(existencyReport);
+        });
+        return existencyReportList;
     }
     
     public List<ExistencyReport> getProductsForExistencyReport(UUID userClientId) {

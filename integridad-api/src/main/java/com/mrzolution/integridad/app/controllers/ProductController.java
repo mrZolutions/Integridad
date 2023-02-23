@@ -5,6 +5,7 @@ import java.util.UUID;
 import com.mrzolution.integridad.app.domain.CuentaContableByProduct;
 import com.mrzolution.integridad.app.domain.ProductBySubsidiary;
 import com.mrzolution.integridad.app.domain.ProductWrapper;
+import com.mrzolution.integridad.app.domain.report.ExistencyReportV2;
 import com.mrzolution.integridad.app.services.ProductRemoveDetailServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -197,6 +198,19 @@ public class ProductController {
 	}
         log.info("ProductController getProductsForExistencyReport DONE");
 	return new ResponseEntity<List>(response, HttpStatus.ACCEPTED);
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value="/rep/existency/V2/{userClientId}")
+    public ResponseEntity getProductsForExistencyReportV2(@PathVariable("userClientId") UUID userClientId) {
+        List<ExistencyReportV2> response = null;
+        try {
+            response = service.getProductsForExistencyReportV2(userClientId);
+        } catch (BadRequestException e) {
+            log.error("ProductController getProductsForExistencyReport Exception thrown: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+        log.info("ProductController getProductsForExistencyReportV2 DONE");
+        return new ResponseEntity<List>(response, HttpStatus.ACCEPTED);
     }
     
     @RequestMapping(method = RequestMethod.GET, value="/rep/existency/cat/{userClientId}")
