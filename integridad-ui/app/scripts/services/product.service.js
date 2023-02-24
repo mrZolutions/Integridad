@@ -67,6 +67,12 @@ angular
             });
         };
 
+        this.getProductsForExistencyReportV2 = function(userClientId) {
+            return securityService.get('/product/rep/existency/V2/' + userClientId).then(function successCallback(response) {
+                return response.data;
+            });
+        };
+
         this.getProductsForExistencyCatReport = function(userClientId) {
             return securityService.get('/product/rep/existency/cat/' + userClientId).then(function successCallback(response) {
                 return response.data;
