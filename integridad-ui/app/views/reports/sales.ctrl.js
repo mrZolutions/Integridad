@@ -851,7 +851,7 @@ angular.module('integridadUiApp')
                             NOMBRE: existency.name,
                             CANTIDAD: parseInt(existency.quantity),
                             TIPO: existency.tipo,
-                            GRUPO: existency.groupo,
+                            PROVEEDOR: existency.groupo,
                             MARCA: existency.marca,
                             LINEA: existency.linea,
                             MEDIDA: existency.medida,
@@ -860,7 +860,7 @@ angular.module('integridadUiApp')
                             PORCENTAGE_EFEC: existency.cashPercentage,
                             DESCUENTO_EFEC: existency.cashDiscount,
                             PRECIO_SIN_IVA: parseFloat(existency.sinIva.toFixed(2)),
-                            PRECIO_FINAL: parseFloat(existency.precio.toFixed(2))
+                            PRECIO_FARMACIA: parseFloat(existency.precio.toFixed(2))
                         };
                 
                         dataReport.push(data);
