@@ -278,7 +278,7 @@ public class ProductServices {
 
             String tieneIva = "NO";
             if(product.isIva()) {
-                tieneIva = "NO";
+                tieneIva = "SI";
             }
             ExistencyReportV2 existencyReport = new ExistencyReportV2(product.getCodeIntegridad(), product.getName(), cantidad, grupo, marca, linea, product.getUnitOfMeasurementFull(),
                     tieneIva, pvp, product.getCashPercentage(), product.getCashDiscount(), sinIva, pFarmacia, product.getProductType().getName());
